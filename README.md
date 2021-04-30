@@ -1,0 +1,2 @@
+# Scruffy
+Scruffy - Discord Bot
