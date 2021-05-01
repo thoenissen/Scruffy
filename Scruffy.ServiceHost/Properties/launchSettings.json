@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "Scruffy.ServiceHost": {
+      "commandName": "Project"
+    }
+  }
+}
