@@ -39,31 +39,41 @@ namespace Scruffy.Services.Reminder
         {
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
-                var jobEntity = dbFactory.GetRepository<OneTimeReminderRepository>()
-                                         .GetQuery()
-                                         .FirstOrDefault(obj => obj.Id == _id);
-
-                if (jobEntity != null)
+                await using (var transaction = dbFactory.BeginTransaction(System.Data.IsolationLevel.RepeatableRead))
                 {
-                    await using (var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider())
+                    var jobEntity = dbFactory.GetRepository<OneTimeReminderRepository>()
+                                             .GetQuery()
+                                             .FirstOrDefault(obj => obj.Id == _id);
+
+                    if (jobEntity?.IsExecuted == false)
                     {
-                        var discordClient = serviceProvider.GetService<DiscordClient>();
-
-                        var channel = await discordClient.GetChannelAsync(jobEntity.ChannelId);
-
-                        if (channel != null)
+                        if (dbFactory.GetRepository<OneTimeReminderRepository>()
+                                 .Refresh(obj => obj.Id == _id,
+                                          obj => obj.IsExecuted = true))
                         {
-                            var user = await discordClient.GetUserAsync(jobEntity.UserId);
+                            await transaction.CommitAsync();
 
-                            await discordClient.SendMessageAsync(channel,
-                                                                 new DiscordMessageBuilder
-                                                                 {
-                                                                     Content = $"{user.Mention} - {(string.IsNullOrWhiteSpace(jobEntity.Message) ? "Reminder!" : jobEntity.Message)}"
-                                                                 });
+                            await using (var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider())
+                            {
+                                var discordClient = serviceProvider.GetService<DiscordClient>();
 
-                            dbFactory.GetRepository<OneTimeReminderRepository>()
-                                     .Refresh(obj => obj.Id == _id,
-                                              obj => obj.IsExecuted = true);
+                                var channel = await discordClient.GetChannelAsync(jobEntity.ChannelId);
+
+                                if (channel != null)
+                                {
+                                    var user = await discordClient.GetUserAsync(jobEntity.UserId);
+
+                                    await discordClient.SendMessageAsync(channel,
+                                                                         new DiscordMessageBuilder
+                                                                         {
+                                                                             Content = $"{user.Mention} Reminder: {(string.IsNullOrWhiteSpace(jobEntity.Message) ? "Reminder!" : jobEntity.Message)}"
+                                                                         });
+
+                                    dbFactory.GetRepository<OneTimeReminderRepository>()
+                                             .Refresh(obj => obj.Id == _id,
+                                                      obj => obj.IsExecuted = true);
+                                }
+                            }
                         }
                     }
                 }

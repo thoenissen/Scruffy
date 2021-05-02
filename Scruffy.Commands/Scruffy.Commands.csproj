@@ -34,7 +34,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Fractals\" />
     <Folder Include="Raid\" />
   </ItemGroup>
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Services.CoreData;
+using Scruffy.Services.Fractals;
 
 namespace Scruffy.Services.Core
 {
@@ -27,6 +28,7 @@ namespace Scruffy.Services.Core
         {
             _serviceCollection = new ServiceCollection();
             _serviceCollection.AddTransient<UserManagementService>();
+            _serviceCollection.AddTransient<FractalLfgMessageBuilder>();
         }
 
         #endregion

@@ -41,7 +41,6 @@
     <Folder Include="Entity\Repositories\Fractals\" />
     <Folder Include="Entity\Repositories\Raid\" />
     <Folder Include="Entity\Repositories\Reminder\" />
-    <Folder Include="Entity\Tables\Fractals\" />
   </ItemGroup>
 
 </Project>

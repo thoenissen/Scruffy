@@ -5,6 +5,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity.Tables.CoreData;
+using Scruffy.Data.Entity.Tables.Fractals;
 using Scruffy.Data.Entity.Tables.Raid;
 using Scruffy.Data.Entity.Tables.Reminder;
 
@@ -97,6 +98,24 @@ namespace Scruffy.Data.Entity
                         .WithOne(obj => obj.User)
                         .HasForeignKey(obj => obj.UserId)
                         .IsRequired();
+
+            // Fractals
+            modelBuilder.Entity<FractalLfgConfigurationEntity>();
+            modelBuilder.Entity<FractalRegistrationEntity>();
+
+            modelBuilder.Entity<FractalLfgConfigurationEntity>()
+                        .HasMany(obj => obj.FractalRegistrations)
+                        .WithOne(obj => obj.FractalLfgConfiguration)
+                        .IsRequired();
+
+            modelBuilder.Entity<FractalRegistrationEntity>()
+                        .HasKey(obj => new
+                                       {
+                                           obj.ConfigurationId,
+                                           obj.AppointmentTimeStamp,
+                                           obj.UserId,
+                                       });
+
             // Raid
             modelBuilder.Entity<RaidAppointmentEntity>();
             modelBuilder.Entity<RaidDayConfigurationEntity>();
@@ -181,6 +200,7 @@ namespace Scruffy.Data.Entity
 
             // Reminder
             modelBuilder.Entity<OneTimeReminderEntity>();
+            modelBuilder.Entity<WeeklyReminderEntity>();
 
             // Disabling cascade on delete
             foreach (var foreignKey in modelBuilder.Model
