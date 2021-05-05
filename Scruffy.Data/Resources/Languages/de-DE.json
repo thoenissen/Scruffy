@@ -1,0 +1,29 @@
+﻿{
+  "CultureInfo": "de-DE",
+  "Description": "Deutsch",
+  "TranslationGroups": {
+    "FractalLfgSetupCommandModule": {
+      "TitlePrompt": "Geben Sie bitte den Titel ein.",
+      "DescriptionPrompt": "Geben Sie bitte die Beschreibung ein.",
+      "AliasNamePrompt": "Geben Sie bitten den Alias-Namen ein.",
+      "BuildingProgress": "Erstellung..."
+    },
+    "ReminderCreationCommandModule": {
+      "CommandProgressed": "Der Befehl wurde verarbeitet.",
+      "SelectDayPrompt": "Wählen Sie bitte einen der folgenden Tage aus.",
+      "WeekdaySelectionTitle": "Auswahl Wochentag",
+      "ReminderTimePrompt": "Wählen Sie bitte den Zeitpunkt der Erinnerung. (Format: hh:mm)",
+      "DeletionTimePrompt": "Wählen Sie bitte den Zeitpunkt der Löschung. (Format: hh:mm)",
+      "ReminderMessagePrompt": "Geben Sie bitte die Nachricht der Erinnerung ein.",
+      "CreationCompletedMessage": "Erstellung abgeschlossen! Alle Nachrichten der Erstellung der Erinnerung werden in 30 Sekunden gelöscht."
+    },
+    "FractalLfgMessageBuilder": {
+      "Today": "Heute"
+    },
+    "OneTimeReminderJob": {
+      "EmptyReminder": "{0} Erinnerung",
+      "SingleLineReminder": "{0} Erinnerung: {1}",
+      "MultiLineReminder": "{0} Erinnerung:\n\n{1}"
+    }
+  }
+}

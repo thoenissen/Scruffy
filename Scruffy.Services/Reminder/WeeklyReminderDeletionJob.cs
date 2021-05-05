@@ -15,7 +15,7 @@ namespace Scruffy.Services.Reminder
     /// <summary>
     /// Deletion of a weekly reminder
     /// </summary>
-    public class WeeklyReminderDeletionJob : AsyncJob
+    public class WeeklyReminderDeletionJob : LocatedAsyncJob
     {
         #region Fields
 
@@ -65,11 +65,11 @@ namespace Scruffy.Services.Reminder
                     {
                         var discordClient = serviceProvider.GetService<DiscordClient>();
 
-                        var channel = await discordClient.GetChannelAsync(data.ChannelId);
+                        var channel = await discordClient.GetChannelAsync(data.ChannelId).ConfigureAwait(false);
 
-                        var message = await channel.GetMessageAsync(data.MessageId.Value);
+                        var message = await channel.GetMessageAsync(data.MessageId.Value).ConfigureAwait(false);
 
-                        await channel.DeleteMessageAsync(message);
+                        await channel.DeleteMessageAsync(message).ConfigureAwait(false);
 
                         dbFactory.GetRepository<WeeklyReminderRepository>()
                                  .Refresh(obj => obj.Id == _id,

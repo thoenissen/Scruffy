@@ -13,8 +13,17 @@
     <DocumentationFile>bin\Release\Scruffy.Data.xml</DocumentationFile>
     <CodeAnalysisRuleSet>..\StyleCop.Release.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\Languages\de-DE.json" />
+    <None Remove="Resources\Languages\en-US.json" />
+  </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Languages\de-DE.json" />
+    <EmbeddedResource Include="Resources\Languages\en-US.json" />
   </ItemGroup>
 
   <ItemGroup>

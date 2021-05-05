@@ -69,7 +69,7 @@ namespace Scruffy.ServiceHost.Discord
 
             _commands.RegisterCommands(Assembly.Load("Scruffy.Commands"));
 
-            await _discordClient.ConnectAsync();
+            await _discordClient.ConnectAsync().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace Scruffy.ServiceHost.Discord
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
         private async Task OnClientReady(DiscordClient sender, ReadyEventArgs e)
         {
-            await _discordClient.UpdateStatusAsync(new DiscordActivity("you!", ActivityType.Watching));
+            await _discordClient.UpdateStatusAsync(new DiscordActivity("you!", ActivityType.Watching)).ConfigureAwait(false);
         }
 
         #endregion // Methods
@@ -95,7 +95,7 @@ namespace Scruffy.ServiceHost.Discord
         {
             if (_discordClient != null)
             {
-                await _discordClient.DisconnectAsync();
+                await _discordClient.DisconnectAsync().ConfigureAwait(false);
 
                 _discordClient.Dispose();
             }

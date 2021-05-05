@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Threading.Tasks;
 
 using Scruffy.ServiceHost.Discord;
@@ -33,15 +34,25 @@ namespace Scruffy.ServiceHost
 
             await using (var jobScheduler = new JobScheduler())
             {
+                // TODO configuration
+                await using (var stream = Assembly.Load("Scruffy.Data").GetManifestResourceStream("Scruffy.Data.Resources.Languages.de-DE.json"))
+                {
+                    var localizationService = new LocalizationService();
+
+                    localizationService.Load(stream);
+
+                    GlobalServiceProvider.Current.AddSingleton(localizationService);
+                }
+
                 GlobalServiceProvider.Current.AddSingleton(jobScheduler);
 
                 await using (var discordBot = new DiscordBot())
                 {
-                    await discordBot.StartAsync();
+                    await discordBot.StartAsync().ConfigureAwait(false);
 
-                    await jobScheduler.StartAsync();
+                    await jobScheduler.StartAsync().ConfigureAwait(false);
 
-                    await _waitForExitTaskSource.Task;
+                    await _waitForExitTaskSource.Task.ConfigureAwait(false);
                 }
             }
         }

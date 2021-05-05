@@ -38,7 +38,7 @@ namespace Scruffy.Services.Core.JobScheduler
         /// <returns>A task that represents the asynchronous dispose operation.</returns>
         public async Task StartAsync()
         {
-            await Task.Run(JobManager.Start);
+            await Task.Run(JobManager.Start).ConfigureAwait(false);
 
             JobManager.AddJob<FractalAppointmentCreationJob>(obj => obj.ToRunEvery(1).Days().At(0, 30));
 
@@ -52,7 +52,7 @@ namespace Scruffy.Services.Core.JobScheduler
                                                                          obj.Id,
                                                                          obj.TimeStamp
                                                                      })
-                                                      .ToListAsync();
+                                                      .ToListAsync().ConfigureAwait(false);
 
                 foreach (var oneTimeReminder in oneTimeReminders)
                 {
@@ -68,7 +68,7 @@ namespace Scruffy.Services.Core.JobScheduler
                                                                          obj.PostTime,
                                                                          obj.DeletionTime
                                                                      })
-                                                      .ToListAsync();
+                                                      .ToListAsync().ConfigureAwait(false);
 
                 foreach (var weeklyReminder in weeklyReminders)
                 {
@@ -129,7 +129,7 @@ namespace Scruffy.Services.Core.JobScheduler
         /// <returns> A task that represents the asynchronous dispose operation.</returns>
         public async ValueTask DisposeAsync()
         {
-            await Task.Run(JobManager.StopAndBlock);
+            await Task.Run(JobManager.StopAndBlock).ConfigureAwait(false);
         }
 
         #endregion // IAsyncDisposable

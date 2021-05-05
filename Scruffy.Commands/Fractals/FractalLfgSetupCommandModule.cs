@@ -4,9 +4,11 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Interactivity.Extensions;
 
+using Scruffy.Commands.Base;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Fractals;
 using Scruffy.Data.Entity.Tables.Fractals;
+using Scruffy.Services.Core;
 using Scruffy.Services.Fractals;
 
 namespace Scruffy.Commands.Fractals
@@ -16,7 +18,7 @@ namespace Scruffy.Commands.Fractals
     /// </summary>
     [ModuleLifespan(ModuleLifespan.Transient)]
     [Group("fractal")]
-    public class FractalLfgSetupCommandModule : BaseCommandModule
+    public class FractalLfgSetupCommandModule : LocatedCommandModuleBase
     {
         #region Properties
 
@@ -26,6 +28,19 @@ namespace Scruffy.Commands.Fractals
         public FractalLfgMessageBuilder MessageBuilder { get; set; }
 
         #endregion // Properties
+
+        #region Constructor
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="localizationService">Localization service</param>
+        public FractalLfgSetupCommandModule(LocalizationService localizationService)
+            : base(localizationService)
+        {
+        }
+
+        #endregion // Constructor
 
         #region Methods
 
@@ -42,26 +57,26 @@ namespace Scruffy.Commands.Fractals
 
             var interactivity = commandContext.Client.GetInteractivity();
 
-            await commandContext.RespondAsync("Please enter a title.");
+            await commandContext.RespondAsync(LocalizationGroup.GetText("TitlePrompt", "Please enter a title.")).ConfigureAwait(false);
 
-            var responseMessage = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContext.Message.Author.Id);
+            var responseMessage = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContext.Message.Author.Id).ConfigureAwait(false);
 
             if (responseMessage.TimedOut == false)
             {
                 title = responseMessage.Result.Content;
 
-                await responseMessage.Result.RespondAsync("Please enter a description.");
+                await responseMessage.Result.RespondAsync(LocalizationGroup.GetText("DescriptionPrompt", "Please enter a description.")).ConfigureAwait(false);
 
-                responseMessage = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContext.Message.Author.Id);
+                responseMessage = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContext.Message.Author.Id).ConfigureAwait(false);
             }
 
             if (responseMessage.TimedOut == false)
             {
                 description = responseMessage.Result.Content;
 
-                await responseMessage.Result.RespondAsync("Please enter a alias name.");
+                await responseMessage.Result.RespondAsync(LocalizationGroup.GetText("AliasNamePrompt", "Please enter a alias name.")).ConfigureAwait(false);
 
-                responseMessage = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContext.Message.Author.Id);
+                responseMessage = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContext.Message.Author.Id).ConfigureAwait(false);
             }
 
             if (responseMessage.TimedOut == false)
@@ -74,7 +89,7 @@ namespace Scruffy.Commands.Fractals
                                 Description = description,
                                 AliasName = aliasName,
                                 ChannelId = commandContext.Channel.Id,
-                                MessageId = (await commandContext.Channel.SendMessageAsync("Building...").ConfigureAwait(false)).Id
+                                MessageId = (await commandContext.Channel.SendMessageAsync(LocalizationGroup.GetText("BuildingProgress", "Building...")).ConfigureAwait(false)).Id
                             };
 
                 using (var dbFactory = RepositoryFactory.CreateInstance())
@@ -83,7 +98,7 @@ namespace Scruffy.Commands.Fractals
                              .Add(entry);
                 }
 
-                await MessageBuilder.RefreshMessageAsync(entry.Id);
+                await MessageBuilder.RefreshMessageAsync(entry.Id).ConfigureAwait(false);
             }
         }
 

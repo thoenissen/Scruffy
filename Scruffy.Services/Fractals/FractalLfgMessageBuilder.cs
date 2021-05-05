@@ -11,13 +11,14 @@ using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Fractals;
+using Scruffy.Services.Core;
 
 namespace Scruffy.Services.Fractals
 {
     /// <summary>
     /// Building the lfg message
     /// </summary>
-    public class FractalLfgMessageBuilder
+    public class FractalLfgMessageBuilder : LocatedServiceBase
     {
         #region Fields
 
@@ -34,7 +35,9 @@ namespace Scruffy.Services.Fractals
         /// Constructor
         /// </summary>
         /// <param name="client">Discord client</param>
-        public FractalLfgMessageBuilder(DiscordClient client)
+        /// <param name="localizationService">Localization service</param>
+        public FractalLfgMessageBuilder(DiscordClient client, LocalizationService localizationService)
+            : base(localizationService)
         {
             _client = client;
         }
@@ -72,7 +75,7 @@ namespace Scruffy.Services.Fractals
                                                                                                 })
                                                                                 .Where(obj2 => obj2.AppointmentTimeStamp > from)
                                                          })
-                                          .FirstOrDefaultAsync();
+                                          .FirstOrDefaultAsync().ConfigureAwait(false);
 
                 if (data != null)
                 {
@@ -94,7 +97,7 @@ namespace Scruffy.Services.Fractals
                     {
                         var date = DateTime.Today.AddDays(i);
                         var name = i == 0
-                                       ? "Today"
+                                       ? LocalizationGroup.GetText("Today", "Today")
                                        : $"`{i} - {DateTimeFormatInfo.CurrentInfo.GetDayName(date.DayOfWeek)[..2]}:` {date:d}";
 
                         stringBuilder.Clear();
@@ -108,7 +111,7 @@ namespace Scruffy.Services.Fractals
 
                                 foreach (var entry in group.OrderBy(obj => obj.RegistrationTimeStamp))
                                 {
-                                    stringBuilder.Append($"> • {(await _client.GetUserAsync(entry.UserId)).Mention}\n");
+                                    stringBuilder.Append($"> • {(await _client.GetUserAsync(entry.UserId).ConfigureAwait(false)).Mention}\n");
                                 }
                             }
 
@@ -125,12 +128,12 @@ namespace Scruffy.Services.Fractals
                     messageBuilder.WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/836238701046398987/d7d1b509a23aa9789885127da9107fe0.png?size=256");
                     messageBuilder.WithTimestamp(DateTime.Now);
 
-                    var channel = await _client.GetChannelAsync(data.ChannelId);
+                    var channel = await _client.GetChannelAsync(data.ChannelId).ConfigureAwait(false);
                     if (channel != null)
                     {
-                        var message = await channel.GetMessageAsync(data.MessageId);
+                        var message = await channel.GetMessageAsync(data.MessageId).ConfigureAwait(false);
 
-                        await message.ModifyAsync(null, messageBuilder.Build());
+                        await message.ModifyAsync(null, messageBuilder.Build()).ConfigureAwait(false);
                     }
                 }
             }

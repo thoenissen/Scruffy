@@ -26,7 +26,7 @@ namespace Scruffy.Services.CoreData
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
                 var userRepository = dbFactory.GetRepository<UserRepository>();
-                if (await userRepository.GetQuery().AnyAsync(obj => obj.Id == userId) == false)
+                if (await userRepository.GetQuery().AnyAsync(obj => obj.Id == userId).ConfigureAwait(false) == false)
                 {
                     userRepository.Add(new UserEntity
                                        {

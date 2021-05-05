@@ -10,9 +10,11 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity.Extensions;
 
+using Scruffy.Commands.Base;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Reminder;
 using Scruffy.Data.Entity.Tables.Reminder;
+using Scruffy.Services.Core;
 using Scruffy.Services.Core.JobScheduler;
 using Scruffy.Services.CoreData;
 
@@ -22,7 +24,7 @@ namespace Scruffy.Commands.Reminder
     /// Reminder module
     /// </summary>
     [ModuleLifespan(ModuleLifespan.Transient)]
-    public class ReminderCreationCommandModule : BaseCommandModule
+    public class ReminderCreationCommandModule : LocatedCommandModuleBase
     {
         #region Properties
 
@@ -37,6 +39,19 @@ namespace Scruffy.Commands.Reminder
         public JobScheduler JobScheduler { get; set; }
 
         #endregion // Properties
+
+        #region Constructor
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="localizationService">Localization service</param>
+        public ReminderCreationCommandModule(LocalizationService localizationService)
+            : base(localizationService)
+        {
+        }
+
+        #endregion // Constructor
 
         #region Command methods
 
@@ -81,7 +96,7 @@ namespace Scruffy.Commands.Reminder
                         JobScheduler.AddOneTimeReminder(reminderEntity.TimeStamp, reminderEntity.Id);
 
                         await commandContext.Channel
-                                            .DeleteMessageAsync(commandContext.Message, "Command progressed.")
+                                            .DeleteMessageAsync(commandContext.Message, LocalizationGroup.GetText("CommandProgressed", "Command progressed."))
                                             .ConfigureAwait(false);
                     }
                 }
@@ -120,16 +135,17 @@ namespace Scruffy.Commands.Reminder
                             };
 
             var stringBuilder = new StringBuilder();
-            stringBuilder.Append("Please select one of the following days.\n\n");
+            stringBuilder.Append(LocalizationGroup.GetText("SelectDayPrompt", "Please select one of the following days."));
+            stringBuilder.Append("\n\n");
 
             foreach (var (emoji, day) in reactions)
             {
                 stringBuilder.Append($"{emoji} {DateTimeFormatInfo.CurrentInfo.GetDayName(day)}\n");
             }
 
-            embedBuilder.AddField("Weekday selection", stringBuilder.ToString());
+            embedBuilder.AddField(LocalizationGroup.GetText("WeekdaySelectionTitle", "Weekday selection"), stringBuilder.ToString());
 
-            var currentBotMessage = await commandContext.RespondAsync(embedBuilder);
+            var currentBotMessage = await commandContext.RespondAsync(embedBuilder).ConfigureAwait(false);
 
             messagesToBeDeleted.Add(currentBotMessage);
 
@@ -142,7 +158,7 @@ namespace Scruffy.Commands.Reminder
                 await currentBotMessage.CreateReactionAsync(emoji).ConfigureAwait(false);
             }
 
-            var dayOfWeekReaction = await dayOfWeekReactionTask;
+            var dayOfWeekReaction = await dayOfWeekReactionTask.ConfigureAwait(false);
 
             if (dayOfWeekReaction.TimedOut == false
              && reactions.TryGetValue(dayOfWeekReaction.Result.Emoji, out var dayOfWeek))
@@ -150,11 +166,11 @@ namespace Scruffy.Commands.Reminder
                 TimeSpan postTimeSpan = default;
                 TimeSpan deletionTimeSpan = default;
 
-                currentBotMessage = await commandContext.Channel.SendMessageAsync("Please enter the reminder time. (Format: hh:mm)");
+                currentBotMessage = await commandContext.Channel.SendMessageAsync(LocalizationGroup.GetText("ReminderTimePrompt", "Please enter the reminder time. (Format: hh:mm)")).ConfigureAwait(false);
 
                 messagesToBeDeleted.Add(currentBotMessage);
 
-                var userResponse = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContext.Message.Author.Id);
+                var userResponse = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContext.Message.Author.Id).ConfigureAwait(false);
 
                 if (userResponse.TimedOut == false)
                 {
@@ -164,11 +180,11 @@ namespace Scruffy.Commands.Reminder
                     {
                         postTimeSpan = TimeSpan.ParseExact(userResponse.Result.Content, "hh\\:mm", CultureInfo.InvariantCulture);
 
-                        currentBotMessage = await commandContext.Channel.SendMessageAsync("Please enter the deletion times. (Format: hh:mm)");
+                        currentBotMessage = await commandContext.Channel.SendMessageAsync(LocalizationGroup.GetText("DeletionTimePrompt", "Please enter the deletion times. (Format: hh:mm)")).ConfigureAwait(false);
 
                         messagesToBeDeleted.Add(currentBotMessage);
 
-                        userResponse = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContext.Message.Author.Id);
+                        userResponse = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContext.Message.Author.Id).ConfigureAwait(false);
                     }
                 }
 
@@ -180,11 +196,11 @@ namespace Scruffy.Commands.Reminder
                     {
                         deletionTimeSpan = TimeSpan.ParseExact(userResponse.Result.Content, "hh\\:mm", CultureInfo.InvariantCulture);
 
-                        currentBotMessage = await commandContext.Channel.SendMessageAsync("Please enter the message of the reminder.");
+                        currentBotMessage = await commandContext.Channel.SendMessageAsync(LocalizationGroup.GetText("ReminderMessagePrompt", "Please enter the message of the reminder.")).ConfigureAwait(false);
 
                         messagesToBeDeleted.Add(currentBotMessage);
 
-                        userResponse = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContext.Message.Author.Id);
+                        userResponse = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContext.Message.Author.Id).ConfigureAwait(false);
                     }
                 }
 
@@ -208,11 +224,11 @@ namespace Scruffy.Commands.Reminder
                         {
                             JobScheduler.AddWeeklyReminder(entity.Id, entity.DayOfWeek, entity.PostTime, entity.DeletionTime);
 
-                            currentBotMessage = await commandContext.Channel.SendMessageAsync("Creation completed! All creation messages will be deleted in 30 seconds.");
+                            currentBotMessage = await commandContext.Channel.SendMessageAsync(LocalizationGroup.GetText("CreationCompletedMessage", "Creation completed! All creation messages will be deleted in 30 seconds.")).ConfigureAwait(false);
 
                             messagesToBeDeleted.Add(currentBotMessage);
 
-                            await Task.Delay(TimeSpan.FromSeconds(30));
+                            await Task.Delay(TimeSpan.FromSeconds(30)).ConfigureAwait(false);
                         }
                     }
                 }
@@ -220,7 +236,7 @@ namespace Scruffy.Commands.Reminder
 
             foreach (var message in messagesToBeDeleted)
             {
-                await commandContext.Channel.DeleteMessageAsync(message);
+                await commandContext.Channel.DeleteMessageAsync(message).ConfigureAwait(false);
             }
         }
 

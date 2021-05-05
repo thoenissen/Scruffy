@@ -15,7 +15,7 @@ namespace Scruffy.Services.Reminder
     /// <summary>
     /// Posting a weekly reminder
     /// </summary>
-    public class WeeklyReminderPostJob : AsyncJob
+    public class WeeklyReminderPostJob : LocatedAsyncJob
     {
         #region Fields
 
@@ -65,9 +65,9 @@ namespace Scruffy.Services.Reminder
                     {
                         var discordClient = serviceProvider.GetService<DiscordClient>();
 
-                        var channel = await discordClient.GetChannelAsync(data.ChannelId);
+                        var channel = await discordClient.GetChannelAsync(data.ChannelId).ConfigureAwait(false);
 
-                        var message = await channel.SendMessageAsync(data.Message);
+                        var message = await channel.SendMessageAsync(data.Message).ConfigureAwait(false);
 
                         dbFactory.GetRepository<WeeklyReminderRepository>()
                                  .Refresh(obj => obj.Id == _id,

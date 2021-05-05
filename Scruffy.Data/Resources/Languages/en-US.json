@@ -1,0 +1,29 @@
+﻿{
+  "CultureInfo": "en-US",
+  "Description" :  "English",
+  "TranslationGroups": {
+    "FractalLfgSetupCommandModule": {
+      "TitlePrompt": "Please enter a title.",
+      "DescriptionPrompt": "Please enter a description.",
+      "AliasNamePrompt": "Please enter an alias name.",
+      "BuildingProgress": "Building..."
+    },
+    "ReminderCreationCommandModule": {
+      "CommandProgressed": "Command progressed.",
+      "SelectDayPrompt": "Please select one of the following days.",
+      "WeekdaySelectionTitle": "Weekday selection",
+      "ReminderTimePrompt": "Please enter the reminder time. (Format: hh:mm)",
+      "DeletionTimePrompt": "Please enter the deletion times. (Format: hh:mm)",
+      "ReminderMessagePrompt": "Please enter the message of the reminder.",
+      "CreationCompletedMessage": "Creation completed! All creation messages will be deleted in 30 seconds."
+    },
+    "FractalLfgMessageBuilder": {
+      "Today": "Today"
+    },
+    "OneTimeReminderJob": {
+      "EmptyReminder": "{0} Reminder",
+      "SingleLineReminder": "{0} Reminder: {1}",
+      "MultiLineReminder": "{0} Reminder:\n\n{1}"
+    }
+  }
+}

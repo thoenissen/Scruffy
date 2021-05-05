@@ -14,7 +14,7 @@ namespace Scruffy.Services.Fractals
     /// <summary>
     /// Daily creation of the fractal appointments
     /// </summary>
-    public class FractalAppointmentCreationJob : AsyncJob
+    public class FractalAppointmentCreationJob : LocatedAsyncJob
     {
         #region AsyncJob
 
@@ -32,7 +32,7 @@ namespace Scruffy.Services.Fractals
                                                                    {
                                                                        obj.Id
                                                                    })
-                                                    .ToListAsync();
+                                                    .ToListAsync().ConfigureAwait(false);
 
                 await using (var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider())
                 {
@@ -40,7 +40,7 @@ namespace Scruffy.Services.Fractals
 
                     foreach (var configuration in configurations)
                     {
-                        await builder.RefreshMessageAsync(configuration.Id);
+                        await builder.RefreshMessageAsync(configuration.Id).ConfigureAwait(false);
 
                         // TODO Creation of appointments
                     }
