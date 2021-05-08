@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Fractals;
+using Scruffy.Data.Services.Fractal;
 using Scruffy.Services.Core;
 
 namespace Scruffy.Services.Fractals
@@ -55,7 +57,7 @@ namespace Scruffy.Services.Fractals
         {
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
-                var from = DateTime.Today.ToUniversalTime();
+                var from = DateTime.Today;
 
                 var data = await dbFactory.GetRepository<FractalLfgConfigurationRepository>()
                                           .GetQuery()
@@ -98,7 +100,7 @@ namespace Scruffy.Services.Fractals
                         var date = DateTime.Today.AddDays(i);
                         var name = i == 0
                                        ? LocalizationGroup.GetText("Today", "Today")
-                                       : $"`{i} - {DateTimeFormatInfo.CurrentInfo.GetDayName(date.DayOfWeek)[..2]}:` {date:d}";
+                                       : $"`{i} - {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(date.DayOfWeek)[..2]}:` {date:d}";
 
                         stringBuilder.Clear();
 
@@ -107,7 +109,7 @@ namespace Scruffy.Services.Fractals
                         {
                             foreach (var group in registrationsOfDay)
                             {
-                                stringBuilder.Append($"> ● {group.Key}\n");
+                                stringBuilder.Append($"> ● {group.Key.ToString("t", LocalizationGroup.CultureInfo)}\n");
 
                                 foreach (var entry in group.OrderBy(obj => obj.RegistrationTimeStamp))
                                 {
@@ -137,6 +139,30 @@ namespace Scruffy.Services.Fractals
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Creates an appointment
+        /// </summary>
+        /// <param name="channelId">Id of the channel</param>
+        /// <param name="appointmentTimeStamp">Appointment timestamp</param>
+        /// <param name="registrations">Registrations</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task<ulong> CreateAppointmentMessage(ulong channelId, DateTime appointmentTimeStamp, IEnumerable<AppointmentCreationRegistrationData> registrations)
+        {
+            var channel = await _client.GetChannelAsync(channelId)
+                                       .ConfigureAwait(false);
+
+            var builder = new StringBuilder();
+            builder.Append(LocalizationGroup.GetFormattedText("AppointmentReminder", "{0} - Appointment reminder", appointmentTimeStamp.ToString("g", LocalizationGroup.CultureInfo)));
+            builder.Append('\n');
+
+            foreach (var registration in registrations)
+            {
+                builder.Append($"> ● {(await _client.GetUserAsync(registration.UserId).ConfigureAwait(false)).Mention}\n");
+            }
+
+            return (await channel.SendMessageAsync(builder.ToString()).ConfigureAwait(false)).Id;
         }
 
         #endregion // Methods

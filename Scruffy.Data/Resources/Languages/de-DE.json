@@ -18,7 +18,8 @@
       "CreationCompletedMessage": "Erstellung abgeschlossen! Alle Nachrichten der Erstellung der Erinnerung werden in 30 Sekunden gelöscht."
     },
     "FractalLfgMessageBuilder": {
-      "Today": "Heute"
+      "Today": "Heute",
+      "AppointmentReminder": "{0} - Terminerinnerung"
     },
     "OneTimeReminderJob": {
       "EmptyReminder": "{0} Erinnerung",

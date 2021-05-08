@@ -115,6 +115,42 @@ namespace Scruffy.Data.Entity.Repositories.Base
         }
 
         /// <summary>
+        /// Refresh a specific entity object or add it, if it doesn't exists
+        /// </summary>
+        /// <param name="expression">Defines the entity object to be refreshed</param>
+        /// <param name="refreshAction">Action to be performed with the entity object</param>
+        /// <returns>Is the operation performed successfully?</returns>
+        public bool AddOrRefresh(Expression<Func<TEntity, bool>> expression, Action<TEntity> refreshAction)
+        {
+            var success = false;
+
+            _dbContext.LastError = null;
+
+            try
+            {
+                var entity = _dbContext.Set<TEntity>().FirstOrDefault(expression);
+                if (entity == null)
+                {
+                    entity = Activator.CreateInstance<TEntity>();
+
+                    _dbContext.Set<TEntity>().Add(entity);
+                }
+
+                refreshAction(entity);
+
+                _dbContext.SaveChanges();
+
+                success = true;
+            }
+            catch (Exception ex)
+            {
+                _dbContext.LastError = ex;
+            }
+
+            return success;
+        }
+
+        /// <summary>
         /// Refresh a specific entity object
         /// </summary>
         /// <param name="expression">Defines the entity object to be refreshed</param>

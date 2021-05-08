@@ -18,7 +18,8 @@
       "CreationCompletedMessage": "Creation completed! All creation messages will be deleted in 30 seconds."
     },
     "FractalLfgMessageBuilder": {
-      "Today": "Today"
+      "Today": "Today",
+      "AppointmentReminder": "{0} - Appointment reminder"
     },
     "OneTimeReminderJob": {
       "EmptyReminder": "{0} Reminder",

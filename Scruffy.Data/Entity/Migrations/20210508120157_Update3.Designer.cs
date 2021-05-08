@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Scruffy.Data.Entity;
 
 namespace Scruffy.Data.Entity.Migrations
 {
     [DbContext(typeof(ScruffyDbContext))]
-    partial class ScruffyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210508120157_Update3")]
+    partial class Update3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,29 +34,6 @@ namespace Scruffy.Data.Entity.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Fractals.FractalAppointmentEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("AppointmentTimeStamp")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long>("ConfigurationId")
-                        .HasColumnType("bigint");
-
-                    b.Property<decimal>("MessageId")
-                        .HasColumnType("decimal(20,0)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ConfigurationId");
-
-                    b.ToTable("FractalAppointments");
                 });
 
             modelBuilder.Entity("Scruffy.Data.Entity.Tables.Fractals.FractalLfgConfigurationEntity", b =>
@@ -96,15 +75,10 @@ namespace Scruffy.Data.Entity.Migrations
                     b.Property<decimal>("UserId")
                         .HasColumnType("decimal(20,0)");
 
-                    b.Property<long?>("AppointmentId")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime>("RegistrationTimeStamp")
                         .HasColumnType("datetime2");
 
                     b.HasKey("ConfigurationId", "AppointmentTimeStamp", "UserId");
-
-                    b.HasIndex("AppointmentId");
 
                     b.ToTable("FractalRegistrations");
                 });
@@ -409,30 +383,13 @@ namespace Scruffy.Data.Entity.Migrations
                     b.ToTable("WeeklyReminders");
                 });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Fractals.FractalAppointmentEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.Fractals.FractalLfgConfigurationEntity", "FractalLfgConfiguration")
-                        .WithMany()
-                        .HasForeignKey("ConfigurationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("FractalLfgConfiguration");
-                });
-
             modelBuilder.Entity("Scruffy.Data.Entity.Tables.Fractals.FractalRegistrationEntity", b =>
                 {
-                    b.HasOne("Scruffy.Data.Entity.Tables.Fractals.FractalAppointmentEntity", "FractalAppointmentEntity")
-                        .WithMany()
-                        .HasForeignKey("AppointmentId");
-
                     b.HasOne("Scruffy.Data.Entity.Tables.Fractals.FractalLfgConfigurationEntity", "FractalLfgConfiguration")
                         .WithMany("FractalRegistrations")
                         .HasForeignKey("ConfigurationId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("FractalAppointmentEntity");
 
                     b.Navigation("FractalLfgConfiguration");
                 });

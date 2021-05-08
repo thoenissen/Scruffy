@@ -31,12 +31,24 @@ namespace Scruffy.Data.Entity.Tables.Fractals
         /// </summary>
         public DateTime RegistrationTimeStamp { get; set; }
 
+        /// <summary>
+        /// Id of the created appointment
+        /// </summary>
+        public long? AppointmentId { get; set; }
+
         #region Navigation properties
 
         /// <summary>
         /// Configuration
         /// </summary>
+        [ForeignKey(nameof(ConfigurationId))]
         public virtual FractalLfgConfigurationEntity FractalLfgConfiguration { get; set; }
+
+        /// <summary>
+        /// Appointment
+        /// </summary>
+        [ForeignKey(nameof(AppointmentId))]
+        public virtual FractalAppointmentEntity FractalAppointmentEntity { get; set; }
 
         #endregion // Navigation properties
 

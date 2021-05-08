@@ -31,7 +31,7 @@ namespace Scruffy.Services.CoreData
                     userRepository.Add(new UserEntity
                                        {
                                            Id = userId,
-                                           CreationTimeStamp = DateTime.Now.ToUniversalTime()
+                                           CreationTimeStamp = DateTime.Now
                                        });
                 }
             }

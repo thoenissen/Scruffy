@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 
 using Microsoft.Data.SqlClient;
@@ -59,6 +60,10 @@ namespace Scruffy.Data.Entity
 
             optionsBuilder.UseSqlServer(connectionStringBuilder.ConnectionString);
 
+#if DEBUG
+            optionsBuilder.LogTo(s => Debug.WriteLine(s));
+#endif
+
             base.OnConfiguring(optionsBuilder);
         }
 
@@ -102,6 +107,7 @@ namespace Scruffy.Data.Entity
             // Fractals
             modelBuilder.Entity<FractalLfgConfigurationEntity>();
             modelBuilder.Entity<FractalRegistrationEntity>();
+            modelBuilder.Entity<FractalAppointmentEntity>();
 
             modelBuilder.Entity<FractalLfgConfigurationEntity>()
                         .HasMany(obj => obj.FractalRegistrations)
