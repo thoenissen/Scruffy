@@ -15,12 +15,6 @@ namespace Scruffy.Data.Entity.Migrations
         /// <param name="migrationBuilder">Builder</param>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<bool>("IsExecuted",
-                                             "OneTimeReminders",
-                                             "bit",
-                                             nullable: false,
-                                             defaultValue: false);
-
             migrationBuilder.CreateTable("FractalLfgConfigurations",
                                          table => new
                                                   {
@@ -70,7 +64,6 @@ namespace Scruffy.Data.Entity.Migrations
         {
             migrationBuilder.DropTable("FractalRegistrations");
             migrationBuilder.DropTable("FractalLfgConfigurations");
-            migrationBuilder.DropColumn("IsExecuted", "OneTimeReminders");
         }
     }
 }
