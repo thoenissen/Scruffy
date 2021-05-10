@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
 using DSharpPlus.Interactivity.Extensions;
 
 using Microsoft.EntityFrameworkCore;
@@ -64,12 +66,19 @@ namespace Scruffy.Commands.Fractals
         [Command("setup")]
         public async Task Setup(CommandContext commandContext)
         {
+            var messagesToBeDeleted = new List<DiscordMessage>
+                                      {
+                                          commandContext.Message
+                                      };
+
             string title = null;
             string description = null;
 
             var interactivity = commandContext.Client.GetInteractivity();
 
-            await commandContext.RespondAsync(LocalizationGroup.GetText("TitlePrompt", "Please enter a title.")).ConfigureAwait(false);
+            var currentBotMessage = await commandContext.RespondAsync(LocalizationGroup.GetText("TitlePrompt", "Please enter a title.")).ConfigureAwait(false);
+
+            messagesToBeDeleted.Add(currentBotMessage);
 
             var responseMessage = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContext.Message.Author.Id).ConfigureAwait(false);
 
@@ -77,7 +86,9 @@ namespace Scruffy.Commands.Fractals
             {
                 title = responseMessage.Result.Content;
 
-                await responseMessage.Result.RespondAsync(LocalizationGroup.GetText("DescriptionPrompt", "Please enter a description.")).ConfigureAwait(false);
+                currentBotMessage = await responseMessage.Result.RespondAsync(LocalizationGroup.GetText("DescriptionPrompt", "Please enter a description.")).ConfigureAwait(false);
+
+                messagesToBeDeleted.Add(currentBotMessage);
 
                 responseMessage = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContext.Message.Author.Id).ConfigureAwait(false);
             }
@@ -86,7 +97,9 @@ namespace Scruffy.Commands.Fractals
             {
                 description = responseMessage.Result.Content;
 
-                await responseMessage.Result.RespondAsync(LocalizationGroup.GetText("AliasNamePrompt", "Please enter a alias name.")).ConfigureAwait(false);
+                currentBotMessage = await responseMessage.Result.RespondAsync(LocalizationGroup.GetText("AliasNamePrompt", "Please enter an alias name.")).ConfigureAwait(false);
+
+                messagesToBeDeleted.Add(currentBotMessage);
 
                 responseMessage = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContext.Message.Author.Id).ConfigureAwait(false);
             }
@@ -111,6 +124,17 @@ namespace Scruffy.Commands.Fractals
                 }
 
                 await MessageBuilder.RefreshMessageAsync(entry.Id).ConfigureAwait(false);
+
+                currentBotMessage = await commandContext.Channel.SendMessageAsync(LocalizationGroup.GetText("CreationCompletedMessage", "Creation completed! All creation messages will be deleted in 30 seconds.")).ConfigureAwait(false);
+
+                messagesToBeDeleted.Add(currentBotMessage);
+
+                await Task.Delay(TimeSpan.FromSeconds(30)).ConfigureAwait(false);
+
+                foreach (var message in messagesToBeDeleted)
+                {
+                    await commandContext.Channel.DeleteMessageAsync(message).ConfigureAwait(false);
+                }
             }
         }
 

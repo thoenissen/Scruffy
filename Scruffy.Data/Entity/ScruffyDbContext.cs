@@ -85,6 +85,7 @@ namespace Scruffy.Data.Entity
         {
             // CoreData
             modelBuilder.Entity<UserEntity>();
+            modelBuilder.Entity<ServerConfigurationEntity>();
 
             modelBuilder.Entity<UserEntity>()
                         .HasMany(obj => obj.OneTimeReminders)

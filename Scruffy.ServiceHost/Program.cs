@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -31,6 +33,7 @@ namespace Scruffy.ServiceHost
         public static async Task Main()
         {
             Console.CancelKeyPress += OnCancelKeyPress;
+            AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
 
             await using (var jobScheduler = new JobScheduler())
             {
@@ -63,6 +66,13 @@ namespace Scruffy.ServiceHost
         /// <param name="sender">Sender</param>
         /// <param name="e">Arguments</param>
         private static void OnCancelKeyPress(object sender, ConsoleCancelEventArgs e) => _waitForExitTaskSource.SetResult(true);
+
+        /// <summary>
+        /// Occurs when the default application domain's parent process exits.
+        /// </summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Argument</param>
+        private static void OnProcessExit(object sender, EventArgs e) => _waitForExitTaskSource.SetResult(true);
 
         #endregion // Methods
     }

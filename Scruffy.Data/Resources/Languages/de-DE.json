@@ -2,11 +2,12 @@
   "CultureInfo": "de-DE",
   "Description": "Deutsch",
   "TranslationGroups": {
-    "FractalLfgSetupCommandModule": {
+    "FractalCommandModule": {
       "TitlePrompt": "Geben Sie bitte den Titel ein.",
       "DescriptionPrompt": "Geben Sie bitte die Beschreibung ein.",
       "AliasNamePrompt": "Geben Sie bitten den Alias-Namen ein.",
-      "BuildingProgress": "Erstellung..."
+      "BuildingProgress": "Erstellung...",
+      "CreationCompletedMessage": "Erstellung abgeschlossen! Alle Nachrichten der Erstellung der Erinnerung werden in 30 Sekunden gelöscht."
     },
     "ReminderCreationCommandModule": {
       "CommandProgressed": "Der Befehl wurde verarbeitet.",
@@ -25,6 +26,9 @@
       "EmptyReminder": "{0} Erinnerung",
       "SingleLineReminder": "{0} Erinnerung: {1}",
       "MultiLineReminder": "{0} Erinnerung:\n\n{1}"
-    }
+    },
+    "ServerConfigurationCommandModule": {
+      "UsingNewPrefix": "Ich werde nun den folgenden Präfix verwenden: {0}" 
+    } 
   }
 }

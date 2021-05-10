@@ -140,7 +140,7 @@ namespace Scruffy.Commands.Reminder
 
             foreach (var (emoji, day) in reactions)
             {
-                stringBuilder.Append($"{emoji} {DateTimeFormatInfo.CurrentInfo.GetDayName(day)}\n");
+                stringBuilder.Append($"{emoji} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(day)}\n");
             }
 
             embedBuilder.AddField(LocalizationGroup.GetText("WeekdaySelectionTitle", "Weekday selection"), stringBuilder.ToString());

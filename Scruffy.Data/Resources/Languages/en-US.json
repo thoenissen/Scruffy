@@ -6,7 +6,8 @@
       "TitlePrompt": "Please enter a title.",
       "DescriptionPrompt": "Please enter a description.",
       "AliasNamePrompt": "Please enter an alias name.",
-      "BuildingProgress": "Building..."
+      "BuildingProgress": "Building...",
+      "CreationCompletedMessage": "Creation completed! All creation messages will be deleted in 30 seconds."
     },
     "ReminderCreationCommandModule": {
       "CommandProgressed": "Command progressed.",
@@ -25,6 +26,9 @@
       "EmptyReminder": "{0} Reminder",
       "SingleLineReminder": "{0} Reminder: {1}",
       "MultiLineReminder": "{0} Reminder:\n\n{1}"
+    },
+    "ServerConfigurationCommandModule": {
+      "UsingNewPrefix": "I will use the following prefix: {0}"
     }
   }
 }

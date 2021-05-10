@@ -100,7 +100,7 @@ namespace Scruffy.Services.Fractals
                         var date = DateTime.Today.AddDays(i);
                         var name = i == 0
                                        ? LocalizationGroup.GetText("Today", "Today")
-                                       : $"`{i} - {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(date.DayOfWeek)[..2]}:` {date:d}";
+                                       : $"`{i} - {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(date.DayOfWeek)[..2]}:` {date.ToString("d", LocalizationGroup.CultureInfo)}";
 
                         stringBuilder.Clear();
 

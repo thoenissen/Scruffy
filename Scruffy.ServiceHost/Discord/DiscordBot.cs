@@ -30,6 +30,11 @@ namespace Scruffy.ServiceHost.Discord
         /// </summary>
         private CommandsNextExtension _commands;
 
+        /// <summary>
+        /// Prefix resolver
+        /// </summary>
+        private PrefixResolvingService _prefixResolver;
+
         #endregion // Fields
 
         #region Methods
@@ -57,9 +62,12 @@ namespace Scruffy.ServiceHost.Discord
 
             GlobalServiceProvider.Current.AddSingleton(_discordClient);
 
+            _prefixResolver = new PrefixResolvingService();
+            GlobalServiceProvider.Current.AddSingleton(_prefixResolver);
+
             _commands = _discordClient.UseCommandsNext(new CommandsNextConfiguration
                                                        {
-                                                           StringPrefixes = new[] { "§" },
+                                                           PrefixResolver = _prefixResolver.OnPrefixResolver,
                                                            EnableDms = true,
                                                            EnableMentionPrefix = true,
                                                            CaseSensitive = false,

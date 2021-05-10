@@ -128,15 +128,22 @@ namespace Scruffy.Data.Entity.Repositories.Base
 
             try
             {
+                var newEntity = false;
+
                 var entity = _dbContext.Set<TEntity>().FirstOrDefault(expression);
                 if (entity == null)
                 {
                     entity = Activator.CreateInstance<TEntity>();
 
-                    _dbContext.Set<TEntity>().Add(entity);
+                    newEntity = true;
                 }
 
                 refreshAction(entity);
+
+                if (newEntity)
+                {
+                    _dbContext.Set<TEntity>().Add(entity);
+                }
 
                 _dbContext.SaveChanges();
 
