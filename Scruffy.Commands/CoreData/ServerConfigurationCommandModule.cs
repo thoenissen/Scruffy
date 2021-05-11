@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 
@@ -13,6 +14,7 @@ namespace Scruffy.Commands.CoreData
     /// Configuration the server
     /// </summary>
     [Group("config")]
+    [RequireUserPermissions(Permissions.Administrator)]
     public class ServerConfigurationCommandModule : LocatedCommandModuleBase
     {
         #region Constructor

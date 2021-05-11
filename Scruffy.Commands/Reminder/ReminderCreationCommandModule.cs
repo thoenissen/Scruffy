@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
@@ -109,6 +110,7 @@ namespace Scruffy.Commands.Reminder
         /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("remindweekly")]
+        [RequireUserPermissions(Permissions.Administrator)]
         public async Task RemindWeekly(CommandContext commandContext)
         {
             var messagesToBeDeleted = new List<DiscordMessage>
