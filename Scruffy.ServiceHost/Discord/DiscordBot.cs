@@ -53,7 +53,6 @@ namespace Scruffy.ServiceHost.Discord
                          };
 
             _discordClient = new DiscordClient(config);
-            _discordClient.Ready += OnClientReady;
 
             _discordClient.UseInteractivity(new InteractivityConfiguration
                                             {
@@ -64,6 +63,8 @@ namespace Scruffy.ServiceHost.Discord
 
             _prefixResolver = new PrefixResolvingService();
             GlobalServiceProvider.Current.AddSingleton(_prefixResolver);
+
+            GlobalServiceProvider.Current.AddSingleton(new DiscordStatusService(_discordClient));
 
             _commands = _discordClient.UseCommandsNext(new CommandsNextConfiguration
                                                        {
@@ -78,17 +79,6 @@ namespace Scruffy.ServiceHost.Discord
             _commands.RegisterCommands(Assembly.Load("Scruffy.Commands"));
 
             await _discordClient.ConnectAsync().ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// The client entered the ready state
-        /// </summary>
-        /// <param name="sender">Sender</param>
-        /// <param name="e">Arguments</param>
-        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        private async Task OnClientReady(DiscordClient sender, ReadyEventArgs e)
-        {
-            await _discordClient.UpdateStatusAsync(new DiscordActivity("you!", ActivityType.Watching)).ConfigureAwait(false);
         }
 
         #endregion // Methods
