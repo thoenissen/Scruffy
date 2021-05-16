@@ -28,7 +28,58 @@
       "MultiLineReminder": "{0} Erinnerung:\n\n{1}"
     },
     "ServerConfigurationCommandModule": {
-      "UsingNewPrefix": "Ich werde nun den folgenden Präfix verwenden: {0}" 
+      "UsingNewPrefix": "Ich werde nun den folgenden Präfix verwenden: {0}"
+    },
+    "HelpCommandFormatter": {
+      "Help": "Befehlshilfe",
+      "GeneralHelp": "Es werden alle Befehlsgruppen ausgegeben. Spezifiziere den Befehl zur Ausgabe von weiteren Informationen.",
+      "NoDescription": "Es steht keine Beschreibung zur Verfügung",
+      "Arguments": "Argumente",
+      "Commands": "Befehlsgruppen",
+      "Subcommands": "Befehle",
+
+      "help": "Ausgabe der Hilfe" ,
+
+      "fractal": "Fraktal-Gruppensuche",
+
+      "fractal setup": "Erstellung einer neuen Gruppensuche",
+
+      "fractal join": "Eintragung in die Gruppensuchen",
+      "fractal join alias": "Aliasname",
+      "fractal join alias description": "Aliasname der Gruppensuchen",
+      "fractal join timeSpan": "Zeit",
+      "fractal join timeSpan description": "Zeit des Termins",
+      "fractal join timeSpan format": "hh:mm",
+      "fractal join days": "Tag/e",
+      "fractal join days description": "Tag oder Tage des Termins",
+      "fractal join days format": "Mo/Di/Mi/Do/Fr/Sa/So",
+
+      "fractal leave": "Verlassen in die Gruppensuchen",
+      "fractal leave alias": "Aliasname",
+      "fractal leave alias description": "Aliasname der Gruppensuchen",
+      "fractal leave timeSpan": "Zeit",
+      "fractal leave timeSpan description": "Zeit des Termins",
+      "fractal leave timeSpan format": "hh:mm",
+      "fractal leave days": "Tage",
+      "fractal leave days description": "Tag oder Tage des Termins",
+      "fractal leave days format": "Mo/Di/Mi/Do/Fr/Sa/So",
+
+      "config": "Konfiguration des Bots",
+
+      "config prefix": "Festlegung des Präfix",
+      "config prefix prefix": "Präfix",
+      "config prefix prefix description": "Zeichenketten zur Verwendung als Präfix",
+
+      "reminder": "Erstellung von Erinnerungen",
+
+      "reminder in": "Erinnerung nach einem angegenen Zeitraum",
+      "reminder in timeSpan": "Zeitraum",
+      "reminder in timeSpan format": "xh/m/s",
+      "reminder in timeSpan description": "Zeitraum bis zur Erinnerung",
+      "reminder in message": "Nachricht",
+      "reminder in message description": "Optional Nachricht",
+
+      "reminder weekly": "Erstellung einer wöchentlichen Erinnerung"
     } 
   }
 }

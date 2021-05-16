@@ -78,6 +78,14 @@ namespace Scruffy.Services.Core
         /// Get a text by the given key
         /// </summary>
         /// <param name="key">Key</param>
+        /// <param name="value">Value</param>
+        /// <returns>Could a value be determined?</returns>
+        public bool TryGetText(string key, out string value) => _texts.TryGetValue(key, out value);
+
+        /// <summary>
+        /// Get a text by the given key
+        /// </summary>
+        /// <param name="key">Key</param>
         /// <param name="fallback">Fallback value</param>
         /// <param name="args">Arguments to call <see cref="string.Format(string, object?[])"/></param>
         /// <returns>The determined text</returns>

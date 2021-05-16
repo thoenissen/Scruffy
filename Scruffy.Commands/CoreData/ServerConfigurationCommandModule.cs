@@ -14,7 +14,9 @@ namespace Scruffy.Commands.CoreData
     /// Configuration the server
     /// </summary>
     [Group("config")]
+    #if !DEBUG
     [RequireUserPermissions(Permissions.Administrator)]
+    #endif
     public class ServerConfigurationCommandModule : LocatedCommandModuleBase
     {
         #region Constructor

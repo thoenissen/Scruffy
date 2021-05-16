@@ -29,6 +29,48 @@
     },
     "ServerConfigurationCommandModule": {
       "UsingNewPrefix": "I will use the following prefix: {0}"
+    },
+    "HelpCommandFormatter": {
+      "Help": "Help",
+      "GeneralHelp": "Listing all top-level commands and groups. Specify a command to see more information.",
+      "NoDescription": "No description provided",
+      "Arguments": "Arguments",
+      "Commands": "Commands",
+      "Subcommands": "Subcommands",
+
+      "help": "Help",
+
+      "fractal": "Fractal lfg",
+
+      "fractal setup": "Fractal lfg creation",
+
+      "fractal join": "Joining a lfg",
+      "fractal join alias": "Alias",
+      "fractal join timeSpan": "Time",
+      "fractal join timeSpan format": "hh:mm",
+      "fractal join days": "Day/s",
+      "fractal join days format": "Mo/Tu/We/Th/Fr/Sa/Su",
+
+      "fractal leave": "Leaving a lfg",
+      "fractal leave alias": "Alias",
+      "fractal leave timeSpan": "Time",
+      "fractal leave timeSpan format": "hh:mm",
+      "fractal leave days": "Day/s",
+      "fractal leave days format": "Mo/Tu/We/Th/Fr/Sa/Su",
+
+      "config": "Bot configuration",
+
+      "config prefix": "Prefix definition",
+      "config prefix prefix": "Prefix",
+
+      "reminder": "Reminder creation",
+
+      "reminder in": "Reminder after the given time",
+      "reminder in timeSpan": "Time",
+      "reminder in timeSpan format": "xh/m/s",
+      "reminder in message": "Message",
+
+      "reminder weekly": "Weekly reminder creation"
     }
   }
 }

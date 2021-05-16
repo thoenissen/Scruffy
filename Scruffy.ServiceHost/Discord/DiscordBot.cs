@@ -76,6 +76,8 @@ namespace Scruffy.ServiceHost.Discord
                                                            Services = GlobalServiceProvider.Current.GetServiceProvider()
                                                        });
 
+            _commands.SetHelpFormatter<HelpCommandFormatter>();
+
             _commands.RegisterCommands(Assembly.Load("Scruffy.Commands"));
 
             await _discordClient.ConnectAsync().ConfigureAwait(false);

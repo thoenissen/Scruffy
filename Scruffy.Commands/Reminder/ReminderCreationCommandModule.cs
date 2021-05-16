@@ -26,6 +26,7 @@ namespace Scruffy.Commands.Reminder
     /// Reminder module
     /// </summary>
     [ModuleLifespan(ModuleLifespan.Transient)]
+    [Group("reminder")]
     public class ReminderCreationCommandModule : LocatedCommandModuleBase
     {
         #region Properties
@@ -64,7 +65,7 @@ namespace Scruffy.Commands.Reminder
         /// <param name="timeSpan">Timespan until the reminder should be executed.</param>
         /// <param name="message">Optional message of the reminder</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-        [Command("remindme")]
+        [Command("in")]
         public async Task RemindMe(CommandContext commandContext, string timeSpan, [RemainingText] string message = null)
         {
             var checkUser = UserManagementService.CheckUserAsync(commandContext.User.Id);
@@ -110,7 +111,7 @@ namespace Scruffy.Commands.Reminder
         /// </summary>
         /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-        [Command("remindweekly")]
+        [Command("weekly")]
         #if !DEBUG
         [RequireUserPermissions(Permissions.Administrator)]
         #endif
