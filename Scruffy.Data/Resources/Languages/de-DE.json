@@ -38,13 +38,13 @@
       "Commands": "Befehlsgruppen",
       "Subcommands": "Befehle",
 
-      "help": "Ausgabe der Hilfe" ,
+      "help": "Ausgabe der Hilfe",
 
       "fractal": "Fraktal-Gruppensuche",
 
       "fractal setup": "Erstellung einer neuen Gruppensuche",
 
-      "fractal join": "Eintragung in die Gruppensuchen",
+      "fractal join": "Eintragung in die Gruppensuche",
       "fractal join alias": "Aliasname",
       "fractal join alias description": "Aliasname der Gruppensuchen",
       "fractal join timeSpan": "Zeit",
@@ -63,6 +63,24 @@
       "fractal leave days": "Tage",
       "fractal leave days description": "Tag oder Tage des Termins",
       "fractal leave days format": "Mo/Di/Mi/Do/Fr/Sa/So",
+
+      "raid": "Schlachtzug-Gruppensuche",
+
+      "raid setup": "Erstellung einer neuen Gruppensuche",
+      "raid join": "Eintragung in die Gruppensuche",
+      "raid join name": "Name",
+      "raid join name description": "Aliasname der Gruppensuche",
+      "raid join role": "Rolle",
+      "raid join role description": "Aliasname der Rolle",
+      "raid leave": "Verlassen der Gruppensuche",
+      "raid leave alias": "Name",
+      "raid leave alias description": "Aliasname der Gruppensuche",
+      "raid leave role": "Rolle",
+      "raid leave role description": "Aliasname der Rolle",
+      "raid roles": "Rollenübersicht",
+      "raid roles own": "Spieler",
+      "raid roles all": "Allgemein",
+      "raid point table": "Punktetabelle",
 
       "config": "Konfiguration des Bots",
 

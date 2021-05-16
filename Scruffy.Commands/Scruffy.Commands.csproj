@@ -33,8 +33,4 @@
     <ProjectReference Include="..\Scruffy.Services\Scruffy.Services.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Raid\" />
-  </ItemGroup>
-
 </Project>

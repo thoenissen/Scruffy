@@ -50,6 +50,7 @@
     <Folder Include="Entity\Repositories\Fractals\" />
     <Folder Include="Entity\Repositories\Raid\" />
     <Folder Include="Entity\Repositories\Reminder\" />
+    <Folder Include="Services\Raid\" />
   </ItemGroup>
 
 </Project>

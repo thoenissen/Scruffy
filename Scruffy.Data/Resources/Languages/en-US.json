@@ -58,6 +58,24 @@
       "fractal leave days": "Day/s",
       "fractal leave days format": "Mo/Tu/We/Th/Fr/Sa/Su",
 
+      "raid": "Raid lfg",
+
+      "raid setup": "Raid lfg creation",
+      "raid join": "Joining a lfg",
+      "raid join name": "Name",
+      "raid join name description": "Lfg name",
+      "raid join role": "Role",
+      "raid join role description": "Role name",
+      "raid leave": "Leaving a lfg",
+      "raid leave alias": "Name",
+      "raid leave alias description": "Lfg name",
+      "raid leave role": "Role",
+      "raid leave role description": "Role name",
+      "raid roles": "Role overview",
+      "raid roles own": "Player",
+      "raid roles all": "General",
+      "raid point table": "Point table",
+
       "config": "Bot configuration",
 
       "config prefix": "Prefix definition",
