@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
@@ -65,9 +64,6 @@ namespace Scruffy.Commands.Fractals
         /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("setup")]
-        #if !DEBUG
-        [RequireUserPermissions(Permissions.Administrator)]
-        #endif
         public async Task Setup(CommandContext commandContext)
         {
             var messagesToBeDeleted = new List<DiscordMessage>
@@ -316,13 +312,18 @@ namespace Scruffy.Commands.Fractals
                             if (isNumericValidation.IsMatch(dayArgument))
                             {
                                 if (int.TryParse(dayArgument, out var add)
-                                 && add > 0
+                                 && add >= 0
                                  && add < 8)
                                 {
                                     appointmentTimeStamp = DateTime.Today
                                                                    .AddDays(add)
                                                                    .Add(timeSpan.Value);
                                 }
+                            }
+                            else if (LocalizationGroup.GetText("Today", "Today").Equals(dayArgument, StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                appointmentTimeStamp = DateTime.Today
+                                                               .Add(timeSpan.Value);
                             }
                             else
                             {
@@ -340,7 +341,8 @@ namespace Scruffy.Commands.Fractals
                                 }
                             }
 
-                            if (appointmentTimeStamp != null)
+                            if (appointmentTimeStamp != null
+                                && appointmentTimeStamp > DateTime.Now.AddHours(2))
                             {
                                 await checkUser.ConfigureAwait(false);
 

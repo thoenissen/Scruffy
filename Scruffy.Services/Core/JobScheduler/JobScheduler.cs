@@ -40,7 +40,7 @@ namespace Scruffy.Services.Core.JobScheduler
         {
             await Task.Run(JobManager.Start).ConfigureAwait(false);
 
-            JobManager.AddJob<FractalAppointmentCreationJob>(obj => obj.ToRunEvery(1).Days().At(0, 30));
+            JobManager.AddJob<FractalDailyRefreshJob>(obj => obj.ToRunEvery(1).Days().At(0, 0));
 
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {

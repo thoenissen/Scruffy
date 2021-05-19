@@ -7,7 +7,8 @@
       "DescriptionPrompt": "Please enter a description.",
       "AliasNamePrompt": "Please enter an alias name.",
       "BuildingProgress": "Building...",
-      "CreationCompletedMessage": "Creation completed! All creation messages will be deleted in 30 seconds."
+      "CreationCompletedMessage": "Creation completed! All creation messages will be deleted in 30 seconds.",
+      "Today": "Today"
     },
     "ReminderCreationCommandModule": {
       "CommandProgressed": "Command progressed.",
