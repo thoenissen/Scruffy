@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using FluentScheduler;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Reminder;
@@ -42,8 +43,21 @@ namespace Scruffy.Services.Core.JobScheduler
 
             JobManager.AddJob<FractalDailyRefreshJob>(obj => obj.ToRunEvery(1).Days().At(0, 0));
 
+            // fractal reminders
+            await using (var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider())
+            {
+                var fractalReminderService = serviceProvider.GetService<FractalReminderService>();
+
+                await fractalReminderService.CreateNextReminderJobAsync()
+                                            .ConfigureAwait(false);
+
+                await fractalReminderService.CreateReminderDeletionJobsAsync()
+                                            .ConfigureAwait(false);
+            }
+
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
+                // one tine reminders
                 var oneTimeReminders = await dbFactory.GetRepository<OneTimeReminderRepository>()
                                                       .GetQuery()
                                                       .Where(obj => obj.IsExecuted == false)
@@ -59,6 +73,7 @@ namespace Scruffy.Services.Core.JobScheduler
                     JobManager.AddJob(new OneTimeReminderJob(oneTimeReminder.Id), obj => obj.ToRunOnceAt(oneTimeReminder.TimeStamp));
                 }
 
+                // weekly reminders
                 var weeklyReminders = await dbFactory.GetRepository<WeeklyReminderRepository>()
                                                       .GetQuery()
                                                       .Select(obj => new
@@ -117,6 +132,30 @@ namespace Scruffy.Services.Core.JobScheduler
 
             JobManager.AddJob(new WeeklyReminderDeletionJob(id),
                               obj => obj.ToRunOnceAt(deletionTimeStamp).AndEvery(7).Days().At(postTime.Hours, postTime.Minutes));
+        }
+
+        /// <summary>
+        /// Add a job
+        /// </summary>
+        /// <param name="job">Job</param>
+        /// <param name="timeStamp">Time stamp to run the job</param>
+        /// <returns>Name of the added job</returns>
+        public string AddJob(IJob job, DateTime timeStamp)
+        {
+            var jobName = Guid.NewGuid().ToString();
+
+            JobManager.AddJob(job, obj => obj.WithName(jobName).ToRunOnceAt(timeStamp));
+
+            return jobName;
+        }
+
+        /// <summary>
+        /// Removes the job by the given name
+        /// </summary>
+        /// <param name="jobName">Name of the job</param>
+        public void RemoveJob(string jobName)
+        {
+            JobManager.RemoveJob(jobName);
         }
 
         #endregion // Methods

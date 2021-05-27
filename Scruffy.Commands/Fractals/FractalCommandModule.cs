@@ -54,6 +54,11 @@ namespace Scruffy.Commands.Fractals
         /// </summary>
         public FractalLfgMessageBuilder MessageBuilder { get; set; }
 
+        /// <summary>
+        /// Fractal reminder service
+        /// </summary>
+        public FractalReminderService FractalReminderService { get; set; }
+
         #endregion // Properties
 
         #region Command methods
@@ -303,6 +308,8 @@ namespace Scruffy.Commands.Fractals
                     if (timeSpan != null
                      && configurationId != null)
                     {
+                        var earliestTimeStamp = default(DateTime?);
+
                         var isNumericValidation = new Regex(@"\d+");
 
                         foreach (var dayArgument in arguments.Skip(argumentsIndex))
@@ -347,6 +354,12 @@ namespace Scruffy.Commands.Fractals
                                 await checkUser.ConfigureAwait(false);
 
                                 action((configurationId.Value, appointmentTimeStamp.Value));
+
+                                if (earliestTimeStamp == null
+                                    || earliestTimeStamp > appointmentTimeStamp)
+                                {
+                                    earliestTimeStamp = appointmentTimeStamp;
+                                }
                             }
                         }
 
@@ -355,6 +368,12 @@ namespace Scruffy.Commands.Fractals
                         await commandContext.Channel
                                             .DeleteMessageAsync(commandContext.Message)
                                             .ConfigureAwait(false);
+
+                        if (earliestTimeStamp != null)
+                        {
+                            await FractalReminderService.RefreshNextReminderJobAsync(earliestTimeStamp.Value)
+                                                        .ConfigureAwait(false);
+                        }
                     }
                 }
             }

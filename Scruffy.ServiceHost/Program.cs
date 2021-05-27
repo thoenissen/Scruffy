@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Globalization;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
 using Scruffy.ServiceHost.Discord;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.JobScheduler;
+using Scruffy.Services.Fractals;
 
 namespace Scruffy.ServiceHost
 {
@@ -49,13 +48,18 @@ namespace Scruffy.ServiceHost
 
                 GlobalServiceProvider.Current.AddSingleton(jobScheduler);
 
-                await using (var discordBot = new DiscordBot())
+                using (var fractalReminderService = new FractalReminderService(jobScheduler))
                 {
-                    await discordBot.StartAsync().ConfigureAwait(false);
+                    GlobalServiceProvider.Current.AddSingleton(fractalReminderService);
 
-                    await jobScheduler.StartAsync().ConfigureAwait(false);
+                    await using (var discordBot = new DiscordBot())
+                    {
+                        await discordBot.StartAsync().ConfigureAwait(false);
 
-                    await _waitForExitTaskSource.Task.ConfigureAwait(false);
+                        await jobScheduler.StartAsync().ConfigureAwait(false);
+
+                        await _waitForExitTaskSource.Task.ConfigureAwait(false);
+                    }
                 }
             }
         }
