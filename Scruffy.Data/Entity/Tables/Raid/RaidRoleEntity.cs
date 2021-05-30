@@ -32,6 +32,11 @@ namespace Scruffy.Data.Entity.Tables.Raid
         /// </summary>
         public string Description { get; set; }
 
+        /// <summary>
+        /// Is the role deleted?
+        /// </summary>
+        public bool IsDeleted { get; set; }
+
         #region Navigation properties
 
         /// <summary>

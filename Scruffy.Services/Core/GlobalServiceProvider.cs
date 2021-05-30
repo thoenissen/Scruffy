@@ -2,6 +2,7 @@
 
 using Scruffy.Services.CoreData;
 using Scruffy.Services.Fractals;
+using Scruffy.Services.Raid;
 
 namespace Scruffy.Services.Core
 {
@@ -29,6 +30,7 @@ namespace Scruffy.Services.Core
             _serviceCollection = new ServiceCollection();
             _serviceCollection.AddTransient<UserManagementService>();
             _serviceCollection.AddTransient<FractalLfgMessageBuilder>();
+            _serviceCollection.AddTransient<RaidRolesService>();
         }
 
         #endregion

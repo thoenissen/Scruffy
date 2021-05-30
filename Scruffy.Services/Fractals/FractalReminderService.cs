@@ -80,15 +80,15 @@ namespace Scruffy.Services.Fractals
                                               .GetQuery()
                                               .Where(obj => obj.AppointmentTimeStamp > timeStamp)
                                               .GroupBy(obj => new
-                                              {
-                                                  obj.ConfigurationId,
-                                                  obj.AppointmentTimeStamp
-                                              })
+                                                              {
+                                                                  obj.ConfigurationId,
+                                                                  obj.AppointmentTimeStamp
+                                                              })
                                               .Select(obj => new
-                                              {
-                                                  TimeStamp = obj.Key.AppointmentTimeStamp,
-                                                  Count = obj.Count()
-                                              })
+                                                             {
+                                                                 TimeStamp = obj.Key.AppointmentTimeStamp,
+                                                                 Count = obj.Count()
+                                                             })
                                               .Where(obj => obj.Count >= 5)
                                               .Select(obj => (DateTime?)obj.TimeStamp)
                                               .OrderBy(obj => obj)

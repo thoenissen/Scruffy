@@ -202,8 +202,7 @@ namespace Scruffy.Data.Entity
             modelBuilder.Entity<RaidRoleEntity>()
                         .HasMany(obj => obj.SubRaidRoles)
                         .WithOne(obj => obj.MainRaidRole)
-                        .HasForeignKey(obj => obj.MainRoleId)
-                        .IsRequired();
+                        .HasForeignKey(obj => obj.MainRoleId);
 
             // Reminder
             modelBuilder.Entity<OneTimeReminderEntity>();

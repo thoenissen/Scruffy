@@ -15,6 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Emojis.json" />
     <None Remove="Resources\Languages\de-DE.json" />
     <None Remove="Resources\Languages\en-US.json" />
   </ItemGroup>
@@ -22,6 +23,7 @@
     <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Emojis.json" />
     <EmbeddedResource Include="Resources\Languages\de-DE.json" />
     <EmbeddedResource Include="Resources\Languages\en-US.json" />
   </ItemGroup>

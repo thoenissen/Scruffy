@@ -31,6 +31,34 @@
     "ServerConfigurationCommandModule": {
       "UsingNewPrefix": "Ich werde nun den folgenden Präfix verwenden: {0}"
     },
+    "RaidRolesService": {
+      "AssistantTitle": "Konfiguration Raid-Rollen",
+      "AssistantDescription": "Mit diesem Assistenten kannst du die Raid-Rollen bearbeiten. Nachfolgenden sind alle bereits eingerichtteten Rollen aufgelistet:",
+      "AssistantRolesField": "Rollen",
+      "AssistantCommandsField": "Befehle",
+      "AssistantAddCommand": "{0} Rolle hinzufügen",
+      "AssistantEditCommand": "{0} Rolle bearbeiten",
+      "AssistantDeleteCommand": "{0} Rolle löschen",
+      "AssistantCancelCommand": "{0} Abbrechen",
+
+      "ReactWithEmojiPrompt": "Reagiere mit dem Emoji, der der Rolle zugewiesen werden soll.",
+      "DescriptionPrompt": "Bitte geben die Bezeichnung der Rolle ein.",
+      "AddSubRolesPrompt": "Sollen der Rolle untergeordnete Rollen hinzugefügt werden?",
+      "AddAdditionalSubRolesPrompt": "Sollen der Rolle weitere untergeordnete Rollen zugewiesen werden?",
+      "CreationCompletedMessage": "Die Erstellung wurde abgeschlossen.",
+
+      "ChooseRoleTitle": "Rollenauswahl",
+      "ChooseRoleDescription": "Wähle eine der folgenden Rollen aus:",
+
+      "RoleEditTitle": "Rollenbearbeitung",
+      "RoleEditEditDescriptionCommand": "{0} Bezeichnung bearbeiten",
+      "RoleEditEditEmojiCommand": "{0} Emoji bearbeiten",
+      "RoleEditAddSubRoleCommand": "{0} Untergeordnete Rolle hinzufügen",
+      "RoleEditEditSubRoleCommand": "{0} Untergeordnete Rolle bearbeiten",
+      "RoleEditDeleteSubRoleCommand": "{0} Untergeordnete Rolle löschen",
+
+      "DeleteRolePrompt": "Soll die Rolle wirklich gelöscht werden?", 
+    },
     "HelpCommandFormatter": {
       "Help": "Befehlshilfe",
       "GeneralHelp": "Es werden alle Befehlsgruppen ausgegeben. Spezifiziere den Befehl zur Ausgabe von weiteren Informationen.",
@@ -99,6 +127,6 @@
       "reminder in message description": "Optional Nachricht",
 
       "reminder weekly": "Erstellung einer wöchentlichen Erinnerung"
-    } 
+    }
   }
 }

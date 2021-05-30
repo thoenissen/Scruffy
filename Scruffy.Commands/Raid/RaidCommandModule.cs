@@ -14,9 +14,6 @@ namespace Scruffy.Commands.Raid
     /// Raid commands
     /// </summary>
     [Group("raid")]
-#if RELEASE
-    [Hidden] // TODO
-#endif
     public class RaidCommandModule : LocatedCommandModuleBase
     {
         #region Constructor
@@ -54,6 +51,9 @@ namespace Scruffy.Commands.Raid
         /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("setup")]
+#if RELEASE
+        [Hidden] // TODO
+#endif
         public async Task Setup(CommandContext commandContext)
         {
             // TODO
@@ -67,6 +67,9 @@ namespace Scruffy.Commands.Raid
         /// <param name="name">Name</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("join")]
+#if RELEASE
+        [Hidden] // TODO
+#endif
         public async Task Join(CommandContext commandContext, string name)
         {
             // TODO
@@ -81,6 +84,9 @@ namespace Scruffy.Commands.Raid
         /// <param name="role">Role</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("join")]
+#if RELEASE
+        [Hidden] // TODO
+#endif
         public async Task Join(CommandContext commandContext, string name, string role)
         {
             // TODO
@@ -94,6 +100,9 @@ namespace Scruffy.Commands.Raid
         /// <param name="name">Name</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("leave")]
+#if RELEASE
+        [Hidden] // TODO
+#endif
         public async Task Leave(CommandContext commandContext, string name)
         {
             // TODO
@@ -108,6 +117,9 @@ namespace Scruffy.Commands.Raid
         /// <param name="role">Role</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("leave")]
+#if RELEASE
+        [Hidden] // TODO
+#endif
         public async Task Leave(CommandContext commandContext, string name, string role)
         {
             // TODO
@@ -149,6 +161,11 @@ namespace Scruffy.Commands.Raid
             /// </summary>
             public RaidMessageBuilder MessageBuilder { get; set; }
 
+            /// <summary>
+            /// Raid roles service
+            /// </summary>
+            public RaidRolesService RaidRolesService { get; set; }
+
             #endregion // Properties
 
             /// <summary>
@@ -157,6 +174,9 @@ namespace Scruffy.Commands.Raid
             /// <param name="commandContext">Current command context</param>
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("own")]
+#if RELEASE
+            [Hidden] // TODO
+#endif
             public async Task RolesOwn(CommandContext commandContext)
             {
                 // TODO
@@ -168,11 +188,11 @@ namespace Scruffy.Commands.Raid
             /// </summary>
             /// <param name="commandContext">Current command context</param>
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-            [Command("all")]
-            public async Task RolesAll(CommandContext commandContext)
+            [Command("setup")]
+            public async Task SetupRoles(CommandContext commandContext)
             {
-                // TODO
-                await Task.Delay(1).ConfigureAwait(false);
+                await RaidRolesService.RunAssistantAsync(commandContext)
+                                      .ConfigureAwait(false);
             }
         }
 
