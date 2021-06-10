@@ -84,6 +84,20 @@ namespace Scruffy.Services.Core
         public static DiscordEmoji GetEmojiEmoji(DiscordClient discordClient) => GetEmoji(discordClient, "Emoji");
 
         /// <summary>
+        /// Get 'Empty'-Emoji
+        /// </summary>
+        /// <param name="discordClient">Discord client</param>
+        /// <returns>Emoji</returns>
+        public static DiscordEmoji GetEmptyEmoji(DiscordClient discordClient) => GetEmoji(discordClient, "Empty");
+
+        /// <summary>
+        /// Get 'Bullet'-Emoji
+        /// </summary>
+        /// <param name="discordClient">Discord client</param>
+        /// <returns>Emoji</returns>
+        public static DiscordEmoji GetBulletEmoji(DiscordClient discordClient) => GetEmoji(discordClient, "Bullet");
+
+        /// <summary>
         /// Get emoji by the given key
         /// </summary>
         /// <param name="discordClient">Discord client</param>

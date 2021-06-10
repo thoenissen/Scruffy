@@ -8,6 +8,7 @@ using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Extensions;
 
 using Scruffy.Services.Core;
+using Scruffy.Services.Core.Discord;
 
 namespace Scruffy.ServiceHost.Discord
 {
@@ -32,6 +33,11 @@ namespace Scruffy.ServiceHost.Discord
         /// Prefix resolver
         /// </summary>
         private PrefixResolvingService _prefixResolver;
+
+        /// <summary>
+        /// Error handling
+        /// </summary>
+        private DiscordErrorHandler _errorHandler;
 
         #endregion // Fields
 
@@ -78,6 +84,8 @@ namespace Scruffy.ServiceHost.Discord
 
             _commands.RegisterCommands(Assembly.Load("Scruffy.Commands"));
 
+            _errorHandler = new DiscordErrorHandler(_commands);
+
             await _discordClient.ConnectAsync().ConfigureAwait(false);
         }
 
@@ -93,6 +101,9 @@ namespace Scruffy.ServiceHost.Discord
         {
             if (_discordClient != null)
             {
+                _errorHandler?.Dispose();
+                _errorHandler = null;
+
                 await _discordClient.DisconnectAsync().ConfigureAwait(false);
 
                 _discordClient.Dispose();

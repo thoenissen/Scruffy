@@ -33,7 +33,7 @@
     },
     "RaidRolesService": {
       "AssistantTitle": "Konfiguration Raid-Rollen",
-      "AssistantDescription": "Mit diesem Assistenten kannst du die Raid-Rollen bearbeiten. Nachfolgenden sind alle bereits eingerichtteten Rollen aufgelistet:",
+      "AssistantDescription": "Mit diesem Assistenten kannst du die Raid-Rollen bearbeiten. Nachfolgend sind alle bereits eingerichteten Rollen aufgelistet:",
       "AssistantRolesField": "Rollen",
       "AssistantCommandsField": "Befehle",
       "AssistantAddCommand": "{0} Rolle hinzufügen",

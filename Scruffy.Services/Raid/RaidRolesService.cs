@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity.Extensions;
@@ -73,23 +74,31 @@ namespace Scruffy.Services.Raid
                 {
                     areRolesAvailable = true;
 
+                    var emptyEmoji = DiscordEmojiService.GetEmptyEmoji(commandContext.Client);
+                    var bulletEmoji = DiscordEmojiService.GetBulletEmoji(commandContext.Client);
+
                     foreach (var role in mainRoles)
                     {
-                        roles.Append(DiscordEmoji.FromGuildEmote(commandContext.Client, role.DiscordEmojiId));
-                        roles.Append(" - ");
-                        roles.Append(role.Description);
-                        roles.Append('\n');
+                        roles.AppendLine(Formatter.Bold($"{DiscordEmoji.FromGuildEmote(commandContext.Client, role.DiscordEmojiId)} {role.Description}"));
 
                         foreach (var subRole in role.SubRoles)
                         {
-                            roles.Append(" ● ");
+                            roles.Append(emptyEmoji);
+                            roles.Append(bulletEmoji);
+                            roles.Append(' ');
                             roles.Append(DiscordEmoji.FromGuildEmote(commandContext.Client, subRole.DiscordEmojiId));
-                            roles.Append(" - ");
+                            roles.Append(' ');
                             roles.Append(subRole.Description);
                             roles.Append('\n');
                         }
+
+                        roles.Append('\n');
                     }
-                    roles.Append('\u200B');
+
+                    if (mainRoles.Count == 0)
+                    {
+                        roles.Append('\u200B');
+                    }
 
                     builder.AddField(LocalizationGroup.GetText("AssistantRolesField", "Roles"), roles.ToString());
                 }
