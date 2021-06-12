@@ -12,6 +12,8 @@
     },
     "ReminderCreationCommandModule": {
       "CommandProgressed": "Der Befehl wurde verarbeitet.",
+      "ChooseChannelPrompt": "Bitte wähle einen der folgenden Kanäle aus:",
+      "ChannelSelectionTitle": "Kanalauswahl",
       "SelectDayPrompt": "Wählen Sie bitte einen der folgenden Tage aus.",
       "WeekdaySelectionTitle": "Auswahl Wochentag",
       "ReminderTimePrompt": "Wählen Sie bitte den Zeitpunkt der Erinnerung. (Format: hh:mm)",
@@ -57,7 +59,50 @@
       "RoleEditEditSubRoleCommand": "{0} Untergeordnete Rolle bearbeiten",
       "RoleEditDeleteSubRoleCommand": "{0} Untergeordnete Rolle löschen",
 
-      "DeleteRolePrompt": "Soll die Rolle wirklich gelöscht werden?", 
+      "DeleteRolePrompt": "Soll die Rolle wirklich gelöscht werden?"
+    },
+    "RaidTemplateAliasNameDialogElement": {
+      "Message": "Bitte gebe den zu verwendenden Aliasnamen ein."
+    },
+    "RaidTemplateDeletionElementBase": {
+      "DeleteRolePrompt": "Soll die Schablone wirklich gelöscht werden?"
+    },
+    "RaidTemplateDescriptionDialogElement": {
+      "Message": "Bitte gebe die zu verwendende Bezeichnung ein."
+    },
+    "RaidTemplateEditDialogElement": {
+      "ChooseCommandTitle": "Schablonenkonfiguration",
+      "ChooseCommandDescription": "Mit diesem Assistenten können bestehende Schablonen bearbeitet werden.",
+      "AliasName": "Aliasname",
+      "Title": "Titel",
+      "Description": "Beschreibung",
+      "CommandTitle": "Befehle",
+      "EditAliasCommand": "{0} Aliasname bearbeiten",
+      "EditTitleCommand": "{0} Titel bearbeiten",
+      "EditDescriptionCommand": "{0} Beschreibung bearbeiten",
+      "EditThumbnailCommand": "{0} Miniaturansicht bearbeiten",
+      "CancelCommand": "{0} Abbrechen"
+    },
+    "RaidTemplateSelectionDialogElement": {
+      "ChooseTemplateTitle": "Schablonenauswahl",
+      "ChooseTemplateDescription": "Wähle eine der folgenden Schablonen aus:",
+      "TemplatesField": "Schablonen"
+    },
+    "RaidTemplateSetupDialogElement": {
+      "ChooseCommandTitle": "Schablonenkonfiguration",
+      "ChooseCommandDescription": "Mit diesem Assistenten können die Schablonen zur Definition des Raid-Tages bearbeitet werden. Die folgenden Schablonen wurden bereits eingerichtet:",
+      "TemplatesField": "Schablonen",
+      "CommandTitle": "Befehle",
+      "AddCommand": "{0} Schablone hinzufügen",
+      "EditCommand": "{0} Schablone bearbeiten",
+      "DeleteCommand": "{0} Schablone löschen",
+      "CancelCommand": "{0} Abbrechen"
+    },
+    "RaidTemplateThumbnailDialogElement": {
+      "Message": "Bitte gebe den Link zur zu verwendenden Miniaturansicht an:"
+    },
+    "RaidTemplateTitleDialogElement": {
+      "Message": "Bitte gebe den zu verwendenden Titel ein:"
     },
     "HelpCommandFormatter": {
       "Help": "Befehlshilfe",
@@ -108,8 +153,9 @@
       "raid leave role description": "Aliasname der Rolle",
       "raid roles": "Rollenübersicht",
       "raid roles own": "Spieler",
-      "raid roles all": "Allgemein",
-      "raid point table": "Punktetabelle",
+      "raid roles setup": "Konfiguration",
+      "raid templates": "Schablonen",
+      "raid templates setup": "Konfiguration",
 
       "config": "Konfiguration des Bots",
 

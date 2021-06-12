@@ -15,10 +15,14 @@ namespace Scruffy.Services.Core
     /// </summary>
     public static class DiscordEmojiService
     {
+        #region Fields
+
         /// <summary>
         /// Emojis
         /// </summary>
         private static readonly ConcurrentDictionary<string, ulong> _emojis;
+
+        #endregion // Fields
 
         #region Constructor
 
@@ -70,6 +74,13 @@ namespace Scruffy.Services.Core
         public static DiscordEmoji GetEdit2Emoji(DiscordClient discordClient) => GetEmoji(discordClient, "Edit2");
 
         /// <summary>
+        /// Get 'Edit3'-Emoji
+        /// </summary>
+        /// <param name="discordClient">Discord client</param>
+        /// <returns>Emoji</returns>
+        public static DiscordEmoji GetEdit3Emoji(DiscordClient discordClient) => GetEmoji(discordClient, "Edit3");
+
+        /// <summary>
         /// Get 'TrashCan'-Emoji
         /// </summary>
         /// <param name="discordClient">Discord client</param>
@@ -96,6 +107,13 @@ namespace Scruffy.Services.Core
         /// <param name="discordClient">Discord client</param>
         /// <returns>Emoji</returns>
         public static DiscordEmoji GetBulletEmoji(DiscordClient discordClient) => GetEmoji(discordClient, "Bullet");
+
+        /// <summary>
+        /// Get 'Image'-Emoji
+        /// </summary>
+        /// <param name="discordClient">Discord client</param>
+        /// <returns>Emoji</returns>
+        public static DiscordEmoji GetImageEmoji(DiscordClient discordClient) => GetEmoji(discordClient, "Image");
 
         /// <summary>
         /// Get emoji by the given key

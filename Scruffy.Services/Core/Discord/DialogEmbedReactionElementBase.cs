@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 
+using DSharpPlus.Entities;
 using DSharpPlus.Interactivity.Extensions;
 
 namespace Scruffy.Services.Core.Discord
@@ -10,7 +12,7 @@ namespace Scruffy.Services.Core.Discord
     /// Dialog element with reactions
     /// </summary>
     /// <typeparam name="TData">Type of the result</typeparam>
-    public abstract class DialogReactionElementBase<TData> : DialogElementBase<TData>
+    public abstract class DialogEmbedReactionElementBase<TData> : DialogElementBase<TData>
     {
         #region Constructor
 
@@ -18,7 +20,7 @@ namespace Scruffy.Services.Core.Discord
         /// Constructor
         /// </summary>
         /// <param name="localizationService">Localization service</param>
-        protected DialogReactionElementBase(LocalizationService localizationService)
+        protected DialogEmbedReactionElementBase(LocalizationService localizationService)
             : base(localizationService)
         {
         }
@@ -36,8 +38,16 @@ namespace Scruffy.Services.Core.Discord
         /// <summary>
         /// Editing the embedded message
         /// </summary>
-        /// <returns>Message</returns>
-        public abstract string GetMessage();
+        /// <param name="builder">Builder</param>
+        public virtual void EditMessage(DiscordEmbedBuilder builder)
+        {
+        }
+
+        /// <summary>
+        /// Returns the title of the commands
+        /// </summary>
+        /// <returns>Commands</returns>
+        protected abstract string GetCommandTitle();
 
         /// <summary>
         /// Default case if none of the given reactions is used
@@ -51,15 +61,31 @@ namespace Scruffy.Services.Core.Discord
         /// <returns>Result</returns>
         public override async Task<TData> Run()
         {
+            var builder = new DiscordEmbedBuilder();
+
+            EditMessage(builder);
+
+            var reactions = GetReactions();
+
+            if (reactions?.Count > 0)
+            {
+                var commands = new StringBuilder();
+                foreach (var reaction in reactions)
+                {
+                    commands.AppendLine(reaction.CommandText);
+                }
+
+                builder.AddField(GetCommandTitle(), commands.ToString());
+            }
+
             var message = await CommandContext.Channel
-                                              .SendMessageAsync(GetMessage())
+                                              .SendMessageAsync(builder)
                                               .ConfigureAwait(false);
 
             var userReactionTask = CommandContext.Client
                                                  .GetInteractivity()
                                                  .WaitForReactionAsync(message, CommandContext.User);
 
-            var reactions = GetReactions();
             if (reactions?.Count > 0)
             {
                 foreach (var reaction in reactions)

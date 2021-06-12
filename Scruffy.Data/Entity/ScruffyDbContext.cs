@@ -134,6 +134,7 @@ namespace Scruffy.Data.Entity
             modelBuilder.Entity<RaidRoleAliasNameEntity>();
             modelBuilder.Entity<RaidRoleEntity>();
             modelBuilder.Entity<RaidUserRoleEntity>();
+            modelBuilder.Entity<RaidDayTemplateEntity>();
 
             modelBuilder.Entity<RaidExperienceAssignmentEntity>()
                         .HasKey(obj => new

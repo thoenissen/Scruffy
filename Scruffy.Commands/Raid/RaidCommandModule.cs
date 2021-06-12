@@ -5,8 +5,10 @@ using DSharpPlus.CommandsNext.Attributes;
 
 using Scruffy.Commands.Base;
 using Scruffy.Services.Core;
+using Scruffy.Services.Core.Discord;
 using Scruffy.Services.CoreData;
 using Scruffy.Services.Raid;
+using Scruffy.Services.Raid.DialogElements;
 
 namespace Scruffy.Commands.Raid
 {
@@ -194,6 +196,47 @@ namespace Scruffy.Commands.Raid
                 await RaidRolesService.RunAssistantAsync(commandContext)
                                       .ConfigureAwait(false);
             }
+        }
+
+        /// <summary>
+        /// Template administration
+        /// </summary>
+        [Group("templates")]
+        public class RaidTemplatesCommandModule : LocatedCommandModuleBase
+        {
+            #region Constructor
+
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="localizationService">Localization service</param>
+            public RaidTemplatesCommandModule(LocalizationService localizationService)
+                : base(localizationService)
+            {
+            }
+
+            #endregion // Constructor
+
+            #region Methods
+
+            /// <summary>
+            /// Starting the templates assistant
+            /// </summary>
+            /// <param name="commandContext">Current command context</param>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+            [Command("setup")]
+            public async Task Setup(CommandContext commandContext)
+            {
+                bool repeat;
+
+                do
+                {
+                    repeat = await DialogHandler.Run<RaidTemplateSetupDialogElement, bool>(commandContext).ConfigureAwait(false);
+                }
+                while (repeat);
+            }
+
+            #endregion // Methods
         }
 
         #endregion // Roles

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 using DSharpPlus.Entities;
 
@@ -23,6 +24,6 @@ namespace Scruffy.Services.Core.Discord
         /// <summary>
         /// Function corresponding to the reaction
         /// </summary>
-        public Func<TData> Func { get; set; }
+        public Func<Task<TData>> Func { get; set; }
     }
 }

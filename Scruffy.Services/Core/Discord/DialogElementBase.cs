@@ -10,8 +10,7 @@ namespace Scruffy.Services.Core.Discord
     /// <summary>
     /// Dialog element
     /// </summary>
-    /// <typeparam name="TData">Type of the result</typeparam>
-    public abstract class DialogElementBase<TData>
+    public abstract class DialogElementBase
     {
         #region Constructor
 
@@ -43,6 +42,11 @@ namespace Scruffy.Services.Core.Discord
         /// </summary>
         public IServiceProvider ServiceProvider { get; private set; }
 
+        /// <summary>
+        /// Current dialog context
+        /// </summary>
+        public DialogContext DialogContext { get; private set; }
+
         #endregion // Properties
 
         #region Methods
@@ -52,11 +56,49 @@ namespace Scruffy.Services.Core.Discord
         /// </summary>
         /// <param name="commandContext">Command context</param>
         /// <param name="serviceProvider">Service provider</param>
-        internal void Initialize(CommandContext commandContext, IServiceProvider serviceProvider)
+        /// <param name="dialogContext">Dialog context</param>
+        internal void Initialize(CommandContext commandContext, IServiceProvider serviceProvider, DialogContext dialogContext)
         {
             CommandContext = commandContext;
             ServiceProvider = serviceProvider;
+            DialogContext = dialogContext;
         }
+
+        /// <summary>
+        /// Execution of the element
+        /// </summary>
+        /// <returns>Result</returns>
+        internal abstract Task<object> InternalRun();
+
+        #endregion // Methods
+    }
+
+    /// <summary>
+    /// Dialog element
+    /// </summary>
+    /// <typeparam name="TData">Type of the result</typeparam>
+    public abstract class DialogElementBase<TData> : DialogElementBase
+    {
+        #region Constructor
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="localizationService">Localization service</param>
+        protected DialogElementBase(LocalizationService localizationService)
+            : base(localizationService)
+        {
+        }
+
+        #endregion // Constructor
+
+        #region Methods
+
+        /// <summary>
+        /// Execution of the element
+        /// </summary>
+        /// <returns>Result</returns>
+        internal sealed override async Task<object> InternalRun() => await Run().ConfigureAwait(false);
 
         /// <summary>
         /// Execution of the element
@@ -72,15 +114,12 @@ namespace Scruffy.Services.Core.Discord
         /// <returns>Result</returns>
         public async Task<TSubData> RunSubElement<T, TSubData>() where T : DialogElementBase<TSubData>
         {
-            await using (var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider())
-            {
-                var service = serviceProvider.GetService<T>();
+            var service = ServiceProvider.GetService<T>();
 
-                service.Initialize(CommandContext, serviceProvider);
+            service.Initialize(CommandContext, ServiceProvider, DialogContext);
 
-                return await service.Run()
-                                    .ConfigureAwait(false);
-            }
+            return await service.Run()
+                                .ConfigureAwait(false);
         }
 
         #endregion // Methods

@@ -1,8 +1,8 @@
 ﻿{
   "CultureInfo": "en-US",
-  "Description" :  "English",
+  "Description" : "English",
   "TranslationGroups": {
-    "FractalLfgSetupCommandModule": {
+    "FractalCommandModule": {
       "TitlePrompt": "Please enter a title.",
       "DescriptionPrompt": "Please enter a description.",
       "AliasNamePrompt": "Please enter an alias name.",
@@ -12,6 +12,8 @@
     },
     "ReminderCreationCommandModule": {
       "CommandProgressed": "Command progressed.",
+      "ChooseChannelPrompt": "Please choose one of the following channels.",
+      "ChannelSelectionTitle": "Channel selection",
       "SelectDayPrompt": "Please select one of the following days.",
       "WeekdaySelectionTitle": "Weekday selection",
       "ReminderTimePrompt": "Please enter the reminder time. (Format: hh:mm)",
@@ -30,6 +32,77 @@
     },
     "ServerConfigurationCommandModule": {
       "UsingNewPrefix": "I will use the following prefix: {0}"
+    },
+    "RaidRolesService": {
+      "AssistantTitle": "Raid role configuration",
+      "AssistantDescription": "With this assistant you are able to configure the raid roles. The following roles are already created:",
+      "AssistantRolesField": "Roles",
+      "AssistantCommandsField": "Commands",
+      "AssistantAddCommand": "{0} Add role",
+      "AssistantEditCommand": "{0} Edit role",
+      "AssistantDeleteCommand": "{0} Delete role",
+      "AssistantCancelCommand": "{0} Cancel",
+
+      "ReactWithEmojiPrompt": "Please react with emoji which should be assigned to the role.",
+      "DescriptionPrompt": "Please enter the description of the role.",
+      "AddSubRolesPrompt": "Do you want to add sub roles?",
+      "AddAdditionalSubRolesPrompt": "Do you want to add additional sub roles?",
+      "CreationCompletedMessage": "The creation is completed.",
+
+      "ChooseRoleTitle": "Raid role selection",
+      "ChooseRoleDescription": "Please choose one of the following roles:",
+
+      "RoleEditTitle": "Raid role configuration",
+      "RoleEditEditDescriptionCommand": "{0} Edit description",
+      "RoleEditEditEmojiCommand": "{0} Edit emoji",
+      "RoleEditAddSubRoleCommand": "{0} Add sub role",
+      "RoleEditEditSubRoleCommand": "{0} Edit sub role",
+      "RoleEditDeleteSubRoleCommand": "{0} Delete sub role",
+
+      "DeleteRolePrompt": "Are you sure you want to delete the role?"
+    },
+    "RaidTemplateAliasNameDialogElement": {
+      "Message": "Please enter the alias name which should be used."
+    },
+    "RaidTemplateDeletionElementBase": {
+      "DeleteRolePrompt": "Are you sure you want to delete the template?"
+    },
+    "RaidTemplateDescriptionDialogElement": {
+      "Message": "Please enter the description which should be used."
+    },
+    "RaidTemplateEditDialogElement": {
+      "ChooseCommandTitle": "Raid template configuration",
+      "ChooseCommandDescription": "With this assistant you are able to configure the raid template.",
+      "AliasName": "Alias name",
+      "Title": "Title",
+      "Description": "Description",
+      "CommandTitle": "Commands",
+      "EditAliasCommand": "{0} Edit alias name",
+      "EditTitleCommand": "{0} Edit title",
+      "EditDescriptionCommand": "{0} Edit description",
+      "EditThumbnailCommand": "{0} Edit thumbnail",
+      "CancelCommand": "{0} Cancel"
+    },
+    "RaidTemplateSelectionDialogElement": {
+      "ChooseTemplateTitle": "Raid template selection",
+      "ChooseTemplateDescription": "Please choose one of the following templates:",
+      "TemplatesField": "Templates"
+    },
+    "RaidTemplateSetupDialogElement": {
+      "ChooseCommandTitle": "Raid template configuration",
+      "ChooseCommandDescription": "With this assistant you are able to configure the raid templates. The following templates are already created:",
+      "TemplatesField": "Templates",
+      "CommandTitle": "Commands",
+      "AddCommand": "{0} Add template",
+      "EditCommand": "{0} Edit template",
+      "DeleteCommand": "{0} Delete template",
+      "CancelCommand": "{0} Cancel"
+    },
+    "RaidTemplateThumbnailDialogElement": {
+      "Message": "Please enter the link to the thumbnail which should be used."
+    },
+    "RaidTemplateTitleDialogElement": {
+      "Message": "Please enter the title which should be used."
     },
     "HelpCommandFormatter": {
       "Help": "Help",
@@ -74,8 +147,9 @@
       "raid leave role description": "Role name",
       "raid roles": "Role overview",
       "raid roles own": "Player",
-      "raid roles all": "General",
-      "raid point table": "Point table",
+      "raid roles setup": "Configuration",
+      "raid templates": "Templates",
+      "raid templates setup": "Configuration",
 
       "config": "Bot configuration",
 

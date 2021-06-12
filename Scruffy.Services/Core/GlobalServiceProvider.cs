@@ -1,5 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Linq;
+using System.Reflection;
 
+using Microsoft.Extensions.DependencyInjection;
+
+using Scruffy.Services.Core.Discord;
 using Scruffy.Services.CoreData;
 using Scruffy.Services.Fractals;
 using Scruffy.Services.Raid;
@@ -30,7 +34,16 @@ namespace Scruffy.Services.Core
             _serviceCollection = new ServiceCollection();
             _serviceCollection.AddTransient<UserManagementService>();
             _serviceCollection.AddTransient<FractalLfgMessageBuilder>();
+
             _serviceCollection.AddTransient<RaidRolesService>();
+
+            foreach (var type in Assembly.Load("Scruffy.Services")
+                                         .GetTypes()
+                                         .Where(obj => typeof(DialogElementBase).IsAssignableFrom(obj)
+                                                    && obj.IsAbstract == false))
+            {
+                _serviceCollection.AddTransient(type);
+            }
         }
 
         #endregion
