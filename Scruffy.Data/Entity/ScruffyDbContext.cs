@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity.Tables.CoreData;
 using Scruffy.Data.Entity.Tables.Fractals;
+using Scruffy.Data.Entity.Tables.General;
 using Scruffy.Data.Entity.Tables.Raid;
 using Scruffy.Data.Entity.Tables.Reminder;
 
@@ -104,6 +105,9 @@ namespace Scruffy.Data.Entity
                         .WithOne(obj => obj.User)
                         .HasForeignKey(obj => obj.UserId)
                         .IsRequired();
+
+            // General
+            modelBuilder.Entity<LogEntryEntity>();
 
             // Fractals
             modelBuilder.Entity<FractalLfgConfigurationEntity>();

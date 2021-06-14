@@ -104,6 +104,9 @@
     "RaidTemplateTitleDialogElement": {
       "Message": "Please enter the title which should be used."
     },
+    "DiscordErrorHandler": {
+      "CommandFailedMessage": "The command could not be executed. But I have an error code ({0}) and funny cat picture."
+    },
     "HelpCommandFormatter": {
       "Help": "Help",
       "GeneralHelp": "Listing all top-level commands and groups. Specify a command to see more information.",

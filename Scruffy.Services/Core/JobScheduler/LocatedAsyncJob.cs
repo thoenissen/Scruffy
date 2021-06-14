@@ -23,10 +23,14 @@ namespace Scruffy.Services.Core.JobScheduler
 
         #endregion
 
+        #region Properties
+
         /// <summary>
         /// Localized group
         /// </summary>
         public LocalizationGroup LocalizationGroup => _localizationGroup ??= GlobalServiceProvider.Current.GetServiceProvider().GetService<LocalizationService>().GetGroup(GetType().Name);
+
+        #endregion // Properties
 
         #region IJob
 

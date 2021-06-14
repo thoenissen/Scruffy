@@ -53,7 +53,7 @@
       "ChooseRoleDescription": "Wähle eine der folgenden Rollen aus:",
 
       "RoleEditTitle": "Rollenbearbeitung",
-      "RoleEditEditDescriptionCommand": "{0} Bezeichnung bearbeiten",
+      "RoleEditEditDescriptionCommand": "{0} Beschreibung bearbeiten",
       "RoleEditEditEmojiCommand": "{0} Emoji bearbeiten",
       "RoleEditAddSubRoleCommand": "{0} Untergeordnete Rolle hinzufügen",
       "RoleEditEditSubRoleCommand": "{0} Untergeordnete Rolle bearbeiten",
@@ -103,6 +103,9 @@
     },
     "RaidTemplateTitleDialogElement": {
       "Message": "Bitte gebe den zu verwendenden Titel ein:"
+    },
+    "DiscordErrorHandler": {
+      "CommandFailedMessage": "Der Befehl konnte nicht ausgeführt werden. Aber dafür habe ich einen Fehlercode ({0}) und ein lustiges Katzenbild für dich."
     },
     "HelpCommandFormatter": {
       "Help": "Befehlshilfe",
