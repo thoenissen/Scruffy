@@ -13,7 +13,7 @@ namespace Scruffy.Data.Entity.Tables.Raid
         /// <summary>
         /// Id of the configuration
         /// </summary>
-        public long ConfigurationId { get; set; }
+        public long TemplateId { get; set; }
 
         /// <summary>
         /// Id of the experience level
@@ -28,10 +28,10 @@ namespace Scruffy.Data.Entity.Tables.Raid
         #region Navigation properties
 
         /// <summary>
-        /// Configuration
+        /// Template
         /// </summary>
-        [ForeignKey(nameof(ConfigurationId))]
-        public virtual RaidDayConfigurationEntity RaidDayConfiguration { get; set; }
+        [ForeignKey(nameof(TemplateId))]
+        public virtual RaidDayTemplateEntity RaidDayTemplateEntity { get; set; }
 
         /// <summary>
         /// Configuration

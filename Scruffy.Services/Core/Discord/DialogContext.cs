@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 
+using DSharpPlus.Entities;
+
 namespace Scruffy.Services.Core.Discord
 {
     /// <summary>
@@ -24,11 +26,17 @@ namespace Scruffy.Services.Core.Discord
         public DialogContext()
         {
             _values = new Dictionary<string, object>();
+            Messages = new List<DiscordMessage>();
         }
 
         #endregion // Constructor
 
         #region Properties
+
+        /// <summary>
+        /// Message
+        /// </summary>
+        public List<DiscordMessage> Messages { get; }
 
         /// <summary>
         /// Set value

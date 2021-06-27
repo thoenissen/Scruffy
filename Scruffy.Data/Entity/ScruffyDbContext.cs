@@ -143,14 +143,14 @@ namespace Scruffy.Data.Entity
             modelBuilder.Entity<RaidExperienceAssignmentEntity>()
                         .HasKey(obj => new
                         {
-                            obj.ConfigurationId,
+                            ConfigurationId = obj.TemplateId,
                             obj.ExperienceLevelId
                         });
 
             modelBuilder.Entity<RaidRequiredRoleEntity>()
                         .HasKey(obj => new
                         {
-                            obj.ConfigurationId,
+                            obj.TemplateId,
                             obj.Index
                         });
 
@@ -169,19 +169,7 @@ namespace Scruffy.Data.Entity
                         .IsRequired();
 
             modelBuilder.Entity<RaidDayConfigurationEntity>()
-                        .HasMany(obj => obj.RaidExperienceAssignments)
-                        .WithOne(obj => obj.RaidDayConfiguration)
-                        .HasForeignKey(obj => obj.ConfigurationId)
-                        .IsRequired();
-
-            modelBuilder.Entity<RaidDayConfigurationEntity>()
                         .HasMany(obj => obj.RaidAppointments)
-                        .WithOne(obj => obj.RaidDayConfiguration)
-                        .HasForeignKey(obj => obj.ConfigurationId)
-                        .IsRequired();
-
-            modelBuilder.Entity<RaidDayConfigurationEntity>()
-                        .HasMany(obj => obj.RaidRequiredRoles)
                         .WithOne(obj => obj.RaidDayConfiguration)
                         .HasForeignKey(obj => obj.ConfigurationId)
                         .IsRequired();
@@ -189,8 +177,7 @@ namespace Scruffy.Data.Entity
             modelBuilder.Entity<RaidExperienceLevelEntity>()
                         .HasMany(obj => obj.InferiorRaidExperienceLevels)
                         .WithOne(obj => obj.SuperiorRaidExperienceLevel)
-                        .HasForeignKey(obj => obj.SuperiorExperienceLevelId)
-                        .IsRequired();
+                        .HasForeignKey(obj => obj.SuperiorExperienceLevelId);
 
             modelBuilder.Entity<RaidExperienceLevelEntity>()
                         .HasMany(obj => obj.RaidExperienceAssignments)

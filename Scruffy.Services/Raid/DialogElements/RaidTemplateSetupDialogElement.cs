@@ -118,7 +118,7 @@ namespace Scruffy.Services.Raid.DialogElements
                                      CommandText = LocalizationGroup.GetFormattedText("AddCommand", "{0} Add template", DiscordEmojiService.GetAddEmoji(CommandContext.Client)),
                                      Func = async () =>
                                             {
-                                                var data = await DialogHandler.RunForm<CreateRaidTemplateFormData>(CommandContext)
+                                                var data = await DialogHandler.RunForm<CreateRaidTemplateFormData>(CommandContext, false)
                                                                               .ConfigureAwait(false);
 
                                                 using (var dbFactory = RepositoryFactory.CreateInstance())

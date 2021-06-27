@@ -46,9 +46,11 @@ namespace Scruffy.Services.Core.Discord
         /// <returns>Result</returns>
         public override async Task<TData> Run()
         {
-            await CommandContext.Channel
-                                .SendMessageAsync(GetMessage())
-                                .ConfigureAwait(false);
+            var currentBotMessage = await CommandContext.Channel
+                                                        .SendMessageAsync(GetMessage())
+                                                        .ConfigureAwait(false);
+
+            DialogContext.Messages.Add(currentBotMessage);
 
             var currentUserResponse = await CommandContext.Client
                                                           .GetInteractivity()
@@ -56,9 +58,14 @@ namespace Scruffy.Services.Core.Discord
                                                                                                       && obj.ChannelId == CommandContext.Channel.Id)
                                                           .ConfigureAwait(false);
 
-            return currentUserResponse.TimedOut == false
-                       ? ConvertMessage(currentUserResponse.Result)
-                       : throw new TimeoutException();
+            if (currentUserResponse.TimedOut == false)
+            {
+                DialogContext.Messages.Add(currentUserResponse.Result);
+
+                return ConvertMessage(currentUserResponse.Result);
+            }
+
+            throw new TimeoutException();
         }
 
         #endregion // Methods

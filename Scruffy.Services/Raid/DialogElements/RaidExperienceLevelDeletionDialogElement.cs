@@ -13,7 +13,7 @@ namespace Scruffy.Services.Raid.DialogElements
     /// <summary>
     /// Deletion of a template
     /// </summary>
-    public class RaidTemplateDeletionElementBase : DialogReactionElementBase<bool>
+    public class RaidExperienceLevelDeletionDialogElement : DialogReactionElementBase<bool>
     {
         #region Fields
 
@@ -30,7 +30,7 @@ namespace Scruffy.Services.Raid.DialogElements
         /// Constructor
         /// </summary>
         /// <param name="localizationService">Localization service</param>
-        public RaidTemplateDeletionElementBase(LocalizationService localizationService)
+        public RaidExperienceLevelDeletionDialogElement(LocalizationService localizationService)
             : base(localizationService)
         {
         }
@@ -43,7 +43,7 @@ namespace Scruffy.Services.Raid.DialogElements
         /// Editing the embedded message
         /// </summary>
         /// <returns>Message</returns>
-        public override string GetMessage() => LocalizationGroup.GetText("DeleteRolePrompt", "Are you sure you want to delete the template?");
+        public override string GetMessage() => LocalizationGroup.GetText("DeleteLevelPrompt", "Are you sure you want to delete the level?");
 
         /// <summary>
         /// Returns the reactions which should be added to the message
@@ -60,10 +60,10 @@ namespace Scruffy.Services.Raid.DialogElements
                                                  {
                                                      using (var dbFactory = RepositoryFactory.CreateInstance())
                                                      {
-                                                         var templateId = DialogContext.GetValue<long>("TemplateId");
+                                                         var levelId = DialogContext.GetValue<long>("ExperienceLevelId");
 
-                                                         dbFactory.GetRepository<RaidDayTemplateRepository>()
-                                                                  .Refresh(obj => obj.Id == templateId, obj => obj.IsDeleted = true);
+                                                         dbFactory.GetRepository<RaidExperienceLevelRepository>()
+                                                                  .Refresh(obj => obj.Id == levelId, obj => obj.IsDeleted = true);
                                                      }
 
                                                      return Task.FromResult(true);

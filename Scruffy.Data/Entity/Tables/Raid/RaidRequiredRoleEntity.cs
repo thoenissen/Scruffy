@@ -11,9 +11,9 @@ namespace Scruffy.Data.Entity.Tables.Raid
         #region Properties
 
         /// <summary>
-        /// Id of the Configuration
+        /// Id of the template
         /// </summary>
-        public long ConfigurationId { get; set; }
+        public long TemplateId { get; set; }
 
         /// <summary>
         /// Index
@@ -35,8 +35,8 @@ namespace Scruffy.Data.Entity.Tables.Raid
         /// <summary>
         /// Configuration
         /// </summary>
-        [ForeignKey(nameof(ConfigurationId))]
-        public virtual RaidDayConfigurationEntity RaidDayConfiguration { get; set; }
+        [ForeignKey(nameof(TemplateId))]
+        public virtual RaidDayTemplateEntity RaidDayTemplateEntity { get; set; }
 
         /// <summary>
         /// Main role

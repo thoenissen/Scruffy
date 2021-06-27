@@ -15,14 +15,14 @@ namespace Scruffy.Services.Raid.DialogElements
     /// <summary>
     /// Selection of a template
     /// </summary>
-    public class RaidTemplateSelectionDialogElement : DialogEmbedMessageElementBase<long>
+    public class RaidExperienceLevelSelectionDialogElement : DialogEmbedMessageElementBase<long>
     {
         #region Fields
 
         /// <summary>
         /// Templates
         /// </summary>
-        private Dictionary<int, long> _templates;
+        private Dictionary<int, long> _levels;
 
         #endregion // Fields
 
@@ -32,7 +32,7 @@ namespace Scruffy.Services.Raid.DialogElements
         /// Constructor
         /// </summary>
         /// <param name="localizationService">Localization service</param>
-        public RaidTemplateSelectionDialogElement(LocalizationService localizationService)
+        public RaidExperienceLevelSelectionDialogElement(LocalizationService localizationService)
             : base(localizationService)
         {
         }
@@ -48,41 +48,41 @@ namespace Scruffy.Services.Raid.DialogElements
         public override DiscordEmbedBuilder GetMessage()
         {
             var builder = new DiscordEmbedBuilder();
-            builder.WithTitle(LocalizationGroup.GetText("ChooseTemplateTitle", "Raid template selection"));
-            builder.WithDescription(LocalizationGroup.GetText("ChooseTemplateDescription", "Please choose one of the following templates:"));
+            builder.WithTitle(LocalizationGroup.GetText("ChooseLevelTitle", "Raid experience level selection"));
+            builder.WithDescription(LocalizationGroup.GetText("ChooseLevelDescription", "Please choose one of the following experience levels:"));
 
-            _templates = new Dictionary<int, long>();
-            var templatesFieldText = new StringBuilder();
+            _levels = new Dictionary<int, long>();
+            var levelsFieldsText = new StringBuilder();
 
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
-                var mainRoles = dbFactory.GetRepository<RaidDayTemplateRepository>()
+                var mainRoles = dbFactory.GetRepository<RaidExperienceLevelRepository>()
                                          .GetQuery()
                                          .Where(obj => obj.IsDeleted == false)
                                          .Select(obj => new
                                          {
                                              obj.Id,
-                                             obj.AliasName
+                                             obj.Description
                                          })
-                                         .OrderBy(obj => obj.AliasName)
+                                         .OrderBy(obj => obj.Description)
                                          .ToList();
 
                 var i = 1;
                 foreach (var role in mainRoles)
                 {
-                    templatesFieldText.Append('`');
-                    templatesFieldText.Append(i);
-                    templatesFieldText.Append("` - ");
-                    templatesFieldText.Append(' ');
-                    templatesFieldText.Append(role.AliasName);
-                    templatesFieldText.Append('\n');
+                    levelsFieldsText.Append('`');
+                    levelsFieldsText.Append(i);
+                    levelsFieldsText.Append("` - ");
+                    levelsFieldsText.Append(' ');
+                    levelsFieldsText.Append(role.Description);
+                    levelsFieldsText.Append('\n');
 
-                    _templates[i] = role.Id;
+                    _levels[i] = role.Id;
 
                     i++;
                 }
 
-                builder.AddField(LocalizationGroup.GetText("TemplatesField", "Templates"), templatesFieldText.ToString());
+                builder.AddField(LocalizationGroup.GetText("LevelsField", "Levels"), levelsFieldsText.ToString());
             }
 
             return builder;
@@ -95,7 +95,7 @@ namespace Scruffy.Services.Raid.DialogElements
         /// <returns>Result</returns>
         public override long ConvertMessage(DiscordMessage message)
         {
-            return int.TryParse(message.Content, out var index) && _templates.TryGetValue(index, out var selectedRoleId)
+            return int.TryParse(message.Content, out var index) && _levels.TryGetValue(index, out var selectedRoleId)
                        ? selectedRoleId
                        : throw new InvalidOperationException();
         }

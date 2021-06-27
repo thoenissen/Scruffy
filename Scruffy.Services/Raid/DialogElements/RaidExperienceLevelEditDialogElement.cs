@@ -12,9 +12,9 @@ using Scruffy.Services.Core.Discord;
 namespace Scruffy.Services.Raid.DialogElements
 {
     /// <summary>
-    /// Editing a raid template
+    /// Editing a raid experience level
     /// </summary>
-    public class RaidTemplateEditDialogElement : DialogEmbedReactionElementBase<bool>
+    public class RaidExperienceLevelEditDialogElement : DialogEmbedReactionElementBase<bool>
     {
         #region Fields
 
@@ -31,7 +31,7 @@ namespace Scruffy.Services.Raid.DialogElements
         /// Constructor
         /// </summary>
         /// <param name="localizationService">Localization service</param>
-        public RaidTemplateEditDialogElement(LocalizationService localizationService)
+        public RaidExperienceLevelEditDialogElement(LocalizationService localizationService)
             : base(localizationService)
         {
         }
@@ -46,29 +46,31 @@ namespace Scruffy.Services.Raid.DialogElements
         /// <param name="builder">Builder</param>
         public override void EditMessage(DiscordEmbedBuilder builder)
         {
-            builder.WithTitle(LocalizationGroup.GetText("ChooseCommandTitle", "Raid template configuration"));
-            builder.WithDescription(LocalizationGroup.GetText("ChooseCommandDescription", "With this assistant you are able to configure the raid template."));
+            builder.WithTitle(LocalizationGroup.GetText("ChooseCommandTitle", "Raid experience level configuration"));
+            builder.WithDescription(LocalizationGroup.GetText("ChooseCommandDescription", "With this assistant you are able to configure the raid experience level."));
 
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
-                var templateId = DialogContext.GetValue<long>("TemplateId");
+                var templateId = DialogContext.GetValue<long>("ExperienceLevelId");
 
-                var data = dbFactory.GetRepository<RaidDayTemplateRepository>()
+                var data = dbFactory.GetRepository<RaidExperienceLevelRepository>()
                                     .GetQuery()
                                     .Where(obj => obj.Id == templateId)
                                     .Select(obj => new
-                                                   {
-                                                       obj.AliasName,
-                                                       obj.Title,
-                                                       obj.Description,
-                                                       obj.Thumbnail
-                                                   })
+                                    {
+                                        obj.Description,
+                                        obj.DiscordEmoji,
+                                        obj.DiscordRoleId
+                                    })
                                     .First();
 
-                builder.AddField(LocalizationGroup.GetText("AliasName", "Alias name"), data.AliasName);
-                builder.AddField(LocalizationGroup.GetText("Title", "Title"), data.Title);
                 builder.AddField(LocalizationGroup.GetText("Description", "Description"), data.Description);
-                builder.WithThumbnail(data.Thumbnail);
+                builder.AddField(LocalizationGroup.GetText("Emoji", "Emoji"), DiscordEmoji.FromGuildEmote(CommandContext.Client, data.DiscordEmoji));
+
+                if (data.DiscordRoleId != null)
+                {
+                    builder.AddField(LocalizationGroup.GetText("Role", "Role"), CommandContext.Guild.Roles[data.DiscordRoleId.Value].Mention);
+                }
             }
         }
 
@@ -92,18 +94,29 @@ namespace Scruffy.Services.Raid.DialogElements
                                       new ReactionData<bool>
                                       {
                                           Emoji = DiscordEmojiService.GetEditEmoji(CommandContext.Client),
-                                          CommandText = LocalizationGroup.GetFormattedText("EditAliasCommand", "{0} Edit alias name", DiscordEmojiService.GetEditEmoji(CommandContext.Client)),
+                                          CommandText = LocalizationGroup.GetFormattedText("EditSuperiorRoleCommand", "{0} Edit superior role", DiscordEmojiService.GetEditEmoji(CommandContext.Client)),
                                           Func = async () =>
                                                  {
-                                                     var aliasName = await RunSubElement<RaidTemplateAliasNameDialogElement, string>()
-                                                                         .ConfigureAwait(false);
+                                                     var newSuperiorLevelId = await RunSubElement<RaidExperienceLevelSuperiorLevelDialogElement, long?>()
+                                                                           .ConfigureAwait(false);
 
                                                      using (var dbFactory = RepositoryFactory.CreateInstance())
                                                      {
-                                                         var templateId = DialogContext.GetValue<long>("TemplateId");
+                                                         var levelId = DialogContext.GetValue<long>("ExperienceLevelId");
 
-                                                         dbFactory.GetRepository<RaidDayTemplateRepository>()
-                                                                  .Refresh(obj => obj.Id == templateId, obj => obj.AliasName = aliasName);
+                                                         dbFactory.GetRepository<RaidExperienceLevelRepository>()
+                                                                  .Refresh(obj => obj.SuperiorExperienceLevelId == levelId,
+                                                                           obj => obj.SuperiorExperienceLevelId = obj.SuperiorRaidExperienceLevel.SuperiorExperienceLevelId);
+
+                                                         if (dbFactory.GetRepository<RaidExperienceLevelRepository>()
+                                                                      .RefreshRange(obj =>  obj.Id != levelId,
+                                                                                    obj => obj.SuperiorExperienceLevelId = newSuperiorLevelId))
+                                                         {
+                                                             dbFactory.GetRepository<RaidExperienceLevelRepository>()
+                                                                      .RefreshRange(obj =>  obj.SuperiorExperienceLevelId == newSuperiorLevelId
+                                                                                         && obj.Id != levelId,
+                                                                                    obj => obj.SuperiorExperienceLevelId = levelId);
+                                                         }
                                                      }
 
                                                      return true;
@@ -112,37 +125,17 @@ namespace Scruffy.Services.Raid.DialogElements
                                       new ReactionData<bool>
                                       {
                                           Emoji = DiscordEmojiService.GetEdit2Emoji(CommandContext.Client),
-                                          CommandText = LocalizationGroup.GetFormattedText("EditTitleCommand", "{0} Edit title", DiscordEmojiService.GetEdit2Emoji(CommandContext.Client)),
+                                          CommandText = LocalizationGroup.GetFormattedText("EditDescriptionCommand", "{0} Edit description", DiscordEmojiService.GetEdit2Emoji(CommandContext.Client)),
                                           Func = async () =>
                                                  {
-                                                     var title = await RunSubElement<RaidTemplateTitleDialogElement, string>()
-                                                                     .ConfigureAwait(false);
-
-                                                     using (var dbFactory = RepositoryFactory.CreateInstance())
-                                                     {
-                                                         var templateId = DialogContext.GetValue<long>("TemplateId");
-
-                                                         dbFactory.GetRepository<RaidDayTemplateRepository>()
-                                                                  .Refresh(obj => obj.Id == templateId, obj => obj.Title = title);
-                                                     }
-
-                                                     return true;
-                                                 }
-                                      },
-                                      new ReactionData<bool>
-                                      {
-                                          Emoji = DiscordEmojiService.GetEdit3Emoji(CommandContext.Client),
-                                          CommandText = LocalizationGroup.GetFormattedText("EditDescriptionCommand", "{0} Edit description", DiscordEmojiService.GetEdit3Emoji(CommandContext.Client)),
-                                          Func = async () =>
-                                                 {
-                                                     var description = await RunSubElement<RaidTemplateDescriptionDialogElement, string>()
+                                                     var description = await RunSubElement<RaidExperienceLevelDescriptionDialogElement, string>()
                                                                            .ConfigureAwait(false);
 
                                                      using (var dbFactory = RepositoryFactory.CreateInstance())
                                                      {
-                                                         var templateId = DialogContext.GetValue<long>("TemplateId");
+                                                         var templateId = DialogContext.GetValue<long>("ExperienceLevelId");
 
-                                                         dbFactory.GetRepository<RaidDayTemplateRepository>()
+                                                         dbFactory.GetRepository<RaidExperienceLevelRepository>()
                                                                   .Refresh(obj => obj.Id == templateId, obj => obj.Description = description);
                                                      }
 
@@ -151,19 +144,39 @@ namespace Scruffy.Services.Raid.DialogElements
                                       },
                                       new ReactionData<bool>
                                       {
-                                          Emoji = DiscordEmojiService.GetImageEmoji(CommandContext.Client),
-                                          CommandText = LocalizationGroup.GetFormattedText("EditThumbnailCommand", "{0} Edit thumbnail", DiscordEmojiService.GetImageEmoji(CommandContext.Client)),
+                                          Emoji = DiscordEmojiService.GetEdit3Emoji(CommandContext.Client),
+                                          CommandText = LocalizationGroup.GetFormattedText("EditRoleCommand", "{0} Edit role", DiscordEmojiService.GetEdit3Emoji(CommandContext.Client)),
                                           Func = async () =>
                                                  {
-                                                     var thumbnail = await RunSubElement<RaidTemplateThumbnailDialogElement, string>()
-                                                                         .ConfigureAwait(false);
+                                                     var role = await RunSubElement<RaidExperienceLevelRoleDialogElement, ulong?>()
+                                                                           .ConfigureAwait(false);
 
                                                      using (var dbFactory = RepositoryFactory.CreateInstance())
                                                      {
-                                                         var templateId = DialogContext.GetValue<long>("TemplateId");
+                                                         var templateId = DialogContext.GetValue<long>("ExperienceLevelId");
 
-                                                         dbFactory.GetRepository<RaidDayTemplateRepository>()
-                                                                  .Refresh(obj => obj.Id == templateId, obj => obj.Thumbnail = thumbnail);
+                                                         dbFactory.GetRepository<RaidExperienceLevelRepository>()
+                                                                  .Refresh(obj => obj.Id == templateId, obj => obj.DiscordRoleId = role);
+                                                     }
+
+                                                     return true;
+                                                 }
+                                      },
+                                      new ReactionData<bool>
+                                      {
+                                          Emoji = DiscordEmojiService.GetEmojiEmoji(CommandContext.Client),
+                                          CommandText = LocalizationGroup.GetFormattedText("EditEmojiCommand", "{0} Edit emoji", DiscordEmojiService.GetEmojiEmoji(CommandContext.Client)),
+                                          Func = async () =>
+                                                 {
+                                                     var emoji = await RunSubElement<RaidExperienceLevelEmojiDialogElement, ulong>()
+                                                                     .ConfigureAwait(false);
+
+                                                     using (var dbFactory = RepositoryFactory.CreateInstance())
+                                                     {
+                                                         var templateId = DialogContext.GetValue<long>("ExperienceLevelId");
+
+                                                         dbFactory.GetRepository<RaidExperienceLevelRepository>()
+                                                                  .Refresh(obj => obj.Id == templateId, obj => obj.DiscordEmoji = emoji);
                                                      }
 
                                                      return true;

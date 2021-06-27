@@ -78,19 +78,21 @@ namespace Scruffy.Services.Core.Discord
                 builder.AddField(GetCommandTitle(), commands.ToString());
             }
 
-            var message = await CommandContext.Channel
-                                              .SendMessageAsync(builder)
-                                              .ConfigureAwait(false);
+            var currentBotMessage = await CommandContext.Channel
+                                                        .SendMessageAsync(builder)
+                                                        .ConfigureAwait(false);
+
+            DialogContext.Messages.Add(currentBotMessage);
 
             var userReactionTask = CommandContext.Client
                                                  .GetInteractivity()
-                                                 .WaitForReactionAsync(message, CommandContext.User);
+                                                 .WaitForReactionAsync(currentBotMessage, CommandContext.User);
 
             if (reactions?.Count > 0)
             {
                 foreach (var reaction in reactions)
                 {
-                    await message.CreateReactionAsync(reaction.Emoji).ConfigureAwait(false);
+                    await currentBotMessage.CreateReactionAsync(reaction.Emoji).ConfigureAwait(false);
                 }
             }
 

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Scruffy.Data.Entity;
 
 namespace Scruffy.Data.Entity.Migrations
 {
     [DbContext(typeof(ScruffyDbContext))]
-    partial class ScruffyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210620105813_Update10")]
+    partial class Update10
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -246,19 +248,11 @@ namespace Scruffy.Data.Entity.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("DiscordEmoji")
-                        .HasColumnType("decimal(20,0)");
-
                     b.Property<decimal?>("DiscordRoleId")
                         .HasColumnType("decimal(20,0)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
                     b.Property<long?>("SuperiorExperienceLevelId")
+                        .IsRequired()
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -534,7 +528,9 @@ namespace Scruffy.Data.Entity.Migrations
                 {
                     b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidExperienceLevelEntity", "SuperiorRaidExperienceLevel")
                         .WithMany("InferiorRaidExperienceLevels")
-                        .HasForeignKey("SuperiorExperienceLevelId");
+                        .HasForeignKey("SuperiorExperienceLevelId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("SuperiorRaidExperienceLevel");
                 });

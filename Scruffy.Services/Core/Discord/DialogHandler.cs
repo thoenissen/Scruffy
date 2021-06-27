@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 using DSharpPlus.CommandsNext;
@@ -41,8 +42,9 @@ namespace Scruffy.Services.Core.Discord
         /// </summary>
         /// <typeparam name="TData">Type of the element result</typeparam>
         /// <param name="commandContext">Current command context</param>
+        /// <param name="deleteMessages">Should the creation message be deleted?</param>
         /// <returns>Result</returns>
-        public static async Task<TData> RunForm<TData>(CommandContext commandContext) where TData : new()
+        public static async Task<TData> RunForm<TData>(CommandContext commandContext, bool deleteMessages) where TData : new()
         {
             await using (var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider())
             {
@@ -64,10 +66,19 @@ namespace Scruffy.Services.Core.Discord
                     }
                 }
 
+                if (deleteMessages)
+                {
+                    dialogContext.Messages.Add(commandContext.Message);
+
+                    await commandContext.Channel
+                                        .DeleteMessagesAsync(dialogContext.Messages)
+                                        .ConfigureAwait(false);
+                }
+
                 return data;
             }
         }
 
-        #endregion
+        #endregion // Methods
     }
 }

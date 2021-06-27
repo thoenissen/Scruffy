@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Scruffy.Data.Entity.Tables.Raid
 {
@@ -19,6 +20,7 @@ namespace Scruffy.Data.Entity.Tables.Raid
         /// <summary>
         /// Alias name
         /// </summary>
+        [StringLength(20)]
         public string AliasName { get; set; }
 
         /// <summary>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity.Extensions;
 
 namespace Scruffy.Services.Core.Discord
@@ -42,8 +43,9 @@ namespace Scruffy.Services.Core.Discord
         /// <summary>
         /// Default case if none of the given reactions is used
         /// </summary>
+        /// <param name="reaction">Reaction</param>
         /// <returns>Result</returns>
-        protected abstract TData DefaultFunc();
+        protected abstract TData DefaultFunc(MessageReactionAddEventArgs reaction);
 
         /// <summary>
         /// Execute the dialog element
@@ -54,6 +56,8 @@ namespace Scruffy.Services.Core.Discord
             var message = await CommandContext.Channel
                                               .SendMessageAsync(GetMessage())
                                               .ConfigureAwait(false);
+
+            DialogContext.Messages.Add(message);
 
             var userReactionTask = CommandContext.Client
                                                  .GetInteractivity()
@@ -83,7 +87,7 @@ namespace Scruffy.Services.Core.Discord
                     }
                 }
 
-                return DefaultFunc();
+                return DefaultFunc(userReaction.Result);
             }
 
             throw new TimeoutException();

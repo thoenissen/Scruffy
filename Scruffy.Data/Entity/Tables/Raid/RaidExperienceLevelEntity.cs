@@ -27,6 +27,21 @@ namespace Scruffy.Data.Entity.Tables.Raid
         /// </summary>
         public ulong? DiscordRoleId { get; set; }
 
+        /// <summary>
+        /// Description
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Discord emoji
+        /// </summary>
+        public ulong DiscordEmoji { get; set; }
+
+        /// <summary>
+        /// Is the level deleted?
+        /// </summary>
+        public bool IsDeleted { get; set; }
+
         #region Navigation properties
 
         /// <summary>

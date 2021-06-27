@@ -43,7 +43,7 @@
       "AssistantDeleteCommand": "{0} Rolle löschen",
       "AssistantCancelCommand": "{0} Abbrechen",
 
-      "ReactWithEmojiPrompt": "Reagiere mit dem Emoji, der der Rolle zugewiesen werden soll.",
+      "ReactWithEmojiPrompt": "Reagiere mit dem Emoji, das der Rolle zugewiesen werden soll.",
       "DescriptionPrompt": "Bitte geben die Bezeichnung der Rolle ein.",
       "AddSubRolesPrompt": "Sollen der Rolle untergeordnete Rollen hinzugefügt werden?",
       "AddAdditionalSubRolesPrompt": "Sollen der Rolle weitere untergeordnete Rollen zugewiesen werden?",
@@ -103,6 +103,66 @@
     },
     "RaidTemplateTitleDialogElement": {
       "Message": "Bitte gebe den zu verwendenden Titel ein:"
+    },
+    "RaidDayDayOfWeekDialogElement": {
+      "Title": "Auswahl des Tages",
+      "Description": "Wähle die gewünschten Wochentage aus:",
+      "Reactions": "Tage"
+    },
+    "RaidDayRegistrationDeadlineDialogElement": {
+      "Message": "Bitte gebe den zu verwendenen Anmeldeschluss ein (hh:mm):"
+    },
+    "RaidDayStartTimeDialogElement": {
+      "Message": "Bitte gebe den zu verwendenen Startzeitpunkt ein (hh:mm):"
+    },
+    "RaidExperienceLevelDeletionDialogElement": {
+      "DeleteLevelPrompt": "Soll das Erfahrungslevel wirklich gelöscht werden?"
+    },
+    "RaidExperienceLevelDescriptionDialogElement": {
+      "Message": "Bitte gebe die zu verwendende Bezeichnung ein."
+    },
+    "RaidExperienceLevelEditDialogElement": {
+      "ChooseCommandTitle": "Erfahrungslevelkonfiguration",
+      "ChooseCommandDescription": "Mit diesem Assistenten können bestehende Erfahrungslevel bearbeitet werden.",
+      "Description": "Bezeichnung",
+      "Emoji": "Emoji",
+      "Role": "Rolle",
+      "CommandTitle": "Befehle",
+      "EditSuperiorRoleCommand": "{0} Übergeordnetes Erfahrungslevel bearbeiten",
+      "EditDescriptionCommand": "{0} Bezeichnung bearbeiten",
+      "EditRoleCommand": "{0} Rolle bearbeiten",
+      "EditEmojiCommand": "{0} Emoji bearbeiten",
+      "CancelCommand": "{0} Abbrechen"
+    },
+    "RaidExperienceLevelEmojiDialogElement": {
+      "EmojiPrompt": "Reagiere mit dem Emoji, das verwendet werden soll."
+    },
+    "RaidExperienceLevelRoleDialogElement": {
+      "ChooseLevelTitle": "Rollenauswahl",
+      "ChooseLevelDescription": "Wähle eine der folgenden Rollen aus",
+      "NoDiscordRole": "Keine Rolle",
+      "RolesField": "Rollen"
+    },
+    "RaidExperienceLevelSelectionDialogElement": {
+      "ChooseLevelTitle": "Erfahrungslevelauswahl",
+      "ChooseLevelDescription": "Wähle eines der folgenden Erfahrungslevel aus:",
+      "LevelsField": "Erfahrungslevel"
+    },
+    "RaidExperienceLevelSetupDialogElement": {
+      "ChooseCommandTitle": "Erfahrungslevelkonfiguration",
+      "ChooseCommandDescription": "Mit dem folgenden Assistenten können die Erfahrungslevel konfiguriert werden. Die folgenden Erfahrungslevel wurden bereits erfasst:",
+      "LevelsFields": "Erfahrungslevel",
+      "AddCommand": "{0} Erfahrungslevel hinzufügen",
+      "EditCommand": "{0} Erfahrungslevel bearbeiten",
+      "DeleteCommand": "{0} Erfahrungslevel löschen",
+      "CancelCommand": "{0} Abbrechen",
+      "CommandTitle": "Befehle"
+    },
+    "RaidExperienceLevelSuperiorLevelDialogElement": {
+      "ChooseLevelTitle": "Erfahrungslevelauswahl",
+      "ChooseLevelDescription": "Wähle eine der folgenden Erfahrungslevel aus:",
+      "NoExperienceLevel": "Keine übergeordnete Rolle",
+      "LevelsField": "Erfahrungslevel"
     },
     "DiscordErrorHandler": {
       "CommandFailedMessage": "Der Befehl konnte nicht ausgeführt werden. Aber dafür habe ich einen Fehlercode ({0}) und ein lustiges Katzenbild für dich."

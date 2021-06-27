@@ -104,6 +104,66 @@
     "RaidTemplateTitleDialogElement": {
       "Message": "Please enter the title which should be used."
     },
+    "RaidDayDayOfWeekDialogElement": {
+      "Title": "Raid day selection",
+      "Description": "Please choose the day of the week:",
+      "Reactions": "Days"
+    },
+    "RaidDayRegistrationDeadlineDialogElement": {
+      "Message": "Please enter the registration deadline (hh:mm):"
+    },
+    "RaidDayStartTimeDialogElement": {
+      "Message": "Please enter the start time (hh:mm):"
+    },
+    "RaidExperienceLevelDeletionDialogElement": {
+      "DeleteLevelPrompt": "Are you sure you want to delete the level?"
+    },
+    "RaidExperienceLevelDescriptionDialogElement": {
+      "Message": "Please enter the description which should be used."
+    },
+    "RaidExperienceLevelEditDialogElement": {
+      "ChooseCommandTitle": "Raid experience level configuration",
+      "ChooseCommandDescription": "With this assistant you are able to configure the raid experience level.",
+      "Description": "Description",
+      "Emoji": "Emoji",
+      "Role": "Role",
+      "CommandTitle": "Commands",
+      "EditSuperiorRoleCommand": "{0} Edit superior role",
+      "EditDescriptionCommand": "{0} Edit description",
+      "EditRoleCommand": "{0} Edit role",
+      "EditEmojiCommand": "{0} Edit emoji",
+      "CancelCommand": "{0} Cancel"
+    },
+    "RaidExperienceLevelEmojiDialogElement": {
+      "EmojiPrompt": "Please react with emoji which should be used."
+    },
+    "RaidExperienceLevelRoleDialogElement": {
+      "ChooseLevelTitle": "Raid experience level role selection",
+      "ChooseLevelDescription": "Please choose one of the following roles:",
+      "NoDiscordRole": "No role",
+      "RolesField": "Roles"
+    },
+    "RaidExperienceLevelSelectionDialogElement": {
+      "ChooseLevelTitle": "Raid experience level selection",
+      "ChooseLevelDescription": "Please choose one of the following experience levels:",
+      "LevelsField": "Levels"
+    },
+    "RaidExperienceLevelSetupDialogElement": {
+      "ChooseCommandTitle": "Raid experience levels configuration",
+      "ChooseCommandDescription": "With this assistant you are able to configure the raid experience levels. The following experience levels are already created:",
+      "LevelsFields": "Levels",
+      "AddCommand": "{0} Add level",
+      "EditCommand": "{0} Edit level",
+      "DeleteCommand": "{0} Delete level",
+      "CancelCommand": "{0} Cancel",
+      "CommandTitle": "Commands"
+    },
+    "RaidExperienceLevelSuperiorLevelDialogElement": {
+      "ChooseLevelTitle": "Raid experience level selection",
+      "ChooseLevelDescription": "Please choose one of the following experience levels:",
+      "NoExperienceLevel": "No superior level",
+      "LevelsField": "Levels"
+    },
     "DiscordErrorHandler": {
       "CommandFailedMessage": "The command could not be executed. But I have an error code ({0}) and funny cat picture."
     },
