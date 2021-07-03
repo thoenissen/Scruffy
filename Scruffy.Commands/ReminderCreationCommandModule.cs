@@ -29,6 +29,19 @@ namespace Scruffy.Commands.Reminder
     [Group("reminder")]
     public class ReminderCreationCommandModule : LocatedCommandModuleBase
     {
+        #region Constructor
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="localizationService">Localization service</param>
+        public ReminderCreationCommandModule(LocalizationService localizationService)
+            : base(localizationService)
+        {
+        }
+
+        #endregion // Constructor
+
         #region Properties
 
         /// <summary>
@@ -42,19 +55,6 @@ namespace Scruffy.Commands.Reminder
         public JobScheduler JobScheduler { get; set; }
 
         #endregion // Properties
-
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        public ReminderCreationCommandModule(LocalizationService localizationService)
-            : base(localizationService)
-        {
-        }
-
-        #endregion // Constructor
 
         #region Command methods
 

@@ -164,6 +164,10 @@
       "NoExperienceLevel": "No superior level",
       "LevelsField": "Levels"
     },
+    "SearchCommandModule": {
+      "SearchResults": "Search results",
+      "NoResults": "I couldn't find anything."
+    },
     "DiscordErrorHandler": {
       "CommandFailedMessage": "The command could not be executed. But I have an error code ({0}) and funny cat picture."
     },
@@ -213,6 +217,8 @@
       "raid roles setup": "Configuration",
       "raid templates": "Templates",
       "raid templates setup": "Configuration",
+      "raid levels": "Levels",
+      "raid levels setup": "Configuration",
 
       "config": "Bot configuration",
 

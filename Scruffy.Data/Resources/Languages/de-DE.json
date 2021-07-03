@@ -164,6 +164,10 @@
       "NoExperienceLevel": "Keine übergeordnete Rolle",
       "LevelsField": "Erfahrungslevel"
     },
+    "SearchCommandModule": {
+      "SearchResults": "Suchergebnis",
+      "NoResults": "Ich konnte leider keine Ergebnisse finden." 
+    },
     "DiscordErrorHandler": {
       "CommandFailedMessage": "Der Befehl konnte nicht ausgeführt werden. Aber dafür habe ich einen Fehlercode ({0}) und ein lustiges Katzenbild für dich."
     },
@@ -219,6 +223,8 @@
       "raid roles setup": "Konfiguration",
       "raid templates": "Schablonen",
       "raid templates setup": "Konfiguration",
+      "raid levels": "Erfahrungslevel",
+      "raid levels setup": "Konfiguration",
 
       "config": "Konfiguration des Bots",
 
