@@ -166,7 +166,9 @@
     },
     "SearchCommandModule": {
       "SearchResults": "Suchergebnis",
-      "NoResults": "Ich konnte leider keine Ergebnisse finden." 
+      "NoResults": "Ich konnte leider keine Ergebnisse finden.",
+      "TitleSearch": "Titelsuche",
+      "TextSearch": "Textsuche" 
     },
     "DiscordErrorHandler": {
       "CommandFailedMessage": "Der Befehl konnte nicht ausgeführt werden. Aber dafür habe ich einen Fehlercode ({0}) und ein lustiges Katzenbild für dich."
@@ -241,7 +243,11 @@
       "reminder in message": "Nachricht",
       "reminder in message description": "Optional Nachricht",
 
-      "reminder weekly": "Erstellung einer wöchentlichen Erinnerung"
+      "reminder weekly": "Erstellung einer wöchentlichen Erinnerung",
+
+      "search": "Suche",
+      "search google" : "Google" ,
+      "search gw2wiki" : "Guild Wars 2 Wiki" 
     }
   }
 }

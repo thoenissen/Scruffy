@@ -166,7 +166,9 @@
     },
     "SearchCommandModule": {
       "SearchResults": "Search results",
-      "NoResults": "I couldn't find anything."
+      "NoResults": "I couldn't find anything.",
+      "TitleSearch": "Title search",
+      "TextSearch": "Text search"
     },
     "DiscordErrorHandler": {
       "CommandFailedMessage": "The command could not be executed. But I have an error code ({0}) and funny cat picture."
@@ -232,7 +234,11 @@
       "reminder in timeSpan format": "xh/m/s",
       "reminder in message": "Message",
 
-      "reminder weekly": "Weekly reminder creation"
+      "reminder weekly": "Weekly reminder creation",
+
+      "search": "Search",
+      "search google": "Google",
+      "search gw2wiki": "Guild Wars 2 Wiki"
     }
   }
 }

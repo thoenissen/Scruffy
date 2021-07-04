@@ -127,7 +127,7 @@ namespace Scruffy.Services.Fractals
                         messageBuilder.AddField(name, stringBuilder.ToString());
                     }
 
-                    messageBuilder.WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/836238701046398987/d7d1b509a23aa9789885127da9107fe0.png?size=256");
+                    messageBuilder.WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/ef1f3e1f3f40100fb3750f8d7d25c657.png?size=64");
                     messageBuilder.WithTimestamp(DateTime.Now);
 
                     var channel = await _client.GetChannelAsync(data.ChannelId).ConfigureAwait(false);
