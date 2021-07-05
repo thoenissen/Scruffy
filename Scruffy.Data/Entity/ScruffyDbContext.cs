@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
+using Scruffy.Data.Entity.Tables.Calendar;
 using Scruffy.Data.Entity.Tables.CoreData;
 using Scruffy.Data.Entity.Tables.Fractals;
 using Scruffy.Data.Entity.Tables.General;
@@ -199,6 +199,21 @@ namespace Scruffy.Data.Entity
             // Reminder
             modelBuilder.Entity<OneTimeReminderEntity>();
             modelBuilder.Entity<WeeklyReminderEntity>();
+
+            // Calendar
+            modelBuilder.Entity<CalendarAppointmentEntity>();
+            modelBuilder.Entity<CalendarAppointmentTemplateEntity>();
+            modelBuilder.Entity<CalendarAppointmentScheduleEntity>();
+
+            modelBuilder.Entity<CalendarAppointmentTemplateEntity>()
+                        .HasMany(obj => obj.CalendarAppointments)
+                        .WithOne(obj => obj.CalendarAppointmentTemplate)
+                        .HasForeignKey(obj => obj.CalendarAppointmentTemplateId);
+
+            modelBuilder.Entity<CalendarAppointmentTemplateEntity>()
+                        .HasMany(obj => obj.CalendarAppointmentSchedules)
+                        .WithOne(obj => obj.CalendarAppointmentTemplate)
+                        .HasForeignKey(obj => obj.CalendarAppointmentTemplateId);
 
             // Disabling cascade on delete
             foreach (var foreignKey in modelBuilder.Model

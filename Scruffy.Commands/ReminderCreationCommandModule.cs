@@ -12,7 +12,6 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity.Extensions;
 
-using Scruffy.Commands.Base;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Reminder;
 using Scruffy.Data.Entity.Tables.Reminder;
@@ -20,7 +19,7 @@ using Scruffy.Services.Core;
 using Scruffy.Services.Core.JobScheduler;
 using Scruffy.Services.CoreData;
 
-namespace Scruffy.Commands.Reminder
+namespace Scruffy.Commands
 {
     /// <summary>
     /// Reminder module

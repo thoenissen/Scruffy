@@ -18,7 +18,6 @@ using Microsoft.AspNetCore.WebUtilities;
 
 using Newtonsoft.Json;
 
-using Scruffy.Commands.Base;
 using Scruffy.Data.Json.MediaWiki;
 using Scruffy.Services.Core;
 

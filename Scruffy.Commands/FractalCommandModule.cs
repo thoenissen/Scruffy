@@ -12,7 +12,6 @@ using DSharpPlus.Interactivity.Extensions;
 
 using Microsoft.EntityFrameworkCore;
 
-using Scruffy.Commands.Base;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Fractals;
 using Scruffy.Data.Entity.Tables.Fractals;
@@ -20,7 +19,7 @@ using Scruffy.Services.Core;
 using Scruffy.Services.CoreData;
 using Scruffy.Services.Fractals;
 
-namespace Scruffy.Commands.Fractals
+namespace Scruffy.Commands
 {
     /// <summary>
     /// Fractal lfg setup commands

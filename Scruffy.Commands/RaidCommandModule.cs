@@ -7,7 +7,6 @@ using DSharpPlus.CommandsNext.Attributes;
 
 using Microsoft.EntityFrameworkCore;
 
-using Scruffy.Commands.Base;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Data.Entity.Tables.Raid;
@@ -18,7 +17,7 @@ using Scruffy.Services.Raid;
 using Scruffy.Services.Raid.DialogElements;
 using Scruffy.Services.Raid.DialogElements.Forms;
 
-namespace Scruffy.Commands.Raid
+namespace Scruffy.Commands
 {
     /// <summary>
     /// Raid commands

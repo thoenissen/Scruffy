@@ -2,7 +2,7 @@
 
 using Scruffy.Services.Core;
 
-namespace Scruffy.Commands.Base
+namespace Scruffy.Commands
 {
     /// <summary>
     /// Command module base class with localization services

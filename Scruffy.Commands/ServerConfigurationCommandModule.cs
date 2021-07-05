@@ -5,10 +5,9 @@ using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 
-using Scruffy.Commands.Base;
 using Scruffy.Services.Core;
 
-namespace Scruffy.Commands.CoreData
+namespace Scruffy.Commands
 {
     /// <summary>
     /// Configuration the server
