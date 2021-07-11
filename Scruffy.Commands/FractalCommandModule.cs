@@ -88,6 +88,8 @@ namespace Scruffy.Commands
 
             if (responseMessage.TimedOut == false)
             {
+                messagesToBeDeleted.Add(responseMessage.Result);
+
                 title = responseMessage.Result.Content;
 
                 currentBotMessage = await responseMessage.Result.RespondAsync(LocalizationGroup.GetText("DescriptionPrompt", "Please enter a description.")).ConfigureAwait(false);
@@ -99,6 +101,8 @@ namespace Scruffy.Commands
 
             if (responseMessage.TimedOut == false)
             {
+                messagesToBeDeleted.Add(responseMessage.Result);
+
                 description = responseMessage.Result.Content;
 
                 currentBotMessage = await responseMessage.Result.RespondAsync(LocalizationGroup.GetText("AliasNamePrompt", "Please enter an alias name.")).ConfigureAwait(false);
@@ -110,6 +114,8 @@ namespace Scruffy.Commands
 
             if (responseMessage.TimedOut == false)
             {
+                messagesToBeDeleted.Add(responseMessage.Result);
+
                 var aliasName = responseMessage.Result.Content;
 
                 var entry = new FractalLfgConfigurationEntity

@@ -90,6 +90,28 @@ namespace Scruffy.Data.Entity
             return _dbContext.Database.BeginTransaction(IsolationLevel.ReadCommitted);
         }
 
+        /// <summary>
+        /// Execution of raw sql
+        /// </summary>
+        /// <param name="sql">SQL-Script</param>
+        /// <param name="parameters">Parameters</param>
+        /// <returns>Number of rows affected</returns>
+        public int? ExecuteSqlCommand(string sql, params object[] parameters)
+        {
+            int? value = null;
+
+            try
+            {
+                value = _dbContext.Database.ExecuteSqlRaw(sql, parameters);
+            }
+            catch (Exception ex)
+            {
+                _dbContext.LastError = ex;
+            }
+
+            return value;
+        }
+
         #endregion // Methods
 
         #region IDisposable

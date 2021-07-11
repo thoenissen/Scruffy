@@ -7,7 +7,7 @@
       "DescriptionPrompt": "Geben Sie bitte die Beschreibung ein.",
       "AliasNamePrompt": "Geben Sie bitten den Alias-Namen ein.",
       "BuildingProgress": "Erstellung...",
-      "CreationCompletedMessage": "Erstellung abgeschlossen! Alle Nachrichten der Erstellung der Erinnerung werden in 30 Sekunden gelöscht.",
+      "CreationCompletedMessage": "Erstellung abgeschlossen! Alle Nachrichten der Erstellung werden in 30 Sekunden gelöscht.",
       "Today": "Heute"
     },
     "ReminderCreationCommandModule": {
@@ -19,7 +19,7 @@
       "ReminderTimePrompt": "Wählen Sie bitte den Zeitpunkt der Erinnerung. (Format: hh:mm)",
       "DeletionTimePrompt": "Wählen Sie bitte den Zeitpunkt der Löschung. (Format: hh:mm)",
       "ReminderMessagePrompt": "Geben Sie bitte die Nachricht der Erinnerung ein.",
-      "CreationCompletedMessage": "Erstellung abgeschlossen! Alle Nachrichten der Erstellung der Erinnerung werden in 30 Sekunden gelöscht."
+      "CreationCompletedMessage": "Erstellung abgeschlossen! Alle Nachrichten der Erstellung werden in 30 Sekunden gelöscht."
     },
     "FractalLfgMessageBuilder": {
       "Today": "Heute",
