@@ -116,6 +116,28 @@ namespace Scruffy.Services.Core
         public static DiscordEmoji GetImageEmoji(DiscordClient discordClient) => GetEmoji(discordClient, "Image");
 
         /// <summary>
+        /// Get guild emoji
+        /// </summary>
+        /// <param name="discordClient">Discord client</param>
+        /// <param name="id">Id</param>
+        /// <returns>Emoji</returns>
+        public static DiscordEmoji GetGuildEmoji(DiscordClient discordClient, ulong id)
+        {
+            DiscordEmoji emoji;
+
+            try
+            {
+                emoji = DiscordEmoji.FromGuildEmote(discordClient, id);
+            }
+            catch
+            {
+                emoji = DiscordEmoji.FromName(discordClient, ":grey_question:");
+            }
+
+            return emoji;
+        }
+
+        /// <summary>
         /// Get emoji by the given key
         /// </summary>
         /// <param name="discordClient">Discord client</param>
@@ -124,7 +146,6 @@ namespace Scruffy.Services.Core
         private static DiscordEmoji GetEmoji(DiscordClient discordClient, string key) => _emojis.TryGetValue(key, out var emojiId)
                                                                                              ? DiscordEmoji.FromGuildEmote(discordClient, emojiId)
                                                                                              : DiscordEmoji.FromName(discordClient, ":grey_question:");
-
         #endregion // Methods
     }
 }

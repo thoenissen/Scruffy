@@ -46,7 +46,6 @@ namespace Scruffy.Services.Raid
             builder.WithTitle(LocalizationGroup.GetText("AssistantTitle", "Raid role configuration"));
             builder.WithDescription(LocalizationGroup.GetText("AssistantDescription", "With this assistant you are able to configure the raid roles. The following roles are already created:"));
 
-            var roles = new StringBuilder();
             var areRolesAvailable = false;
 
             using (var dbFactory = RepositoryFactory.CreateInstance())
@@ -74,33 +73,23 @@ namespace Scruffy.Services.Raid
                 {
                     areRolesAvailable = true;
 
-                    var emptyEmoji = DiscordEmojiService.GetEmptyEmoji(commandContext.Client);
-                    var bulletEmoji = DiscordEmojiService.GetBulletEmoji(commandContext.Client);
-
                     foreach (var role in mainRoles)
                     {
-                        roles.AppendLine(Formatter.Bold($"{DiscordEmoji.FromGuildEmote(commandContext.Client, role.DiscordEmojiId)} {role.Description}"));
+                        var roles = new StringBuilder(1024, 1024);
 
                         foreach (var subRole in role.SubRoles)
                         {
-                            roles.Append(emptyEmoji);
-                            roles.Append(bulletEmoji);
-                            roles.Append(' ');
-                            roles.Append(DiscordEmoji.FromGuildEmote(commandContext.Client, subRole.DiscordEmojiId));
+                            roles.Append("> ");
+                            roles.Append(DiscordEmojiService.GetGuildEmoji(commandContext.Client, subRole.DiscordEmojiId));
                             roles.Append(' ');
                             roles.Append(subRole.Description);
                             roles.Append('\n');
                         }
 
                         roles.Append('\n');
-                    }
 
-                    if (mainRoles.Count == 0)
-                    {
-                        roles.Append('\u200B');
+                        builder.AddField($"{DiscordEmojiService.GetGuildEmoji(commandContext.Client, role.DiscordEmojiId)} {role.Description}", roles.ToString());
                     }
-
-                    builder.AddField(LocalizationGroup.GetText("AssistantRolesField", "Roles"), roles.ToString());
                 }
             }
 
