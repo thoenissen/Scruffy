@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Scruffy.Data.Entity;
 
 namespace Scruffy.Data.Entity.Migrations
 {
     [DbContext(typeof(ScruffyDbContext))]
-    partial class ScruffyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210717131135_Update13")]
+    partial class Update13
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -208,102 +210,6 @@ namespace Scruffy.Data.Entity.Migrations
                     b.ToTable("LogEntries");
                 });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildAdministration.GuildEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ApiKey")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("DiscordServerId")
-                        .HasColumnType("decimal(20,0)");
-
-                    b.Property<string>("GuildId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("NotificationChannelId")
-                        .HasColumnType("decimal(20,0)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DiscordServerId");
-
-                    b.ToTable("Guilds");
-                });
-
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildAdministration.GuildLogEntryEntity", b =>
-                {
-                    b.Property<long>("GuildId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Action")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Activity")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ChangedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Coins")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Count")
-                        .HasColumnType("int");
-
-                    b.Property<string>("InvitedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ItemId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("KickedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MessageOfTheDay")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NewRank")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OldRank")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Operation")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Participants")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("RecipeId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Time")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("TotalParticipants")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Type")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("UpgradeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("User")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("GuildId", "Id");
-
-                    b.ToTable("GuildLogEntries");
-                });
-
             modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidAppointmentEntity", b =>
                 {
                     b.Property<long>("Id")
@@ -316,9 +222,6 @@ namespace Scruffy.Data.Entity.Migrations
 
                     b.Property<DateTime>("Deadline")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsCommitted")
-                        .HasColumnType("bit");
 
                     b.Property<long>("TemplateId")
                         .HasColumnType("bigint");
@@ -418,9 +321,6 @@ namespace Scruffy.Data.Entity.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AliasName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -707,28 +607,6 @@ namespace Scruffy.Data.Entity.Migrations
                     b.Navigation("FractalLfgConfiguration");
                 });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildAdministration.GuildEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.CoreData.ServerConfigurationEntity", "ServerConfiguration")
-                        .WithMany()
-                        .HasForeignKey("DiscordServerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("ServerConfiguration");
-                });
-
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildAdministration.GuildLogEntryEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.GuildAdministration.GuildEntity", "Guild")
-                        .WithMany("GuildLogEntries")
-                        .HasForeignKey("GuildId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Guild");
-                });
-
             modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidAppointmentEntity", b =>
                 {
                     b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidDayConfigurationEntity", "RaidDayConfiguration")
@@ -926,11 +804,6 @@ namespace Scruffy.Data.Entity.Migrations
             modelBuilder.Entity("Scruffy.Data.Entity.Tables.Fractals.FractalLfgConfigurationEntity", b =>
                 {
                     b.Navigation("FractalRegistrations");
-                });
-
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildAdministration.GuildEntity", b =>
-                {
-                    b.Navigation("GuildLogEntries");
                 });
 
             modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidAppointmentEntity", b =>

@@ -33,6 +33,12 @@
     "ServerConfigurationCommandModule": {
       "UsingNewPrefix": "I will use the following prefix: {0}"
     },
+    "RaidCommandModule": {
+      "NoActiveAppointment": "Currently there is no active appointment."
+    },
+    "RaidExperienceLevelsCommandModule": {
+      "UnknownExperienceLevel": "The experience role by the given name does not exist."
+    },
     "RaidRolesService": {
       "AssistantTitle": "Raid role configuration",
       "AssistantDescription": "With this assistant you are able to configure the raid roles. The following roles are already created:",
@@ -124,11 +130,13 @@
     "RaidExperienceLevelEditDialogElement": {
       "ChooseCommandTitle": "Raid experience level configuration",
       "ChooseCommandDescription": "With this assistant you are able to configure the raid experience level.",
+      "AliasName": "Alias name",
       "Description": "Description",
       "Emoji": "Emoji",
       "Role": "Role",
       "CommandTitle": "Commands",
       "EditSuperiorRoleCommand": "{0} Edit superior role",
+      "EditAliasNameCommand": "{0} Edit alias name",
       "EditDescriptionCommand": "{0} Edit description",
       "EditRoleCommand": "{0} Edit role",
       "EditEmojiCommand": "{0} Edit emoji",
@@ -163,6 +171,31 @@
       "ChooseLevelDescription": "Please choose one of the following experience levels:",
       "NoExperienceLevel": "No superior level",
       "LevelsField": "Levels"
+    },
+    "RaidExperienceLevelAliasNameDialogElement": {
+      "Message": "Please enter the alias name which should be used."
+    },
+    "RaidCommitService": {
+      "NoOpenAppointment": "There is no uncommitted appointment available."
+    },
+    "RaidExperienceLevelsService": {
+      "ExperienceLevels": "Experience levels"
+    },
+    "RaidMessageBuilder": {
+      "SubstitutesBench": "Substitutes bench"
+    },
+    "GuildAdministrationApiKeyDialogElement": {
+      "Message": "Please enter the api key."
+    },
+    "GuildAdministrationGuildDialogElement": {
+      "ChooseGuildTitle": "Guild selection",
+      "ChooseGuildDescription": "Please choose one of the following guilds:",
+      "GuildsField": "Guilds"
+    },
+    "GuildLogImportJob": {
+      "MemberJoined": "**{0}** joined the guild.",
+      "MemberLeft": "**{0}** left the guild.",
+      "MemberKicked": "**{0}** got kicked out of the guild by **{1}**."
     },
     "SearchCommandModule": {
       "SearchResults": "Search results",
@@ -214,6 +247,7 @@
       "raid leave alias description": "Lfg name",
       "raid leave role": "Role",
       "raid leave role description": "Role name",
+      "raid commit": "Commit appointment",
       "raid roles": "Role overview",
       "raid roles own": "Player",
       "raid roles setup": "Configuration",
@@ -221,6 +255,14 @@
       "raid templates setup": "Configuration",
       "raid levels": "Levels",
       "raid levels setup": "Configuration",
+      "raid levels set": "Assign a level to users",
+      "raid levels set aliasName": "Alias name",
+      "raid levels set users": "Users", 
+      "raid levels overview": "Levels overview",
+
+      "guild": "Guild administration",
+      "guild setup": "Setup the guild administration",
+      "guild setNotificationChannel": "Set the notification channel",
 
       "config": "Bot configuration",
 

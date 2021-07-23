@@ -2,12 +2,15 @@
 using System.Linq;
 using System.Threading.Tasks;
 
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
 
 using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;
+using Scruffy.Data.Entity.Repositories.CoreData;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Data.Entity.Tables.Raid;
 using Scruffy.Services.Core;
@@ -51,6 +54,11 @@ namespace Scruffy.Commands
         /// </summary>
         public RaidMessageBuilder MessageBuilder { get; set; }
 
+        /// <summary>
+        /// Committing a appointment
+        /// </summary>
+        public RaidCommitService CommitService { get; set; }
+
         #endregion // Properties
 
         #region Methods
@@ -61,6 +69,7 @@ namespace Scruffy.Commands
         /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("setup")]
+        [RequireUserPermissions(Permissions.Administrator)]
         public async Task Setup(CommandContext commandContext)
         {
             var data = await DialogHandler.RunForm<CreateRaidDayFormData>(commandContext, true)
@@ -69,19 +78,41 @@ namespace Scruffy.Commands
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
                 var message = await commandContext.Channel
-                                                  .SendMessageAsync("TODO") // TODO
+                                                  .SendMessageAsync(DiscordEmojiService.GetProgressEmoji(commandContext.Client))
                                                   .ConfigureAwait(false);
 
+                var configuration = new RaidDayConfigurationEntity
+                                  {
+                                      AliasName = data.AliasName,
+                                      Day = data.Day,
+                                      RegistrationDeadline = data.RegistrationDeadline,
+                                      StartTime = data.StartTime,
+                                      ChannelId = commandContext.Channel.Id,
+                                      MessageId = message.Id
+                                  };
+
                 dbFactory.GetRepository<RaidDayConfigurationRepository>()
-                         .Add(new RaidDayConfigurationEntity
-                               {
-                                   AliasName = data.AliasName,
-                                   Day = data.Day,
-                                   RegistrationDeadline = data.RegistrationDeadline,
-                                   StartTime = data.StartTime,
-                                   ChannelId = commandContext.Channel.Id,
-                                   MessageId = message.Id
-                               });
+                         .Add(configuration);
+
+                var appointmentTimeStamp = DateTime.Today.Add(data.StartTime);
+                while (appointmentTimeStamp < DateTime.Now
+                    || appointmentTimeStamp.DayOfWeek != data.Day)
+                {
+                    appointmentTimeStamp = appointmentTimeStamp.AddDays(1);
+                }
+
+                dbFactory.GetRepository<RaidAppointmentRepository>()
+                         .Add(new RaidAppointmentEntity
+                              {
+                                  ConfigurationId = configuration.Id,
+                                  TemplateId = data.TemplateId,
+                                  TimeStamp = appointmentTimeStamp,
+                                  Deadline = appointmentTimeStamp.Date
+                                                                 .Add(data.RegistrationDeadline)
+                              });
+
+                await MessageBuilder.RefreshMessageAsync(configuration.Id)
+                                    .ConfigureAwait(false);
             }
         }
 
@@ -128,25 +159,10 @@ namespace Scruffy.Commands
                 }
                 else
                 {
-                    // TODO No current appointment
+                    await commandContext.RespondAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."))
+                                        .ConfigureAwait(false);
                 }
             }
-        }
-
-        /// <summary>
-        /// Joining an appointment
-        /// </summary>
-        /// <param name="commandContext">Current command context</param>
-        /// <param name="name">Name</param>
-        /// <param name="role">Role</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-        [Command("join")]
-#if RELEASE
-        [Hidden] // TODO
-#endif
-        public async Task Join(CommandContext commandContext, string name, string role)
-        {
-            await Task.Delay(1).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -173,6 +189,9 @@ namespace Scruffy.Commands
                                                  .ConfigureAwait(false);
                 if (appointment != null)
                 {
+                    dbFactory.GetRepository<RaidRegistrationRoleAssignmentRepository>()
+                             .RemoveRange(obj => obj.RaidRegistration.AppointmentId == appointment.Id);
+
                     if (dbFactory.GetRepository<RaidRegistrationRepository>()
                                  .Remove(obj => obj.AppointmentId == appointment.Id
                                                       && obj.UserId == commandContext.User.Id))
@@ -183,25 +202,24 @@ namespace Scruffy.Commands
                 }
                 else
                 {
-                    // TODO No current appointment
+                    await commandContext.RespondAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."))
+                                        .ConfigureAwait(false);
                 }
             }
         }
 
         /// <summary>
-        /// Leaving an appointment
+        /// Commiting the current raid appointment
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
-        /// <param name="name">Name</param>
-        /// <param name="role">Role</param>
+        /// <param name="commandContext">Command context</param>
+        /// <param name="aliasName">Alias name</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-        [Command("leave")]
-#if RELEASE
-        [Hidden] // TODO
-#endif
-        public async Task Leave(CommandContext commandContext, string name, string role)
+        [Command("commit")]
+        [RequireUserPermissions(Permissions.Administrator)]
+        public async Task Commit(CommandContext commandContext, string aliasName)
         {
-            await Task.Delay(1).ConfigureAwait(false);
+            await CommitService.CommitRaidAppointment(commandContext, aliasName)
+                               .ConfigureAwait(false);
         }
 
         #endregion // Methods
@@ -248,25 +266,12 @@ namespace Scruffy.Commands
             #endregion // Properties
 
             /// <summary>
-            /// Starting the personal roles assistant
-            /// </summary>
-            /// <param name="commandContext">Current command context</param>
-            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-            [Command("own")]
-#if RELEASE
-            [Hidden] // TODO
-#endif
-            public async Task RolesOwn(CommandContext commandContext)
-            {
-                await Task.Delay(1).ConfigureAwait(false);
-            }
-
-            /// <summary>
             /// Starting the roles assistant
             /// </summary>
             /// <param name="commandContext">Current command context</param>
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("setup")]
+            [RequireUserPermissions(Permissions.Administrator)]
             public async Task SetupRoles(CommandContext commandContext)
             {
                 await RaidRolesService.RunAssistantAsync(commandContext)
@@ -306,6 +311,7 @@ namespace Scruffy.Commands
             /// <param name="commandContext">Current command context</param>
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("setup")]
+            [RequireUserPermissions(Permissions.Administrator)]
             public async Task Setup(CommandContext commandContext)
             {
                 bool repeat;
@@ -344,6 +350,15 @@ namespace Scruffy.Commands
 
             #endregion // Constructor
 
+            #region Properties
+
+            /// <summary>
+            /// Experience level service
+            /// </summary>
+            public RaidExperienceLevelsService RaidExperienceLevelsService { get; set; }
+
+            #endregion // Properties
+
             #region Methods
 
             /// <summary>
@@ -352,6 +367,7 @@ namespace Scruffy.Commands
             /// <param name="commandContext">Current command context</param>
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("setup")]
+            [RequireUserPermissions(Permissions.Administrator)]
             public async Task Setup(CommandContext commandContext)
             {
                 bool repeat;
@@ -362,6 +378,68 @@ namespace Scruffy.Commands
                                                 .ConfigureAwait(false);
                 }
                 while (repeat);
+            }
+
+            /// <summary>
+            /// Set experience levels to players
+            /// </summary>
+            /// <param name="commandContext">Command context</param>
+            /// <param name="aliasName">Alias name</param>
+            /// <param name="users">Users</param>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+            [Command("set")]
+            [RequireUserPermissions(Permissions.Administrator)]
+            public async Task SetExperienceLevel(CommandContext commandContext, string aliasName, params DiscordUser[] users)
+            {
+                using (var dbFactory = RepositoryFactory.CreateInstance())
+                {
+                    var experienceLevelId = await dbFactory.GetRepository<RaidExperienceLevelRepository>()
+                                                           .GetQuery()
+                                                           .Where(obj => obj.AliasName == aliasName)
+                                                           .Select(obj => obj.Id)
+                                                           .FirstOrDefaultAsync()
+                                                           .ConfigureAwait(false);
+
+                    if (experienceLevelId > 0)
+                    {
+                        foreach (var user in users)
+                        {
+                            dbFactory.GetRepository<UserRepository>()
+                                     .AddOrRefresh(obj => obj.Id == user.Id,
+                                                   obj =>
+                                                   {
+                                                       if (obj.Id == default)
+                                                       {
+                                                           obj.Id = user.Id;
+                                                           obj.CreationTimeStamp = DateTime.Now;
+                                                       }
+
+                                                       obj.RaidExperienceLevelId = experienceLevelId;
+                                                   });
+                        }
+
+                        await commandContext.Message
+                                            .CreateReactionAsync(DiscordEmojiService.GetCheckEmoji(commandContext.Client))
+                                            .ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        await commandContext.RespondAsync(LocalizationGroup.GetText("UnknownExperienceLevel", "The experience role by the given name does not exist."))
+                                            .ConfigureAwait(false);
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Post overview of experience roles
+            /// </summary>
+            /// <param name="commandContext">Command context</param>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+            [Command("overview")]
+            public async Task SendExperienceLevelOverview(CommandContext commandContext)
+            {
+                await RaidExperienceLevelsService.PostExperienceLevelOverview(commandContext)
+                                                 .ConfigureAwait(false);
             }
 
             #endregion // Methods

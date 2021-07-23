@@ -3,7 +3,7 @@
 namespace Scruffy.Data.Entity.Tables.Raid
 {
     /// <summary>
-    /// Assignment of the valid experience level to a configuration
+    /// Assignment of the valid experience level to a template
     /// </summary>
     [Table("RaidExperienceAssignments")]
     public class RaidExperienceAssignmentEntity

@@ -111,9 +111,7 @@ namespace Scruffy.Commands
         /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("weekly")]
-        #if !DEBUG
         [RequireUserPermissions(Permissions.Administrator)]
-        #endif
         public async Task RemindWeekly(CommandContext commandContext)
         {
             var continueCreation = true;

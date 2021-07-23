@@ -6,6 +6,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord.Attributes;
 using Scruffy.Services.Debug;
+using Scruffy.Services.Raid;
 
 namespace Scruffy.Commands
 {
@@ -29,6 +30,110 @@ namespace Scruffy.Commands
         }
 
         #endregion // Constructor
+
+        #region Dump
+
+        /// <summary>
+        /// Listing
+        /// </summary>
+        [Group("dump")]
+        [ModuleLifespan(ModuleLifespan.Transient)]
+        public class DebugDumpModule : LocatedCommandModuleBase
+        {
+            #region Constructor
+
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="localizationService">Localization service</param>
+            public DebugDumpModule(LocalizationService localizationService)
+                : base(localizationService)
+            {
+            }
+
+            #endregion // Constructor
+
+            #region Properties
+
+            /// <summary>
+            /// Debug-Service
+            /// </summary>
+            public DebugService DebugService { get; set; }
+
+            #endregion // Properties
+
+            #region Methods
+
+            /// <summary>
+            /// List roles
+            /// </summary>
+            /// <param name="commandContext">Current command context</param>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+            [Command("text")]
+            public async Task Roles(CommandContext commandContext)
+            {
+                await DebugService.DumpText(commandContext)
+                                  .ConfigureAwait(false);
+            }
+
+            #endregion // Methods
+        }
+
+        #endregion // Dump
+
+        #region Raid
+
+        /// <summary>
+        /// Listing
+        /// </summary>
+        [Group("raid")]
+        [ModuleLifespan(ModuleLifespan.Transient)]
+        public class DebugRaidModule : LocatedCommandModuleBase
+        {
+            #region Constructor
+
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="localizationService">Localization service</param>
+            public DebugRaidModule(LocalizationService localizationService)
+                : base(localizationService)
+            {
+            }
+
+            #endregion // Constructor
+
+            #region Properties
+
+            /// <summary>
+            /// Message builder
+            /// </summary>
+            public RaidMessageBuilder MessageBuilder { get; set; }
+
+            #endregion // Properties
+
+            #region Methods
+
+            /// <summary>
+            /// List roles
+            /// </summary>
+            /// <param name="commandContext">Current command context</param>
+            /// <param name="configurationId">Id of the configuration</param>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+            [Command("refresh_message")]
+            public async Task Roles(CommandContext commandContext, long configurationId)
+            {
+                await MessageBuilder.RefreshMessageAsync(configurationId)
+                                    .ConfigureAwait(false);
+
+                await commandContext.Message.DeleteAsync()
+                                    .ConfigureAwait(false);
+            }
+
+            #endregion // Methods
+        }
+
+        #endregion // Raid
 
         #region List
 

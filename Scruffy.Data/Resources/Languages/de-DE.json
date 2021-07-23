@@ -33,6 +33,12 @@
     "ServerConfigurationCommandModule": {
       "UsingNewPrefix": "Ich werde nun den folgenden Präfix verwenden: {0}"
     },
+    "RaidCommandModule": {
+      "NoActiveAppointment": "Es besteht kein aktiver Termin."
+    },
+    "RaidExperienceLevelsCommandModule": {
+      "UnknownExperienceLevel": "Das angegebene Erfahrungslevel existiert nicht."
+    },
     "RaidRolesService": {
       "AssistantTitle": "Konfiguration Raid-Rollen",
       "AssistantDescription": "Mit diesem Assistenten kannst du die Raid-Rollen bearbeiten. Nachfolgend sind alle bereits eingerichteten Rollen aufgelistet:",
@@ -124,11 +130,13 @@
     "RaidExperienceLevelEditDialogElement": {
       "ChooseCommandTitle": "Erfahrungslevelkonfiguration",
       "ChooseCommandDescription": "Mit diesem Assistenten können bestehende Erfahrungslevel bearbeitet werden.",
+      "AliasName": "Aliasname",
       "Description": "Bezeichnung",
       "Emoji": "Emoji",
       "Role": "Rolle",
       "CommandTitle": "Befehle",
       "EditSuperiorRoleCommand": "{0} Übergeordnetes Erfahrungslevel bearbeiten",
+      "EditAliasNameCommand": "{0} Aliasname bearbeiten",
       "EditDescriptionCommand": "{0} Bezeichnung bearbeiten",
       "EditRoleCommand": "{0} Rolle bearbeiten",
       "EditEmojiCommand": "{0} Emoji bearbeiten",
@@ -164,11 +172,36 @@
       "NoExperienceLevel": "Keine übergeordnete Rolle",
       "LevelsField": "Erfahrungslevel"
     },
+    "RaidExperienceLevelAliasNameDialogElement": {
+      "Message": "Bitte geben den zu verwendenden Aliasnamen ein."
+    },
+    "RaidCommitService": {
+      "NoOpenAppointment": "Es besteht kein Termin, der noch nicht fortgeschrieben worden ist."
+    },
+    "RaidExperienceLevelsService": {
+      "ExperienceLevels": "Erfahrungslevel"
+    },
+    "RaidMessageBuilder": {
+      "SubstitutesBench": "Ersatzbank"
+    },
+    "GuildAdministrationApiKeyDialogElement": {
+      "Message": "Gebe den zu verwendenden API-Key ein:"
+    },
+    "GuildAdministrationGuildDialogElement": {
+      "ChooseGuildTitle": "Gildenauswahl",
+      "ChooseGuildDescription": "Bitte wähle eine der folgenden Gilden aus:",
+      "GuildsField": "Gilden"
+    },
+    "GuildLogImportJob": {
+      "MemberJoined": "**{0}** ist der Gilde beigetreten.",
+      "MemberLeft": "**{0}** hat die Gilde verlassen.",
+      "MemberKicked": "**{0}** wurde von **{1}** aus der Gilde geworfen."
+    },
     "SearchCommandModule": {
       "SearchResults": "Suchergebnis",
       "NoResults": "Ich konnte leider keine Ergebnisse finden.",
       "TitleSearch": "Titelsuche",
-      "TextSearch": "Textsuche" 
+      "TextSearch": "Textsuche"
     },
     "DiscordErrorHandler": {
       "CommandFailedMessage": "Der Befehl konnte nicht ausgeführt werden. Aber dafür habe ich einen Fehlercode ({0}) und ein lustiges Katzenbild für dich."
@@ -220,6 +253,7 @@
       "raid leave alias description": "Aliasname der Gruppensuche",
       "raid leave role": "Rolle",
       "raid leave role description": "Aliasname der Rolle",
+      "raid commit": "Fortschreibung eines Termins",
       "raid roles": "Rollenübersicht",
       "raid roles own": "Spieler",
       "raid roles setup": "Konfiguration",
@@ -227,6 +261,14 @@
       "raid templates setup": "Konfiguration",
       "raid levels": "Erfahrungslevel",
       "raid levels setup": "Konfiguration",
+      "raid levels set": "Erfahrungslevelzuweisung",
+      "raid levels set aliasName": "Aliasname",
+      "raid levels set users": "Benutzer",
+      "raid levels overview": "Erfahrungslevelübersicht",
+
+      "guild": "Gildenverwaltung",
+      "guild setup": "Einrichtung der Gildenadministration",
+      "guild setNotificationChannel": "Setzen des Benachrichtigungskanals",
 
       "config": "Konfiguration des Bots",
 
@@ -246,8 +288,8 @@
       "reminder weekly": "Erstellung einer wöchentlichen Erinnerung",
 
       "search": "Suche",
-      "search google" : "Google" ,
-      "search gw2wiki" : "Guild Wars 2 Wiki" 
+      "search google": "Google",
+      "search gw2wiki": "Guild Wars 2 Wiki"
     }
   }
 }

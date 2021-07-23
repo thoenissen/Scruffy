@@ -74,6 +74,13 @@ namespace Scruffy.Services.Core
         public static DiscordEmoji GetEdit2Emoji(DiscordClient discordClient) => GetEmoji(discordClient, "Edit2");
 
         /// <summary>
+        /// Get 'Edit4'-Emoji
+        /// </summary>
+        /// <param name="discordClient">Discord client</param>
+        /// <returns>Emoji</returns>
+        public static DiscordEmoji GetEdit4Emoji(DiscordClient discordClient) => GetEmoji(discordClient, "Edit4");
+
+        /// <summary>
         /// Get 'Edit3'-Emoji
         /// </summary>
         /// <param name="discordClient">Discord client</param>
@@ -116,6 +123,20 @@ namespace Scruffy.Services.Core
         public static DiscordEmoji GetImageEmoji(DiscordClient discordClient) => GetEmoji(discordClient, "Image");
 
         /// <summary>
+        /// Get 'Progress'-Emoji
+        /// </summary>
+        /// <param name="discordClient">Discord client</param>
+        /// <returns>Emoji</returns>
+        public static DiscordEmoji GetProgressEmoji(DiscordClient discordClient) => GetEmoji(discordClient, "Progress");
+
+        /// <summary>
+        /// Get 'QuestionMark'-Emoji
+        /// </summary>
+        /// <param name="discordClient">Discord client</param>
+        /// <returns>Emoji</returns>
+        public static DiscordEmoji GetQuestionMarkEmoji(DiscordClient discordClient) => GetEmoji(discordClient, "QuestionMark");
+
+        /// <summary>
         /// Get guild emoji
         /// </summary>
         /// <param name="discordClient">Discord client</param>
@@ -143,9 +164,20 @@ namespace Scruffy.Services.Core
         /// <param name="discordClient">Discord client</param>
         /// <param name="key">key</param>
         /// <returns>Emoji</returns>
-        private static DiscordEmoji GetEmoji(DiscordClient discordClient, string key) => _emojis.TryGetValue(key, out var emojiId)
-                                                                                             ? DiscordEmoji.FromGuildEmote(discordClient, emojiId)
-                                                                                             : DiscordEmoji.FromName(discordClient, ":grey_question:");
+        private static DiscordEmoji GetEmoji(DiscordClient discordClient, string key)
+        {
+            try
+            {
+                return _emojis.TryGetValue(key, out var emojiId)
+                           ? DiscordEmoji.FromGuildEmote(discordClient, emojiId)
+                           : DiscordEmoji.FromName(discordClient, ":grey_question:");
+            }
+            catch
+            {
+                return DiscordEmoji.FromName(discordClient, ":grey_question:");
+            }
+        }
+
         #endregion // Methods
     }
 }

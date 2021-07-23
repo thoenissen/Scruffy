@@ -9,6 +9,7 @@ using Scruffy.Data.Entity.Tables.Calendar;
 using Scruffy.Data.Entity.Tables.CoreData;
 using Scruffy.Data.Entity.Tables.Fractals;
 using Scruffy.Data.Entity.Tables.General;
+using Scruffy.Data.Entity.Tables.GuildAdministration;
 using Scruffy.Data.Entity.Tables.Raid;
 using Scruffy.Data.Entity.Tables.Reminder;
 
@@ -186,6 +187,11 @@ namespace Scruffy.Data.Entity
                         .HasForeignKey(obj => obj.ExperienceLevelId)
                         .IsRequired();
 
+            modelBuilder.Entity<RaidExperienceLevelEntity>()
+                        .HasMany(obj => obj.Users)
+                        .WithOne(obj => obj.RaidExperienceLevel)
+                        .HasForeignKey(obj => obj.RaidExperienceLevelId);
+
             modelBuilder.Entity<RaidRegistrationEntity>()
                         .HasMany(obj => obj.RaidRegistrationRoleAssignments)
                         .WithOne(obj => obj.RaidRegistration)
@@ -196,6 +202,16 @@ namespace Scruffy.Data.Entity
                         .HasMany(obj => obj.SubRaidRoles)
                         .WithOne(obj => obj.MainRaidRole)
                         .HasForeignKey(obj => obj.MainRoleId);
+
+            modelBuilder.Entity<RaidDayTemplateEntity>()
+                        .HasMany(obj => obj.RaidAppointments)
+                        .WithOne(obj => obj.RaidDayTemplateEntity)
+                        .HasForeignKey(obj => obj.TemplateId);
+
+            modelBuilder.Entity<RaidDayTemplateEntity>()
+                        .HasMany(obj => obj.RaidExperienceAssignments)
+                        .WithOne(obj => obj.RaidDayTemplateEntity)
+                        .HasForeignKey(obj => obj.TemplateId);
 
             // Reminder
             modelBuilder.Entity<OneTimeReminderEntity>();
@@ -215,6 +231,22 @@ namespace Scruffy.Data.Entity
                         .HasMany(obj => obj.CalendarAppointmentSchedules)
                         .WithOne(obj => obj.CalendarAppointmentTemplate)
                         .HasForeignKey(obj => obj.CalendarAppointmentTemplateId);
+
+            // Guild
+            modelBuilder.Entity<GuildEntity>();
+            modelBuilder.Entity<GuildLogEntryEntity>();
+
+            modelBuilder.Entity<GuildLogEntryEntity>()
+                        .HasKey(obj => new
+                                       {
+                                           obj.GuildId,
+                                           obj.Id
+                                       });
+
+            modelBuilder.Entity<GuildEntity>()
+                        .HasMany(obj => obj.GuildLogEntries)
+                        .WithOne(obj => obj.Guild)
+                        .HasForeignKey(obj => obj.GuildId);
 
             // Disabling cascade on delete
             foreach (var foreignKey in modelBuilder.Model

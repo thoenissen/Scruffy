@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
+using Scruffy.Data.Entity.Tables.CoreData;
+
 namespace Scruffy.Data.Entity.Tables.Raid
 {
     /// <summary>
@@ -33,6 +35,11 @@ namespace Scruffy.Data.Entity.Tables.Raid
         public string Description { get; set; }
 
         /// <summary>
+        /// Alias name
+        /// </summary>
+        public string AliasName { get; set;  }
+
+        /// <summary>
         /// Discord emoji
         /// </summary>
         public ulong DiscordEmoji { get; set; }
@@ -59,6 +66,11 @@ namespace Scruffy.Data.Entity.Tables.Raid
         /// Assignments
         /// </summary>
         public virtual ICollection<RaidExperienceAssignmentEntity> RaidExperienceAssignments { get; set; }
+
+        /// <summary>
+        /// Users
+        /// </summary>
+        public virtual ICollection<UserEntity> Users { get; set; }
 
         #endregion // Navigation properties
 

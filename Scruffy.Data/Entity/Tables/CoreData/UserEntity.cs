@@ -27,7 +27,17 @@ namespace Scruffy.Data.Entity.Tables.CoreData
         /// </summary>
         public DateTime CreationTimeStamp { get; set; }
 
+        /// <summary>
+        /// Experience level
+        /// </summary>
+        public long? RaidExperienceLevelId { get; set; }
+
         #region Navigation properties
+
+        /// <summary>
+        /// Raid experience level
+        /// </summary>
+        public virtual RaidExperienceLevelEntity RaidExperienceLevel { get; set; }
 
         /// <summary>
         /// One time reminders

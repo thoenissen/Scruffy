@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Scruffy.Data.Entity.Tables.Raid
@@ -42,6 +43,20 @@ namespace Scruffy.Data.Entity.Tables.Raid
         /// Ist the template deleted?
         /// </summary>
         public bool IsDeleted { get; set; }
+
+        #region Navigation properties
+
+        /// <summary>
+        /// Appointments
+        /// </summary>
+        public virtual ICollection<RaidAppointmentEntity> RaidAppointments { get; set; }
+
+        /// <summary>
+        /// Experience level assignments
+        /// </summary>
+        public virtual ICollection<RaidExperienceAssignmentEntity> RaidExperienceAssignments { get; set; }
+
+        #endregion // Navigation properties
 
         #endregion // Properties
     }

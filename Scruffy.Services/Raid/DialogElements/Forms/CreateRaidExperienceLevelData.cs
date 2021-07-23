@@ -26,6 +26,12 @@ namespace Scruffy.Services.Raid.DialogElements.Forms
         public string Description { get; set; }
 
         /// <summary>
+        /// AliasName
+        /// </summary>
+        [DialogElementAssignment(typeof(RaidExperienceLevelAliasNameDialogElement))]
+        public string AliasName { get; set; }
+
+        /// <summary>
         /// Discord emoji
         /// </summary>
         [DialogElementAssignment(typeof(RaidExperienceLevelEmojiDialogElement))]
