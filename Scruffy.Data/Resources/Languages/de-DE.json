@@ -269,6 +269,7 @@
       "guild": "Gildenverwaltung",
       "guild setup": "Einrichtung der Gildenadministration",
       "guild setNotificationChannel": "Setzen des Benachrichtigungskanals",
+      "guild emblem random": "Zufallsgenerierung von Gilden-Emblemen", 
 
       "config": "Konfiguration des Bots",
 

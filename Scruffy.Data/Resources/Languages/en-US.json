@@ -257,12 +257,13 @@
       "raid levels setup": "Configuration",
       "raid levels set": "Assign a level to users",
       "raid levels set aliasName": "Alias name",
-      "raid levels set users": "Users", 
+      "raid levels set users": "Users",
       "raid levels overview": "Levels overview",
 
       "guild": "Guild administration",
       "guild setup": "Setup the guild administration",
       "guild setNotificationChannel": "Set the notification channel",
+      "guild emblem random": "Random generation of guild emblems",
 
       "config": "Bot configuration",
 

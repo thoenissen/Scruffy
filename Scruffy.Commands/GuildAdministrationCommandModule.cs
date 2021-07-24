@@ -36,6 +36,11 @@ namespace Scruffy.Commands
         /// </summary>
         public GuildAdministrationConfigurationService ConfigurationService { get; set; }
 
+        /// <summary>
+        /// Emblem service
+        /// </summary>
+        public GuildEmblemService GuildEmblemService { get; set; }
+
         #endregion // Properties
 
         #region Methods
@@ -67,6 +72,57 @@ namespace Scruffy.Commands
         }
 
         #endregion // Methods
+
+        #region Emblem
+
+        /// <summary>
+        /// Guild emblem
+        /// </summary>
+        [Group("emblem")]
+        [ModuleLifespan(ModuleLifespan.Transient)]
+        public class GuildAdministrationEmblemCommandModule : LocatedCommandModuleBase
+        {
+            #region Constructor
+
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="localizationService">Localization service</param>
+            public GuildAdministrationEmblemCommandModule(LocalizationService localizationService)
+                : base(localizationService)
+            {
+            }
+
+            #endregion // Constructor
+
+            #region Properties
+
+            /// <summary>
+            /// Emblem service
+            /// </summary>
+            public GuildEmblemService GuildEmblemService { get; set; }
+
+            #endregion // Properties
+
+            #region Methods
+
+            /// <summary>
+            /// Post random guild emblems
+            /// </summary>
+            /// <param name="commandContext">Current command context</param>
+            /// <param name="count">Count</param>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+            [Command("random")]
+            public async Task SetNotificationChannel(CommandContext commandContext, int count)
+            {
+                await GuildEmblemService.PostRandomGuildEmblems(commandContext, count)
+                                        .ConfigureAwait(false);
+            }
+
+            #endregion // Methods
+        }
+
+        #endregion Emblem
 
     }
 }

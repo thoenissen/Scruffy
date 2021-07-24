@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -98,6 +99,80 @@ namespace Scruffy.Services.WebApi
         }
 
         /// <summary>
+        /// Request all available guild emblem foregrounds
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task<List<long>> GetGuildEmblemForegrounds()
+        {
+            using (var response = await CreateRequest($"https://api.guildwars2.com/v2/emblem/foregrounds").GetResponseAsync()
+                                                                                                                   .ConfigureAwait(false))
+            {
+                using (var reader = new StreamReader(response.GetResponseStream()))
+                {
+                    var jsonResult = await reader.ReadToEndAsync().ConfigureAwait(false);
+
+                    return JsonConvert.DeserializeObject<List<long>>(jsonResult);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Request all available guild emblem backgrounds
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task<List<long>> GetGuildEmblemBackgrounds()
+        {
+            using (var response = await CreateRequest($"https://api.guildwars2.com/v2/emblem/backgrounds").GetResponseAsync()
+                                                                                                                                    .ConfigureAwait(false))
+            {
+                using (var reader = new StreamReader(response.GetResponseStream()))
+                {
+                    var jsonResult = await reader.ReadToEndAsync().ConfigureAwait(false);
+
+                    return JsonConvert.DeserializeObject<List<long>>(jsonResult);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Request the layers of a guild emblem background
+        /// </summary>
+        /// <param name="id">Id</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task<GuildEmblemLayerData> GetGuildEmblemBackgroundLayer(long id)
+        {
+            using (var response = await CreateRequest($"https://api.guildwars2.com/v2/emblem/backgrounds?ids={id}").GetResponseAsync()
+                                                                                                                   .ConfigureAwait(false))
+            {
+                using (var reader = new StreamReader(response.GetResponseStream()))
+                {
+                    var jsonResult = await reader.ReadToEndAsync().ConfigureAwait(false);
+
+                    return JsonConvert.DeserializeObject<List<GuildEmblemLayerData>>(jsonResult).FirstOrDefault();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Request the layers of a guild emblem foreground
+        /// </summary>
+        /// <param name="id">Id</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task<GuildEmblemLayerData> GetGuildEmblemForegroundLayer(long id)
+        {
+            using (var response = await CreateRequest($"https://api.guildwars2.com/v2/emblem/foregrounds?ids={id}").GetResponseAsync()
+                                                                                                                            .ConfigureAwait(false))
+            {
+                using (var reader = new StreamReader(response.GetResponseStream()))
+                {
+                    var jsonResult = await reader.ReadToEndAsync().ConfigureAwait(false);
+
+                    return JsonConvert.DeserializeObject<List<GuildEmblemLayerData>>(jsonResult).FirstOrDefault();
+                }
+            }
+        }
+
+        /// <summary>
         /// Create a new request
         /// </summary>
         /// <param name="uri">Uri</param>
@@ -106,7 +181,10 @@ namespace Scruffy.Services.WebApi
         {
             var request = WebRequest.CreateHttp(uri);
 
-            request.Headers.Add("Authorization", "Bearer " + _apiKey);
+            if (_apiKey != null)
+            {
+                request.Headers.Add("Authorization", "Bearer " + _apiKey);
+            }
 
             return request;
         }
