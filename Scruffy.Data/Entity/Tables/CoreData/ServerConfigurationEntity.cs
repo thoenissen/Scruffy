@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Scruffy.Data.Entity.Tables.CoreData
 {
     /// <summary>
     /// Configuration of a server
     /// </summary>
+    [Table("ServerConfigurations")]
     public class ServerConfigurationEntity
     {
         #region Properties

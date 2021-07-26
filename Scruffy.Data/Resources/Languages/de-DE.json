@@ -3,22 +3,22 @@
   "Description": "Deutsch",
   "TranslationGroups": {
     "FractalCommandModule": {
-      "TitlePrompt": "Geben Sie bitte den Titel ein.",
-      "DescriptionPrompt": "Geben Sie bitte die Beschreibung ein.",
-      "AliasNamePrompt": "Geben Sie bitten den Alias-Namen ein.",
+      "TitlePrompt": "Gib bitte den Titel ein.",
+      "DescriptionPrompt": "Gib bitte die Beschreibung ein.",
+      "AliasNamePrompt": "Gib bitte den Alias-Namen ein.",
       "BuildingProgress": "Erstellung...",
       "CreationCompletedMessage": "Erstellung abgeschlossen! Alle Nachrichten der Erstellung werden in 30 Sekunden gelöscht.",
       "Today": "Heute"
     },
     "ReminderCreationCommandModule": {
       "CommandProgressed": "Der Befehl wurde verarbeitet.",
-      "ChooseChannelPrompt": "Bitte wähle einen der folgenden Kanäle aus:",
+      "ChooseChannelPrompt": "Wähle bitte einen der folgenden Kanäle aus:",
       "ChannelSelectionTitle": "Kanalauswahl",
-      "SelectDayPrompt": "Wählen Sie bitte einen der folgenden Tage aus.",
+      "SelectDayPrompt": "Wähle bitte einen der folgenden Tage aus.",
       "WeekdaySelectionTitle": "Auswahl Wochentag",
-      "ReminderTimePrompt": "Wählen Sie bitte den Zeitpunkt der Erinnerung. (Format: hh:mm)",
-      "DeletionTimePrompt": "Wählen Sie bitte den Zeitpunkt der Löschung. (Format: hh:mm)",
-      "ReminderMessagePrompt": "Geben Sie bitte die Nachricht der Erinnerung ein.",
+      "ReminderTimePrompt": "Wähle bitte den Zeitpunkt der Erinnerung. (Format: hh:mm)",
+      "DeletionTimePrompt": "Wähle bitte den Zeitpunkt der Löschung. (Format: hh:mm)",
+      "ReminderMessagePrompt": "Gib bitte die Nachricht der Erinnerung ein.",
       "CreationCompletedMessage": "Erstellung abgeschlossen! Alle Nachrichten der Erstellung werden in 30 Sekunden gelöscht."
     },
     "FractalLfgMessageBuilder": {
@@ -50,7 +50,7 @@
       "AssistantCancelCommand": "{0} Abbrechen",
 
       "ReactWithEmojiPrompt": "Reagiere mit dem Emoji, das der Rolle zugewiesen werden soll.",
-      "DescriptionPrompt": "Bitte geben die Bezeichnung der Rolle ein.",
+      "DescriptionPrompt": "Gib bitte die Bezeichnung der Rolle ein.",
       "AddSubRolesPrompt": "Sollen der Rolle untergeordnete Rollen hinzugefügt werden?",
       "AddAdditionalSubRolesPrompt": "Sollen der Rolle weitere untergeordnete Rollen zugewiesen werden?",
       "CreationCompletedMessage": "Die Erstellung wurde abgeschlossen.",
@@ -68,13 +68,13 @@
       "DeleteRolePrompt": "Soll die Rolle wirklich gelöscht werden?"
     },
     "RaidTemplateAliasNameDialogElement": {
-      "Message": "Bitte gebe den zu verwendenden Aliasnamen ein."
+      "Message": "Gib bitte den zu verwendenden Aliasnamen ein."
     },
     "RaidTemplateDeletionElementBase": {
       "DeleteRolePrompt": "Soll die Schablone wirklich gelöscht werden?"
     },
     "RaidTemplateDescriptionDialogElement": {
-      "Message": "Bitte gebe die zu verwendende Bezeichnung ein."
+      "Message": "Gib bitte die zu verwendende Bezeichnung ein."
     },
     "RaidTemplateEditDialogElement": {
       "ChooseCommandTitle": "Schablonenkonfiguration",
@@ -105,10 +105,10 @@
       "CancelCommand": "{0} Abbrechen"
     },
     "RaidTemplateThumbnailDialogElement": {
-      "Message": "Bitte gebe den Link zur zu verwendenden Miniaturansicht an:"
+      "Message": "Gib bitte den Link zur zu verwendenden Miniaturansicht an:"
     },
     "RaidTemplateTitleDialogElement": {
-      "Message": "Bitte gebe den zu verwendenden Titel ein:"
+      "Message": "Gib bitte den zu verwendenden Titel ein:"
     },
     "RaidDayDayOfWeekDialogElement": {
       "Title": "Auswahl des Tages",
@@ -116,16 +116,16 @@
       "Reactions": "Tage"
     },
     "RaidDayRegistrationDeadlineDialogElement": {
-      "Message": "Bitte gebe den zu verwendenen Anmeldeschluss ein (hh:mm):"
+      "Message": "Gib bitte den zu verwendenen Anmeldeschluss ein (hh:mm):"
     },
     "RaidDayStartTimeDialogElement": {
-      "Message": "Bitte gebe den zu verwendenen Startzeitpunkt ein (hh:mm):"
+      "Message": "Gib bitte den zu verwendenen Startzeitpunkt ein (hh:mm):"
     },
     "RaidExperienceLevelDeletionDialogElement": {
       "DeleteLevelPrompt": "Soll das Erfahrungslevel wirklich gelöscht werden?"
     },
     "RaidExperienceLevelDescriptionDialogElement": {
-      "Message": "Bitte gebe die zu verwendende Bezeichnung ein."
+      "Message": "Gib bitte die zu verwendende Bezeichnung ein."
     },
     "RaidExperienceLevelEditDialogElement": {
       "ChooseCommandTitle": "Erfahrungslevelkonfiguration",
@@ -173,7 +173,7 @@
       "LevelsField": "Erfahrungslevel"
     },
     "RaidExperienceLevelAliasNameDialogElement": {
-      "Message": "Bitte geben den zu verwendenden Aliasnamen ein."
+      "Message": "Gib bitte den zu verwendenden Aliasnamen ein."
     },
     "RaidCommitService": {
       "NoOpenAppointment": "Es besteht kein Termin, der noch nicht fortgeschrieben worden ist."
@@ -185,7 +185,7 @@
       "SubstitutesBench": "Ersatzbank"
     },
     "GuildAdministrationApiKeyDialogElement": {
-      "Message": "Gebe den zu verwendenden API-Key ein:"
+      "Message": "Gib den zu verwendenden API-Key ein:"
     },
     "GuildAdministrationGuildDialogElement": {
       "ChooseGuildTitle": "Gildenauswahl",
@@ -196,6 +196,65 @@
       "MemberJoined": "**{0}** ist der Gilde beigetreten.",
       "MemberLeft": "**{0}** hat die Gilde verlassen.",
       "MemberKicked": "**{0}** wurde von **{1}** aus der Gilde geworfen."
+    },
+    "CalendarTemplateDeletionDialogElement": {
+      "DeletePrompt": "Soll die Schablone wirklich gelöscht werden?"
+    },
+    "CalendarTemplateDescriptionDialogElement": {
+      "Message": "Gib bitte die zu nutzende Beschreibung ein."
+    },
+    "CalendarTemplateEditDialogElement": {
+      "ChooseCommandTitle": "Kalenderschablonenkonfiguration",
+      "ChooseCommandDescription": "Mit diesem Assistenten kannst du die Kalenderschablone konfigurieren.",
+      "Description": "Bezeichnung",
+      "ReminderTime": "Erinnerungszeit",
+      "ReminderMessage": "Erinnerungsnachricht",
+      "GuildPoints": "Gildenpunkte",
+      "CommandTitle": "Befehle",
+      "EditDescriptionCommand": "{0} Beschreibung bearbeiten",
+      "EditUriCommand": "{0} Link bearbeiten",
+      "EditReminderCommand": "{0} Erinnerung bearbeiten",
+      "EditGuildPointsCommand": "{0} Gildenpunkte bearbeiten",
+      "CancelCommand": "{0} Abbrechen"
+    },
+    "CalendarTemplateGuildPointsCapDialogElement": {
+      "Prompt": "Wird durch dieses Event das wöchtentliche Limit erhöht?"
+    },
+    "CalendarTemplateGuildPointsDialogElement": {
+      "Prompt": "Sollen diesem Event Gildenpunkte hinzugefügt werden?"
+    },
+    "CalendarTemplateGuildPointsPointsDialogElement": {
+      "Message": "Gib bitte die zu verwendende Anzahl ein."
+    },
+    "CalendarTemplateReminderDialogElement": {
+      "Prompt": "Soll eine Erinnerung hinzugefügt werden?"
+    },
+    "CalendarTemplateReminderMessageDialogElement": {
+      "Message": "Gib bitte die Nachricht der Erinnerung ein."
+    },
+    "CalendarTemplateReminderTimeDialogElement": {
+      "Message": "Gib bitte den Zeitpunkt der Erinnerung ein (hh:mm):"
+    },
+    "CalendarTemplateSelectionDialogElement": {
+      "ChooseTemplateTitle": "Kalenderschablonenauswahl",
+      "ChooseTemplateDescription": "Wähle bitte eines der folgenden Schablonen aus:",
+      "TemplateField": "Schablonen"
+    },
+    "CalendarTemplateSetupDialogElement": {
+      "ChooseCommandTitle": "Kalenderschablonenkonfiguration",
+      "ChooseCommandDescription": "Mit diesem Assistenten können die Kalenderschablonen bearbeitet werden. Die folgenden Schablonen wurden bereits angelegt:",
+      "TemplatesField": "Schablonen",
+      "AddCommand": "{0} Schablone hinzufügen",
+      "EditCommand": "{0} Schablone bearbeiten",
+      "DeleteCommand": "{0} Schablone löschen",
+      "CancelCommand": "{0} Abbrechen",
+      "CommandTitle": "Befehle"
+    },
+    "CalendarTemplateUriDialogElement": {
+      "Prompt": "Soll ein Link hinzugefügt werden?"
+    },
+    "CalendarTemplateUriUriDialogElement": {
+      "Message": "Gib bitte den zu verwendenen Link ein."
     },
     "SearchCommandModule": {
       "SearchResults": "Suchergebnis",
@@ -269,7 +328,11 @@
       "guild": "Gildenverwaltung",
       "guild setup": "Einrichtung der Gildenadministration",
       "guild setNotificationChannel": "Setzen des Benachrichtigungskanals",
-      "guild emblem random": "Zufallsgenerierung von Gilden-Emblemen", 
+      "guild emblem random": "Zufallsgenerierung von Gilden-Emblemen",
+
+      "calender": "Kalenderverwaltung",
+      "calender templates": "Schablonenverwaltung",
+      "calender templates setup": "Schablonen-Assistent",
 
       "config": "Konfiguration des Bots",
 

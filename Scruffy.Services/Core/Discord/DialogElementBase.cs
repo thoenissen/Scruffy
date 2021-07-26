@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 using DSharpPlus.CommandsNext;
 
 using Microsoft.Extensions.DependencyInjection;
+
+using Scruffy.Services.Core.Discord.Attributes;
 
 namespace Scruffy.Services.Core.Discord
 {
@@ -120,6 +123,37 @@ namespace Scruffy.Services.Core.Discord
 
             return await service.Run()
                                 .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Execution one dialog element
+        /// </summary>
+        /// <typeparam name="TSubData">Type of the element result</typeparam>
+        /// <returns>Result</returns>
+        public async Task<TSubData> RunSubForm<TSubData>() where TSubData : new()
+        {
+            var data = new TSubData();
+
+            foreach (var property in data.GetType()
+                                         .GetProperties())
+            {
+                var attribute = property.GetCustomAttributes(typeof(DialogElementAssignmentAttribute), false)
+                                        .OfType<DialogElementAssignmentAttribute>()
+                                        .FirstOrDefault();
+
+                if (attribute != null)
+                {
+                    var service = (DialogElementBase)ServiceProvider.GetService(attribute.DialogElementType);
+
+                    service.Initialize(CommandContext, ServiceProvider, DialogContext);
+
+                    property.SetValue(data,
+                                      await service.InternalRun()
+                                                   .ConfigureAwait(false));
+                }
+            }
+
+            return data;
         }
 
         #endregion // Methods

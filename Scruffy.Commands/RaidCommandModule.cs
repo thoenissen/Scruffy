@@ -265,6 +265,8 @@ namespace Scruffy.Commands
 
             #endregion // Properties
 
+            #region Methods
+
             /// <summary>
             /// Starting the roles assistant
             /// </summary>
@@ -277,6 +279,8 @@ namespace Scruffy.Commands
                 await RaidRolesService.RunAssistantAsync(commandContext)
                                       .ConfigureAwait(false);
             }
+
+            #endregion // Methods
         }
 
         #endregion // Roles

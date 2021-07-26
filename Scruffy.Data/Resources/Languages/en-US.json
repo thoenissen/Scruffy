@@ -197,6 +197,65 @@
       "MemberLeft": "**{0}** left the guild.",
       "MemberKicked": "**{0}** got kicked out of the guild by **{1}**."
     },
+    "CalendarTemplateDeletionDialogElement": {
+      "DeletePrompt": "Are you sure you want to delete the template?"
+    },
+    "CalendarTemplateDescriptionDialogElement": {
+      "Message": "Please enter the description which should be used."
+    },
+    "CalendarTemplateEditDialogElement": {
+      "ChooseCommandTitle": "Calendar template configuration",
+      "ChooseCommandDescription": "With this assistant you are able to configure the calendar template",
+      "Description": "Description",
+      "ReminderTime": "Reminder time",
+      "ReminderMessage": "Reminder message",
+      "GuildPoints": "Points",
+      "CommandTitle": "Commands",
+      "EditDescriptionCommand": "{0} Edit description",
+      "EditUriCommand": "{0} Edit link",
+      "EditReminderCommand": "{0} Edit reminder",
+      "EditGuildPointsCommand": "{0} Edit guild points",
+      "CancelCommand": "{0} Cancel"
+    },
+    "CalendarTemplateGuildPointsCapDialogElement": {
+      "Prompt": "Is the guild points cap raised by this event?"
+    },
+    "CalendarTemplateGuildPointsDialogElement": {
+      "Prompt": "Do you want to add guild points to this event?"
+    },
+    "CalendarTemplateGuildPointsPointsDialogElement": {
+      "Message": "Please enter the number of guild points which can be earned by this event."
+    },
+    "CalendarTemplateReminderDialogElement": {
+      "Prompt": "Do you want to add a reminder?"
+    },
+    "CalendarTemplateReminderMessageDialogElement": {
+      "Message": "Please enter the reminder message which should be used."
+    },
+    "CalendarTemplateReminderTimeDialogElement": {
+      "Message": "Please enter the reminder time (hh:mm):"
+    },
+    "CalendarTemplateSelectionDialogElement": {
+      "ChooseTemplateTitle": "Calendar template selection",
+      "ChooseTemplateDescription": "Please choose one of the following calendar templates:",
+      "TemplateField": "Templates"
+    },
+    "CalendarTemplateSetupDialogElement": {
+      "ChooseCommandTitle": "Calendar template configuration",
+      "ChooseCommandDescription": "With this assistant you are able to configure the calendar templates. The following templates are already created:",
+      "TemplatesField": "Templates",
+      "AddCommand": "{0} Add template",
+      "EditCommand": "{0} Edit template",
+      "DeleteCommand": "{0} Delete template",
+      "CancelCommand": "{0} Cancel",
+      "CommandTitle": "Commands"
+    },
+    "CalendarTemplateUriDialogElement": {
+      "Prompt": "Do you want to add link?"
+    },
+    "CalendarTemplateUriUriDialogElement": {
+      "Message": "Please enter the link which should be used."
+    },
     "SearchCommandModule": {
       "SearchResults": "Search results",
       "NoResults": "I couldn't find anything.",
@@ -264,6 +323,10 @@
       "guild setup": "Setup the guild administration",
       "guild setNotificationChannel": "Set the notification channel",
       "guild emblem random": "Random generation of guild emblems",
+
+      "calender": "Calendar administration",
+      "calender templates": "Template administration",
+      "calender templates setup": "Template assistant",
 
       "config": "Bot configuration",
 

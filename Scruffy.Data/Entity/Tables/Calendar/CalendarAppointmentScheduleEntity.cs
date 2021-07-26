@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
+using Scruffy.Data.Entity.Tables.CoreData;
 using Scruffy.Data.Enumerations;
 
 namespace Scruffy.Data.Entity.Tables.Calendar
@@ -17,6 +18,11 @@ namespace Scruffy.Data.Entity.Tables.Calendar
         /// </summary>
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
+
+        /// <summary>
+        /// Id of the Server
+        /// </summary>
+        public long ServerId { get; set; }
 
         /// <summary>
         /// Id of the template
