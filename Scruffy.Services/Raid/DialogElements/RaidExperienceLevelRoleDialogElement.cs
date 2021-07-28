@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 using DSharpPlus.Entities;
 
@@ -85,12 +86,10 @@ namespace Scruffy.Services.Raid.DialogElements
         /// Converting the response message
         /// </summary>
         /// <param name="message">Message</param>
-        /// <returns>Result</returns>
-        public override ulong? ConvertMessage(DiscordMessage message)
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public override Task<ulong?> ConvertMessage(DiscordMessage message)
         {
-            return int.TryParse(message.Content, out var index) && _levels.TryGetValue(index, out var selectedRoleId)
-                       ? selectedRoleId
-                       : null;
+            return Task.FromResult(int.TryParse(message.Content, out var index) && _levels.TryGetValue(index, out var selectedRoleId) ? selectedRoleId : null);
         }
 
         #endregion // DialogEmbedMessageElementBase<long>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 using DSharpPlus.Entities;
 
@@ -88,12 +89,10 @@ namespace Scruffy.Services.GuildAdministration.DialogElements
         /// Converting the response message
         /// </summary>
         /// <param name="message">Message</param>
-        /// <returns>Result</returns>
-        public override string ConvertMessage(DiscordMessage message)
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public override Task<string> ConvertMessage(DiscordMessage message)
         {
-            return int.TryParse(message.Content, out var index) && _guilds.TryGetValue(index, out var selectedGuild)
-                       ? selectedGuild
-                       : throw new InvalidOperationException();
+            return Task.FromResult(int.TryParse(message.Content, out var index) && _guilds.TryGetValue(index, out var selectedGuild) ? selectedGuild : throw new InvalidOperationException());
         }
 
         #endregion // DialogEmbedMessageElementBase<long>

@@ -256,6 +256,57 @@
     "CalendarTemplateUriUriDialogElement": {
       "Message": "Please enter the link which should be used."
     },
+    "CalendarScheduleDayOfWeekDialogElement": {
+      "Title": "Schedule selection",
+      "Description": "Please choose the day of the week:",
+      "Reactions": "Days"
+    },
+    "CalendarScheduleDeletionDialogElement": {
+      "DeletePrompt": "Are you sure you want to delete the schedule?"
+    },
+    "CalendarScheduleDescriptionDialogElement": {
+      "Message": "Please enter the description which should be used."
+    },
+    "CalendarScheduleEditDialogElement": {
+      "ChooseCommandTitle": "Calendar schedule configuration",
+      "ChooseCommandDescription": "With this assistant you are able to configure the calendar schedule",
+      "Description": "Description",
+      "CommandTitle": "Commands",
+      "EditDescriptionCommand": "{0} Edit description",
+      "EditScheduleCommand": "{0} Edit schedule",
+      "EditTemplateCommand": "{0} Edit template",
+      "CancelCommand": "{0} Cancel"
+    },
+    "CalendarScheduleOccurenceCountDialogElement": {
+      "Message": "Please enter on which {0} of the month the appointment should be created or zero if it should be created every week."
+    },
+    "CalendarScheduleOptionsDialogElement": {
+      "Title": "Schedule options selection",
+      "Description": "Please choose one of the following options:",
+      "Reactions": "Options",
+      "None": "No options",
+      "EvenMonth": "Even month",
+      "UnevenMonth": "Uneven month"
+    },
+    "CalendarScheduleScheduleDialogElement": {
+      "ChooseTypeTitle": "Type selection",
+      "ChooseTypeDescription": "Please choose one of the following types:",
+      "TypesField": "Types"
+    },
+    "CalendarScheduleSelectionDialogElement": {
+      "ChooseScheduleTitle": "Calendar schedule selection",
+      "ChooseScheduleDescription": "Please choose one of the following calendar schedules:",
+      "ScheduleField": "Schedules"
+    },
+    "CalendarScheduleSetupDialogElement": {
+      "ChooseCommandTitle": "Calendar schedule configuration",
+      "ChooseCommandDescription": "With this assistant you are able to configure the calendar schedules. The following schedules are already created:",
+      "SchedulesField": "Schedules",
+      "AddCommand": "{0} Add schedule",
+      "EditCommand": "{0} Edit schedule",
+      "DeleteCommand": "{0} Delete schedule",
+      "CancelCommand": "{0} Cancel"
+    },
     "SearchCommandModule": {
       "SearchResults": "Search results",
       "NoResults": "I couldn't find anything.",
@@ -327,6 +378,8 @@
       "calender": "Calendar administration",
       "calender templates": "Template administration",
       "calender templates setup": "Template assistant",
+      "calender schedules": "Schedules administration",
+      "calender schedules setup": "Schedules assistant",
 
       "config": "Bot configuration",
 

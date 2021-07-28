@@ -65,7 +65,7 @@ namespace Scruffy.Commands
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("setup")]
             [RequireUserPermissions(Permissions.Administrator)]
-            public async Task SetupRoles(CommandContext commandContext)
+            public async Task Setup(CommandContext commandContext)
             {
                 await CalendarTemplateService.RunAssistantAsync(commandContext)
                                              .ConfigureAwait(false);
@@ -76,6 +76,54 @@ namespace Scruffy.Commands
         }
 
         #endregion // Templates
+
+        #region Schedule
+
+        /// <summary>
+        /// Calendar template commands
+        /// </summary>
+        [Group("schedules")]
+        [ModuleLifespan(ModuleLifespan.Transient)]
+        public class CalendarScheduleCommandModule : LocatedCommandModuleBase
+        {
+            #region Constructor
+
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="localizationService">Localization service</param>
+            public CalendarScheduleCommandModule(LocalizationService localizationService)
+                : base(localizationService)
+            {
+            }
+
+            #endregion // Constructor
+
+            /// <summary>
+            /// Calendar schedules service
+            /// </summary>
+            public CalendarScheduleService CalendarScheduleService { get; set; }
+
+            #region Methods
+
+            /// <summary>
+            /// Starting the schedules assistant
+            /// </summary>
+            /// <param name="commandContext">Current command context</param>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+            [Command("setup")]
+            [RequireUserPermissions(Permissions.Administrator)]
+            public async Task Setup(CommandContext commandContext)
+            {
+                await CalendarScheduleService.RunAssistantAsync(commandContext)
+                                             .ConfigureAwait(false);
+            }
+
+            #endregion // Methods
+
+        }
+
+        #endregion // Schedule
 
     }
 }

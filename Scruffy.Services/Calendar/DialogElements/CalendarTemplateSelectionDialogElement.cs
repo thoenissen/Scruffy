@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 using DSharpPlus.Entities;
 
@@ -93,11 +94,9 @@ namespace Scruffy.Services.Calendar.DialogElements
         /// </summary>
         /// <param name="message">Message</param>
         /// <returns>Result</returns>
-        public override long ConvertMessage(DiscordMessage message)
+        public override Task<long> ConvertMessage(DiscordMessage message)
         {
-            return int.TryParse(message.Content, out var index) && _templates.TryGetValue(index, out var selectedTemplateId)
-                       ? selectedTemplateId
-                       : throw new InvalidOperationException();
+            return Task.FromResult(int.TryParse(message.Content, out var index) && _templates.TryGetValue(index, out var selectedTemplateId) ? selectedTemplateId : throw new InvalidOperationException());
         }
 
         #endregion // DialogEmbedMessageElementBase<long>

@@ -7,6 +7,8 @@ namespace Scruffy.Services.Calendar.DialogElements.Forms
     /// </summary>
     public class CreateCalendarTemplateData
     {
+        #region Properties
+
         /// <summary>
         /// Description
         /// </summary>
@@ -30,5 +32,7 @@ namespace Scruffy.Services.Calendar.DialogElements.Forms
         /// </summary>
         [DialogElementAssignment(typeof(CalendarTemplateGuildPointsDialogElement))]
         public CalenderTemplateGuildData GuildPoints { get; set; }
+
+        #endregion // Properties
     }
 }

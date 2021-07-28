@@ -256,6 +256,57 @@
     "CalendarTemplateUriUriDialogElement": {
       "Message": "Gib bitte den zu verwendenen Link ein."
     },
+    "CalendarScheduleDayOfWeekDialogElement": {
+      "Title": "Zeitplanselektion",
+      "Description": "Wähle bitte den Wochentag aus:",
+      "Reactions": "Wochentage"
+    },
+    "CalendarScheduleDeletionDialogElement": {
+      "DeletePrompt": "Soll der Zeitplan wirklich gelöscht werden?"
+    },
+    "CalendarScheduleDescriptionDialogElement": {
+      "Message": "Gib die Bezeichnung des Zeitplans ein."
+    },
+    "CalendarScheduleEditDialogElement": {
+      "ChooseCommandTitle": "Zeitplankonfiguration",
+      "ChooseCommandDescription": "Mit diesem Assistenten können die Zeitpläne bearbeitet werden.",
+      "Description": "Bezeichnung",
+      "CommandTitle": "Befehle",
+      "EditDescriptionCommand": "{0} Bezeichung bearbeiten",
+      "EditScheduleCommand": "{0} Zeitplan bearbeiten",
+      "EditTemplateCommand": "{0} Schablone bearbeiten",
+      "CancelCommand": "{0} Abbrechen"
+    },
+    "CalendarScheduleOccurenceCountDialogElement": {
+      "Message": "Bitte gib an, am wievielten {0} im Monat der Termin angelegt werden soll oder null, wenn der Termin jede Woche stattfinden soll."
+    },
+    "CalendarScheduleOptionsDialogElement": {
+      "Title": "Auswahl der Zeitplanoptionen",
+      "Description": "Wähle bitte eine der folgenden Optionen:",
+      "Reactions": "Optionen",
+      "None": "Keine Optionen",
+      "EvenMonth": "Grade Monate",
+      "UnevenMonth": "Ungrade Monate"
+    },
+    "CalendarScheduleScheduleDialogElement": {
+      "ChooseTypeTitle": "Auswahl des Typs",
+      "ChooseTypeDescription": "Wähle bitte eine der folgenden Typen:",
+      "TypesField": "Typen"
+    },
+    "CalendarScheduleSelectionDialogElement": {
+      "ChooseScheduleTitle": "Zeitplanauswahl",
+      "ChooseScheduleDescription": "Wähle bitte einen der folgenden Zeitpläne:",
+      "ScheduleField": "Zeitpläne"
+    },
+    "CalendarScheduleSetupDialogElement": {
+      "ChooseCommandTitle": "Zeitplankonfiguration",
+      "ChooseCommandDescription": "Mit diesem Assistenten können die Zeitpläne verwaltet werden. Die folgenden Zeitpläne wurden bereits erstellt:",
+      "SchedulesField": "Zeitpläne",
+      "AddCommand": "{0} Zeitplan hinzufügen",
+      "EditCommand": "{0} Zeitplan bearbeiten",
+      "DeleteCommand": "{0} Zeitplan löschen",
+      "CancelCommand": "{0} Abbrechen"
+    },
     "SearchCommandModule": {
       "SearchResults": "Suchergebnis",
       "NoResults": "Ich konnte leider keine Ergebnisse finden.",
@@ -333,6 +384,8 @@
       "calender": "Kalenderverwaltung",
       "calender templates": "Schablonenverwaltung",
       "calender templates setup": "Schablonen-Assistent",
+      "calender schedules": "Zeitplanverwaltung",
+      "calender schedules setup": "Zeitplan-Assistent",
 
       "config": "Konfiguration des Bots",
 

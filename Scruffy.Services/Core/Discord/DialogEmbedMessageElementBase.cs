@@ -37,8 +37,8 @@ namespace Scruffy.Services.Core.Discord
         /// Converting the response message
         /// </summary>
         /// <param name="message">Message</param>
-        /// <returns>Result</returns>
-        public virtual TData ConvertMessage(DiscordMessage message) => (TData)Convert.ChangeType(message.Content, typeof(TData));
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public virtual Task<TData> ConvertMessage(DiscordMessage message) => Task.FromResult((TData)Convert.ChangeType(message.Content, typeof(TData)));
 
         /// <summary>
         /// Execute the dialog element
@@ -62,7 +62,7 @@ namespace Scruffy.Services.Core.Discord
             {
                 DialogContext.Messages.Add(currentUserResponse.Result);
 
-                return ConvertMessage(currentUserResponse.Result);
+                return await ConvertMessage(currentUserResponse.Result).ConfigureAwait(false);
             }
 
             throw new TimeoutException();

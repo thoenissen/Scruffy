@@ -7,6 +7,8 @@ namespace Scruffy.Services.Calendar.DialogElements.Forms
     /// </summary>
     public class CalenderTemplateGuildData
     {
+        #region Properties
+
         /// <summary>
         /// Guild points
         /// </summary>
@@ -18,5 +20,7 @@ namespace Scruffy.Services.Calendar.DialogElements.Forms
         /// </summary>
         [DialogElementAssignment(typeof(CalendarTemplateGuildPointsCapDialogElement))]
         public bool IsRaisingPointCap { get; set; }
+
+        #endregion // Properties
     }
 }

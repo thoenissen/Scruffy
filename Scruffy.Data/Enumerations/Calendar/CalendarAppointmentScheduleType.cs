@@ -1,4 +1,4 @@
-﻿namespace Scruffy.Data.Enumerations
+﻿namespace Scruffy.Data.Enumerations.Calendar
 {
     /// <summary>
     /// Type of schedule

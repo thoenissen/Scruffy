@@ -9,6 +9,8 @@ namespace Scruffy.Services.Calendar.DialogElements.Forms
     /// </summary>
     public class CalenderTemplateReminderData
     {
+        #region Properties
+
         /// <summary>
         /// Message
         /// </summary>
@@ -20,5 +22,7 @@ namespace Scruffy.Services.Calendar.DialogElements.Forms
         /// </summary>
         [DialogElementAssignment(typeof(CalendarTemplateReminderTimeDialogElement))]
         public TimeSpan? Time { get; set; }
+
+        #endregion // Properties
     }
 }

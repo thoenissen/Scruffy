@@ -1,6 +1,6 @@
 ﻿using System;
 
-using Scruffy.Data.Enumerations;
+using Scruffy.Data.Enumerations.Calendar;
 
 namespace Scruffy.Data.Services.Calendar
 {
@@ -20,6 +20,11 @@ namespace Scruffy.Data.Services.Calendar
         /// Day of week
         /// </summary>
         public DayOfWeek DayOfWeek { get; set; }
+
+        /// <summary>
+        /// Options
+        /// </summary>
+        public WeekDayOfMonthSpecialOptions Options { get; set; }
 
         #endregion // Properties
     }

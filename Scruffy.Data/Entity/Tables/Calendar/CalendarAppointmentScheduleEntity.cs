@@ -2,6 +2,7 @@
 
 using Scruffy.Data.Entity.Tables.CoreData;
 using Scruffy.Data.Enumerations;
+using Scruffy.Data.Enumerations.Calendar;
 
 namespace Scruffy.Data.Entity.Tables.Calendar
 {
@@ -22,7 +23,12 @@ namespace Scruffy.Data.Entity.Tables.Calendar
         /// <summary>
         /// Id of the Server
         /// </summary>
-        public long ServerId { get; set; }
+        public ulong ServerId { get; set; }
+
+        /// <summary>
+        /// Description
+        /// </summary>
+        public string Description { get; set; }
 
         /// <summary>
         /// Id of the template
