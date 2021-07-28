@@ -31,6 +31,11 @@ namespace Scruffy.Data.Entity.Tables.Calendar
         public string Description { get; set; }
 
         /// <summary>
+        /// Reminder time
+        /// </summary>
+        public TimeSpan? AppointmentTime { get; set; }
+
+        /// <summary>
         /// Uri
         /// </summary>
         public string Uri { get; set; }

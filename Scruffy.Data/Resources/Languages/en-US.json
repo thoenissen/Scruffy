@@ -213,6 +213,7 @@
       "CommandTitle": "Commands",
       "EditDescriptionCommand": "{0} Edit description",
       "EditUriCommand": "{0} Edit link",
+      "EditAppointmentTimeCommand": "{0} Edit appointment time",
       "EditReminderCommand": "{0} Edit reminder",
       "EditGuildPointsCommand": "{0} Edit guild points",
       "CancelCommand": "{0} Cancel"
@@ -306,6 +307,9 @@
       "EditCommand": "{0} Edit schedule",
       "DeleteCommand": "{0} Delete schedule",
       "CancelCommand": "{0} Cancel"
+    },
+    "CalendarTemplateAppointmentTimeDialogElement": {
+      "Message": "Please enter the appointment time (hh:mm):"
     },
     "SearchCommandModule": {
       "SearchResults": "Search results",

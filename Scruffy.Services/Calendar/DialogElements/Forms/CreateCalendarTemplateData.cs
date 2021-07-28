@@ -1,4 +1,6 @@
-﻿using Scruffy.Services.Core.Discord.Attributes;
+﻿using System;
+
+using Scruffy.Services.Core.Discord.Attributes;
 
 namespace Scruffy.Services.Calendar.DialogElements.Forms
 {
@@ -20,6 +22,12 @@ namespace Scruffy.Services.Calendar.DialogElements.Forms
         /// </summary>
         [DialogElementAssignment(typeof(CalendarTemplateUriDialogElement))]
         public string Uri { get; set; }
+
+        /// <summary>
+        /// Appointment time
+        /// </summary>
+        [DialogElementAssignment(typeof(CalendarTemplateAppointmentTimeDialogElement))]
+        public TimeSpan AppointmentTime { get; set; }
 
         /// <summary>
         /// Reminder

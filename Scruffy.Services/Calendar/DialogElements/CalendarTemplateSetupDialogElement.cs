@@ -128,6 +128,7 @@ namespace Scruffy.Services.Calendar.DialogElements
                                                                 {
                                                                     ServerId = CommandContext.Guild.Id,
                                                                     Description = data.Description,
+                                                                    AppointmentTime = data.AppointmentTime,
                                                                     Uri = data.Uri,
                                                                     ReminderMessage = data.Reminder?.Message,
                                                                     ReminderTime = data.Reminder?.Time,

@@ -9,9 +9,9 @@ using Scruffy.Services.Core.Discord;
 namespace Scruffy.Services.Calendar.DialogElements
 {
     /// <summary>
-    /// Acquisition of the reminder time
+    /// Acquisition of the appointment time
     /// </summary>
-    public class CalendarTemplateReminderTimeDialogElement : DialogMessageElementBase<TimeSpan>
+    public class CalendarTemplateAppointmentTimeDialogElement : DialogMessageElementBase<TimeSpan>
     {
         #region Constructor
 
@@ -19,7 +19,7 @@ namespace Scruffy.Services.Calendar.DialogElements
         /// Constructor
         /// </summary>
         /// <param name="localizationService">Localization service</param>
-        public CalendarTemplateReminderTimeDialogElement(LocalizationService localizationService)
+        public CalendarTemplateAppointmentTimeDialogElement(LocalizationService localizationService)
             : base(localizationService)
         {
         }
@@ -32,7 +32,7 @@ namespace Scruffy.Services.Calendar.DialogElements
         /// Return the message of element
         /// </summary>
         /// <returns>Message</returns>
-        public override string GetMessage() => LocalizationGroup.GetText("Message", "Please enter the reminder time (hh:mm):");
+        public override string GetMessage() => LocalizationGroup.GetText("Message", "Please enter the appointment time (hh:mm):");
 
         /// <summary>
         /// Converting the response message

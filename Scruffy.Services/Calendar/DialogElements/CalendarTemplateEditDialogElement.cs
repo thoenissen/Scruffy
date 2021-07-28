@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -144,8 +145,28 @@ namespace Scruffy.Services.Calendar.DialogElements
                                       },
                                       new ReactionData<bool>
                                       {
-                                          Emoji = DiscordEmojiService.GetEdit3Emoji(CommandContext.Client),
-                                          CommandText = LocalizationGroup.GetFormattedText("EditReminderCommand", "{0} Edit reminder", DiscordEmojiService.GetEdit3Emoji(CommandContext.Client)),
+                                          Emoji = DiscordEmojiService.GetEdit2Emoji(CommandContext.Client),
+                                          CommandText = LocalizationGroup.GetFormattedText("EditAppointmentTimeCommand", "{0} Edit appointment time", DiscordEmojiService.GetEdit2Emoji(CommandContext.Client)),
+                                          Func = async () =>
+                                                 {
+                                                     var time = await RunSubElement<CalendarTemplateAppointmentTimeDialogElement, TimeSpan>()
+                                                                   .ConfigureAwait(false);
+
+                                                     using (var dbFactory = RepositoryFactory.CreateInstance())
+                                                     {
+                                                         var templateId = DialogContext.GetValue<long>("CalendarTemplateId");
+
+                                                         dbFactory.GetRepository<CalendarAppointmentTemplateRepository>()
+                                                                  .Refresh(obj => obj.Id == templateId, obj => obj.AppointmentTime = time);
+                                                     }
+
+                                                     return true;
+                                                 }
+                                      },
+                                      new ReactionData<bool>
+                                      {
+                                          Emoji = DiscordEmojiService.GetEdit4Emoji(CommandContext.Client),
+                                          CommandText = LocalizationGroup.GetFormattedText("EditReminderCommand", "{0} Edit reminder", DiscordEmojiService.GetEdit4Emoji(CommandContext.Client)),
                                           Func = async () =>
                                                  {
                                                      var reminder = await RunSubElement<CalendarTemplateReminderDialogElement, CalenderTemplateReminderData>().ConfigureAwait(false);

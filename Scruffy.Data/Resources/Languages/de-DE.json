@@ -213,6 +213,7 @@
       "CommandTitle": "Befehle",
       "EditDescriptionCommand": "{0} Beschreibung bearbeiten",
       "EditUriCommand": "{0} Link bearbeiten",
+      "EditAppointmentTimeCommand": "{0} Zeitpunkt bearbeiten",
       "EditReminderCommand": "{0} Erinnerung bearbeiten",
       "EditGuildPointsCommand": "{0} Gildenpunkte bearbeiten",
       "CancelCommand": "{0} Abbrechen"
@@ -306,6 +307,9 @@
       "EditCommand": "{0} Zeitplan bearbeiten",
       "DeleteCommand": "{0} Zeitplan löschen",
       "CancelCommand": "{0} Abbrechen"
+    },
+    "CalendarTemplateAppointmentTimeDialogElement": {
+      "Message": "Gibt bitte den Zeitpunkt des Termins ein (hh:mm):"
     },
     "SearchCommandModule": {
       "SearchResults": "Suchergebnis",
