@@ -15,6 +15,7 @@ using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Data.Entity.Tables.Raid;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord;
+using Scruffy.Services.Core.Discord.Attributes;
 using Scruffy.Services.CoreData;
 using Scruffy.Services.Raid;
 using Scruffy.Services.Raid.DialogElements;
@@ -69,7 +70,7 @@ namespace Scruffy.Commands
         /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("setup")]
-        [RequireUserPermissions(Permissions.Administrator)]
+        [RequireAdministratorPermissions]
         public async Task Setup(CommandContext commandContext)
         {
             var data = await DialogHandler.RunForm<CreateRaidDayFormData>(commandContext, true)
@@ -215,7 +216,7 @@ namespace Scruffy.Commands
         /// <param name="aliasName">Alias name</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("commit")]
-        [RequireUserPermissions(Permissions.Administrator)]
+        [RequireAdministratorPermissions]
         public async Task Commit(CommandContext commandContext, string aliasName)
         {
             await CommitService.CommitRaidAppointment(commandContext, aliasName)
@@ -273,7 +274,7 @@ namespace Scruffy.Commands
             /// <param name="commandContext">Current command context</param>
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("setup")]
-            [RequireUserPermissions(Permissions.Administrator)]
+            [RequireAdministratorPermissions]
             public async Task SetupRoles(CommandContext commandContext)
             {
                 await RaidRolesService.RunAssistantAsync(commandContext)
@@ -315,7 +316,7 @@ namespace Scruffy.Commands
             /// <param name="commandContext">Current command context</param>
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("setup")]
-            [RequireUserPermissions(Permissions.Administrator)]
+            [RequireAdministratorPermissions]
             public async Task Setup(CommandContext commandContext)
             {
                 bool repeat;
@@ -371,7 +372,7 @@ namespace Scruffy.Commands
             /// <param name="commandContext">Current command context</param>
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("setup")]
-            [RequireUserPermissions(Permissions.Administrator)]
+            [RequireAdministratorPermissions]
             public async Task Setup(CommandContext commandContext)
             {
                 bool repeat;
@@ -392,7 +393,7 @@ namespace Scruffy.Commands
             /// <param name="users">Users</param>
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("set")]
-            [RequireUserPermissions(Permissions.Administrator)]
+            [RequireAdministratorPermissions]
             public async Task SetExperienceLevel(CommandContext commandContext, string aliasName, params DiscordUser[] users)
             {
                 using (var dbFactory = RepositoryFactory.CreateInstance())

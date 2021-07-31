@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Reminder;
+using Scruffy.Services.Calendar;
 using Scruffy.Services.Fractals;
 using Scruffy.Services.GuildAdministration;
 using Scruffy.Services.Reminder;
@@ -43,6 +44,7 @@ namespace Scruffy.Services.Core.JobScheduler
             await Task.Run(JobManager.Start).ConfigureAwait(false);
 
             JobManager.AddJob<FractalDailyRefreshJob>(obj => obj.ToRunEvery(1).Days().At(0, 0));
+            JobManager.AddJob<CalendarRefreshJob>(obj => obj.ToRunEvery(1).Days().At(0, 0));
             JobManager.AddJob<BackupJob>(obj => obj.ToRunEvery(1).Days().At(2, 0));
             JobManager.AddJob<GuildLogImportJob>(obj => obj.ToRunEvery(5).Minutes());
 

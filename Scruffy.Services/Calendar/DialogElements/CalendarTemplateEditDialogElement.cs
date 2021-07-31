@@ -145,8 +145,8 @@ namespace Scruffy.Services.Calendar.DialogElements
                                       },
                                       new ReactionData<bool>
                                       {
-                                          Emoji = DiscordEmojiService.GetEdit2Emoji(CommandContext.Client),
-                                          CommandText = LocalizationGroup.GetFormattedText("EditAppointmentTimeCommand", "{0} Edit appointment time", DiscordEmojiService.GetEdit2Emoji(CommandContext.Client)),
+                                          Emoji = DiscordEmojiService.GetEdit3Emoji(CommandContext.Client),
+                                          CommandText = LocalizationGroup.GetFormattedText("EditAppointmentTimeCommand", "{0} Edit appointment time", DiscordEmojiService.GetEdit3Emoji(CommandContext.Client)),
                                           Func = async () =>
                                                  {
                                                      var time = await RunSubElement<CalendarTemplateAppointmentTimeDialogElement, TimeSpan>()
@@ -189,8 +189,8 @@ namespace Scruffy.Services.Calendar.DialogElements
                                       },
                                       new ReactionData<bool>
                                       {
-                                          Emoji = DiscordEmojiService.GetEdit4Emoji(CommandContext.Client),
-                                          CommandText = LocalizationGroup.GetFormattedText("EditGuildPointsCommand", "{0} Edit guild points", DiscordEmojiService.GetEdit4Emoji(CommandContext.Client)),
+                                          Emoji = DiscordEmojiService.GetEdit5Emoji(CommandContext.Client),
+                                          CommandText = LocalizationGroup.GetFormattedText("EditGuildPointsCommand", "{0} Edit guild points", DiscordEmojiService.GetEdit5Emoji(CommandContext.Client)),
                                           Func = async () =>
                                                  {
                                                      var guildPoints = await RunSubElement<CalendarTemplateGuildPointsDialogElement, CalenderTemplateGuildData>().ConfigureAwait(false);

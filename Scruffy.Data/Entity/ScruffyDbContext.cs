@@ -221,6 +221,14 @@ namespace Scruffy.Data.Entity
             modelBuilder.Entity<CalendarAppointmentEntity>();
             modelBuilder.Entity<CalendarAppointmentTemplateEntity>();
             modelBuilder.Entity<CalendarAppointmentScheduleEntity>();
+            modelBuilder.Entity<CalendarAppointmentParticipantEntity>();
+
+            modelBuilder.Entity<CalendarAppointmentParticipantEntity>()
+                        .HasKey(obj => new
+                                       {
+                                           obj.AppointmentId,
+                                           obj.UserId
+                                       });
 
             modelBuilder.Entity<CalendarAppointmentTemplateEntity>()
                         .HasMany(obj => obj.CalendarAppointments)
@@ -231,6 +239,11 @@ namespace Scruffy.Data.Entity
                         .HasMany(obj => obj.CalendarAppointmentSchedules)
                         .WithOne(obj => obj.CalendarAppointmentTemplate)
                         .HasForeignKey(obj => obj.CalendarAppointmentTemplateId);
+
+            modelBuilder.Entity<CalendarAppointmentEntity>()
+                        .HasMany(obj => obj.CalendarAppointmentParticipants)
+                        .WithOne(obj => obj.CalendarAppointment)
+                        .HasForeignKey(obj => obj.AppointmentId);
 
             // Guild
             modelBuilder.Entity<GuildEntity>();

@@ -33,7 +33,7 @@ namespace Scruffy.Data.Entity.Tables.Calendar
         /// <summary>
         /// Reminder time
         /// </summary>
-        public TimeSpan? AppointmentTime { get; set; }
+        public TimeSpan AppointmentTime { get; set; }
 
         /// <summary>
         /// Uri

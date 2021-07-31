@@ -7,6 +7,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Extensions;
 
+using Scruffy.Services.Calendar;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord;
 
@@ -39,6 +40,11 @@ namespace Scruffy.ServiceHost.Discord
         /// </summary>
         private DiscordErrorHandler _errorHandler;
 
+        /// <summary>
+        /// Administration permissions validation
+        /// </summary>
+        private AdministrationPermissionsValidationService _administrationPermissionsValidationService;
+
         #endregion // Fields
 
         #region Methods
@@ -67,6 +73,9 @@ namespace Scruffy.ServiceHost.Discord
 
             _prefixResolver = new PrefixResolvingService();
             GlobalServiceProvider.Current.AddSingleton(_prefixResolver);
+
+            _administrationPermissionsValidationService = new AdministrationPermissionsValidationService();
+            GlobalServiceProvider.Current.AddSingleton(_administrationPermissionsValidationService);
 
             GlobalServiceProvider.Current.AddSingleton(new DiscordStatusService(_discordClient));
 

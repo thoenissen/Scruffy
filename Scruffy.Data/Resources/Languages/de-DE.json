@@ -197,6 +197,12 @@
       "MemberLeft": "**{0}** hat die Gilde verlassen.",
       "MemberKicked": "**{0}** wurde von **{1}** aus der Gilde geworfen."
     },
+    "GuildAdministrationCalendarTitleDialogElement": {
+      "Message": "Gib bitte den Titel der Kalenders ein."
+    },
+    "GuildAdministrationCalendarDescriptionDialogElement": {
+      "Message": "Gib bitte die Beschreibung des Kalenders ein."
+    },
     "CalendarTemplateDeletionDialogElement": {
       "DeletePrompt": "Soll die Schablone wirklich gelöscht werden?"
     },
@@ -292,7 +298,8 @@
     "CalendarScheduleScheduleDialogElement": {
       "ChooseTypeTitle": "Auswahl des Typs",
       "ChooseTypeDescription": "Wähle bitte eine der folgenden Typen:",
-      "TypesField": "Typen"
+      "TypesField": "Typen",
+      "WeekDayOfMonth": "Wochentage"
     },
     "CalendarScheduleSelectionDialogElement": {
       "ChooseScheduleTitle": "Zeitplanauswahl",
@@ -310,6 +317,9 @@
     },
     "CalendarTemplateAppointmentTimeDialogElement": {
       "Message": "Gibt bitte den Zeitpunkt des Termins ein (hh:mm):"
+    },
+    "CalendarMessageBuilderService": {
+      "WeekNumber": "KW"
     },
     "SearchCommandModule": {
       "SearchResults": "Suchergebnis",
@@ -383,6 +393,7 @@
       "guild": "Gildenverwaltung",
       "guild setup": "Einrichtung der Gildenadministration",
       "guild setNotificationChannel": "Setzen des Benachrichtigungskanals",
+      "guild calendar": "Kalendereinrichtung",
       "guild emblem random": "Zufallsgenerierung von Gilden-Emblemen",
 
       "calender": "Kalenderverwaltung",
@@ -396,6 +407,8 @@
       "config prefix": "Festlegung des Präfix",
       "config prefix prefix": "Präfix",
       "config prefix prefix description": "Zeichenketten zur Verwendung als Präfix",
+      "config adminRole": "Administratorenrolle setzen",
+      "config adminRole role": "Administratorenrolle",
 
       "reminder": "Erstellung von Erinnerungen",
 

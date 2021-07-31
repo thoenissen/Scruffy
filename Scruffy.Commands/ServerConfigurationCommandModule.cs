@@ -1,11 +1,12 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 
-using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
 
 using Scruffy.Services.Core;
+using Scruffy.Services.Core.Discord.Attributes;
 
 namespace Scruffy.Commands
 {
@@ -13,7 +14,7 @@ namespace Scruffy.Commands
     /// Configuration the server
     /// </summary>
     [Group("config")]
-    [RequireUserPermissions(Permissions.Administrator)]
+    [RequireAdministratorPermissions]
     public class ServerConfigurationCommandModule : LocatedCommandModuleBase
     {
         #region Constructor
@@ -35,6 +36,11 @@ namespace Scruffy.Commands
         /// Prefix resolving
         /// </summary>
         public PrefixResolvingService PrefixResolvingService { get; set; }
+
+        /// <summary>
+        /// Administration service
+        /// </summary>
+        public AdministrationPermissionsValidationService AdministrationPermissionsValidationService { get; set; }
 
         #endregion // Properties
 
@@ -60,6 +66,19 @@ namespace Scruffy.Commands
             }
         }
 
+        /// <summary>
+        /// Set the server administration role
+        /// </summary>
+        /// <param name="commandContext">Current command context</param>
+        /// <param name="role">Roles</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("adminRole")]
+        public async Task SetAdministrationRole(CommandContext commandContext, DiscordRole role)
+        {
+            AdministrationPermissionsValidationService.AddOrRefresh(commandContext.Guild.Id, role.Id);
+
+            await commandContext.Message.CreateReactionAsync(DiscordEmojiService.GetCheckEmoji(commandContext.Client)).ConfigureAwait(false);
+        }
         #endregion // Methods
     }
 }

@@ -16,6 +16,7 @@ using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Reminder;
 using Scruffy.Data.Entity.Tables.Reminder;
 using Scruffy.Services.Core;
+using Scruffy.Services.Core.Discord.Attributes;
 using Scruffy.Services.Core.JobScheduler;
 using Scruffy.Services.CoreData;
 
@@ -111,7 +112,7 @@ namespace Scruffy.Commands
         /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("weekly")]
-        [RequireUserPermissions(Permissions.Administrator)]
+        [RequireAdministratorPermissions]
         public async Task RemindWeekly(CommandContext commandContext)
         {
             var continueCreation = true;
@@ -183,15 +184,15 @@ namespace Scruffy.Commands
                 };
 
                 var reactions = new Dictionary<DiscordEmoji, DayOfWeek>
-                {
-                    [DiscordEmoji.FromName(commandContext.Client, ":one:")] = DayOfWeek.Monday,
-                    [DiscordEmoji.FromName(commandContext.Client, ":two:")] = DayOfWeek.Tuesday,
-                    [DiscordEmoji.FromName(commandContext.Client, ":three:")] = DayOfWeek.Wednesday,
-                    [DiscordEmoji.FromName(commandContext.Client, ":four:")] = DayOfWeek.Thursday,
-                    [DiscordEmoji.FromName(commandContext.Client, ":five:")] = DayOfWeek.Friday,
-                    [DiscordEmoji.FromName(commandContext.Client, ":six:")] = DayOfWeek.Saturday,
-                    [DiscordEmoji.FromName(commandContext.Client, ":seven:")] = DayOfWeek.Sunday
-                };
+                                    {
+                                        [DiscordEmoji.FromName(commandContext.Client, ":one:")] = DayOfWeek.Monday,
+                                        [DiscordEmoji.FromName(commandContext.Client, ":two:")] = DayOfWeek.Tuesday,
+                                        [DiscordEmoji.FromName(commandContext.Client, ":three:")] = DayOfWeek.Wednesday,
+                                        [DiscordEmoji.FromName(commandContext.Client, ":four:")] = DayOfWeek.Thursday,
+                                        [DiscordEmoji.FromName(commandContext.Client, ":five:")] = DayOfWeek.Friday,
+                                        [DiscordEmoji.FromName(commandContext.Client, ":six:")] = DayOfWeek.Saturday,
+                                        [DiscordEmoji.FromName(commandContext.Client, ":seven:")] = DayOfWeek.Sunday
+                                    };
 
                 stringBuilder.Clear();
                 stringBuilder.Append(LocalizationGroup.GetText("SelectDayPrompt", "Please select one of the following days."));

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using DSharpPlus.EventArgs;
@@ -60,10 +61,17 @@ namespace Scruffy.Services.Calendar.DialogElements
                                                  {
                                                      using (var dbFactory = RepositoryFactory.CreateInstance())
                                                      {
-                                                         var levelId = DialogContext.GetValue<long>("CalendarScheduleId");
+                                                         var scheduleId = DialogContext.GetValue<long>("CalendarScheduleId");
 
-                                                         dbFactory.GetRepository<CalendarAppointmentScheduleRepository>()
-                                                                  .Remove(obj => obj.Id == levelId);
+                                                         if (dbFactory.GetRepository<CalendarAppointmentScheduleRepository>()
+                                                                      .Refresh(obj => obj.Id == scheduleId, obj => obj.IsDeleted = true))
+                                                         {
+                                                             var now = DateTime.Now;
+
+                                                             dbFactory.GetRepository<CalendarAppointmentRepository>()
+                                                                      .RemoveRange(obj => obj.CalendarAppointmentScheduleId == scheduleId
+                                                                                       && obj.TimeStamp > now);
+                                                         }
                                                      }
 
                                                      return Task.FromResult(true);

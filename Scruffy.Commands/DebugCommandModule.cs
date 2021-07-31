@@ -3,6 +3,7 @@
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 
+using Scruffy.Services.Calendar;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord.Attributes;
 using Scruffy.Services.Debug;
@@ -220,5 +221,80 @@ namespace Scruffy.Commands
         }
 
         #endregion // List
+
+        #region Calendar
+
+        /// <summary>
+        /// Listing
+        /// </summary>
+        [Group("calendar")]
+        [ModuleLifespan(ModuleLifespan.Transient)]
+        public class DebugCalendarModule : LocatedCommandModuleBase
+        {
+            #region Constructor
+
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="localizationService">Localization service</param>
+            public DebugCalendarModule(LocalizationService localizationService)
+                : base(localizationService)
+            {
+            }
+
+            #endregion // Constructor
+
+            #region Properties
+
+            /// <summary>
+            /// Message builder
+            /// </summary>
+            public CalendarMessageBuilderService MessageBuilder { get; set; }
+
+            /// <summary>
+            /// Message builder
+            /// </summary>
+            public CalendarScheduleService ScheduleService { get; set; }
+
+            #endregion // Properties
+
+            #region Methods
+
+            /// <summary>
+            /// Refresh calendar message
+            /// </summary>
+            /// <param name="commandContext">Current command context</param>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+            [Command("refresh_appointments")]
+            public async Task RefreshAppointments(CommandContext commandContext)
+            {
+                await ScheduleService.CreateAppointments(commandContext.Guild.Id)
+                                     .ConfigureAwait(false);
+
+                await commandContext.Message
+                                    .DeleteAsync()
+                                    .ConfigureAwait(false);
+            }
+
+            /// <summary>
+            /// Refresh calendar message
+            /// </summary>
+            /// <param name="commandContext">Current command context</param>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+            [Command("refresh_message")]
+            public async Task RefreshMessage(CommandContext commandContext)
+            {
+                await MessageBuilder.RefreshMessages(commandContext.Guild.Id)
+                                    .ConfigureAwait(false);
+
+                await commandContext.Message
+                                    .DeleteAsync()
+                                    .ConfigureAwait(false);
+            }
+
+            #endregion // Methods
+        }
+
+        #endregion // Raid
     }
 }

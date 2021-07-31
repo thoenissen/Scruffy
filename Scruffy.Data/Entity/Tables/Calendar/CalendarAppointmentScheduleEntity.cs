@@ -1,7 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-using Scruffy.Data.Entity.Tables.CoreData;
-using Scruffy.Data.Enumerations;
 using Scruffy.Data.Enumerations.Calendar;
 
 namespace Scruffy.Data.Entity.Tables.Calendar
@@ -44,6 +42,11 @@ namespace Scruffy.Data.Entity.Tables.Calendar
         /// Additional data
         /// </summary>
         public string AdditionalData { get; set; }
+
+        /// <summary>
+        /// Is the schedule deleted?
+        /// </summary>
+        public bool IsDeleted { get; set; }
 
         #region Navigation properties
 

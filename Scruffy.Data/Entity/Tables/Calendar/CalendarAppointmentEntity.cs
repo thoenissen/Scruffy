@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Scruffy.Data.Entity.Tables.Calendar
@@ -27,6 +28,11 @@ namespace Scruffy.Data.Entity.Tables.Calendar
         /// </summary>
         public long CalendarAppointmentTemplateId { get; set; }
 
+        /// <summary>
+        /// Id of the schedule
+        /// </summary>
+        public long CalendarAppointmentScheduleId { get; set; }
+
         #region Navigation properties
 
         /// <summary>
@@ -34,6 +40,17 @@ namespace Scruffy.Data.Entity.Tables.Calendar
         /// </summary>
         [ForeignKey(nameof(CalendarAppointmentTemplateId))]
         public virtual CalendarAppointmentTemplateEntity CalendarAppointmentTemplate { get; set; }
+
+        /// <summary>
+        /// Schedule
+        /// </summary>
+        [ForeignKey(nameof(CalendarAppointmentScheduleId))]
+        public virtual CalendarAppointmentScheduleEntity CalendarAppointmentSchedule { get; set; }
+
+        /// <summary>
+        /// Participants
+        /// </summary>
+        public virtual ICollection<CalendarAppointmentParticipantEntity> CalendarAppointmentParticipants { get; set; }
 
         #endregion // Navigation properties
 

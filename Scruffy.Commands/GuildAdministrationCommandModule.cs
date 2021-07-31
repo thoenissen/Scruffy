@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
 
-using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 
 using Scruffy.Services.Core;
+using Scruffy.Services.Core.Discord.Attributes;
 using Scruffy.Services.GuildAdministration;
 
 namespace Scruffy.Commands
@@ -51,7 +51,7 @@ namespace Scruffy.Commands
         /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("setup")]
-        [RequireUserPermissions(Permissions.Administrator)]
+        [RequireAdministratorPermissions]
         public async Task Setup(CommandContext commandContext)
         {
             await ConfigurationService.CreateGuildConfiguration(commandContext)
@@ -64,10 +64,23 @@ namespace Scruffy.Commands
         /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("setNotificationChannel")]
-        [RequireUserPermissions(Permissions.Administrator)]
+        [RequireAdministratorPermissions]
         public async Task SetNotificationChannel(CommandContext commandContext)
         {
             await ConfigurationService.SetNotificationChannel(commandContext)
+                                      .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Setting up the calendar
+        /// </summary>
+        /// <param name="commandContext">Command context</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("calendar")]
+        [RequireAdministratorPermissions]
+        public async Task SetupCalendar(CommandContext commandContext)
+        {
+            await ConfigurationService.SetupCalendar(commandContext)
                                       .ConfigureAwait(false);
         }
 

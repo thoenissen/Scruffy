@@ -22,6 +22,11 @@ namespace Scruffy.Data.Entity.Tables.CoreData
         /// </summary>
         public string Prefix { get; set; }
 
+        /// <summary>
+        /// Administration role
+        /// </summary>
+        public ulong? AdministratorRoleId { get; set; }
+
         #endregion // Properties
     }
 }

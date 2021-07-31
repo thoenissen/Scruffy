@@ -4,6 +4,7 @@ using DSharpPlus.CommandsNext;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.GuildAdministration;
+using Scruffy.Services.Calendar;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord;
 using Scruffy.Services.GuildAdministration.DialogElements.Forms;
@@ -15,15 +16,33 @@ namespace Scruffy.Services.GuildAdministration
     /// </summary>
     public class GuildAdministrationConfigurationService : LocatedServiceBase
     {
+        #region Fields
+
+        /// <summary>
+        /// Calendar message builder
+        /// </summary>
+        private readonly CalendarMessageBuilderService _calendarMessageBuilderService;
+
+        /// <summary>
+        /// Calendar scheduling
+        /// </summary>
+        private readonly CalendarScheduleService _calendarScheduleService;
+
+        #endregion // Fields
+
         #region Constructor
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="localizationService">Localization service</param>
-        public GuildAdministrationConfigurationService(LocalizationService localizationService)
+        /// <param name="calendarMessageBuilderService">Message builder</param>
+        /// <param name="calendarScheduleService">Schedule service</param>
+        public GuildAdministrationConfigurationService(LocalizationService localizationService, CalendarMessageBuilderService calendarMessageBuilderService, CalendarScheduleService calendarScheduleService)
             : base(localizationService)
         {
+            _calendarMessageBuilderService = calendarMessageBuilderService;
+            _calendarScheduleService = calendarScheduleService;
         }
 
         #endregion // Constructor
@@ -72,6 +91,44 @@ namespace Scruffy.Services.GuildAdministration
 
             await commandContext.Message.DeleteAsync()
                                 .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Setting up the calendar
+        /// </summary>
+        /// <param name="commandContext">Command context</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task SetupCalendar(CommandContext commandContext)
+        {
+            var data = await DialogHandler.RunForm<SetGuildCalendarFormData>(commandContext, true)
+                                          .ConfigureAwait(false);
+
+            if (data != null)
+            {
+                var message = await commandContext.Channel
+                                                  .SendMessageAsync(LocalizationGroup.GetText("CalendarBuilding", "The calendar will be build with the next refresh."))
+                                                  .ConfigureAwait(false);
+
+                using (var dbFactory = RepositoryFactory.CreateInstance())
+                {
+                    if (dbFactory.GetRepository<GuildRepository>()
+                                  .Refresh(obj => obj.DiscordServerId == commandContext.Guild.Id,
+                                                obj =>
+                                                {
+                                                     obj.CalendarDescription = data.Description;
+                                                     obj.CalendarTitle = data.Title;
+                                                     obj.GuildCalendarChannelId = commandContext.Channel.Id;
+                                                     obj.GuildCalendarMessageId = message.Id;
+                                                }))
+                    {
+                        await _calendarScheduleService.CreateAppointments(commandContext.Guild.Id)
+                                                      .ConfigureAwait(false);
+
+                        await _calendarMessageBuilderService.RefreshMessages(commandContext.Guild.Id)
+                                                            .ConfigureAwait(false);
+                    }
+                }
+            }
         }
 
         #endregion // Methods

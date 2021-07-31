@@ -197,6 +197,12 @@
       "MemberLeft": "**{0}** left the guild.",
       "MemberKicked": "**{0}** got kicked out of the guild by **{1}**."
     },
+    "GuildAdministrationCalendarTitleDialogElement": {
+      "Message": "Please enter the calendar title."
+    },
+    "GuildAdministrationCalendarDescriptionDialogElement": {
+      "Message": "Please enter the description."
+    },
     "CalendarTemplateDeletionDialogElement": {
       "DeletePrompt": "Are you sure you want to delete the template?"
     },
@@ -292,7 +298,8 @@
     "CalendarScheduleScheduleDialogElement": {
       "ChooseTypeTitle": "Type selection",
       "ChooseTypeDescription": "Please choose one of the following types:",
-      "TypesField": "Types"
+      "TypesField": "Types",
+      "WeekDayOfMonth": "Weekday"
     },
     "CalendarScheduleSelectionDialogElement": {
       "ChooseScheduleTitle": "Calendar schedule selection",
@@ -310,6 +317,9 @@
     },
     "CalendarTemplateAppointmentTimeDialogElement": {
       "Message": "Please enter the appointment time (hh:mm):"
+    },
+    "CalendarMessageBuilderService": {
+      "WeekNumber": "Week"
     },
     "SearchCommandModule": {
       "SearchResults": "Search results",
@@ -377,6 +387,7 @@
       "guild": "Guild administration",
       "guild setup": "Setup the guild administration",
       "guild setNotificationChannel": "Set the notification channel",
+      "guild calendar": "Calendar setup",
       "guild emblem random": "Random generation of guild emblems",
 
       "calender": "Calendar administration",
@@ -389,6 +400,8 @@
 
       "config prefix": "Prefix definition",
       "config prefix prefix": "Prefix",
+      "config adminRole": "Administrator role definition",
+      "config adminRole role": "Administrator role",
 
       "reminder": "Reminder creation",
 

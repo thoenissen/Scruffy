@@ -6,9 +6,8 @@
    fill="#000000"
    version="1.1"
    id="svg6"
-   sodipodi:docname="scruffy_edit4.svg"
+   sodipodi:docname="scruffy_edit5.svg"
    inkscape:version="1.1 (c68e22c387, 2021-05-23)"
-   inkscape:export-filename="C:\Users\sebas\source\repos\thoenissen\Scruffy\Scruffy.Data\Resources\Icons\scruffy_edit4.png"
    inkscape:export-xdpi="1071.51"
    inkscape:export-ydpi="1071.51"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -27,7 +26,7 @@
      inkscape:pagecheckerboard="0"
      showgrid="false"
      inkscape:zoom="36.375"
-     inkscape:cx="11.42268"
+     inkscape:cx="10.845361"
      inkscape:cy="12"
      inkscape:window-width="2560"
      inkscape:window-height="1377"
@@ -42,7 +41,8 @@
   <path
      d="M14.06 9.02l.92.92L5.92 19H5v-.92l9.06-9.06M17.66 3c-.25 0-.51.1-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29zm-3.6 3.19L3 17.25V21h3.75L17.81 9.94l-3.75-3.75z"
      id="path4"
-     style="fill:#a05a2c;fill-opacity:1"
+     style="fill:#550000;fill-opacity:1"
+     inkscape:export-filename="C:\Users\sebas\Downloads\scruffy_edit5.png"
      inkscape:export-xdpi="1071.51"
      inkscape:export-ydpi="1071.51" />
 </svg>

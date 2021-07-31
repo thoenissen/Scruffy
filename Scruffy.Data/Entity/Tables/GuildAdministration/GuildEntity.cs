@@ -42,7 +42,12 @@ namespace Scruffy.Data.Entity.Tables.GuildAdministration
         /// <summary>
         /// Id of the discord channel of the calendar
         /// </summary>
-        public long? GuildCalendarChannelId { get; set; }
+        public ulong? GuildCalendarChannelId { get; set; }
+
+        /// <summary>
+        /// Id of the calendar message
+        /// </summary>
+        public ulong? GuildCalendarMessageId { get; set; }
 
         /// <summary>
         /// Title of the calendar
@@ -53,11 +58,6 @@ namespace Scruffy.Data.Entity.Tables.GuildAdministration
         /// Description of the calendar
         /// </summary>
         public string CalendarDescription { get; set; }
-
-        /// <summary>
-        /// Id of the calendar message
-        /// </summary>
-        public long? GuildCalendarMessageId { get; set; }
 
         #region Navigation - Properties
 

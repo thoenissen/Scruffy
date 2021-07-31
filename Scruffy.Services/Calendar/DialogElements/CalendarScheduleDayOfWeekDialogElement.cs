@@ -45,7 +45,7 @@ namespace Scruffy.Services.Calendar.DialogElements
         {
             DialogContext.SetValue("DayOfWeek", dayOfWeek);
 
-            return Task.FromResult(DayOfWeek.Monday);
+            return Task.FromResult(dayOfWeek);
         }
 
         #region DialogReactionElementBase<DayOfWeek>

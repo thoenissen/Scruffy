@@ -89,7 +89,8 @@ namespace Scruffy.Services.Calendar.DialogElements
         {
             var data = new CalenderScheduleData();
 
-            if (int.TryParse(message.Content, out var index) && _types.TryGetValue(index, out var type))
+            if (int.TryParse(message.Content, out var index)
+             && _types.TryGetValue(index, out var type))
             {
                 object additionalData;
 
@@ -112,6 +113,10 @@ namespace Scruffy.Services.Calendar.DialogElements
                 }
 
                 data.AdditionalData = JsonConvert.SerializeObject(additionalData);
+            }
+            else
+            {
+                throw new InvalidOperationException();
             }
 
             return data;

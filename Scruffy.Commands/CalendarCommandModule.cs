@@ -6,6 +6,7 @@ using DSharpPlus.CommandsNext.Attributes;
 
 using Scruffy.Services.Calendar;
 using Scruffy.Services.Core;
+using Scruffy.Services.Core.Discord.Attributes;
 
 namespace Scruffy.Commands
 {
@@ -64,7 +65,7 @@ namespace Scruffy.Commands
             /// <param name="commandContext">Current command context</param>
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("setup")]
-            [RequireUserPermissions(Permissions.Administrator)]
+            [RequireAdministratorPermissions]
             public async Task Setup(CommandContext commandContext)
             {
                 await CalendarTemplateService.RunAssistantAsync(commandContext)
@@ -112,7 +113,7 @@ namespace Scruffy.Commands
             /// <param name="commandContext">Current command context</param>
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("setup")]
-            [RequireUserPermissions(Permissions.Administrator)]
+            [RequireAdministratorPermissions]
             public async Task Setup(CommandContext commandContext)
             {
                 await CalendarScheduleService.RunAssistantAsync(commandContext)

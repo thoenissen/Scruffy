@@ -104,7 +104,7 @@ namespace Scruffy.Services.Core.Discord
                 {
                     foreach (var reaction in reactions)
                     {
-                        if (reaction.Emoji.Id == userReaction.Result.Emoji.Id)
+                        if (reaction.Emoji.ToString() == userReaction.Result.Emoji.ToString())
                         {
                             return await reaction.Func().ConfigureAwait(false);
                         }
