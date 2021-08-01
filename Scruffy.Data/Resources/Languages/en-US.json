@@ -203,6 +203,10 @@
     "GuildAdministrationCalendarDescriptionDialogElement": {
       "Message": "Please enter the description."
     },
+    "GuildAdministrationConfigurationService": {
+      "MotdBuilding": "The message of the day will be build with the next refresh.",
+      "CalendarBuilding": "The calendar will be build with the next refresh."
+    },
     "CalendarTemplateDeletionDialogElement": {
       "DeletePrompt": "Are you sure you want to delete the template?"
     },
@@ -319,7 +323,12 @@
       "Message": "Please enter the appointment time (hh:mm):"
     },
     "CalendarMessageBuilderService": {
-      "WeekNumber": "Week"
+      "WeekNumber": "Week",
+      "Motd": "Message of the day:",
+      "MotdFormat": "{0} - {1}, {2:dd.MM} at {2:hh:mm}"
+    },
+    "CalendarOneTimeDayDialogElement": {
+      "Message": "Please enter the day. (yyyy-MM-dd)"
     },
     "SearchCommandModule": {
       "SearchResults": "Search results",
@@ -387,14 +396,17 @@
       "guild": "Guild administration",
       "guild setup": "Setup the guild administration",
       "guild setNotificationChannel": "Set the notification channel",
+      "guild setReminderChannel": "Set the reminder channel",
+      "guild motd": "Setup the message of the day message",
       "guild calendar": "Calendar setup",
       "guild emblem random": "Random generation of guild emblems",
 
-      "calender": "Calendar administration",
-      "calender templates": "Template administration",
-      "calender templates setup": "Template assistant",
-      "calender schedules": "Schedules administration",
-      "calender schedules setup": "Schedules assistant",
+      "calendar": "Calendar administration",
+      "calendar add": "Adding a one time event",
+      "calendar templates": "Template administration",
+      "calendar templates setup": "Template assistant",
+      "calendar schedules": "Schedules administration",
+      "calendar schedules setup": "Schedules assistant",
 
       "config": "Bot configuration",
 

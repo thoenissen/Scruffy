@@ -59,6 +59,21 @@ namespace Scruffy.Data.Entity.Tables.GuildAdministration
         /// </summary>
         public string CalendarDescription { get; set; }
 
+        /// <summary>
+        /// Id of the discord channel of motd
+        /// </summary>
+        public ulong? MessageOfTheDayChannelId { get; set; }
+
+        /// <summary>
+        /// Id of the motd
+        /// </summary>
+        public ulong? MessageOfTheDayMessageId { get; set; }
+
+        /// <summary>
+        /// Reminder channel
+        /// </summary>
+        public ulong? ReminderChannelId { get; set;  }
+
         #region Navigation - Properties
 
         /// <summary>

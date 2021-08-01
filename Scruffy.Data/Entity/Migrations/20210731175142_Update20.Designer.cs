@@ -3,13 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Scruffy.Data.Entity;
 
 namespace Scruffy.Data.Entity.Migrations
 {
     [DbContext(typeof(ScruffyDbContext))]
-    partial class ScruffyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210731175142_Update20")]
+    partial class Update20
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -305,9 +309,6 @@ namespace Scruffy.Data.Entity.Migrations
                         .HasColumnType("decimal(20,0)");
 
                     b.Property<decimal?>("NotificationChannelId")
-                        .HasColumnType("decimal(20,0)");
-
-                    b.Property<decimal?>("ReminderChannelId")
                         .HasColumnType("decimal(20,0)");
 
                     b.HasKey("Id");

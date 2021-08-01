@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
 using DSharpPlus.Entities;
 
-using Scruffy.Data.Entity;
-using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord;
 

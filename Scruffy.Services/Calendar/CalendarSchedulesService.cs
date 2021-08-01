@@ -11,9 +11,11 @@ using Newtonsoft.Json;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Calendar;
+using Scruffy.Data.Entity.Tables.Calendar;
 using Scruffy.Data.Enumerations.Calendar;
 using Scruffy.Data.Services.Calendar;
 using Scruffy.Services.Calendar.DialogElements;
+using Scruffy.Services.Calendar.DialogElements.Forms;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord;
 
@@ -24,15 +26,26 @@ namespace Scruffy.Services.Calendar
     /// </summary>
     public class CalendarScheduleService : LocatedServiceBase
     {
+        #region Fields
+
+        /// <summary>
+        /// Message builder
+        /// </summary>
+        private readonly CalendarMessageBuilderService _messageBuilder;
+
+        #endregion // Fields
+
         #region Constructor
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="localizationService">Localization service</param>
-        public CalendarScheduleService(LocalizationService localizationService)
+        /// <param name="messageBuilder">Message builder</param>
+        public CalendarScheduleService(LocalizationService localizationService, CalendarMessageBuilderService messageBuilder)
             : base(localizationService)
         {
+            _messageBuilder = messageBuilder;
         }
 
         #endregion // Constructor
@@ -175,6 +188,40 @@ namespace Scruffy.Services.Calendar
                                 Trace.WriteLine($"Invalid schedule: {schedule.Type}");
                             }
                             break;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Adding a one time event
+        /// </summary>
+        /// <param name="commandContext">Command context</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task AddOneTimeEvent(CommandContext commandContext)
+        {
+            var data = await DialogHandler.RunForm<CreateOneTimeEventFormData>(commandContext, false)
+                                          .ConfigureAwait(false);
+            if (data != null)
+            {
+                using (var dbFactory = RepositoryFactory.CreateInstance())
+                {
+                    var appointmentTime = dbFactory.GetRepository<CalendarAppointmentTemplateRepository>()
+                                            .GetQuery()
+                                            .Where(obj => obj.Id == data.TemplateId)
+                                            .Select(obj => obj.AppointmentTime)
+                                            .First();
+
+                    if (dbFactory.GetRepository<CalendarAppointmentRepository>()
+                             .Add(new CalendarAppointmentEntity
+                             {
+                                 CalendarAppointmentScheduleId = null,
+                                 CalendarAppointmentTemplateId = data.TemplateId,
+                                 TimeStamp = data.Day.Add(appointmentTime)
+                             }))
+                    {
+                        await _messageBuilder.RefreshMessages(commandContext.Guild.Id)
+                                             .ConfigureAwait(false);
                     }
                 }
             }

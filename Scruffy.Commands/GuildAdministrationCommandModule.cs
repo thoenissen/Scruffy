@@ -72,6 +72,32 @@ namespace Scruffy.Commands
         }
 
         /// <summary>
+        /// Setting the reminder channel
+        /// </summary>
+        /// <param name="commandContext">Current command context</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("setReminderChannel")]
+        [RequireAdministratorPermissions]
+        public async Task SetReminderChannel(CommandContext commandContext)
+        {
+            await ConfigurationService.SetReminderChannel(commandContext)
+                                      .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Setting up the motd builder
+        /// </summary>
+        /// <param name="commandContext">Command context</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("motd")]
+        [RequireAdministratorPermissions]
+        public async Task SetupMotd(CommandContext commandContext)
+        {
+            await ConfigurationService.SetupMotd(commandContext)
+                                      .ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Setting up the calendar
         /// </summary>
         /// <param name="commandContext">Command context</param>

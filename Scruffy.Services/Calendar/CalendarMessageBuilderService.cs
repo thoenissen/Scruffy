@@ -50,6 +50,82 @@ namespace Scruffy.Services.Calendar
         /// </summary>
         /// <param name="serverId">Id of the server</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task RefreshMotds(ulong? serverId)
+        {
+            using (var dbFactory = RepositoryFactory.CreateInstance())
+            {
+                var now = DateTime.Now;
+
+                var appointments = dbFactory.GetRepository<CalendarAppointmentRepository>()
+                                            .GetQuery()
+                                            .Where(obj => obj.TimeStamp > now);
+
+                foreach (var calendar in dbFactory.GetRepository<GuildRepository>()
+                                                  .GetQuery()
+                                                  .Where(obj => obj.MessageOfTheDayChannelId != null
+                                                             && obj.MessageOfTheDayMessageId != null
+                                                             && (serverId == null || obj.DiscordServerId == serverId))
+                                                  .Select(obj => new
+                                                  {
+                                                      obj.CalendarTitle,
+                                                      obj.CalendarDescription,
+                                                      obj.MessageOfTheDayChannelId,
+                                                      obj.MessageOfTheDayMessageId,
+                                                      Appointments = appointments.Where(obj2 => obj2.CalendarAppointmentTemplate.ServerId == obj.DiscordServerId)
+                                                                                                .Select(obj2 => new
+                                                                                                {
+                                                                                                    obj2.TimeStamp,
+                                                                                                    obj2.CalendarAppointmentTemplate.Description,
+                                                                                                })
+                                                                                                .OrderBy(obj2 => obj2.TimeStamp)
+                                                                                                .ToList()
+                                                  }))
+                {
+                    var messageBuilder = new StringBuilder();
+
+                    messageBuilder.AppendLine("--------------------");
+
+                    foreach (var appointment in calendar.Appointments)
+                    {
+                        var currentLine = LocalizationGroup.GetFormattedText("MotdFormat",
+                                                                             "{0} - {1}, {2:dd.MM} at {2:hh:mm}",
+                                                                             appointment.Description,
+                                                                             LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(appointment.TimeStamp.DayOfWeek),
+                                                                             appointment.TimeStamp);
+
+                        if (messageBuilder.Length + currentLine.Length > 300)
+                        {
+                            break;
+                        }
+
+                        messageBuilder.AppendLine(currentLine);
+                    }
+
+                    messageBuilder.Append("--------------------");
+
+                    var channel = await _discordClient.GetChannelAsync(calendar.MessageOfTheDayChannelId.Value)
+                                                      .ConfigureAwait(false);
+
+                    if (channel != null)
+                    {
+                        var message = await channel.GetMessageAsync(calendar.MessageOfTheDayMessageId.Value)
+                                                   .ConfigureAwait(false);
+
+                        if (message != null)
+                        {
+                            await message.ModifyAsync(Formatter.Bold(LocalizationGroup.GetText("Motd", "Message of the day:")) + "\n" + Formatter.BlockCode(messageBuilder.ToString()))
+                                         .ConfigureAwait(false);
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Refreshing all calendars
+        /// </summary>
+        /// <param name="serverId">Id of the server</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task RefreshMessages(ulong? serverId)
         {
             using (var dbFactory = RepositoryFactory.CreateInstance())
@@ -104,7 +180,7 @@ namespace Scruffy.Services.Calendar
 
                         foreach (var appointment in calendar.Appointments)
                         {
-                            var currentLine = $@"`({LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(appointment.TimeStamp.DayOfWeek).Substring(0, 2)}) {appointment.TimeStamp.ToString("G", LocalizationGroup.CultureInfo)}` {(string.IsNullOrWhiteSpace(appointment.Uri) ? appointment.Description : Formatter.MaskedUrl(appointment.Description, new Uri(appointment.Uri)))}";
+                            var currentLine = $@"`({LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(appointment.TimeStamp.DayOfWeek).Substring(0, 2)}) {appointment.TimeStamp.ToString("g", LocalizationGroup.CultureInfo)}` {(string.IsNullOrWhiteSpace(appointment.Uri) ? appointment.Description : Formatter.MaskedUrl(appointment.Description, new Uri(appointment.Uri)))}";
 
                             if (currentMonth != appointment.TimeStamp.Month
                              || currentWeekOfYear != GetIso8601WeekOfYear(appointment.TimeStamp)

@@ -292,6 +292,22 @@ namespace Scruffy.Commands
                                     .ConfigureAwait(false);
             }
 
+            /// <summary>
+            /// Refresh motd
+            /// </summary>
+            /// <param name="commandContext">Current command context</param>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+            [Command("refresh_motd")]
+            public async Task RefreshMotd(CommandContext commandContext)
+            {
+                await MessageBuilder.RefreshMotds(commandContext.Guild.Id)
+                                    .ConfigureAwait(false);
+
+                await commandContext.Message
+                                    .DeleteAsync()
+                                    .ConfigureAwait(false);
+            }
+
             #endregion // Methods
         }
 

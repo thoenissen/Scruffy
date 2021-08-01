@@ -31,7 +31,17 @@ namespace Scruffy.Data.Entity.Tables.Calendar
         /// <summary>
         /// Id of the schedule
         /// </summary>
-        public long CalendarAppointmentScheduleId { get; set; }
+        public long? CalendarAppointmentScheduleId { get; set; }
+
+        /// <summary>
+        /// Id of the channel
+        /// </summary>
+        public ulong? ReminderChannelId { get; set; }
+
+        /// <summary>
+        /// Id of the message
+        /// </summary>
+        public ulong? ReminderMessageId { get; set; }
 
         #region Navigation properties
 

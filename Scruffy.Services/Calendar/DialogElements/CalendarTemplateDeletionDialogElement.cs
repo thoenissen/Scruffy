@@ -69,7 +69,7 @@ namespace Scruffy.Services.Calendar.DialogElements
                                                              var now = DateTime.Now;
 
                                                              dbFactory.GetRepository<CalendarAppointmentRepository>()
-                                                                      .RemoveRange(obj => obj.CalendarAppointmentScheduleId == templateId
+                                                                      .RemoveRange(obj => obj.CalendarAppointmentTemplateId == templateId
                                                                                        && obj.TimeStamp > now);
                                                          }
                                                      }

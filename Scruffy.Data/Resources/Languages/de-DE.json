@@ -59,7 +59,7 @@
       "ChooseRoleDescription": "Wähle eine der folgenden Rollen aus:",
 
       "RoleEditTitle": "Rollenbearbeitung",
-      "RoleEditEditDescriptionCommand": "{0} Beschreibung bearbeiten",
+      "RoleEditEditDescriptionCommand": "{0} Bezeichnung bearbeiten",
       "RoleEditEditEmojiCommand": "{0} Emoji bearbeiten",
       "RoleEditAddSubRoleCommand": "{0} Untergeordnete Rolle hinzufügen",
       "RoleEditEditSubRoleCommand": "{0} Untergeordnete Rolle bearbeiten",
@@ -203,11 +203,15 @@
     "GuildAdministrationCalendarDescriptionDialogElement": {
       "Message": "Gib bitte die Beschreibung des Kalenders ein."
     },
+    "GuildAdministrationConfigurationService": {
+      "MotdBuilding": "Die Nachricht des Tages wird mit der nächste Aktualisierung angepasst.",
+      "CalendarBuilding": "Der Kalender wird mit der nächsten Aktualisierung aufgebaut."
+    },
     "CalendarTemplateDeletionDialogElement": {
       "DeletePrompt": "Soll die Schablone wirklich gelöscht werden?"
     },
     "CalendarTemplateDescriptionDialogElement": {
-      "Message": "Gib bitte die zu nutzende Beschreibung ein."
+      "Message": "Gib bitte die zu nutzende Bezeichnung ein."
     },
     "CalendarTemplateEditDialogElement": {
       "ChooseCommandTitle": "Kalenderschablonenkonfiguration",
@@ -217,7 +221,7 @@
       "ReminderMessage": "Erinnerungsnachricht",
       "GuildPoints": "Gildenpunkte",
       "CommandTitle": "Befehle",
-      "EditDescriptionCommand": "{0} Beschreibung bearbeiten",
+      "EditDescriptionCommand": "{0} Bezeichnung bearbeiten",
       "EditUriCommand": "{0} Link bearbeiten",
       "EditAppointmentTimeCommand": "{0} Zeitpunkt bearbeiten",
       "EditReminderCommand": "{0} Erinnerung bearbeiten",
@@ -319,7 +323,12 @@
       "Message": "Gibt bitte den Zeitpunkt des Termins ein (hh:mm):"
     },
     "CalendarMessageBuilderService": {
-      "WeekNumber": "KW"
+      "WeekNumber": "KW",
+      "Motd": "Nachricht des Tages:",
+      "MotdFormat": "{0} - {1}, {2:dd.MM} um {2:hh:mm} Uhr"
+    },
+    "CalendarOneTimeDayDialogElement": {
+      "Message": "Gbt bitte den Tag ein. (yyyy-MM-dd)"
     },
     "SearchCommandModule": {
       "SearchResults": "Suchergebnis",
@@ -393,14 +402,17 @@
       "guild": "Gildenverwaltung",
       "guild setup": "Einrichtung der Gildenadministration",
       "guild setNotificationChannel": "Setzen des Benachrichtigungskanals",
+      "guild setReminderChannel": "Setzen des Erinnerungskanals",
+      "guild motd": "Erstellung der Nachricht der 'Nachricht des Tages'",
       "guild calendar": "Kalendereinrichtung",
       "guild emblem random": "Zufallsgenerierung von Gilden-Emblemen",
 
-      "calender": "Kalenderverwaltung",
-      "calender templates": "Schablonenverwaltung",
-      "calender templates setup": "Schablonen-Assistent",
-      "calender schedules": "Zeitplanverwaltung",
-      "calender schedules setup": "Zeitplan-Assistent",
+      "calendar": "Kalenderverwaltung",
+      "calendar add": "Hinzufügen eines einmaligen Events",
+      "calendar templates": "Schablonenverwaltung",
+      "calendar templates setup": "Schablonen-Assistent",
+      "calendar schedules": "Zeitplanverwaltung",
+      "calendar schedules setup": "Zeitplan-Assistent",
 
       "config": "Konfiguration des Bots",
 
