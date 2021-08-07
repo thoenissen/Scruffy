@@ -24,5 +24,10 @@
         /// Count
         /// </summary>
         public long Count { get; set; }
+
+        /// <summary>
+        /// Rank
+        /// </summary>
+        public int Rank { get; set; }
     }
 }

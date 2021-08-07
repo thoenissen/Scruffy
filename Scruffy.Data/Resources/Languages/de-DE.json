@@ -21,6 +21,34 @@
       "ReminderMessagePrompt": "Gib bitte die Nachricht der Erinnerung ein.",
       "CreationCompletedMessage": "Erstellung abgeschlossen! Alle Nachrichten der Erstellung werden in 30 Sekunden gelöscht."
     },
+    "AccountApiKeyDialogElement": {
+      "Message": "Gib bitte den zu verwendenen Api Key ein."
+    },
+    "AccountDpsReportUserTokenDialogElement": {
+      "Message": "Gib bitte den zu verwendenen dps.report-Benutzertoken ein."
+    },
+    "AccountEditDialogElement": {
+      "ChooseCommandTitle": "Account Konfiguration",
+      "ChooseCommandDescription": "Mit diesem Assistenten kannst du deine Guild Wars 2 Account Informationen konfigurieren.",
+      "Name": "Name",
+      "IsApiKeyAvailable": "Api Key",
+      "DpsReportUserToken": "dps.report-Benutzertoken",
+      "Data": "Daten",
+      "CommandTitle": "Befehle",
+      "EditApiKeyCommand": "{0} Api Key bearbeiten",
+      "EditDpsReportUserTokenCommand": "{0} dps.report-Benutzertoken bearbeiten",
+      "AccountNameMismatch": "Der angegebene Api Key passt nicht zum angegebenen Accountnamen.",
+      "InvalidToken": "Der angegebene Api Kay hat nicht alle benötigten Berechtigungen.",
+      "CancelCommand": "{0} Abbrechen"
+    },
+    "AccountSelectionDialogElement": {
+      "ChooseTitle": "Account-Auswahl",
+      "ChooseDescription": "Wähle bitte einen der folgenden Accounts aus:",
+      "AccountsField": "Accounts"
+    },
+    "AccountAdministrationService": {
+      "InvalidToken": "Der angegebene Api Kay hat nicht alle benötigten Berechtigungen."
+    },
     "FractalLfgMessageBuilder": {
       "Today": "Heute",
       "AppointmentReminder": "{0} - Terminerinnerung"
@@ -184,6 +212,9 @@
     "RaidMessageBuilder": {
       "SubstitutesBench": "Ersatzbank"
     },
+    "RaidCommitDialogElement": {
+      "CommandTitle": "Befehle"
+    },
     "GuildAdministrationApiKeyDialogElement": {
       "Message": "Gib den zu verwendenden API-Key ein:"
     },
@@ -325,7 +356,7 @@
     "CalendarMessageBuilderService": {
       "WeekNumber": "KW",
       "Motd": "Nachricht des Tages:",
-      "MotdFormat": "{0} - {1}, {2:dd.MM} um {2:hh:mm} Uhr"
+      "MotdFormat": "{0} - {1}, {2:dd.MM} um {2:HH:mm} Uhr"
     },
     "CalendarOneTimeDayDialogElement": {
       "Message": "Gbt bitte den Tag ein. (yyyy-MM-dd)"
@@ -348,6 +379,10 @@
       "Subcommands": "Befehle",
 
       "help": "Ausgabe der Hilfe",
+
+      "account": "Guild Wars 2 Account Konfiguration",
+      "account add": "Hinzufügen eines neuen Accounts",
+      "account edit": "Bearbeitung eines Accounts",
 
       "fractal": "Fraktal-Gruppensuche",
 

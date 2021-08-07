@@ -13,7 +13,7 @@ namespace Scruffy.Services.Calendar.DialogElements.Forms
         /// Guild points
         /// </summary>
         [DialogElementAssignment(typeof(CalendarTemplateGuildPointsPointsDialogElement))]
-        public int Points { get; set; }
+        public double Points { get; set; }
 
         /// <summary>
         /// Does this event raise the maximum cap of guild points per week?

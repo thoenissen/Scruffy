@@ -56,9 +56,9 @@ namespace Scruffy.Services.Calendar
             {
                 var now = DateTime.Now;
 
-                var appointments = dbFactory.GetRepository<CalendarAppointmentRepository>()
+                var templates = dbFactory.GetRepository<CalendarAppointmentTemplateRepository>()
                                             .GetQuery()
-                                            .Where(obj => obj.TimeStamp > now);
+                                            .Select(obj => obj);
 
                 foreach (var calendar in dbFactory.GetRepository<GuildRepository>()
                                                   .GetQuery()
@@ -71,14 +71,18 @@ namespace Scruffy.Services.Calendar
                                                       obj.CalendarDescription,
                                                       obj.MessageOfTheDayChannelId,
                                                       obj.MessageOfTheDayMessageId,
-                                                      Appointments = appointments.Where(obj2 => obj2.CalendarAppointmentTemplate.ServerId == obj.DiscordServerId)
-                                                                                                .Select(obj2 => new
-                                                                                                {
-                                                                                                    obj2.TimeStamp,
-                                                                                                    obj2.CalendarAppointmentTemplate.Description,
-                                                                                                })
-                                                                                                .OrderBy(obj2 => obj2.TimeStamp)
-                                                                                                .ToList()
+                                                      Appointments = templates.Where(obj2 => obj2.ServerId == obj.DiscordServerId)
+                                                                              .SelectMany(obj2 => obj2.CalendarAppointments
+                                                                                                      .Where(obj3 => obj3.TimeStamp > now
+                                                                                                                  && obj2.CalendarAppointments.Any(obj4 => obj4.TimeStamp > now
+                                                                                                                                                                && obj4.TimeStamp < obj3.TimeStamp) == false)
+                                                                                                      .Select(obj3 => new
+                                                                                                                      {
+                                                                                                                          obj3.TimeStamp,
+                                                                                                                          obj2.Description
+                                                                                                                      }))
+                                                                              .OrderBy(obj2 => obj2.TimeStamp)
+                                                                              .ToList()
                                                   }))
                 {
                     var messageBuilder = new StringBuilder();
@@ -88,12 +92,12 @@ namespace Scruffy.Services.Calendar
                     foreach (var appointment in calendar.Appointments)
                     {
                         var currentLine = LocalizationGroup.GetFormattedText("MotdFormat",
-                                                                             "{0} - {1}, {2:dd.MM} at {2:hh:mm}",
+                                                                             "{0} - {1}, {2:dd.MM} at {2:HH:mm}",
                                                                              appointment.Description,
                                                                              LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(appointment.TimeStamp.DayOfWeek),
                                                                              appointment.TimeStamp);
 
-                        if (messageBuilder.Length + currentLine.Length > 300)
+                        if (messageBuilder.Length + currentLine.Length > 900)
                         {
                             break;
                         }
@@ -113,7 +117,13 @@ namespace Scruffy.Services.Calendar
 
                         if (message != null)
                         {
-                            await message.ModifyAsync(Formatter.Bold(LocalizationGroup.GetText("Motd", "Message of the day:")) + "\n" + Formatter.BlockCode(messageBuilder.ToString()))
+                            await message.ModifyAsync(null,
+                                                      new DiscordEmbedBuilder().WithTitle(LocalizationGroup.GetText("Motd", "Message of the day:"))
+                                                                               .WithDescription(Formatter.BlockCode(messageBuilder.ToString()))
+                                                                               .WithColor(DiscordColor.Green)
+                                                                               .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/ef1f3e1f3f40100fb3750f8d7d25c657.png?size=64")
+                                                                               .WithTimestamp(DateTime.Now)
+                                                                               .Build())
                                          .ConfigureAwait(false);
                         }
                     }
@@ -198,10 +208,10 @@ namespace Scruffy.Services.Calendar
                                 stringBuilder.Clear();
                                 stringBuilder.AppendLine(currentLine);
 
-                                currentFieldTitle = currentWeekOfYear == GetIso8601WeekOfYear(appointment.TimeStamp)
-                                                        ? "\u200B"
-                                                        : currentMonth != appointment.TimeStamp.Month
-                                                            ? $"{LocalizationGroup.CultureInfo.DateTimeFormat.GetMonthName(appointment.TimeStamp.Month)} {appointment.TimeStamp.Year}\n\n{LocalizationGroup.GetText("WeekNumber", "Week")} {GetIso8601WeekOfYear(appointment.TimeStamp)}"
+                                currentFieldTitle = currentMonth != appointment.TimeStamp.Month
+                                                        ? $"{LocalizationGroup.CultureInfo.DateTimeFormat.GetMonthName(appointment.TimeStamp.Month)} {appointment.TimeStamp.Year}\n\n{LocalizationGroup.GetText("WeekNumber", "Week")} {GetIso8601WeekOfYear(appointment.TimeStamp)}"
+                                                        : currentWeekOfYear == GetIso8601WeekOfYear(appointment.TimeStamp)
+                                                            ? "\u200B"
                                                             : $"{LocalizationGroup.GetText("WeekNumber", "Week")} {GetIso8601WeekOfYear(appointment.TimeStamp)}";
                             }
                             else

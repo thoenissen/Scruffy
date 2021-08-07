@@ -62,8 +62,12 @@ namespace Scruffy.Services.Raid.DialogElements
                                                      {
                                                          var levelId = DialogContext.GetValue<long>("ExperienceLevelId");
 
-                                                         dbFactory.GetRepository<RaidExperienceLevelRepository>()
-                                                                  .Refresh(obj => obj.Id == levelId, obj => obj.IsDeleted = true);
+                                                         if (dbFactory.GetRepository<RaidExperienceLevelRepository>()
+                                                                      .Refresh(obj => obj.Id == levelId, obj => obj.IsDeleted = true))
+                                                         {
+                                                             dbFactory.GetRepository<RaidExperienceLevelRepository>()
+                                                                      .RefreshRanks();
+                                                         }
                                                      }
 
                                                      return Task.FromResult(true);

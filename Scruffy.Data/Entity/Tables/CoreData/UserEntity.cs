@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+using Scruffy.Data.Entity.Tables.Account;
 using Scruffy.Data.Entity.Tables.Raid;
 using Scruffy.Data.Entity.Tables.Reminder;
 
@@ -53,6 +54,11 @@ namespace Scruffy.Data.Entity.Tables.CoreData
         /// Raid roles
         /// </summary>
         public virtual ICollection<RaidUserRoleEntity> RaidUserRoles { get; set; }
+
+        /// <summary>
+        /// Accounts
+        /// </summary>
+        public virtual ICollection<AccountEntity> Accounts { get; set; }
 
         #endregion // Navigation properties
 

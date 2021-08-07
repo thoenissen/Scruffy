@@ -30,6 +30,11 @@ namespace Scruffy.Data.Entity.Tables.Raid
         public ulong? DiscordRoleId { get; set; }
 
         /// <summary>
+        /// Rank of the experience level
+        /// </summary>
+        public int Rank { get; set; }
+
+        /// <summary>
         /// Description
         /// </summary>
         public string Description { get; set; }
@@ -43,6 +48,11 @@ namespace Scruffy.Data.Entity.Tables.Raid
         /// Discord emoji
         /// </summary>
         public ulong DiscordEmoji { get; set; }
+
+        /// <summary>
+        /// Participation points
+        /// </summary>
+        public long ParticipationPoints { get; set; }
 
         /// <summary>
         /// Is the level deleted?

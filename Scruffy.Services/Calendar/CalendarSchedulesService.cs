@@ -63,7 +63,7 @@ namespace Scruffy.Services.Calendar
 
             do
             {
-                repeat = await DialogHandler.Run<CalendarScheduleSetupDialogElement, bool>(commandContext).ConfigureAwait(false);
+                repeat = await DialogHandler.Run<CalendarScheduleSetupDialogElement, bool>(CommandContextContainer.FromCommandContext(commandContext)).ConfigureAwait(false);
             }
             while (repeat);
         }
@@ -200,7 +200,7 @@ namespace Scruffy.Services.Calendar
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task AddOneTimeEvent(CommandContext commandContext)
         {
-            var data = await DialogHandler.RunForm<CreateOneTimeEventFormData>(commandContext, false)
+            var data = await DialogHandler.RunForm<CreateOneTimeEventFormData>(CommandContextContainer.FromCommandContext(commandContext), false)
                                           .ConfigureAwait(false);
             if (data != null)
             {

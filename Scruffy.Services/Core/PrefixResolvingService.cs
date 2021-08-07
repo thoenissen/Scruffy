@@ -73,12 +73,16 @@ namespace Scruffy.Services.Core
         /// <returns>Position</returns>
         public Task<int> OnPrefixResolver(DiscordMessage msg)
         {
-            var result = -1;
+            int result;
 
             if (msg?.Channel?.GuildId != null
              && _prefixes.TryGetValue(msg.Channel.GuildId.Value, out var prefix))
             {
                 result = msg.GetStringPrefixLength(prefix, StringComparison.OrdinalIgnoreCase);
+            }
+            else
+            {
+                result = msg.GetStringPrefixLength(".", StringComparison.OrdinalIgnoreCase);
             }
 
             return Task.FromResult(result);

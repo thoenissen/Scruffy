@@ -40,7 +40,7 @@ namespace Scruffy.Services.Calendar
 
                 using (var dbFactory = RepositoryFactory.CreateInstance())
                 {
-                    var from = DateTime.Now;
+                    var from = DateTime.Today;
                     var to = DateTime.Today.AddDays(1);
 
                     var jobScheduler = serviceProvider.GetService<JobScheduler>();

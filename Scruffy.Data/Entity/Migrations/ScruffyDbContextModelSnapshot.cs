@@ -3,6 +3,8 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Scruffy.Data.Entity;
 
 namespace Scruffy.Data.Entity.Migrations
 {
@@ -16,6 +18,28 @@ namespace Scruffy.Data.Entity.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.5")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Account.AccountEntity", b =>
+                {
+                    b.Property<string>("Name")
+                        .HasMaxLength(42)
+                        .HasColumnType("nvarchar(42)");
+
+                    b.Property<string>("ApiKey")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DpsReportUserToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("UserId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.HasKey("Name");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Accounts");
+                });
 
             modelBuilder.Entity("Scruffy.Data.Entity.Tables.Calendar.CalendarAppointmentEntity", b =>
                 {
@@ -111,8 +135,8 @@ namespace Scruffy.Data.Entity.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("GuildPoints")
-                        .HasColumnType("int");
+                    b.Property<double?>("GuildPoints")
+                        .HasColumnType("float");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -418,6 +442,26 @@ namespace Scruffy.Data.Entity.Migrations
                     b.ToTable("RaidAppointments");
                 });
 
+            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidCurrentUserPointsEntity", b =>
+                {
+                    b.Property<decimal>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(20,0)")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+
+                    b.Property<double>("Points")
+                        .HasColumnType("float");
+
+                    b.Property<decimal?>("UserId1")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.HasKey("UserId");
+
+                    b.HasIndex("UserId1");
+
+                    b.ToTable("RaidCurrentUserPoints");
+                });
+
             modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidDayConfigurationEntity", b =>
                 {
                     b.Property<long>("Id")
@@ -517,6 +561,12 @@ namespace Scruffy.Data.Entity.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<long>("ParticipationPoints")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Rank")
+                        .HasColumnType("int");
+
                     b.Property<long?>("SuperiorExperienceLevelId")
                         .HasColumnType("bigint");
 
@@ -537,6 +587,9 @@ namespace Scruffy.Data.Entity.Migrations
                     b.Property<long>("AppointmentId")
                         .HasColumnType("bigint");
 
+                    b.Property<long?>("LineupExperienceLevelId")
+                        .HasColumnType("bigint");
+
                     b.Property<long?>("Points")
                         .HasColumnType("bigint");
 
@@ -549,6 +602,8 @@ namespace Scruffy.Data.Entity.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AppointmentId");
+
+                    b.HasIndex("LineupExperienceLevelId");
 
                     b.HasIndex("UserId");
 
@@ -652,6 +707,54 @@ namespace Scruffy.Data.Entity.Migrations
                     b.ToTable("RaidRoles");
                 });
 
+            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRoleLineupAssignmentEntity", b =>
+                {
+                    b.Property<long>("TemplateId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("LineupHeaderId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("TemplateId", "LineupHeaderId");
+
+                    b.HasIndex("LineupHeaderId");
+
+                    b.ToTable("RaidRoleLineupAssignments");
+                });
+
+            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRoleLineupEntryEntity", b =>
+                {
+                    b.Property<long>("LineupHeaderId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Position")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("RoleId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("LineupHeaderId", "Position", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("RaidRoleLineupEntries");
+                });
+
+            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRoleLineupHeaderEntity", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RaidRoleLineupHeaders");
+                });
+
             modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidUserRoleEntity", b =>
                 {
                     b.Property<decimal>("UserId")
@@ -729,6 +832,17 @@ namespace Scruffy.Data.Entity.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("WeeklyReminders");
+                });
+
+            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Account.AccountEntity", b =>
+                {
+                    b.HasOne("Scruffy.Data.Entity.Tables.CoreData.UserEntity", "User")
+                        .WithMany("Accounts")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Scruffy.Data.Entity.Tables.Calendar.CalendarAppointmentEntity", b =>
@@ -856,7 +970,7 @@ namespace Scruffy.Data.Entity.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidDayTemplateEntity", "RaidDayTemplateEntity")
+                    b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidDayTemplateEntity", "RaidDayTemplate")
                         .WithMany("RaidAppointments")
                         .HasForeignKey("TemplateId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -864,7 +978,16 @@ namespace Scruffy.Data.Entity.Migrations
 
                     b.Navigation("RaidDayConfiguration");
 
-                    b.Navigation("RaidDayTemplateEntity");
+                    b.Navigation("RaidDayTemplate");
+                });
+
+            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidCurrentUserPointsEntity", b =>
+                {
+                    b.HasOne("Scruffy.Data.Entity.Tables.CoreData.UserEntity", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId1");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidExperienceAssignmentEntity", b =>
@@ -875,13 +998,13 @@ namespace Scruffy.Data.Entity.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidDayTemplateEntity", "RaidDayTemplateEntity")
+                    b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidDayTemplateEntity", "RaidDayTemplate")
                         .WithMany("RaidExperienceAssignments")
                         .HasForeignKey("TemplateId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("RaidDayTemplateEntity");
+                    b.Navigation("RaidDayTemplate");
 
                     b.Navigation("RaidExperienceLevel");
                 });
@@ -903,11 +1026,17 @@ namespace Scruffy.Data.Entity.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidExperienceLevelEntity", "LineupExperienceLevel")
+                        .WithMany()
+                        .HasForeignKey("LineupExperienceLevelId");
+
                     b.HasOne("Scruffy.Data.Entity.Tables.CoreData.UserEntity", "User")
                         .WithMany("RaidRegistrations")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("LineupExperienceLevel");
 
                     b.Navigation("RaidAppointment");
 
@@ -988,6 +1117,44 @@ namespace Scruffy.Data.Entity.Migrations
                     b.Navigation("MainRaidRole");
                 });
 
+            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRoleLineupAssignmentEntity", b =>
+                {
+                    b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidRoleLineupHeaderEntity", "RaidRoleLineupHeader")
+                        .WithMany("RaidRoleLineupAssignments")
+                        .HasForeignKey("LineupHeaderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidDayTemplateEntity", "RaidDayTemplate")
+                        .WithMany("RaidRoleLineupAssignments")
+                        .HasForeignKey("TemplateId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("RaidDayTemplate");
+
+                    b.Navigation("RaidRoleLineupHeader");
+                });
+
+            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRoleLineupEntryEntity", b =>
+                {
+                    b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidRoleLineupHeaderEntity", "RaidRoleLineupHeader")
+                        .WithMany("RaidRoleLineupEntries")
+                        .HasForeignKey("LineupHeaderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidRoleEntity", "RaidRole")
+                        .WithMany("RaidRoleLineupEntries")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("RaidRole");
+
+                    b.Navigation("RaidRoleLineupHeader");
+                });
+
             modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidUserRoleEntity", b =>
                 {
                     b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidRoleEntity", "MainRaidRole")
@@ -1040,6 +1207,8 @@ namespace Scruffy.Data.Entity.Migrations
 
             modelBuilder.Entity("Scruffy.Data.Entity.Tables.CoreData.UserEntity", b =>
                 {
+                    b.Navigation("Accounts");
+
                     b.Navigation("OneTimeReminders");
 
                     b.Navigation("RaidRegistrations");
@@ -1072,6 +1241,8 @@ namespace Scruffy.Data.Entity.Migrations
                     b.Navigation("RaidAppointments");
 
                     b.Navigation("RaidExperienceAssignments");
+
+                    b.Navigation("RaidRoleLineupAssignments");
                 });
 
             modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidExperienceLevelEntity", b =>
@@ -1090,7 +1261,16 @@ namespace Scruffy.Data.Entity.Migrations
 
             modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRoleEntity", b =>
                 {
+                    b.Navigation("RaidRoleLineupEntries");
+
                     b.Navigation("SubRaidRoles");
+                });
+
+            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRoleLineupHeaderEntity", b =>
+                {
+                    b.Navigation("RaidRoleLineupAssignments");
+
+                    b.Navigation("RaidRoleLineupEntries");
                 });
 #pragma warning restore 612, 618
         }

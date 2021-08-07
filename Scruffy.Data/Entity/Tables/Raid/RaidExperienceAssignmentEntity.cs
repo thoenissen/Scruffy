@@ -31,7 +31,7 @@ namespace Scruffy.Data.Entity.Tables.Raid
         /// Template
         /// </summary>
         [ForeignKey(nameof(TemplateId))]
-        public virtual RaidDayTemplateEntity RaidDayTemplateEntity { get; set; }
+        public virtual RaidDayTemplateEntity RaidDayTemplate { get; set; }
 
         /// <summary>
         /// Configuration

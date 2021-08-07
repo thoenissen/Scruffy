@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 using DSharpPlus.CommandsNext;
@@ -43,16 +44,17 @@ namespace Scruffy.Services.Raid
             {
                 var now = DateTime.Now;
 
-                var appointment = await dbFactory.GetRepository<RaidAppointmentRepository>()
+                var appointmentId = await dbFactory.GetRepository<RaidAppointmentRepository>()
                                                  .GetQuery()
-                                                 .FirstOrDefaultAsync(obj => obj.TimeStamp < now
-                                                                                  && obj.IsCommitted
+                                                 .Where(obj => obj.TimeStamp < now
+                                                                                  && obj.IsCommitted == false
                                                                                   && obj.RaidDayConfiguration.AliasName == aliasName)
+                                                 .Select(obj => obj.Id)
+                                                 .FirstOrDefaultAsync()
                                                  .ConfigureAwait(false);
 
-                if (appointment != null)
+                if (appointmentId > 0)
                 {
-                    // TODO
                 }
                 else
                 {

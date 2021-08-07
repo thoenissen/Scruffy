@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +8,6 @@ using DSharpPlus.Entities;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
-using Scruffy.Data.Services.Raid;
 using Scruffy.Services.Core;
 
 namespace Scruffy.Services.Raid
@@ -25,11 +23,6 @@ namespace Scruffy.Services.Raid
         /// Discord client
         /// </summary>
         private DiscordClient _client;
-
-        /// <summary>
-        /// Experience levels
-        /// </summary>
-        private List<RaidExperienceLevelData> _unorderedLevels;
 
         #endregion // Fields
 
@@ -61,43 +54,46 @@ namespace Scruffy.Services.Raid
             {
                 var now = DateTime.Now;
 
+                var currentRaidPoints = dbFactory.GetRepository<RaidCurrentUserPointsRepository>()
+                                                 .GetQuery()
+                                                 .Select(obj => obj);
+
                 var appointment = dbFactory.GetRepository<RaidAppointmentRepository>()
                                            .GetQuery()
                                            .Where(obj => obj.ConfigurationId == configurationId
                                                          && obj.TimeStamp > now)
                                            .OrderByDescending(obj => obj.TimeStamp)
-                                           .Select(obj => new RaidAppointmentMessageData
+                                           .Select(obj => new
                                                           {
-                                                              TimeStamp = obj.TimeStamp,
+                                                              obj.TimeStamp,
+                                                              obj.RaidDayConfiguration.ChannelId,
+                                                              obj.RaidDayConfiguration.MessageId,
+                                                              obj.RaidDayTemplate.Thumbnail,
+                                                              obj.RaidDayTemplate.Title,
+                                                              obj.RaidDayTemplate.Description,
 
-                                                              ChannelId = obj.RaidDayConfiguration.ChannelId,
-                                                              MessageId = obj.RaidDayConfiguration.MessageId,
-
-                                                              Thumbnail = obj.RaidDayTemplateEntity.Thumbnail,
-                                                              Title = obj.RaidDayTemplateEntity.Title,
-                                                              Description = obj.RaidDayTemplateEntity.Description,
-
-                                                              ExperienceLevels  = obj.RaidDayTemplateEntity
+                                                              ExperienceLevels  = obj.RaidDayTemplate
                                                                                      .RaidExperienceAssignments
-                                                                                     .Select(obj2 => new RaidAppointmentMessageExperienceLevel
+                                                                                     .Select(obj2 => new
                                                                                                      {
-                                                                                                         Id = obj2.RaidExperienceLevel.Id,
-                                                                                                         DiscordEmoji = obj2.RaidExperienceLevel.DiscordEmoji,
-                                                                                                         Description = obj2.RaidExperienceLevel.Description,
-                                                                                                         Count = obj2.Count
+                                                                                                         RaidExperienceLevelId  = obj2.RaidExperienceLevel.Id,
+                                                                                                         obj2.RaidExperienceLevel.DiscordEmoji,
+                                                                                                         obj2.RaidExperienceLevel.Description,
+                                                                                                         obj2.RaidExperienceLevel.Rank,
+                                                                                                         obj2.Count
                                                                                                      })
                                                                                      .ToList(),
 
                                                               Registrations = obj.RaidRegistrations
-
-                                                                                 // TODO order by points
-                                                                                 .OrderBy(obj => obj.RegistrationTimeStamp)
-                                                                                 .Select(obj2 => new RaidAppointmentRegistrationData
-                                                                                                 {
-                                                                                                     UserId = obj2.UserId,
-                                                                                                     RaidExperienceLevelId = obj2.User.RaidExperienceLevelId
-                                                                                                 })
-                                                                                 .ToList()
+                                                                              .Select(obj3 => new
+                                                                                              {
+                                                                                                  obj3.UserId,
+                                                                                                  Points = currentRaidPoints.Where(obj4 => obj4.UserId == obj3.UserId)
+                                                                                                                            .Select(obj4 => obj4.Points).FirstOrDefault(),
+                                                                                                  obj3.LineupExperienceLevelId,
+                                                                                                  ExperienceLevelDiscordEmoji = (ulong?)obj3.User.RaidExperienceLevel.DiscordEmoji,
+                                                                                              })
+                                                                              .ToList()
                                                           })
                                            .FirstOrDefault();
 
@@ -115,33 +111,19 @@ namespace Scruffy.Services.Raid
 
                         if (message != null)
                         {
-                            var slots = GetSlots(dbFactory, appointment);
-
-                            // Assigning the users to the slots
-                            var substitutesBench = new List<(ulong UserId, long? ExperienceLevelId)>();
-
-                            foreach (var registration in appointment.Registrations)
-                            {
-                                var slot = slots.FirstOrDefault(obj => obj.SlotCount > obj.Users.Count
-                                                                       && obj.ExperienceLevelIds.Any(obj2 => obj2 == registration.RaidExperienceLevelId));
-                                if (slot != null)
-                                {
-                                    slot.Users.Add(registration.UserId);
-                                }
-                                else
-                                {
-                                    substitutesBench.Add((registration.UserId, registration.RaidExperienceLevelId));
-                                }
-                            }
-
                             var stringBuilder = new StringBuilder();
 
                             // Building the message
-                            foreach (var slot in slots)
+                            foreach (var slot in appointment.ExperienceLevels)
                             {
-                                foreach (var userId in slot.Users)
+                                var registrations = appointment.Registrations
+                                                               .Where(obj => obj.LineupExperienceLevelId == slot.RaidExperienceLevelId)
+                                                               .OrderByDescending(obj => obj.Points)
+                                                               .ToList();
+
+                                foreach (var registration in registrations)
                                 {
-                                    var discordUser = await _client.GetUserAsync(userId)
+                                    var discordUser = await _client.GetUserAsync(registration.UserId)
                                                                    .ConfigureAwait(false);
 
                                     stringBuilder.AppendLine($" > {DiscordEmojiService.GetQuestionMarkEmoji(_client)} {discordUser.Mention}");
@@ -149,19 +131,19 @@ namespace Scruffy.Services.Raid
 
                                 stringBuilder.Append('\u200B');
 
-                                builder.AddField($"{DiscordEmojiService.GetGuildEmoji(_client, slot.DiscordEmoji)} {slot.Description} ({slot.Users.Count}/{slot.SlotCount})", stringBuilder.ToString());
+                                builder.AddField($"{DiscordEmojiService.GetGuildEmoji(_client, slot.DiscordEmoji)} {slot.Description} ({registrations.Count})", stringBuilder.ToString());
 
                                 stringBuilder.Clear();
                             }
 
-                            foreach (var (userId, experienceLevelId) in substitutesBench)
+                            foreach (var entry in appointment.Registrations
+                                                             .Where(obj => obj.LineupExperienceLevelId == null)
+                                                             .OrderByDescending(obj => obj.Points))
                             {
-                                var discordUser = await _client.GetUserAsync(userId)
+                                var discordUser = await _client.GetUserAsync(entry.UserId)
                                                                .ConfigureAwait(false);
 
-                                var experienceLevel = _unorderedLevels.FirstOrDefault(obj => obj.Id == experienceLevelId);
-
-                                stringBuilder.AppendLine($" > {DiscordEmojiService.GetQuestionMarkEmoji(_client)} {discordUser.Mention} {(experienceLevel != null ? DiscordEmojiService.GetGuildEmoji(_client, experienceLevel.DiscordEmoji) : null)}");
+                                stringBuilder.AppendLine($" > {DiscordEmojiService.GetQuestionMarkEmoji(_client)} {discordUser.Mention} {(entry.ExperienceLevelDiscordEmoji != null ? DiscordEmojiService.GetGuildEmoji(_client, entry.ExperienceLevelDiscordEmoji.Value) : null)}");
                             }
 
                             stringBuilder.Append('\u200B');
@@ -181,60 +163,6 @@ namespace Scruffy.Services.Raid
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Get the usable slots of the appointment
-        /// </summary>
-        /// <param name="dbFactory">Repository factory</param>
-        /// <param name="appointment">Appointment data</param>
-        /// <returns>Slots</returns>
-        private List<RaidAppointmentSlotData> GetSlots(RepositoryFactory dbFactory, RaidAppointmentMessageData appointment)
-        {
-            var slotCountFactor = appointment.Registrations.Count / appointment.ExperienceLevels.Sum(obj => (double)obj.Count) > 1.4 ? 2 : 1;
-
-            _unorderedLevels ??= dbFactory.GetRepository<RaidExperienceLevelRepository>()
-                                          .GetQuery()
-                                          .Where(obj => obj.IsDeleted == false)
-                                          .Select(obj => new RaidExperienceLevelData
-                                                         {
-                                                             Id = obj.Id,
-                                                             SuperiorExperienceLevelId = obj.SuperiorExperienceLevelId,
-                                                             Description = obj.Description,
-                                                             DiscordEmoji = obj.DiscordEmoji,
-                                                         })
-                                          .ToList();
-
-            var slots = new List<RaidAppointmentSlotData>();
-            var currentLevel = _unorderedLevels.FirstOrDefault(obj => obj.SuperiorExperienceLevelId == null);
-            var experienceLevelIds = new List<long>();
-
-            while (currentLevel != null)
-            {
-                experienceLevelIds.Add(currentLevel.Id);
-
-                var currentSlot = new RaidAppointmentSlotData
-                                  {
-                                      Description = currentLevel.Description,
-                                      DiscordEmoji = currentLevel.DiscordEmoji,
-                                      Users = new List<ulong>(),
-                                      ExperienceLevelIds = experienceLevelIds.ToList()
-                                  };
-
-                slots.Add(currentSlot);
-
-                var experienceLevel = appointment.ExperienceLevels.FirstOrDefault(obj => obj.Id == currentLevel.Id);
-                if (experienceLevel != null)
-                {
-                    currentSlot.SlotCount = experienceLevel.Count * slotCountFactor;
-                }
-
-                currentLevel = _unorderedLevels.FirstOrDefault(obj => obj.SuperiorExperienceLevelId == currentLevel.Id);
-            }
-
-            slots.RemoveAll(obj => obj.SlotCount == 0);
-
-            return slots;
         }
 
         #endregion // Methods

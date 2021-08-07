@@ -56,7 +56,7 @@ namespace Scruffy.Services.GuildAdministration
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task CreateGuildConfiguration(CommandContext commandContext)
         {
-            var data = await DialogHandler.RunForm<CreateGuildAdministrationFormData>(commandContext, true)
+            var data = await DialogHandler.RunForm<CreateGuildAdministrationFormData>(CommandContextContainer.FromCommandContext(commandContext), true)
                                           .ConfigureAwait(false);
 
             if (data != null)
@@ -148,7 +148,7 @@ namespace Scruffy.Services.GuildAdministration
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task SetupCalendar(CommandContext commandContext)
         {
-            var data = await DialogHandler.RunForm<SetGuildCalendarFormData>(commandContext, true)
+            var data = await DialogHandler.RunForm<SetGuildCalendarFormData>(CommandContextContainer.FromCommandContext(commandContext), true)
                                           .ConfigureAwait(false);
 
             if (data != null)

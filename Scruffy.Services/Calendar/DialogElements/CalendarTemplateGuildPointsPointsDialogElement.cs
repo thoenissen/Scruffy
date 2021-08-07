@@ -1,4 +1,6 @@
-﻿using DSharpPlus.Entities;
+﻿using System.Globalization;
+
+using DSharpPlus.Entities;
 
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord;
@@ -8,7 +10,7 @@ namespace Scruffy.Services.Calendar.DialogElements
     /// <summary>
     /// Acquisition of the calendar template guild points
     /// </summary>
-    public class CalendarTemplateGuildPointsPointsDialogElement : DialogMessageElementBase<int>
+    public class CalendarTemplateGuildPointsPointsDialogElement : DialogMessageElementBase<double>
     {
         #region Constructor
 
@@ -36,9 +38,9 @@ namespace Scruffy.Services.Calendar.DialogElements
         /// </summary>
         /// <param name="message">Message</param>
         /// <returns>Result</returns>
-        public override int ConvertMessage(DiscordMessage message)
+        public override double ConvertMessage(DiscordMessage message)
         {
-            return int.TryParse(message.Content, out var value) ? value : 0;
+            return double.TryParse(message.Content, NumberStyles.Any, LocalizationGroup.CultureInfo, out var value) ? value : 0;
         }
 
         #endregion // DialogMessageElementBase<string>

@@ -40,6 +40,11 @@ namespace Scruffy.Data.Entity.Tables.Raid
         /// </summary>
         public long? Points { get; set; }
 
+        /// <summary>
+        /// Id of the experience level
+        /// </summary>
+        public long? LineupExperienceLevelId { get; set; }
+
         #region Navigation properties
 
         /// <summary>
@@ -53,6 +58,12 @@ namespace Scruffy.Data.Entity.Tables.Raid
         /// </summary>
         [ForeignKey(nameof(UserId))]
         public virtual UserEntity User { get; set; }
+
+        /// <summary>
+        /// Experience level
+        /// </summary>
+        [ForeignKey(nameof(LineupExperienceLevelId))]
+        public virtual RaidExperienceLevelEntity LineupExperienceLevel { get; set; }
 
         /// <summary>
         /// Registrations

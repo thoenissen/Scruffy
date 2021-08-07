@@ -8,28 +8,23 @@ namespace Scruffy.Data.Services.Raid
     public class RaidAppointmentSlotData
     {
         /// <summary>
-        /// Description
+        /// Rank
         /// </summary>
-        public string Description { get; set; }
-
-        /// <summary>
-        /// Discord emoji
-        /// </summary>
-        public ulong DiscordEmoji { get; set; }
-
-        /// <summary>
-        /// Valid experience levels
-        /// </summary>
-        public List<long> ExperienceLevelIds { get; set; }
+        public int Rank { get; set; }
 
         /// <summary>
         /// Users
         /// </summary>
-        public List<ulong> Users { get; set; }
+        public List<long> Registrations { get; set; }
 
         /// <summary>
         /// Slot count
         /// </summary>
         public long SlotCount { get; set; }
+
+        /// <summary>
+        /// Experience level id
+        /// </summary>
+        public long ExperienceLevelId { get; set; }
     }
 }

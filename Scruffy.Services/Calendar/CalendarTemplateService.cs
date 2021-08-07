@@ -39,7 +39,7 @@ namespace Scruffy.Services.Calendar
 
             do
             {
-                repeat = await DialogHandler.Run<CalendarTemplateSetupDialogElement, bool>(commandContext).ConfigureAwait(false);
+                repeat = await DialogHandler.Run<CalendarTemplateSetupDialogElement, bool>(CommandContextContainer.FromCommandContext(commandContext)).ConfigureAwait(false);
             }
             while (repeat);
         }

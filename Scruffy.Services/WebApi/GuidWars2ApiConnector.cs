@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 using Scruffy.Data.Json.GuildWars2.Account;
+using Scruffy.Data.Json.GuildWars2.Core;
 using Scruffy.Data.Json.GuildWars2.Guild;
 
 namespace Scruffy.Services.WebApi
@@ -42,6 +43,24 @@ namespace Scruffy.Services.WebApi
         #region Methods
 
         /// <summary>
+        /// Request the token information
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task<TokenInformation> GetTokenInformationAsync()
+        {
+            using (var response = await CreateRequest("https://api.guildwars2.com/v2/tokeninfo").GetResponseAsync()
+                                                                                                .ConfigureAwait(false))
+            {
+                using (var reader = new StreamReader(response.GetResponseStream()))
+                {
+                    var jsonResult = await reader.ReadToEndAsync().ConfigureAwait(false);
+
+                    return JsonConvert.DeserializeObject<TokenInformation>(jsonResult);
+                }
+            }
+        }
+
+        /// <summary>
         /// Request the account information
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
@@ -67,7 +86,7 @@ namespace Scruffy.Services.WebApi
         public  async Task<GuildInformation> GetGuildInformation(string id)
         {
             using (var response = await CreateRequest($"https://api.guildwars2.com/v2/guild/{id}?v=latest").GetResponseAsync()
-                                                                                                                                          .ConfigureAwait(false))
+                                                                                                           .ConfigureAwait(false))
             {
                 using (var reader = new StreamReader(response.GetResponseStream()))
                 {

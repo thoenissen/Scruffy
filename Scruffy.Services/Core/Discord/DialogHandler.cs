@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 using DSharpPlus.CommandsNext;
@@ -6,6 +7,7 @@ using DSharpPlus.CommandsNext;
 using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Services.Core.Discord.Attributes;
+using Scruffy.Services.Core.Discord.Interfaces;
 
 namespace Scruffy.Services.Core.Discord
 {
@@ -22,14 +24,19 @@ namespace Scruffy.Services.Core.Discord
         /// <typeparam name="T">Type of the element</typeparam>
         /// <typeparam name="TData">Type of the element result</typeparam>
         /// <param name="commandContext">Current command context</param>
+        /// <param name="onInitialize">Initialization</param>
         /// <returns>Result</returns>
-        public static async Task<TData> Run<T, TData>(CommandContext commandContext) where T : DialogElementBase<TData>
+        public static async Task<TData> Run<T, TData>(ICommandContext commandContext, Action<DialogContext> onInitialize = null) where T : DialogElementBase<TData>
         {
             await using (var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider())
             {
                 var service = serviceProvider.GetService<T>();
 
-                service.Initialize(commandContext, serviceProvider, new DialogContext());
+                var dialogContext = new DialogContext();
+
+                onInitialize?.Invoke(dialogContext);
+
+                service.Initialize(commandContext, serviceProvider, dialogContext);
 
                 return await service.Run()
                                     .ConfigureAwait(false);
@@ -43,7 +50,7 @@ namespace Scruffy.Services.Core.Discord
         /// <param name="commandContext">Current command context</param>
         /// <param name="deleteMessages">Should the creation message be deleted?</param>
         /// <returns>Result</returns>
-        public static async Task<TData> RunForm<TData>(CommandContext commandContext, bool deleteMessages) where TData : new()
+        public static async Task<TData> RunForm<TData>(ICommandContext commandContext, bool deleteMessages) where TData : new()
         {
             await using (var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider())
             {

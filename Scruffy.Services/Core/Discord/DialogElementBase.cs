@@ -2,11 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-using DSharpPlus.CommandsNext;
-
 using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Services.Core.Discord.Attributes;
+using Scruffy.Services.Core.Discord.Interfaces;
 
 namespace Scruffy.Services.Core.Discord
 {
@@ -38,7 +37,7 @@ namespace Scruffy.Services.Core.Discord
         /// <summary>
         /// Command context
         /// </summary>
-        public CommandContext CommandContext { get; private set; }
+        public ICommandContext CommandContext { get; private set; }
 
         /// <summary>
         /// Service provider
@@ -60,7 +59,7 @@ namespace Scruffy.Services.Core.Discord
         /// <param name="commandContext">Command context</param>
         /// <param name="serviceProvider">Service provider</param>
         /// <param name="dialogContext">Dialog context</param>
-        internal void Initialize(CommandContext commandContext, IServiceProvider serviceProvider, DialogContext dialogContext)
+        internal void Initialize(ICommandContext commandContext, IServiceProvider serviceProvider, DialogContext dialogContext)
         {
             CommandContext = commandContext;
             ServiceProvider = serviceProvider;

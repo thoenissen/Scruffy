@@ -53,7 +53,7 @@ namespace Scruffy.Data.Entity.Tables.Calendar
         /// <summary>
         /// Guild points
         /// </summary>
-        public int? GuildPoints { get; set;  }
+        public double? GuildPoints { get; set;  }
 
         /// <summary>
         /// Does this event raise the maximum cap of guild points per week?

@@ -56,6 +56,11 @@ namespace Scruffy.Data.Entity.Tables.Raid
         /// </summary>
         public virtual ICollection<RaidExperienceAssignmentEntity> RaidExperienceAssignments { get; set; }
 
+        /// <summary>
+        /// Lineups
+        /// </summary>
+        public virtual ICollection<RaidRoleLineupAssignmentEntity> RaidRoleLineupAssignments { get; set; }
+
         #endregion // Navigation properties
 
         #endregion // Properties

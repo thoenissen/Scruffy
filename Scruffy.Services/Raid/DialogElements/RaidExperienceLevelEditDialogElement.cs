@@ -114,10 +114,14 @@ namespace Scruffy.Services.Raid.DialogElements
                                                                       .RefreshRange(obj =>  obj.Id != levelId,
                                                                                     obj => obj.SuperiorExperienceLevelId = newSuperiorLevelId))
                                                          {
-                                                             dbFactory.GetRepository<RaidExperienceLevelRepository>()
-                                                                      .RefreshRange(obj =>  obj.SuperiorExperienceLevelId == newSuperiorLevelId
-                                                                                         && obj.Id != levelId,
-                                                                                    obj => obj.SuperiorExperienceLevelId = levelId);
+                                                             if (dbFactory.GetRepository<RaidExperienceLevelRepository>()
+                                                                          .RefreshRange(obj =>  obj.SuperiorExperienceLevelId == newSuperiorLevelId
+                                                                                             && obj.Id != levelId,
+                                                                                        obj => obj.SuperiorExperienceLevelId = levelId))
+                                                             {
+                                                                 dbFactory.GetRepository<RaidExperienceLevelRepository>()
+                                                                          .RefreshRanks();
+                                                             }
                                                          }
                                                      }
 

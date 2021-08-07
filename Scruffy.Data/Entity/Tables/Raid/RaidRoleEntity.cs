@@ -50,6 +50,11 @@ namespace Scruffy.Data.Entity.Tables.Raid
         /// </summary>
         public virtual ICollection<RaidRoleEntity> SubRaidRoles { get; set; }
 
+        /// <summary>
+        /// Lineup entries
+        /// </summary>
+        public virtual ICollection<RaidRoleLineupEntryEntity> RaidRoleLineupEntries { get; set; }
+
         #endregion // Navigation properties
 
         #endregion // Properties

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Data.Entity;
+using Scruffy.Data.Entity.Repositories.Calendar;
 using Scruffy.Data.Entity.Repositories.Reminder;
 using Scruffy.Services.Calendar;
 using Scruffy.Services.Fractals;
@@ -93,6 +94,27 @@ namespace Scruffy.Services.Core.JobScheduler
                 foreach (var weeklyReminder in weeklyReminders)
                 {
                     AddWeeklyReminder(weeklyReminder.Id, weeklyReminder.DayOfWeek, weeklyReminder.PostTime, weeklyReminder.DeletionTime);
+                }
+
+                // calendar reminders
+                var from = DateTime.Today;
+                var to = DateTime.Today.AddDays(1);
+
+                foreach (var entry in dbFactory.GetRepository<CalendarAppointmentRepository>()
+                                               .GetQuery()
+                                               .Where(obj => obj.TimeStamp > from
+                                                          && obj.TimeStamp < to
+                                                          && obj.CalendarAppointmentTemplate.ReminderTime != null)
+                                               .Select(obj => new
+                                                              {
+                                                                  obj.Id,
+                                                                  obj.CalendarAppointmentTemplate.ReminderTime,
+                                                                  obj.TimeStamp,
+                                                              })
+                                               .ToList())
+                {
+                    JobManager.AddJob(new CalendarReminderPostJob(entry.Id), obj => obj.ToRunOnceAt(DateTime.Today.Add(entry.ReminderTime.Value)));
+                    JobManager.AddJob(new CalendarReminderDeletionJob(entry.Id), obj => obj.ToRunOnceAt(entry.TimeStamp));
                 }
             }
         }

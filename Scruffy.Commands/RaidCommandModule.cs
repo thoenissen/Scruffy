@@ -59,6 +59,11 @@ namespace Scruffy.Commands
         /// </summary>
         public RaidCommitService CommitService { get; set; }
 
+        /// <summary>
+        /// Registration service
+        /// </summary>
+        public RaidRegistrationService RegistrationService { get; set; }
+
         #endregion // Properties
 
         #region Methods
@@ -72,7 +77,7 @@ namespace Scruffy.Commands
         [RequireAdministratorPermissions]
         public async Task Setup(CommandContext commandContext)
         {
-            var data = await DialogHandler.RunForm<CreateRaidDayFormData>(commandContext, true)
+            var data = await DialogHandler.RunForm<CreateRaidDayFormData>(CommandContextContainer.FromCommandContext(commandContext), true)
                                           .ConfigureAwait(false);
 
             using (var dbFactory = RepositoryFactory.CreateInstance())
@@ -140,18 +145,8 @@ namespace Scruffy.Commands
                                                  .ConfigureAwait(false);
                 if (appointment != null)
                 {
-                    if (dbFactory.GetRepository<RaidRegistrationRepository>()
-                                 .AddOrRefresh(obj => obj.AppointmentId == appointment.Id
-                                                      && obj.UserId == commandContext.User.Id,
-                                               obj =>
-                                               {
-                                                   if (obj.Id == 0)
-                                                   {
-                                                       obj.AppointmentId = appointment.Id;
-                                                       obj.UserId = commandContext.User.Id;
-                                                       obj.RegistrationTimeStamp = DateTime.Now;
-                                                   }
-                                               }))
+                    if (await RegistrationService.Join(appointment.Id, commandContext.User.Id)
+                                                 .ConfigureAwait(false))
                     {
                         await MessageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
                                             .ConfigureAwait(false);
@@ -189,12 +184,8 @@ namespace Scruffy.Commands
                                                  .ConfigureAwait(false);
                 if (appointment != null)
                 {
-                    dbFactory.GetRepository<RaidRegistrationRoleAssignmentRepository>()
-                             .RemoveRange(obj => obj.RaidRegistration.AppointmentId == appointment.Id);
-
-                    if (dbFactory.GetRepository<RaidRegistrationRepository>()
-                                 .Remove(obj => obj.AppointmentId == appointment.Id
-                                                      && obj.UserId == commandContext.User.Id))
+                    if (await RegistrationService.Leave(appointment.Id, commandContext.User.Id)
+                                                 .ConfigureAwait(false))
                     {
                         await MessageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
                                             .ConfigureAwait(false);
@@ -322,7 +313,7 @@ namespace Scruffy.Commands
 
                 do
                 {
-                    repeat = await DialogHandler.Run<RaidTemplateSetupDialogElement, bool>(commandContext).ConfigureAwait(false);
+                    repeat = await DialogHandler.Run<RaidTemplateSetupDialogElement, bool>(CommandContextContainer.FromCommandContext(commandContext)).ConfigureAwait(false);
                 }
                 while (repeat);
             }
@@ -378,7 +369,7 @@ namespace Scruffy.Commands
 
                 do
                 {
-                    repeat = await DialogHandler.Run<RaidExperienceLevelSetupDialogElement, bool>(commandContext)
+                    repeat = await DialogHandler.Run<RaidExperienceLevelSetupDialogElement, bool>(CommandContextContainer.FromCommandContext(commandContext))
                                                 .ConfigureAwait(false);
                 }
                 while (repeat);

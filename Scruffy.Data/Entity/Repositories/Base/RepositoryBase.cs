@@ -119,8 +119,9 @@ namespace Scruffy.Data.Entity.Repositories.Base
         /// </summary>
         /// <param name="expression">Defines the entity object to be refreshed</param>
         /// <param name="refreshAction">Action to be performed with the entity object</param>
+        /// <param name="after">Action to be performed after the refresh/add-operation</param>
         /// <returns>Is the operation performed successfully?</returns>
-        public bool AddOrRefresh(Expression<Func<TEntity, bool>> expression, Action<TEntity> refreshAction)
+        public bool AddOrRefresh(Expression<Func<TEntity, bool>> expression, Action<TEntity> refreshAction, Action<TEntity> after = null)
         {
             var success = false;
 
@@ -146,6 +147,8 @@ namespace Scruffy.Data.Entity.Repositories.Base
                 }
 
                 _dbContext.SaveChanges();
+
+                after?.Invoke(entity);
 
                 success = true;
             }
@@ -222,8 +225,9 @@ namespace Scruffy.Data.Entity.Repositories.Base
         /// Remove a entity object
         /// </summary>
         /// <param name="expression">Defines the entity object to be refreshed</param>
+        /// <param name="beforeRemove">Action to be performed before the remove-operation</param>
         /// <returns>Is the operation performed successfully?</returns>
-        public bool Remove(Expression<Func<TEntity, bool>> expression)
+        public bool Remove(Expression<Func<TEntity, bool>> expression, Action<TEntity> beforeRemove = null)
         {
             var success = false;
 
@@ -233,7 +237,11 @@ namespace Scruffy.Data.Entity.Repositories.Base
             {
                 var dbSet = _dbContext.Set<TEntity>();
 
-                dbSet.Remove(dbSet.First(expression));
+                var entity = dbSet.First(expression);
+
+                beforeRemove?.Invoke(entity);
+
+                dbSet.Remove(entity);
 
                 _dbContext.SaveChanges();
 

@@ -14,5 +14,10 @@
         /// Experience level id
         /// </summary>
         public long? RaidExperienceLevelId { get; set; }
+
+        /// <summary>
+        /// User rank
+        /// </summary>
+        public int Rank { get; set; }
     }
 }
