@@ -2,7 +2,6 @@
 using System.Text;
 using System.Threading.Tasks;
 
-using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Services.Core;
+using Scruffy.Services.Core.Discord;
 
 namespace Scruffy.Services.Raid
 {
@@ -36,9 +36,9 @@ namespace Scruffy.Services.Raid
         /// <summary>
         /// Post overview of experience roles
         /// </summary>
-        /// <param name="commandContext">Command context</param>
+        /// <param name="commandContextContainer">Command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task PostExperienceLevelOverview(CommandContext commandContext)
+        public async Task PostExperienceLevelOverview(CommandContextContainer commandContextContainer)
         {
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
@@ -70,11 +70,11 @@ namespace Scruffy.Services.Raid
                 {
                     var levelFieldCounter = 1;
 
-                    currentFieldTitle = $"{DiscordEmojiService.GetGuildEmoji(commandContext.Client, level.DiscordEmoji)} {level.Description} #{levelFieldCounter}";
+                    currentFieldTitle = $"{DiscordEmojiService.GetGuildEmoji(commandContextContainer.Client, level.DiscordEmoji)} {level.Description} #{levelFieldCounter}";
 
                     foreach (var entry in level.Users)
                     {
-                        var user = await commandContext.Client
+                        var user = await commandContextContainer.Client
                                                        .GetUserAsync(entry)
                                                        .ConfigureAwait(false);
 
@@ -89,7 +89,7 @@ namespace Scruffy.Services.Raid
                             {
                                 fieldCounter = 1;
 
-                                await commandContext.Channel
+                                await commandContextContainer.Channel
                                                     .SendMessageAsync(embedBuilder)
                                                     .ConfigureAwait(false);
 
@@ -105,7 +105,7 @@ namespace Scruffy.Services.Raid
 
                             levelFieldCounter++;
 
-                            currentFieldTitle = $"{DiscordEmojiService.GetGuildEmoji(commandContext.Client, level.DiscordEmoji)} {level.Description} #{levelFieldCounter}";
+                            currentFieldTitle = $"{DiscordEmojiService.GetGuildEmoji(commandContextContainer.Client, level.DiscordEmoji)} {level.Description} #{levelFieldCounter}";
 
                             stringBuilder = new StringBuilder();
                         }
@@ -120,7 +120,7 @@ namespace Scruffy.Services.Raid
                     stringBuilder = new StringBuilder();
                 }
 
-                await commandContext.Channel
+                await commandContextContainer.Channel
                                     .SendMessageAsync(embedBuilder)
                                     .ConfigureAwait(false);
             }

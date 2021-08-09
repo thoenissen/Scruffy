@@ -60,6 +60,8 @@ namespace Scruffy.Services.Core.Discord
 
             if (currentUserResponse.TimedOut == false)
             {
+                CommandContext.LastUserMessage = currentUserResponse.Result;
+
                 DialogContext.Messages.Add(currentUserResponse.Result);
 
                 return ConvertMessage(currentUserResponse.Result);

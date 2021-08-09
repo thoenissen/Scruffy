@@ -53,17 +53,22 @@ namespace Scruffy.Commands
         /// <param name="prefix">Prefix</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("prefix")]
-        public async Task SetPrefix(CommandContext commandContext, string prefix)
+        [RequireGuild]
+        public Task SetPrefix(CommandContext commandContext, string prefix)
         {
-            if (string.IsNullOrWhiteSpace(prefix) == false
-             && prefix.Length > 0
-             && prefix.Any(char.IsControl) == false)
-            {
-                PrefixResolvingService.AddOrRefresh(commandContext.Guild.Id, prefix);
+            return InvokeAsync(commandContext,
+                               async commandContextContainer =>
+                               {
+                                   if (string.IsNullOrWhiteSpace(prefix) == false
+                                    && prefix.Length > 0
+                                    && prefix.Any(char.IsControl) == false)
+                                   {
+                                       PrefixResolvingService.AddOrRefresh(commandContext.Guild.Id, prefix);
 
-                await commandContext.RespondAsync(LocalizationGroup.GetFormattedText("UsingNewPrefix", "I will use the following prefix: {0}", prefix))
-                                    .ConfigureAwait(false);
-            }
+                                       await commandContext.RespondAsync(LocalizationGroup.GetFormattedText("UsingNewPrefix", "I will use the following prefix: {0}", prefix))
+                                                           .ConfigureAwait(false);
+                                   }
+                               });
         }
 
         /// <summary>
@@ -73,11 +78,16 @@ namespace Scruffy.Commands
         /// <param name="role">Roles</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("adminRole")]
-        public async Task SetAdministrationRole(CommandContext commandContext, DiscordRole role)
+        [RequireGuild]
+        public Task SetAdministrationRole(CommandContext commandContext, DiscordRole role)
         {
-            AdministrationPermissionsValidationService.AddOrRefresh(commandContext.Guild.Id, role.Id);
+            return InvokeAsync(commandContext,
+                               async commandContextContainer =>
+                               {
+                                   AdministrationPermissionsValidationService.AddOrRefresh(commandContext.Guild.Id, role.Id);
 
-            await commandContext.Message.CreateReactionAsync(DiscordEmojiService.GetCheckEmoji(commandContext.Client)).ConfigureAwait(false);
+                                   await commandContext.Message.CreateReactionAsync(DiscordEmojiService.GetCheckEmoji(commandContext.Client)).ConfigureAwait(false);
+                               });
         }
         #endregion // Methods
     }

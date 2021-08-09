@@ -22,6 +22,11 @@ namespace Scruffy.Data.Entity.Tables.General
         public string Message { get; set; }
 
         /// <summary>
+        /// Last user command
+        /// </summary>
+        public string LastUserCommand { get; set; }
+
+        /// <summary>
         /// Command name
         /// </summary>
         public string QualifiedCommandName { get; set; }

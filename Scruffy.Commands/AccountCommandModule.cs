@@ -5,6 +5,7 @@ using DSharpPlus.CommandsNext.Attributes;
 
 using Scruffy.Services.Account;
 using Scruffy.Services.Core;
+using Scruffy.Services.CoreData;
 
 namespace Scruffy.Commands
 {
@@ -35,6 +36,11 @@ namespace Scruffy.Commands
         /// </summary>
         public AccountAdministrationService AdministrationService { get; set; }
 
+        /// <summary>
+        /// Users service
+        /// </summary>
+        public UserManagementService UserManagementService { get; set; }
+
         #endregion // Properties
 
         #region Command methods
@@ -45,10 +51,17 @@ namespace Scruffy.Commands
         /// <param name="commandContext">Command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         [Command("add")]
-        public async Task Add(CommandContext commandContext)
+        public Task Add(CommandContext commandContext)
         {
-            await AdministrationService.Add(commandContext)
-                                       .ConfigureAwait(false);
+            return InvokeAsync(commandContext,
+                               async commandContextContainer =>
+                               {
+                                   await UserManagementService.CheckUserAsync(commandContextContainer.User.Id)
+                                                              .ConfigureAwait(false);
+
+                                   await AdministrationService.Add(commandContextContainer)
+                                                              .ConfigureAwait(false);
+                               });
         }
 
         /// <summary>
@@ -57,10 +70,17 @@ namespace Scruffy.Commands
         /// <param name="commandContext">Command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         [Command("edit")]
-        public async Task Edit(CommandContext commandContext)
+        public Task Edit(CommandContext commandContext)
         {
-            await AdministrationService.Edit(commandContext)
-                                       .ConfigureAwait(false);
+            return InvokeAsync(commandContext,
+                               async commandContextContainer =>
+                               {
+                                   await UserManagementService.CheckUserAsync(commandContextContainer.User.Id)
+                                                              .ConfigureAwait(false);
+
+                                   await AdministrationService.Edit(commandContextContainer)
+                                                              .ConfigureAwait(false);
+                               });
         }
 
         #endregion // Command methods

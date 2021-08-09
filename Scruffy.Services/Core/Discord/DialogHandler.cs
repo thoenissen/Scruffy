@@ -2,12 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-using DSharpPlus.CommandsNext;
-
 using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Services.Core.Discord.Attributes;
-using Scruffy.Services.Core.Discord.Interfaces;
 
 namespace Scruffy.Services.Core.Discord
 {
@@ -26,7 +23,7 @@ namespace Scruffy.Services.Core.Discord
         /// <param name="commandContext">Current command context</param>
         /// <param name="onInitialize">Initialization</param>
         /// <returns>Result</returns>
-        public static async Task<TData> Run<T, TData>(ICommandContext commandContext, Action<DialogContext> onInitialize = null) where T : DialogElementBase<TData>
+        public static async Task<TData> Run<T, TData>(CommandContextContainer commandContext, Action<DialogContext> onInitialize = null) where T : DialogElementBase<TData>
         {
             await using (var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider())
             {
@@ -50,7 +47,7 @@ namespace Scruffy.Services.Core.Discord
         /// <param name="commandContext">Current command context</param>
         /// <param name="deleteMessages">Should the creation message be deleted?</param>
         /// <returns>Result</returns>
-        public static async Task<TData> RunForm<TData>(ICommandContext commandContext, bool deleteMessages) where TData : new()
+        public static async Task<TData> RunForm<TData>(CommandContextContainer commandContext, bool deleteMessages) where TData : new()
         {
             await using (var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider())
             {

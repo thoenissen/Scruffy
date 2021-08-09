@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Scruffy.Data.Json.GuildWars2.Account;
 using Scruffy.Data.Json.GuildWars2.Core;
 using Scruffy.Data.Json.GuildWars2.Guild;
+using Scruffy.Data.Json.GuildWars2.Items;
 
 namespace Scruffy.Services.WebApi
 {
@@ -187,6 +188,44 @@ namespace Scruffy.Services.WebApi
                     var jsonResult = await reader.ReadToEndAsync().ConfigureAwait(false);
 
                     return JsonConvert.DeserializeObject<List<GuildEmblemLayerData>>(jsonResult).FirstOrDefault();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Request the guild stash
+        /// </summary>
+        /// <param name="guildId">Id of the guild</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task<List<GuildStash>> GetGuildVault(string guildId)
+        {
+            using (var response = await CreateRequest($"https://api.guildwars2.com/v2/guild/{guildId}/stash").GetResponseAsync()
+                                                                                                             .ConfigureAwait(false))
+            {
+                using (var reader = new StreamReader(response.GetResponseStream()))
+                {
+                    var jsonResult = await reader.ReadToEndAsync().ConfigureAwait(false);
+
+                    return JsonConvert.DeserializeObject<List<GuildStash>>(jsonResult);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Request the item data
+        /// </summary>
+        /// <param name="itemId">Id of the item</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task<Item> GetItem(int itemId)
+        {
+            using (var response = await CreateRequest($"https://api.guildwars2.com/v2/items/{itemId}").GetResponseAsync()
+                                                                                                      .ConfigureAwait(false))
+            {
+                using (var reader = new StreamReader(response.GetResponseStream()))
+                {
+                    var jsonResult = await reader.ReadToEndAsync().ConfigureAwait(false);
+
+                    return JsonConvert.DeserializeObject<Item>(jsonResult);
                 }
             }
         }

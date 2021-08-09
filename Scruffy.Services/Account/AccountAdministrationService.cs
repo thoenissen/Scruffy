@@ -1,15 +1,12 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 
-using DSharpPlus.CommandsNext;
-
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Account;
 using Scruffy.Data.Json.GuildWars2.Core;
 using Scruffy.Services.Account.DialogElements;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord;
-using Scruffy.Services.Core.Discord.Interfaces;
 using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.Account
@@ -37,21 +34,21 @@ namespace Scruffy.Services.Account
         /// <summary>
         /// Adding a new account
         /// </summary>
-        /// <param name="originCommandContext">Original command context</param>
+        /// <param name="commandContextContainer">Command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task Add(CommandContext originCommandContext)
+        public async Task Add(CommandContextContainer commandContextContainer)
         {
-            if (originCommandContext.Message.Channel.IsPrivate == false)
+            if (commandContextContainer.Message.Channel.IsPrivate == false)
             {
-                await originCommandContext.Message
-                                          .DeleteAsync()
-                                          .ConfigureAwait(false);
+                await commandContextContainer.Message
+                                             .RespondAsync(LocalizationGroup.GetText("SwitchToPrivate", "I answered your command as a private message."))
+                                             .ConfigureAwait(false);
             }
 
-            var commandContext = await CommandContextContainer.SwitchToDirectMessageContext(originCommandContext)
-                                                              .ConfigureAwait(false);
+            await commandContextContainer.SwitchToDirectMessageContext()
+                                         .ConfigureAwait(false);
 
-            var apiKey = await DialogHandler.Run<AccountApiKeyDialogElement, string>(commandContext)
+            var apiKey = await DialogHandler.Run<AccountApiKeyDialogElement, string>(commandContextContainer)
                                             .ConfigureAwait(false);
 
             apiKey = apiKey?.Trim();
@@ -73,24 +70,24 @@ namespace Scruffy.Services.Account
                         using (var dbFactory = RepositoryFactory.CreateInstance())
                         {
                             if (dbFactory.GetRepository<AccountRepository>()
-                                         .AddOrRefresh(obj => obj.UserId == commandContext.User.Id
+                                         .AddOrRefresh(obj => obj.UserId == commandContextContainer.User.Id
                                                            && obj.Name == accountInformation.Name,
                                                        obj =>
                                                        {
-                                                           obj.UserId = commandContext.User.Id;
+                                                           obj.UserId = commandContextContainer.User.Id;
                                                            obj.Name = accountInformation.Name;
                                                            obj.ApiKey = apiKey;
                                                        }))
                             {
-                                await Edit(commandContext, accountInformation.Name).ConfigureAwait(false);
+                                await Edit(commandContextContainer, accountInformation.Name).ConfigureAwait(false);
                             }
                         }
                     }
                     else
                     {
-                        await commandContext.Channel
-                                            .SendMessageAsync(LocalizationGroup.GetText("InvalidToken", "The provided token doesn't have the required permissions."))
-                                            .ConfigureAwait(false);
+                        await commandContextContainer.Channel
+                                                     .SendMessageAsync(LocalizationGroup.GetText("InvalidToken", "The provided token doesn't have the required permissions."))
+                                                     .ConfigureAwait(false);
                     }
                 }
             }
@@ -99,37 +96,46 @@ namespace Scruffy.Services.Account
         /// <summary>
         /// Editing a existing account
         /// </summary>
-        /// <param name="originCommandContext">Original command context</param>
+        /// <param name="commandContextContainer">Command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task Edit(CommandContext originCommandContext)
+        public async Task Edit(CommandContextContainer commandContextContainer)
         {
-            if (originCommandContext.Message.Channel.IsPrivate == false)
+            if (commandContextContainer.Message.Channel.IsPrivate == false)
             {
-                await originCommandContext.Message
-                                          .DeleteAsync()
-                                          .ConfigureAwait(false);
+                await commandContextContainer.Message
+                                             .RespondAsync(LocalizationGroup.GetText("SwitchToPrivate", "I answered your command as a private message."))
+                                             .ConfigureAwait(false);
             }
 
-            var commandContext = await CommandContextContainer.SwitchToDirectMessageContext(originCommandContext)
-                                                              .ConfigureAwait(false);
+            await commandContextContainer.SwitchToDirectMessageContext()
+                                         .ConfigureAwait(false);
 
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
                 var names = dbFactory.GetRepository<AccountRepository>()
                                      .GetQuery()
-                                     .Where(obj => obj.UserId == commandContext.User.Id)
+                                     .Where(obj => obj.UserId == commandContextContainer.User.Id)
                                      .Select(obj => obj.Name)
                                      .Take(2)
                                      .ToList();
 
-                var name = names.Count == 1
-                               ? names.First()
-                               : await DialogHandler.Run<AccountSelectionDialogElement, string>(commandContext)
-                                                    .ConfigureAwait(false);
-
-                if (string.IsNullOrWhiteSpace(name) == false)
+                if (names.Count == 0)
                 {
-                    await Edit(commandContext, name).ConfigureAwait(false);
+                    await commandContextContainer.Channel
+                                                 .SendMessageAsync(LocalizationGroup.GetText("NoAccounts", "You don't have any accounts configured."))
+                                                 .ConfigureAwait(false);
+                }
+                else
+                {
+                    var name = names.Count == 1
+                                   ? names.First()
+                                   : await DialogHandler.Run<AccountSelectionDialogElement, string>(commandContextContainer)
+                                                        .ConfigureAwait(false);
+
+                    if (string.IsNullOrWhiteSpace(name) == false)
+                    {
+                        await Edit(commandContextContainer, name).ConfigureAwait(false);
+                    }
                 }
             }
         }
@@ -140,7 +146,7 @@ namespace Scruffy.Services.Account
         /// <param name="commandContext">Command context</param>
         /// <param name="name">Name</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        private async Task Edit(ICommandContext commandContext, string name)
+        private async Task Edit(CommandContextContainer commandContext, string name)
         {
             bool repeat;
 

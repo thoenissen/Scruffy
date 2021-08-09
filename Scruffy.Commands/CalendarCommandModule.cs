@@ -46,11 +46,16 @@ namespace Scruffy.Commands
         /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("add")]
+        [RequireGuild]
         [RequireAdministratorPermissions]
-        public async Task AddOneTimeEvent(CommandContext commandContext)
+        public Task AddOneTimeEvent(CommandContext commandContext)
         {
-            await CalendarScheduleService.AddOneTimeEvent(commandContext)
-                                         .ConfigureAwait(false);
+            return InvokeAsync(commandContext,
+                               async commandContextContainer =>
+                               {
+                                   await CalendarScheduleService.AddOneTimeEvent(commandContext)
+                                                                .ConfigureAwait(false);
+                               });
         }
 
         #endregion // Methods
@@ -94,11 +99,16 @@ namespace Scruffy.Commands
             /// <param name="commandContext">Current command context</param>
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("setup")]
+            [RequireGuild]
             [RequireAdministratorPermissions]
-            public async Task Setup(CommandContext commandContext)
+            public Task Setup(CommandContext commandContext)
             {
-                await CalendarTemplateService.RunAssistantAsync(commandContext)
-                                             .ConfigureAwait(false);
+                return InvokeAsync(commandContext,
+                                   async commandContextContainer =>
+                                   {
+                                       await CalendarTemplateService.RunAssistantAsync(commandContext)
+                                                                    .ConfigureAwait(false);
+                                   });
             }
 
             #endregion // Methods
@@ -146,11 +156,16 @@ namespace Scruffy.Commands
             /// <param name="commandContext">Current command context</param>
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("setup")]
+            [RequireGuild]
             [RequireAdministratorPermissions]
-            public async Task Setup(CommandContext commandContext)
+            public Task Setup(CommandContext commandContext)
             {
-                await CalendarScheduleService.RunAssistantAsync(commandContext)
-                                             .ConfigureAwait(false);
+                return InvokeAsync(commandContext,
+                                   async commandContextContainer =>
+                                   {
+                                       await CalendarScheduleService.RunAssistantAsync(commandContext)
+                                                                    .ConfigureAwait(false);
+                                   });
             }
 
             #endregion // Methods

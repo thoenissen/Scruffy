@@ -66,44 +66,51 @@ namespace Scruffy.Commands
         /// <param name="message">Optional message of the reminder</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("in")]
-        public async Task RemindMe(CommandContext commandContext, string timeSpan, [RemainingText] string message = null)
+        public Task RemindMe(CommandContext commandContext, string timeSpan, [RemainingText] string message = null)
         {
-            var checkUser = UserManagementService.CheckUserAsync(commandContext.User.Id);
+            return InvokeAsync(commandContext,
+                               async commandContextContainer =>
+                               {
+                                   var checkUser = UserManagementService.CheckUserAsync(commandContext.User.Id);
 
-            var timeSpanValidation = new Regex(@"\d+(h|m|s)");
-            if (timeSpanValidation.IsMatch(timeSpan))
-            {
-                var amount = Convert.ToUInt64(timeSpan[..^1], CultureInfo.InvariantCulture);
+                                   var timeSpanValidation = new Regex(@"\d+(h|m|s)");
+                                   if (timeSpanValidation.IsMatch(timeSpan))
+                                   {
+                                       var amount = Convert.ToUInt64(timeSpan[..^1], CultureInfo.InvariantCulture);
 
-                using (var dbFactory = RepositoryFactory.CreateInstance())
-                {
-                    await checkUser.ConfigureAwait(false);
+                                       using (var dbFactory = RepositoryFactory.CreateInstance())
+                                       {
+                                           await checkUser.ConfigureAwait(false);
 
-                    var reminderEntity = new OneTimeReminderEntity
-                                         {
-                                             UserId = commandContext.User.Id,
-                                             ChannelId = commandContext.Channel.Id,
-                                             TimeStamp = timeSpan[^1..] switch
-                                             {
-                                                 "h" => DateTime.Now.AddHours(amount),
-                                                 "m" => DateTime.Now.AddMinutes(amount),
-                                                 "s" => DateTime.Now.AddSeconds(amount),
-                                                 _ => throw new InvalidOperationException()
-                                             },
-                                             Message = message
-                                         };
+                                           var reminderEntity = new OneTimeReminderEntity
+                                                                {
+                                                                    UserId = commandContext.User.Id,
+                                                                    ChannelId = commandContext.Channel.Id,
+                                                                    TimeStamp = timeSpan[^1..] switch
+                                                                    {
+                                                                        "h" => DateTime.Now.AddHours(amount),
+                                                                        "m" => DateTime.Now.AddMinutes(amount),
+                                                                        "s" => DateTime.Now.AddSeconds(amount),
+                                                                        _ => throw new InvalidOperationException()
+                                                                    },
+                                                                    Message = message
+                                                                };
 
-                    if (dbFactory.GetRepository<OneTimeReminderRepository>()
-                                 .Add(reminderEntity))
-                    {
-                        JobScheduler.AddOneTimeReminder(reminderEntity.TimeStamp, reminderEntity.Id);
+                                           if (dbFactory.GetRepository<OneTimeReminderRepository>()
+                                                        .Add(reminderEntity))
+                                           {
+                                               JobScheduler.AddOneTimeReminder(reminderEntity.TimeStamp, reminderEntity.Id);
 
-                        await commandContext.Channel
-                                            .DeleteMessageAsync(commandContext.Message, LocalizationGroup.GetText("CommandProgressed", "Command progressed."))
-                                            .ConfigureAwait(false);
-                    }
-                }
-            }
+                                               if (commandContext.Channel.IsPrivate == false)
+                                               {
+                                                   await commandContext.Channel
+                                                                       .DeleteMessageAsync(commandContext.Message, LocalizationGroup.GetText("CommandProgressed", "Command progressed."))
+                                                                       .ConfigureAwait(false);
+                                               }
+                                           }
+                                       }
+                                   }
+                               });
         }
 
         /// <summary>
@@ -113,207 +120,211 @@ namespace Scruffy.Commands
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("weekly")]
         [RequireAdministratorPermissions]
-        public async Task RemindWeekly(CommandContext commandContext)
+        public Task RemindWeekly(CommandContext commandContext)
         {
-            var continueCreation = true;
-
-            // Creation data
-            var channelId = 0ul;
-            var dayOfWeek = default(DayOfWeek);
-            var postTimeSpan = default(TimeSpan);
-            var deletionTimeSpan = default(TimeSpan);
-
-            // Channel selection
-            var messagesToBeDeleted = new List<DiscordMessage>
-                                      {
-                                          commandContext.Message
-                                      };
-
-            var interactivity = commandContext.Client.GetInteractivity();
-
-            var stringBuilder = new StringBuilder();
-            stringBuilder.Append(LocalizationGroup.GetText("ChooseChannelPrompt", "Please choose one of the following channels."));
-            stringBuilder.Append("\n\n");
-
-            var channels = new Dictionary<int, ulong>();
-
-            var counter = 1;
-            foreach (var (_, discordChannel) in commandContext.Guild.Channels.Where(obj => obj.Value.Type == ChannelType.Text))
-            {
-                channels[counter] = discordChannel.Id;
-
-                stringBuilder.Append($"`{counter}` - {discordChannel.Mention}\n");
-                counter++;
-            }
-
-            var embedBuilder = new DiscordEmbedBuilder
+            return InvokeAsync(commandContext,
+                               async commandContextContainer =>
                                {
-                                   Color = DiscordColor.Green
-                               };
+                                   var continueCreation = true;
 
-            embedBuilder.AddField(LocalizationGroup.GetText("ChannelSelectionTitle", "Channel selection"), stringBuilder.ToString());
+                                   // Creation data
+                                   var channelId = 0ul;
+                                   var dayOfWeek = default(DayOfWeek);
+                                   var postTimeSpan = default(TimeSpan);
+                                   var deletionTimeSpan = default(TimeSpan);
 
-            var currentBotMessage = await commandContext.RespondAsync(embedBuilder).ConfigureAwait(false);
+                                   // Channel selection
+                                   var messagesToBeDeleted = new List<DiscordMessage>
+                                                             {
+                                                                 commandContextContainer.Message
+                                                             };
 
-            messagesToBeDeleted.Add(currentBotMessage);
+                                   var interactivity = commandContextContainer.Client.GetInteractivity();
 
-            var userResponse = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContext.Message.Author.Id).ConfigureAwait(false);
-            if (userResponse.TimedOut == false)
-            {
-                messagesToBeDeleted.Add(userResponse.Result);
+                                   var stringBuilder = new StringBuilder();
+                                   stringBuilder.Append(LocalizationGroup.GetText("ChooseChannelPrompt", "Please choose one of the following channels."));
+                                   stringBuilder.Append("\n\n");
 
-                continueCreation = int.TryParse(userResponse.Result.Content, out var parsedChannelId)
-                                && channels.ContainsKey(parsedChannelId);
+                                   var channels = new Dictionary<int, ulong>();
 
-                if (continueCreation)
-                {
-                    channelId = channels[parsedChannelId];
-                }
-            }
-            else
-            {
-                continueCreation = false;
-            }
+                                   var counter = 1;
+                                   foreach (var (_, discordChannel) in commandContext.Guild.Channels.Where(obj => obj.Value.Type == ChannelType.Text))
+                                   {
+                                       channels[counter] = discordChannel.Id;
 
-            // Weekday selection
-            if (continueCreation)
-            {
-                embedBuilder = new DiscordEmbedBuilder
-                {
-                    Color = DiscordColor.Green
-                };
+                                       stringBuilder.Append($"`{counter}` - {discordChannel.Mention}\n");
+                                       counter++;
+                                   }
 
-                var reactions = new Dictionary<DiscordEmoji, DayOfWeek>
-                                    {
-                                        [DiscordEmoji.FromName(commandContext.Client, ":one:")] = DayOfWeek.Monday,
-                                        [DiscordEmoji.FromName(commandContext.Client, ":two:")] = DayOfWeek.Tuesday,
-                                        [DiscordEmoji.FromName(commandContext.Client, ":three:")] = DayOfWeek.Wednesday,
-                                        [DiscordEmoji.FromName(commandContext.Client, ":four:")] = DayOfWeek.Thursday,
-                                        [DiscordEmoji.FromName(commandContext.Client, ":five:")] = DayOfWeek.Friday,
-                                        [DiscordEmoji.FromName(commandContext.Client, ":six:")] = DayOfWeek.Saturday,
-                                        [DiscordEmoji.FromName(commandContext.Client, ":seven:")] = DayOfWeek.Sunday
-                                    };
+                                   var embedBuilder = new DiscordEmbedBuilder
+                                   {
+                                       Color = DiscordColor.Green
+                                   };
 
-                stringBuilder.Clear();
-                stringBuilder.Append(LocalizationGroup.GetText("SelectDayPrompt", "Please select one of the following days."));
-                stringBuilder.Append("\n\n");
+                                   embedBuilder.AddField(LocalizationGroup.GetText("ChannelSelectionTitle", "Channel selection"), stringBuilder.ToString());
 
-                foreach (var (emoji, day) in reactions)
-                {
-                    stringBuilder.Append($"{emoji} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(day)}\n");
-                }
+                                   var currentBotMessage = await commandContextContainer.Message.RespondAsync(embedBuilder).ConfigureAwait(false);
 
-                embedBuilder.AddField(LocalizationGroup.GetText("WeekdaySelectionTitle", "Weekday selection"), stringBuilder.ToString());
+                                   messagesToBeDeleted.Add(currentBotMessage);
 
-                currentBotMessage = await commandContext.RespondAsync(embedBuilder).ConfigureAwait(false);
+                                   var userResponse = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContextContainer.Message.Author.Id).ConfigureAwait(false);
+                                   if (userResponse.TimedOut == false)
+                                   {
+                                       messagesToBeDeleted.Add(userResponse.Result);
 
-                messagesToBeDeleted.Add(currentBotMessage);
+                                       continueCreation = int.TryParse(userResponse.Result.Content, out var parsedChannelId)
+                                                       && channels.ContainsKey(parsedChannelId);
 
-                var dayOfWeekReactionTask = interactivity.WaitForReactionAsync(obj => obj.Message == currentBotMessage
-                                                                                     && reactions.ContainsKey(obj.Emoji),
-                                                                           commandContext.User);
+                                       if (continueCreation)
+                                       {
+                                           channelId = channels[parsedChannelId];
+                                       }
+                                   }
+                                   else
+                                   {
+                                       continueCreation = false;
+                                   }
 
-                foreach (var (emoji, _) in reactions)
-                {
-                    await currentBotMessage.CreateReactionAsync(emoji).ConfigureAwait(false);
-                }
+                                   // Weekday selection
+                                   if (continueCreation)
+                                   {
+                                       embedBuilder = new DiscordEmbedBuilder
+                                       {
+                                           Color = DiscordColor.Green
+                                       };
 
-                var dayOfWeekReaction = await dayOfWeekReactionTask.ConfigureAwait(false);
+                                       var reactions = new Dictionary<DiscordEmoji, DayOfWeek>
+                                       {
+                                           [DiscordEmoji.FromName(commandContext.Client, ":one:")] = DayOfWeek.Monday,
+                                           [DiscordEmoji.FromName(commandContext.Client, ":two:")] = DayOfWeek.Tuesday,
+                                           [DiscordEmoji.FromName(commandContext.Client, ":three:")] = DayOfWeek.Wednesday,
+                                           [DiscordEmoji.FromName(commandContext.Client, ":four:")] = DayOfWeek.Thursday,
+                                           [DiscordEmoji.FromName(commandContext.Client, ":five:")] = DayOfWeek.Friday,
+                                           [DiscordEmoji.FromName(commandContext.Client, ":six:")] = DayOfWeek.Saturday,
+                                           [DiscordEmoji.FromName(commandContext.Client, ":seven:")] = DayOfWeek.Sunday
+                                       };
 
-                continueCreation = dayOfWeekReaction.TimedOut == false
-                                && reactions.TryGetValue(dayOfWeekReaction.Result.Emoji, out dayOfWeek);
-            }
+                                       stringBuilder.Clear();
+                                       stringBuilder.Append(LocalizationGroup.GetText("SelectDayPrompt", "Please select one of the following days."));
+                                       stringBuilder.Append("\n\n");
 
-            // Post times
-            if (continueCreation)
-            {
-                continueCreation = false;
+                                       foreach (var (emoji, day) in reactions)
+                                       {
+                                           stringBuilder.Append($"{emoji} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(day)}\n");
+                                       }
 
-                currentBotMessage = await commandContext.Channel.SendMessageAsync(LocalizationGroup.GetText("ReminderTimePrompt", "Please enter the reminder time. (Format: hh:mm)")).ConfigureAwait(false);
+                                       embedBuilder.AddField(LocalizationGroup.GetText("WeekdaySelectionTitle", "Weekday selection"), stringBuilder.ToString());
 
-                messagesToBeDeleted.Add(currentBotMessage);
+                                       currentBotMessage = await commandContext.RespondAsync(embedBuilder).ConfigureAwait(false);
 
-                userResponse = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContext.Message.Author.Id).ConfigureAwait(false);
+                                       messagesToBeDeleted.Add(currentBotMessage);
 
-                if (userResponse.TimedOut == false)
-                {
-                    messagesToBeDeleted.Add(userResponse.Result);
+                                       var dayOfWeekReactionTask = interactivity.WaitForReactionAsync(obj => obj.Message == currentBotMessage
+                                                                                                            && reactions.ContainsKey(obj.Emoji),
+                                                                                                  commandContext.User);
 
-                    if (new Regex(@"\d\d:\d\d").IsMatch(userResponse.Result.Content))
-                    {
-                        postTimeSpan = TimeSpan.ParseExact(userResponse.Result.Content, "hh\\:mm", CultureInfo.InvariantCulture);
+                                       foreach (var (emoji, _) in reactions)
+                                       {
+                                           await currentBotMessage.CreateReactionAsync(emoji).ConfigureAwait(false);
+                                       }
 
-                        continueCreation = true;
-                    }
-                }
-            }
+                                       var dayOfWeekReaction = await dayOfWeekReactionTask.ConfigureAwait(false);
 
-            // Deletion time
-            if (continueCreation)
-            {
-                continueCreation = false;
+                                       continueCreation = dayOfWeekReaction.TimedOut == false
+                                                       && reactions.TryGetValue(dayOfWeekReaction.Result.Emoji, out dayOfWeek);
+                                   }
 
-                currentBotMessage = await commandContext.Channel.SendMessageAsync(LocalizationGroup.GetText("DeletionTimePrompt", "Please enter the deletion times. (Format: hh:mm)")).ConfigureAwait(false);
+                                   // Post times
+                                   if (continueCreation)
+                                   {
+                                       continueCreation = false;
 
-                messagesToBeDeleted.Add(currentBotMessage);
+                                       currentBotMessage = await commandContext.Channel.SendMessageAsync(LocalizationGroup.GetText("ReminderTimePrompt", "Please enter the reminder time. (Format: hh:mm)")).ConfigureAwait(false);
 
-                userResponse = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContext.Message.Author.Id).ConfigureAwait(false);
+                                       messagesToBeDeleted.Add(currentBotMessage);
 
-                if (userResponse.TimedOut == false)
-                {
-                    messagesToBeDeleted.Add(userResponse.Result);
+                                       userResponse = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContext.Message.Author.Id).ConfigureAwait(false);
 
-                    if (new Regex(@"\d\d:\d\d").IsMatch(userResponse.Result.Content))
-                    {
-                        deletionTimeSpan = TimeSpan.ParseExact(userResponse.Result.Content, "hh\\:mm", CultureInfo.InvariantCulture);
+                                       if (userResponse.TimedOut == false)
+                                       {
+                                           messagesToBeDeleted.Add(userResponse.Result);
 
-                        continueCreation = deletionTimeSpan > postTimeSpan;
-                    }
-                }
-            }
+                                           if (new Regex(@"\d\d:\d\d").IsMatch(userResponse.Result.Content))
+                                           {
+                                               postTimeSpan = TimeSpan.ParseExact(userResponse.Result.Content, "hh\\:mm", CultureInfo.InvariantCulture);
 
-            // Creation
-            if (continueCreation)
-            {
-                currentBotMessage = await commandContext.Channel.SendMessageAsync(LocalizationGroup.GetText("ReminderMessagePrompt", "Please enter the message of the reminder.")).ConfigureAwait(false);
+                                               continueCreation = true;
+                                           }
+                                       }
+                                   }
 
-                messagesToBeDeleted.Add(currentBotMessage);
+                                   // Deletion time
+                                   if (continueCreation)
+                                   {
+                                       continueCreation = false;
 
-                userResponse = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContext.Message.Author.Id).ConfigureAwait(false);
+                                       currentBotMessage = await commandContext.Channel.SendMessageAsync(LocalizationGroup.GetText("DeletionTimePrompt", "Please enter the deletion times. (Format: hh:mm)")).ConfigureAwait(false);
 
-                if (userResponse.TimedOut == false)
-                {
-                    messagesToBeDeleted.Add(userResponse.Result);
+                                       messagesToBeDeleted.Add(currentBotMessage);
 
-                    using (var dbFactory = RepositoryFactory.CreateInstance())
-                    {
-                        var entity = new WeeklyReminderEntity
-                                     {
-                                         DayOfWeek = dayOfWeek,
-                                         ChannelId = channelId,
-                                         PostTime = postTimeSpan,
-                                         DeletionTime = deletionTimeSpan,
-                                         Message = userResponse.Result.Content
-                                     };
+                                       userResponse = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContext.Message.Author.Id).ConfigureAwait(false);
 
-                        if (dbFactory.GetRepository<WeeklyReminderRepository>()
-                                     .Add(entity))
-                        {
-                            JobScheduler.AddWeeklyReminder(entity.Id, entity.DayOfWeek, entity.PostTime, entity.DeletionTime);
+                                       if (userResponse.TimedOut == false)
+                                       {
+                                           messagesToBeDeleted.Add(userResponse.Result);
 
-                            currentBotMessage = await commandContext.Channel.SendMessageAsync(LocalizationGroup.GetText("CreationCompletedMessage", "Creation completed! All creation messages will be deleted in 30 seconds.")).ConfigureAwait(false);
+                                           if (new Regex(@"\d\d:\d\d").IsMatch(userResponse.Result.Content))
+                                           {
+                                               deletionTimeSpan = TimeSpan.ParseExact(userResponse.Result.Content, "hh\\:mm", CultureInfo.InvariantCulture);
 
-                            messagesToBeDeleted.Add(currentBotMessage);
+                                               continueCreation = deletionTimeSpan > postTimeSpan;
+                                           }
+                                       }
+                                   }
 
-                            await Task.Delay(TimeSpan.FromSeconds(30)).ConfigureAwait(false);
-                        }
-                    }
-                }
-            }
+                                   // Creation
+                                   if (continueCreation)
+                                   {
+                                       currentBotMessage = await commandContext.Channel.SendMessageAsync(LocalizationGroup.GetText("ReminderMessagePrompt", "Please enter the message of the reminder.")).ConfigureAwait(false);
 
-            await commandContext.Channel
-                                .DeleteMessagesAsync(messagesToBeDeleted)
-                                .ConfigureAwait(false);
+                                       messagesToBeDeleted.Add(currentBotMessage);
+
+                                       userResponse = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContext.Message.Author.Id).ConfigureAwait(false);
+
+                                       if (userResponse.TimedOut == false)
+                                       {
+                                           messagesToBeDeleted.Add(userResponse.Result);
+
+                                           using (var dbFactory = RepositoryFactory.CreateInstance())
+                                           {
+                                               var entity = new WeeklyReminderEntity
+                                               {
+                                                   DayOfWeek = dayOfWeek,
+                                                   ChannelId = channelId,
+                                                   PostTime = postTimeSpan,
+                                                   DeletionTime = deletionTimeSpan,
+                                                   Message = userResponse.Result.Content
+                                               };
+
+                                               if (dbFactory.GetRepository<WeeklyReminderRepository>()
+                                                            .Add(entity))
+                                               {
+                                                   JobScheduler.AddWeeklyReminder(entity.Id, entity.DayOfWeek, entity.PostTime, entity.DeletionTime);
+
+                                                   currentBotMessage = await commandContext.Channel.SendMessageAsync(LocalizationGroup.GetText("CreationCompletedMessage", "Creation completed! All creation messages will be deleted in 30 seconds.")).ConfigureAwait(false);
+
+                                                   messagesToBeDeleted.Add(currentBotMessage);
+
+                                                   await Task.Delay(TimeSpan.FromSeconds(30)).ConfigureAwait(false);
+                                               }
+                                           }
+                                       }
+                                   }
+
+                                   await commandContext.Channel
+                                                       .DeleteMessagesAsync(messagesToBeDeleted)
+                                                       .ConfigureAwait(false);
+                               });
         }
 
         #endregion // Command methods

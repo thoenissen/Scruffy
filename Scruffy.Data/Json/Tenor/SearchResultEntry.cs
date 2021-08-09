@@ -30,8 +30,20 @@ namespace Scruffy.Data.Json.Tenor
         /// <summary>
         /// Url
         /// </summary>
+        [JsonProperty("nanogif")]
+        public MediaData NanoGif { get; set; }
+
+        /// <summary>
+        /// Url
+        /// </summary>
+        [JsonProperty("mediumgif")]
+        public MediaData MediumGif { get; set; }
+
+        /// <summary>
+        /// Url
+        /// </summary>
         [JsonProperty("gif")]
-        public MediaData GIF { get; set; }
+        public MediaData Gif { get; set; }
     }
 
     /// <summary>
@@ -44,5 +56,11 @@ namespace Scruffy.Data.Json.Tenor
         /// </summary>
         [JsonProperty("url")]
         public string Url { get; set; }
+
+        /// <summary>
+        /// Size
+        /// </summary>
+        [JsonProperty("size")]
+        public int Size { get; set; }
     }
 }

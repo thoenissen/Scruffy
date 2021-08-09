@@ -6,10 +6,10 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 
 using Scruffy.Services.Core;
+using Scruffy.Services.Core.Discord;
 using Scruffy.Services.WebApi;
 
 using SixLabors.ImageSharp;
@@ -45,7 +45,7 @@ namespace Scruffy.Services.GuildAdministration
         /// <param name="commandContext">Command context</param>
         /// <param name="count">Count</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task PostRandomGuildEmblems(CommandContext commandContext, int count)
+        public async Task PostRandomGuildEmblems(CommandContextContainer commandContext, int count)
         {
             await using (var connector = new GuidWars2ApiConnector(null))
             {

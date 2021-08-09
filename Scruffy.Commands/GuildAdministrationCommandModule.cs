@@ -51,11 +51,16 @@ namespace Scruffy.Commands
         /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("setup")]
+        [RequireGuild]
         [RequireAdministratorPermissions]
-        public async Task Setup(CommandContext commandContext)
+        public Task Setup(CommandContext commandContext)
         {
-            await ConfigurationService.CreateGuildConfiguration(commandContext)
-                                      .ConfigureAwait(false);
+            return InvokeAsync(commandContext,
+                               async commandContextContainer =>
+                               {
+                                   await ConfigurationService.CreateGuildConfiguration(commandContextContainer)
+                                                             .ConfigureAwait(false);
+                               });
         }
 
         /// <summary>
@@ -64,11 +69,16 @@ namespace Scruffy.Commands
         /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("setNotificationChannel")]
+        [RequireGuild]
         [RequireAdministratorPermissions]
-        public async Task SetNotificationChannel(CommandContext commandContext)
+        public Task SetNotificationChannel(CommandContext commandContext)
         {
-            await ConfigurationService.SetNotificationChannel(commandContext)
-                                      .ConfigureAwait(false);
+            return InvokeAsync(commandContext,
+                               async commandContextContainer =>
+                               {
+                                   await ConfigurationService.SetNotificationChannel(commandContextContainer)
+                                                             .ConfigureAwait(false);
+                               });
         }
 
         /// <summary>
@@ -77,11 +87,16 @@ namespace Scruffy.Commands
         /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("setReminderChannel")]
+        [RequireGuild]
         [RequireAdministratorPermissions]
-        public async Task SetReminderChannel(CommandContext commandContext)
+        public Task SetReminderChannel(CommandContext commandContext)
         {
-            await ConfigurationService.SetReminderChannel(commandContext)
-                                      .ConfigureAwait(false);
+            return InvokeAsync(commandContext,
+                               async commandContextContainer =>
+                               {
+                                   await ConfigurationService.SetReminderChannel(commandContextContainer)
+                                                             .ConfigureAwait(false);
+                               });
         }
 
         /// <summary>
@@ -90,11 +105,16 @@ namespace Scruffy.Commands
         /// <param name="commandContext">Command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("motd")]
+        [RequireGuild]
         [RequireAdministratorPermissions]
-        public async Task SetupMotd(CommandContext commandContext)
+        public Task SetupMotd(CommandContext commandContext)
         {
-            await ConfigurationService.SetupMotd(commandContext)
-                                      .ConfigureAwait(false);
+            return InvokeAsync(commandContext,
+                               async commandContextContainer =>
+                               {
+                                   await ConfigurationService.SetupMotd(commandContextContainer)
+                                                             .ConfigureAwait(false);
+                               });
         }
 
         /// <summary>
@@ -103,11 +123,16 @@ namespace Scruffy.Commands
         /// <param name="commandContext">Command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("calendar")]
+        [RequireGuild]
         [RequireAdministratorPermissions]
-        public async Task SetupCalendar(CommandContext commandContext)
+        public Task SetupCalendar(CommandContext commandContext)
         {
-            await ConfigurationService.SetupCalendar(commandContext)
-                                      .ConfigureAwait(false);
+            return InvokeAsync(commandContext,
+                               async commandContextContainer =>
+                               {
+                                   await ConfigurationService.SetupCalendar(commandContextContainer)
+                                                             .ConfigureAwait(false);
+                               });
         }
 
         #endregion // Methods
@@ -152,10 +177,15 @@ namespace Scruffy.Commands
             /// <param name="count">Count</param>
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("random")]
-            public async Task SetNotificationChannel(CommandContext commandContext, int count)
+            [RequireGuild]
+            public Task SetNotificationChannel(CommandContext commandContext, int count)
             {
-                await GuildEmblemService.PostRandomGuildEmblems(commandContext, count)
-                                        .ConfigureAwait(false);
+                return InvokeAsync(commandContext,
+                                   async commandContextContainer =>
+                                   {
+                                       await GuildEmblemService.PostRandomGuildEmblems(commandContextContainer, count)
+                                                               .ConfigureAwait(false);
+                                   });
             }
 
             #endregion // Methods
@@ -163,5 +193,59 @@ namespace Scruffy.Commands
 
         #endregion Emblem
 
+        #region Bank
+
+        /// <summary>
+        /// Guild bank
+        /// </summary>
+        [Group("bank")]
+        [ModuleLifespan(ModuleLifespan.Transient)]
+        public class GuildAdministrationBankCommandModule : LocatedCommandModuleBase
+        {
+            #region Constructor
+
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="localizationService">Localization service</param>
+            public GuildAdministrationBankCommandModule(LocalizationService localizationService)
+                : base(localizationService)
+            {
+            }
+
+            #endregion // Constructor
+
+            #region Properties
+
+            /// <summary>
+            /// Bank service
+            /// </summary>
+            public GuildBankService BankService { get; set; }
+
+            #endregion // Properties
+
+            #region Methods
+
+            /// <summary>
+            /// Check the guild bank
+            /// </summary>
+            /// <param name="commandContext">Current command context</param>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+            [Command("check")]
+            [RequireGuild]
+            public Task SetNotificationChannel(CommandContext commandContext)
+            {
+                return InvokeAsync(commandContext,
+                                   async commandContextContainer =>
+                                   {
+                                       await BankService.Check(commandContextContainer)
+                                                        .ConfigureAwait(false);
+                                   });
+            }
+
+            #endregion // Methods
+        }
+
+        #endregion Emblem
     }
 }

@@ -29,7 +29,7 @@
     },
     "AccountEditDialogElement": {
       "ChooseCommandTitle": "Account Konfiguration",
-      "ChooseCommandDescription": "Mit diesem Assistenten kannst du deine Guild Wars 2 Account Informationen konfigurieren.",
+      "ChooseCommandDescription": "Mit diesem Assistenten kannst du deine Guild Wars 2 Account-Informationen konfigurieren.",
       "Name": "Name",
       "IsApiKeyAvailable": "Api Key",
       "DpsReportUserToken": "dps.report-Benutzertoken",
@@ -47,7 +47,9 @@
       "AccountsField": "Accounts"
     },
     "AccountAdministrationService": {
-      "InvalidToken": "Der angegebene Api Kay hat nicht alle benötigten Berechtigungen."
+      "InvalidToken": "Der angegebene Api Kay hat nicht alle benötigten Berechtigungen.",
+      "SwitchToPrivate": "Ich habe deinen Befehl als private Nachricht beantwortet.",
+      "NoAccounts": "Du hast aktuell keine konfigurierten Acccounts." 
     },
     "FractalLfgMessageBuilder": {
       "Today": "Heute",
@@ -237,6 +239,11 @@
     "GuildAdministrationConfigurationService": {
       "MotdBuilding": "Die Nachricht des Tages wird mit der nächste Aktualisierung angepasst.",
       "CalendarBuilding": "Der Kalender wird mit der nächsten Aktualisierung aufgebaut."
+    },
+    "GuildBankService": {
+      "BankValidation": "Banküberprüfung",
+      "BankValidationResult": "Folgend sind die Ergebnis der Überprüfung der Gildenbank aufgelistet.",
+      "NoApiKey": "Die Gilde wurde noch nicht konfiguriert." 
     },
     "CalendarTemplateDeletionDialogElement": {
       "DeletePrompt": "Soll die Schablone wirklich gelöscht werden?"
@@ -441,6 +448,8 @@
       "guild motd": "Erstellung der Nachricht der 'Nachricht des Tages'",
       "guild calendar": "Kalendereinrichtung",
       "guild emblem random": "Zufallsgenerierung von Gilden-Emblemen",
+      "guild bank": "Gildenbank",
+      "guild bank check": "Überprüfung" ,
 
       "calendar": "Kalenderverwaltung",
       "calendar add": "Hinzufügen eines einmaligen Events",

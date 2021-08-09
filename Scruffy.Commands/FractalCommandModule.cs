@@ -16,6 +16,8 @@ using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Fractals;
 using Scruffy.Data.Entity.Tables.Fractals;
 using Scruffy.Services.Core;
+using Scruffy.Services.Core.Discord;
+using Scruffy.Services.Core.Discord.Attributes;
 using Scruffy.Services.CoreData;
 using Scruffy.Services.Fractals;
 
@@ -68,84 +70,90 @@ namespace Scruffy.Commands
         /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("setup")]
-        public async Task Setup(CommandContext commandContext)
+        [RequireGuild]
+        [RequireAdministratorPermissions]
+        public Task Setup(CommandContext commandContext)
         {
-            var messagesToBeDeleted = new List<DiscordMessage>
-                                      {
-                                          commandContext.Message
-                                      };
+            return InvokeAsync(commandContext,
+                               async commandContextContainer =>
+                               {
+                                   var messagesToBeDeleted = new List<DiscordMessage>
+                                                             {
+                                                                 commandContextContainer.Message
+                                                             };
 
-            string title = null;
-            string description = null;
+                                   string title = null;
+                                   string description = null;
 
-            var interactivity = commandContext.Client.GetInteractivity();
+                                   var interactivity = commandContextContainer.Client.GetInteractivity();
 
-            var currentBotMessage = await commandContext.RespondAsync(LocalizationGroup.GetText("TitlePrompt", "Please enter a title.")).ConfigureAwait(false);
+                                   var currentBotMessage = await commandContext.Message.RespondAsync(LocalizationGroup.GetText("TitlePrompt", "Please enter a title.")).ConfigureAwait(false);
 
-            messagesToBeDeleted.Add(currentBotMessage);
+                                   messagesToBeDeleted.Add(currentBotMessage);
 
-            var responseMessage = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContext.Message.Author.Id).ConfigureAwait(false);
+                                   var responseMessage = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContextContainer.Message.Author.Id).ConfigureAwait(false);
 
-            if (responseMessage.TimedOut == false)
-            {
-                messagesToBeDeleted.Add(responseMessage.Result);
+                                   if (responseMessage.TimedOut == false)
+                                   {
+                                       messagesToBeDeleted.Add(responseMessage.Result);
 
-                title = responseMessage.Result.Content;
+                                       title = responseMessage.Result.Content;
 
-                currentBotMessage = await responseMessage.Result.RespondAsync(LocalizationGroup.GetText("DescriptionPrompt", "Please enter a description.")).ConfigureAwait(false);
+                                       currentBotMessage = await responseMessage.Result.RespondAsync(LocalizationGroup.GetText("DescriptionPrompt", "Please enter a description.")).ConfigureAwait(false);
 
-                messagesToBeDeleted.Add(currentBotMessage);
+                                       messagesToBeDeleted.Add(currentBotMessage);
 
-                responseMessage = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContext.Message.Author.Id).ConfigureAwait(false);
-            }
+                                       responseMessage = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContextContainer.Message.Author.Id).ConfigureAwait(false);
+                                   }
 
-            if (responseMessage.TimedOut == false)
-            {
-                messagesToBeDeleted.Add(responseMessage.Result);
+                                   if (responseMessage.TimedOut == false)
+                                   {
+                                       messagesToBeDeleted.Add(responseMessage.Result);
 
-                description = responseMessage.Result.Content;
+                                       description = responseMessage.Result.Content;
 
-                currentBotMessage = await responseMessage.Result.RespondAsync(LocalizationGroup.GetText("AliasNamePrompt", "Please enter an alias name.")).ConfigureAwait(false);
+                                       currentBotMessage = await responseMessage.Result.RespondAsync(LocalizationGroup.GetText("AliasNamePrompt", "Please enter an alias name.")).ConfigureAwait(false);
 
-                messagesToBeDeleted.Add(currentBotMessage);
+                                       messagesToBeDeleted.Add(currentBotMessage);
 
-                responseMessage = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContext.Message.Author.Id).ConfigureAwait(false);
-            }
+                                       responseMessage = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContextContainer.Message.Author.Id).ConfigureAwait(false);
+                                   }
 
-            if (responseMessage.TimedOut == false)
-            {
-                messagesToBeDeleted.Add(responseMessage.Result);
+                                   if (responseMessage.TimedOut == false)
+                                   {
+                                       messagesToBeDeleted.Add(responseMessage.Result);
 
-                var aliasName = responseMessage.Result.Content;
+                                       var aliasName = responseMessage.Result.Content;
 
-                var entry = new FractalLfgConfigurationEntity
-                            {
-                                Title = title,
-                                Description = description,
-                                AliasName = aliasName,
-                                ChannelId = commandContext.Channel.Id,
-                                MessageId = (await commandContext.Channel.SendMessageAsync(LocalizationGroup.GetText("BuildingProgress", "Building...")).ConfigureAwait(false)).Id
-                            };
+                                       var entry = new FractalLfgConfigurationEntity
+                                                   {
+                                                       Title = title,
+                                                       Description = description,
+                                                       AliasName = aliasName,
+                                                       ChannelId = commandContextContainer.Channel.Id,
+                                                       MessageId = (await commandContextContainer.Channel.SendMessageAsync(LocalizationGroup.GetText("BuildingProgress", "Building...")).ConfigureAwait(false)).Id
+                                                   };
 
-                using (var dbFactory = RepositoryFactory.CreateInstance())
-                {
-                    dbFactory.GetRepository<FractalLfgConfigurationRepository>()
-                             .Add(entry);
-                }
+                                       using (var dbFactory = RepositoryFactory.CreateInstance())
+                                       {
+                                           dbFactory.GetRepository<FractalLfgConfigurationRepository>()
+                                                    .Add(entry);
+                                       }
 
-                await MessageBuilder.RefreshMessageAsync(entry.Id).ConfigureAwait(false);
+                                       await MessageBuilder.RefreshMessageAsync(entry.Id).ConfigureAwait(false);
 
-                currentBotMessage = await commandContext.Channel.SendMessageAsync(LocalizationGroup.GetText("CreationCompletedMessage", "Creation completed! All creation messages will be deleted in 30 seconds.")).ConfigureAwait(false);
+                                       currentBotMessage = await commandContextContainer.Channel.SendMessageAsync(LocalizationGroup.GetText("CreationCompletedMessage", "Creation completed! All creation messages will be deleted in 30 seconds.")).ConfigureAwait(false);
 
-                messagesToBeDeleted.Add(currentBotMessage);
+                                       messagesToBeDeleted.Add(currentBotMessage);
 
-                await Task.Delay(TimeSpan.FromSeconds(30)).ConfigureAwait(false);
+                                       await Task.Delay(TimeSpan.FromSeconds(30)).ConfigureAwait(false);
 
-                foreach (var message in messagesToBeDeleted)
-                {
-                    await commandContext.Channel.DeleteMessageAsync(message).ConfigureAwait(false);
-                }
-            }
+                                       foreach (var message in messagesToBeDeleted)
+                                       {
+                                           await commandContextContainer.Channel.DeleteMessageAsync(message).ConfigureAwait(false);
+                                       }
+                                   }
+                               });
         }
 
         /// <summary>
@@ -157,27 +165,32 @@ namespace Scruffy.Commands
         /// <param name="days">Days</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         [Command("join")]
-        public async Task Join(CommandContext commandContext, string alias, string timeSpan, params string[] days)
+        [RequireGuild]
+        public Task Join(CommandContext commandContext, string alias, string timeSpan, params string[] days)
         {
-            await EvaluateRegistrationArguments(commandContext,
-                                                new List<string> { alias, timeSpan }.Concat(days),
-                                                e =>
-                                                {
-                                                    using (var dbFactory = RepositoryFactory.CreateInstance())
-                                                    {
-                                                        dbFactory.GetRepository<FractalRegistrationRepository>()
-                                                                 .AddOrRefresh(obj => obj.ConfigurationId == e.ConfigurationId
-                                                                                   && obj.AppointmentTimeStamp == e.AppointmentTimeStamp
-                                                                                   && obj.UserId == commandContext.User.Id,
-                                                                               obj =>
-                                                                               {
-                                                                                   obj.ConfigurationId = e.ConfigurationId;
-                                                                                   obj.AppointmentTimeStamp = e.AppointmentTimeStamp;
-                                                                                   obj.UserId = commandContext.User.Id;
-                                                                                   obj.RegistrationTimeStamp = DateTime.Now;
-                                                                               });
-                                                    }
-                                                }).ConfigureAwait(false);
+            return InvokeAsync(commandContext,
+                               async commandContextContainer =>
+                               {
+                                   await EvaluateRegistrationArguments(commandContextContainer,
+                                                                       new List<string> { alias, timeSpan }.Concat(days),
+                                                                       e =>
+                                                                       {
+                                                                           using (var dbFactory = RepositoryFactory.CreateInstance())
+                                                                           {
+                                                                               dbFactory.GetRepository<FractalRegistrationRepository>()
+                                                                                        .AddOrRefresh(obj => obj.ConfigurationId == e.ConfigurationId
+                                                                                                          && obj.AppointmentTimeStamp == e.AppointmentTimeStamp
+                                                                                                          && obj.UserId == commandContextContainer.User.Id,
+                                                                                                      obj =>
+                                                                                                      {
+                                                                                                          obj.ConfigurationId = e.ConfigurationId;
+                                                                                                          obj.AppointmentTimeStamp = e.AppointmentTimeStamp;
+                                                                                                          obj.UserId = commandContextContainer.User.Id;
+                                                                                                          obj.RegistrationTimeStamp = DateTime.Now;
+                                                                                                      });
+                                                                           }
+                                                                       }).ConfigureAwait(false);
+                               });
         }
 
         /// <summary>
@@ -188,27 +201,32 @@ namespace Scruffy.Commands
         /// <param name="days">Days</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         [Command("join")]
-        public async Task Join(CommandContext commandContext, string timeSpan, params string[] days)
+        [RequireGuild]
+        public Task Join(CommandContext commandContext, string timeSpan, params string[] days)
         {
-            await EvaluateRegistrationArguments(commandContext,
-                                                new List<string> { timeSpan }.Concat(days),
-                                                e =>
-                                                {
-                                                    using (var dbFactory = RepositoryFactory.CreateInstance())
-                                                    {
-                                                        dbFactory.GetRepository<FractalRegistrationRepository>()
-                                                               .AddOrRefresh(obj => obj.ConfigurationId == e.ConfigurationId
-                                                                                 && obj.AppointmentTimeStamp == e.AppointmentTimeStamp
-                                                                                 && obj.UserId == commandContext.User.Id,
-                                                                             obj =>
-                                                                             {
-                                                                                 obj.ConfigurationId = e.ConfigurationId;
-                                                                                 obj.AppointmentTimeStamp = e.AppointmentTimeStamp;
-                                                                                 obj.UserId = commandContext.User.Id;
-                                                                                 obj.RegistrationTimeStamp = DateTime.Now;
-                                                                             });
-                                                    }
-                                                }).ConfigureAwait(false);
+            return InvokeAsync(commandContext,
+                               async commandContextContainer =>
+                               {
+                                   await EvaluateRegistrationArguments(commandContextContainer,
+                                                                       new List<string> { timeSpan }.Concat(days),
+                                                                       e =>
+                                                                       {
+                                                                           using (var dbFactory = RepositoryFactory.CreateInstance())
+                                                                           {
+                                                                               dbFactory.GetRepository<FractalRegistrationRepository>()
+                                                                                        .AddOrRefresh(obj => obj.ConfigurationId == e.ConfigurationId
+                                                                                                          && obj.AppointmentTimeStamp == e.AppointmentTimeStamp
+                                                                                                          && obj.UserId == commandContextContainer.User.Id,
+                                                                                                      obj =>
+                                                                                                      {
+                                                                                                          obj.ConfigurationId = e.ConfigurationId;
+                                                                                                          obj.AppointmentTimeStamp = e.AppointmentTimeStamp;
+                                                                                                          obj.UserId = commandContextContainer.User.Id;
+                                                                                                          obj.RegistrationTimeStamp = DateTime.Now;
+                                                                                                      });
+                                                                           }
+                                                                       }).ConfigureAwait(false);
+                               });
         }
 
         /// <summary>
@@ -220,20 +238,25 @@ namespace Scruffy.Commands
         /// <param name="days">Days</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("leave")]
-        public async Task Leave(CommandContext commandContext, string alias, string timeSpan, params string[] days)
+        [RequireGuild]
+        public Task Leave(CommandContext commandContext, string alias, string timeSpan, params string[] days)
         {
-            await EvaluateRegistrationArguments(commandContext,
-                                                new List<string> { alias, timeSpan }.Concat(days),
-                                                e =>
-                                                {
-                                                    using (var dbFactory = RepositoryFactory.CreateInstance())
-                                                    {
-                                                        dbFactory.GetRepository<FractalRegistrationRepository>()
-                                                                 .RemoveRange(obj => obj.ConfigurationId == e.ConfigurationId
-                                                                                   && obj.AppointmentTimeStamp == e.AppointmentTimeStamp
-                                                                                   && obj.UserId == commandContext.User.Id);
-                                                    }
-                                                }).ConfigureAwait(false);
+            return InvokeAsync(commandContext,
+                               async commandContextContainer =>
+                               {
+                                   await EvaluateRegistrationArguments(commandContextContainer,
+                                                                       new List<string> { alias, timeSpan }.Concat(days),
+                                                                       e =>
+                                                                       {
+                                                                           using (var dbFactory = RepositoryFactory.CreateInstance())
+                                                                           {
+                                                                               dbFactory.GetRepository<FractalRegistrationRepository>()
+                                                                                        .RemoveRange(obj => obj.ConfigurationId == e.ConfigurationId
+                                                                                                         && obj.AppointmentTimeStamp == e.AppointmentTimeStamp
+                                                                                                         && obj.UserId == commandContextContainer.User.Id);
+                                                                           }
+                                                                       }).ConfigureAwait(false);
+                               });
         }
 
         /// <summary>
@@ -244,20 +267,25 @@ namespace Scruffy.Commands
         /// <param name="days">Days</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("leave")]
-        public async Task Leave(CommandContext commandContext, string timeSpan, params string[] days)
+        [RequireGuild]
+        public Task Leave(CommandContext commandContext, string timeSpan, params string[] days)
         {
-            await EvaluateRegistrationArguments(commandContext,
-                                                new List<string> { timeSpan }.Concat(days),
-                                                e =>
-                                                {
-                                                    using (var dbFactory = RepositoryFactory.CreateInstance())
-                                                    {
-                                                        dbFactory.GetRepository<FractalRegistrationRepository>()
-                                                                 .RemoveRange(obj => obj.ConfigurationId == e.ConfigurationId
-                                                                                  && obj.AppointmentTimeStamp == e.AppointmentTimeStamp
-                                                                                  && obj.UserId == commandContext.User.Id);
-                                                    }
-                                                }).ConfigureAwait(false);
+            return InvokeAsync(commandContext,
+                               async commandContextContainer =>
+                               {
+                                   await EvaluateRegistrationArguments(commandContextContainer,
+                                                                       new List<string> { timeSpan }.Concat(days),
+                                                                       e =>
+                                                                       {
+                                                                           using (var dbFactory = RepositoryFactory.CreateInstance())
+                                                                           {
+                                                                               dbFactory.GetRepository<FractalRegistrationRepository>()
+                                                                                        .RemoveRange(obj => obj.ConfigurationId == e.ConfigurationId
+                                                                                                         && obj.AppointmentTimeStamp == e.AppointmentTimeStamp
+                                                                                                         && obj.UserId == commandContextContainer.User.Id);
+                                                                           }
+                                                                       }).ConfigureAwait(false);
+                               });
         }
 
         #endregion // Command methods
@@ -267,16 +295,16 @@ namespace Scruffy.Commands
         /// <summary>
         /// Evaluation of the join or leave arguments
         /// </summary>
-        /// <param name="commandContext">Context</param>
+        /// <param name="commandContextContainer">Context</param>
         /// <param name="argumentsEnumerable">Arguments</param>
         /// <param name="action">Action</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-        private async Task EvaluateRegistrationArguments(CommandContext commandContext, IEnumerable<string> argumentsEnumerable, Action<(int ConfigurationId, DateTime AppointmentTimeStamp)> action)
+        private async Task EvaluateRegistrationArguments(CommandContextContainer commandContextContainer, IEnumerable<string> argumentsEnumerable, Action<(int ConfigurationId, DateTime AppointmentTimeStamp)> action)
         {
             var arguments = argumentsEnumerable.ToList();
             if (arguments.Count >= 2)
             {
-                var checkUser = UserManagementService.CheckUserAsync(commandContext.User.Id);
+                var checkUser = UserManagementService.CheckUserAsync(commandContextContainer.User.Id);
 
                 using (var dbFactory = RepositoryFactory.CreateInstance())
                 {
@@ -290,7 +318,7 @@ namespace Scruffy.Commands
                         timeSpan = TimeSpan.ParseExact(arguments[0], "hh\\:mm", CultureInfo.InvariantCulture);
                         configurationId = await dbFactory.GetRepository<FractalLfgConfigurationRepository>()
                                                          .GetQuery()
-                                                         .Where(obj => obj.ChannelId == commandContext.Channel.Id)
+                                                         .Where(obj => obj.ChannelId == commandContextContainer.Channel.Id)
                                                          .Select(obj => (int?)obj.Id)
                                                          .FirstOrDefaultAsync()
                                                          .ConfigureAwait(false);
@@ -370,8 +398,8 @@ namespace Scruffy.Commands
 
                         await MessageBuilder.RefreshMessageAsync(configurationId.Value).ConfigureAwait(false);
 
-                        await commandContext.Channel
-                                            .DeleteMessageAsync(commandContext.Message)
+                        await commandContextContainer.Channel
+                                            .DeleteMessageAsync(commandContextContainer.Message)
                                             .ConfigureAwait(false);
 
                         if (earliestTimeStamp != null)

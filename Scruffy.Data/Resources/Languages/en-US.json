@@ -47,7 +47,9 @@
       "AccountsField": "Accounts"
     },
     "AccountAdministrationService": {
-      "InvalidToken": "The provided token doesn't have the required permissions."
+      "InvalidToken": "The provided token doesn't have the required permissions.",
+      "SwitchToPrivate": "I answered your command as a private message.",
+      "NoAccounts": "You don't have any accounts configured."
     },
     "FractalLfgMessageBuilder": {
       "Today": "Today",
@@ -237,6 +239,11 @@
     "GuildAdministrationConfigurationService": {
       "MotdBuilding": "The message of the day will be build with the next refresh.",
       "CalendarBuilding": "The calendar will be build with the next refresh."
+    },
+    "GuildBankService": {
+      "BankValidation": "Guild bank validation",
+      "BankValidationResult": "In the following message you can see the results of the bank validation.",
+      "NoApiKey": "The guild ist not configured."
     },
     "CalendarTemplateDeletionDialogElement": {
       "DeletePrompt": "Are you sure you want to delete the template?"
@@ -435,6 +442,8 @@
       "guild motd": "Setup the message of the day message",
       "guild calendar": "Calendar setup",
       "guild emblem random": "Random generation of guild emblems",
+      "guild bank": "Guild bank",
+      "guild bank check": "Validation", 
 
       "calendar": "Calendar administration",
       "calendar add": "Adding a one time event",

@@ -4,57 +4,52 @@ using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 
-using Scruffy.Services.Core.Discord.Interfaces;
-
 namespace Scruffy.Services.Core.Discord
 {
     /// <summary>
     /// CommandContext wrapper
     /// </summary>
-    public class CommandContextContainer : ICommandContext
+    public class CommandContextContainer
     {
-        #region Static methods
+        #region Constructor
 
         /// <summary>
         /// Create a wrapper from a normal CommandContext
         /// </summary>
         /// <param name="commandContext">CommandContext</param>
         /// <returns>ICommandContext-implementation</returns>
-        public static ICommandContext FromCommandContext(CommandContext commandContext)
+        public CommandContextContainer(CommandContext commandContext)
         {
-            return new CommandContextContainer
-                   {
-                       Client = commandContext.Client,
-                       Guild = commandContext.Guild,
-                       Message = commandContext.Message,
-                       Channel = commandContext.Channel,
-                       User = commandContext.User
-                   };
+            Client = commandContext.Client;
+            Guild = commandContext.Guild;
+            LastUserMessage = Message = commandContext.Message;
+            Channel = commandContext.Channel;
+            User = commandContext.User;
+            Member = commandContext.Member;
         }
+
+        #endregion // Constructor
+
+        #region Methods
 
         /// <summary>
         /// Switching to a direct message context
         /// </summary>
-        /// <param name="commandContext">CommandContext</param>
         /// <returns>ICommandContext-implementation</returns>
-        public static async Task<ICommandContext> SwitchToDirectMessageContext(CommandContext commandContext)
+        public async Task SwitchToDirectMessageContext()
         {
-            return new CommandContextContainer
-                   {
-                       Client = commandContext.Client,
-                       Message = commandContext.Message,
-                       Channel = commandContext.Channel.IsPrivate
-                                     ? commandContext.Channel
-                                     : await commandContext.Member
-                                                           .CreateDmChannelAsync()
-                                                           .ConfigureAwait(false),
-                       User = commandContext.User
-                   };
+            if (Channel.IsPrivate == false)
+            {
+                Channel = await Member.CreateDmChannelAsync()
+                                      .ConfigureAwait(false);
+
+                Member = null;
+            }
         }
 
-        #endregion // Static methods
+        #endregion // Methods
 
-        #region ICommandContext
+        #region Properties
 
         /// <summary>
         /// Current discord client
@@ -81,6 +76,16 @@ namespace Scruffy.Services.Core.Discord
         /// </summary>
         public DiscordUser User { get; private set; }
 
-        #endregion // ICommandContext
+        /// <summary>
+        /// Current member
+        /// </summary>
+        public DiscordMember Member { get; private set; }
+
+        /// <summary>
+        /// Last user message
+        /// </summary>
+        public DiscordMessage LastUserMessage { get; internal set; }
+
+        #endregion // Properties
     }
 }

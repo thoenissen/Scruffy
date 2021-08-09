@@ -2,13 +2,12 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-using DSharpPlus.CommandsNext;
-
 using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Services.Core;
+using Scruffy.Services.Core.Discord;
 
 namespace Scruffy.Services.Raid
 {
@@ -38,7 +37,7 @@ namespace Scruffy.Services.Raid
         /// <param name="commandContext">Command context</param>
         /// <param name="aliasName">Alias name</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task CommitRaidAppointment(CommandContext commandContext, string aliasName)
+        public async Task CommitRaidAppointment(CommandContextContainer commandContext, string aliasName)
         {
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
@@ -58,7 +57,8 @@ namespace Scruffy.Services.Raid
                 }
                 else
                 {
-                    await commandContext.RespondAsync(LocalizationGroup.GetText("NoOpenAppointment", "There is no uncommitted appointment available."))
+                    await commandContext.Message
+                                        .RespondAsync(LocalizationGroup.GetText("NoOpenAppointment", "There is no uncommitted appointment available."))
                                         .ConfigureAwait(false);
                 }
             }

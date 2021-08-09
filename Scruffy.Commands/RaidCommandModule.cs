@@ -74,51 +74,56 @@ namespace Scruffy.Commands
         /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("setup")]
+        [RequireGuild]
         [RequireAdministratorPermissions]
-        public async Task Setup(CommandContext commandContext)
+        public Task Setup(CommandContext commandContext)
         {
-            var data = await DialogHandler.RunForm<CreateRaidDayFormData>(CommandContextContainer.FromCommandContext(commandContext), true)
-                                          .ConfigureAwait(false);
+            return InvokeAsync(commandContext,
+                               async commandContextContainer =>
+                               {
+                                   var data = await DialogHandler.RunForm<CreateRaidDayFormData>(commandContextContainer, true)
+                                                                 .ConfigureAwait(false);
 
-            using (var dbFactory = RepositoryFactory.CreateInstance())
-            {
-                var message = await commandContext.Channel
-                                                  .SendMessageAsync(DiscordEmojiService.GetProgressEmoji(commandContext.Client))
-                                                  .ConfigureAwait(false);
+                                   using (var dbFactory = RepositoryFactory.CreateInstance())
+                                   {
+                                       var message = await commandContextContainer.Channel
+                                                                                  .SendMessageAsync(DiscordEmojiService.GetProgressEmoji(commandContextContainer.Client))
+                                                                                  .ConfigureAwait(false);
 
-                var configuration = new RaidDayConfigurationEntity
-                                  {
-                                      AliasName = data.AliasName,
-                                      Day = data.Day,
-                                      RegistrationDeadline = data.RegistrationDeadline,
-                                      StartTime = data.StartTime,
-                                      ChannelId = commandContext.Channel.Id,
-                                      MessageId = message.Id
-                                  };
+                                       var configuration = new RaidDayConfigurationEntity
+                                       {
+                                           AliasName = data.AliasName,
+                                           Day = data.Day,
+                                           RegistrationDeadline = data.RegistrationDeadline,
+                                           StartTime = data.StartTime,
+                                           ChannelId = commandContextContainer.Channel.Id,
+                                           MessageId = message.Id
+                                       };
 
-                dbFactory.GetRepository<RaidDayConfigurationRepository>()
-                         .Add(configuration);
+                                       dbFactory.GetRepository<RaidDayConfigurationRepository>()
+                                                .Add(configuration);
 
-                var appointmentTimeStamp = DateTime.Today.Add(data.StartTime);
-                while (appointmentTimeStamp < DateTime.Now
-                    || appointmentTimeStamp.DayOfWeek != data.Day)
-                {
-                    appointmentTimeStamp = appointmentTimeStamp.AddDays(1);
-                }
+                                       var appointmentTimeStamp = DateTime.Today.Add(data.StartTime);
+                                       while (appointmentTimeStamp < DateTime.Now
+                                           || appointmentTimeStamp.DayOfWeek != data.Day)
+                                       {
+                                           appointmentTimeStamp = appointmentTimeStamp.AddDays(1);
+                                       }
 
-                dbFactory.GetRepository<RaidAppointmentRepository>()
-                         .Add(new RaidAppointmentEntity
-                              {
-                                  ConfigurationId = configuration.Id,
-                                  TemplateId = data.TemplateId,
-                                  TimeStamp = appointmentTimeStamp,
-                                  Deadline = appointmentTimeStamp.Date
-                                                                 .Add(data.RegistrationDeadline)
-                              });
+                                       dbFactory.GetRepository<RaidAppointmentRepository>()
+                                                .Add(new RaidAppointmentEntity
+                                                {
+                                                    ConfigurationId = configuration.Id,
+                                                    TemplateId = data.TemplateId,
+                                                    TimeStamp = appointmentTimeStamp,
+                                                    Deadline = appointmentTimeStamp.Date
+                                                                                        .Add(data.RegistrationDeadline)
+                                                });
 
-                await MessageBuilder.RefreshMessageAsync(configuration.Id)
-                                    .ConfigureAwait(false);
-            }
+                                       await MessageBuilder.RefreshMessageAsync(configuration.Id)
+                                                           .ConfigureAwait(false);
+                                   }
+                               });
         }
 
         /// <summary>
@@ -128,36 +133,42 @@ namespace Scruffy.Commands
         /// <param name="name">Name</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("join")]
-        public async Task Join(CommandContext commandContext, string name)
+        [RequireGuild]
+        public Task Join(CommandContext commandContext, string name)
         {
-            using (var dbFactory = RepositoryFactory.CreateInstance())
-            {
-                var appointment = await dbFactory.GetRepository<RaidAppointmentRepository>()
-                                                 .GetQuery()
-                                                 .Where(obj => obj.TimeStamp > DateTime.Now
-                                                               && obj.RaidDayConfiguration.AliasName == name)
-                                                 .Select(obj => new
-                                                                {
-                                                                    obj.Id,
-                                                                    obj.ConfigurationId
-                                                                })
-                                                 .FirstOrDefaultAsync()
-                                                 .ConfigureAwait(false);
-                if (appointment != null)
-                {
-                    if (await RegistrationService.Join(appointment.Id, commandContext.User.Id)
-                                                 .ConfigureAwait(false))
-                    {
-                        await MessageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
-                                            .ConfigureAwait(false);
-                    }
-                }
-                else
-                {
-                    await commandContext.RespondAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."))
-                                        .ConfigureAwait(false);
-                }
-            }
+            return InvokeAsync(commandContext,
+                               async commandContextContainer =>
+                               {
+                                   using (var dbFactory = RepositoryFactory.CreateInstance())
+                                   {
+                                       var appointment = await dbFactory.GetRepository<RaidAppointmentRepository>()
+                                                                        .GetQuery()
+                                                                        .Where(obj => obj.TimeStamp > DateTime.Now
+                                                                                   && obj.RaidDayConfiguration.AliasName == name)
+                                                                        .Select(obj => new
+                                                                                       {
+                                                                                           obj.Id,
+                                                                                           obj.ConfigurationId
+                                                                                       })
+                                                                        .FirstOrDefaultAsync()
+                                                                        .ConfigureAwait(false);
+                                       if (appointment != null)
+                                       {
+                                           if (await RegistrationService.Join(appointment.Id, commandContextContainer.User.Id)
+                                                                        .ConfigureAwait(false))
+                                           {
+                                               await MessageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
+                                                                   .ConfigureAwait(false);
+                                           }
+                                       }
+                                       else
+                                       {
+                                           await commandContextContainer.Message
+                                                                        .RespondAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."))
+                                                                        .ConfigureAwait(false);
+                                       }
+                                   }
+                               });
         }
 
         /// <summary>
@@ -167,36 +178,42 @@ namespace Scruffy.Commands
         /// <param name="name">Name</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("leave")]
-        public async Task Leave(CommandContext commandContext, string name)
+        [RequireGuild]
+        public Task Leave(CommandContext commandContext, string name)
         {
-            using (var dbFactory = RepositoryFactory.CreateInstance())
-            {
-                var appointment = await dbFactory.GetRepository<RaidAppointmentRepository>()
-                                                 .GetQuery()
-                                                 .Where(obj => obj.TimeStamp > DateTime.Now
-                                                               && obj.RaidDayConfiguration.AliasName == name)
-                                                 .Select(obj => new
-                                                 {
-                                                     obj.Id,
-                                                     obj.ConfigurationId
-                                                 })
-                                                 .FirstOrDefaultAsync()
-                                                 .ConfigureAwait(false);
-                if (appointment != null)
-                {
-                    if (await RegistrationService.Leave(appointment.Id, commandContext.User.Id)
-                                                 .ConfigureAwait(false))
-                    {
-                        await MessageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
-                                            .ConfigureAwait(false);
-                    }
-                }
-                else
-                {
-                    await commandContext.RespondAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."))
-                                        .ConfigureAwait(false);
-                }
-            }
+            return InvokeAsync(commandContext,
+                               async commandContextContainer =>
+                               {
+                                   using (var dbFactory = RepositoryFactory.CreateInstance())
+                                   {
+                                       var appointment = await dbFactory.GetRepository<RaidAppointmentRepository>()
+                                                                        .GetQuery()
+                                                                        .Where(obj => obj.TimeStamp > DateTime.Now
+                                                                                   && obj.RaidDayConfiguration.AliasName == name)
+                                                                        .Select(obj => new
+                                                                                       {
+                                                                                           obj.Id,
+                                                                                           obj.ConfigurationId
+                                                                                       })
+                                                                        .FirstOrDefaultAsync()
+                                                                        .ConfigureAwait(false);
+                                       if (appointment != null)
+                                       {
+                                           if (await RegistrationService.Leave(appointment.Id, commandContextContainer.User.Id)
+                                                                        .ConfigureAwait(false))
+                                           {
+                                               await MessageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
+                                                                   .ConfigureAwait(false);
+                                           }
+                                       }
+                                       else
+                                       {
+                                           await commandContextContainer.Message
+                                                                        .RespondAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."))
+                                                                        .ConfigureAwait(false);
+                                       }
+                                   }
+                               });
         }
 
         /// <summary>
@@ -206,11 +223,16 @@ namespace Scruffy.Commands
         /// <param name="aliasName">Alias name</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("commit")]
+        [RequireGuild]
         [RequireAdministratorPermissions]
-        public async Task Commit(CommandContext commandContext, string aliasName)
+        public Task Commit(CommandContext commandContext, string aliasName)
         {
-            await CommitService.CommitRaidAppointment(commandContext, aliasName)
-                               .ConfigureAwait(false);
+            return InvokeAsync(commandContext,
+                               async commandContextContainer =>
+                               {
+                                   await CommitService.CommitRaidAppointment(commandContextContainer, aliasName)
+                                                      .ConfigureAwait(false);
+                               });
         }
 
         #endregion // Methods
@@ -264,11 +286,16 @@ namespace Scruffy.Commands
             /// <param name="commandContext">Current command context</param>
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("setup")]
+            [RequireGuild]
             [RequireAdministratorPermissions]
-            public async Task SetupRoles(CommandContext commandContext)
+            public Task SetupRoles(CommandContext commandContext)
             {
-                await RaidRolesService.RunAssistantAsync(commandContext)
-                                      .ConfigureAwait(false);
+                return InvokeAsync(commandContext,
+                                   async commandContextContainer =>
+                                   {
+                                       await RaidRolesService.RunAssistantAsync(commandContextContainer)
+                                                             .ConfigureAwait(false);
+                                   });
             }
 
             #endregion // Methods
@@ -306,16 +333,21 @@ namespace Scruffy.Commands
             /// <param name="commandContext">Current command context</param>
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("setup")]
+            [RequireGuild]
             [RequireAdministratorPermissions]
-            public async Task Setup(CommandContext commandContext)
+            public Task Setup(CommandContext commandContext)
             {
-                bool repeat;
+                return InvokeAsync(commandContext,
+                                   async commandContextContainer =>
+                                   {
+                                       bool repeat;
 
-                do
-                {
-                    repeat = await DialogHandler.Run<RaidTemplateSetupDialogElement, bool>(CommandContextContainer.FromCommandContext(commandContext)).ConfigureAwait(false);
-                }
-                while (repeat);
+                                       do
+                                       {
+                                           repeat = await DialogHandler.Run<RaidTemplateSetupDialogElement, bool>(commandContextContainer).ConfigureAwait(false);
+                                       }
+                                       while (repeat);
+                                   });
             }
 
             #endregion // Methods
@@ -362,17 +394,22 @@ namespace Scruffy.Commands
             /// <param name="commandContext">Current command context</param>
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("setup")]
+            [RequireGuild]
             [RequireAdministratorPermissions]
-            public async Task Setup(CommandContext commandContext)
+            public Task Setup(CommandContext commandContext)
             {
-                bool repeat;
+                return InvokeAsync(commandContext,
+                                   async commandContextContainer =>
+                                   {
+                                       bool repeat;
 
-                do
-                {
-                    repeat = await DialogHandler.Run<RaidExperienceLevelSetupDialogElement, bool>(CommandContextContainer.FromCommandContext(commandContext))
-                                                .ConfigureAwait(false);
-                }
-                while (repeat);
+                                       do
+                                       {
+                                           repeat = await DialogHandler.Run<RaidExperienceLevelSetupDialogElement, bool>(commandContextContainer)
+                                                                       .ConfigureAwait(false);
+                                       }
+                                       while (repeat);
+                                   });
             }
 
             /// <summary>
@@ -383,46 +420,52 @@ namespace Scruffy.Commands
             /// <param name="users">Users</param>
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("set")]
+            [RequireGuild]
             [RequireAdministratorPermissions]
-            public async Task SetExperienceLevel(CommandContext commandContext, string aliasName, params DiscordUser[] users)
+            public Task SetExperienceLevel(CommandContext commandContext, string aliasName, params DiscordUser[] users)
             {
-                using (var dbFactory = RepositoryFactory.CreateInstance())
-                {
-                    var experienceLevelId = await dbFactory.GetRepository<RaidExperienceLevelRepository>()
-                                                           .GetQuery()
-                                                           .Where(obj => obj.AliasName == aliasName)
-                                                           .Select(obj => obj.Id)
-                                                           .FirstOrDefaultAsync()
-                                                           .ConfigureAwait(false);
+                return InvokeAsync(commandContext,
+                                   async commandContextContainer =>
+                                   {
+                                       using (var dbFactory = RepositoryFactory.CreateInstance())
+                                       {
+                                           var experienceLevelId = await dbFactory.GetRepository<RaidExperienceLevelRepository>()
+                                                                                  .GetQuery()
+                                                                                  .Where(obj => obj.AliasName == aliasName)
+                                                                                  .Select(obj => obj.Id)
+                                                                                  .FirstOrDefaultAsync()
+                                                                                  .ConfigureAwait(false);
 
-                    if (experienceLevelId > 0)
-                    {
-                        foreach (var user in users)
-                        {
-                            dbFactory.GetRepository<UserRepository>()
-                                     .AddOrRefresh(obj => obj.Id == user.Id,
-                                                   obj =>
-                                                   {
-                                                       if (obj.Id == default)
-                                                       {
-                                                           obj.Id = user.Id;
-                                                           obj.CreationTimeStamp = DateTime.Now;
-                                                       }
+                                           if (experienceLevelId > 0)
+                                           {
+                                               foreach (var user in users)
+                                               {
+                                                   dbFactory.GetRepository<UserRepository>()
+                                                            .AddOrRefresh(obj => obj.Id == user.Id,
+                                                                          obj =>
+                                                                          {
+                                                                              if (obj.Id == default)
+                                                                              {
+                                                                                  obj.Id = user.Id;
+                                                                                  obj.CreationTimeStamp = DateTime.Now;
+                                                                              }
 
-                                                       obj.RaidExperienceLevelId = experienceLevelId;
-                                                   });
-                        }
+                                                                              obj.RaidExperienceLevelId = experienceLevelId;
+                                                                          });
+                                               }
 
-                        await commandContext.Message
-                                            .CreateReactionAsync(DiscordEmojiService.GetCheckEmoji(commandContext.Client))
-                                            .ConfigureAwait(false);
-                    }
-                    else
-                    {
-                        await commandContext.RespondAsync(LocalizationGroup.GetText("UnknownExperienceLevel", "The experience role by the given name does not exist."))
-                                            .ConfigureAwait(false);
-                    }
-                }
+                                               await commandContextContainer.Message
+                                                                            .CreateReactionAsync(DiscordEmojiService.GetCheckEmoji(commandContextContainer.Client))
+                                                                            .ConfigureAwait(false);
+                                           }
+                                           else
+                                           {
+                                               await commandContextContainer.Message
+                                                                            .RespondAsync(LocalizationGroup.GetText("UnknownExperienceLevel", "The experience role by the given name does not exist."))
+                                                                            .ConfigureAwait(false);
+                                           }
+                                       }
+                                   });
             }
 
             /// <summary>
@@ -431,10 +474,15 @@ namespace Scruffy.Commands
             /// <param name="commandContext">Command context</param>
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("overview")]
-            public async Task SendExperienceLevelOverview(CommandContext commandContext)
+            [RequireGuild]
+            public Task SendExperienceLevelOverview(CommandContext commandContext)
             {
-                await RaidExperienceLevelsService.PostExperienceLevelOverview(commandContext)
-                                                 .ConfigureAwait(false);
+                return InvokeAsync(commandContext,
+                                   async commandContextContainer =>
+                                   {
+                                       await RaidExperienceLevelsService.PostExperienceLevelOverview(commandContextContainer)
+                                                                        .ConfigureAwait(false);
+                                   });
             }
 
             #endregion // Methods

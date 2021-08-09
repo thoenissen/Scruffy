@@ -5,15 +5,11 @@ using System.Threading.Tasks;
 
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Exceptions;
-using DSharpPlus.Entities;
 
 using Microsoft.Extensions.DependencyInjection;
 
 using Newtonsoft.Json;
 
-using Scruffy.Data.Entity;
-using Scruffy.Data.Entity.Repositories.General;
-using Scruffy.Data.Entity.Tables.General;
 using Scruffy.Data.Json.Tenor;
 
 namespace Scruffy.Services.Core.Discord
@@ -99,50 +95,19 @@ namespace Scruffy.Services.Core.Discord
             else if (e.Exception is TimeoutException)
             {
             }
-            else
+            else if (e.Exception is ArgumentException
+                  || e.Exception is InvalidOperationException)
             {
-                if (e.Context?.Channel != null)
-                {
-                    using (var dbFactory = RepositoryFactory.CreateInstance())
-                    {
-                        var logEntry = new LogEntryEntity
-                                       {
-                                           Message = e.Exception.ToString(),
-                                           QualifiedCommandName = e.Command?.QualifiedName
-                                       };
+                var cmd = e.Context.CommandsNext.FindCommand("help " + e.Command.QualifiedName, out var customArgs);
 
-                        dbFactory.GetRepository<LogEntryRepository>()
-                                 .Add(logEntry);
+                cmd ??= e.Context.CommandsNext.FindCommand("help", out customArgs);
 
-                        using (var response = await WebRequest.CreateHttp("https://g.tenor.com/v1/search?q=funny%20cat&key=RXM3VE2UGRU9&limit=50&contentfilter=high&ar_range=all")
-                                                              .GetResponseAsync()
-                                                              .ConfigureAwait(false))
-                        {
-                            using (var reader = new StreamReader(response.GetResponseStream()))
-                            {
-                                var jsonResult = await reader.ReadToEndAsync().ConfigureAwait(false);
+                var fakeContext = e.Context.CommandsNext.CreateFakeContext(e.Context.Member ?? e.Context.User, e.Context.Channel, "help " + e.Command.QualifiedName, e.Context.Prefix, cmd, customArgs);
 
-                                var searchResult = JsonConvert.DeserializeObject<SearchResultRoot>(jsonResult);
-
-                                using (var webClient = new WebClient())
-                                {
-                                    var tenorEntry = searchResult.Results[_rnd.Next(0, searchResult.Results.Count - 1)];
-
-                                    await using (var stream = new MemoryStream(webClient.DownloadData(tenorEntry.Media[0].GIF.Url)))
-                                    {
-                                        var builder = new DiscordMessageBuilder().WithContent(LocalizationGroup.GetFormattedText("CommandFailedMessage", "The command could not be executed. But I have an error code ({0}) and funny cat picture.", logEntry.Id))
-                                                                                 .WithFile("cat.gif", stream);
-
-                                        await e.Context
-                                               .Channel
-                                               .SendMessageAsync(builder)
-                                               .ConfigureAwait(false);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                await e.Context
+                       .CommandsNext
+                       .ExecuteCommandAsync(fakeContext)
+                       .ConfigureAwait(false);
             }
         }
 

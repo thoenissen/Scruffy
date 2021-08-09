@@ -3,7 +3,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity.Extensions;
 
@@ -11,6 +10,7 @@ using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Data.Entity.Tables.Raid;
 using Scruffy.Services.Core;
+using Scruffy.Services.Core.Discord;
 
 namespace Scruffy.Services.Raid
 {
@@ -37,9 +37,9 @@ namespace Scruffy.Services.Raid
         /// <summary>
         /// Starting the roles assistant
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
+        /// <param name="commandContextContainer">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task RunAssistantAsync(CommandContext commandContext)
+        public async Task RunAssistantAsync(CommandContextContainer commandContextContainer)
         {
             var builder = new DiscordEmbedBuilder();
             builder.WithTitle(LocalizationGroup.GetText("AssistantTitle", "Raid role configuration"));
@@ -79,7 +79,7 @@ namespace Scruffy.Services.Raid
                         foreach (var subRole in role.SubRoles)
                         {
                             roles.Append("> ");
-                            roles.Append(DiscordEmojiService.GetGuildEmoji(commandContext.Client, subRole.DiscordEmojiId));
+                            roles.Append(DiscordEmojiService.GetGuildEmoji(commandContextContainer.Client, subRole.DiscordEmojiId));
                             roles.Append(' ');
                             roles.Append(subRole.Description);
                             roles.Append('\n');
@@ -87,15 +87,15 @@ namespace Scruffy.Services.Raid
 
                         roles.Append('\n');
 
-                        builder.AddField($"{DiscordEmojiService.GetGuildEmoji(commandContext.Client, role.DiscordEmojiId)} {role.Description}", roles.ToString());
+                        builder.AddField($"{DiscordEmojiService.GetGuildEmoji(commandContextContainer.Client, role.DiscordEmojiId)} {role.Description}", roles.ToString());
                     }
                 }
             }
 
-            var addEmoji = DiscordEmojiService.GetAddEmoji(commandContext.Client);
-            var editEmoji = DiscordEmojiService.GetEditEmoji(commandContext.Client);
-            var deleteEmoji = DiscordEmojiService.GetTrashCanEmoji(commandContext.Client);
-            var cancelEmoji = DiscordEmojiService.GetCrossEmoji(commandContext.Client);
+            var addEmoji = DiscordEmojiService.GetAddEmoji(commandContextContainer.Client);
+            var editEmoji = DiscordEmojiService.GetEditEmoji(commandContextContainer.Client);
+            var deleteEmoji = DiscordEmojiService.GetTrashCanEmoji(commandContextContainer.Client);
+            var cancelEmoji = DiscordEmojiService.GetCrossEmoji(commandContextContainer.Client);
 
             var commands = new StringBuilder();
             commands.AppendLine(LocalizationGroup.GetFormattedText("AssistantAddCommand", "{0} Add role", addEmoji));
@@ -110,13 +110,13 @@ namespace Scruffy.Services.Raid
 
             builder.AddField(LocalizationGroup.GetText("AssistantCommandsField", "Commands"), commands.ToString());
 
-            var message = await commandContext.Channel
+            var message = await commandContextContainer.Channel
                                               .SendMessageAsync(builder)
                                               .ConfigureAwait(false);
 
-            var userReactionTask = commandContext.Client
+            var userReactionTask = commandContextContainer.Client
                                                  .GetInteractivity()
-                                                 .WaitForReactionAsync(message, commandContext.User);
+                                                 .WaitForReactionAsync(message, commandContextContainer.User);
 
             await message.CreateReactionAsync(addEmoji).ConfigureAwait(false);
             await message.CreateReactionAsync(editEmoji).ConfigureAwait(false);
@@ -133,15 +133,15 @@ namespace Scruffy.Services.Raid
             {
                 if (userReaction.Result.Emoji.Id == addEmoji.Id)
                 {
-                    await RunAddAssistantAsync(commandContext).ConfigureAwait(false);
+                    await RunAddAssistantAsync(commandContextContainer).ConfigureAwait(false);
                 }
                 else if (userReaction.Result.Emoji.Id == editEmoji.Id && areRolesAvailable)
                 {
-                    await RunEditAssistantAsync(commandContext).ConfigureAwait(false);
+                    await RunEditAssistantAsync(commandContextContainer).ConfigureAwait(false);
                 }
                 else if (userReaction.Result.Emoji.Id == deleteEmoji.Id)
                 {
-                    await RunDeleteAssistantAsync(commandContext).ConfigureAwait(false);
+                    await RunDeleteAssistantAsync(commandContextContainer).ConfigureAwait(false);
                 }
             }
         }
@@ -149,18 +149,18 @@ namespace Scruffy.Services.Raid
         /// <summary>
         /// Starting the roles adding assistant
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
+        /// <param name="commandContextContainer">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        private async Task RunAddAssistantAsync(CommandContext commandContext)
+        private async Task RunAddAssistantAsync(CommandContextContainer commandContextContainer)
         {
-            var currentBotMessage = await commandContext.Channel
+            var currentBotMessage = await commandContextContainer.Channel
                                                         .SendMessageAsync(LocalizationGroup.GetText("ReactWithEmojiPrompt", "Please react with emoji which should be assigned to the role."))
                                                         .ConfigureAwait(false);
 
-            var interactivity = commandContext.Client
+            var interactivity = commandContextContainer.Client
                                               .GetInteractivity();
 
-            var reaction = await interactivity.WaitForReactionAsync(currentBotMessage, commandContext.User)
+            var reaction = await interactivity.WaitForReactionAsync(currentBotMessage, commandContextContainer.User)
                                               .ConfigureAwait(false);
 
             if (reaction.TimedOut == false && reaction.Result.Emoji.Id > 0)
@@ -170,12 +170,12 @@ namespace Scruffy.Services.Raid
                                        DiscordEmojiId = reaction.Result.Emoji.Id
                                    };
 
-                currentBotMessage = await commandContext.Channel
+                currentBotMessage = await commandContextContainer.Channel
                                                         .SendMessageAsync(LocalizationGroup.GetText("DescriptionPrompt", "Please enter the description of the role."))
                                                         .ConfigureAwait(false);
 
-                var currentUserResponse = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContext.User.Id
-                                                                                      && obj.ChannelId == commandContext.Channel.Id)
+                var currentUserResponse = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContextContainer.User.Id
+                                                                                      && obj.ChannelId == commandContextContainer.Channel.Id)
                                                              .ConfigureAwait(false);
 
                 if (currentUserResponse.TimedOut == false)
@@ -184,8 +184,8 @@ namespace Scruffy.Services.Raid
 
                     var continueCreation = true;
                     var subRolesData = new List<RaidRoleEntity>();
-                    var checkEmoji = DiscordEmojiService.GetCheckEmoji(commandContext.Client);
-                    var crossEmoji = DiscordEmojiService.GetCrossEmoji(commandContext.Client);
+                    var checkEmoji = DiscordEmojiService.GetCheckEmoji(commandContextContainer.Client);
+                    var crossEmoji = DiscordEmojiService.GetCrossEmoji(commandContextContainer.Client);
 
                     var addSubRoles = true;
                     while (addSubRoles)
@@ -194,13 +194,13 @@ namespace Scruffy.Services.Raid
                                              ? LocalizationGroup.GetText("AddSubRolesPrompt", "Do you want to add sub roles?")
                                              : LocalizationGroup.GetText("AddAdditionalSubRolesPrompt", "Do you want to add additional sub roles?");
 
-                        currentBotMessage = await commandContext.Channel
+                        currentBotMessage = await commandContextContainer.Channel
                                                                 .SendMessageAsync(promptText)
                                                                 .ConfigureAwait(false);
 
-                        var userReactionTask = commandContext.Client
+                        var userReactionTask = commandContextContainer.Client
                                                              .GetInteractivity()
-                                                             .WaitForReactionAsync(currentBotMessage, commandContext.User);
+                                                             .WaitForReactionAsync(currentBotMessage, commandContextContainer.User);
 
                         await currentBotMessage.CreateReactionAsync(checkEmoji).ConfigureAwait(false);
                         await currentBotMessage.CreateReactionAsync(crossEmoji).ConfigureAwait(false);
@@ -210,11 +210,11 @@ namespace Scruffy.Services.Raid
                         {
                             if (userReaction.Result.Emoji.Id == checkEmoji.Id)
                             {
-                                currentBotMessage = await commandContext.Channel
+                                currentBotMessage = await commandContextContainer.Channel
                                                                         .SendMessageAsync(LocalizationGroup.GetText("ReactWithEmojiPrompt", "Please react with emoji which should be assigned to the role."))
                                                                         .ConfigureAwait(false);
 
-                                reaction = await interactivity.WaitForReactionAsync(currentBotMessage, commandContext.User)
+                                reaction = await interactivity.WaitForReactionAsync(currentBotMessage, commandContextContainer.User)
                                                               .ConfigureAwait(false);
 
                                 if (reaction.TimedOut == false && reaction.Result.Emoji.Id > 0)
@@ -224,12 +224,12 @@ namespace Scruffy.Services.Raid
                                                           DiscordEmojiId = reaction.Result.Emoji.Id
                                                       };
 
-                                    currentBotMessage = await commandContext.Channel
+                                    currentBotMessage = await commandContextContainer.Channel
                                                                             .SendMessageAsync(LocalizationGroup.GetText("DescriptionPrompt", "Please enter the description of the role."))
                                                                             .ConfigureAwait(false);
 
-                                    currentUserResponse = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContext.User.Id
-                                                                                                      && obj.ChannelId == commandContext.Channel.Id)
+                                    currentUserResponse = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContextContainer.User.Id
+                                                                                                      && obj.ChannelId == commandContextContainer.Channel.Id)
                                                                              .ConfigureAwait(false);
 
                                     if (currentUserResponse.TimedOut == false)
@@ -276,7 +276,7 @@ namespace Scruffy.Services.Raid
                             }
                         }
 
-                        await commandContext.Channel
+                        await commandContextContainer.Channel
                                             .SendMessageAsync(LocalizationGroup.GetText("CreationCompletedMessage", "The creation is completed."))
                                             .ConfigureAwait(false);
                     }
@@ -287,11 +287,11 @@ namespace Scruffy.Services.Raid
         /// <summary>
         /// Starting the role editing assistant
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
+        /// <param name="commandContextContainer">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        private async Task RunEditAssistantAsync(CommandContext commandContext)
+        private async Task RunEditAssistantAsync(CommandContextContainer commandContextContainer)
         {
-            var roleId = await SelectRoleAsync(commandContext, null).ConfigureAwait(false);
+            var roleId = await SelectRoleAsync(commandContextContainer, null).ConfigureAwait(false);
             if (roleId != null)
             {
                 var builder = new DiscordEmbedBuilder();
@@ -321,7 +321,7 @@ namespace Scruffy.Services.Raid
                                          .OrderBy(obj => obj.Description)
                                          .First();
 
-                    builder.WithDescription($"{DiscordEmoji.FromGuildEmote(commandContext.Client, roles.DiscordEmojiId)} - {roles.Description}");
+                    builder.WithDescription($"{DiscordEmoji.FromGuildEmote(commandContextContainer.Client, roles.DiscordEmojiId)} - {roles.Description}");
 
                     if (roles.SubRoles.Any())
                     {
@@ -329,7 +329,7 @@ namespace Scruffy.Services.Raid
 
                         foreach (var role in roles.SubRoles)
                         {
-                            rolesFieldText.Append(DiscordEmoji.FromGuildEmote(commandContext.Client, role.DiscordEmojiId));
+                            rolesFieldText.Append(DiscordEmoji.FromGuildEmote(commandContextContainer.Client, role.DiscordEmojiId));
                             rolesFieldText.Append(" - ");
                             rolesFieldText.Append(role.Description);
                             rolesFieldText.Append('\n');
@@ -339,12 +339,12 @@ namespace Scruffy.Services.Raid
                     }
                 }
 
-                var addSubRoleEmoji = DiscordEmojiService.GetAddEmoji(commandContext.Client);
-                var descriptionEmoji = DiscordEmojiService.GetEditEmoji(commandContext.Client);
-                var editSubRoleEmoji = DiscordEmojiService.GetEdit2Emoji(commandContext.Client);
-                var emojiEmoji = DiscordEmojiService.GetEmojiEmoji(commandContext.Client);
-                var deleteSubRoleEmoji = DiscordEmojiService.GetTrashCanEmoji(commandContext.Client);
-                var cancelEmoji = DiscordEmojiService.GetCrossEmoji(commandContext.Client);
+                var addSubRoleEmoji = DiscordEmojiService.GetAddEmoji(commandContextContainer.Client);
+                var descriptionEmoji = DiscordEmojiService.GetEditEmoji(commandContextContainer.Client);
+                var editSubRoleEmoji = DiscordEmojiService.GetEdit2Emoji(commandContextContainer.Client);
+                var emojiEmoji = DiscordEmojiService.GetEmojiEmoji(commandContextContainer.Client);
+                var deleteSubRoleEmoji = DiscordEmojiService.GetTrashCanEmoji(commandContextContainer.Client);
+                var cancelEmoji = DiscordEmojiService.GetCrossEmoji(commandContextContainer.Client);
 
                 var commands = new StringBuilder();
                 commands.AppendLine(LocalizationGroup.GetFormattedText("RoleEditEditDescriptionCommand", "{0} Edit description", descriptionEmoji));
@@ -361,13 +361,13 @@ namespace Scruffy.Services.Raid
 
                 builder.AddField(LocalizationGroup.GetText("AssistantCommandsField", "Commands"), commands.ToString());
 
-                var message = await commandContext.Channel
+                var message = await commandContextContainer.Channel
                                                   .SendMessageAsync(builder)
                                                   .ConfigureAwait(false);
 
-                var userReactionTask = commandContext.Client
+                var userReactionTask = commandContextContainer.Client
                                                      .GetInteractivity()
-                                                     .WaitForReactionAsync(message, commandContext.User);
+                                                     .WaitForReactionAsync(message, commandContextContainer.User);
 
                 await message.CreateReactionAsync(descriptionEmoji).ConfigureAwait(false);
                 await message.CreateReactionAsync(emojiEmoji).ConfigureAwait(false);
@@ -386,23 +386,23 @@ namespace Scruffy.Services.Raid
                 {
                     if (userReaction.Result.Emoji.Id == addSubRoleEmoji.Id)
                     {
-                        await RunAddSubRoleAssistantAsync(commandContext, roleId.Value).ConfigureAwait(false);
+                        await RunAddSubRoleAssistantAsync(commandContextContainer, roleId.Value).ConfigureAwait(false);
                     }
                     else if (userReaction.Result.Emoji.Id == descriptionEmoji.Id)
                     {
-                        await RunEditDescriptionAssistantAsync(commandContext, roleId.Value).ConfigureAwait(false);
+                        await RunEditDescriptionAssistantAsync(commandContextContainer, roleId.Value).ConfigureAwait(false);
                     }
                     else if (userReaction.Result.Emoji.Id == editSubRoleEmoji.Id)
                     {
-                        await RunEditSubRoleAssistantAsync(commandContext, roleId.Value).ConfigureAwait(false);
+                        await RunEditSubRoleAssistantAsync(commandContextContainer, roleId.Value).ConfigureAwait(false);
                     }
                     else if (userReaction.Result.Emoji.Id == emojiEmoji.Id)
                     {
-                        await RunEditEmojiAssistantAsync(commandContext, roleId.Value).ConfigureAwait(false);
+                        await RunEditEmojiAssistantAsync(commandContextContainer, roleId.Value).ConfigureAwait(false);
                     }
                     else if (userReaction.Result.Emoji.Id == deleteSubRoleEmoji.Id)
                     {
-                        await RunDeleteSubRoleAssistantAsync(commandContext, roleId.Value).ConfigureAwait(false);
+                        await RunDeleteSubRoleAssistantAsync(commandContextContainer, roleId.Value).ConfigureAwait(false);
                     }
                 }
             }
@@ -411,19 +411,19 @@ namespace Scruffy.Services.Raid
         /// <summary>
         /// Editing the description of the role
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
+        /// <param name="commandContextContainer">Current command context</param>
         /// <param name="roleId">Id of the role</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        private async Task RunEditDescriptionAssistantAsync(CommandContext commandContext, long roleId)
+        private async Task RunEditDescriptionAssistantAsync(CommandContextContainer commandContextContainer, long roleId)
         {
-            await commandContext.Channel
+            await commandContextContainer.Channel
                                 .SendMessageAsync(LocalizationGroup.GetText("DescriptionPrompt", "Please enter the description of the role."))
                                 .ConfigureAwait(false);
 
-            var response = await commandContext.Client
+            var response = await commandContextContainer.Client
                                                .GetInteractivity()
-                                               .WaitForMessageAsync(obj => obj.ChannelId == commandContext.Channel.Id
-                                                                        && obj.Author.Id == commandContext.Member.Id)
+                                               .WaitForMessageAsync(obj => obj.ChannelId == commandContextContainer.Channel.Id
+                                                                        && obj.Author.Id == commandContextContainer.Member.Id)
                                                .ConfigureAwait(false);
 
             if (response.TimedOut == false)
@@ -440,18 +440,18 @@ namespace Scruffy.Services.Raid
         /// <summary>
         /// Editing the emoji of the role
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
+        /// <param name="commandContextContainer">Current command context</param>
         /// <param name="roleId">Id of the role</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        private async Task RunEditEmojiAssistantAsync(CommandContext commandContext, long roleId)
+        private async Task RunEditEmojiAssistantAsync(CommandContextContainer commandContextContainer, long roleId)
         {
-            var message = await commandContext.Channel
+            var message = await commandContextContainer.Channel
                                               .SendMessageAsync(LocalizationGroup.GetText("ReactWithEmojiPrompt", "Please react with emoji which should be assigned to the role."))
                                               .ConfigureAwait(false);
 
-            var response = await commandContext.Client
+            var response = await commandContextContainer.Client
                                                .GetInteractivity()
-                                               .WaitForReactionAsync(message, commandContext.Member)
+                                               .WaitForReactionAsync(message, commandContextContainer.Member)
                                                .ConfigureAwait(false);
 
             if (response.TimedOut == false)
@@ -468,18 +468,18 @@ namespace Scruffy.Services.Raid
         /// <summary>
         /// Editing a new sub role
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
+        /// <param name="commandContextContainer">Current command context</param>
         /// <param name="mainRoleId">Id of the role</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        private async Task RunAddSubRoleAssistantAsync(CommandContext commandContext, long mainRoleId)
+        private async Task RunAddSubRoleAssistantAsync(CommandContextContainer commandContextContainer, long mainRoleId)
         {
-            var interactivity = commandContext.Client.GetInteractivity();
+            var interactivity = commandContextContainer.Client.GetInteractivity();
 
-            var currentBotMessage = await commandContext.Channel
+            var currentBotMessage = await commandContextContainer.Channel
                                         .SendMessageAsync(LocalizationGroup.GetText("ReactWithEmojiPrompt", "Please react with emoji which should be assigned to the role."))
                                         .ConfigureAwait(false);
 
-            var reaction = await interactivity.WaitForReactionAsync(currentBotMessage, commandContext.User)
+            var reaction = await interactivity.WaitForReactionAsync(currentBotMessage, commandContextContainer.User)
                                               .ConfigureAwait(false);
 
             if (reaction.TimedOut == false && reaction.Result.Emoji.Id > 0)
@@ -490,12 +490,12 @@ namespace Scruffy.Services.Raid
                                       DiscordEmojiId = reaction.Result.Emoji.Id
                                   };
 
-                currentBotMessage = await commandContext.Channel
+                currentBotMessage = await commandContextContainer.Channel
                                                         .SendMessageAsync(LocalizationGroup.GetText("DescriptionPrompt", "Please enter the description of the role."))
                                                         .ConfigureAwait(false);
 
-                var currentUserResponse = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContext.User.Id
-                                                                                  && obj.ChannelId == commandContext.Channel.Id)
+                var currentUserResponse = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContextContainer.User.Id
+                                                                                  && obj.ChannelId == commandContextContainer.Channel.Id)
                                                          .ConfigureAwait(false);
 
                 if (currentUserResponse.TimedOut == false)
@@ -514,20 +514,20 @@ namespace Scruffy.Services.Raid
         /// <summary>
         /// Editing a sub role
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
+        /// <param name="commandContextContainer">Current command context</param>
         /// <param name="mainRoleId">Id of the role</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        private async Task RunEditSubRoleAssistantAsync(CommandContext commandContext, long mainRoleId)
+        private async Task RunEditSubRoleAssistantAsync(CommandContextContainer commandContextContainer, long mainRoleId)
         {
-            var roleId = await SelectRoleAsync(commandContext, mainRoleId).ConfigureAwait(false);
+            var roleId = await SelectRoleAsync(commandContextContainer, mainRoleId).ConfigureAwait(false);
             if (roleId != null)
             {
                 var builder = new DiscordEmbedBuilder();
                 builder.WithTitle(LocalizationGroup.GetText("RoleEditTitle", "Raid role configuration"));
 
-                var descriptionEmoji = DiscordEmojiService.GetEditEmoji(commandContext.Client);
-                var emojiEmoji = DiscordEmojiService.GetEmojiEmoji(commandContext.Client);
-                var cancelEmoji = DiscordEmojiService.GetCrossEmoji(commandContext.Client);
+                var descriptionEmoji = DiscordEmojiService.GetEditEmoji(commandContextContainer.Client);
+                var emojiEmoji = DiscordEmojiService.GetEmojiEmoji(commandContextContainer.Client);
+                var cancelEmoji = DiscordEmojiService.GetCrossEmoji(commandContextContainer.Client);
 
                 var commands = new StringBuilder();
                 commands.AppendLine(LocalizationGroup.GetFormattedText("RoleEditEditDescriptionCommand", "{0} Edit description", descriptionEmoji));
@@ -536,13 +536,13 @@ namespace Scruffy.Services.Raid
 
                 builder.AddField(LocalizationGroup.GetText("AssistantCommandsField", "Commands"), commands.ToString());
 
-                var message = await commandContext.Channel
+                var message = await commandContextContainer.Channel
                                                   .SendMessageAsync(builder)
                                                   .ConfigureAwait(false);
 
-                var userReactionTask = commandContext.Client
+                var userReactionTask = commandContextContainer.Client
                                                      .GetInteractivity()
-                                                     .WaitForReactionAsync(message, commandContext.User);
+                                                     .WaitForReactionAsync(message, commandContextContainer.User);
 
                 await message.CreateReactionAsync(descriptionEmoji).ConfigureAwait(false);
                 await message.CreateReactionAsync(emojiEmoji).ConfigureAwait(false);
@@ -553,11 +553,11 @@ namespace Scruffy.Services.Raid
                 {
                     if (userReaction.Result.Emoji.Id == descriptionEmoji.Id)
                     {
-                        await RunEditDescriptionAssistantAsync(commandContext, roleId.Value).ConfigureAwait(false);
+                        await RunEditDescriptionAssistantAsync(commandContextContainer, roleId.Value).ConfigureAwait(false);
                     }
                     else if (userReaction.Result.Emoji.Id == emojiEmoji.Id)
                     {
-                        await RunEditEmojiAssistantAsync(commandContext, roleId.Value).ConfigureAwait(false);
+                        await RunEditEmojiAssistantAsync(commandContextContainer, roleId.Value).ConfigureAwait(false);
                     }
                 }
             }
@@ -566,24 +566,24 @@ namespace Scruffy.Services.Raid
         /// <summary>
         /// Deletion of a sub role
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
+        /// <param name="commandContextContainer">Current command context</param>
         /// <param name="mainRoleId">Id of the role</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        private async Task RunDeleteSubRoleAssistantAsync(CommandContext commandContext, long mainRoleId)
+        private async Task RunDeleteSubRoleAssistantAsync(CommandContextContainer commandContextContainer, long mainRoleId)
         {
-            var roleId = await SelectRoleAsync(commandContext, mainRoleId).ConfigureAwait(false);
+            var roleId = await SelectRoleAsync(commandContextContainer, mainRoleId).ConfigureAwait(false);
             if (roleId != null)
             {
-                var checkEmoji = DiscordEmojiService.GetCheckEmoji(commandContext.Client);
-                var crossEmoji = DiscordEmojiService.GetCrossEmoji(commandContext.Client);
+                var checkEmoji = DiscordEmojiService.GetCheckEmoji(commandContextContainer.Client);
+                var crossEmoji = DiscordEmojiService.GetCrossEmoji(commandContextContainer.Client);
 
-                var message = await commandContext.Channel
+                var message = await commandContextContainer.Channel
                                                   .SendMessageAsync(LocalizationGroup.GetText("DeleteRolePrompt", "Are you sure you want to delete the role?"))
                                                   .ConfigureAwait(false);
 
-                var userReactionTask = commandContext.Client
+                var userReactionTask = commandContextContainer.Client
                                                      .GetInteractivity()
-                                                     .WaitForReactionAsync(message, commandContext.User);
+                                                     .WaitForReactionAsync(message, commandContextContainer.User);
 
                 await message.CreateReactionAsync(checkEmoji).ConfigureAwait(false);
                 await message.CreateReactionAsync(crossEmoji).ConfigureAwait(false);
@@ -604,24 +604,23 @@ namespace Scruffy.Services.Raid
         /// <summary>
         /// Starting the role deletion assistant
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
+        /// <param name="commandContextContainer">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        private async Task RunDeleteAssistantAsync(CommandContext commandContext)
+        private async Task RunDeleteAssistantAsync(CommandContextContainer commandContextContainer)
         {
-            var roleId = await SelectRoleAsync(commandContext, null)
-                             .ConfigureAwait(false);
+            var roleId = await SelectRoleAsync(commandContextContainer, null).ConfigureAwait(false);
             if (roleId != null)
             {
-                var checkEmoji = DiscordEmojiService.GetCheckEmoji(commandContext.Client);
-                var crossEmoji = DiscordEmojiService.GetCrossEmoji(commandContext.Client);
+                var checkEmoji = DiscordEmojiService.GetCheckEmoji(commandContextContainer.Client);
+                var crossEmoji = DiscordEmojiService.GetCrossEmoji(commandContextContainer.Client);
 
-                var message = await commandContext.Channel
+                var message = await commandContextContainer.Channel
                                                   .SendMessageAsync(LocalizationGroup.GetText("DeleteRolePrompt", "Are you sure you want to delete the role?"))
                                                   .ConfigureAwait(false);
 
-                var userReactionTask = commandContext.Client
+                var userReactionTask = commandContextContainer.Client
                                                      .GetInteractivity()
-                                                     .WaitForReactionAsync(message, commandContext.User);
+                                                     .WaitForReactionAsync(message, commandContextContainer.User);
 
                 await message.CreateReactionAsync(checkEmoji).ConfigureAwait(false);
                 await message.CreateReactionAsync(crossEmoji).ConfigureAwait(false);
@@ -642,10 +641,10 @@ namespace Scruffy.Services.Raid
         /// <summary>
         /// Selection a role
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
+        /// <param name="commandContextContainer">Current command context</param>
         /// <param name="mainRoleId">Id of the main role</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        private async Task<long?> SelectRoleAsync(CommandContext commandContext, long? mainRoleId)
+        private async Task<long?> SelectRoleAsync(CommandContextContainer commandContextContainer, long? mainRoleId)
         {
             long? roleId = null;
 
@@ -677,7 +676,7 @@ namespace Scruffy.Services.Raid
                     rolesFieldText.Append('`');
                     rolesFieldText.Append(i);
                     rolesFieldText.Append("` - ");
-                    rolesFieldText.Append(DiscordEmoji.FromGuildEmote(commandContext.Client, role.DiscordEmojiId));
+                    rolesFieldText.Append(DiscordEmoji.FromGuildEmote(commandContextContainer.Client, role.DiscordEmojiId));
                     rolesFieldText.Append(' ');
                     rolesFieldText.Append(role.Description);
                     rolesFieldText.Append('\n');
@@ -690,14 +689,14 @@ namespace Scruffy.Services.Raid
                 builder.AddField(LocalizationGroup.GetText("AssistantRolesField", "Roles"), rolesFieldText.ToString());
             }
 
-            await commandContext.Channel
+            await commandContextContainer.Channel
                                 .SendMessageAsync(builder)
                                 .ConfigureAwait(false);
 
-            var currentUserResponse = await commandContext.Client
+            var currentUserResponse = await commandContextContainer.Client
                                                           .GetInteractivity()
-                                                          .WaitForMessageAsync(obj => obj.Author.Id == commandContext.User.Id
-                                                                                   && obj.ChannelId == commandContext.Channel.Id)
+                                                          .WaitForMessageAsync(obj => obj.Author.Id == commandContextContainer.User.Id
+                                                                                   && obj.ChannelId == commandContextContainer.Channel.Id)
                                                           .ConfigureAwait(false);
 
             if (currentUserResponse.TimedOut == false

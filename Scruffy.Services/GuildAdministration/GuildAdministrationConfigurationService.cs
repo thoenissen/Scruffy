@@ -1,7 +1,5 @@
 ﻿using System.Threading.Tasks;
 
-using DSharpPlus.CommandsNext;
-
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.GuildAdministration;
 using Scruffy.Services.Calendar;
@@ -54,9 +52,9 @@ namespace Scruffy.Services.GuildAdministration
         /// </summary>
         /// <param name="commandContext">Command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task CreateGuildConfiguration(CommandContext commandContext)
+        public async Task CreateGuildConfiguration(CommandContextContainer commandContext)
         {
-            var data = await DialogHandler.RunForm<CreateGuildAdministrationFormData>(CommandContextContainer.FromCommandContext(commandContext), true)
+            var data = await DialogHandler.RunForm<CreateGuildAdministrationFormData>(commandContext, true)
                                           .ConfigureAwait(false);
 
             if (data != null)
@@ -80,7 +78,7 @@ namespace Scruffy.Services.GuildAdministration
         /// </summary>
         /// <param name="commandContext">Command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task SetNotificationChannel(CommandContext commandContext)
+        public async Task SetNotificationChannel(CommandContextContainer commandContext)
         {
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
@@ -98,7 +96,7 @@ namespace Scruffy.Services.GuildAdministration
         /// </summary>
         /// <param name="commandContext">Command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task SetReminderChannel(CommandContext commandContext)
+        public async Task SetReminderChannel(CommandContextContainer commandContext)
         {
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
@@ -116,7 +114,7 @@ namespace Scruffy.Services.GuildAdministration
         /// </summary>
         /// <param name="commandContext">Command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task SetupMotd(CommandContext commandContext)
+        public async Task SetupMotd(CommandContextContainer commandContext)
         {
             var message = await commandContext.Channel
                                               .SendMessageAsync(LocalizationGroup.GetText("MotdBuilding", "The message of the day will be build with the next refresh."))
@@ -146,9 +144,9 @@ namespace Scruffy.Services.GuildAdministration
         /// </summary>
         /// <param name="commandContext">Command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task SetupCalendar(CommandContext commandContext)
+        public async Task SetupCalendar(CommandContextContainer commandContext)
         {
-            var data = await DialogHandler.RunForm<SetGuildCalendarFormData>(CommandContextContainer.FromCommandContext(commandContext), true)
+            var data = await DialogHandler.RunForm<SetGuildCalendarFormData>(commandContext, true)
                                           .ConfigureAwait(false);
 
             if (data != null)
