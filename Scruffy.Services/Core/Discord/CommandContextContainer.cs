@@ -21,6 +21,9 @@ namespace Scruffy.Services.Core.Discord
         public CommandContextContainer(CommandContext commandContext)
         {
             Client = commandContext.Client;
+            CommandsNext = commandContext.CommandsNext;
+            Prefix = commandContext.Prefix;
+
             Guild = commandContext.Guild;
             LastUserMessage = Message = commandContext.Message;
             Channel = commandContext.Channel;
@@ -57,6 +60,16 @@ namespace Scruffy.Services.Core.Discord
         public DiscordClient Client { get; private set; }
 
         /// <summary>
+        /// This is the class which handles command registration, management, and execution.
+        /// </summary>
+        public CommandsNextExtension CommandsNext { get; private set; }
+
+        /// <summary>
+        /// Prefix
+        /// </summary>
+        public string Prefix { get; private set; }
+
+        /// <summary>
         /// Current guild
         /// </summary>
         public DiscordGuild Guild { get; private set; }
@@ -87,5 +100,26 @@ namespace Scruffy.Services.Core.Discord
         public DiscordMessage LastUserMessage { get; internal set; }
 
         #endregion // Properties
+
+        #region Methods
+
+        /// <summary>
+        /// Show help of the given command
+        /// </summary>
+        /// <param name="commandName">Command name</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task ShowHelp(string commandName)
+        {
+            var cmd = CommandsNext.FindCommand("help " + commandName, out var customArgs);
+            if (cmd != null)
+            {
+                var fakeContext = CommandsNext.CreateFakeContext(Member ?? User, Channel, "help " + commandName, Prefix, cmd, customArgs);
+
+                await CommandsNext.ExecuteCommandAsync(fakeContext)
+                                  .ConfigureAwait(false);
+            }
+        }
+
+        #endregion // Methods
     }
 }

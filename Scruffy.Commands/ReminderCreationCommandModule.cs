@@ -66,7 +66,7 @@ namespace Scruffy.Commands
         /// <param name="message">Optional message of the reminder</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("in")]
-        public Task RemindMe(CommandContext commandContext, string timeSpan, [RemainingText] string message = null)
+        public Task RemindMeIn(CommandContext commandContext, string timeSpan, [RemainingText] string message = null)
         {
             return InvokeAsync(commandContext,
                                async commandContextContainer =>
@@ -109,6 +109,117 @@ namespace Scruffy.Commands
                                                }
                                            }
                                        }
+                                   }
+                                   else
+                                   {
+                                       await commandContextContainer.ShowHelp("reminder in")
+                                                                    .ConfigureAwait(false);
+                                   }
+                               });
+        }
+
+        /// <summary>
+        /// Creation of a one time reminder
+        /// </summary>
+        /// <param name="commandContext">Current command context</param>
+        /// <param name="time">Time</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("at")]
+        public Task RemindMeAt(CommandContext commandContext, string time)
+        {
+            return RemindMeAt(commandContext, time, null, null);
+        }
+
+        /// <summary>
+        /// Creation of a one time reminder
+        /// </summary>
+        /// <param name="commandContext">Current command context</param>
+        /// <param name="time">Time</param>
+        /// <param name="message">Optional message of the reminder</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("at")]
+        public Task RemindMeAt(CommandContext commandContext, string time, string message)
+        {
+            return RemindMeAt(commandContext, time, message, null);
+        }
+
+        /// <summary>
+        /// Creation of a one time reminder
+        /// </summary>
+        /// <param name="commandContext">Current command context</param>
+        /// <param name="date">Date</param>
+        /// <param name="time">Time</param>
+        /// <param name="message">Optional message of the reminder</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("at")]
+        public Task RemindMeAt(CommandContext commandContext, string date, string time, [RemainingText] string message)
+        {
+            return InvokeAsync(commandContext,
+                               async commandContextContainer =>
+                               {
+                                   var checkUser = UserManagementService.CheckUserAsync(commandContext.User.Id);
+
+                                   DateTime? timeStamp = null;
+                                   string reminderMessage = null;
+
+                                   if (new Regex(@"\d\d\d\d-\d\d-\d\d").IsMatch(date)
+                                    && DateTime.TryParseExact(date, "yyyy-MM-dd", null, DateTimeStyles.None, out var parsedDate)
+                                    && string.IsNullOrWhiteSpace(time) == false
+                                    && new Regex(@"\d\d:\d\d").IsMatch(time)
+                                    && TimeSpan.TryParseExact(time, "hh\\:mm", null, out var parsedDateTime))
+                                   {
+                                       timeStamp = parsedDate.Add(parsedDateTime);
+                                       reminderMessage = message;
+                                   }
+                                   else if (new Regex(@"\d\d:\d\d").IsMatch(date)
+                                         && TimeSpan.TryParseExact(date, "hh\\:mm", null, out var parsedTime))
+                                   {
+                                       timeStamp = DateTime.Today.Add(parsedTime);
+
+                                       if (timeStamp.Value < DateTime.Now)
+                                       {
+                                           timeStamp = timeStamp.Value.AddDays(1);
+                                       }
+
+                                       reminderMessage = time;
+                                       if (string.IsNullOrWhiteSpace(message) == false)
+                                       {
+                                           reminderMessage += " " + message;
+                                       }
+                                   }
+
+                                   if (timeStamp != null)
+                                   {
+                                       await checkUser.ConfigureAwait(false);
+
+                                       using (var dbFactory = RepositoryFactory.CreateInstance())
+                                       {
+                                           var reminderEntity = new OneTimeReminderEntity
+                                                                {
+                                                                    UserId = commandContext.User.Id,
+                                                                    ChannelId = commandContext.Channel.Id,
+                                                                    TimeStamp = timeStamp.Value,
+                                                                    Message = reminderMessage
+                                                                };
+
+                                           if (dbFactory.GetRepository<OneTimeReminderRepository>()
+                                                        .Add(reminderEntity))
+                                           {
+                                               JobScheduler.AddOneTimeReminder(reminderEntity.TimeStamp, reminderEntity.Id);
+
+                                               if (commandContext.Channel.IsPrivate == false)
+                                               {
+                                                   await commandContext.Channel
+                                                                       .DeleteMessageAsync(commandContext.Message, LocalizationGroup.GetText("CommandProgressed", "Command progressed."))
+                                                                       .ConfigureAwait(false);
+                                               }
+                                           }
+                                       }
+                                   }
+                                   else
+                                   {
+                                       await commandContextContainer.ShowHelp("reminder at")
+                                                                    .ConfigureAwait(false);
                                    }
                                });
         }

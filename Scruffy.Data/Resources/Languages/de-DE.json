@@ -49,7 +49,7 @@
     "AccountAdministrationService": {
       "InvalidToken": "Der angegebene Api Kay hat nicht alle benötigten Berechtigungen.",
       "SwitchToPrivate": "Ich habe deinen Befehl als private Nachricht beantwortet.",
-      "NoAccounts": "Du hast aktuell keine konfigurierten Acccounts." 
+      "NoAccounts": "Du hast aktuell keine konfigurierten Acccounts."
     },
     "FractalLfgMessageBuilder": {
       "Today": "Heute",
@@ -243,7 +243,7 @@
     "GuildBankService": {
       "BankValidation": "Banküberprüfung",
       "BankValidationResult": "Folgend sind die Ergebnis der Überprüfung der Gildenbank aufgelistet.",
-      "NoApiKey": "Die Gilde wurde noch nicht konfiguriert." 
+      "NoApiKey": "Die Gilde wurde noch nicht konfiguriert."
     },
     "CalendarTemplateDeletionDialogElement": {
       "DeletePrompt": "Soll die Schablone wirklich gelöscht werden?"
@@ -374,7 +374,7 @@
       "TitleSearch": "Titelsuche",
       "TextSearch": "Textsuche"
     },
-    "DiscordErrorHandler": {
+    "LocatedCommandModuleBase": {
       "CommandFailedMessage": "Der Befehl konnte nicht ausgeführt werden. Aber dafür habe ich einen Fehlercode ({0}) und ein lustiges Katzenbild für dich."
     },
     "HelpCommandFormatter": {
@@ -449,7 +449,7 @@
       "guild calendar": "Kalendereinrichtung",
       "guild emblem random": "Zufallsgenerierung von Gilden-Emblemen",
       "guild bank": "Gildenbank",
-      "guild bank check": "Überprüfung" ,
+      "guild bank check": "Überprüfung",
 
       "calendar": "Kalenderverwaltung",
       "calendar add": "Hinzufügen eines einmaligen Events",
@@ -474,6 +474,15 @@
       "reminder in timeSpan description": "Zeitraum bis zur Erinnerung",
       "reminder in message": "Nachricht",
       "reminder in message description": "Optional Nachricht",
+      "reminder at": "Erinnerung zum angegebenem Zeitpunkt",
+      "reminder at time": "Zeit",
+      "reminder at time format": "mm:dd",
+      "reminder at time description": "Zeit der Erinnerung",
+      "reminder at date": "Datum",
+      "reminder at date format": "yyyy-MM-dd",
+      "reminder at date description": "Datum der Erinnerung",
+      "reminder at message": "Nachricht",
+      "reminder at message description": "Optionale Nachricht",
 
       "reminder weekly": "Erstellung einer wöchentlichen Erinnerung",
 

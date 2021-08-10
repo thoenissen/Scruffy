@@ -22,6 +22,15 @@ namespace Scruffy.Commands
     /// </summary>
     public class LocatedCommandModuleBase : BaseCommandModule
     {
+        #region Fields
+
+        /// <summary>
+        /// Internal localization group
+        /// </summary>
+        private Lazy<LocalizationGroup> _internalLocalizationGroup;
+
+        #endregion // Fields
+
         #region Constructor
 
         /// <summary>
@@ -31,6 +40,7 @@ namespace Scruffy.Commands
         public LocatedCommandModuleBase(LocalizationService localizationService)
         {
             LocalizationGroup = localizationService.GetGroup(GetType().Name);
+            _internalLocalizationGroup = new Lazy<LocalizationGroup>(() => localizationService.GetGroup(nameof(LocatedCommandModuleBase)));
         }
 
         #endregion // Constructor
@@ -108,7 +118,7 @@ namespace Scruffy.Commands
 
                                 await using (var stream = new MemoryStream(webClient.DownloadData(gifUrl)))
                                 {
-                                    var builder = new DiscordMessageBuilder().WithContent(LocalizationGroup.GetFormattedText("CommandFailedMessage", "The command could not be executed. But I have an error code ({0}) and funny cat picture.", logEntry.Id))
+                                    var builder = new DiscordMessageBuilder().WithContent(_internalLocalizationGroup.Value.GetFormattedText("CommandFailedMessage", "The command could not be executed. But I have an error code ({0}) and funny cat picture.", logEntry.Id))
                                                                              .WithFile("cat.gif", stream);
 
                                     await commandContextContainer.Channel

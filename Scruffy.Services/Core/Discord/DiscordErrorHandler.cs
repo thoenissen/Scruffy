@@ -102,6 +102,20 @@ namespace Scruffy.Services.Core.Discord
 
                 cmd ??= e.Context.CommandsNext.FindCommand("help", out customArgs);
 
+                if (e.Context.Channel.IsPrivate)
+                {
+                    if (e.Context.Client.PrivateChannels.ContainsKey(e.Context.Channel.Id) == false)
+                    {
+                        if (e.Context.Member != null)
+                        {
+                            await e.Context
+                                   .Member
+                                   .CreateDmChannelAsync()
+                                   .ConfigureAwait(false);
+                        }
+                    }
+                }
+
                 var fakeContext = e.Context.CommandsNext.CreateFakeContext(e.Context.Member ?? e.Context.User, e.Context.Channel, "help " + e.Command.QualifiedName, e.Context.Prefix, cmd, customArgs);
 
                 await e.Context

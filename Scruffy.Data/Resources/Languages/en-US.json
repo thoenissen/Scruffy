@@ -374,7 +374,7 @@
       "TitleSearch": "Title search",
       "TextSearch": "Text search"
     },
-    "DiscordErrorHandler": {
+    "LocatedCommandModuleBase": {
       "CommandFailedMessage": "The command could not be executed. But I have an error code ({0}) and funny cat picture."
     },
     "HelpCommandFormatter": {
@@ -443,7 +443,7 @@
       "guild calendar": "Calendar setup",
       "guild emblem random": "Random generation of guild emblems",
       "guild bank": "Guild bank",
-      "guild bank check": "Validation", 
+      "guild bank check": "Validation",
 
       "calendar": "Calendar administration",
       "calendar add": "Adding a one time event",
@@ -465,6 +465,12 @@
       "reminder in timeSpan": "Time",
       "reminder in timeSpan format": "xh/m/s",
       "reminder in message": "Message",
+      "reminder at": "Reminder at the given time",
+      "reminder at time": "Time",
+      "reminder at time format": "mm:dd",
+      "reminder at date": "Date",
+      "reminder at date format": "yyyy-MM-dd",
+      "reminder at message": "Message",
 
       "reminder weekly": "Weekly reminder creation",
 
