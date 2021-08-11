@@ -127,7 +127,8 @@ namespace Scruffy.Commands
                 await MessageBuilder.RefreshMessageAsync(configurationId)
                                     .ConfigureAwait(false);
 
-                await commandContext.Message.DeleteAsync()
+                await commandContext.Message
+                                    .DeleteAsync()
                                     .ConfigureAwait(false);
             }
 

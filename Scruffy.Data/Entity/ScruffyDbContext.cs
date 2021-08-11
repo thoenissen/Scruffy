@@ -291,6 +291,10 @@ namespace Scruffy.Data.Entity
             // Guild
             modelBuilder.Entity<GuildEntity>();
             modelBuilder.Entity<GuildLogEntryEntity>();
+            modelBuilder.Entity<GuildSpecialRankConfigurationEntity>();
+            modelBuilder.Entity<GuildSpecialRankPointsEntity>();
+            modelBuilder.Entity<GuildSpecialRankProtocolEntryEntity>();
+            modelBuilder.Entity<GuildSpecialRankRoleAssignmentEntity>();
 
             modelBuilder.Entity<GuildLogEntryEntity>()
                         .HasKey(obj => new
@@ -303,6 +307,35 @@ namespace Scruffy.Data.Entity
                         .HasMany(obj => obj.GuildLogEntries)
                         .WithOne(obj => obj.Guild)
                         .HasForeignKey(obj => obj.GuildId);
+
+            modelBuilder.Entity<GuildSpecialRankConfigurationEntity>()
+                        .HasMany(obj => obj.GuildSpecialRankPoints)
+                        .WithOne(obj => obj.GuildSpecialRankConfiguration)
+                        .HasForeignKey(obj => obj.ConfigurationId);
+
+            modelBuilder.Entity<GuildSpecialRankConfigurationEntity>()
+                        .HasMany(obj => obj.GuildSpecialRankProtocolEntries)
+                        .WithOne(obj => obj.GuildSpecialRankConfiguration)
+                        .HasForeignKey(obj => obj.ConfigurationId);
+
+            modelBuilder.Entity<GuildSpecialRankConfigurationEntity>()
+                        .HasMany(obj => obj.GuildSpecialRankRoleAssignments)
+                        .WithOne(obj => obj.GuildSpecialRankConfiguration)
+                        .HasForeignKey(obj => obj.ConfigurationId);
+
+            modelBuilder.Entity<GuildSpecialRankPointsEntity>()
+                        .HasKey(obj => new
+                        {
+                            obj.ConfigurationId,
+                            obj.UserId
+                        });
+
+            modelBuilder.Entity<GuildSpecialRankRoleAssignmentEntity>()
+                        .HasKey(obj => new
+                        {
+                            obj.ConfigurationId,
+                            obj.DiscordRoleId
+                        });
 
             // Account
             modelBuilder.Entity<AccountEntity>();

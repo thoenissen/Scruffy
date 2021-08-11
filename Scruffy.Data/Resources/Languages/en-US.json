@@ -245,6 +245,74 @@
       "BankValidationResult": "In the following message you can see the results of the bank validation.",
       "NoApiKey": "The guild ist not configured."
     },
+    "GuildAdministrationSpecialRankDeletionDialogElement": {
+      "DeletePrompt": "Are you sure you want to delete the special rank?"
+    },
+    "GuildAdministrationSpecialRankDescriptionDialogElement": {
+      "Message": "Please enter the description which should be used."
+    },
+    "GuildAdministrationSpecialRankDiscordRoleDialogElement": {
+      "ChooseRoleTitle": "Role selection",
+      "ChooseRoleDescription": "Please choose one of the following roles:",
+      "RolesField": "Roles"
+    },
+    "GuildAdministrationSpecialRankEditDialogElement": {
+      "ChooseCommandTitle": "Special rank configuration",
+      "ChooseCommandDescription": "With this assistant you are able to configure the special rank.",
+      "Description": "Description",
+      "DiscordRole": "Discord role",
+      "MaximumPoints": "Maximum points",
+      "GrantThreshold": "Grant threshold",
+      "RemoveThreshold": "Remove threshold",
+      "General": "General",
+      "Roles": "Roles",
+      "CommandTitle": "Commands",
+      "EditDescriptionCommand": "{0} Edit description",
+      "EditRoleCommand": "{0} Edit role",
+      "EditMaximumPointsCommand": "{0} Edit maximum points",
+      "EditGrantThresholdCommand": "{0} Edit grant threshold",
+      "EditRemoveThresholdCommand": "{0} Edit remove threshold",
+      "AddPointRoleCommand": "{0} Add point role",
+      "RemovePointRoleCommand": "{0} Remove point role",
+      "CancelCommand": "{0} Cancel"
+    },
+    "GuildAdministrationSpecialRankGrantThresholdDialogElement": {
+      "Message": "Please enter the grant threshold which should be used."
+    },
+    "GuildAdministrationSpecialRankMaximumPointsDialogElement": {
+      "Message": "Please enter the maximum points which can be acquired."
+    },
+    "GuildAdministrationSpecialRankRemoveThresholdDialogElement": {
+      "Message": "Please enter the remove threshold which should be used."
+    },
+    "GuildAdministrationSpecialRankRoleAssignmentDiscordRoleDialogElement": {
+      "ChooseRoleTitle": "Role selection",
+      "ChooseRoleDescription": "Please choose one of the following roles:",
+      "RolesField": "Roles"
+    },
+    "GuildAdministrationSpecialRankRoleAssignmentPointsDialogElement": {
+      "Message": "Please enter the points which should be used."
+    },
+    "GuildAdministrationSpecialRankRoleAssignmentSelectionDialogElement": {
+      "ChooseAssignmentTitle": "Assignment selection",
+      "ChooseAssignmentDescription": "Please choose one of the following assignments:",
+      "AssignmentsField": "Assignments"
+    },
+    "GuildAdministrationSpecialRankSelectionDialogElement": {
+      "ChooseSpecialRankTitle": "Special rank selection",
+      "ChooseSpecialRankDescription": "Please choose one of the following special ranks:",
+      "RanksField": "Ranks"
+    },
+    "GuildAdministrationSpecialRankSetupDialogElement": {
+      "ChooseCommandTitle": "Guild special rank configuration",
+      "ChooseCommandDescription": "With this assistant you are able to configure the guild special ranks. The following special ranks are already created:",
+      "RanksFields": "Ranks",
+      "AddCommand": "{0} Add rank",
+      "EditCommand": "{0} Edit rank",
+      "DeleteCommand": "{0} Delete rank",
+      "CancelCommand": "{0} Cancel",
+      "CommandTitle": "Commands"
+    },
     "CalendarTemplateDeletionDialogElement": {
       "DeletePrompt": "Are you sure you want to delete the template?"
     },

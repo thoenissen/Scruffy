@@ -245,6 +245,75 @@
       "BankValidationResult": "Folgend sind die Ergebnis der Überprüfung der Gildenbank aufgelistet.",
       "NoApiKey": "Die Gilde wurde noch nicht konfiguriert."
     },
+
+    "GuildAdministrationSpecialRankDeletionDialogElement": {
+      "DeletePrompt": "Soll der Spezial-Rang wirklich gelöscht werden?"
+    },
+    "GuildAdministrationSpecialRankDescriptionDialogElement": {
+      "Message": "Gib bitte die zu verwendende Bezeichnung ein."
+    },
+    "GuildAdministrationSpecialRankDiscordRoleDialogElement": {
+      "ChooseRoleTitle": "Rollenauswahl",
+      "ChooseRoleDescription": "Wähle bitte eine der folgenden Rollen aus:",
+      "RolesField": "Rollen"
+    },
+    "GuildAdministrationSpecialRankEditDialogElement": {
+      "ChooseCommandTitle": "Spezial-Rang Konfiguration",
+      "ChooseCommandDescription": "Mit diesem Assistenten kannst du die Spezial-Ränge konfigurieren.",
+      "Description": "Bezeichnung",
+      "DiscordRole": "Discord-Rolle",
+      "MaximumPoints": "Maximale Anzahl Punkte",
+      "GrantThreshold": "'Hinzufügen'-Schwellenwert",
+      "RemoveThreshold": "'Entfernen'-Schwellenwert",
+      "General": "Allgemein",
+      "Roles": "Rollen",
+      "CommandTitle": "Befehle",
+      "EditDescriptionCommand": "{0} Bezeichnung bearbeiten",
+      "EditRoleCommand": "{0} Discord-Rolle bearbeiten",
+      "EditMaximumPointsCommand": "{0} Maximale Anzahl Punkte bearbeiten",
+      "EditGrantThresholdCommand": "{0} 'Hinzufügen'-Schwellenwert",
+      "EditRemoveThresholdCommand": "{0} 'Entfernen'-Schwellenwert bearbeiten",
+      "AddPointRoleCommand": "{0} Punkte-Rolle zuweisen",
+      "RemovePointRoleCommand": "{0} Punkte-Rolle entfernen",
+      "CancelCommand": "{0} Abbrechen"
+    },
+    "GuildAdministrationSpecialRankGrantThresholdDialogElement": {
+      "Message": "Gib bitte den zu verwendenden 'Hinzufügen'-Schwellenwert ein."
+    },
+    "GuildAdministrationSpecialRankMaximumPointsDialogElement": {
+      "Message": "Gib bitte die maximal zu erreichenden Punkte ein."
+    },
+    "GuildAdministrationSpecialRankRemoveThresholdDialogElement": {
+      "Message": "Gib bitte den zu verwendenden 'Entfernen'-Schwellenwert ein."
+    },
+    "GuildAdministrationSpecialRankRoleAssignmentDiscordRoleDialogElement": {
+      "ChooseRoleTitle": "Rollenauswahl",
+      "ChooseRoleDescription": "Wähle bitte eine der folgenden Rollen aus:",
+      "RolesField": "Rollen"
+    },
+    "GuildAdministrationSpecialRankRoleAssignmentPointsDialogElement": {
+      "Message": "Gibt die zuverwendende Anzahl Punkte ein."
+    },
+    "GuildAdministrationSpecialRankRoleAssignmentSelectionDialogElement": {
+      "ChooseAssignmentTitle": "Zuweisungsauswahl",
+      "ChooseAssignmentDescription": "Wähle bitte eine der folgenden Zuweisungen aus:",
+      "AssignmentsField": "Zuweisungen"
+    },
+    "GuildAdministrationSpecialRankSelectionDialogElement": {
+      "ChooseSpecialRankTitle": "Spezial-Rang-Auswahl",
+      "ChooseSpecialRankDescription": "Wähle bitte einen der folgenden Spezial-Ränge:",
+      "RanksField": "Ränge"
+    },
+    "GuildAdministrationSpecialRankSetupDialogElement": {
+      "ChooseCommandTitle": "Spezial-Rang-Konfiguration",
+      "ChooseCommandDescription": "Mit diesem Assistenten können die Spezial-Ränge konfiguriert werden. Die folgenden Spezial-Ränge wurden bereits erstellt:",
+      "RanksFields": "Ränge",
+      "AddCommand": "{0} Rang hinzufügen",
+      "EditCommand": "{0} Rang bearbeiten",
+      "DeleteCommand": "{0} Rang löschen",
+      "CancelCommand": "{0} Abbrechen",
+      "CommandTitle": "Befehle"
+    },
     "CalendarTemplateDeletionDialogElement": {
       "DeletePrompt": "Soll die Schablone wirklich gelöscht werden?"
     },

@@ -4,8 +4,10 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 
 using Scruffy.Services.Core;
+using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Discord.Attributes;
 using Scruffy.Services.GuildAdministration;
+using Scruffy.Services.GuildAdministration.DialogElements;
 
 namespace Scruffy.Commands
 {
@@ -247,5 +249,57 @@ namespace Scruffy.Commands
         }
 
         #endregion Emblem
+
+        #region Special ranks
+
+        /// <summary>
+        /// Special ranks
+        /// </summary>
+        [Group("specialrank")]
+        [ModuleLifespan(ModuleLifespan.Transient)]
+        public class GuildAdministrationSpecialRankCommandModule : LocatedCommandModuleBase
+        {
+            #region Constructor
+
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="localizationService">Localization service</param>
+            public GuildAdministrationSpecialRankCommandModule(LocalizationService localizationService)
+                : base(localizationService)
+            {
+            }
+
+            #endregion // Constructor
+
+            #region Methods
+
+            /// <summary>
+            /// Special ranks configuration
+            /// </summary>
+            /// <param name="commandContext">Current command context</param>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+            [Command("setup")]
+            [RequireGuild]
+            public Task Setup(CommandContext commandContext)
+            {
+                return InvokeAsync(commandContext,
+                                   async commandContextContainer =>
+                                   {
+                                       bool repeat;
+
+                                       do
+                                       {
+                                           repeat = await DialogHandler.Run<GuildAdministrationSpecialRankSetupDialogElement, bool>(commandContextContainer).ConfigureAwait(false);
+                                       }
+                                       while (repeat);
+                                   });
+            }
+
+            #endregion // Methods
+        }
+
+        #endregion // Special ranks
+
     }
 }
