@@ -43,7 +43,7 @@ namespace Scruffy.Data.Entity.Tables.GuildAdministration
         /// <summary>
         /// Amount of points
         /// </summary>
-        public ulong? Amount { get; set; }
+        public double? Amount { get; set; }
 
         #region Navigation properties
 

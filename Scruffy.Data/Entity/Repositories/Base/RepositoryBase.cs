@@ -287,6 +287,12 @@ namespace Scruffy.Data.Entity.Repositories.Base
             return success;
         }
 
+        /// <summary>
+        /// Returning the internal DbContext
+        /// </summary>
+        /// <returns>DbContext</returns>
+        protected ScruffyDbContext GetDbContext() => _dbContext;
+
         #endregion // Methods
     }
 }

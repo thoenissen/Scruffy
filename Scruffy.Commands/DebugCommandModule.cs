@@ -2,11 +2,14 @@
 
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
 
 using Scruffy.Services.Calendar;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord.Attributes;
+using Scruffy.Services.CoreData;
 using Scruffy.Services.Debug;
+using Scruffy.Services.GuildAdministration;
 using Scruffy.Services.Raid;
 
 namespace Scruffy.Commands
@@ -307,6 +310,104 @@ namespace Scruffy.Commands
                 await commandContext.Message
                                     .DeleteAsync()
                                     .ConfigureAwait(false);
+            }
+
+            #endregion // Methods
+        }
+
+        #endregion // Raid
+
+        #region User
+
+        /// <summary>
+        /// Listing
+        /// </summary>
+        [Group("user")]
+        [ModuleLifespan(ModuleLifespan.Transient)]
+        public class DebugUserModule : LocatedCommandModuleBase
+        {
+            #region Constructor
+
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="localizationService">Localization service</param>
+            public DebugUserModule(LocalizationService localizationService)
+                : base(localizationService)
+            {
+            }
+
+            #endregion // Constructor
+
+            #region Properties
+
+            /// <summary>
+            /// User management service
+            /// </summary>
+            public UserManagementService UserManagementService { get; set; }
+
+            #endregion // Properties
+
+            #region Methods
+
+            /// <summary>
+            /// Refresh calendar message
+            /// </summary>
+            /// <param name="commandContext">Current command context</param>
+            /// <param name="discordUser">User</param>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+            [Command("add")]
+            public async Task RefreshAppointments(CommandContext commandContext, DiscordUser discordUser)
+            {
+                await UserManagementService.CheckUserAsync(discordUser.Id)
+                                           .ConfigureAwait(false);
+
+                await commandContext.Message
+                                    .CreateReactionAsync(DiscordEmojiService.GetCheckEmoji(commandContext.Client))
+                                    .ConfigureAwait(false);
+            }
+
+            #endregion // Methods
+        }
+
+        #endregion // Raid
+
+        #region User
+
+        /// <summary>
+        /// Guild
+        /// </summary>
+        [Group("guild")]
+        [ModuleLifespan(ModuleLifespan.Transient)]
+        public class DebugGuildModule : LocatedCommandModuleBase
+        {
+            #region Constructor
+
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="localizationService">Localization service</param>
+            public DebugGuildModule(LocalizationService localizationService)
+                : base(localizationService)
+            {
+            }
+
+            #endregion // Constructor
+
+            #region Methods
+
+            /// <summary>
+            /// Refresh calendar message
+            /// </summary>
+            /// <param name="commandContext">Current command context</param>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+            [Command("specialrank_job")]
+            public async Task ExecuteSpecialRankJob(CommandContext commandContext)
+            {
+                var job = new GuildSpecialRankPointsJob();
+
+                await job.ExecuteAsync()
+                         .ConfigureAwait(false);
             }
 
             #endregion // Methods

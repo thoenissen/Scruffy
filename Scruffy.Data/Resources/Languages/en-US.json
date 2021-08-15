@@ -313,6 +313,14 @@
       "CancelCommand": "{0} Cancel",
       "CommandTitle": "Commands"
     },
+    "GuildSpecialRankService": {
+      "Overview": "Points overview"
+    },
+    "GuildSpecialRankPointsJob": {
+      "RoleAssignment": "Role assignment",
+      "RemovedRoles": "Removals",
+      "GrantedRoles": "Assignments"
+    },
     "CalendarTemplateDeletionDialogElement": {
       "DeletePrompt": "Are you sure you want to delete the template?"
     },
@@ -431,7 +439,7 @@
     "CalendarMessageBuilderService": {
       "WeekNumber": "Week",
       "Motd": "Message of the day:",
-      "MotdFormat": "{0} - {1}, {2:dd.MM} at {2:HH:mm}"
+      "MotdFormat": "{0} - {1}, {2:dd.MM.} at {2:HH:mm}"
     },
     "CalendarOneTimeDayDialogElement": {
       "Message": "Please enter the day. (yyyy-MM-dd)"

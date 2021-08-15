@@ -314,6 +314,14 @@
       "CancelCommand": "{0} Abbrechen",
       "CommandTitle": "Befehle"
     },
+    "GuildSpecialRankService": {
+      "Overview": "Punkteübersicht"
+    },
+    "GuildSpecialRankPointsJob": {
+      "RoleAssignment": "Rollenzuweisung",
+      "RemovedRoles": "Entfernung",
+      "GrantedRoles": "Zuweisung"
+    },
     "CalendarTemplateDeletionDialogElement": {
       "DeletePrompt": "Soll die Schablone wirklich gelöscht werden?"
     },
@@ -432,7 +440,7 @@
     "CalendarMessageBuilderService": {
       "WeekNumber": "KW",
       "Motd": "Nachricht des Tages:",
-      "MotdFormat": "{0} - {1}, {2:dd.MM} um {2:HH:mm} Uhr"
+      "MotdFormat": "{0} - {1}, {2:dd.MM.} um {2:HH:mm} Uhr"
     },
     "CalendarOneTimeDayDialogElement": {
       "Message": "Gbt bitte den Tag ein. (yyyy-MM-dd)"

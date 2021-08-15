@@ -11,7 +11,14 @@ namespace Scruffy.Services.Core.JobScheduler
     /// </summary>
     public abstract class LocatedAsyncJob : IJob
     {
+        #region Fields
+
+        /// <summary>
+        /// Localization group
+        /// </summary>
         private LocalizationGroup _localizationGroup;
+
+        #endregion // Fields
 
         #region Methods
 
@@ -19,9 +26,9 @@ namespace Scruffy.Services.Core.JobScheduler
         /// Executes the job
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        protected abstract Task ExecuteAsync();
+        public abstract Task ExecuteAsync();
 
-        #endregion
+        #endregion // Methods
 
         #region Properties
 

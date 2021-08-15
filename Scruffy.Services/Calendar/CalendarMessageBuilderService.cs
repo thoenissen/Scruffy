@@ -92,7 +92,7 @@ namespace Scruffy.Services.Calendar
                     foreach (var appointment in calendar.Appointments)
                     {
                         var currentLine = LocalizationGroup.GetFormattedText("MotdFormat",
-                                                                             "{0} - {1}, {2:dd.MM} at {2:HH:mm}",
+                                                                             "{0} - {1}, {2:dd.MM.} at {2:HH:mm}",
                                                                              appointment.Description,
                                                                              LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(appointment.TimeStamp.DayOfWeek),
                                                                              appointment.TimeStamp);

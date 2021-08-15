@@ -49,7 +49,7 @@ namespace Scruffy.Services.Fractals
         /// Executes the job
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        protected override async Task ExecuteAsync()
+        public override async Task ExecuteAsync()
         {
             await using (var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider())
             {

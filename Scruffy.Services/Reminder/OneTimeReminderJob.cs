@@ -35,7 +35,7 @@ namespace Scruffy.Services.Reminder
         /// Executes the job.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        protected override async Task ExecuteAsync()
+        public override async Task ExecuteAsync()
         {
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {

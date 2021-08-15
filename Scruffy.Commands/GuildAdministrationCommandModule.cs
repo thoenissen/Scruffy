@@ -272,6 +272,11 @@ namespace Scruffy.Commands
 
             #endregion // Constructor
 
+            /// <summary>
+            /// Special rank service
+            /// </summary>
+            public GuildSpecialRankService SpecialRankService { get; set; }
+
             #region Methods
 
             /// <summary>
@@ -293,6 +298,23 @@ namespace Scruffy.Commands
                                            repeat = await DialogHandler.Run<GuildAdministrationSpecialRankSetupDialogElement, bool>(commandContextContainer).ConfigureAwait(false);
                                        }
                                        while (repeat);
+                                   });
+            }
+
+            /// <summary>
+            /// Special ranks configuration
+            /// </summary>
+            /// <param name="commandContext">Current command context</param>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+            [Command("overview")]
+            [RequireGuild]
+            public Task Overview(CommandContext commandContext)
+            {
+                return InvokeAsync(commandContext,
+                                   async commandContextContainer =>
+                                   {
+                                       await SpecialRankService.PostOverview(commandContextContainer)
+                                                               .ConfigureAwait(false);
                                    });
             }
 

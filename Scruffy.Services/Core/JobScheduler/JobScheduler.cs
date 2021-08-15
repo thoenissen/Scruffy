@@ -45,9 +45,13 @@ namespace Scruffy.Services.Core.JobScheduler
             await Task.Run(JobManager.Start).ConfigureAwait(false);
 
             JobManager.AddJob<FractalDailyRefreshJob>(obj => obj.ToRunEvery(1).Days().At(0, 0));
+
             JobManager.AddJob<CalendarRefreshJob>(obj => obj.ToRunEvery(1).Days().At(0, 0));
+
             JobManager.AddJob<BackupJob>(obj => obj.ToRunEvery(1).Days().At(2, 0));
+
             JobManager.AddJob<GuildLogImportJob>(obj => obj.ToRunEvery(5).Minutes());
+            JobManager.AddJob<GuildSpecialRankPointsJob>(obj => obj.ToRunEvery(1).Days().At(0, 0));
 
             // fractal reminders
             await using (var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider())

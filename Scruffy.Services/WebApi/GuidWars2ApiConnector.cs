@@ -11,6 +11,7 @@ using Scruffy.Data.Json.GuildWars2.Account;
 using Scruffy.Data.Json.GuildWars2.Core;
 using Scruffy.Data.Json.GuildWars2.Guild;
 using Scruffy.Data.Json.GuildWars2.Items;
+using Scruffy.Data.Json.GuildWars2.Quaggans;
 
 namespace Scruffy.Services.WebApi
 {
@@ -226,6 +227,43 @@ namespace Scruffy.Services.WebApi
                     var jsonResult = await reader.ReadToEndAsync().ConfigureAwait(false);
 
                     return JsonConvert.DeserializeObject<Item>(jsonResult);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Request the list of quaggans
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task<List<string>> GetQuaggans()
+        {
+            using (var response = await CreateRequest($"https://api.guildwars2.com/v2/quaggans").GetResponseAsync()
+                                                                                                .ConfigureAwait(false))
+            {
+                using (var reader = new StreamReader(response.GetResponseStream()))
+                {
+                    var jsonResult = await reader.ReadToEndAsync().ConfigureAwait(false);
+
+                    return JsonConvert.DeserializeObject<List<string>>(jsonResult);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Request the quaggan data
+        /// </summary>
+        /// <param name="name">Name</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task<QuagganData> GetQuaggan(string name)
+        {
+            using (var response = await CreateRequest($"https://api.guildwars2.com/v2/quaggans/{name}").GetResponseAsync()
+                                                                                                       .ConfigureAwait(false))
+            {
+                using (var reader = new StreamReader(response.GetResponseStream()))
+                {
+                    var jsonResult = await reader.ReadToEndAsync().ConfigureAwait(false);
+
+                    return JsonConvert.DeserializeObject<QuagganData>(jsonResult);
                 }
             }
         }
