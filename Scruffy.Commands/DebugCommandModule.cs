@@ -18,6 +18,7 @@ namespace Scruffy.Commands
     /// Debug commands
     /// </summary>
     [Group("debug")]
+    [Aliases("d")]
     [RequireDeveloperPermissions]
     [ModuleLifespan(ModuleLifespan.Transient)]
     public class DebugCommandModule : LocatedCommandModuleBase
@@ -41,6 +42,7 @@ namespace Scruffy.Commands
         /// Listing
         /// </summary>
         [Group("dump")]
+        [Aliases("d")]
         [ModuleLifespan(ModuleLifespan.Transient)]
         public class DebugDumpModule : LocatedCommandModuleBase
         {
@@ -91,6 +93,7 @@ namespace Scruffy.Commands
         /// Listing
         /// </summary>
         [Group("raid")]
+        [Aliases("r")]
         [ModuleLifespan(ModuleLifespan.Transient)]
         public class DebugRaidModule : LocatedCommandModuleBase
         {
@@ -146,6 +149,7 @@ namespace Scruffy.Commands
         /// Listing
         /// </summary>
         [Group("list")]
+        [Aliases("l")]
         [ModuleLifespan(ModuleLifespan.Transient)]
         public class DebugListModule : LocatedCommandModuleBase
         {
@@ -232,6 +236,7 @@ namespace Scruffy.Commands
         /// Listing
         /// </summary>
         [Group("calendar")]
+        [Aliases("c")]
         [ModuleLifespan(ModuleLifespan.Transient)]
         public class DebugCalendarModule : LocatedCommandModuleBase
         {
@@ -323,6 +328,7 @@ namespace Scruffy.Commands
         /// Listing
         /// </summary>
         [Group("user")]
+        [Aliases("u")]
         [ModuleLifespan(ModuleLifespan.Transient)]
         public class DebugUserModule : LocatedCommandModuleBase
         {
@@ -378,6 +384,7 @@ namespace Scruffy.Commands
         /// Guild
         /// </summary>
         [Group("guild")]
+        [Aliases("g")]
         [ModuleLifespan(ModuleLifespan.Transient)]
         public class DebugGuildModule : LocatedCommandModuleBase
         {

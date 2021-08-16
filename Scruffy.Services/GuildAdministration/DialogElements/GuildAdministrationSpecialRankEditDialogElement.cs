@@ -71,7 +71,9 @@ namespace Scruffy.Services.GuildAdministration.DialogElements
                                                                    {
                                                                        obj2.DiscordRoleId,
                                                                        obj2.Points
-                                                                   })
+                                                                   }),
+                                        IgnoreRoles = obj.GuildSpecialRankIgnoreRoleAssignments
+                                                         .Select(obj => obj.DiscordRoleId)
                                     })
                                     .First();
 
@@ -91,7 +93,17 @@ namespace Scruffy.Services.GuildAdministration.DialogElements
                 }
 
                 fieldBuilder.Append("\u200B");
-                builder.AddField(LocalizationGroup.GetText("Roles", "Roles"), fieldBuilder.ToString());
+                builder.AddField(LocalizationGroup.GetText("Roles", "Point roles"), fieldBuilder.ToString());
+
+                fieldBuilder.Clear();
+
+                foreach (var role in data.IgnoreRoles)
+                {
+                    fieldBuilder.AppendLine(CommandContext.Guild.GetRole(role).Mention);
+                }
+
+                fieldBuilder.Append("\u200B");
+                builder.AddField(LocalizationGroup.GetText("IgnoreRoles", "Ignore roles"), fieldBuilder.ToString());
             }
         }
 
@@ -253,6 +265,51 @@ namespace Scruffy.Services.GuildAdministration.DialogElements
                                                          dbFactory.GetRepository<GuildSpecialRankRoleAssignmentRepository>()
                                                                   .Remove(obj => obj.ConfigurationId == rankId
                                                                               && obj.DiscordRoleId == roleId);
+                                                     }
+
+                                                     return true;
+                                                 }
+                                      },
+                                      new ReactionData<bool>
+                                      {
+                                          Emoji = DiscordEmojiService.GetAdd2Emoji(CommandContext.Client),
+                                          CommandText = LocalizationGroup.GetFormattedText("AddIgnoreRoleCommand", "{0} Add ignore role", DiscordEmojiService.GetAdd2Emoji(CommandContext.Client)),
+                                          Func = async () =>
+                                                 {
+                                                     var discordId = await RunSubElement<GuildAdministrationSpecialRankRoleAssignmentDiscordRoleDialogElement, ulong>().ConfigureAwait(false);
+
+                                                     using (var dbFactory = RepositoryFactory.CreateInstance())
+                                                     {
+                                                         var rankId = DialogContext.GetValue<long>("RankId");
+
+                                                         dbFactory.GetRepository<GuildSpecialRankIgnoreRoleAssignmentRepository>()
+                                                                  .AddOrRefresh(obj => obj.ConfigurationId == rankId
+                                                                               && obj.DiscordRoleId == discordId,
+                                                                           obj =>
+                                                                           {
+                                                                               obj.ConfigurationId = rankId;
+                                                                               obj.DiscordRoleId = discordId;
+                                                                           });
+                                                     }
+
+                                                     return true;
+                                                 }
+                                      },
+                                      new ReactionData<bool>
+                                      {
+                                          Emoji = DiscordEmojiService.GetTrashCan2Emoji(CommandContext.Client),
+                                          CommandText = LocalizationGroup.GetFormattedText("RemoveIgnoreRoleCommand", "{0} Remove ignore role", DiscordEmojiService.GetTrashCan2Emoji(CommandContext.Client)),
+                                          Func = async () =>
+                                                 {
+                                                     var discordId = await RunSubElement<GuildAdministrationSpecialRankRoleAssignmentDiscordRoleDialogElement, ulong>().ConfigureAwait(false);
+
+                                                     using (var dbFactory = RepositoryFactory.CreateInstance())
+                                                     {
+                                                         var rankId = DialogContext.GetValue<long>("RankId");
+
+                                                         dbFactory.GetRepository<GuildSpecialRankRoleAssignmentRepository>()
+                                                                  .Remove(obj => obj.ConfigurationId == rankId
+                                                                              && obj.DiscordRoleId == discordId);
                                                      }
 
                                                      return true;

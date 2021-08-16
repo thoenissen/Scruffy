@@ -295,6 +295,7 @@ namespace Scruffy.Data.Entity
             modelBuilder.Entity<GuildSpecialRankPointsEntity>();
             modelBuilder.Entity<GuildSpecialRankProtocolEntryEntity>();
             modelBuilder.Entity<GuildSpecialRankRoleAssignmentEntity>();
+            modelBuilder.Entity<GuildSpecialRankIgnoreRoleAssignmentEntity>();
 
             modelBuilder.Entity<GuildLogEntryEntity>()
                         .HasKey(obj => new
@@ -323,6 +324,11 @@ namespace Scruffy.Data.Entity
                         .WithOne(obj => obj.GuildSpecialRankConfiguration)
                         .HasForeignKey(obj => obj.ConfigurationId);
 
+            modelBuilder.Entity<GuildSpecialRankConfigurationEntity>()
+                        .HasMany(obj => obj.GuildSpecialRankIgnoreRoleAssignments)
+                        .WithOne(obj => obj.GuildSpecialRankConfiguration)
+                        .HasForeignKey(obj => obj.ConfigurationId);
+
             modelBuilder.Entity<GuildSpecialRankPointsEntity>()
                         .HasKey(obj => new
                         {
@@ -336,6 +342,13 @@ namespace Scruffy.Data.Entity
                             obj.ConfigurationId,
                             obj.DiscordRoleId
                         });
+
+            modelBuilder.Entity<GuildSpecialRankIgnoreRoleAssignmentEntity>()
+                        .HasKey(obj => new
+                                       {
+                                           obj.ConfigurationId,
+                                           obj.DiscordRoleId
+                                       });
 
             // Account
             modelBuilder.Entity<AccountEntity>();

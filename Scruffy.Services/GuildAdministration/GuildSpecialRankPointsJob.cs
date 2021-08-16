@@ -50,7 +50,9 @@ namespace Scruffy.Services.GuildAdministration
                                                                                          {
                                                                                              obj2.DiscordRoleId,
                                                                                              obj2.Points
-                                                                                         })
+                                                                                         }),
+                                                               IgnoreRoles = obj.GuildSpecialRankIgnoreRoleAssignments
+                                                                                .Select(obj2 => obj2.DiscordRoleId)
                                                            })
                                                            .ToList())
                     {
@@ -62,11 +64,14 @@ namespace Scruffy.Services.GuildAdministration
                         foreach (var user in await guild.GetAllMembersAsync()
                                                         .ConfigureAwait(false))
                         {
-                            foreach (var role in configuration.Roles)
+                            if (configuration.IgnoreRoles.Any(obj => user.Roles.Any(obj2 => obj2.Id == obj)) == false)
                             {
-                                if (user.Roles.Any(obj => obj.Id == role.DiscordRoleId))
+                                foreach (var role in configuration.Roles)
                                 {
-                                    points.Add((user.Id, role.Points));
+                                    if (user.Roles.Any(obj => obj.Id == role.DiscordRoleId))
+                                    {
+                                        points.Add((user.Id, role.Points));
+                                    }
                                 }
                             }
                         }
@@ -105,7 +110,9 @@ namespace Scruffy.Services.GuildAdministration
                                                                                                          {
                                                                                                              obj2.UserId,
                                                                                                              IsGrantRole = obj2.Points > obj.GrantThreshold
-                                                                                                         })
+                                                                                                         }),
+                                                                              IgnoreRoles = obj.GuildSpecialRankIgnoreRoleAssignments
+                                                                                               .Select(obj2 => obj2.DiscordRoleId)
                                                                           })
                                                            .ToList())
                     {
@@ -117,17 +124,20 @@ namespace Scruffy.Services.GuildAdministration
                         foreach (var user in await guild.GetAllMembersAsync()
                                                         .ConfigureAwait(false))
                         {
-                            var isRoleAssigned = user.Roles.Any(obj => obj.Id == configuration.DiscordRoleId);
-                            if (isRoleAssigned)
+                            if (configuration.IgnoreRoles.Any(obj => user.Roles.Any(obj2 => obj2.Id == obj)) == false)
                             {
-                                if (configuration.Users.Any(obj => obj.UserId == user.Id) == false)
+                                var isRoleAssigned = user.Roles.Any(obj => obj.Id == configuration.DiscordRoleId);
+                                if (isRoleAssigned)
                                 {
-                                    actions.Add((false, user));
+                                    if (configuration.Users.Any(obj => obj.UserId == user.Id) == false)
+                                    {
+                                        actions.Add((false, user));
+                                    }
                                 }
-                            }
-                            else if (configuration.Users.FirstOrDefault(obj => obj.UserId == user.Id)?.IsGrantRole == true)
-                            {
-                                actions.Add((true, user));
+                                else if (configuration.Users.FirstOrDefault(obj => obj.UserId == user.Id)?.IsGrantRole == true)
+                                {
+                                    actions.Add((true, user));
+                                }
                             }
                         }
 

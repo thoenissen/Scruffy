@@ -27,6 +27,7 @@ namespace Scruffy.Commands
     /// </summary>
     [ModuleLifespan(ModuleLifespan.Transient)]
     [Group("reminder")]
+    [Aliases("re")]
     public class ReminderCreationCommandModule : LocatedCommandModuleBase
     {
         #region Constructor

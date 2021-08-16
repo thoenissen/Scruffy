@@ -46,6 +46,13 @@ namespace Scruffy.Services.Core
         public static DiscordEmoji GetAddEmoji(DiscordClient discordClient) => GetEmoji(discordClient, "Add");
 
         /// <summary>
+        /// Get 'Add2'-Emoji
+        /// </summary>
+        /// <param name="discordClient">Discord client</param>
+        /// <returns>Emoji</returns>
+        public static DiscordEmoji GetAdd2Emoji(DiscordClient discordClient) => GetEmoji(discordClient, "Add2");
+
+        /// <summary>
         /// Get 'Check'-Emoji
         /// </summary>
         /// <param name="discordClient">Discord client</param>
@@ -100,6 +107,13 @@ namespace Scruffy.Services.Core
         /// <param name="discordClient">Discord client</param>
         /// <returns>Emoji</returns>
         public static DiscordEmoji GetTrashCanEmoji(DiscordClient discordClient) => GetEmoji(discordClient, "TrashCan");
+
+        /// <summary>
+        /// Get 'TrashCan2'-Emoji
+        /// </summary>
+        /// <param name="discordClient">Discord client</param>
+        /// <returns>Emoji</returns>
+        public static DiscordEmoji GetTrashCan2Emoji(DiscordClient discordClient) => GetEmoji(discordClient, "TrashCan2");
 
         /// <summary>
         /// Get 'Emoji'-Emoji

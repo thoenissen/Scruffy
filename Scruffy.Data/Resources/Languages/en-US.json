@@ -266,6 +266,7 @@
       "RemoveThreshold": "Remove threshold",
       "General": "General",
       "Roles": "Roles",
+      "IgnoreRoles": "Ignore roles",
       "CommandTitle": "Commands",
       "EditDescriptionCommand": "{0} Edit description",
       "EditRoleCommand": "{0} Edit role",
@@ -274,6 +275,8 @@
       "EditRemoveThresholdCommand": "{0} Edit remove threshold",
       "AddPointRoleCommand": "{0} Add point role",
       "RemovePointRoleCommand": "{0} Remove point role",
+      "AddIgnoreRoleCommand": "{0} Add ignore role",
+      "RemoveIgnoreRoleCommand": "{0} Remove ignore role",
       "CancelCommand": "{0} Cancel"
     },
     "GuildAdministrationSpecialRankGrantThresholdDialogElement": {

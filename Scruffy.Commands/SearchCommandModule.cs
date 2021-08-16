@@ -28,6 +28,7 @@ namespace Scruffy.Commands
     /// </summary>
     [ModuleLifespan(ModuleLifespan.Transient)]
     [Group("search")]
+    [Aliases("s")]
     public class SearchCommandModule : LocatedCommandModuleBase
     {
         #region Constructor

@@ -15,6 +15,7 @@ namespace Scruffy.Commands
     /// Administration of the Guild Wars 2 guild
     /// </summary>
     [Group("guild")]
+    [Aliases("g")]
     [ModuleLifespan(ModuleLifespan.Transient)]
     public class GuildAdministrationCommandModule : LocatedCommandModuleBase
     {
@@ -145,6 +146,7 @@ namespace Scruffy.Commands
         /// Guild emblem
         /// </summary>
         [Group("emblem")]
+        [Aliases("e")]
         [ModuleLifespan(ModuleLifespan.Transient)]
         public class GuildAdministrationEmblemCommandModule : LocatedCommandModuleBase
         {
@@ -256,6 +258,7 @@ namespace Scruffy.Commands
         /// Special ranks
         /// </summary>
         [Group("specialrank")]
+        [Aliases("s")]
         [ModuleLifespan(ModuleLifespan.Transient)]
         public class GuildAdministrationSpecialRankCommandModule : LocatedCommandModuleBase
         {

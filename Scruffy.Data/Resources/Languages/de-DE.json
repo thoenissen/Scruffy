@@ -267,6 +267,7 @@
       "RemoveThreshold": "'Entfernen'-Schwellenwert",
       "General": "Allgemein",
       "Roles": "Rollen",
+      "IgnoreRoles": "Zu ignorierende Rollen",
       "CommandTitle": "Befehle",
       "EditDescriptionCommand": "{0} Bezeichnung bearbeiten",
       "EditRoleCommand": "{0} Discord-Rolle bearbeiten",
@@ -275,6 +276,8 @@
       "EditRemoveThresholdCommand": "{0} 'Entfernen'-Schwellenwert bearbeiten",
       "AddPointRoleCommand": "{0} Punkte-Rolle zuweisen",
       "RemovePointRoleCommand": "{0} Punkte-Rolle entfernen",
+      "AddIgnoreRoleCommand": "{0} Zu ignorierende Rolle zuweisen",
+      "RemoveIgnoreRoleCommand": "{0} Zu ignorierende Rolle entfernen",
       "CancelCommand": "{0} Abbrechen"
     },
     "GuildAdministrationSpecialRankGrantThresholdDialogElement": {

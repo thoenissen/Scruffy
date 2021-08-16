@@ -13,6 +13,7 @@ namespace Scruffy.Commands
     /// Calendar commands
     /// </summary>
     [Group("account")]
+    [Aliases("a")]
     [ModuleLifespan(ModuleLifespan.Transient)]
     public class AccountCommandModule : LocatedCommandModuleBase
     {

@@ -26,6 +26,7 @@ namespace Scruffy.Commands
     /// Raid commands
     /// </summary>
     [Group("raid")]
+    [Aliases("ra")]
     [ModuleLifespan(ModuleLifespan.Transient)]
     public class RaidCommandModule : LocatedCommandModuleBase
     {
@@ -243,6 +244,7 @@ namespace Scruffy.Commands
         /// Role administration
         /// </summary>
         [Group("roles")]
+        [Aliases("r")]
         [ModuleLifespan(ModuleLifespan.Transient)]
         public class RaidRolesCommandModule : LocatedCommandModuleBase
         {
@@ -309,6 +311,7 @@ namespace Scruffy.Commands
         /// Template administration
         /// </summary>
         [Group("templates")]
+        [Aliases("t")]
         [ModuleLifespan(ModuleLifespan.Transient)]
         public class RaidTemplatesCommandModule : LocatedCommandModuleBase
         {
@@ -361,6 +364,7 @@ namespace Scruffy.Commands
         /// Template administration
         /// </summary>
         [Group("levels")]
+        [Aliases("l")]
         [ModuleLifespan(ModuleLifespan.Transient)]
         public class RaidExperienceLevelsCommandModule : LocatedCommandModuleBase
         {

@@ -13,6 +13,7 @@ namespace Scruffy.Commands
     /// Calendar commands
     /// </summary>
     [Group("calendar")]
+    [Aliases("ca")]
     [ModuleLifespan(ModuleLifespan.Transient)]
     public class CalendarCommandModule : LocatedCommandModuleBase
     {
@@ -66,6 +67,7 @@ namespace Scruffy.Commands
         /// Calendar template commands
         /// </summary>
         [Group("templates")]
+        [Aliases("t")]
         [ModuleLifespan(ModuleLifespan.Transient)]
         public class CalendarTemplateCommandModule : LocatedCommandModuleBase
         {
@@ -123,6 +125,7 @@ namespace Scruffy.Commands
         /// Calendar template commands
         /// </summary>
         [Group("schedules")]
+        [Aliases("s")]
         [ModuleLifespan(ModuleLifespan.Transient)]
         public class CalendarScheduleCommandModule : LocatedCommandModuleBase
         {

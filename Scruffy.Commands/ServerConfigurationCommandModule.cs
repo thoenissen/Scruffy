@@ -14,6 +14,7 @@ namespace Scruffy.Commands
     /// Configuration the server
     /// </summary>
     [Group("config")]
+    [Aliases("co")]
     [RequireAdministratorPermissions]
     public class ServerConfigurationCommandModule : LocatedCommandModuleBase
     {

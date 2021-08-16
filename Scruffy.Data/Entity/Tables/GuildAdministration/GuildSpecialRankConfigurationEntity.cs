@@ -75,6 +75,11 @@ namespace Scruffy.Data.Entity.Tables.GuildAdministration
         /// </summary>
         public virtual ICollection<GuildSpecialRankRoleAssignmentEntity> GuildSpecialRankRoleAssignments { get; set; }
 
+        /// <summary>
+        /// Ignore roles
+        /// </summary>
+        public virtual ICollection<GuildSpecialRankIgnoreRoleAssignmentEntity> GuildSpecialRankIgnoreRoleAssignments { get; set; }
+
         #endregion // Navigation properties
 
         #endregion // Properties

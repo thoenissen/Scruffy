@@ -27,6 +27,7 @@ namespace Scruffy.Commands
     /// Fractal lfg setup commands
     /// </summary>
     [Group("fractal")]
+    [Aliases("f")]
     [ModuleLifespan(ModuleLifespan.Transient)]
     public class FractalCommandModule : LocatedCommandModuleBase
     {
