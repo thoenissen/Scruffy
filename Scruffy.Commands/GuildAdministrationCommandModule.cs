@@ -3,11 +3,13 @@
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 
+using Scruffy.Data.Enumerations.GuildAdministration;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Discord.Attributes;
 using Scruffy.Services.GuildAdministration;
 using Scruffy.Services.GuildAdministration.DialogElements;
+using Scruffy.Services.GuildWars2;
 
 namespace Scruffy.Commands
 {
@@ -67,37 +69,55 @@ namespace Scruffy.Commands
         }
 
         /// <summary>
-        /// Setting the notification channel
+        /// Setting the special rank notification channel
         /// </summary>
         /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-        [Command("setNotificationChannel")]
+        [Command("setSpecialRankNotification")]
         [RequireGuild]
         [RequireAdministratorPermissions]
-        public Task SetNotificationChannel(CommandContext commandContext)
+        public Task SetSpecialRankNotification(CommandContext commandContext)
         {
             return InvokeAsync(commandContext,
                                async commandContextContainer =>
                                {
-                                   await ConfigurationService.SetNotificationChannel(commandContextContainer)
+                                   await ConfigurationService.SetNotificationChannel(commandContextContainer, GuildChannelConfigurationType.SpecialRankRankChange)
                                                              .ConfigureAwait(false);
                                });
         }
 
         /// <summary>
-        /// Setting the reminder channel
+        /// Setting the calendar notification channel
         /// </summary>
         /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-        [Command("setReminderChannel")]
+        [Command("setCalendarReminderNotification")]
         [RequireGuild]
         [RequireAdministratorPermissions]
-        public Task SetReminderChannel(CommandContext commandContext)
+        public Task SetCalendarReminderNotification(CommandContext commandContext)
         {
             return InvokeAsync(commandContext,
                                async commandContextContainer =>
                                {
-                                   await ConfigurationService.SetReminderChannel(commandContextContainer)
+                                   await ConfigurationService.SetNotificationChannel(commandContextContainer, GuildChannelConfigurationType.CalendarReminder)
+                                                             .ConfigureAwait(false);
+                               });
+        }
+
+        /// <summary>
+        /// Setting the guild log notification
+        /// </summary>
+        /// <param name="commandContext">Current command context</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("setGuildLogNotification")]
+        [RequireGuild]
+        [RequireAdministratorPermissions]
+        public Task SetGuildLogNotification(CommandContext commandContext)
+        {
+            return InvokeAsync(commandContext,
+                               async commandContextContainer =>
+                               {
+                                   await ConfigurationService.SetNotificationChannel(commandContextContainer, GuildChannelConfigurationType.GuildLogNotification)
                                                              .ConfigureAwait(false);
                                });
         }
@@ -203,6 +223,7 @@ namespace Scruffy.Commands
         /// Guild bank
         /// </summary>
         [Group("bank")]
+        [Aliases("b")]
         [ModuleLifespan(ModuleLifespan.Transient)]
         public class GuildAdministrationBankCommandModule : LocatedCommandModuleBase
         {
@@ -326,5 +347,60 @@ namespace Scruffy.Commands
 
         #endregion // Special ranks
 
+        #region Charts
+
+        /// <summary>
+        /// Guild bank
+        /// </summary>
+        [Group("charts")]
+        [Aliases("c")]
+        [ModuleLifespan(ModuleLifespan.Transient)]
+        public class GuildAdministrationChartCommandModule : LocatedCommandModuleBase
+        {
+            #region Constructor
+
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="localizationService">Localization service</param>
+            public GuildAdministrationChartCommandModule(LocalizationService localizationService)
+                : base(localizationService)
+            {
+            }
+
+            #endregion // Constructor
+
+            #region Properties
+
+            /// <summary>
+            /// Bank service
+            /// </summary>
+            public WorldsService WorldsService { get; set; }
+
+            #endregion // Properties
+
+            #region Methods
+
+            /// <summary>
+            /// Worlds overview
+            /// </summary>
+            /// <param name="commandContext">Current command context</param>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+            [Command("worlds")]
+            [RequireGuild]
+            public Task SetNotificationChannel(CommandContext commandContext)
+            {
+                return InvokeAsync(commandContext,
+                                   async commandContextContainer =>
+                                   {
+                                       await WorldsService.PostWorldsOverview(commandContextContainer)
+                                                          .ConfigureAwait(false);
+                                   });
+            }
+
+            #endregion // Methods
+        }
+
+        #endregion Emblem
     }
 }

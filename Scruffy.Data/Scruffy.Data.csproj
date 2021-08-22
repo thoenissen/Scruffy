@@ -51,10 +51,14 @@
     <Folder Include="Entity\Queryable\General\" />
     <Folder Include="Entity\Queryable\GuildAdministration\" />
     <Folder Include="Entity\Queryable\Account\" />
+    <Folder Include="Entity\Queryable\Games\" />
+    <Folder Include="Entity\Queryable\GuildWars2\" />
     <Folder Include="Entity\Queryable\Reminder\" />
     <Folder Include="Entity\Repositories\Fractals\" />
     <Folder Include="Entity\Repositories\General\" />
     <Folder Include="Entity\Repositories\Account\" />
+    <Folder Include="Entity\Repositories\Games\" />
+    <Folder Include="Entity\Repositories\GuildWars2\" />
     <Folder Include="Entity\Repositories\Raid\" />
     <Folder Include="Entity\Repositories\Reminder\" />
   </ItemGroup>

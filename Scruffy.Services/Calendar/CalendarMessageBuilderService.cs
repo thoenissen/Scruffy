@@ -7,9 +7,13 @@ using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.Entities;
 
+using Newtonsoft.Json;
+
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Calendar;
 using Scruffy.Data.Entity.Repositories.GuildAdministration;
+using Scruffy.Data.Enumerations.GuildAdministration;
+using Scruffy.Data.Json.Calendar;
 using Scruffy.Services.Core;
 
 namespace Scruffy.Services.Calendar
@@ -57,33 +61,41 @@ namespace Scruffy.Services.Calendar
                 var now = DateTime.Now;
 
                 var templates = dbFactory.GetRepository<CalendarAppointmentTemplateRepository>()
-                                            .GetQuery()
-                                            .Select(obj => obj);
+                                         .GetQuery()
+                                         .Select(obj => obj);
+
+                var channels = dbFactory.GetRepository<GuildChannelConfigurationRepository>()
+                                        .GetQuery()
+                                        .Select(obj => obj);
 
                 foreach (var calendar in dbFactory.GetRepository<GuildRepository>()
                                                   .GetQuery()
-                                                  .Where(obj => obj.MessageOfTheDayChannelId != null
-                                                             && obj.MessageOfTheDayMessageId != null
-                                                             && (serverId == null || obj.DiscordServerId == serverId))
+                                                  .Where(obj => serverId == null || obj.DiscordServerId == serverId)
                                                   .Select(obj => new
-                                                  {
-                                                      obj.CalendarTitle,
-                                                      obj.CalendarDescription,
-                                                      obj.MessageOfTheDayChannelId,
-                                                      obj.MessageOfTheDayMessageId,
-                                                      Appointments = templates.Where(obj2 => obj2.ServerId == obj.DiscordServerId)
-                                                                              .SelectMany(obj2 => obj2.CalendarAppointments
-                                                                                                      .Where(obj3 => obj3.TimeStamp > now
-                                                                                                                  && obj2.CalendarAppointments.Any(obj4 => obj4.TimeStamp > now
-                                                                                                                                                                && obj4.TimeStamp < obj3.TimeStamp) == false)
-                                                                                                      .Select(obj3 => new
-                                                                                                                      {
-                                                                                                                          obj3.TimeStamp,
-                                                                                                                          obj2.Description
-                                                                                                                      }))
-                                                                              .OrderBy(obj2 => obj2.TimeStamp)
-                                                                              .ToList()
-                                                  }))
+                                                                 {
+                                                                     Channel = channels.Where(obj2 => obj2.GuildId == obj.Id
+                                                                                                      && obj2.Type == GuildChannelConfigurationType.CalendarMessageOfTheDay)
+                                                                                       .Select(obj2 => new
+                                                                                                       {
+                                                                                                           obj2.ChannelId,
+                                                                                                           obj2.MessageId
+                                                                                                       })
+                                                                                       .FirstOrDefault(),
+                                                                     Appointments = templates.Where(obj2 => obj2.ServerId == obj.DiscordServerId)
+                                                                                             .SelectMany(obj2 => obj2.CalendarAppointments
+                                                                                                                     .Where(obj3 => obj3.TimeStamp > now
+                                                                                                                                 && obj2.CalendarAppointments.Any(obj4 => obj4.TimeStamp > now
+                                                                                                                                                                               && obj4.TimeStamp < obj3.TimeStamp) == false)
+                                                                                                                     .Select(obj3 => new
+                                                                                                                                     {
+                                                                                                                                         obj3.TimeStamp,
+                                                                                                                                         obj2.Description
+                                                                                                                                     }))
+                                                                                             .OrderBy(obj2 => obj2.TimeStamp)
+                                                                                             .ToList()
+                                                                 })
+                                                  .Where(obj => obj.Channel.ChannelId > 0)
+                                                  .ToList())
                 {
                     var messageBuilder = new StringBuilder();
 
@@ -107,12 +119,12 @@ namespace Scruffy.Services.Calendar
 
                     messageBuilder.Append("--------------------");
 
-                    var channel = await _discordClient.GetChannelAsync(calendar.MessageOfTheDayChannelId.Value)
+                    var channel = await _discordClient.GetChannelAsync(calendar.Channel.ChannelId)
                                                       .ConfigureAwait(false);
 
                     if (channel != null)
                     {
-                        var message = await channel.GetMessageAsync(calendar.MessageOfTheDayMessageId.Value)
+                        var message = await channel.GetMessageAsync(calendar.Channel.MessageId.Value)
                                                    .ConfigureAwait(false);
 
                         if (message != null)
@@ -146,17 +158,24 @@ namespace Scruffy.Services.Calendar
                                             .GetQuery()
                                             .Where(obj => obj.TimeStamp > now);
 
+                var channels = dbFactory.GetRepository<GuildChannelConfigurationRepository>()
+                                        .GetQuery()
+                                        .Select(obj => obj);
+
                 foreach (var calendar in dbFactory.GetRepository<GuildRepository>()
                                                   .GetQuery()
-                                                  .Where(obj => obj.GuildCalendarChannelId != null
-                                                             && obj.GuildCalendarMessageId != null
-                                                             && (serverId == null || obj.DiscordServerId == serverId))
+                                                  .Where(obj => serverId == null || obj.DiscordServerId == serverId)
                                                   .Select(obj => new
                                                                  {
-                                                                     obj.CalendarTitle,
-                                                                     obj.CalendarDescription,
-                                                                     obj.GuildCalendarChannelId,
-                                                                     obj.GuildCalendarMessageId,
+                                                                     Channel = channels.Where(obj2 => obj2.GuildId == obj.Id
+                                                                                                      && obj2.Type == GuildChannelConfigurationType.CalendarOverview)
+                                                                                       .Select(obj2 => new
+                                                                                                       {
+                                                                                                           obj2.ChannelId,
+                                                                                                           obj2.MessageId,
+                                                                                                           obj2.AdditionalData
+                                                                                                       })
+                                                                                       .FirstOrDefault(),
                                                                      Appointments = appointments.Where(obj2 => obj2.CalendarAppointmentTemplate.ServerId == obj.DiscordServerId)
                                                                                                 .Select(obj2 => new
                                                                                                                 {
@@ -166,12 +185,16 @@ namespace Scruffy.Services.Calendar
                                                                                                                 })
                                                                                                 .OrderBy(obj2 => obj2.TimeStamp)
                                                                                                 .ToList()
-                                                                 }))
+                                                                 })
+                                                  .Where(obj => obj.Channel.ChannelId > 0)
+                                                  .ToList())
                 {
                     var builder = new DiscordEmbedBuilder();
 
-                    builder.WithTitle(calendar.CalendarTitle);
-                    builder.WithDescription(calendar.CalendarDescription);
+                    var additionalData = JsonConvert.DeserializeObject<AdditionalCalendarChannelData>(calendar.Channel.AdditionalData);
+
+                    builder.WithTitle(additionalData.Title);
+                    builder.WithDescription(additionalData.Description);
                     builder.WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/836238701046398987/d7d1b509a23aa9789885127da9107fe0.png?size=256");
                     builder.WithThumbnail("https://cdn.discordapp.com/attachments/847555191842537552/870776562943946782/12382200801557740332-512.png");
                     builder.WithColor(DiscordColor.Green);
@@ -230,12 +253,12 @@ namespace Scruffy.Services.Calendar
                         }
                     }
 
-                    var channel = await _discordClient.GetChannelAsync(calendar.GuildCalendarChannelId.Value)
+                    var channel = await _discordClient.GetChannelAsync(calendar.Channel.ChannelId)
                                                       .ConfigureAwait(false);
 
                     if (channel != null)
                     {
-                        var message = await channel.GetMessageAsync(calendar.GuildCalendarMessageId.Value)
+                        var message = await channel.GetMessageAsync(calendar.Channel.MessageId.Value)
                                                    .ConfigureAwait(false);
 
                         if (message != null)

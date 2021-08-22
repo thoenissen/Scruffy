@@ -32,7 +32,7 @@ namespace Scruffy.Data.Json.GuildWars2.Account
         /// The id of the home world the account is assigned to.
         /// </summary>
         [JsonProperty("world")]
-        public int World { get; set; }
+        public long World { get; set; }
 
         /// <summary>
         ///  A list of guilds assigned to the given account.

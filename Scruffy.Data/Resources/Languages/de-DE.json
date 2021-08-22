@@ -243,6 +243,8 @@
     "GuildBankService": {
       "BankValidation": "Banküberprüfung",
       "BankValidationResult": "Folgend sind die Ergebnis der Überprüfung der Gildenbank aufgelistet.",
+      "DuplicationCheck": "Duplikatprüfung",
+      "CoinCheck": "Goldbestandsprüfung",
       "NoApiKey": "Die Gilde wurde noch nicht konfiguriert."
     },
 
@@ -324,6 +326,9 @@
       "RoleAssignment": "Rollenzuweisung",
       "RemovedRoles": "Entfernung",
       "GrantedRoles": "Zuweisung"
+    },
+    "WorldsService": {
+      "Overview": "Weltenübersicht"
     },
     "CalendarTemplateDeletionDialogElement": {
       "DeletePrompt": "Soll die Schablone wirklich gelöscht werden?"

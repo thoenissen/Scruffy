@@ -10,6 +10,7 @@ using Scruffy.Services.Core.Discord.Attributes;
 using Scruffy.Services.CoreData;
 using Scruffy.Services.Debug;
 using Scruffy.Services.GuildAdministration;
+using Scruffy.Services.GuildWars2;
 using Scruffy.Services.Raid;
 
 namespace Scruffy.Commands
@@ -378,7 +379,7 @@ namespace Scruffy.Commands
 
         #endregion // Raid
 
-        #region User
+        #region Guild
 
         /// <summary>
         /// Guild
@@ -415,6 +416,68 @@ namespace Scruffy.Commands
 
                 await job.ExecuteAsync()
                          .ConfigureAwait(false);
+            }
+
+            #endregion // Methods
+        }
+
+        #endregion // Raid
+
+        #region Import
+
+        /// <summary>
+        /// Import
+        /// </summary>
+        [Group("import")]
+        [Aliases("i")]
+        [ModuleLifespan(ModuleLifespan.Transient)]
+        public class DebugImportModule : LocatedCommandModuleBase
+        {
+            #region Constructor
+
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="localizationService">Localization service</param>
+            public DebugImportModule(LocalizationService localizationService)
+                : base(localizationService)
+            {
+            }
+
+            #endregion // Constructor
+
+            #region Properties
+
+            /// <summary>
+            /// Worlds
+            /// </summary>
+            public WorldsService WorldsService { get; set; }
+
+            #endregion // Properties
+
+            #region Methods
+
+            /// <summary>
+            /// Import worlds
+            /// </summary>
+            /// <param name="commandContext">Current command context</param>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+            [Command("worlds")]
+            public async Task ExecuteSpecialRankJob(CommandContext commandContext)
+            {
+                if (await WorldsService.ImportWorlds()
+                                       .ConfigureAwait(false))
+                {
+                    await commandContext.Message
+                                        .CreateReactionAsync(DiscordEmojiService.GetCheckEmoji(commandContext.Client))
+                                        .ConfigureAwait(false);
+                }
+                else
+                {
+                    await commandContext.Message
+                                        .CreateReactionAsync(DiscordEmojiService.GetCrossEmoji(commandContext.Client))
+                                        .ConfigureAwait(false);
+                }
             }
 
             #endregion // Methods

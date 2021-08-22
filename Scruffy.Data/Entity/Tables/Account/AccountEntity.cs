@@ -35,6 +35,16 @@ namespace Scruffy.Data.Entity.Tables.Account
         /// </summary>
         public string ApiKey { get; set; }
 
+        /// <summary>
+        /// Last age in seconds
+        /// </summary>
+        public long LastAge { get; set; }
+
+        /// <summary>
+        /// Id of the word
+        /// </summary>
+        public long? WordId { get; set; }
+
         #region Navigation properties
 
         /// <summary>

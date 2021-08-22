@@ -1,7 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
+
+using Newtonsoft.Json;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.GuildAdministration;
+using Scruffy.Data.Enumerations.GuildAdministration;
+using Scruffy.Data.Json.Calendar;
 using Scruffy.Services.Calendar;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord;
@@ -77,32 +82,29 @@ namespace Scruffy.Services.GuildAdministration
         /// Setting the notification channel
         /// </summary>
         /// <param name="commandContext">Command context</param>
+        /// <param name="type">Type</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task SetNotificationChannel(CommandContextContainer commandContext)
+        public async Task SetNotificationChannel(CommandContextContainer commandContext, GuildChannelConfigurationType type)
         {
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
-                dbFactory.GetRepository<GuildRepository>()
-                         .AddOrRefresh(obj => obj.DiscordServerId == commandContext.Guild.Id,
-                                       obj => obj.NotificationChannelId = commandContext.Channel.Id);
-            }
+                var guildId = dbFactory.GetRepository<GuildRepository>()
+                                       .GetQuery()
+                                       .Where(obj => obj.DiscordServerId == commandContext.Guild.Id)
+                                       .Select(obj => obj.Id)
+                                       .FirstOrDefault();
 
-            await commandContext.Message.DeleteAsync()
-                                .ConfigureAwait(false);
-        }
-
-        /// <summary>
-        ///  Setting the reminder channel
-        /// </summary>
-        /// <param name="commandContext">Command context</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task SetReminderChannel(CommandContextContainer commandContext)
-        {
-            using (var dbFactory = RepositoryFactory.CreateInstance())
-            {
-                dbFactory.GetRepository<GuildRepository>()
-                         .AddOrRefresh(obj => obj.DiscordServerId == commandContext.Guild.Id,
-                                       obj => obj.ReminderChannelId = commandContext.Channel.Id);
+                if (guildId > 0)
+                {
+                    dbFactory.GetRepository<GuildChannelConfigurationRepository>()
+                             .AddOrRefresh(obj => obj.GuildId == guildId
+                                              && obj.Type == type,
+                                           obj =>
+                                           {
+                                               obj.Type = type;
+                                               obj.ChannelId = commandContext.Channel.Id;
+                                           });
+                }
             }
 
             await commandContext.Message.DeleteAsync()
@@ -122,19 +124,30 @@ namespace Scruffy.Services.GuildAdministration
 
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
-                if (dbFactory.GetRepository<GuildRepository>()
-                             .Refresh(obj => obj.DiscordServerId == commandContext.Guild.Id,
-                                      obj =>
-                                      {
-                                          obj.MessageOfTheDayChannelId = commandContext.Channel.Id;
-                                          obj.MessageOfTheDayMessageId = message.Id;
-                                      }))
-                {
-                    await _calendarScheduleService.CreateAppointments(commandContext.Guild.Id)
-                                                  .ConfigureAwait(false);
+                var guildId = dbFactory.GetRepository<GuildRepository>()
+                                       .GetQuery()
+                                       .Where(obj => obj.DiscordServerId == commandContext.Guild.Id)
+                                       .Select(obj => obj.Id)
+                                       .FirstOrDefault();
 
-                    await _calendarMessageBuilderService.RefreshMotds(commandContext.Guild.Id)
-                                                        .ConfigureAwait(false);
+                if (guildId > 0)
+                {
+                    if (dbFactory.GetRepository<GuildChannelConfigurationRepository>()
+                                 .AddOrRefresh(obj => obj.GuildId == guildId
+                                                   && obj.Type == GuildChannelConfigurationType.CalendarMessageOfTheDay,
+                                               obj =>
+                                               {
+                                                   obj.Type = GuildChannelConfigurationType.CalendarMessageOfTheDay;
+                                                   obj.ChannelId = commandContext.Channel.Id;
+                                                   obj.MessageId = message.Id;
+                                               }))
+                    {
+                        await _calendarScheduleService.CreateAppointments(commandContext.Guild.Id)
+                                                      .ConfigureAwait(false);
+
+                        await _calendarMessageBuilderService.RefreshMotds(commandContext.Guild.Id)
+                                                            .ConfigureAwait(false);
+                    }
                 }
             }
         }
@@ -157,24 +170,37 @@ namespace Scruffy.Services.GuildAdministration
 
                 using (var dbFactory = RepositoryFactory.CreateInstance())
                 {
-                    if (dbFactory.GetRepository<GuildRepository>()
-                                  .Refresh(obj => obj.DiscordServerId == commandContext.Guild.Id,
+                    var guildId = dbFactory.GetRepository<GuildRepository>()
+                                           .GetQuery()
+                                           .Where(obj => obj.DiscordServerId == commandContext.Guild.Id)
+                                           .Select(obj => obj.Id)
+                                           .FirstOrDefault();
+
+                    if (guildId > 0)
+                    {
+                        if (dbFactory.GetRepository<GuildChannelConfigurationRepository>()
+                                  .AddOrRefresh(obj => obj.GuildId == guildId
+                                                    && obj.Type == GuildChannelConfigurationType.CalendarOverview,
                                                 obj =>
                                                 {
-                                                     obj.CalendarDescription = data.Description;
-                                                     obj.CalendarTitle = data.Title;
-                                                     obj.GuildCalendarChannelId = commandContext.Channel.Id;
-                                                     obj.GuildCalendarMessageId = message.Id;
+                                                    obj.ChannelId = commandContext.Channel.Id;
+                                                    obj.MessageId = message.Id;
+                                                    obj.AdditionalData = JsonConvert.SerializeObject(new AdditionalCalendarChannelData
+                                                    {
+                                                        Title = data.Title,
+                                                        Description = data.Description
+                                                    });
                                                 }))
-                    {
-                        await _calendarScheduleService.CreateAppointments(commandContext.Guild.Id)
-                                                      .ConfigureAwait(false);
+                        {
+                            await _calendarScheduleService.CreateAppointments(commandContext.Guild.Id)
+                                                          .ConfigureAwait(false);
 
-                        await _calendarMessageBuilderService.RefreshMessages(commandContext.Guild.Id)
-                                                            .ConfigureAwait(false);
+                            await _calendarMessageBuilderService.RefreshMessages(commandContext.Guild.Id)
+                                                                .ConfigureAwait(false);
 
-                        await _calendarMessageBuilderService.RefreshMotds(commandContext.Guild.Id)
-                                                            .ConfigureAwait(false);
+                            await _calendarMessageBuilderService.RefreshMotds(commandContext.Guild.Id)
+                                                                .ConfigureAwait(false);
+                        }
                     }
                 }
             }

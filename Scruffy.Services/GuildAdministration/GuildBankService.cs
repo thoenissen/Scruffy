@@ -70,10 +70,14 @@ namespace Scruffy.Services.GuildAdministration
                             var slots = new List<(int ItemId, int X, int Y)>();
                             var i = 0;
 
-                            foreach (var slot in stash.Slots.Where(obj => obj != null
-                                                                       && obj.Count < 250))
+                            foreach (var slot in stash.Slots)
                             {
-                                slots.Add((slot.ItemId, (i % 10) + 1, (i / 10) + 1));
+                                if (slot != null
+                                 && slot.Count < 250)
+                                {
+                                    slots.Add((slot.ItemId, (i % 10) + 1, (i / 10) + 1));
+                                }
+
                                 i++;
                             }
 
@@ -96,13 +100,30 @@ namespace Scruffy.Services.GuildAdministration
 
                             if (stringBuilder.Length > 0)
                             {
-                                stringBuilder.Append("\u200B");
-                                msg.AddField((stash.Note ?? "Stash") + " \u200B " + DiscordEmojiService.GetCrossEmoji(commandContext.Client), stringBuilder.ToString());
+                                stringBuilder.Insert(0, Formatter.Bold(LocalizationGroup.GetText("DuplicationCheck", "Duplication check")) + " \u200B " + DiscordEmojiService.GetCrossEmoji(commandContext.Client) + "\n");
                             }
                             else
                             {
-                                msg.AddField((stash.Note ?? "Stash") + " \u200B " + DiscordEmojiService.GetCheckEmoji(commandContext.Client), "\n\u200B");
+                                stringBuilder.AppendLine(Formatter.Bold(LocalizationGroup.GetText("DuplicationCheck", "Duplication check")) + " \u200B " + DiscordEmojiService.GetCheckEmoji(commandContext.Client));
                             }
+
+                            if (stash.Coins != 0 && stash.Coins % 10000 != 0)
+                            {
+                                var goldCoins = stash.Coins / 10000;
+                                var silverCoins = (stash.Coins - (goldCoins * 10000)) / 100;
+                                var copperCoins = stash.Coins % 100;
+
+                                stringBuilder.AppendLine(Formatter.Bold(LocalizationGroup.GetText("CoinCheck", "Coins check")) + " \u200B " + DiscordEmojiService.GetCrossEmoji(commandContext.Client));
+                                stringBuilder.AppendLine($"{goldCoins} {DiscordEmojiService.GetGuildWars2GoldEmoji(commandContext.Client)} {silverCoins} {DiscordEmojiService.GetGuildWars2SilverEmoji(commandContext.Client)} {copperCoins} {DiscordEmojiService.GetGuildWars2CopperEmoji(commandContext.Client)}");
+                            }
+                            else
+                            {
+                                stringBuilder.AppendLine(Formatter.Bold(LocalizationGroup.GetText("CoinCheck", "Coins check")) + " \u200B " + DiscordEmojiService.GetCheckEmoji(commandContext.Client));
+                            }
+
+                            stringBuilder.Append("\u200B");
+
+                            msg.AddField(stash.Note ?? "Stash", stringBuilder.ToString());
                         }
                     }
 

@@ -243,6 +243,8 @@
     "GuildBankService": {
       "BankValidation": "Guild bank validation",
       "BankValidationResult": "In the following message you can see the results of the bank validation.",
+      "DuplicationCheck": "Duplication check",
+      "CoinCheck": "Coins check",
       "NoApiKey": "The guild ist not configured."
     },
     "GuildAdministrationSpecialRankDeletionDialogElement": {
@@ -323,6 +325,9 @@
       "RoleAssignment": "Role assignment",
       "RemovedRoles": "Removals",
       "GrantedRoles": "Assignments"
+    },
+    "WorldsService": {
+      "Overview": "Worlds overview"
     },
     "CalendarTemplateDeletionDialogElement": {
       "DeletePrompt": "Are you sure you want to delete the template?"

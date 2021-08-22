@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.GuildAdministration;
 using Scruffy.Data.Entity.Tables.GuildAdministration;
+using Scruffy.Data.Enumerations.GuildAdministration;
 using Scruffy.Data.Json.GuildWars2.Guild;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.JobScheduler;
@@ -36,6 +37,10 @@ namespace Scruffy.Services.GuildAdministration
                 {
                     var discordClient = serviceProvider.GetService<DiscordClient>();
 
+                    var channels = dbFactory.GetRepository<GuildChannelConfigurationRepository>()
+                                            .GetQuery()
+                                            .Select(obj => obj);
+
                     foreach (var guild in dbFactory.GetRepository<GuildRepository>()
                                                    .GetQuery()
                                                    .Select(obj => new
@@ -44,15 +49,18 @@ namespace Scruffy.Services.GuildAdministration
                                                                       obj.ApiKey,
                                                                       obj.GuildId,
                                                                       LastLogEntryId = obj.GuildLogEntries
-                                                                                          .Select(obj => obj.Id)
-                                                                                          .OrderByDescending(obj => obj)
+                                                                                          .Select(obj2 => obj2.Id)
+                                                                                          .OrderByDescending(obj2 => obj2)
                                                                                           .FirstOrDefault(),
-                                                                      obj.NotificationChannelId,
+                                                                      ChannelId = channels.Where(obj2 => obj2.GuildId == obj.Id
+                                                                                                      && obj2.Type == GuildChannelConfigurationType.GuildLogNotification)
+                                                                                          .Select(obj2 => (ulong?)obj2.ChannelId)
+                                                                                          .FirstOrDefault()
                                                                   })
                                                    .ToList())
                     {
-                        var discordChannel = guild.NotificationChannelId != null
-                                                 ? await discordClient.GetChannelAsync(guild.NotificationChannelId.Value)
+                        var discordChannel = guild.ChannelId != null
+                                                 ? await discordClient.GetChannelAsync(guild.ChannelId.Value)
                                                                       .ConfigureAwait(false)
                                                  : null;
 

@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Calendar;
 using Scruffy.Data.Entity.Repositories.GuildAdministration;
+using Scruffy.Data.Enumerations.GuildAdministration;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.JobScheduler;
 
@@ -52,9 +53,9 @@ namespace Scruffy.Services.Calendar
             {
                 using (var dbFactory = RepositoryFactory.CreateInstance())
                 {
-                    var guilds = dbFactory.GetRepository<GuildRepository>()
-                                          .GetQuery()
-                                          .Select(obj => obj);
+                    var channels = dbFactory.GetRepository<GuildChannelConfigurationRepository>()
+                                            .GetQuery()
+                                            .Select(obj => obj);
 
                     var data = dbFactory.GetRepository<CalendarAppointmentRepository>()
                                         .GetQuery()
@@ -62,18 +63,19 @@ namespace Scruffy.Services.Calendar
                                                    && obj.ReminderMessageId == null)
                                         .Select(obj => new
                                                        {
-                                                           ChannelId = guilds.Where(obj2 => obj2.DiscordServerId == obj.CalendarAppointmentTemplate.ServerId)
-                                                                                            .Select(obj2 => obj2.ReminderChannelId)
-                                                                                            .FirstOrDefault(),
+                                                           ChannelId = channels.Where(obj2 => obj2.Guild.DiscordServerId == obj.CalendarAppointmentTemplate.ServerId
+                                                                                           && obj2.Type == GuildChannelConfigurationType.CalendarReminder)
+                                                                               .Select(obj2 => obj2.ChannelId)
+                                                                               .FirstOrDefault(),
                                                            obj.CalendarAppointmentTemplate.ReminderMessage
                                                        })
-                                        .FirstOrDefault(obj => obj.ChannelId != null);
+                                        .FirstOrDefault(obj => obj.ChannelId > 0);
 
                     if (data?.ChannelId != null)
                     {
                         var discordClient = serviceProvider.GetService<DiscordClient>();
 
-                        var channel = await discordClient.GetChannelAsync(data.ChannelId.Value)
+                        var channel = await discordClient.GetChannelAsync(data.ChannelId)
                                                          .ConfigureAwait(false);
 
                         var message = await channel.SendMessageAsync(data.ReminderMessage)

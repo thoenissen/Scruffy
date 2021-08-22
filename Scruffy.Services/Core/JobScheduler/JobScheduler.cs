@@ -10,8 +10,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Calendar;
 using Scruffy.Data.Entity.Repositories.Reminder;
+using Scruffy.Services.Account;
 using Scruffy.Services.Calendar;
 using Scruffy.Services.Fractals;
+using Scruffy.Services.Games;
 using Scruffy.Services.GuildAdministration;
 using Scruffy.Services.Reminder;
 
@@ -44,14 +46,25 @@ namespace Scruffy.Services.Core.JobScheduler
         {
             await Task.Run(JobManager.Start).ConfigureAwait(false);
 
+            // Fractals
             JobManager.AddJob<FractalDailyRefreshJob>(obj => obj.ToRunEvery(1).Days().At(0, 0));
 
+            // Calendar
             JobManager.AddJob<CalendarRefreshJob>(obj => obj.ToRunEvery(1).Days().At(0, 0));
 
+            // Backup
             JobManager.AddJob<BackupJob>(obj => obj.ToRunEvery(1).Days().At(2, 0));
 
+            // Account
+            JobManager.AddJob<AccountLoginCheckJob>(obj => obj.ToRunEvery(1).Days().At(0, 5));
+
+            // Guild
             JobManager.AddJob<GuildLogImportJob>(obj => obj.ToRunEvery(5).Minutes());
-            JobManager.AddJob<GuildSpecialRankPointsJob>(obj => obj.ToRunEvery(1).Days().At(0, 0));
+            JobManager.AddJob<GuildSpecialRankPointsJob>(obj => obj.ToRunEvery(1).Days().At(0, 30));
+
+            // Games
+            JobManager.AddJob<CounterGameJob>(obj => obj.ToRunEvery(10).Minutes());
+            JobManager.AddJob<WordChainJob>(obj => obj.ToRunEvery(10).Minutes());
 
             // fractal reminders
             await using (var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider())
@@ -114,10 +127,16 @@ namespace Scruffy.Services.Core.JobScheduler
                                                                   obj.Id,
                                                                   obj.CalendarAppointmentTemplate.ReminderTime,
                                                                   obj.TimeStamp,
+                                                                  obj.ReminderMessageId
                                                               })
                                                .ToList())
                 {
-                    JobManager.AddJob(new CalendarReminderPostJob(entry.Id), obj => obj.ToRunOnceAt(DateTime.Today.Add(entry.ReminderTime.Value)));
+                    if (entry.ReminderMessageId == null
+                     && entry.TimeStamp > DateTime.Now)
+                    {
+                        JobManager.AddJob(new CalendarReminderPostJob(entry.Id), obj => obj.ToRunOnceAt(DateTime.Today.Add(entry.ReminderTime.Value)));
+                    }
+
                     JobManager.AddJob(new CalendarReminderDeletionJob(entry.Id), obj => obj.ToRunOnceAt(entry.TimeStamp));
                 }
             }

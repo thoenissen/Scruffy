@@ -9,8 +9,10 @@ using Scruffy.Data.Entity.Tables.Account;
 using Scruffy.Data.Entity.Tables.Calendar;
 using Scruffy.Data.Entity.Tables.CoreData;
 using Scruffy.Data.Entity.Tables.Fractals;
+using Scruffy.Data.Entity.Tables.Games;
 using Scruffy.Data.Entity.Tables.General;
 using Scruffy.Data.Entity.Tables.GuildAdministration;
+using Scruffy.Data.Entity.Tables.GuildWars2;
 using Scruffy.Data.Entity.Tables.Raid;
 using Scruffy.Data.Entity.Tables.Reminder;
 
@@ -296,6 +298,7 @@ namespace Scruffy.Data.Entity
             modelBuilder.Entity<GuildSpecialRankProtocolEntryEntity>();
             modelBuilder.Entity<GuildSpecialRankRoleAssignmentEntity>();
             modelBuilder.Entity<GuildSpecialRankIgnoreRoleAssignmentEntity>();
+            modelBuilder.Entity<GuildChannelConfigurationEntity>();
 
             modelBuilder.Entity<GuildLogEntryEntity>()
                         .HasKey(obj => new
@@ -303,6 +306,14 @@ namespace Scruffy.Data.Entity
                                            obj.GuildId,
                                            obj.Id
                                        });
+
+            modelBuilder.Entity<GuildChannelConfigurationEntity>()
+                        .HasKey(obj => new
+                                       {
+                                           obj.GuildId,
+                                           obj.Type
+                                       }
+                                );
 
             modelBuilder.Entity<GuildEntity>()
                         .HasMany(obj => obj.GuildLogEntries)
@@ -352,6 +363,20 @@ namespace Scruffy.Data.Entity
 
             // Account
             modelBuilder.Entity<AccountEntity>();
+            modelBuilder.Entity<AccountDailyLoginCheckEntity>();
+
+            modelBuilder.Entity<AccountDailyLoginCheckEntity>()
+                        .HasKey(obj => new
+                                       {
+                                           obj.Name,
+                                           obj.Date
+                                       });
+
+            // Games
+            modelBuilder.Entity<GameChannelEntity>();
+
+            // Guild Wars 2
+            modelBuilder.Entity<GuildWarsWorldEntity>();
 
             // Disabling cascade on delete
             foreach (var foreignKey in modelBuilder.Model.GetEntityTypes()

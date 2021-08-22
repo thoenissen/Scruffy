@@ -76,7 +76,9 @@ namespace Scruffy.Services.GuildAdministration
                         await using (var connector = new QuickChartConnector())
                         {
                             var users = new List<string>();
-                            foreach (var user in configuration.Users)
+                            foreach (var user in configuration.Users
+                                                              .OrderByDescending(obj => obj.Points)
+                                                              .ThenBy(obj => obj.UserId))
                             {
                                 var member = await commandContext.Guild
                                                                  .GetMemberAsync(user.UserId)
@@ -97,6 +99,8 @@ namespace Scruffy.Services.GuildAdministration
                                                                                        BackgroundColor = "#316ed5",
                                                                                        BorderColor = "#274d85",
                                                                                        Data = configuration.Users
+                                                                                                           .OrderByDescending(obj => obj.Points)
+                                                                                                           .ThenBy(obj => obj.UserId)
                                                                                                            .Select(obj => obj.Points)
                                                                                                            .ToList()
                                                                                    }

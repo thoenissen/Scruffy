@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.GuildAdministration;
+using Scruffy.Data.Enumerations.GuildAdministration;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.JobScheduler;
 using Scruffy.Services.CoreData;
@@ -94,6 +95,10 @@ namespace Scruffy.Services.GuildAdministration
                         }
                     }
 
+                    var channels = dbFactory.GetRepository<GuildChannelConfigurationRepository>()
+                                            .GetQuery()
+                                            .Select(obj => obj);
+
                     foreach (var configuration in dbFactory.GetRepository<GuildSpecialRankConfigurationRepository>()
                                                            .GetQuery()
                                                            .Where(obj => obj.IsDeleted == false)
@@ -102,8 +107,11 @@ namespace Scruffy.Services.GuildAdministration
                                                                               obj.Id,
                                                                               obj.Description,
                                                                               obj.Guild.DiscordServerId,
-                                                                              obj.Guild.NotificationChannelId,
                                                                               obj.DiscordRoleId,
+                                                                              ChannelId = channels.Where(obj2 => obj2.GuildId == obj.Id
+                                                                                                              && obj2.Type == GuildChannelConfigurationType.SpecialRankRankChange)
+                                                                                                  .Select(obj2 => (ulong?)obj2.ChannelId)
+                                                                                                  .FirstOrDefault(),
                                                                               Users = obj.GuildSpecialRankPoints
                                                                                          .Where(obj2 => obj2.Points > obj.RemoveThreshold)
                                                                                          .Select(obj2 => new
@@ -143,7 +151,7 @@ namespace Scruffy.Services.GuildAdministration
 
                         if (actions.Count > 0)
                         {
-                            if (configuration.NotificationChannelId != null)
+                            if (configuration.ChannelId != null)
                             {
                                 var builder = new DiscordEmbedBuilder();
                                 builder.WithTitle(LocalizationGroup.GetText("RoleAssignment", "Role assignment"));
@@ -174,7 +182,7 @@ namespace Scruffy.Services.GuildAdministration
                                     builder.AddField(LocalizationGroup.GetText("GrantedRoles", "Granted roles"), stringBuilder.ToString());
                                 }
 
-                                var channel = await client.GetChannelAsync(configuration.NotificationChannelId.Value)
+                                var channel = await client.GetChannelAsync(configuration.ChannelId.Value)
                                                           .ConfigureAwait(false);
 
                                 await channel.SendMessageAsync(builder)

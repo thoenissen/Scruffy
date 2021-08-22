@@ -3,35 +3,23 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Scruffy.Data.Entity;
 
 namespace Scruffy.Data.Entity.Migrations
 {
     [DbContext(typeof(ScruffyDbContext))]
-    partial class ScruffyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210816201456_Update27")]
+    partial class Update27
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.5")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Account.AccountDailyLoginCheckEntity", b =>
-                {
-                    b.Property<string>("Name")
-                        .HasMaxLength(42)
-                        .HasColumnType("nvarchar(42)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Name", "Date");
-
-                    b.ToTable("AccountDailyLoginChecks");
-                });
 
             modelBuilder.Entity("Scruffy.Data.Entity.Tables.Account.AccountEntity", b =>
                 {
@@ -45,14 +33,8 @@ namespace Scruffy.Data.Entity.Migrations
                     b.Property<string>("DpsReportUserToken")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("LastAge")
-                        .HasColumnType("bigint");
-
                     b.Property<decimal>("UserId")
                         .HasColumnType("decimal(20,0)");
-
-                    b.Property<long?>("WordId")
-                        .HasColumnType("bigint");
 
                     b.HasKey("Name");
 
@@ -335,28 +317,6 @@ namespace Scruffy.Data.Entity.Migrations
                     b.ToTable("LogEntries");
                 });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildAdministration.GuildChannelConfigurationEntity", b =>
-                {
-                    b.Property<long>("GuildId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.Property<string>("AdditionalData")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("ChannelId")
-                        .HasColumnType("decimal(20,0)");
-
-                    b.Property<decimal?>("MessageId")
-                        .HasColumnType("decimal(20,0)");
-
-                    b.HasKey("GuildId", "Type");
-
-                    b.ToTable("GuildChannelConfigurations");
-                });
-
             modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildAdministration.GuildEntity", b =>
                 {
                     b.Property<long>("Id")
@@ -367,11 +327,35 @@ namespace Scruffy.Data.Entity.Migrations
                     b.Property<string>("ApiKey")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("CalendarDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CalendarTitle")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("DiscordServerId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<decimal?>("GuildCalendarChannelId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<decimal?>("GuildCalendarMessageId")
                         .HasColumnType("decimal(20,0)");
 
                     b.Property<string>("GuildId")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("MessageOfTheDayChannelId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<decimal?>("MessageOfTheDayMessageId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<decimal?>("NotificationChannelId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<decimal?>("ReminderChannelId")
+                        .HasColumnType("decimal(20,0)");
 
                     b.HasKey("Id");
 
@@ -561,19 +545,6 @@ namespace Scruffy.Data.Entity.Migrations
                     b.HasKey("ConfigurationId", "DiscordRoleId");
 
                     b.ToTable("GuildSpecialRankRoleAssignments");
-                });
-
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GuildWarsWorldEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("GuildWarsWorlds");
                 });
 
             modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidAppointmentEntity", b =>
@@ -999,17 +970,6 @@ namespace Scruffy.Data.Entity.Migrations
                     b.ToTable("WeeklyReminders");
                 });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Account.AccountDailyLoginCheckEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.Account.AccountEntity", "AccountEntity")
-                        .WithMany()
-                        .HasForeignKey("Name")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("AccountEntity");
-                });
-
             modelBuilder.Entity("Scruffy.Data.Entity.Tables.Account.AccountEntity", b =>
                 {
                     b.HasOne("Scruffy.Data.Entity.Tables.CoreData.UserEntity", "User")
@@ -1114,17 +1074,6 @@ namespace Scruffy.Data.Entity.Migrations
                     b.Navigation("FractalAppointmentEntity");
 
                     b.Navigation("FractalLfgConfiguration");
-                });
-
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildAdministration.GuildChannelConfigurationEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.GuildAdministration.GuildEntity", "Guild")
-                        .WithMany()
-                        .HasForeignKey("GuildId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Guild");
                 });
 
             modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildAdministration.GuildEntity", b =>
