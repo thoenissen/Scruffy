@@ -29,6 +29,7 @@ namespace Scruffy.Commands
     [Group("fractal")]
     [Aliases("f")]
     [ModuleLifespan(ModuleLifespan.Transient)]
+    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
     public class FractalCommandModule : LocatedCommandModuleBase
     {
         #region Constructor
@@ -167,6 +168,7 @@ namespace Scruffy.Commands
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         [Command("join")]
         [RequireGuild]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
         public Task Join(CommandContext commandContext, string alias, string timeSpan, params string[] days)
         {
             return InvokeAsync(commandContext,
@@ -240,6 +242,7 @@ namespace Scruffy.Commands
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("leave")]
         [RequireGuild]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
         public Task Leave(CommandContext commandContext, string alias, string timeSpan, params string[] days)
         {
             return InvokeAsync(commandContext,

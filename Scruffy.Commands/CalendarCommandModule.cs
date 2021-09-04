@@ -14,6 +14,7 @@ namespace Scruffy.Commands
     /// </summary>
     [Group("calendar")]
     [Aliases("ca")]
+    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     [ModuleLifespan(ModuleLifespan.Transient)]
     public class CalendarCommandModule : LocatedCommandModuleBase
     {
@@ -49,6 +50,7 @@ namespace Scruffy.Commands
         [Command("add")]
         [RequireGuild]
         [RequireAdministratorPermissions]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public Task AddOneTimeEvent(CommandContext commandContext)
         {
             return InvokeAsync(commandContext,
@@ -69,6 +71,7 @@ namespace Scruffy.Commands
         [Group("templates")]
         [Aliases("t")]
         [ModuleLifespan(ModuleLifespan.Transient)]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public class CalendarTemplateCommandModule : LocatedCommandModuleBase
         {
             #region Constructor
@@ -103,6 +106,7 @@ namespace Scruffy.Commands
             [Command("setup")]
             [RequireGuild]
             [RequireAdministratorPermissions]
+            [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
             public Task Setup(CommandContext commandContext)
             {
                 return InvokeAsync(commandContext,
@@ -127,6 +131,7 @@ namespace Scruffy.Commands
         [Group("schedules")]
         [Aliases("s")]
         [ModuleLifespan(ModuleLifespan.Transient)]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public class CalendarScheduleCommandModule : LocatedCommandModuleBase
         {
             #region Constructor
@@ -161,6 +166,7 @@ namespace Scruffy.Commands
             [Command("setup")]
             [RequireGuild]
             [RequireAdministratorPermissions]
+            [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
             public Task Setup(CommandContext commandContext)
             {
                 return InvokeAsync(commandContext,

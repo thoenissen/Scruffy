@@ -5,6 +5,7 @@ using DSharpPlus.CommandsNext.Attributes;
 
 using Scruffy.Services.Account;
 using Scruffy.Services.Core;
+using Scruffy.Services.Core.Discord.Attributes;
 using Scruffy.Services.CoreData;
 
 namespace Scruffy.Commands
@@ -14,6 +15,7 @@ namespace Scruffy.Commands
     /// </summary>
     [Group("account")]
     [Aliases("a")]
+    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
     [ModuleLifespan(ModuleLifespan.Transient)]
     public class AccountCommandModule : LocatedCommandModuleBase
     {
@@ -52,6 +54,7 @@ namespace Scruffy.Commands
         /// <param name="commandContext">Command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         [Command("add")]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
         public Task Add(CommandContext commandContext)
         {
             return InvokeAsync(commandContext,
@@ -71,6 +74,7 @@ namespace Scruffy.Commands
         /// <param name="commandContext">Command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         [Command("edit")]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
         public Task Edit(CommandContext commandContext)
         {
             return InvokeAsync(commandContext,

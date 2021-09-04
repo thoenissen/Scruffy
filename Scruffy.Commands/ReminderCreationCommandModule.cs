@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -28,6 +29,7 @@ namespace Scruffy.Commands
     [ModuleLifespan(ModuleLifespan.Transient)]
     [Group("reminder")]
     [Aliases("re")]
+    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
     public class ReminderCreationCommandModule : LocatedCommandModuleBase
     {
         #region Constructor
@@ -67,6 +69,7 @@ namespace Scruffy.Commands
         /// <param name="message">Optional message of the reminder</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("in")]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
         public Task RemindMeIn(CommandContext commandContext, string timeSpan, [RemainingText] string message = null)
         {
             return InvokeAsync(commandContext,
@@ -102,6 +105,17 @@ namespace Scruffy.Commands
                                            {
                                                JobScheduler.AddOneTimeReminder(reminderEntity.TimeStamp, reminderEntity.Id);
 
+                                               await commandContext.Channel
+                                                                   .SendMessageAsync(LocalizationGroup.GetFormattedText("ReminderCreated",
+                                                                                                                        "The reminder has been set for {0} {1}.",
+                                                                                                                        reminderEntity.TimeStamp
+                                                                                                                                      .ToString(LocalizationGroup.CultureInfo.DateTimeFormat.ShortDatePattern,
+                                                                                                                                                LocalizationGroup.CultureInfo.DateTimeFormat),
+                                                                                                                        reminderEntity.TimeStamp
+                                                                                                                                      .ToString(LocalizationGroup.CultureInfo.DateTimeFormat.ShortTimePattern,
+                                                                                                                                                LocalizationGroup.CultureInfo.DateTimeFormat)))
+                                                                   .ConfigureAwait(false);
+
                                                if (commandContext.Channel.IsPrivate == false)
                                                {
                                                    await commandContext.Channel
@@ -126,6 +140,7 @@ namespace Scruffy.Commands
         /// <param name="time">Time</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("at")]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
         public Task RemindMeAt(CommandContext commandContext, string time)
         {
             return RemindMeAt(commandContext, time, null, null);
@@ -207,6 +222,17 @@ namespace Scruffy.Commands
                                                         .Add(reminderEntity))
                                            {
                                                JobScheduler.AddOneTimeReminder(reminderEntity.TimeStamp, reminderEntity.Id);
+
+                                               await commandContext.Channel
+                                                                   .SendMessageAsync(LocalizationGroup.GetFormattedText("ReminderCreated",
+                                                                                                                        "The reminder has been set for {0} {1}.",
+                                                                                                                        reminderEntity.TimeStamp
+                                                                                                                                      .ToString(LocalizationGroup.CultureInfo.DateTimeFormat.ShortDatePattern,
+                                                                                                                                                LocalizationGroup.CultureInfo.DateTimeFormat),
+                                                                                                                        reminderEntity.TimeStamp
+                                                                                                                                      .ToString(LocalizationGroup.CultureInfo.DateTimeFormat.ShortTimePattern,
+                                                                                                                                                LocalizationGroup.CultureInfo.DateTimeFormat)))
+                                                                   .ConfigureAwait(false);
 
                                                if (commandContext.Channel.IsPrivate == false)
                                                {

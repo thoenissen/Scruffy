@@ -19,7 +19,8 @@
       "ReminderTimePrompt": "Please enter the reminder time. (Format: hh:mm)",
       "DeletionTimePrompt": "Please enter the deletion times. (Format: hh:mm)",
       "ReminderMessagePrompt": "Please enter the message of the reminder.",
-      "CreationCompletedMessage": "Creation completed! All creation messages will be deleted in 30 seconds."
+      "CreationCompletedMessage": "Creation completed! All creation messages will be deleted in 30 seconds.",
+      "ReminderCreated": "The reminder has been set for {0} {1}.",
     },
     "AccountApiKeyDialogElement": {
       "Message": "Please enter the api key which should be used."

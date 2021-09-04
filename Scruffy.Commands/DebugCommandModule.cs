@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Net;
+using System.Text;
+using System.Threading.Tasks;
 
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
@@ -22,6 +25,7 @@ namespace Scruffy.Commands
     [Aliases("d")]
     [RequireDeveloperPermissions]
     [ModuleLifespan(ModuleLifespan.Transient)]
+    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugCommandModule : LocatedCommandModuleBase
     {
         #region Constructor
@@ -45,6 +49,7 @@ namespace Scruffy.Commands
         [Group("dump")]
         [Aliases("d")]
         [ModuleLifespan(ModuleLifespan.Transient)]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
         public class DebugDumpModule : LocatedCommandModuleBase
         {
             #region Constructor
@@ -77,6 +82,7 @@ namespace Scruffy.Commands
             /// <param name="commandContext">Current command context</param>
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("text")]
+            [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
             public async Task Roles(CommandContext commandContext)
             {
                 await DebugService.DumpText(commandContext)
@@ -151,6 +157,7 @@ namespace Scruffy.Commands
         /// </summary>
         [Group("list")]
         [Aliases("l")]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
         [ModuleLifespan(ModuleLifespan.Transient)]
         public class DebugListModule : LocatedCommandModuleBase
         {
@@ -184,6 +191,7 @@ namespace Scruffy.Commands
             /// <param name="commandContext">Current command context</param>
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("roles")]
+            [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
             public async Task Roles(CommandContext commandContext)
             {
                 await DebugService.ListRoles(commandContext)
@@ -196,6 +204,7 @@ namespace Scruffy.Commands
             /// <param name="commandContext">Current command context</param>
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("users")]
+            [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
             public async Task Users(CommandContext commandContext)
             {
                 await DebugService.ListUsers(commandContext)
@@ -208,6 +217,7 @@ namespace Scruffy.Commands
             /// <param name="commandContext">Current command context</param>
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("emojis")]
+            [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
             public async Task Emojis(CommandContext commandContext)
             {
                 await DebugService.ListEmojis(commandContext)
@@ -220,6 +230,7 @@ namespace Scruffy.Commands
             /// <param name="commandContext">Current command context</param>
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("channels")]
+            [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
             public async Task Channels(CommandContext commandContext)
             {
                 await DebugService.ListChannels(commandContext)
@@ -478,6 +489,77 @@ namespace Scruffy.Commands
                                         .CreateReactionAsync(DiscordEmojiService.GetCrossEmoji(commandContext.Client))
                                         .ConfigureAwait(false);
                 }
+            }
+
+            #endregion // Methods
+        }
+
+        #endregion // Raid
+
+        #region Network
+
+        /// <summary>
+        /// Import
+        /// </summary>
+        [Group("network")]
+        [Aliases("n")]
+        [ModuleLifespan(ModuleLifespan.Transient)]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
+        public class DebugNetworkModule : LocatedCommandModuleBase
+        {
+            #region Constructor
+
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="localizationService">Localization service</param>
+            public DebugNetworkModule(LocalizationService localizationService)
+                : base(localizationService)
+            {
+            }
+
+            #endregion // Constructor
+
+            #region Properties
+
+            /// <summary>
+            /// Worlds
+            /// </summary>
+            public WorldsService WorldsService { get; set; }
+
+            #endregion // Properties
+
+            #region Methods
+
+            /// <summary>
+            /// DNS-Information overview
+            /// </summary>
+            /// <param name="commandContext">Current command context</param>
+            /// <param name="domain">Domain name</param>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+            [Command("dnsinfo")]
+            [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
+            public async Task GetDnsInformation(CommandContext commandContext, string domain)
+            {
+                var embed = new DiscordEmbedBuilder().WithTitle("DNS Information")
+                                                     .WithDescription(domain);
+
+                var addresses = await Dns.GetHostAddressesAsync(domain)
+                                         .ConfigureAwait(false);
+
+                var stringBuilder = new StringBuilder();
+
+                foreach (var address in addresses)
+                {
+                    stringBuilder.AppendLine(address.ToString());
+                }
+
+                stringBuilder.Append("\u200B");
+
+                embed.AddField("IP-Addresses", stringBuilder.ToString());
+
+                await commandContext.RespondAsync(embed)
+                                    .ConfigureAwait(false);
             }
 
             #endregion // Methods

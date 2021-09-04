@@ -20,6 +20,7 @@ using Newtonsoft.Json;
 
 using Scruffy.Data.Json.MediaWiki;
 using Scruffy.Services.Core;
+using Scruffy.Services.Core.Discord.Attributes;
 
 namespace Scruffy.Commands
 {
@@ -29,6 +30,7 @@ namespace Scruffy.Commands
     [ModuleLifespan(ModuleLifespan.Transient)]
     [Group("search")]
     [Aliases("s")]
+    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
     public class SearchCommandModule : LocatedCommandModuleBase
     {
         #region Constructor
@@ -53,6 +55,7 @@ namespace Scruffy.Commands
         /// <param name="searchTerm">Search term</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         [Command("google")]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
         public Task Google(CommandContext commandContext, [RemainingText] string searchTerm)
         {
             return InvokeAsync(commandContext,
@@ -111,6 +114,7 @@ namespace Scruffy.Commands
         /// <param name="searchTerm">Search term</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         [Command("gw2wiki")]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
         public Task GW2Wiki(CommandContext commandContext, [RemainingText] string searchTerm)
         {
             return InvokeAsync(commandContext,

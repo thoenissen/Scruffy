@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -65,6 +66,18 @@ namespace Scruffy.Services.Core
 
             _embedBuilder.WithDescription($"{Formatter.InlineCode(command.QualifiedName)}: {_localizationGroup.GetText(command.QualifiedName, _localizationGroup.GetText("NoDescription", "No description provided."))}");
 
+            AddCommand(command, sb => _embedBuilder.AddField(_localizationGroup.GetText("Arguments", "Arguments"), sb.ToString().Trim()));
+
+            return this;
+        }
+
+        /// <summary>
+        /// Adding a command
+        /// </summary>
+        /// <param name="command">Command</param>
+        /// <param name="onCommand">Adding a command overload</param>
+        public void AddCommand(Command command, Action<StringBuilder> onCommand)
+        {
             if (command.Overloads?.Any() == true)
             {
                 var sb = new StringBuilder();
@@ -81,7 +94,7 @@ namespace Scruffy.Services.Core
                           .Append(arg.IsOptional || arg.IsCatchAll ? ']' : '>');
                     }
 
-                    sb.Append("`\n");
+                    sb.Append("` " + _localizationGroup.GetText(command.QualifiedName, string.Empty) + "\n");
 
                     foreach (var arg in ovl.Arguments)
                     {
@@ -100,7 +113,7 @@ namespace Scruffy.Services.Core
                         if (_localizationGroup.TryGetText($"{command.QualifiedName} {arg.Name} description", out var description))
                         {
                             sb.Append(" : ")
-                             .Append(description);
+                              .Append(description);
                         }
 
                         sb.Append("\n");
@@ -109,10 +122,8 @@ namespace Scruffy.Services.Core
                     sb.Append('\n');
                 }
 
-                _embedBuilder.AddField(_localizationGroup.GetText("Arguments", "Arguments"), sb.ToString().Trim());
+                onCommand(sb);
             }
-
-            return this;
         }
 
         /// <summary>

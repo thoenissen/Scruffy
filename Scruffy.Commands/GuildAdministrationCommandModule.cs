@@ -19,6 +19,7 @@ namespace Scruffy.Commands
     [Group("guild")]
     [Aliases("g")]
     [ModuleLifespan(ModuleLifespan.Transient)]
+    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public class GuildAdministrationCommandModule : LocatedCommandModuleBase
     {
         #region Constructor
@@ -225,6 +226,7 @@ namespace Scruffy.Commands
         [Group("bank")]
         [Aliases("b")]
         [ModuleLifespan(ModuleLifespan.Transient)]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public class GuildAdministrationBankCommandModule : LocatedCommandModuleBase
         {
             #region Constructor
@@ -258,6 +260,7 @@ namespace Scruffy.Commands
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("check")]
             [RequireGuild]
+            [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
             public Task SetNotificationChannel(CommandContext commandContext)
             {
                 return InvokeAsync(commandContext,
@@ -281,6 +284,7 @@ namespace Scruffy.Commands
         [Group("specialrank")]
         [Aliases("s")]
         [ModuleLifespan(ModuleLifespan.Transient)]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public class GuildAdministrationSpecialRankCommandModule : LocatedCommandModuleBase
         {
             #region Constructor
@@ -332,6 +336,7 @@ namespace Scruffy.Commands
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("overview")]
             [RequireGuild]
+            [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
             public Task Overview(CommandContext commandContext)
             {
                 return InvokeAsync(commandContext,
@@ -355,6 +360,7 @@ namespace Scruffy.Commands
         [Group("charts")]
         [Aliases("c")]
         [ModuleLifespan(ModuleLifespan.Transient)]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public class GuildAdministrationChartCommandModule : LocatedCommandModuleBase
         {
             #region Constructor
@@ -388,6 +394,7 @@ namespace Scruffy.Commands
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("worlds")]
             [RequireGuild]
+            [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
             public Task SetNotificationChannel(CommandContext commandContext)
             {
                 return InvokeAsync(commandContext,

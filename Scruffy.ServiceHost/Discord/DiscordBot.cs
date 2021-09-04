@@ -85,6 +85,7 @@ namespace Scruffy.ServiceHost.Discord
                                                            EnableMentionPrefix = true,
                                                            CaseSensitive = false,
                                                            DmHelp = false,
+                                                           EnableDefaultHelp = false,
                                                            Services = GlobalServiceProvider.Current.GetServiceProvider()
                                                        });
 

@@ -4,6 +4,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 
 using Scruffy.Services.Core;
+using Scruffy.Services.Core.Discord.Attributes;
 using Scruffy.Services.GuildWars2;
 
 namespace Scruffy.Commands
@@ -13,6 +14,7 @@ namespace Scruffy.Commands
     /// </summary>
     [Group("gw2")]
     [ModuleLifespan(ModuleLifespan.Transient)]
+    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
     public class GuildWars2CommandBuilder : LocatedCommandModuleBase
     {
         #region Constructor
@@ -45,6 +47,7 @@ namespace Scruffy.Commands
         /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("quaggan")]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
         public Task RemindMeIn(CommandContext commandContext)
         {
             return InvokeAsync(commandContext,

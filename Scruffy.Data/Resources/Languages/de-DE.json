@@ -19,7 +19,8 @@
       "ReminderTimePrompt": "Wähle bitte den Zeitpunkt der Erinnerung. (Format: hh:mm)",
       "DeletionTimePrompt": "Wähle bitte den Zeitpunkt der Löschung. (Format: hh:mm)",
       "ReminderMessagePrompt": "Gib bitte die Nachricht der Erinnerung ein.",
-      "CreationCompletedMessage": "Erstellung abgeschlossen! Alle Nachrichten der Erstellung werden in 30 Sekunden gelöscht."
+      "CreationCompletedMessage": "Erstellung abgeschlossen! Alle Nachrichten der Erstellung werden in 30 Sekunden gelöscht.",
+      "ReminderCreated": "Die Erinnerung wurde für den {0} um {1} Uhr eingerichtet."
     },
     "AccountApiKeyDialogElement": {
       "Message": "Gib bitte den zu verwendenen Api Key ein."
@@ -462,6 +463,10 @@
     "LocatedCommandModuleBase": {
       "CommandFailedMessage": "Der Befehl konnte nicht ausgeführt werden. Aber dafür habe ich einen Fehlercode ({0}) und ein lustiges Katzenbild für dich."
     },
+    "HelpOverviewCommandModule": {
+      "HelpCommandOverviewTitle": "Übersicht über die wichtigsten Befehle",
+      "HelpCommandOverviewDescription": "In der folgenden Nachricht werden die wichtigsten Befehle der ausgewählten Kategorie ausgegeben."
+    },
     "HelpCommandFormatter": {
       "Help": "Befehlshilfe",
       "GeneralHelp": "Es werden alle Befehlsgruppen ausgegeben. Spezifiziere den Befehl zur Ausgabe von weiteren Informationen.",
@@ -471,6 +476,10 @@
       "Subcommands": "Befehle",
 
       "help": "Ausgabe der Hilfe",
+      "help overview": "Übersicht der wichtigsten Befehle",
+      "help overview all": "Übersicht aller Befehle",
+      "help overview developer": "Übersicht aller Entwicklerbefehle",
+      "help overview admin": "Übersicht aller Administratorbefehle",
 
       "account": "Guild Wars 2 Account Konfiguration",
       "account add": "Hinzufügen eines neuen Accounts",
@@ -490,9 +499,9 @@
       "fractal join days description": "Tag oder Tage des Termins",
       "fractal join days format": "Mo/Di/Mi/Do/Fr/Sa/So",
 
-      "fractal leave": "Verlassen in die Gruppensuchen",
+      "fractal leave": "Verlassen der Gruppensuchen",
       "fractal leave alias": "Aliasname",
-      "fractal leave alias description": "Aliasname der Gruppensuchen",
+      "fractal leave alias description": "Aliasname der Gruppensuche",
       "fractal leave timeSpan": "Zeit",
       "fractal leave timeSpan description": "Zeit des Termins",
       "fractal leave timeSpan format": "hh:mm",
@@ -509,32 +518,51 @@
       "raid join role": "Rolle",
       "raid join role description": "Aliasname der Rolle",
       "raid leave": "Verlassen der Gruppensuche",
-      "raid leave alias": "Name",
-      "raid leave alias description": "Aliasname der Gruppensuche",
+      "raid leave name": "Name",
+      "raid leave name description": "Aliasname der Gruppensuche",
       "raid leave role": "Rolle",
       "raid leave role description": "Aliasname der Rolle",
       "raid commit": "Fortschreibung eines Termins",
+      "raid commit aliasName": "Name",
+      "raid commit aliasName description": "Aliasname der Gruppensuche",
       "raid roles": "Rollenübersicht",
       "raid roles own": "Spieler",
-      "raid roles setup": "Konfiguration",
+      "raid roles setup": "Konfiguration der Rollen",
       "raid templates": "Schablonen",
-      "raid templates setup": "Konfiguration",
+      "raid templates setup": "Konfiguration der Schablonen",
       "raid levels": "Erfahrungslevel",
-      "raid levels setup": "Konfiguration",
+      "raid levels setup": "Konfiguration der Erfahrungslevel",
       "raid levels set": "Erfahrungslevelzuweisung",
       "raid levels set aliasName": "Aliasname",
+      "raid levels set aliasName description": "Aliasname des Erfahrungslevels",
       "raid levels set users": "Benutzer",
+      "raid levels set users description": "Benutzer",
       "raid levels overview": "Erfahrungslevelübersicht",
 
       "guild": "Gildenverwaltung",
       "guild setup": "Einrichtung der Gildenadministration",
-      "guild setNotificationChannel": "Setzen des Benachrichtigungskanals",
-      "guild setReminderChannel": "Setzen des Erinnerungskanals",
+      "guild setspecialranknotification": "Setzen des Benachrichtigungskanals für Spezial-Ränge",
+      "guild setcalendarremindernotification": "Setzen des Benachrichtigungskanals für Erinnerungen",
+      "guild setguildlognotification": "Setzen des Benachrichtigungskanals des Gildenprotokolls",
       "guild motd": "Erstellung der Nachricht der 'Nachricht des Tages'",
       "guild calendar": "Kalendereinrichtung",
       "guild emblem random": "Zufallsgenerierung von Gilden-Emblemen",
+      "guild emblem random count": "Anzahl",
+      "guild emblem random count description": "Anzahl der Gilden-Embleme",
       "guild bank": "Gildenbank",
-      "guild bank check": "Überprüfung",
+      "guild bank check": "Überprüfung der Gildenbank",
+      "guild specialrank setup": "Einrichtungs-Assistent für Spezial-Ränge",
+      "guild specialrank overview": "Übersicht der aktuellen Punktevergabe der Spezial-Ränge",
+      "guild charts worlds": "Übersicht der aktuellen Weltenverteilung",
+
+      "gw2": "Guild Wars 2",
+      "gw2 quaggan": "Zufällige Quaggan-Bilder",
+
+      "games": "Discord-Spiele",
+      "games counter add": "Scruffy zum Zahlen zählen hinzufügen",
+      "games counter remove": "Scruffy zum Zahlen zählen entfernen",
+      "games wordchain add": "Scruffy zum Wortschlangen bilden hinzufügen",
+      "games wordchain remove": "Scruffy zum Wortschlangen bilden entfernen",
 
       "calendar": "Kalenderverwaltung",
       "calendar add": "Hinzufügen eines einmaligen Events",
@@ -553,13 +581,13 @@
 
       "reminder": "Erstellung von Erinnerungen",
 
-      "reminder in": "Erinnerung nach einem angegenen Zeitraum",
+      "reminder in": "Erinnerung nach einem angegebenen Zeitraum",
       "reminder in timeSpan": "Zeitraum",
       "reminder in timeSpan format": "xh/m/s",
       "reminder in timeSpan description": "Zeitraum bis zur Erinnerung",
       "reminder in message": "Nachricht",
       "reminder in message description": "Optional Nachricht",
-      "reminder at": "Erinnerung zum angegebenem Zeitpunkt",
+      "reminder at": "Erinnerung zum angegebenen Zeitpunkt",
       "reminder at time": "Zeit",
       "reminder at time format": "mm:dd",
       "reminder at time description": "Zeit der Erinnerung",
@@ -573,7 +601,31 @@
 
       "search": "Suche",
       "search google": "Google",
-      "search gw2wiki": "Guild Wars 2 Wiki"
+      "search google searchTerm": "Suchbegriff",
+      "search google searchTerm description": "Suchbegriff zur Ausführung der Suche",
+      "search gw2wiki": "Guild Wars 2 Wiki",
+      "search gw2wiki searchTerm": "Suchbegriff",
+      "search gw2wiki searchTerm description": "Suchbegriff zur Ausführung der Suche",
+
+      "debug": "Entwicklerbefehle",
+      "debug dump text": "Exportieren des Textes der Nachricht in eine txt-Datei",
+      "debug raid refresh_message": "Aktualisierung der Schlachtzug-Gruppensuche",
+      "debug raid refresh_message configurationId": "ID",
+      "debug raid refresh_message configurationId description": "ID der Konfiguration",
+      "debug list roles": "Auflistung aller Rollen des Servers",
+      "debug list users": "Auflistung aller Benutzer des Servers",
+      "debug list emojis": "Auflistung aller Emoji des Servers",
+      "debug list channels": "Auflistung aller Kanäle des Servers",
+      "debug calendar refresh_appointments": "Aktualisierung der Termine des Kalenders",
+      "debug calendar refresh_message": "Aktualisierung des Kalenders",
+      "debug calendar refresh_motd": "Aktualisierung der Nachricht des Tages",
+      "debug user add": "Hinzufügen eines Benutzers zur Verwaltung",
+      "debug user add discordUser": "Benutzer",
+      "debug user add discordUser description": "Discord-Benutzer",
+      "debug guild specialrank_job": "Ausführung des täglichen Jobs zur Zuweisung der Punkte",
+      "debug import worlds": "Import aller Welten bzw. Server von Guild Wars 2",
+      "debug network dnsinfo": "Ausgaben von Informationen zur einer Domäne",
+      "debug network dnsinfo domain": "Domäne"
     }
   }
 }
