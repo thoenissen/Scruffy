@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 
 using DSharpPlus.Entities;
 
+using Microsoft.EntityFrameworkCore;
+
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Services.Core;
@@ -44,7 +46,8 @@ namespace Scruffy.Services.Raid.DialogElements
         /// Editing the embedded message
         /// </summary>
         /// <param name="builder">Builder</param>
-        public override void EditMessage(DiscordEmbedBuilder builder)
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public override async Task EditMessage(DiscordEmbedBuilder builder)
         {
             builder.WithTitle(LocalizationGroup.GetText("ChooseCommandTitle", "Raid experience level configuration"));
             builder.WithDescription(LocalizationGroup.GetText("ChooseCommandDescription", "With this assistant you are able to configure the raid experience level."));
@@ -53,17 +56,18 @@ namespace Scruffy.Services.Raid.DialogElements
             {
                 var templateId = DialogContext.GetValue<long>("ExperienceLevelId");
 
-                var data = dbFactory.GetRepository<RaidExperienceLevelRepository>()
-                                    .GetQuery()
-                                    .Where(obj => obj.Id == templateId)
-                                    .Select(obj => new
-                                    {
-                                        obj.Description,
-                                        obj.AliasName,
-                                        obj.DiscordEmoji,
-                                        obj.DiscordRoleId
-                                    })
-                                    .First();
+                var data = await dbFactory.GetRepository<RaidExperienceLevelRepository>()
+                                          .GetQuery()
+                                          .Where(obj => obj.Id == templateId)
+                                          .Select(obj => new
+                                                         {
+                                                             obj.Description,
+                                                             obj.AliasName,
+                                                             obj.DiscordEmoji,
+                                                             obj.DiscordRoleId
+                                                         })
+                                          .FirstAsync()
+                                          .ConfigureAwait(false);
 
                 builder.AddField(LocalizationGroup.GetText("Description", "Description"), data.Description);
                 builder.AddField(LocalizationGroup.GetText("AliasName", "Alias name"), data.AliasName);

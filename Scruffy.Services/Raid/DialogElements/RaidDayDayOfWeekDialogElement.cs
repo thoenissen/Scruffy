@@ -42,10 +42,13 @@ namespace Scruffy.Services.Raid.DialogElements
         /// Editing the embedded message
         /// </summary>
         /// <param name="builder">Builder</param>
-        public override void EditMessage(DiscordEmbedBuilder builder)
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public override Task EditMessage(DiscordEmbedBuilder builder)
         {
             builder.WithTitle(LocalizationGroup.GetText("Title", "Raid day selection"));
             builder.WithDescription(LocalizationGroup.GetText("Description", "Please choose the day of the week:"));
+
+            return Task.CompletedTask;
         }
 
         /// <summary>

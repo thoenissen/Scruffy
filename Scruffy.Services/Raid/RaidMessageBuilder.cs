@@ -52,8 +52,6 @@ namespace Scruffy.Services.Raid
         {
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
-                var now = DateTime.Now;
-
                 var currentRaidPoints = dbFactory.GetRepository<RaidCurrentUserPointsRepository>()
                                                  .GetQuery()
                                                  .Select(obj => obj);
@@ -61,7 +59,7 @@ namespace Scruffy.Services.Raid
                 var appointment = dbFactory.GetRepository<RaidAppointmentRepository>()
                                            .GetQuery()
                                            .Where(obj => obj.ConfigurationId == configurationId
-                                                         && obj.TimeStamp > now)
+                                                      && obj.IsCommitted == false)
                                            .OrderByDescending(obj => obj.TimeStamp)
                                            .Select(obj => new
                                                           {

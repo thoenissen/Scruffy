@@ -216,7 +216,24 @@
       "SubstitutesBench": "Ersatzbank"
     },
     "RaidCommitDialogElement": {
-      "CommandTitle": "Befehle"
+      "CommitTitle": "Raid points commit",
+      "CommitText": "The following points will be committed:",
+      "Users": "Users",
+      "AddCommand": "{0} Add user",
+      "SetPointsCommand": "{0} Set points",
+      "RemoveCommand": "{0} Remove user",
+      "CommitCommand": "{0} Commit",
+      "CancelCommand": "{0} Cancel",
+      "CommandTitle": "Commands"
+    },
+    "RaidCommitPointDialogElement": {
+      "Message": "How many points should be assigned?"
+    },
+    "RaidCommitRemoveUserDialogElement": {
+      "Message": "Which user should be removed?"
+    },
+    "RaidCommitUserDialogElement": {
+      "Message": "Please input the user."
     },
     "GuildAdministrationApiKeyDialogElement": {
       "Message": "Gib den zu verwendenden API-Key ein:"

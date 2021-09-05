@@ -46,6 +46,8 @@ namespace Scruffy.Services.Raid
             {
                 long? registrationId = null;
 
+                var isAlreadyRegistered = false;
+
                 if (dbFactory.GetRepository<RaidRegistrationRepository>()
                              .AddOrRefresh(obj => obj.AppointmentId == appointmentId && obj.UserId == userId,
                                            obj =>
@@ -56,10 +58,15 @@ namespace Scruffy.Services.Raid
                                                    obj.UserId = userId;
                                                    obj.RegistrationTimeStamp = DateTime.Now;
                                                }
+                                               else
+                                               {
+                                                   isAlreadyRegistered = true;
+                                               }
                                            },
                                            obj => registrationId = obj.Id))
                 {
-                    if (registrationId != null)
+                    if (registrationId != null
+                     && isAlreadyRegistered == false)
                     {
                         var registration = dbFactory.GetRepository<RaidRegistrationRepository>()
                                                     .GetQuery()
@@ -83,7 +90,7 @@ namespace Scruffy.Services.Raid
                         if (registration?.IsDeadlineReached == false)
                         {
                             if (registration.AvailableSlots != null
-                             && registration.AvailableSlots < registration.Registrations)
+                             && registration.AvailableSlots > registration.Registrations)
                             {
                                 success = dbFactory.GetRepository<RaidRegistrationRepository>()
                                                    .Refresh(obj => obj.Id == registrationId,
@@ -125,20 +132,20 @@ namespace Scruffy.Services.Raid
                                             .Where(obj => obj.AppointmentId == appointmentId
                                                        && obj.UserId == userId)
                                             .Select(obj => new
-                                                           {
-                                                               obj.Id,
-                                                               IsDeadlineReached = obj.RaidAppointment.Deadline < obj.RegistrationTimeStamp,
-                                                               Registrations = obj.RaidAppointment
+                                            {
+                                                obj.Id,
+                                                IsDeadlineReached = obj.RaidAppointment.Deadline < obj.RegistrationTimeStamp,
+                                                Registrations = obj.RaidAppointment
                                                                                          .RaidRegistrations
                                                                                          .Count(obj2 => obj.LineupExperienceLevelId == obj.User.RaidExperienceLevelId),
-                                                               AvailableSlots = obj.RaidAppointment
+                                                AvailableSlots = obj.RaidAppointment
                                                                                    .RaidDayTemplate
                                                                                    .RaidExperienceAssignments
                                                                                    .Where(obj2 => obj2.ExperienceLevelId == obj.User.RaidExperienceLevelId)
                                                                                    .Select(obj2 => (int?)obj2.Count)
                                                                                    .FirstOrDefault(),
-                                                               obj.User.RaidExperienceLevelId
-                                                           })
+                                                obj.User.RaidExperienceLevelId
+                                            })
                                             .FirstOrDefault();
 
                 if (registration != null)
@@ -188,22 +195,23 @@ namespace Scruffy.Services.Raid
                                                      .Select(obj => new
                                                      {
                                                          ExperienceLevels = obj.RaidDayTemplate
-                                                                                               .RaidExperienceAssignments
-                                                                                               .Select(obj2 => new
-                                                                                                               {
-                                                                                                                   obj2.ExperienceLevelId,
-                                                                                                                   obj2.RaidExperienceLevel.Rank,
-                                                                                                                   obj2.Count,
-                                                                                                               })
-                                                                                               .ToList(),
+                                                                               .RaidExperienceAssignments
+                                                                               .Select(obj2 => new
+                                                                               {
+                                                                                   obj2.ExperienceLevelId,
+                                                                                   obj2.RaidExperienceLevel.Rank,
+                                                                                   obj2.Count
+                                                                               })
+                                                                               .ToList(),
                                                          Registrations = obj.RaidRegistrations
                                                                             .OrderByDescending(obj2 => currentRaidPoints.Where(obj3 => obj3.UserId == obj2.UserId)
-                                                                                                                        .Select(obj3 => obj3.Points))
+                                                                                                                        .Select(obj3 => obj3.Points)
+                                                                                                                        .FirstOrDefault())
                                                                             .Select(obj2 => new
-                                                                                            {
-                                                                                                obj.Id,
-                                                                                                obj2.User.RaidExperienceLevel.Rank
-                                                                                            })
+                                                                            {
+                                                                                obj.Id,
+                                                                                obj2.User.RaidExperienceLevel.Rank
+                                                                            })
                                                                             .ToList()
                                                      })
                                                      .FirstOrDefaultAsync()

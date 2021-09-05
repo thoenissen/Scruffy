@@ -20,7 +20,7 @@
       "DeletionTimePrompt": "Please enter the deletion times. (Format: hh:mm)",
       "ReminderMessagePrompt": "Please enter the message of the reminder.",
       "CreationCompletedMessage": "Creation completed! All creation messages will be deleted in 30 seconds.",
-      "ReminderCreated": "The reminder has been set for {0} {1}.",
+      "ReminderCreated": "The reminder has been set for {0} {1}."
     },
     "AccountApiKeyDialogElement": {
       "Message": "Please enter the api key which should be used."
@@ -216,7 +216,24 @@
       "SubstitutesBench": "Substitutes bench"
     },
     "RaidCommitDialogElement": {
-      "CommandTitle": "Commands"
+      "CommitTitle": "Fortschreibung der Teilnahmepunkte",
+      "CommitText": "Die folgenden Punkte werden fortgeschrieben:",
+      "Users": "Benutzer",
+      "AddCommand": "{0} Benutzer hinzufügen",
+      "SetPointsCommand": "{0} Punkte bearbeiten",
+      "RemoveCommand": "{0} Benutzer entfernen",
+      "CommitCommand": "{0} Bestätigen",
+      "CancelCommand": "{0} Abbrechen",
+      "CommandTitle": "Befehle"
+    },
+    "RaidCommitPointDialogElement": {
+      "Message": "Wie viele Punkte sollen zugewiesen werden?"
+    },
+    "RaidCommitRemoveUserDialogElement": {
+      "Message": "Welcher Benutzer soll entfernt werden?"
+    },
+    "RaidCommitUserDialogElement": {
+      "Message": "Welcher Benutzer soll angepasst werden?"
     },
     "GuildAdministrationApiKeyDialogElement": {
       "Message": "Please enter the api key."

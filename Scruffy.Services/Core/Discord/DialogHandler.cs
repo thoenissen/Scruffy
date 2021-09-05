@@ -11,9 +11,43 @@ namespace Scruffy.Services.Core.Discord
     /// <summary>
     /// Handling dialog elements
     /// </summary>
-    public static class DialogHandler
+    public sealed class DialogHandler : IAsyncDisposable, IDisposable
     {
-        #region Methods
+        #region Fields
+
+        /// <summary>
+        /// Command context
+        /// </summary>
+        private CommandContextContainer _commandContext;
+
+        /// <summary>
+        /// Dialog context
+        /// </summary>
+        private DialogContext _dialogContext;
+
+        /// <summary>
+        /// Service provider
+        /// </summary>
+        private ServiceProvider _serviceProvider;
+
+        #endregion // Fields
+
+        #region Constructor
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="commandContext">Command context</param>
+        public DialogHandler(CommandContextContainer commandContext)
+        {
+            _commandContext = commandContext;
+            _dialogContext = new DialogContext();
+            _serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+        }
+
+        #endregion // Constructor
+
+        #region Static - Methods
 
         /// <summary>
         /// Execution one dialog element
@@ -83,5 +117,67 @@ namespace Scruffy.Services.Core.Discord
         }
 
         #endregion // Methods
+
+        #region Methods
+
+        /// <summary>
+        /// Execution one dialog element
+        /// </summary>
+        /// <typeparam name="T">Type of the element</typeparam>
+        /// <typeparam name="TData">Type of the element result</typeparam>
+        /// <param name="element">Dialog element</param>
+        /// <returns>Result</returns>
+        public async Task<TData> Run<T, TData>(T element) where T : DialogElementBase<TData>
+        {
+            element.Initialize(_commandContext, _serviceProvider, _dialogContext);
+
+            return await element.Run()
+                                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Deletes all messages
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task DeleteMessages()
+        {
+            foreach (var message in _dialogContext.Messages)
+            {
+                await message.DeleteAsync()
+                             .ConfigureAwait(false);
+            }
+        }
+
+        #endregion // Methods
+
+        #region IAsyncDisposable
+
+        /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously.</summary>
+        /// <returns>A task that represents the asynchronous dispose operation.</returns>
+        public async ValueTask DisposeAsync()
+        {
+            if (_serviceProvider != null)
+            {
+                await _serviceProvider.DisposeAsync()
+                                      .ConfigureAwait(false);
+
+                _serviceProvider = null;
+            }
+        }
+
+        #endregion // IAsyncDisposable
+
+        #region IDisposable
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            _serviceProvider?.Dispose();
+            _serviceProvider = null;
+        }
+
+        #endregion // IDisposable
     }
 }

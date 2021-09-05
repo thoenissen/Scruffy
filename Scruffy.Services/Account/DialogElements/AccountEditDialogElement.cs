@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.Entities;
 
+using Microsoft.EntityFrameworkCore;
+
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Account;
 using Scruffy.Data.Json.GuildWars2.Core;
@@ -48,7 +50,8 @@ namespace Scruffy.Services.Account.DialogElements
         /// Editing the embedded message
         /// </summary>
         /// <param name="builder">Builder</param>
-        public override void EditMessage(DiscordEmbedBuilder builder)
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public override async Task EditMessage(DiscordEmbedBuilder builder)
         {
             builder.WithTitle(LocalizationGroup.GetText("ChooseCommandTitle", "Account configuration"));
             builder.WithDescription(LocalizationGroup.GetText("ChooseCommandDescription", "With this assistant you are able to configure your Guild Wars 2 account configuration."));
@@ -57,17 +60,18 @@ namespace Scruffy.Services.Account.DialogElements
             {
                 var name = DialogContext.GetValue<string>("AccountName");
 
-                var data = dbFactory.GetRepository<AccountRepository>()
-                                    .GetQuery()
-                                    .Where(obj => obj.UserId == CommandContext.User.Id
-                                               && obj.Name == name)
-                                    .Select(obj => new
-                                                   {
-                                                       obj.Name,
-                                                       IsApiKeyAvailable = obj.ApiKey != null,
-                                                       obj.DpsReportUserToken,
-                                                   })
-                                    .First();
+                var data = await dbFactory.GetRepository<AccountRepository>()
+                                          .GetQuery()
+                                          .Where(obj => obj.UserId == CommandContext.User.Id
+                                                     && obj.Name == name)
+                                          .Select(obj => new
+                                                         {
+                                                             obj.Name,
+                                                             IsApiKeyAvailable = obj.ApiKey != null,
+                                                             obj.DpsReportUserToken,
+                                                         })
+                                          .FirstAsync()
+                                          .ConfigureAwait(false);
 
                 var stringBuilder = new StringBuilder();
 

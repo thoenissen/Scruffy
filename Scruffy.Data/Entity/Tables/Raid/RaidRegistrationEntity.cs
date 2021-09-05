@@ -38,7 +38,7 @@ namespace Scruffy.Data.Entity.Tables.Raid
         /// <summary>
         /// Points
         /// </summary>
-        public long? Points { get; set; }
+        public double? Points { get; set; }
 
         /// <summary>
         /// Id of the experience level

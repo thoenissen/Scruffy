@@ -39,9 +39,8 @@ namespace Scruffy.Services.Core.Discord
         /// Editing the embedded message
         /// </summary>
         /// <param name="builder">Builder</param>
-        public virtual void EditMessage(DiscordEmbedBuilder builder)
-        {
-        }
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public virtual Task EditMessage(DiscordEmbedBuilder builder) => Task.CompletedTask;
 
         /// <summary>
         /// Returns the title of the commands
@@ -63,7 +62,7 @@ namespace Scruffy.Services.Core.Discord
         {
             var builder = new DiscordEmbedBuilder();
 
-            EditMessage(builder);
+            await EditMessage(builder).ConfigureAwait(false);
 
             var reactions = GetReactions();
 

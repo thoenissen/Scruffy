@@ -11,6 +11,15 @@ namespace Scruffy.Services.Core.Discord
     /// </summary>
     public class CommandContextContainer
     {
+        #region Fields
+
+        /// <summary>
+        /// Original context
+        /// </summary>
+        private CommandContext _commandContext;
+
+        #endregion // Fields
+
         #region Constructor
 
         /// <summary>
@@ -20,6 +29,8 @@ namespace Scruffy.Services.Core.Discord
         /// <returns>ICommandContext-implementation</returns>
         public CommandContextContainer(CommandContext commandContext)
         {
+            _commandContext = commandContext;
+
             Client = commandContext.Client;
             CommandsNext = commandContext.CommandsNext;
             Prefix = commandContext.Prefix;
@@ -47,6 +58,8 @@ namespace Scruffy.Services.Core.Discord
                                       .ConfigureAwait(false);
 
                 Member = null;
+
+                _commandContext = null;
             }
         }
 
@@ -119,6 +132,12 @@ namespace Scruffy.Services.Core.Discord
                                   .ConfigureAwait(false);
             }
         }
+
+        /// <summary>
+        /// Get the original context
+        /// </summary>
+        /// <returns>Original context</returns>
+        public CommandContext GetCommandContext() => _commandContext;
 
         #endregion // Methods
     }

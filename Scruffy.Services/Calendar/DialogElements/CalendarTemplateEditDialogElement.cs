@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 using DSharpPlus.Entities;
 
+using Microsoft.EntityFrameworkCore;
+
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Calendar;
 using Scruffy.Services.Calendar.DialogElements.Forms;
@@ -46,7 +48,8 @@ namespace Scruffy.Services.Calendar.DialogElements
         /// Editing the embedded message
         /// </summary>
         /// <param name="builder">Builder</param>
-        public override void EditMessage(DiscordEmbedBuilder builder)
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public override async Task EditMessage(DiscordEmbedBuilder builder)
         {
             builder.WithTitle(LocalizationGroup.GetText("ChooseCommandTitle", "Calendar template configuration"));
             builder.WithDescription(LocalizationGroup.GetText("ChooseCommandDescription", "With this assistant you are able to configure the calendar template"));
@@ -55,17 +58,18 @@ namespace Scruffy.Services.Calendar.DialogElements
             {
                 var templateId = DialogContext.GetValue<long>("CalendarTemplateId");
 
-                var data = dbFactory.GetRepository<CalendarAppointmentTemplateRepository>()
-                                    .GetQuery()
-                                    .Where(obj => obj.Id == templateId)
-                                    .Select(obj => new
-                                    {
-                                        obj.Description,
-                                        obj.ReminderTime,
-                                        obj.ReminderMessage,
-                                        obj.GuildPoints
-                                    })
-                                    .First();
+                var data = await dbFactory.GetRepository<CalendarAppointmentTemplateRepository>()
+                                          .GetQuery()
+                                          .Where(obj => obj.Id == templateId)
+                                          .Select(obj => new
+                                                         {
+                                                             obj.Description,
+                                                             obj.ReminderTime,
+                                                             obj.ReminderMessage,
+                                                             obj.GuildPoints
+                                                         })
+                                          .FirstAsync()
+                                          .ConfigureAwait(false);
 
                 builder.AddField(LocalizationGroup.GetText("Description", "Description"), data.Description);
 

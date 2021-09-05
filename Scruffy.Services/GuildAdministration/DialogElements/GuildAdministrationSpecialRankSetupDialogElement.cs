@@ -85,7 +85,8 @@ namespace Scruffy.Services.GuildAdministration.DialogElements
         /// Editing the embedded message
         /// </summary>
         /// <param name="builder">Builder</param>
-        public override void EditMessage(DiscordEmbedBuilder builder)
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public override Task EditMessage(DiscordEmbedBuilder builder)
         {
             builder.WithTitle(LocalizationGroup.GetText("ChooseCommandTitle", "Guild special rank configuration"));
             builder.WithDescription(LocalizationGroup.GetText("ChooseCommandDescription", "With this assistant you are able to configure the guild special ranks. The following special ranks are already created:"));
@@ -108,6 +109,8 @@ namespace Scruffy.Services.GuildAdministration.DialogElements
             }
 
             builder.AddField(LocalizationGroup.GetText("RanksFields", "Ranks"), levelsBuilder.ToString());
+
+            return Task.CompletedTask;
         }
 
         /// <summary>

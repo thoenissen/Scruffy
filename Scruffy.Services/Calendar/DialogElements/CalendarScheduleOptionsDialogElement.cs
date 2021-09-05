@@ -43,10 +43,13 @@ namespace Scruffy.Services.Calendar.DialogElements
         /// Editing the embedded message
         /// </summary>
         /// <param name="builder">Builder</param>
-        public override void EditMessage(DiscordEmbedBuilder builder)
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public override Task EditMessage(DiscordEmbedBuilder builder)
         {
             builder.WithTitle(LocalizationGroup.GetText("Title", "Schedule options selection"));
             builder.WithDescription(LocalizationGroup.GetText("Description", "Please choose one of the following options:"));
+
+            return Task.CompletedTask;
         }
 
         /// <summary>

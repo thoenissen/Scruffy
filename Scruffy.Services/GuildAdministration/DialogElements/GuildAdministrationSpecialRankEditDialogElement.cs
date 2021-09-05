@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.Entities;
 
+using Microsoft.EntityFrameworkCore;
+
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.GuildAdministration;
 using Scruffy.Services.Core;
@@ -47,7 +49,8 @@ namespace Scruffy.Services.GuildAdministration.DialogElements
         /// Editing the embedded message
         /// </summary>
         /// <param name="builder">Builder</param>
-        public override void EditMessage(DiscordEmbedBuilder builder)
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public override async Task EditMessage(DiscordEmbedBuilder builder)
         {
             builder.WithTitle(LocalizationGroup.GetText("ChooseCommandTitle", "Special rank configuration"));
             builder.WithDescription(LocalizationGroup.GetText("ChooseCommandDescription", "With this assistant you are able to configure the special rank."));
@@ -56,26 +59,27 @@ namespace Scruffy.Services.GuildAdministration.DialogElements
             {
                 var rankId = DialogContext.GetValue<long>("RankId");
 
-                var data = dbFactory.GetRepository<GuildSpecialRankConfigurationRepository>()
-                                    .GetQuery()
-                                    .Where(obj => obj.Id == rankId)
-                                    .Select(obj => new
-                                    {
-                                        obj.Description,
-                                        obj.DiscordRoleId,
-                                        obj.MaximumPoints,
-                                        obj.GrantThreshold,
-                                        obj.RemoveThreshold,
-                                        Roles = obj.GuildSpecialRankRoleAssignments
-                                                   .Select(obj2 => new
-                                                                   {
-                                                                       obj2.DiscordRoleId,
-                                                                       obj2.Points
-                                                                   }),
-                                        IgnoreRoles = obj.GuildSpecialRankIgnoreRoleAssignments
-                                                         .Select(obj => obj.DiscordRoleId)
-                                    })
-                                    .First();
+                var data = await  dbFactory.GetRepository<GuildSpecialRankConfigurationRepository>()
+                                           .GetQuery()
+                                           .Where(obj => obj.Id == rankId)
+                                           .Select(obj => new
+                                                          {
+                                                              obj.Description,
+                                                              obj.DiscordRoleId,
+                                                              obj.MaximumPoints,
+                                                              obj.GrantThreshold,
+                                                              obj.RemoveThreshold,
+                                                              Roles = obj.GuildSpecialRankRoleAssignments
+                                                                         .Select(obj2 => new
+                                                                                         {
+                                                                                             obj2.DiscordRoleId,
+                                                                                             obj2.Points
+                                                                                         }),
+                                                              IgnoreRoles = obj.GuildSpecialRankIgnoreRoleAssignments
+                                                                               .Select(obj => obj.DiscordRoleId)
+                                                          })
+                                           .FirstAsync()
+                                           .ConfigureAwait(false);
 
                 var fieldBuilder = new StringBuilder();
                 fieldBuilder.AppendLine($"{Formatter.Bold(LocalizationGroup.GetText("Description", "Description"))}: {data.Description}");

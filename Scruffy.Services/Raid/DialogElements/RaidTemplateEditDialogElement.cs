@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 
 using DSharpPlus.Entities;
 
+using Microsoft.EntityFrameworkCore;
+
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Services.Core;
@@ -44,7 +46,8 @@ namespace Scruffy.Services.Raid.DialogElements
         /// Editing the embedded message
         /// </summary>
         /// <param name="builder">Builder</param>
-        public override void EditMessage(DiscordEmbedBuilder builder)
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public override async Task EditMessage(DiscordEmbedBuilder builder)
         {
             builder.WithTitle(LocalizationGroup.GetText("ChooseCommandTitle", "Raid template configuration"));
             builder.WithDescription(LocalizationGroup.GetText("ChooseCommandDescription", "With this assistant you are able to configure the raid template."));
@@ -53,17 +56,18 @@ namespace Scruffy.Services.Raid.DialogElements
             {
                 var templateId = DialogContext.GetValue<long>("TemplateId");
 
-                var data = dbFactory.GetRepository<RaidDayTemplateRepository>()
-                                    .GetQuery()
-                                    .Where(obj => obj.Id == templateId)
-                                    .Select(obj => new
-                                                   {
-                                                       obj.AliasName,
-                                                       obj.Title,
-                                                       obj.Description,
-                                                       obj.Thumbnail
-                                                   })
-                                    .First();
+                var data = await dbFactory.GetRepository<RaidDayTemplateRepository>()
+                                          .GetQuery()
+                                          .Where(obj => obj.Id == templateId)
+                                          .Select(obj => new
+                                                         {
+                                                             obj.AliasName,
+                                                             obj.Title,
+                                                             obj.Description,
+                                                             obj.Thumbnail
+                                                         })
+                                          .FirstAsync()
+                                          .ConfigureAwait(false);
 
                 builder.AddField(LocalizationGroup.GetText("AliasName", "Alias name"), data.AliasName);
                 builder.AddField(LocalizationGroup.GetText("Title", "Title"), data.Title);

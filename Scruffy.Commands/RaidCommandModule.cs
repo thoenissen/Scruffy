@@ -118,7 +118,7 @@ namespace Scruffy.Commands
                                                     TemplateId = data.TemplateId,
                                                     TimeStamp = appointmentTimeStamp,
                                                     Deadline = appointmentTimeStamp.Date
-                                                                                        .Add(data.RegistrationDeadline)
+                                                                                   .Add(data.RegistrationDeadline)
                                                 });
 
                                        await MessageBuilder.RefreshMessageAsync(configuration.Id)

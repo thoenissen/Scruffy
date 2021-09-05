@@ -80,7 +80,8 @@ namespace Scruffy.Services.Calendar.DialogElements
         /// Editing the embedded message
         /// </summary>
         /// <param name="builder">Builder</param>
-        public override void EditMessage(DiscordEmbedBuilder builder)
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public override Task EditMessage(DiscordEmbedBuilder builder)
         {
             builder.WithTitle(LocalizationGroup.GetText("ChooseCommandTitle", "Calendar template configuration"));
             builder.WithDescription(LocalizationGroup.GetText("ChooseCommandDescription", "With this assistant you are able to configure the calendar templates. The following templates are already created:"));
@@ -101,6 +102,8 @@ namespace Scruffy.Services.Calendar.DialogElements
             }
 
             builder.AddField(LocalizationGroup.GetText("TemplatesField", "Templates"), templatesBuilder.ToString());
+
+            return Task.CompletedTask;
         }
 
         /// <summary>
