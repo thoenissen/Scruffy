@@ -90,6 +90,13 @@ namespace Scruffy.Services.Raid
                                                                                                                             .Select(obj4 => obj4.Points).FirstOrDefault(),
                                                                                                   obj3.LineupExperienceLevelId,
                                                                                                   ExperienceLevelDiscordEmoji = (ulong?)obj3.User.RaidExperienceLevel.DiscordEmoji,
+                                                                                                  Roles = obj3.RaidRegistrationRoleAssignments
+                                                                                                              .Select(obj4 => new
+                                                                                                                              {
+                                                                                                                                  MainRoleEmoji = obj4.MainRaidRole.DiscordEmojiId,
+                                                                                                                                  SubRoleEmoji = (ulong?)obj4.SubRaidRole.DiscordEmojiId
+                                                                                                                              })
+                                                                                                              .ToList()
                                                                                               })
                                                                               .ToList()
                                                           })
@@ -124,7 +131,37 @@ namespace Scruffy.Services.Raid
                                     var discordUser = await _client.GetUserAsync(registration.UserId)
                                                                    .ConfigureAwait(false);
 
-                                    stringBuilder.AppendLine($" > {DiscordEmojiService.GetQuestionMarkEmoji(_client)} {discordUser.Mention}");
+                                    stringBuilder.Append(" > ");
+
+                                    if (registration.Roles?.Count > 0)
+                                    {
+                                        var first = true;
+
+                                        foreach (var role in registration.Roles)
+                                        {
+                                            if (first == false)
+                                            {
+                                                stringBuilder.Append(", ");
+                                            }
+                                            else
+                                            {
+                                                first = false;
+                                            }
+
+                                            stringBuilder.Append(DiscordEmojiService.GetGuildEmoji(_client, role.MainRoleEmoji));
+
+                                            if (role.SubRoleEmoji != null)
+                                            {
+                                                stringBuilder.Append(DiscordEmojiService.GetGuildEmoji(_client, role.SubRoleEmoji.Value));
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        stringBuilder.Append(DiscordEmojiService.GetQuestionMarkEmoji(_client));
+                                    }
+
+                                    stringBuilder.Append($" {discordUser.Mention}\n");
                                 }
 
                                 stringBuilder.Append('\u200B');

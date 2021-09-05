@@ -235,6 +235,12 @@
     "RaidCommitUserDialogElement": {
       "Message": "Please input the user."
     },
+    "RaidRoleSelectionDialogElement": {
+      "ChooseLevelTitle": "Rollenauswahl",
+      "ChooseLevelDescription": "Wähle eine der folgenden Rollen:",
+      "NoRole": "Keine Spezifizierung",
+      "RolesField": "Rollen" 
+    },
     "GuildAdministrationApiKeyDialogElement": {
       "Message": "Gib den zu verwendenden API-Key ein:"
     },

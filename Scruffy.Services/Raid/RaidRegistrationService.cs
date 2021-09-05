@@ -38,14 +38,12 @@ namespace Scruffy.Services.Raid
         /// <param name="appointmentId">Id of the appointment</param>
         /// <param name="userId">User id</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task<bool> Join(long appointmentId, ulong userId)
+        public async Task<long?> Join(long appointmentId, ulong userId)
         {
-            var success = false;
+            long? registrationId = null;
 
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
-                long? registrationId = null;
-
                 var isAlreadyRegistered = false;
 
                 if (dbFactory.GetRepository<RaidRegistrationRepository>()
@@ -92,24 +90,20 @@ namespace Scruffy.Services.Raid
                             if (registration.AvailableSlots != null
                              && registration.AvailableSlots > registration.Registrations)
                             {
-                                success = dbFactory.GetRepository<RaidRegistrationRepository>()
+                                dbFactory.GetRepository<RaidRegistrationRepository>()
                                                    .Refresh(obj => obj.Id == registrationId,
                                                             obj => obj.LineupExperienceLevelId = registration.RaidExperienceLevelId);
                             }
                             else
                             {
-                                success = await RefreshAppointment(registrationId.Value).ConfigureAwait(false);
+                                await RefreshAppointment(registrationId.Value).ConfigureAwait(false);
                             }
-                        }
-                        else
-                        {
-                            success = true;
                         }
                     }
                 }
             }
 
-            return success;
+            return registrationId;
         }
 
         /// <summary>
@@ -154,6 +148,9 @@ namespace Scruffy.Services.Raid
                       && registration.AvailableSlots != registration.Registrations)
                      || registration.IsDeadlineReached)
                     {
+                        dbFactory.GetRepository<RaidRegistrationRoleAssignmentRepository>()
+                                 .RemoveRange(obj => obj.RegistrationId == registration.Id);
+
                         dbFactory.GetRepository<RaidRegistrationRepository>()
                                  .Remove(obj => obj.Id == registration.Id);
                     }

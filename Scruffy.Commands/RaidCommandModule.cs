@@ -65,6 +65,11 @@ namespace Scruffy.Commands
         /// </summary>
         public RaidRegistrationService RegistrationService { get; set; }
 
+        /// <summary>
+        /// Role assignment
+        /// </summary>
+        public RaidRoleAssignmentService RoleAssignmentService { get; set; }
+
         #endregion // Properties
 
         #region Methods
@@ -155,9 +160,14 @@ namespace Scruffy.Commands
                                                                         .ConfigureAwait(false);
                                        if (appointment != null)
                                        {
-                                           if (await RegistrationService.Join(appointment.Id, commandContextContainer.User.Id)
-                                                                        .ConfigureAwait(false))
+                                           var registrationId = await RegistrationService.Join(appointment.Id, commandContextContainer.User.Id)
+                                                                                         .ConfigureAwait(false);
+
+                                           if (registrationId != null)
                                            {
+                                               await RoleAssignmentService.AssignRoles(commandContextContainer, registrationId.Value)
+                                                                          .ConfigureAwait(false);
+
                                                await MessageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
                                                                    .ConfigureAwait(false);
                                            }
