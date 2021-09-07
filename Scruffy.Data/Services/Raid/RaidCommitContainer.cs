@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Scruffy.Data.Services.Raid
 {
@@ -11,6 +12,11 @@ namespace Scruffy.Data.Services.Raid
         /// Id of the appointment
         /// </summary>
         public long AppointmentId { get; set; }
+
+        /// <summary>
+        /// Timestamp of the appointment
+        /// </summary>
+        public DateTime AppointmentTimeStamp { get; set; }
 
         /// <summary>
         /// Users

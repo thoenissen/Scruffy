@@ -145,6 +145,9 @@ namespace Scruffy.Commands
             return InvokeAsync(commandContext,
                                async commandContextContainer =>
                                {
+                                   await UserManagementService.CheckUserAsync(commandContext.User.Id)
+                                                              .ConfigureAwait(false);
+
                                    using (var dbFactory = RepositoryFactory.CreateInstance())
                                    {
                                        var appointment = await dbFactory.GetRepository<RaidAppointmentRepository>()
@@ -171,6 +174,69 @@ namespace Scruffy.Commands
                                                await MessageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
                                                                    .ConfigureAwait(false);
                                            }
+
+                                           await commandContextContainer.Message
+                                                                        .DeleteAsync()
+                                                                        .ConfigureAwait(false);
+                                       }
+                                       else
+                                       {
+                                           await commandContextContainer.Message
+                                                                        .RespondAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."))
+                                                                        .ConfigureAwait(false);
+                                       }
+                                   }
+                               });
+        }
+
+        /// <summary>
+        /// Joining an appointment
+        /// </summary>
+        /// <param name="commandContext">Current command context</param>
+        /// <param name="user">User</param>
+        /// <param name="name">Name</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("joinUser")]
+        [RequireGuild]
+        [RequireAdministratorPermissions]
+        public Task Join(CommandContext commandContext, DiscordUser user, string name)
+        {
+            return InvokeAsync(commandContext,
+                               async commandContextContainer =>
+                               {
+                                   await UserManagementService.CheckUserAsync(user.Id)
+                                                              .ConfigureAwait(false);
+
+                                   using (var dbFactory = RepositoryFactory.CreateInstance())
+                                   {
+                                       var appointment = await dbFactory.GetRepository<RaidAppointmentRepository>()
+                                                                        .GetQuery()
+                                                                        .Where(obj => obj.TimeStamp > DateTime.Now
+                                                                                   && obj.RaidDayConfiguration.AliasName == name)
+                                                                        .Select(obj => new
+                                                                        {
+                                                                            obj.Id,
+                                                                            obj.ConfigurationId
+                                                                        })
+                                                                        .FirstOrDefaultAsync()
+                                                                        .ConfigureAwait(false);
+                                       if (appointment != null)
+                                       {
+                                           var registrationId = await RegistrationService.Join(appointment.Id, user.Id)
+                                                                                         .ConfigureAwait(false);
+
+                                           if (registrationId != null)
+                                           {
+                                               await RoleAssignmentService.AssignRoles(commandContextContainer, registrationId.Value)
+                                                                          .ConfigureAwait(false);
+
+                                               await MessageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
+                                                                   .ConfigureAwait(false);
+                                           }
+
+                                           await commandContextContainer.Message
+                                                                        .DeleteAsync()
+                                                                        .ConfigureAwait(false);
                                        }
                                        else
                                        {
@@ -195,6 +261,9 @@ namespace Scruffy.Commands
             return InvokeAsync(commandContext,
                                async commandContextContainer =>
                                {
+                                   await UserManagementService.CheckUserAsync(commandContext.User.Id)
+                                                              .ConfigureAwait(false);
+
                                    using (var dbFactory = RepositoryFactory.CreateInstance())
                                    {
                                        var appointment = await dbFactory.GetRepository<RaidAppointmentRepository>()
@@ -216,6 +285,114 @@ namespace Scruffy.Commands
                                                await MessageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
                                                                    .ConfigureAwait(false);
                                            }
+
+                                           await commandContextContainer.Message
+                                                                        .DeleteAsync()
+                                                                        .ConfigureAwait(false);
+                                       }
+                                       else
+                                       {
+                                           await commandContextContainer.Message
+                                                                        .RespondAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."))
+                                                                        .ConfigureAwait(false);
+                                       }
+                                   }
+                               });
+        }
+
+        /// <summary>
+        /// Leaving an appointment
+        /// </summary>
+        /// <param name="commandContext">Current command context</param>
+        /// <param name="user">User</param>
+        /// <param name="name">Name</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("leaveUser")]
+        [RequireGuild]
+        [RequireAdministratorPermissions]
+        public Task Leave(CommandContext commandContext, DiscordUser user, string name)
+        {
+            return InvokeAsync(commandContext,
+                               async commandContextContainer =>
+                               {
+                                   await UserManagementService.CheckUserAsync(user.Id)
+                                                              .ConfigureAwait(false);
+
+                                   using (var dbFactory = RepositoryFactory.CreateInstance())
+                                   {
+                                       var appointment = await dbFactory.GetRepository<RaidAppointmentRepository>()
+                                                                        .GetQuery()
+                                                                        .Where(obj => obj.TimeStamp > DateTime.Now
+                                                                                   && obj.RaidDayConfiguration.AliasName == name)
+                                                                        .Select(obj => new
+                                                                        {
+                                                                            obj.Id,
+                                                                            obj.ConfigurationId
+                                                                        })
+                                                                        .FirstOrDefaultAsync()
+                                                                        .ConfigureAwait(false);
+                                       if (appointment != null)
+                                       {
+                                           if (await RegistrationService.Leave(appointment.Id, user.Id)
+                                                                        .ConfigureAwait(false))
+                                           {
+                                               await MessageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
+                                                                   .ConfigureAwait(false);
+                                           }
+
+                                           await commandContextContainer.Message
+                                                                        .DeleteAsync()
+                                                                        .ConfigureAwait(false);
+                                       }
+                                       else
+                                       {
+                                           await commandContextContainer.Message
+                                                                        .RespondAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."))
+                                                                        .ConfigureAwait(false);
+                                       }
+                                   }
+                               });
+        }
+
+        /// <summary>
+        /// Commiting the current raid appointment
+        /// </summary>
+        /// <param name="commandContext">Command context</param>
+        /// <param name="name">Alias name</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("setTemplate")]
+        [RequireGuild]
+        [RequireAdministratorPermissions]
+        public Task SetTemplate(CommandContext commandContext, string name)
+        {
+            return InvokeAsync(commandContext,
+                               async commandContextContainer =>
+                               {
+                                   using (var dbFactory = RepositoryFactory.CreateInstance())
+                                   {
+                                       var appointment = await dbFactory.GetRepository<RaidAppointmentRepository>()
+                                                                        .GetQuery()
+                                                                        .Where(obj => obj.TimeStamp > DateTime.Now
+                                                                                   && obj.RaidDayConfiguration.AliasName == name)
+                                                                        .Select(obj => new
+                                                                                       {
+                                                                                           obj.Id,
+                                                                                           obj.ConfigurationId
+                                                                                       })
+                                                                        .FirstOrDefaultAsync()
+                                                                        .ConfigureAwait(false);
+                                       if (appointment != null)
+                                       {
+                                           if (await RegistrationService.SetTemplate(commandContextContainer, appointment.Id)
+                                                                        .ConfigureAwait(false))
+                                           {
+                                               await MessageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
+                                                                   .ConfigureAwait(false);
+                                           }
+
+                                           await commandContextContainer.Message
+                                                                        .DeleteAsync()
+                                                                        .ConfigureAwait(false);
                                        }
                                        else
                                        {
@@ -482,14 +659,75 @@ namespace Scruffy.Commands
                                    });
             }
 
+            #endregion // Methods
+        }
+
+        #endregion // Templates
+
+        #region Levels
+
+        /// <summary>
+        /// Overviews
+        /// </summary>
+        [Group("overview")]
+        [Aliases("o")]
+        [ModuleLifespan(ModuleLifespan.Transient)]
+        public class RaidOverviewCommandModule : LocatedCommandModuleBase
+        {
+            #region Constructor
+
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="localizationService">Localization service</param>
+            public RaidOverviewCommandModule(LocalizationService localizationService)
+                : base(localizationService)
+            {
+            }
+
+            #endregion // Constructor
+
+            #region Properties
+
+            /// <summary>
+            /// Experience level service
+            /// </summary>
+            public RaidExperienceLevelsService RaidExperienceLevelsService { get; set; }
+
+            /// <summary>
+            /// Overviews service
+            /// </summary>
+            public RaidOverviewService RaidOverviewService { get; set; }
+
+            #endregion // Properties
+
+            #region Methods
+
+            /// <summary>
+            /// Post overview of participation points
+            /// </summary>
+            /// <param name="commandContext">Command context</param>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+            [Command("participation")]
+            [RequireGuild]
+            public Task PostParticipationOverview(CommandContext commandContext)
+            {
+                return InvokeAsync(commandContext,
+                                   async commandContextContainer =>
+                                   {
+                                       await RaidOverviewService.PostParticipationOverview(commandContextContainer)
+                                                                .ConfigureAwait(false);
+                                   });
+            }
+
             /// <summary>
             /// Post overview of experience roles
             /// </summary>
             /// <param name="commandContext">Command context</param>
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-            [Command("overview")]
+            [Command("levels")]
             [RequireGuild]
-            public Task SendExperienceLevelOverview(CommandContext commandContext)
+            public Task PostExperienceLevelOverview(CommandContext commandContext)
             {
                 return InvokeAsync(commandContext,
                                    async commandContextContainer =>

@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
+
+using Scruffy.Data.Enumerations.General;
 
 namespace Scruffy.Data.Entity.Tables.General
 {
@@ -15,6 +18,16 @@ namespace Scruffy.Data.Entity.Tables.General
         /// </summary>
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
+
+        /// <summary>
+        /// Time stamp
+        /// </summary>
+        public DateTime TimeStamp { get; set; }
+
+        /// <summary>
+        /// Type
+        /// </summary>
+        public LogEntryType Type { get; set; }
 
         /// <summary>
         /// Message

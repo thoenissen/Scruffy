@@ -71,7 +71,8 @@ namespace Scruffy.Services.Raid
                                                    .Select(obj => new
                                                            {
                                                                obj.Id,
-                                                               obj.ConfigurationId
+                                                               obj.ConfigurationId,
+                                                               obj.TimeStamp
                                                            })
                                                    .FirstOrDefaultAsync()
                                                    .ConfigureAwait(false);
@@ -110,7 +111,7 @@ namespace Scruffy.Services.Raid
                         users.Add(new RaidCommitUserData
                                   {
                                       UserId = entry.UserId,
-                                      Points = experienceLevel.ParticipationPoints * (entry.LineupExperienceLevelId == null ? 3 : 1),
+                                      Points = experienceLevel.ParticipationPoints * (entry.LineupExperienceLevelId == null ? 3.0 : 1.0),
                                       DiscordEmoji = experienceLevel.DiscordEmoji,
                                   });
                     }
@@ -118,6 +119,7 @@ namespace Scruffy.Services.Raid
                     var container = new RaidCommitContainer
                                     {
                                         AppointmentId = appointment.Id,
+                                        AppointmentTimeStamp = appointment.TimeStamp,
                                         Users = users,
                                     };
 

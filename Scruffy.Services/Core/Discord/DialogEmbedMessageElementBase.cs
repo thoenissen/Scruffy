@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using DSharpPlus.Entities;
@@ -12,6 +13,15 @@ namespace Scruffy.Services.Core.Discord
     /// <typeparam name="TData">Type of the result</typeparam>
     public abstract class DialogEmbedMessageElementBase<TData> : DialogElementBase<TData>
     {
+        #region Fields
+
+        /// <summary>
+        /// Localization service
+        /// </summary>
+        private LocalizationService _localizationService;
+
+        #endregion // Fields
+
         #region Constructor
 
         /// <summary>
@@ -21,6 +31,7 @@ namespace Scruffy.Services.Core.Discord
         protected DialogEmbedMessageElementBase(LocalizationService localizationService)
             : base(localizationService)
         {
+            _localizationService = localizationService;
         }
 
         #endregion // Constructor
@@ -46,26 +57,46 @@ namespace Scruffy.Services.Core.Discord
         /// <returns>Result</returns>
         public override async Task<TData> Run()
         {
-            var currentBotMessage = await CommandContext.Channel
-                                                        .SendMessageAsync(GetMessage())
-                                                        .ConfigureAwait(false);
+            var repeat = false;
 
-            DialogContext.Messages.Add(currentBotMessage);
-
-            var currentUserResponse = await CommandContext.Client
-                                                          .GetInteractivity()
-                                                          .WaitForMessageAsync(obj => obj.Author.Id == CommandContext.User.Id
-                                                                                                      && obj.ChannelId == CommandContext.Channel.Id)
-                                                          .ConfigureAwait(false);
-
-            if (currentUserResponse.TimedOut == false)
+            do
             {
-                CommandContext.LastUserMessage = currentUserResponse.Result;
+                var currentBotMessage = await CommandContext.Channel
+                                                            .SendMessageAsync(GetMessage())
+                                                            .ConfigureAwait(false);
 
-                DialogContext.Messages.Add(currentUserResponse.Result);
+                DialogContext.Messages.Add(currentBotMessage);
 
-                return await ConvertMessage(currentUserResponse.Result).ConfigureAwait(false);
+                var currentUserResponse = await CommandContext.Client
+                                                              .GetInteractivity()
+                                                              .WaitForMessageAsync(obj => obj.Author.Id == CommandContext.User.Id
+                                                                                       && obj.ChannelId == CommandContext.Channel.Id)
+                                                              .ConfigureAwait(false);
+
+                if (currentUserResponse.TimedOut == false)
+                {
+                    CommandContext.LastUserMessage = currentUserResponse.Result;
+
+                    DialogContext.Messages.Add(currentUserResponse.Result);
+
+                    try
+                    {
+                        return await ConvertMessage(currentUserResponse.Result).ConfigureAwait(false);
+                    }
+                    catch (Exception ex) when (ex is InvalidOperationException || ex is KeyNotFoundException)
+                    {
+                        var repeatMessage = await CommandContext.Channel
+                                                                .SendMessageAsync(_localizationService.GetGroup(nameof(DialogElementBase))
+                                                                                                      .GetText("PleaseTryAgain", "Your input was invalid. Please try again."))
+                                                                .ConfigureAwait(false);
+
+                        DialogContext.Messages.Add(repeatMessage);
+
+                        repeat = true;
+                    }
+                }
             }
+            while (repeat);
 
             throw new TimeoutException();
         }

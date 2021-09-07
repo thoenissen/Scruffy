@@ -89,6 +89,7 @@ namespace Scruffy.Services.Raid
                                                                                                   Points = currentRaidPoints.Where(obj4 => obj4.UserId == obj3.UserId)
                                                                                                                             .Select(obj4 => obj4.Points).FirstOrDefault(),
                                                                                                   obj3.LineupExperienceLevelId,
+                                                                                                  ExperienceLevelId = (int?)obj3.User.RaidExperienceLevel.Id,
                                                                                                   ExperienceLevelDiscordEmoji = (ulong?)obj3.User.RaidExperienceLevel.DiscordEmoji,
                                                                                                   Roles = obj3.RaidRegistrationRoleAssignments
                                                                                                               .Select(obj4 => new
@@ -119,7 +120,8 @@ namespace Scruffy.Services.Raid
                             var stringBuilder = new StringBuilder();
 
                             // Building the message
-                            foreach (var slot in appointment.ExperienceLevels)
+                            foreach (var slot in appointment.ExperienceLevels
+                                                            .OrderBy(obj => obj.Rank))
                             {
                                 var registrations = appointment.Registrations
                                                                .Where(obj => obj.LineupExperienceLevelId == slot.RaidExperienceLevelId)
@@ -161,12 +163,21 @@ namespace Scruffy.Services.Raid
                                         stringBuilder.Append(DiscordEmojiService.GetQuestionMarkEmoji(_client));
                                     }
 
-                                    stringBuilder.Append($" {discordUser.Mention}\n");
+                                    stringBuilder.Append($" {discordUser.Mention}");
+
+                                    if (registration.LineupExperienceLevelId != registration.ExperienceLevelId
+                                     && registration.ExperienceLevelDiscordEmoji != null)
+                                    {
+                                        stringBuilder.Append(' ');
+                                        stringBuilder.Append(DiscordEmojiService.GetGuildEmoji(_client, registration.ExperienceLevelDiscordEmoji.Value));
+                                    }
+
+                                    stringBuilder.Append($"\n");
                                 }
 
                                 stringBuilder.Append('\u200B');
 
-                                builder.AddField($"{DiscordEmojiService.GetGuildEmoji(_client, slot.DiscordEmoji)} {slot.Description} ({registrations.Count})", stringBuilder.ToString());
+                                builder.AddField($"{DiscordEmojiService.GetGuildEmoji(_client, slot.DiscordEmoji)} {slot.Description} ({registrations.Count}/{slot.Count})", stringBuilder.ToString());
 
                                 stringBuilder.Clear();
                             }
@@ -185,7 +196,7 @@ namespace Scruffy.Services.Raid
 
                             builder.AddField(LocalizationGroup.GetText("SubstitutesBench", "Substitutes bench"), stringBuilder.ToString());
 
-                            builder.WithTitle($"{appointment.Title} - {appointment.TimeStamp:g}");
+                            builder.WithTitle($"{appointment.Title} - {appointment.TimeStamp.ToString("g", LocalizationGroup.CultureInfo)}");
                             builder.WithDescription(appointment.Description);
                             builder.WithThumbnail(appointment.Thumbnail);
                             builder.WithColor(DiscordColor.Green);

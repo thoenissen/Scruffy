@@ -125,6 +125,22 @@ namespace Scruffy.Services.Core.Discord
         /// </summary>
         /// <typeparam name="T">Type of the element</typeparam>
         /// <typeparam name="TData">Type of the element result</typeparam>
+        /// <returns>Result</returns>
+        public async Task<TData> Run<T, TData>() where T : DialogElementBase<TData>
+        {
+            var element = _serviceProvider.GetService<T>();
+
+            element.Initialize(_commandContext, _serviceProvider, _dialogContext);
+
+            return await element.Run()
+                                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Execution one dialog element
+        /// </summary>
+        /// <typeparam name="T">Type of the element</typeparam>
+        /// <typeparam name="TData">Type of the element result</typeparam>
         /// <param name="element">Dialog element</param>
         /// <returns>Result</returns>
         public async Task<TData> Run<T, TData>(T element) where T : DialogElementBase<TData>

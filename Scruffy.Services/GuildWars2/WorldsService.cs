@@ -12,6 +12,7 @@ using Scruffy.Data.Entity.Repositories.Account;
 using Scruffy.Data.Entity.Repositories.General;
 using Scruffy.Data.Entity.Repositories.GuildWars2;
 using Scruffy.Data.Entity.Tables.General;
+using Scruffy.Data.Enumerations.General;
 using Scruffy.Data.Json.QuickChart;
 using Scruffy.Services.Account;
 using Scruffy.Services.Core;
@@ -79,6 +80,8 @@ namespace Scruffy.Services.GuildWars2
                     dbFactory.GetRepository<LogEntryRepository>()
                              .Add(new LogEntryEntity
                                   {
+                                      TimeStamp = DateTime.Now,
+                                      Type = LogEntryType.Job,
                                       QualifiedCommandName = nameof(AccountLoginCheckJob),
                                       Message = ex.ToString()
                                   });

@@ -15,6 +15,7 @@ using Scruffy.Data.Entity.Repositories.GuildAdministration;
 using Scruffy.Data.Enumerations.GuildAdministration;
 using Scruffy.Data.Json.Calendar;
 using Scruffy.Services.Core;
+using Scruffy.Services.Core.Extensions;
 
 namespace Scruffy.Services.Calendar
 {
@@ -205,8 +206,8 @@ namespace Scruffy.Services.Calendar
                         var first = calendar.Appointments.First();
 
                         var currentMonth = first.TimeStamp.Month;
-                        var currentWeekOfYear = GetIso8601WeekOfYear(first.TimeStamp);
-                        var currentFieldTitle = $"{LocalizationGroup.CultureInfo.DateTimeFormat.GetMonthName(first.TimeStamp.Month)} {first.TimeStamp.Year}\n\n{LocalizationGroup.GetText("WeekNumber", "Week")} {GetIso8601WeekOfYear(first.TimeStamp)}";
+                        var currentWeekOfYear = first.TimeStamp.GetIso8601WeekOfYear();
+                        var currentFieldTitle = $"{LocalizationGroup.CultureInfo.DateTimeFormat.GetMonthName(first.TimeStamp.Month)} {first.TimeStamp.Year}\n\n{LocalizationGroup.GetText("WeekNumber", "Week")} {first.TimeStamp.GetIso8601WeekOfYear()}";
 
                         var fieldCounter = 0;
                         var stringBuilder = new StringBuilder();
@@ -216,7 +217,7 @@ namespace Scruffy.Services.Calendar
                             var currentLine = $@"`({LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(appointment.TimeStamp.DayOfWeek).Substring(0, 2)}) {appointment.TimeStamp.ToString("g", LocalizationGroup.CultureInfo)}` {(string.IsNullOrWhiteSpace(appointment.Uri) ? appointment.Description : Formatter.MaskedUrl(appointment.Description, new Uri(appointment.Uri)))}";
 
                             if (currentMonth != appointment.TimeStamp.Month
-                             || currentWeekOfYear != GetIso8601WeekOfYear(appointment.TimeStamp)
+                             || currentWeekOfYear != appointment.TimeStamp.GetIso8601WeekOfYear()
                              || stringBuilder.Length + currentLine.Length > 1024)
                             {
                                 builder.AddField(currentFieldTitle, stringBuilder.ToString());
@@ -232,10 +233,10 @@ namespace Scruffy.Services.Calendar
                                 stringBuilder.AppendLine(currentLine);
 
                                 currentFieldTitle = currentMonth != appointment.TimeStamp.Month
-                                                        ? $"{LocalizationGroup.CultureInfo.DateTimeFormat.GetMonthName(appointment.TimeStamp.Month)} {appointment.TimeStamp.Year}\n\n{LocalizationGroup.GetText("WeekNumber", "Week")} {GetIso8601WeekOfYear(appointment.TimeStamp)}"
-                                                        : currentWeekOfYear == GetIso8601WeekOfYear(appointment.TimeStamp)
+                                                        ? $"{LocalizationGroup.CultureInfo.DateTimeFormat.GetMonthName(appointment.TimeStamp.Month)} {appointment.TimeStamp.Year}\n\n{LocalizationGroup.GetText("WeekNumber", "Week")} {appointment.TimeStamp.GetIso8601WeekOfYear()}"
+                                                        : currentWeekOfYear == appointment.TimeStamp.GetIso8601WeekOfYear()
                                                             ? "\u200B"
-                                                            : $"{LocalizationGroup.GetText("WeekNumber", "Week")} {GetIso8601WeekOfYear(appointment.TimeStamp)}";
+                                                            : $"{LocalizationGroup.GetText("WeekNumber", "Week")} {appointment.TimeStamp.GetIso8601WeekOfYear()}";
                             }
                             else
                             {
@@ -243,7 +244,7 @@ namespace Scruffy.Services.Calendar
                             }
 
                             currentMonth = appointment.TimeStamp.Month;
-                            currentWeekOfYear = GetIso8601WeekOfYear(appointment.TimeStamp);
+                            currentWeekOfYear = appointment.TimeStamp.GetIso8601WeekOfYear();
                         }
 
                         if (fieldCounter < 6
@@ -269,22 +270,6 @@ namespace Scruffy.Services.Calendar
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Returning ISO 8601 week of year
-        /// </summary>
-        /// <param name="date">Date</param>
-        /// <returns>Week number</returns>
-        private static int GetIso8601WeekOfYear(DateTime date)
-        {
-            var day = CultureInfo.InvariantCulture.Calendar.GetDayOfWeek(date);
-            if (day >= DayOfWeek.Monday && day <= DayOfWeek.Wednesday)
-            {
-                date = date.AddDays(3);
-            }
-
-            return CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(date, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
         }
 
         #endregion // Methods

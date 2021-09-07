@@ -83,23 +83,26 @@ namespace Scruffy.Services.Raid.DialogElements
                 _roles[0] = null;
 
                 var i = 1;
+                var fieldCounter = 1;
+
                 foreach (var role in mainRoles)
                 {
-                    levelsFieldsText.Append('`');
-                    levelsFieldsText.Append(i);
-                    levelsFieldsText.Append("` - ");
-                    levelsFieldsText.Append(' ');
-                    levelsFieldsText.Append(DiscordEmojiService.GetGuildEmoji(CommandContext.Client, role.DiscordEmojiId));
-                    levelsFieldsText.Append(' ');
-                    levelsFieldsText.Append(role.Description);
-                    levelsFieldsText.Append('\n');
+                    var currentLine = $"`{i}` -  {DiscordEmojiService.GetGuildEmoji(CommandContext.Client, role.DiscordEmojiId)} {role.Description}{'\n'}";
 
                     _roles[i] = role.Id;
-
                     i++;
+
+                    if (currentLine.Length + levelsFieldsText.Length > 1024)
+                    {
+                        builder.AddField(LocalizationGroup.GetText("RolesField", "Roles") + " #" + fieldCounter, levelsFieldsText.ToString());
+                        levelsFieldsText.Clear();
+                        fieldCounter++;
+                    }
+
+                    levelsFieldsText.Append(currentLine);
                 }
 
-                builder.AddField(LocalizationGroup.GetText("RolesField", "Roles"), levelsFieldsText.ToString());
+                builder.AddField(LocalizationGroup.GetText("RolesField", "Roles") + " #" + fieldCounter, levelsFieldsText.ToString());
             }
 
             return builder;

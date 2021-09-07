@@ -52,7 +52,7 @@ namespace Scruffy.Data.Entity.Tables.Raid
         /// <summary>
         /// Participation points
         /// </summary>
-        public long ParticipationPoints { get; set; }
+        public double ParticipationPoints { get; set; }
 
         /// <summary>
         /// Is the level deleted?

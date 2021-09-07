@@ -2,7 +2,6 @@
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
-using Scruffy.Data.Entity.Tables.Raid;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord;
 
@@ -48,32 +47,42 @@ namespace Scruffy.Services.Raid.DialogElements
         {
             await using (var dialogHandler = new DialogHandler(commandContext))
             {
-                var repeat = true;
-
                 using (var dbFactory = RepositoryFactory.CreateInstance())
                 {
-                    while (repeat)
+                    dbFactory.GetRepository<RaidRegistrationRoleAssignmentRepository>()
+                             .RemoveRange(obj => obj.RegistrationId == registrationId);
+
+                    do
                     {
                         var mainRole = await dialogHandler.Run<RaidRoleSelectionDialogElement, long?>(new RaidRoleSelectionDialogElement(_localizationService, null))
                                                           .ConfigureAwait(false);
+
                         if (mainRole != null)
                         {
                             var subRole = await dialogHandler.Run<RaidRoleSelectionDialogElement, long?>(new RaidRoleSelectionDialogElement(_localizationService, mainRole))
                                                              .ConfigureAwait(false);
 
                             dbFactory.GetRepository<RaidRegistrationRoleAssignmentRepository>()
-                                     .Add(new RaidRegistrationRoleAssignmentEntity
-                                          {
-                                              RegistrationId = registrationId,
-                                              MainRoleId = mainRole.Value,
-                                              SubRoleId = subRole
-                                          });
+                                     .AddOrRefresh(obj => obj.RegistrationId == registrationId
+                                                       && obj.MainRoleId == mainRole.Value
+                                                       && obj.SubRoleId == subRole,
+                                                   obj =>
+                                                   {
+                                                       obj.RegistrationId = registrationId;
+                                                       obj.MainRoleId = mainRole.Value;
+                                                       obj.SubRoleId = subRole;
+                                                   });
                         }
                         else
                         {
-                            repeat = false;
+                            break;
                         }
                     }
+                    while (await dialogHandler.Run<RaidRoleSelectionNextDialogElement, bool>(new RaidRoleSelectionNextDialogElement(_localizationService, false))
+                                              .ConfigureAwait(false));
+
+                    await dialogHandler.DeleteMessages()
+                                       .ConfigureAwait(false);
                 }
             }
         }

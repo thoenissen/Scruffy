@@ -5,6 +5,7 @@ using FluentScheduler;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.General;
 using Scruffy.Data.Entity.Tables.General;
+using Scruffy.Data.Enumerations.General;
 
 namespace Scruffy.Services.Core
 {
@@ -27,6 +28,8 @@ namespace Scruffy.Services.Core
                     dbFactory.GetRepository<LogEntryRepository>()
                              .Add(new LogEntryEntity
                                   {
+                                      TimeStamp = DateTime.Now,
+                                      Type = LogEntryType.Job,
                                       Message = dbFactory.LastError.ToString(),
                                       QualifiedCommandName = nameof(BackupJob)
                                   });

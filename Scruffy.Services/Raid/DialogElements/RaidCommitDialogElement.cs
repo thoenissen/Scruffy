@@ -169,7 +169,7 @@ namespace Scruffy.Services.Raid.DialogElements
                                       {
                                           Emoji = DiscordEmojiService.GetCheckEmoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("CommitCommand", "{0} Commit", DiscordEmojiService.GetCheckEmoji(CommandContext.Client)),
-                                          Func = async () =>
+                                          Func = () =>
                                                  {
                                                      using (var dbFactory = RepositoryFactory.CreateInstance())
                                                      {
@@ -191,36 +191,84 @@ namespace Scruffy.Services.Raid.DialogElements
                                                                                     });
                                                          }
 
-                                                         var dateLimit = DateTime.Today;
+                                                         var dateLimit = _commitData.AppointmentTimeStamp.AddDays(-7 * 15);
 
-                                                         while (dateLimit.DayOfWeek != DayOfWeek.Monday)
-                                                         {
-                                                             dateLimit = dateLimit.AddDays(-1);
-                                                         }
+                                                         var users = dbFactory.GetRepository<RaidRegistrationRepository>()
+                                                                              .GetQuery()
+                                                                              .Where(obj => obj.Points != null
+                                                                                         && obj.RaidAppointment.TimeStamp > dateLimit)
+                                                                              .Select(obj => new
+                                                                                             {
+                                                                                                 obj.UserId,
+                                                                                                 obj.RaidAppointment.TimeStamp,
+                                                                                                 obj.Points
+                                                                                             })
+                                                                              .AsEnumerable()
+                                                                              .GroupBy(obj => obj.UserId)
+                                                                              .Select(obj => new
+                                                                                             {
+                                                                                                 UserId = obj.Key,
+                                                                                                 Points = obj.Select(obj2 => new
+                                                                                                                             {
+                                                                                                                                 obj2.TimeStamp,
+                                                                                                                                 obj2.Points
+                                                                                                                             })
+                                                                                             })
+                                                                              .ToList();
 
-                                                         dateLimit = dateLimit.AddDays(-7 * 14);
+                                                         dbFactory.GetRepository<RaidCurrentUserPointsRepository>()
+                                                                  .RefreshRange(obj => true,
+                                                                                obj =>
+                                                                                {
+                                                                                    var user = users.FirstOrDefault(obj2 => obj2.UserId == obj.UserId);
+                                                                                    if (user != null)
+                                                                                    {
+                                                                                        obj.Points = user.Points.Sum(obj2 =>
+                                                                                                                     {
+                                                                                                                         var points = 0.0;
 
-                                                         foreach (var user in await dbFactory.GetRepository<RaidRegistrationRepository>()
-                                                                                             .GetQuery()
-                                                                                             .Where(obj => obj.Points != null
-                                                                                                        && obj.RaidAppointment.TimeStamp > dateLimit)
-                                                                                             .GroupBy(obj => obj.UserId)
-                                                                                             .Select(obj => new
-                                                                                                            {
-                                                                                                                UserId = obj.Key,
-                                                                                                                Points = obj.Sum(obj2 => (double)obj2.Points)
-                                                                                                            })
-                                                                                             .ToListAsync()
-                                                                                             .ConfigureAwait(false))
+                                                                                                                         if (obj2.Points != null)
+                                                                                                                         {
+                                                                                                                             var weekCount = (_commitData.AppointmentTimeStamp - obj2.TimeStamp).Days / 7;
+
+                                                                                                                             points = Math.Pow(10, -(weekCount - 15) / 14.6) * obj2.Points.Value;
+                                                                                                                         }
+
+                                                                                                                         return points;
+                                                                                                                     });
+
+                                                                                        users.Remove(user);
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        obj.Points = 0;
+                                                                                    }
+                                                                                });
+
+                                                         foreach (var user in users)
                                                          {
                                                              dbFactory.GetRepository<RaidCurrentUserPointsRepository>()
-                                                                      .AddOrRefresh(obj => obj.UserId == user.UserId,
-                                                                                    obj =>
-                                                                                    {
-                                                                                        obj.UserId = user.UserId;
-                                                                                        obj.Points = user.Points;
-                                                                                    });
+                                                                      .Add(new RaidCurrentUserPointsEntity
+                                                                           {
+                                                                               UserId = user.UserId,
+                                                                               Points = user.Points.Sum(obj2 =>
+                                                                                                        {
+                                                                                                            var points = 0.0;
+
+                                                                                                            if (obj2.Points != null)
+                                                                                                            {
+                                                                                                                var weekCount = (_commitData.AppointmentTimeStamp - obj2.TimeStamp).Days / 7;
+
+                                                                                                                points = Math.Pow(10, -(weekCount - 15) / 14.6) * obj2.Points.Value;
+                                                                                                            }
+
+                                                                                                            return points;
+                                                                                                        })
+                                                                           });
                                                          }
+
+                                                         dbFactory.GetRepository<RaidCurrentUserPointsRepository>()
+                                                                  .RemoveRange(obj => obj.Points <= 0.0);
 
                                                          var nextAppointment = new RaidAppointmentEntity();
 
@@ -240,7 +288,7 @@ namespace Scruffy.Services.Raid.DialogElements
                                                                   .Add(nextAppointment);
                                                      }
 
-                                                     return false;
+                                                     return Task.FromResult(false);
                                                  }
                                       },
                                       new ReactionData<bool>

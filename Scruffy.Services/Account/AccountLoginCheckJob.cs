@@ -7,6 +7,7 @@ using Scruffy.Data.Entity.Repositories.Account;
 using Scruffy.Data.Entity.Repositories.General;
 using Scruffy.Data.Entity.Tables.Account;
 using Scruffy.Data.Entity.Tables.General;
+using Scruffy.Data.Enumerations.General;
 using Scruffy.Services.Core.JobScheduler;
 using Scruffy.Services.WebApi;
 
@@ -71,6 +72,8 @@ namespace Scruffy.Services.Account
                         dbFactory.GetRepository<LogEntryRepository>()
                                  .Add(new LogEntryEntity
                                           {
+                                              TimeStamp = DateTime.Now,
+                                              Type = LogEntryType.Job,
                                               QualifiedCommandName = nameof(AccountLoginCheckJob),
                                               LastUserCommand = account.Name,
                                               Message = ex.ToString()

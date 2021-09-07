@@ -22,6 +22,9 @@
       "CreationCompletedMessage": "Creation completed! All creation messages will be deleted in 30 seconds.",
       "ReminderCreated": "The reminder has been set for {0} {1}."
     },
+    "DialogElementBase": {
+      "PleaseTryAgain": "Your input was invalid. Please try again."
+    },
     "AccountApiKeyDialogElement": {
       "Message": "Please enter the api key which should be used."
     },
@@ -240,6 +243,13 @@
       "ChooseLevelDescription": "Please choose one of the following roles:",
       "NoRole": "No additional role",
       "RolesField": "Roles"
+    },
+    "RaidRoleSelectionNextDialogElement": {
+      "MessageFirst": "Do you want to add a role preference?",
+      "MessageNext": "Do you want to add another role preference?"
+    },
+    "RaidOverviewService": {
+      "ParticipationOverview": "Participation points overview"
     },
     "GuildAdministrationApiKeyDialogElement": {
       "Message": "Please enter the api key."

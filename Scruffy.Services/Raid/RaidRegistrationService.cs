@@ -9,6 +9,8 @@ using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Data.Services.Raid;
 using Scruffy.Services.Core;
+using Scruffy.Services.Core.Discord;
+using Scruffy.Services.Raid.DialogElements;
 
 namespace Scruffy.Services.Raid
 {
@@ -74,7 +76,7 @@ namespace Scruffy.Services.Raid
                                                                        IsDeadlineReached = obj.RaidAppointment.Deadline < obj.RegistrationTimeStamp,
                                                                        Registrations = obj.RaidAppointment
                                                                                           .RaidRegistrations
-                                                                                          .Count(obj2 => obj.LineupExperienceLevelId == obj.User.RaidExperienceLevelId),
+                                                                                          .Count(obj2 => obj2.LineupExperienceLevelId == obj.User.RaidExperienceLevelId),
                                                                        AvailableSlots = obj.RaidAppointment
                                                                                            .RaidDayTemplate
                                                                                            .RaidExperienceAssignments
@@ -91,12 +93,12 @@ namespace Scruffy.Services.Raid
                              && registration.AvailableSlots > registration.Registrations)
                             {
                                 dbFactory.GetRepository<RaidRegistrationRepository>()
-                                                   .Refresh(obj => obj.Id == registrationId,
-                                                            obj => obj.LineupExperienceLevelId = registration.RaidExperienceLevelId);
+                                         .Refresh(obj => obj.Id == registrationId,
+                                                  obj => obj.LineupExperienceLevelId = registration.RaidExperienceLevelId);
                             }
                             else
                             {
-                                await RefreshAppointment(registrationId.Value).ConfigureAwait(false);
+                                await RefreshAppointment(appointmentId).ConfigureAwait(false);
                             }
                         }
                     }
@@ -118,9 +120,6 @@ namespace Scruffy.Services.Raid
 
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
-                dbFactory.GetRepository<RaidRegistrationRoleAssignmentRepository>()
-                         .RemoveRange(obj => obj.RaidRegistration.AppointmentId == appointmentId);
-
                 var registration = dbFactory.GetRepository<RaidRegistrationRepository>()
                                             .GetQuery()
                                             .Where(obj => obj.AppointmentId == appointmentId
@@ -130,40 +129,77 @@ namespace Scruffy.Services.Raid
                                                 obj.Id,
                                                 IsDeadlineReached = obj.RaidAppointment.Deadline < obj.RegistrationTimeStamp,
                                                 Registrations = obj.RaidAppointment
-                                                                                         .RaidRegistrations
-                                                                                         .Count(obj2 => obj.LineupExperienceLevelId == obj.User.RaidExperienceLevelId),
+                                                                   .RaidRegistrations
+                                                                   .Count(obj2 => obj2.LineupExperienceLevelId == obj.User.RaidExperienceLevelId),
                                                 AvailableSlots = obj.RaidAppointment
-                                                                                   .RaidDayTemplate
-                                                                                   .RaidExperienceAssignments
-                                                                                   .Where(obj2 => obj2.ExperienceLevelId == obj.User.RaidExperienceLevelId)
-                                                                                   .Select(obj2 => (int?)obj2.Count)
-                                                                                   .FirstOrDefault(),
+                                                                    .RaidDayTemplate
+                                                                    .RaidExperienceAssignments
+                                                                    .Where(obj2 => obj2.ExperienceLevelId == obj.User.RaidExperienceLevelId)
+                                                                    .Select(obj2 => (int?)obj2.Count)
+                                                                    .FirstOrDefault(),
                                                 obj.User.RaidExperienceLevelId
                                             })
                                             .FirstOrDefault();
 
                 if (registration != null)
                 {
+                    dbFactory.GetRepository<RaidRegistrationRoleAssignmentRepository>()
+                             .RemoveRange(obj => obj.RegistrationId == registration.Id);
+
+                    dbFactory.GetRepository<RaidRegistrationRepository>()
+                             .Remove(obj => obj.Id == registration.Id);
+
                     if ((registration.AvailableSlots != null
                       && registration.AvailableSlots != registration.Registrations)
                      || registration.IsDeadlineReached)
                     {
-                        dbFactory.GetRepository<RaidRegistrationRoleAssignmentRepository>()
-                                 .RemoveRange(obj => obj.RegistrationId == registration.Id);
-
-                        dbFactory.GetRepository<RaidRegistrationRepository>()
-                                 .Remove(obj => obj.Id == registration.Id);
+                        success = true;
                     }
                     else
                     {
-                        success = await RefreshAppointment(registration.Id)
-                                      .ConfigureAwait(false);
+                        success = await RefreshAppointment(appointmentId).ConfigureAwait(false);
                     }
                 }
                 else
                 {
                     success = true;
                 }
+            }
+
+            return success;
+        }
+
+        /// <summary>
+        /// Set template
+        /// </summary>
+        /// <param name="commandContext">Command context</param>
+        /// <param name="appointmentId">Id of the appointment</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task<bool> SetTemplate(CommandContextContainer commandContext, long appointmentId)
+        {
+            var success = false;
+
+            await using (var dialogHandler = new DialogHandler(commandContext))
+            {
+                var templateId = await dialogHandler.Run<RaidTemplateSelectionDialogElement, long>()
+                                                    .ConfigureAwait(false);
+                if (templateId > 0)
+                {
+                    using (var dbFactory = RepositoryFactory.CreateInstance())
+                    {
+                        success = dbFactory.GetRepository<RaidAppointmentRepository>()
+                                           .Refresh(obj => obj.Id == appointmentId,
+                                                    obj => obj.TemplateId = templateId);
+
+                        if (success)
+                        {
+                            await RefreshAppointment(appointmentId).ConfigureAwait(false);
+                        }
+                    }
+                }
+
+                await dialogHandler.DeleteMessages()
+                                   .ConfigureAwait(false);
             }
 
             return success;
@@ -182,6 +218,10 @@ namespace Scruffy.Services.Raid
             {
                 await using (var transaction = dbFactory.BeginTransaction(System.Data.IsolationLevel.ReadCommitted))
                 {
+                    var defaultRank = dbFactory.GetRepository<RaidExperienceLevelRepository>()
+                                               .GetQuery()
+                                               .Max(obj => obj.Rank);
+
                     var currentRaidPoints = dbFactory.GetRepository<RaidCurrentUserPointsRepository>()
                                                      .GetQuery()
                                                      .Select(obj => obj);
@@ -206,8 +246,8 @@ namespace Scruffy.Services.Raid
                                                                                                                         .FirstOrDefault())
                                                                             .Select(obj2 => new
                                                                             {
-                                                                                obj.Id,
-                                                                                obj2.User.RaidExperienceLevel.Rank
+                                                                                obj2.Id,
+                                                                                Rank = (int?)obj2.User.RaidExperienceLevel.Rank
                                                                             })
                                                                             .ToList()
                                                      })
@@ -221,6 +261,7 @@ namespace Scruffy.Services.Raid
                                                   : 1;
 
                         var slots = appointment.ExperienceLevels
+                                               .OrderBy(obj => obj.Rank)
                                                .Select(obj => new RaidAppointmentSlotData
                                                {
                                                    ExperienceLevelId = obj.ExperienceLevelId,
@@ -236,7 +277,7 @@ namespace Scruffy.Services.Raid
                         foreach (var registration in appointment.Registrations)
                         {
                             var slot = slots.FirstOrDefault(obj => obj.SlotCount > obj.Registrations.Count
-                                                                && obj.Rank <= registration.Rank);
+                                                                && obj.Rank >= (registration.Rank ?? defaultRank));
 
                             if (slot != null)
                             {

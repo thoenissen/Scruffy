@@ -71,11 +71,11 @@ namespace Scruffy.Commands
                                        request.C2coff = "1";
                                        request.Cx = Environment.GetEnvironmentVariable("SCRUFFY_GOOGLE_CSE_ID");
                                        request.Num = 6;
-                                       request.OrTerms = searchTerm;
+                                       request.Q = searchTerm;
                                        request.Safe = CseResource.ListRequest.SafeEnum.Active;
 
                                        var resultContainer = await request.ExecuteAsync()
-                                                                 .ConfigureAwait(false);
+                                                                          .ConfigureAwait(false);
 
                                        if (resultContainer.Items?.Count > 0)
                                        {

@@ -29,6 +29,7 @@ namespace Scruffy.Data.Entity.Tables.Raid
         /// <summary>
         /// User
         /// </summary>
+        [ForeignKey(nameof(UserId))]
         public UserEntity User { get; set; }
 
         #endregion // Navigation properties

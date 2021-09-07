@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.General;
 using Scruffy.Data.Entity.Tables.General;
+using Scruffy.Data.Enumerations.General;
 using Scruffy.Data.Json.Tenor;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord;
@@ -73,12 +74,17 @@ namespace Scruffy.Commands
             catch (TimeoutException)
             {
             }
+            catch (OperationCanceledException)
+            {
+            }
             catch (Exception ex)
             {
                 using (var dbFactory = RepositoryFactory.CreateInstance())
                 {
                     var logEntry = new LogEntryEntity
                                    {
+                                       TimeStamp = DateTime.Now,
+                                       Type = LogEntryType.CommandError,
                                        Message = ex.ToString(),
                                        QualifiedCommandName = commandContext.Command?.QualifiedName,
                                        LastUserCommand = commandContextContainer.LastUserMessage?.Content
