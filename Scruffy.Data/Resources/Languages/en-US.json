@@ -71,7 +71,8 @@
       "NoActiveAppointment": "Currently there is no active appointment."
     },
     "RaidExperienceLevelsCommandModule": {
-      "UnknownExperienceLevel": "The experience role by the given name does not exist."
+      "UnknownExperienceLevel": "The experience role by the given name does not exist.",
+      "NewRankFormat": "New level for {0}: {1} {2} {3}"
     },
     "RaidRolesService": {
       "AssistantTitle": "Raid role configuration",

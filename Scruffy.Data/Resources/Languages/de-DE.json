@@ -1,4 +1,5 @@
-﻿{
+﻿
+{
   "CultureInfo": "de-DE",
   "Description": "Deutsch",
   "TranslationGroups": {
@@ -71,7 +72,8 @@
       "NoActiveAppointment": "Es besteht kein aktiver Termin."
     },
     "RaidExperienceLevelsCommandModule": {
-      "UnknownExperienceLevel": "Das angegebene Erfahrungslevel existiert nicht."
+      "UnknownExperienceLevel": "Das angegebene Erfahrungslevel existiert nicht.",
+      "NewRankFormat": "Neue Wertung für {0}: {1} {2} {3}"
     },
     "RaidRolesService": {
       "AssistantTitle": "Konfiguration Raid-Rollen",
@@ -587,6 +589,20 @@
       "guild specialrank setup": "Einrichtungs-Assistent für Spezial-Ränge",
       "guild specialrank overview": "Übersicht der aktuellen Punktevergabe der Spezial-Ränge",
       "guild charts worlds": "Übersicht der aktuellen Weltenverteilung",
+
+      "guild export": "Export des Gildenlogs",
+      "guild export stash": "Export der Gildenlogeinträge der Bank",
+      "guild export stash mode": "Modus",
+      "guild export stash mode description": "Exportmodus",
+      "guild export stash mode format": "raw/sum",
+      "guild export stash sinceDate": "Modus",
+      "guild export stash sinceDate description": "Datum des ersten Eintrages",
+      "guild export upgrades": "Export der Gildenlogeinträge der Aufwertungen",
+      "guild export upgrades mode": "Modus",
+      "guild export upgrades mode description": "Exportmodus",
+      "guild export upgrades mode format": "raw/sum",
+      "guild export upgrades sinceDate": "Modus",
+      "guild export upgrades sinceDate description": "Datum des ersten Eintrages",
 
       "gw2": "Guild Wars 2",
       "gw2 quaggan": "Zufällige Quaggan-Bilder",

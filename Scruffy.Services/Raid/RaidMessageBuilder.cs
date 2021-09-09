@@ -189,7 +189,37 @@ namespace Scruffy.Services.Raid
                                 var discordUser = await _client.GetUserAsync(entry.UserId)
                                                                .ConfigureAwait(false);
 
-                                stringBuilder.AppendLine($" > {DiscordEmojiService.GetQuestionMarkEmoji(_client)} {discordUser.Mention} {(entry.ExperienceLevelDiscordEmoji != null ? DiscordEmojiService.GetGuildEmoji(_client, entry.ExperienceLevelDiscordEmoji.Value) : null)}");
+                                stringBuilder.Append(" > ");
+
+                                if (entry.Roles?.Count > 0)
+                                {
+                                    var first = true;
+
+                                    foreach (var role in entry.Roles)
+                                    {
+                                        if (first == false)
+                                        {
+                                            stringBuilder.Append(", ");
+                                        }
+                                        else
+                                        {
+                                            first = false;
+                                        }
+
+                                        stringBuilder.Append(DiscordEmojiService.GetGuildEmoji(_client, role.MainRoleEmoji));
+
+                                        if (role.SubRoleEmoji != null)
+                                        {
+                                            stringBuilder.Append(DiscordEmojiService.GetGuildEmoji(_client, role.SubRoleEmoji.Value));
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    stringBuilder.Append(DiscordEmojiService.GetQuestionMarkEmoji(_client));
+                                }
+
+                                stringBuilder.AppendLine($" {discordUser.Mention} {(entry.ExperienceLevelDiscordEmoji != null ? DiscordEmojiService.GetGuildEmoji(_client, entry.ExperienceLevelDiscordEmoji.Value) : null)}");
                             }
 
                             stringBuilder.Append('\u200B');

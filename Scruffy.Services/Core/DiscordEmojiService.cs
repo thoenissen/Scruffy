@@ -179,6 +179,20 @@ namespace Scruffy.Services.Core
         public static DiscordEmoji GetGuildWars2CopperEmoji(DiscordClient discordClient) => GetEmoji(discordClient, "GuildWars2Copper");
 
         /// <summary>
+        /// Get 'ArrowUp'-Emoji
+        /// </summary>
+        /// <param name="discordClient">Discord client</param>
+        /// <returns>Emoji</returns>
+        public static DiscordEmoji GetArrowUpEmoji(DiscordClient discordClient) => GetEmoji(discordClient, "ArrowUp");
+
+        /// <summary>
+        /// Get 'ArrowDown'-Emoji
+        /// </summary>
+        /// <param name="discordClient">Discord client</param>
+        /// <returns>Emoji</returns>
+        public static DiscordEmoji GetArrowDownEmoji(DiscordClient discordClient) => GetEmoji(discordClient, "ArrowDown");
+
+        /// <summary>
         /// Get guild emoji
         /// </summary>
         /// <param name="discordClient">Discord client</param>

@@ -51,7 +51,7 @@ namespace Scruffy.Services.Raid
                                      .Select(obj => new
                                                     {
                                                         obj.UserId,
-                                                        obj.Points
+                                                        Points = obj.Points * 100.0
                                                     })
                                      .ToList();
 
@@ -100,8 +100,10 @@ namespace Scruffy.Services.Raid
                                                                                         {
                                                                                             new XAxis
                                                                                             {
-                                                                                                Ticks = new AxisTicks
+                                                                                                Ticks = new AxisTicks<double>
                                                                                                         {
+                                                                                                            MinValue = 0,
+                                                                                                            MaxValue = Math.Ceiling(((users.Max(obj => obj.Points) / 10) + 1) * 10),
                                                                                                             FontColor = "#b3b3b3"
                                                                                                         }
                                                                                             }
@@ -112,8 +114,6 @@ namespace Scruffy.Services.Raid
                                                                                             {
                                                                                                 Ticks = new AxisTicks<double>
                                                                                                         {
-                                                                                                            MinValue = 0,
-                                                                                                            MaxValue = Math.Ceiling(((users.Max(obj => obj.Points) / 10) + 1) * 10),
                                                                                                             FontColor = "#b3b3b3"
                                                                                                         }
                                                                                             }

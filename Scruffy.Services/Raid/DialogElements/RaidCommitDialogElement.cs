@@ -235,7 +235,8 @@ namespace Scruffy.Services.Raid.DialogElements
                                                                                                                          }
 
                                                                                                                          return points;
-                                                                                                                     });
+                                                                                                                     })
+                                                                                                   / 66.147532745646117;
 
                                                                                         users.Remove(user);
                                                                                     }
@@ -264,6 +265,7 @@ namespace Scruffy.Services.Raid.DialogElements
 
                                                                                                             return points;
                                                                                                         })
+                                                                                      / 66.147532745646117
                                                                            });
                                                          }
 

@@ -10,6 +10,7 @@ using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Data.Services.Raid;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord;
+using Scruffy.Services.CoreData;
 using Scruffy.Services.Raid.DialogElements;
 
 namespace Scruffy.Services.Raid
@@ -19,15 +20,26 @@ namespace Scruffy.Services.Raid
     /// </summary>
     public class RaidRegistrationService : LocatedServiceBase
     {
+        #region Fields
+
+        /// <summary>
+        /// User management
+        /// </summary>
+        private UserManagementService _userManagementService;
+
+        #endregion
+
         #region Properties
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="localizationService">Localization service</param>
-        public RaidRegistrationService(LocalizationService localizationService)
+        /// <param name="userManagementService">User mangement</param>
+        public RaidRegistrationService(LocalizationService localizationService, UserManagementService userManagementService)
             : base(localizationService)
         {
+            _userManagementService = userManagementService;
         }
 
         #endregion // Properties
@@ -37,10 +49,11 @@ namespace Scruffy.Services.Raid
         /// <summary>
         /// Joining a appointment
         /// </summary>
+        /// <param name="commandContext">Command context</param>
         /// <param name="appointmentId">Id of the appointment</param>
         /// <param name="userId">User id</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task<long?> Join(long appointmentId, ulong userId)
+        public async Task<long?> Join(CommandContextContainer commandContext, long appointmentId, ulong userId)
         {
             long? registrationId = null;
 
@@ -48,60 +61,76 @@ namespace Scruffy.Services.Raid
             {
                 var isAlreadyRegistered = false;
 
-                if (dbFactory.GetRepository<RaidRegistrationRepository>()
-                             .AddOrRefresh(obj => obj.AppointmentId == appointmentId && obj.UserId == userId,
-                                           obj =>
-                                           {
-                                               if (obj.Id == 0)
-                                               {
-                                                   obj.AppointmentId = appointmentId;
-                                                   obj.UserId = userId;
-                                                   obj.RegistrationTimeStamp = DateTime.Now;
-                                               }
-                                               else
-                                               {
-                                                   isAlreadyRegistered = true;
-                                               }
-                                           },
-                                           obj => registrationId = obj.Id))
-                {
-                    if (registrationId != null
-                     && isAlreadyRegistered == false)
-                    {
-                        var registration = dbFactory.GetRepository<RaidRegistrationRepository>()
-                                                    .GetQuery()
-                                                    .Where(obj => obj.Id == registrationId)
-                                                    .Select(obj => new
-                                                                   {
-                                                                       IsDeadlineReached = obj.RaidAppointment.Deadline < obj.RegistrationTimeStamp,
-                                                                       Registrations = obj.RaidAppointment
-                                                                                          .RaidRegistrations
-                                                                                          .Count(obj2 => obj2.LineupExperienceLevelId == obj.User.RaidExperienceLevelId),
-                                                                       AvailableSlots = obj.RaidAppointment
-                                                                                           .RaidDayTemplate
-                                                                                           .RaidExperienceAssignments
-                                                                                           .Where(obj2 => obj2.ExperienceLevelId == obj.User.RaidExperienceLevelId)
-                                                                                           .Select(obj2 => (int?)obj2.Count)
-                                                                                           .FirstOrDefault(),
-                                                                       obj.User.RaidExperienceLevelId
-                                                                   })
-                                                    .FirstOrDefault();
+                var userExperienceLevelRank = await _userManagementService.GetRaidExperienceLevelRank(userId)
+                                                                          .ConfigureAwait(false);
 
-                        if (registration?.IsDeadlineReached == false)
+                if (dbFactory.GetRepository<RaidAppointmentRepository>()
+                             .GetQuery()
+                             .Any(obj => obj.Id == appointmentId
+                                         && obj.RaidDayTemplate.RaidExperienceAssignments.Any(obj2 => obj2.RaidExperienceLevel.Rank <= userExperienceLevelRank)))
+                {
+                    if (dbFactory.GetRepository<RaidRegistrationRepository>()
+                                 .AddOrRefresh(obj => obj.AppointmentId == appointmentId
+                                                   && obj.UserId == userId,
+                                               obj =>
+                                               {
+                                                   if (obj.Id == 0)
+                                                   {
+                                                       obj.AppointmentId = appointmentId;
+                                                       obj.UserId = userId;
+                                                       obj.RegistrationTimeStamp = DateTime.Now;
+                                                   }
+                                                   else
+                                                   {
+                                                       isAlreadyRegistered = true;
+                                                   }
+                                               },
+                                               obj => registrationId = obj.Id))
+                    {
+                        if (registrationId != null
+                         && isAlreadyRegistered == false)
                         {
-                            if (registration.AvailableSlots != null
-                             && registration.AvailableSlots > registration.Registrations)
+                            var registration = dbFactory.GetRepository<RaidRegistrationRepository>()
+                                                        .GetQuery()
+                                                        .Where(obj => obj.Id == registrationId)
+                                                        .Select(obj => new
+                                                        {
+                                                            IsDeadlineReached = obj.RaidAppointment.Deadline < obj.RegistrationTimeStamp,
+                                                            Registrations = obj.RaidAppointment
+                                                                                              .RaidRegistrations
+                                                                                              .Count(obj2 => obj2.LineupExperienceLevelId == obj.User.RaidExperienceLevelId),
+                                                            AvailableSlots = obj.RaidAppointment
+                                                                                               .RaidDayTemplate
+                                                                                               .RaidExperienceAssignments
+                                                                                               .Where(obj2 => obj2.ExperienceLevelId == obj.User.RaidExperienceLevelId)
+                                                                                               .Select(obj2 => (int?)obj2.Count)
+                                                                                               .FirstOrDefault(),
+                                                            obj.User.RaidExperienceLevelId
+                                                        })
+                                                        .FirstOrDefault();
+
+                            if (registration?.IsDeadlineReached == false)
                             {
-                                dbFactory.GetRepository<RaidRegistrationRepository>()
-                                         .Refresh(obj => obj.Id == registrationId,
-                                                  obj => obj.LineupExperienceLevelId = registration.RaidExperienceLevelId);
-                            }
-                            else
-                            {
-                                await RefreshAppointment(appointmentId).ConfigureAwait(false);
+                                if (registration.AvailableSlots != null
+                                 && registration.AvailableSlots > registration.Registrations)
+                                {
+                                    dbFactory.GetRepository<RaidRegistrationRepository>()
+                                             .Refresh(obj => obj.Id == registrationId,
+                                                      obj => obj.LineupExperienceLevelId = registration.RaidExperienceLevelId);
+                                }
+                                else
+                                {
+                                    await RefreshAppointment(appointmentId).ConfigureAwait(false);
+                                }
                             }
                         }
                     }
+                }
+                else
+                {
+                    await commandContext.Channel
+                                        .SendMessageAsync(LocalizationGroup.GetText("RequiredExperienceLevelMissing", "You don't have the required experience level."))
+                                        .ConfigureAwait(false);
                 }
             }
 
@@ -210,7 +239,7 @@ namespace Scruffy.Services.Raid
         /// </summary>
         /// <param name="appointmentId">Id of the appointment</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        private async Task<bool> RefreshAppointment(long appointmentId)
+        public async Task<bool> RefreshAppointment(long appointmentId)
         {
             var success = false;
 

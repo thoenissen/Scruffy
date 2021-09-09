@@ -157,11 +157,9 @@ namespace Scruffy.Services.Core.Discord
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task DeleteMessages()
         {
-            foreach (var message in _dialogContext.Messages)
-            {
-                await message.DeleteAsync()
-                             .ConfigureAwait(false);
-            }
+            await _commandContext.Channel
+                                 .DeleteMessagesAsync(_dialogContext.Messages)
+                                 .ConfigureAwait(false);
         }
 
         #endregion // Methods

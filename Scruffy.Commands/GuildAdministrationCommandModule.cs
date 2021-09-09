@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Globalization;
+using System.Threading.Tasks;
 
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
@@ -402,6 +404,110 @@ namespace Scruffy.Commands
                                    {
                                        await WorldsService.PostWorldsOverview(commandContextContainer)
                                                           .ConfigureAwait(false);
+                                   });
+            }
+
+            #endregion // Methods
+        }
+
+        #endregion Emblem
+
+        #region Charts
+
+        /// <summary>
+        /// Exporting data
+        /// </summary>
+        [Group("export")]
+        [Aliases("e")]
+        [ModuleLifespan(ModuleLifespan.Transient)]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
+        public class GuildAdministrationExportCommandModule : LocatedCommandModuleBase
+        {
+            #region Constructor
+
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="localizationService">Localization service</param>
+            public GuildAdministrationExportCommandModule(LocalizationService localizationService)
+                : base(localizationService)
+            {
+            }
+
+            #endregion // Constructor
+
+            #region Properties
+
+            /// <summary>
+            /// Export service
+            /// </summary>
+            public GuildExportService GuildExportService { get; set; }
+
+            #endregion // Properties
+
+            #region Methods
+
+            /// <summary>
+            /// Worlds overview
+            /// </summary>
+            /// <param name="commandContext">Current command context</param>
+            /// <param name="mode">Mode</param>
+            /// <param name="sinceDate">Since Date</param>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+            [Command("stash")]
+            [RequireGuild]
+            [RequireAdministratorPermissions]
+            [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
+            public Task ExportStashLog(CommandContext commandContext, string mode, string sinceDate)
+            {
+                return InvokeAsync(commandContext,
+                                   async commandContextContainer =>
+                                   {
+                                       if (DateTime.TryParseExact(sinceDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
+                                       {
+                                           if (mode == "sum")
+                                           {
+                                               await GuildExportService.ExportStashLogSummarized(commandContextContainer, date)
+                                                                       .ConfigureAwait(false);
+                                           }
+                                           else
+                                           {
+                                               await GuildExportService.ExportStashLog(commandContextContainer, date)
+                                                                       .ConfigureAwait(false);
+                                           }
+                                       }
+                                   });
+            }
+
+            /// <summary>
+            /// Worlds overview
+            /// </summary>
+            /// <param name="commandContext">Current command context</param>
+            /// <param name="mode">Mode</param>
+            /// <param name="sinceDate">Since Date</param>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+            [Command("upgrades")]
+            [RequireGuild]
+            [RequireAdministratorPermissions]
+            [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
+            public Task ExportUpgradesLog(CommandContext commandContext, string mode, string sinceDate)
+            {
+                return InvokeAsync(commandContext,
+                                   async commandContextContainer =>
+                                   {
+                                       if (DateTime.TryParseExact(sinceDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
+                                       {
+                                           if (mode == "sum")
+                                           {
+                                               await GuildExportService.ExportUpgradesLogSummarized(commandContextContainer, date)
+                                                                       .ConfigureAwait(false);
+                                           }
+                                           else
+                                           {
+                                               await GuildExportService.ExportUpgradesLog(commandContextContainer, date)
+                                                                       .ConfigureAwait(false);
+                                           }
+                                       }
                                    });
             }
 

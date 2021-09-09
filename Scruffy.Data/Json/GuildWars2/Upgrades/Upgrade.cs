@@ -1,14 +1,14 @@
 ﻿using Newtonsoft.Json;
 
-namespace Scruffy.Data.Json.GuildWars2.Items
+namespace Scruffy.Data.Json.GuildWars2.Upgrades
 {
     /// <summary>
-    /// Item
+    /// Upgrade
     /// </summary>
-    public class Item
+    public class Upgrade
     {
         /// <summary>
-        /// Id
+        /// id
         /// </summary>
         [JsonProperty("id")]
         public int Id { get; set; }
@@ -18,11 +18,5 @@ namespace Scruffy.Data.Json.GuildWars2.Items
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
-
-        /// <summary>
-        /// Vendor value
-        /// </summary>
-        [JsonProperty("vendor_value")]
-        public long? VendorValue { get; set; }
     }
 }

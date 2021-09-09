@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -145,9 +146,6 @@ namespace Scruffy.Commands
             return InvokeAsync(commandContext,
                                async commandContextContainer =>
                                {
-                                   await UserManagementService.CheckUserAsync(commandContext.User.Id)
-                                                              .ConfigureAwait(false);
-
                                    using (var dbFactory = RepositoryFactory.CreateInstance())
                                    {
                                        var appointment = await dbFactory.GetRepository<RaidAppointmentRepository>()
@@ -163,7 +161,7 @@ namespace Scruffy.Commands
                                                                         .ConfigureAwait(false);
                                        if (appointment != null)
                                        {
-                                           var registrationId = await RegistrationService.Join(appointment.Id, commandContextContainer.User.Id)
+                                           var registrationId = await RegistrationService.Join(commandContextContainer, appointment.Id, commandContextContainer.User.Id)
                                                                                          .ConfigureAwait(false);
 
                                            if (registrationId != null)
@@ -173,11 +171,11 @@ namespace Scruffy.Commands
 
                                                await MessageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
                                                                    .ConfigureAwait(false);
-                                           }
 
-                                           await commandContextContainer.Message
-                                                                        .DeleteAsync()
-                                                                        .ConfigureAwait(false);
+                                               await commandContextContainer.Message
+                                                                            .DeleteAsync()
+                                                                            .ConfigureAwait(false);
+                                           }
                                        }
                                        else
                                        {
@@ -204,9 +202,6 @@ namespace Scruffy.Commands
             return InvokeAsync(commandContext,
                                async commandContextContainer =>
                                {
-                                   await UserManagementService.CheckUserAsync(user.Id)
-                                                              .ConfigureAwait(false);
-
                                    using (var dbFactory = RepositoryFactory.CreateInstance())
                                    {
                                        var appointment = await dbFactory.GetRepository<RaidAppointmentRepository>()
@@ -222,7 +217,7 @@ namespace Scruffy.Commands
                                                                         .ConfigureAwait(false);
                                        if (appointment != null)
                                        {
-                                           var registrationId = await RegistrationService.Join(appointment.Id, user.Id)
+                                           var registrationId = await RegistrationService.Join(commandContextContainer, appointment.Id, user.Id)
                                                                                          .ConfigureAwait(false);
 
                                            if (registrationId != null)
@@ -232,11 +227,11 @@ namespace Scruffy.Commands
 
                                                await MessageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
                                                                    .ConfigureAwait(false);
-                                           }
 
-                                           await commandContextContainer.Message
-                                                                        .DeleteAsync()
-                                                                        .ConfigureAwait(false);
+                                               await commandContextContainer.Message
+                                                                            .DeleteAsync()
+                                                                            .ConfigureAwait(false);
+                                           }
                                        }
                                        else
                                        {
@@ -261,9 +256,6 @@ namespace Scruffy.Commands
             return InvokeAsync(commandContext,
                                async commandContextContainer =>
                                {
-                                   await UserManagementService.CheckUserAsync(commandContext.User.Id)
-                                                              .ConfigureAwait(false);
-
                                    using (var dbFactory = RepositoryFactory.CreateInstance())
                                    {
                                        var appointment = await dbFactory.GetRepository<RaidAppointmentRepository>()
@@ -315,9 +307,6 @@ namespace Scruffy.Commands
             return InvokeAsync(commandContext,
                                async commandContextContainer =>
                                {
-                                   await UserManagementService.CheckUserAsync(user.Id)
-                                                              .ConfigureAwait(false);
-
                                    using (var dbFactory = RepositoryFactory.CreateInstance())
                                    {
                                        var appointment = await dbFactory.GetRepository<RaidAppointmentRepository>()
@@ -575,6 +564,16 @@ namespace Scruffy.Commands
             /// </summary>
             public RaidExperienceLevelsService RaidExperienceLevelsService { get; set; }
 
+            /// <summary>
+            /// Raid registration
+            /// </summary>
+            public RaidRegistrationService RaidRegistrationService { get; set; }
+
+            /// <summary>
+            /// Message builder
+            /// </summary>
+            public RaidMessageBuilder MessageBuilder  { get; set; }
+
             #endregion // Properties
 
             #region Methods
@@ -629,6 +628,8 @@ namespace Scruffy.Commands
 
                                            if (experienceLevelId > 0)
                                            {
+                                               var changedRanks = new List<(DiscordUser User, long? OldExperienceLevelId, long NewExperienceLevelId)>();
+
                                                foreach (var user in users)
                                                {
                                                    dbFactory.GetRepository<UserRepository>()
@@ -641,13 +642,71 @@ namespace Scruffy.Commands
                                                                                   obj.CreationTimeStamp = DateTime.Now;
                                                                               }
 
+                                                                              if (obj.RaidExperienceLevelId != experienceLevelId)
+                                                                              {
+                                                                                  changedRanks.Add((user, obj.RaidExperienceLevelId, experienceLevelId));
+                                                                              }
+
                                                                               obj.RaidExperienceLevelId = experienceLevelId;
                                                                           });
                                                }
 
+                                               var now = DateTime.Now;
+
+                                               var userIds = users.Select(obj => obj.Id)
+                                                                  .ToList();
+
+                                               var appointments = dbFactory.GetRepository<RaidAppointmentRepository>()
+                                                                           .GetQuery()
+                                                                           .Where(obj => obj.IsCommitted == false
+                                                                                         && obj.TimeStamp > now
+                                                                                         && obj.RaidRegistrations.Any(obj2 => userIds.Contains(obj2.UserId)))
+                                                                           .Select(obj => new
+                                                                                          {
+                                                                                              obj.Id,
+                                                                                              obj.ConfigurationId
+                                                                                          })
+                                                                           .ToList();
+
+                                               foreach (var appointment in appointments)
+                                               {
+                                                   await RaidRegistrationService.RefreshAppointment(appointment.Id)
+                                                                                .ConfigureAwait(false);
+
+                                                   await MessageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
+                                                                       .ConfigureAwait(false);
+                                               }
+
                                                await commandContextContainer.Message
-                                                                            .CreateReactionAsync(DiscordEmojiService.GetCheckEmoji(commandContextContainer.Client))
+                                                                            .DeleteAsync()
                                                                             .ConfigureAwait(false);
+
+                                               var experienceLevels = dbFactory.GetRepository<RaidExperienceLevelRepository>()
+                                                                               .GetQuery()
+                                                                               .Select(obj => new
+                                                                                              {
+                                                                                                  obj.Id,
+                                                                                                  obj.Description,
+                                                                                                  obj.Rank
+                                                                                              })
+                                                                               .ToList();
+
+                                               foreach (var changedRank in changedRanks.Where(obj => obj.NewExperienceLevelId != obj.OldExperienceLevelId))
+                                               {
+                                                   var oldRank = experienceLevels.FirstOrDefault(obj => obj.Id == changedRank.OldExperienceLevelId);
+                                                   var newRank = experienceLevels.FirstOrDefault(obj => obj.Id == changedRank.NewExperienceLevelId);
+
+                                                   await commandContextContainer.Channel
+                                                                                .SendMessageAsync(LocalizationGroup.GetFormattedText("NewRankFormat",
+                                                                                                                                     "Level changed for {0}: {1} {2} {3}",
+                                                                                                                                     changedRank.User.Mention,
+                                                                                                                                     oldRank?.Description,
+                                                                                                                                     oldRank == null || oldRank.Rank < newRank?.Rank
+                                                                                                                                        ? DiscordEmojiService.GetArrowUpEmoji(commandContext.Client)
+                                                                                                                                        : DiscordEmojiService.GetArrowDownEmoji(commandContext.Client),
+                                                                                                                                     newRank?.Description))
+                                                                                .ConfigureAwait(false);
+                                               }
                                            }
                                            else
                                            {

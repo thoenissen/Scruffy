@@ -14,6 +14,8 @@ using Scruffy.Data.Json.GuildWars2.Core;
 using Scruffy.Data.Json.GuildWars2.Guild;
 using Scruffy.Data.Json.GuildWars2.Items;
 using Scruffy.Data.Json.GuildWars2.Quaggans;
+using Scruffy.Data.Json.GuildWars2.TradingPost;
+using Scruffy.Data.Json.GuildWars2.Upgrades;
 using Scruffy.Data.Json.GuildWars2.World;
 
 namespace Scruffy.Services.WebApi
@@ -328,6 +330,76 @@ namespace Scruffy.Services.WebApi
         }
 
         /// <summary>
+        /// Get items
+        /// </summary>
+        /// <param name="itemIds">Item ids</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task<List<Item>> GetItems(List<int?> itemIds)
+        {
+            return Invoke(async () =>
+                          {
+                              var pageCount = (int)Math.Ceiling(itemIds.Count / 200.0);
+
+                              var items = new List<Item>();
+
+                              for (var i = 0; i < pageCount; i++)
+                              {
+                                  var ids = string.Join(",", itemIds.Skip(i * 200).Take(200).Select(obj => obj.ToString()));
+
+                                  using (var response = await CreateRequest("https://api.guildwars2.com/v2/items?ids=" + ids)
+                                                              .GetResponseAsync()
+                                                              .ConfigureAwait(false))
+                                  {
+                                      using (var reader = new StreamReader(response.GetResponseStream()))
+                                      {
+                                          var jsonResult = await reader.ReadToEndAsync()
+                                                                       .ConfigureAwait(false);
+
+                                          items.AddRange(JsonConvert.DeserializeObject<List<Item>>(jsonResult));
+                                      }
+                                  }
+                              }
+
+                              return items;
+                          });
+        }
+
+        /// <summary>
+        /// Get upgrades
+        /// </summary>
+        /// <param name="upgradeIds">Upgrade ids</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task<List<Upgrade>> GetUpgrades(List<int?> upgradeIds)
+        {
+            return Invoke(async () =>
+                          {
+                              var pageCount = (int)Math.Ceiling(upgradeIds.Count / 200.0);
+
+                              var upgrades = new List<Upgrade>();
+
+                              for (var i = 0; i < pageCount; i++)
+                              {
+                                  var ids = string.Join(",", upgradeIds.Skip(i * 200).Take(200).Select(obj => obj.ToString()));
+
+                                  using (var response = await CreateRequest("https://api.guildwars2.com/v2/guild/upgrades?ids=" + ids)
+                                                              .GetResponseAsync()
+                                                              .ConfigureAwait(false))
+                                  {
+                                      using (var reader = new StreamReader(response.GetResponseStream()))
+                                      {
+                                          var jsonResult = await reader.ReadToEndAsync()
+                                                                       .ConfigureAwait(false);
+
+                                          upgrades.AddRange(JsonConvert.DeserializeObject<List<Upgrade>>(jsonResult));
+                                      }
+                                  }
+                              }
+
+                              return upgrades;
+                          });
+        }
+
+        /// <summary>
         /// Request the list of quaggans
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
@@ -394,6 +466,47 @@ namespace Scruffy.Services.WebApi
                                       return JsonConvert.DeserializeObject<List<WorldData>>(jsonResult);
                                   }
                               }
+                          });
+        }
+
+        /// <summary>
+        /// Get trading post values
+        /// </summary>
+        /// <param name="itemIds">Item ids</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task<List<TradingPostItemPrice>> GetTradingPostPrices(List<int?> itemIds)
+        {
+            return Invoke(async () =>
+                          {
+                              var pageCount = (int)Math.Ceiling(itemIds.Count / 200.0);
+
+                              var prices = new List<TradingPostItemPrice>();
+
+                              for (var i = 0; i < pageCount; i++)
+                              {
+                                  var ids = string.Join(",", itemIds.Skip(i * 200).Take(200).Select(obj => obj.ToString()));
+
+                                  try
+                                  {
+                                      using (var response = await CreateRequest("https://api.guildwars2.com/v2/commerce/prices?ids=" + ids)
+                                                                  .GetResponseAsync()
+                                                                  .ConfigureAwait(false))
+                                      {
+                                          using (var reader = new StreamReader(response.GetResponseStream()))
+                                          {
+                                              var jsonResult = await reader.ReadToEndAsync()
+                                                                           .ConfigureAwait(false);
+
+                                              prices.AddRange(JsonConvert.DeserializeObject<List<TradingPostItemPrice>>(jsonResult));
+                                          }
+                                      }
+                                  }
+                                  catch (WebException ex) when (ex.Response is HttpWebResponse { StatusCode: HttpStatusCode.NotFound })
+                                  {
+                                  }
+                              }
+
+                              return prices;
                           });
         }
 
