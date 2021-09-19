@@ -185,6 +185,39 @@ namespace Scruffy.Commands
                                        {
                                            var stringBuilder = new StringBuilder();
 
+                                           async Task AddField()
+                                           {
+                                               if (fieldCounter == 6)
+                                               {
+                                                   if (builderCounter == 1)
+                                                   {
+                                                       builder.WithTitle(builder.Title + " #" + builderCounter);
+                                                   }
+
+                                                   builderCounter++;
+
+                                                   await commandContextContainer.Message
+                                                                                .RespondAsync(builder)
+                                                                                .ConfigureAwait(false);
+                                                   fieldCounter = 0;
+
+                                                   builder = new DiscordEmbedBuilder();
+                                                   builder.WithTitle(LocalizationGroup.GetText("HelpCommandOverviewTitle", "Overview of the most important commands") + " #" + builderCounter)
+                                                          .WithColor(DiscordColor.Green)
+                                                          .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/ef1f3e1f3f40100fb3750f8d7d25c657.png?size=64")
+                                                          .WithTimestamp(DateTime.Now);
+                                               }
+
+                                               if (stringBuilder.Length > 0)
+                                               {
+                                                   builder.AddField(localizationGroup.GetText(topLevelCommandGroup.Name, topLevelCommandGroup.Name + " commands"), stringBuilder.ToString());
+
+                                                   stringBuilder = new StringBuilder();
+                                               }
+
+                                               fieldCounter++;
+                                           }
+
                                            async Task ProcessCommands(IEnumerable<Command> commands)
                                            {
                                                foreach (var command in commands.Where(obj => obj.CustomAttributes.Any(filterExpression)))
@@ -195,39 +228,25 @@ namespace Scruffy.Commands
                                                    }
                                                    else if ((await command.RunChecksAsync(commandContext, true).ConfigureAwait(false)).Any() == false)
                                                    {
-                                                       formatter.AddCommand(command, sb => stringBuilder.Append(sb));
+                                                       await formatter.AddCommand(command,
+                                                                                  async sb =>
+                                                                                  {
+                                                                                      var currentLine = sb.ToString();
+                                                                                      if (currentLine.Length + stringBuilder.Length > 1024)
+                                                                                      {
+                                                                                          await AddField().ConfigureAwait(false);
+                                                                                      }
+
+                                                                                      stringBuilder.Append(sb);
+                                                                                  })
+                                                                      .ConfigureAwait(false);
                                                    }
                                                }
                                            }
 
                                            await ProcessCommands(topLevelCommandGroup.Children).ConfigureAwait(false);
 
-                                           if (fieldCounter == 6)
-                                           {
-                                               if (builderCounter == 1)
-                                               {
-                                                   builder.WithTitle(builder.Title + " #" + builderCounter);
-                                                   builderCounter++;
-                                               }
-
-                                               await commandContextContainer.Message
-                                                                            .RespondAsync(builder)
-                                                                            .ConfigureAwait(false);
-                                               fieldCounter = 0;
-
-                                               builder = new DiscordEmbedBuilder();
-                                               builder.WithTitle(LocalizationGroup.GetText("HelpCommandOverviewTitle", "Overview of the most important commands") + " #" + builderCounter)
-                                                      .WithColor(DiscordColor.Green)
-                                                      .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/ef1f3e1f3f40100fb3750f8d7d25c657.png?size=64")
-                                                      .WithTimestamp(DateTime.Now);
-                                           }
-
-                                           if (stringBuilder.Length > 0)
-                                           {
-                                               builder.AddField(localizationGroup.GetText(topLevelCommandGroup.Name, topLevelCommandGroup.Name + " commands"), stringBuilder.ToString());
-                                           }
-
-                                           fieldCounter++;
+                                           await AddField().ConfigureAwait(false);
                                        }
 
                                        await commandContextContainer.Message

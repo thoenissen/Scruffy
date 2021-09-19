@@ -487,6 +487,38 @@
     "CalendarOneTimeDayDialogElement": {
       "Message": "Please enter the day. (yyyy-MM-dd)"
     },
+    "CalendarAddParticipantsDialogElement": {
+      "Message": "Please enter the members:"
+    },
+    "CalendarAddVoiceChannelDialogElement": {
+      "ChooseTitle": "Voice channel selection",
+      "ChooseDescription": "Please choose one of the voice channels:",
+      "Field": "Channels"
+    },
+    "CalendarAppointmentSelectionDialogElement": {
+      "ChooseTitle": "Appointment selection",
+      "ChooseDescription": "Please choose one of the following appointments:",
+      "Field": "Appointments"
+    },
+    "CalendarParticipantsEditDialogElement": {
+      "CommitTitle": "Participants",
+      "CommitText": "The following participants are recorded:",
+      "Participants": "Participants",
+      "Commands": "Commands",
+      "AddUserCommand": "{0} Add user",
+      "AddVoiceChannelCommand": "{0} Add channel",
+      "RemoveUserCommand": "{0} Remove user",
+      "SetLeaderCommand": "{0} Leader",
+      "CommitCommand": "{0} Commit",
+      "CommitSuccess": "The participants list has been refreshed.",
+      "CancelCommand": "{0} Cancel"
+    },
+    "CalendarRemoveParticipantsDialogElement": {
+      "Message": "Please enter the members:"
+    },
+    "CalendarSetLeaderParticipantsDialogElement": {
+      "Message": "Please enter the members:"
+    },
     "SearchCommandModule": {
       "SearchResults": "Search results",
       "NoResults": "I couldn't find anything.",

@@ -24,7 +24,7 @@
       "ReminderCreated": "Die Erinnerung wurde für den {0} um {1} Uhr eingerichtet."
     },
     "DialogElementBase": {
-      "PleaseTryAgain": "Deine Eingabe war ungültig. Versuche es noch einmal." 
+      "PleaseTryAgain": "Deine Eingabe war ungültig. Versuche es noch einmal."
     },
     "AccountApiKeyDialogElement": {
       "Message": "Gib bitte den zu verwendenen Api Key ein."
@@ -224,9 +224,9 @@
       "CommitTitle": "Fortschreibung Teilnahmepunkte",
       "CommitText": "Die folgenden Punkte werden fortgeschrieben:",
       "Users": "Benutzer",
-      "AddCommand": "{0} Benutzer hinzufügen",
+      "AddCommand": "{0} Teilnehmer hinzufügen",
       "SetPointsCommand": "{0} Bearbeitung der Punkte",
-      "RemoveCommand": "{0} Benutzer entfernen",
+      "RemoveCommand": "{0} Teilnehmer entfernen",
       "CommitCommand": "{0} Bestätigung",
       "CancelCommand": "{0} Abbrechen",
       "CommandTitle": "Befehle"
@@ -489,6 +489,38 @@
     "CalendarOneTimeDayDialogElement": {
       "Message": "Gbt bitte den Tag ein. (yyyy-MM-dd)"
     },
+    "CalendarAddParticipantsDialogElement": {
+      "Message": "Gib bitte die Benutzer ein:"
+    },
+    "CalendarAddVoiceChannelDialogElement": {
+      "ChooseTitle": "Sprachkanalauswahl",
+      "ChooseDescription": "Wähle einen der folgenden Sprachkanäle aus:",
+      "Field": "Kanäle"
+    },
+    "CalendarAppointmentSelectionDialogElement": {
+      "ChooseTitle": "Terminauswahl",
+      "ChooseDescription": "Wähle einen der folgenden Termine aus:",
+      "Field": "Teilnehmer"
+    },
+    "CalendarParticipantsEditDialogElement": {
+      "CommitTitle": "Teilnehmer",
+      "CommitText": "Die folgenden Teilnehmer wurden erfasst:",
+      "Participants": "Teilnehmer",
+      "Commands": "Befehle",
+      "AddUserCommand": "{0} Teilnehmer hinzufügen",
+      "AddVoiceChannelCommand": "{0} Sprachkanal hinzufügen",
+      "RemoveUserCommand": "{0} Teilnehmer entfernen",
+      "SetLeaderCommand": "{0} Terminleitung",
+      "CommitCommand": "{0} Bestätigen",
+      "CommitSuccess": "Die Teilnehmerliste wurde aktualisiert.",
+      "CancelCommand": "{0} Abbrechen"
+    },
+    "CalendarRemoveParticipantsDialogElement": {
+      "Message": "Gib bitte die Benutzer ein:"
+    },
+    "CalendarSetLeaderParticipantsDialogElement": {
+      "Message": "Gib bitte die Benutzer ein:"
+    },
     "SearchCommandModule": {
       "SearchResults": "Suchergebnis",
       "NoResults": "Ich konnte leider keine Ergebnisse finden.",
@@ -552,11 +584,28 @@
       "raid join name description": "Aliasname der Gruppensuche",
       "raid join role": "Rolle",
       "raid join role description": "Aliasname der Rolle",
+      "raid joinuser": "Eintragung in die Gruppensuche",
+      "raid joinuser user": "Benutzer",
+      "raid joinuser user description": "Discord-Benutzer",
+      "raid joinuser name": "Name",
+      "raid joinuser name description": "Aliasname der Gruppensuche",
+      "raid joinuser role": "Rolle",
+      "raid joinuser role description": "Aliasname der Rolle",
       "raid leave": "Verlassen der Gruppensuche",
       "raid leave name": "Name",
       "raid leave name description": "Aliasname der Gruppensuche",
       "raid leave role": "Rolle",
       "raid leave role description": "Aliasname der Rolle",
+      "raid leaveuser": "Verlassen der Gruppensuche",
+      "raid leaveuser user": "Benutzer",
+      "raid leaveuser user description": "Discord-Benutzer",
+      "raid leaveuser name": "Name",
+      "raid leaveuser name description": "Aliasname der Gruppensuche",
+      "raid leaveuser role": "Rolle",
+      "raid leaveuser role description": "Aliasname der Rolle",
+      "raid settemplate": "Setzen der Schablone eines Raidtermins",
+      "raid settemplate name": "Name",
+      "raid settemplate name description": "Aliasname der Gruppensuche",
       "raid commit": "Fortschreibung eines Termins",
       "raid commit aliasName": "Name",
       "raid commit aliasName description": "Aliasname der Gruppensuche",
@@ -572,7 +621,9 @@
       "raid levels set aliasName description": "Aliasname des Erfahrungslevels",
       "raid levels set users": "Benutzer",
       "raid levels set users description": "Benutzer",
-      "raid levels overview": "Erfahrungslevelübersicht",
+      "raid overview": "Übersichten",
+      "raid overview participation": "Teilnahmepunkteübersicht",
+      "raid overview levels": "Erfahrungslevelübersicht",
 
       "guild": "Gildenverwaltung",
       "guild setup": "Einrichtung der Gildenadministration",
@@ -581,6 +632,8 @@
       "guild setguildlognotification": "Setzen des Benachrichtigungskanals des Gildenprotokolls",
       "guild motd": "Erstellung der Nachricht der 'Nachricht des Tages'",
       "guild calendar": "Kalendereinrichtung",
+      "guild charts": "Diagramme",
+      "guild emblem": "Embleme",
       "guild emblem random": "Zufallsgenerierung von Gilden-Emblemen",
       "guild emblem random count": "Anzahl",
       "guild emblem random count description": "Anzahl der Gilden-Embleme",
@@ -595,21 +648,28 @@
       "guild export stash mode": "Modus",
       "guild export stash mode description": "Exportmodus",
       "guild export stash mode format": "raw/sum",
-      "guild export stash sinceDate": "Modus",
-      "guild export stash sinceDate description": "Datum des ersten Eintrages",
+      "guild export stash sinceDate": "Startdatum",
+      "guild export stash sinceDate description": "Startdatum der Ermittlung",
+      "guild export stash sinceTime": "Startzeit",
+      "guild export stash sinceTime description": "Startzeit der Ermittlung",
       "guild export upgrades": "Export der Gildenlogeinträge der Aufwertungen",
       "guild export upgrades mode": "Modus",
       "guild export upgrades mode description": "Exportmodus",
       "guild export upgrades mode format": "raw/sum",
-      "guild export upgrades sinceDate": "Modus",
-      "guild export upgrades sinceDate description": "Datum des ersten Eintrages",
+      "guild export upgrades sinceDate": "Startdatum",
+      "guild export upgrades sinceDate description": "Startdatum der Ermittlung",
+      "guild export upgrades sinceTime": "Startzeit",
+      "guild export upgrades sinceTime description": "Startzeit der Ermittlung",
+      "guild export activity": "Loginaktivitätsübersicht",
 
       "gw2": "Guild Wars 2",
       "gw2 quaggan": "Zufällige Quaggan-Bilder",
 
       "games": "Discord-Spiele",
+      "games counter": "Zahlenzählen",
       "games counter add": "Scruffy zum Zahlen zählen hinzufügen",
       "games counter remove": "Scruffy zum Zahlen zählen entfernen",
+      "games wordchain": "Wortketten",
       "games wordchain add": "Scruffy zum Wortschlangen bilden hinzufügen",
       "games wordchain remove": "Scruffy zum Wortschlangen bilden entfernen",
 
@@ -625,8 +685,8 @@
       "config prefix": "Festlegung des Präfix",
       "config prefix prefix": "Präfix",
       "config prefix prefix description": "Zeichenketten zur Verwendung als Präfix",
-      "config adminRole": "Administratorenrolle setzen",
-      "config adminRole role": "Administratorenrolle",
+      "config adminrole": "Administratorenrolle setzen",
+      "config adminrole role": "Administratorenrolle",
 
       "reminder": "Erstellung von Erinnerungen",
 

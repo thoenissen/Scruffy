@@ -117,12 +117,18 @@ namespace Scruffy.Services.Raid
 
                         if (message != null)
                         {
-                            var stringBuilder = new StringBuilder();
+                            var fieldBuilder = new StringBuilder();
+
+                            var slotCountFactor = appointment.Registrations.Count / appointment.ExperienceLevels.Sum(obj => (double)obj.Count) >= 1.4
+                                 ? 2
+                                 : 1;
 
                             // Building the message
                             foreach (var slot in appointment.ExperienceLevels
                                                             .OrderBy(obj => obj.Rank))
                             {
+                                var fieldCounter = 1;
+
                                 var registrations = appointment.Registrations
                                                                .Where(obj => obj.LineupExperienceLevelId == slot.RaidExperienceLevelId)
                                                                .OrderByDescending(obj => obj.Points)
@@ -133,7 +139,8 @@ namespace Scruffy.Services.Raid
                                     var discordUser = await _client.GetUserAsync(registration.UserId)
                                                                    .ConfigureAwait(false);
 
-                                    stringBuilder.Append(" > ");
+                                    var lineBuilder = new StringBuilder();
+                                    lineBuilder.Append(" > ");
 
                                     if (registration.Roles?.Count > 0)
                                     {
@@ -143,43 +150,58 @@ namespace Scruffy.Services.Raid
                                         {
                                             if (first == false)
                                             {
-                                                stringBuilder.Append(", ");
+                                                lineBuilder.Append(", ");
                                             }
                                             else
                                             {
                                                 first = false;
                                             }
 
-                                            stringBuilder.Append(DiscordEmojiService.GetGuildEmoji(_client, role.MainRoleEmoji));
+                                            lineBuilder.Append(DiscordEmojiService.GetGuildEmoji(_client, role.MainRoleEmoji));
 
                                             if (role.SubRoleEmoji != null)
                                             {
-                                                stringBuilder.Append(DiscordEmojiService.GetGuildEmoji(_client, role.SubRoleEmoji.Value));
+                                                lineBuilder.Append(DiscordEmojiService.GetGuildEmoji(_client, role.SubRoleEmoji.Value));
                                             }
                                         }
                                     }
                                     else
                                     {
-                                        stringBuilder.Append(DiscordEmojiService.GetQuestionMarkEmoji(_client));
+                                        lineBuilder.Append(DiscordEmojiService.GetQuestionMarkEmoji(_client));
                                     }
 
-                                    stringBuilder.Append($" {discordUser.Mention}");
+                                    lineBuilder.Append($" {discordUser.Mention}");
 
                                     if (registration.LineupExperienceLevelId != registration.ExperienceLevelId
                                      && registration.ExperienceLevelDiscordEmoji != null)
                                     {
-                                        stringBuilder.Append(' ');
-                                        stringBuilder.Append(DiscordEmojiService.GetGuildEmoji(_client, registration.ExperienceLevelDiscordEmoji.Value));
+                                        lineBuilder.Append(' ');
+                                        lineBuilder.Append(DiscordEmojiService.GetGuildEmoji(_client, registration.ExperienceLevelDiscordEmoji.Value));
                                     }
 
-                                    stringBuilder.Append($"\n");
+                                    lineBuilder.Append($"\n");
+
+                                    if (lineBuilder.Length + fieldBuilder.Length > 1024)
+                                    {
+                                        builder.AddField($"{DiscordEmojiService.GetGuildEmoji(_client, slot.DiscordEmoji)} {slot.Description} ({registrations.Count}/{slot.Count * slotCountFactor}) #{fieldCounter}", fieldBuilder.ToString());
+                                        fieldBuilder = new StringBuilder();
+                                        fieldCounter++;
+                                    }
+
+                                    fieldBuilder.Append(lineBuilder);
                                 }
 
-                                stringBuilder.Append('\u200B');
+                                fieldBuilder.Append('\u200B');
 
-                                builder.AddField($"{DiscordEmojiService.GetGuildEmoji(_client, slot.DiscordEmoji)} {slot.Description} ({registrations.Count}/{slot.Count})", stringBuilder.ToString());
+                                var fieldName = $"{DiscordEmojiService.GetGuildEmoji(_client, slot.DiscordEmoji)} {slot.Description} ({registrations.Count}/{slot.Count * slotCountFactor})";
+                                if (fieldCounter != 1)
+                                {
+                                    fieldName = $"{fieldName} #{fieldCounter}";
+                                }
 
-                                stringBuilder.Clear();
+                                builder.AddField(fieldName, fieldBuilder.ToString());
+
+                                fieldBuilder.Clear();
                             }
 
                             foreach (var entry in appointment.Registrations
@@ -189,7 +211,7 @@ namespace Scruffy.Services.Raid
                                 var discordUser = await _client.GetUserAsync(entry.UserId)
                                                                .ConfigureAwait(false);
 
-                                stringBuilder.Append(" > ");
+                                fieldBuilder.Append(" > ");
 
                                 if (entry.Roles?.Count > 0)
                                 {
@@ -199,32 +221,32 @@ namespace Scruffy.Services.Raid
                                     {
                                         if (first == false)
                                         {
-                                            stringBuilder.Append(", ");
+                                            fieldBuilder.Append(", ");
                                         }
                                         else
                                         {
                                             first = false;
                                         }
 
-                                        stringBuilder.Append(DiscordEmojiService.GetGuildEmoji(_client, role.MainRoleEmoji));
+                                        fieldBuilder.Append(DiscordEmojiService.GetGuildEmoji(_client, role.MainRoleEmoji));
 
                                         if (role.SubRoleEmoji != null)
                                         {
-                                            stringBuilder.Append(DiscordEmojiService.GetGuildEmoji(_client, role.SubRoleEmoji.Value));
+                                            fieldBuilder.Append(DiscordEmojiService.GetGuildEmoji(_client, role.SubRoleEmoji.Value));
                                         }
                                     }
                                 }
                                 else
                                 {
-                                    stringBuilder.Append(DiscordEmojiService.GetQuestionMarkEmoji(_client));
+                                    fieldBuilder.Append(DiscordEmojiService.GetQuestionMarkEmoji(_client));
                                 }
 
-                                stringBuilder.AppendLine($" {discordUser.Mention} {(entry.ExperienceLevelDiscordEmoji != null ? DiscordEmojiService.GetGuildEmoji(_client, entry.ExperienceLevelDiscordEmoji.Value) : null)}");
+                                fieldBuilder.AppendLine($" {discordUser.Mention} {(entry.ExperienceLevelDiscordEmoji != null ? DiscordEmojiService.GetGuildEmoji(_client, entry.ExperienceLevelDiscordEmoji.Value) : null)}");
                             }
 
-                            stringBuilder.Append('\u200B');
+                            fieldBuilder.Append('\u200B');
 
-                            builder.AddField(LocalizationGroup.GetText("SubstitutesBench", "Substitutes bench"), stringBuilder.ToString());
+                            builder.AddField(LocalizationGroup.GetText("SubstitutesBench", "Substitutes bench"), fieldBuilder.ToString());
 
                             builder.WithTitle($"{appointment.Title} - {appointment.TimeStamp.ToString("g", LocalizationGroup.CultureInfo)}");
                             builder.WithDescription(appointment.Description);

@@ -6,10 +6,12 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 
 using Newtonsoft.Json;
 
 using Scruffy.Data.Json.GuildWars2.Account;
+using Scruffy.Data.Json.GuildWars2.Characters;
 using Scruffy.Data.Json.GuildWars2.Core;
 using Scruffy.Data.Json.GuildWars2.Guild;
 using Scruffy.Data.Json.GuildWars2.Items;
@@ -131,6 +133,78 @@ namespace Scruffy.Services.WebApi
                                                                    .ConfigureAwait(false);
 
                                       return JsonConvert.DeserializeObject<AccountInformation>(jsonResult);
+                                  }
+                              }
+                          });
+        }
+
+        /// <summary>
+        /// Request the characters information
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task<List<Character>> GetCharactersAsync()
+        {
+            return Invoke(async () =>
+                          {
+                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/characters?ids=all")
+                                                          .GetResponseAsync()
+                                                          .ConfigureAwait(false))
+                              {
+                                  using (var reader = new StreamReader(response.GetResponseStream()))
+                                  {
+                                      var jsonResult = await reader.ReadToEndAsync()
+                                                                   .ConfigureAwait(false);
+
+                                      return JsonConvert.DeserializeObject<List<Character>>(jsonResult)
+                                                        .Where(obj => obj.Flags?.Contains("Beta") != true)
+                                                        .ToList();
+                                  }
+                              }
+                          });
+        }
+
+        /// <summary>
+        /// Request the character names
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task<List<string>> GetCharacterNamesAsync()
+        {
+            return Invoke(async () =>
+                          {
+                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/characters")
+                                                          .GetResponseAsync()
+                                                          .ConfigureAwait(false))
+                              {
+                                  using (var reader = new StreamReader(response.GetResponseStream()))
+                                  {
+                                      var jsonResult = await reader.ReadToEndAsync()
+                                                                   .ConfigureAwait(false);
+
+                                      return JsonConvert.DeserializeObject<List<string>>(jsonResult);
+                                  }
+                              }
+                          });
+        }
+
+        /// <summary>
+        /// Request the character information
+        /// </summary>
+        /// <param name="characterName">Character name</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task<Character> GetCharacterAsync(string characterName)
+        {
+            return Invoke(async () =>
+                          {
+                              using (var response = await CreateRequest($"https://api.guildwars2.com/v2/characters/{Uri.EscapeUriString(characterName)}?v=latest")
+                                                          .GetResponseAsync()
+                                                          .ConfigureAwait(false))
+                              {
+                                  using (var reader = new StreamReader(response.GetResponseStream()))
+                                  {
+                                      var jsonResult = await reader.ReadToEndAsync()
+                                                                   .ConfigureAwait(false);
+
+                                      return JsonConvert.DeserializeObject<Character>(jsonResult);
                                   }
                               }
                           });

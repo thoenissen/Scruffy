@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,9 +9,12 @@ using DSharpPlus.Entities;
 using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;
+using Scruffy.Data.Entity.Repositories.Account;
+using Scruffy.Data.Entity.Repositories.CoreData;
 using Scruffy.Data.Entity.Repositories.GuildAdministration;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord;
+using Scruffy.Services.Core.Extensions;
 using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.GuildAdministration
@@ -352,6 +356,135 @@ namespace Scruffy.Services.GuildAdministration
                                                 .SendMessageAsync(new DiscordMessageBuilder().WithFile("upgrades_log.csv", memoryStream))
                                                 .ConfigureAwait(false);
                         }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Exporting login data
+        /// </summary>
+        /// <param name="commandContext">Command context</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task ExportLoginActivityLog(CommandContextContainer commandContext)
+        {
+            using (var dbFactory = RepositoryFactory.CreateInstance())
+            {
+                var dateLimit = DateTime.Today.AddDays(-7);
+
+                var entries = await dbFactory.GetRepository<AccountDailyLoginCheckRepository>()
+                                                .GetQuery()
+                                                .Where(obj => obj.Date >= dateLimit)
+                                                .Select(obj => new
+                                                               {
+                                                                   obj.AccountEntity.Name
+                                                               })
+                                                .Distinct()
+                                                .ToListAsync()
+                                                .ConfigureAwait(false);
+
+                await using (var memoryStream = new MemoryStream())
+                {
+                    await using (var writer = new StreamWriter(memoryStream))
+                    {
+                        await writer.WriteLineAsync("AccountName")
+                                    .ConfigureAwait(false);
+
+                        foreach (var entry in entries)
+                        {
+                            await writer.WriteLineAsync($"{entry.Name};")
+                                        .ConfigureAwait(false);
+                        }
+
+                        await writer.FlushAsync()
+                                    .ConfigureAwait(false);
+
+                        memoryStream.Position = 0;
+
+                        await commandContext.Channel
+                                            .SendMessageAsync(new DiscordMessageBuilder().WithFile("activity_log.csv", memoryStream))
+                                            .ConfigureAwait(false);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Exporting representation state
+        /// </summary>
+        /// <param name="commandContext">Command context</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task ExportRepresentation(CommandContextContainer commandContext)
+        {
+            using (var dbFactory = RepositoryFactory.CreateInstance())
+            {
+                var guildApiKey = dbFactory.GetRepository<GuildRepository>()
+                                           .GetQuery()
+                                           .Where(obj => obj.DiscordServerId == commandContext.Guild.Id)
+                                           .Select(obj => obj.GuildId)
+                                           .FirstOrDefault();
+
+                var entries = await dbFactory.GetRepository<AccountRepository>()
+                                             .GetQuery()
+                                             .Select(obj => new
+                                                            {
+                                                                obj.Name,
+                                                                obj.UserId,
+                                                                obj.ApiKey
+                                                            })
+                                             .ToListAsync()
+                                             .ConfigureAwait(false);
+
+                var accounts = new List<(string User, string AccountName, int Characters, int?Representation)>();
+
+                foreach (var entry in entries)
+                {
+                    DiscordMember user = null;
+
+                    try
+                    {
+                        user = await commandContext.Guild
+                                                   .GetMemberAsync(entry.UserId)
+                                                   .ConfigureAwait(false);
+                    }
+                    catch
+                    {
+                    }
+
+                    if (user != null)
+                    {
+                        await using (var connector = new GuidWars2ApiConnector(entry.ApiKey))
+                        {
+                            var characters = await connector.GetCharactersAsync()
+                                                            .ConfigureAwait(false);
+
+                            accounts.Add((user.TryGetDisplayName(), entry.Name, characters?.Count ?? 0, characters?.Count(obj => obj.Guild == guildApiKey) ?? 0));
+                        }
+                    }
+                }
+
+                await using (var memoryStream = new MemoryStream())
+                {
+                    await using (var writer = new StreamWriter(memoryStream))
+                    {
+                        await writer.WriteLineAsync("User;AccountName;Characters;Representation;Percentage")
+                                    .ConfigureAwait(false);
+
+                        foreach (var (user, accountName, characters, representation) in accounts.OrderBy(obj => obj.User)
+                                                                                                                                                     .ThenBy(obj => obj.AccountName))
+                        {
+                            await writer.WriteLineAsync($"{user};{accountName};{characters};{representation};{(characters != 0 ? representation / (double)characters : 0)}")
+                                        .ConfigureAwait(false);
+                        }
+
+                        await writer.FlushAsync()
+                                    .ConfigureAwait(false);
+
+                        memoryStream.Position = 0;
+
+                        await commandContext.Channel
+                                            .SendMessageAsync(new DiscordMessageBuilder().WithFile("representation.csv", memoryStream))
+                                            .ConfigureAwait(false);
                     }
                 }
             }

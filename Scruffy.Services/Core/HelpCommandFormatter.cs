@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
@@ -66,7 +67,7 @@ namespace Scruffy.Services.Core
 
             _embedBuilder.WithDescription($"{Formatter.InlineCode(command.QualifiedName)}: {_localizationGroup.GetText(command.QualifiedName, _localizationGroup.GetText("NoDescription", "No description provided."))}");
 
-            AddCommand(command, sb => _embedBuilder.AddField(_localizationGroup.GetText("Arguments", "Arguments"), sb.ToString().Trim()));
+            AddCommand(command, sb => Task.Run(() => _embedBuilder.AddField(_localizationGroup.GetText("Arguments", "Arguments"), sb.ToString().Trim()))).Wait();
 
             return this;
         }
@@ -76,7 +77,8 @@ namespace Scruffy.Services.Core
         /// </summary>
         /// <param name="command">Command</param>
         /// <param name="onCommand">Adding a command overload</param>
-        public void AddCommand(Command command, Action<StringBuilder> onCommand)
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task AddCommand(Command command, Func<StringBuilder, Task> onCommand)
         {
             if (command.Overloads?.Any() == true)
             {
@@ -118,11 +120,9 @@ namespace Scruffy.Services.Core
 
                         sb.Append("\n");
                     }
-
-                    sb.Append('\n');
                 }
 
-                onCommand(sb);
+                await onCommand(sb).ConfigureAwait(false);
             }
         }
 

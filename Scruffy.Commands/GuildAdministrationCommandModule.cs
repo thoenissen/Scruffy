@@ -485,6 +485,42 @@ namespace Scruffy.Commands
             /// <param name="commandContext">Current command context</param>
             /// <param name="mode">Mode</param>
             /// <param name="sinceDate">Since Date</param>
+            /// <param name="sinceTime">Since Time</param>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+            [Command("stash")]
+            [RequireGuild]
+            [RequireAdministratorPermissions]
+            [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
+            public Task ExportStashLog(CommandContext commandContext, string mode, string sinceDate, string sinceTime)
+            {
+                return InvokeAsync(commandContext,
+                                   async commandContextContainer =>
+                                   {
+                                       if (DateTime.TryParseExact(sinceDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date)
+                                           && TimeSpan.TryParseExact(sinceTime, "hh\\:mm", null, out var time))
+                                       {
+                                           date = date.Add(time);
+
+                                           if (mode == "sum")
+                                           {
+                                               await GuildExportService.ExportStashLogSummarized(commandContextContainer, date)
+                                                                       .ConfigureAwait(false);
+                                           }
+                                           else
+                                           {
+                                               await GuildExportService.ExportStashLog(commandContextContainer, date)
+                                                                       .ConfigureAwait(false);
+                                           }
+                                       }
+                                   });
+            }
+
+            /// <summary>
+            /// Worlds overview
+            /// </summary>
+            /// <param name="commandContext">Current command context</param>
+            /// <param name="mode">Mode</param>
+            /// <param name="sinceDate">Since Date</param>
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("upgrades")]
             [RequireGuild]
@@ -508,6 +544,80 @@ namespace Scruffy.Commands
                                                                        .ConfigureAwait(false);
                                            }
                                        }
+                                   });
+            }
+
+            /// <summary>
+            /// Worlds overview
+            /// </summary>
+            /// <param name="commandContext">Current command context</param>
+            /// <param name="mode">Mode</param>
+            /// <param name="sinceDate">Since Date</param>
+            /// <param name="sinceTime">Since Time</param>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+            [Command("upgrades")]
+            [RequireGuild]
+            [RequireAdministratorPermissions]
+            [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
+            public Task ExportUpgradesLog(CommandContext commandContext, string mode, string sinceDate, string sinceTime)
+            {
+                return InvokeAsync(commandContext,
+                                   async commandContextContainer =>
+                                   {
+                                       if (DateTime.TryParseExact(sinceDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date)
+                                        && TimeSpan.TryParseExact(sinceTime, "hh\\:mm", null, out var time))
+                                       {
+                                           date = date.Add(time);
+
+                                           if (mode == "sum")
+                                           {
+                                               await GuildExportService.ExportUpgradesLogSummarized(commandContextContainer, date)
+                                                                       .ConfigureAwait(false);
+                                           }
+                                           else
+                                           {
+                                               await GuildExportService.ExportUpgradesLog(commandContextContainer, date)
+                                                                       .ConfigureAwait(false);
+                                           }
+                                       }
+                                   });
+            }
+
+            /// <summary>
+            /// Login Activity
+            /// </summary>
+            /// <param name="commandContext">Current command context</param>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+            [Command("activity")]
+            [RequireGuild]
+            [RequireAdministratorPermissions]
+            [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
+            public Task ExportUpgradesLog(CommandContext commandContext)
+            {
+                return InvokeAsync(commandContext,
+                                   async commandContextContainer =>
+                                   {
+                                       await GuildExportService.ExportLoginActivityLog(commandContextContainer)
+                                                               .ConfigureAwait(false);
+                                   });
+            }
+
+            /// <summary>
+            /// Representation state
+            /// </summary>
+            /// <param name="commandContext">Current command context</param>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+            [Command("representation")]
+            [RequireGuild]
+            [RequireAdministratorPermissions]
+            [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
+            public Task ExportRepresentation(CommandContext commandContext)
+            {
+                return InvokeAsync(commandContext,
+                                   async commandContextContainer =>
+                                   {
+                                       await GuildExportService.ExportRepresentation(commandContextContainer)
+                                                               .ConfigureAwait(false);
                                    });
             }
 

@@ -273,6 +273,7 @@ namespace Scruffy.Services.Raid
                                                                             .OrderByDescending(obj2 => currentRaidPoints.Where(obj3 => obj3.UserId == obj2.UserId)
                                                                                                                         .Select(obj3 => obj3.Points)
                                                                                                                         .FirstOrDefault())
+                                                                            .ThenBy(obj2 => obj2.RegistrationTimeStamp)
                                                                             .Select(obj2 => new
                                                                             {
                                                                                 obj2.Id,
@@ -285,7 +286,7 @@ namespace Scruffy.Services.Raid
 
                     if (appointment != null)
                     {
-                        var slotCountFactor = appointment.Registrations.Count / appointment.ExperienceLevels.Sum(obj => (double)obj.Count) > 1.4
+                        var slotCountFactor = appointment.Registrations.Count / appointment.ExperienceLevels.Sum(obj => (double)obj.Count) >= 1.4
                                                   ? 2
                                                   : 1;
 

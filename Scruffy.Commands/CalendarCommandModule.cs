@@ -38,6 +38,11 @@ namespace Scruffy.Commands
         /// </summary>
         public CalendarScheduleService CalendarScheduleService { get; set; }
 
+        /// <summary>
+        /// Participants service
+        /// </summary>
+        public CalendarParticipantsService CalendarParticipantsService { get; set; }
+
         #endregion // Properties
 
         #region Methods
@@ -58,6 +63,26 @@ namespace Scruffy.Commands
                                {
                                    await CalendarScheduleService.AddOneTimeEvent(commandContext)
                                                                 .ConfigureAwait(false);
+                               });
+        }
+
+        /// <summary>
+        /// Editing participants
+        /// </summary>
+        /// <param name="commandContext">Current command context</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("participants")]
+        [Aliases("p")]
+        [RequireGuild]
+        [RequireAdministratorPermissions]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
+        public Task EditParticipants(CommandContext commandContext)
+        {
+            return InvokeAsync(commandContext,
+                               async commandContextContainer =>
+                               {
+                                   await CalendarParticipantsService.EditParticipants(commandContextContainer)
+                                                                    .ConfigureAwait(false);
                                });
         }
 
@@ -182,6 +207,5 @@ namespace Scruffy.Commands
         }
 
         #endregion // Schedule
-
     }
 }
