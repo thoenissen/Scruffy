@@ -22,6 +22,24 @@
       "CreationCompletedMessage": "Creation completed! All creation messages will be deleted in 30 seconds.",
       "ReminderCreated": "The reminder has been set for {0} {1}."
     },
+    "GuildWars2CommandBuilder": {
+      "GuildWars2Updates": "Guild Wars 2 - Updates",
+      "Release": "Release",
+      "Timespan": "Timespan",
+      "Day": "Day",
+      "Days": "Days",
+      "Hour": "Hour",
+      "Hours": "Hours",
+      "Minute": "Minute",
+      "Minutes": "Minutes",
+      "Second": "Second",
+      "Seconds": "Seconds",
+      "Confirmed": "Confirmed",
+      "Source": "Source",
+      "Sources": "Sources",
+      "UpdateField": "General",
+      "EodField": "End of Dragons"
+    },
     "DialogElementBase": {
       "PleaseTryAgain": "Your input was invalid. Please try again."
     },

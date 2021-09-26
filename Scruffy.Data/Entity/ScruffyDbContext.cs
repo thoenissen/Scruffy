@@ -23,7 +23,21 @@ namespace Scruffy.Data.Entity
     /// </summary>
     public class ScruffyDbContext : DbContext
     {
+        #region Fields
+
+        /// <summary>
+        /// Connection string
+        /// </summary>
+        private static string _connectionString;
+
+        #endregion // Fields
+
         #region Properties
+
+        /// <summary>
+        /// Connection string
+        /// </summary>
+        public string ConnectionString => _connectionString;
 
         /// <summary>
         /// Last error
@@ -63,7 +77,9 @@ namespace Scruffy.Data.Entity
                                               UserID = Environment.GetEnvironmentVariable("SCRUFFY_DB_USER"),
                                               Password = Environment.GetEnvironmentVariable("SCRUFFY_DB_PASSWORD")
                                           };
-            optionsBuilder.UseSqlServer(connectionStringBuilder.ConnectionString);
+            _connectionString = connectionStringBuilder.ConnectionString;
+
+            optionsBuilder.UseSqlServer(ConnectionString);
 #if DEBUG
             optionsBuilder.LogTo(s => Debug.WriteLine(s));
 #endif
@@ -377,6 +393,15 @@ namespace Scruffy.Data.Entity
 
             // Guild Wars 2
             modelBuilder.Entity<GuildWarsWorldEntity>();
+            modelBuilder.Entity<GuildWarsItemEntity>();
+            modelBuilder.Entity<GuildWarsItemGuildUpgradeConversionEntity>();
+
+            modelBuilder.Entity<GuildWarsItemGuildUpgradeConversionEntity>()
+                        .HasKey(obj => new
+                                       {
+                                           obj.ItemId,
+                                           obj.UpgradeId
+                                       });
 
             // Disabling cascade on delete
             foreach (var foreignKey in modelBuilder.Model.GetEntityTypes()

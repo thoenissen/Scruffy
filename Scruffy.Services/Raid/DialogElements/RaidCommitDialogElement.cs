@@ -76,6 +76,8 @@ namespace Scruffy.Services.Raid.DialogElements
 
             var message = new StringBuilder();
 
+            var fieldCounter = 1;
+
             foreach (var user in _commitData.Users
                                             .OrderByDescending(obj => obj.Points))
             {
@@ -83,12 +85,27 @@ namespace Scruffy.Services.Raid.DialogElements
                                                       .GetUserAsync(user.UserId)
                                                       .ConfigureAwait(false);
 
-                message.AppendLine($"{Formatter.InlineCode(user.Points.ToString("#.##"))} - {DiscordEmojiService.GetGuildEmoji(CommandContext.Client, user.DiscordEmoji)} {discordUser.Mention}");
+                var currentLine = $"{Formatter.InlineCode(user.Points.ToString("0.0"))} - {DiscordEmojiService.GetGuildEmoji(CommandContext.Client, user.DiscordEmoji)} {discordUser.Mention}";
+                if (currentLine.Length + message.Length > 1024)
+                {
+                    builder.AddField(LocalizationGroup.GetText("Users", "Users") + " #" + fieldCounter, message.ToString());
+                    fieldCounter++;
+
+                    message = new StringBuilder();
+                }
+
+                message.AppendLine(currentLine);
             }
 
             message.AppendLine("\u200b");
 
-            builder.AddField(LocalizationGroup.GetText("Users", "Users"), message.ToString());
+            var fieldName = LocalizationGroup.GetText("Users", "Users");
+            if (fieldCounter > 1)
+            {
+                fieldName = fieldName + " #" + fieldCounter;
+            }
+
+            builder.AddField(fieldName, message.ToString());
         }
 
         /// <summary>

@@ -75,7 +75,7 @@ namespace Scruffy.Services.GuildAdministration
                                                       {
                                                           GuildId = guild.Id,
                                                           Id = entry.Id,
-                                                          Time = entry.Time,
+                                                          Time = entry.Time.ToLocalTime(),
                                                           Type = entry.Type,
                                                           User = entry.User,
                                                           KickedBy = entry.KickedBy,

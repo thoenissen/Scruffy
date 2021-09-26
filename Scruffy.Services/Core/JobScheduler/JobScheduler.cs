@@ -46,6 +46,7 @@ namespace Scruffy.Services.Core.JobScheduler
         {
             await Task.Run(JobManager.Start).ConfigureAwait(false);
 
+#if RELEASE
             // Fractals
             JobManager.AddJob<FractalDailyRefreshJob>(obj => obj.ToRunEvery(1).Days().At(0, 0));
 
@@ -59,7 +60,7 @@ namespace Scruffy.Services.Core.JobScheduler
             JobManager.AddJob<AccountLoginCheckJob>(obj => obj.ToRunEvery(1).Days().At(0, 5));
 
             // Guild
-            JobManager.AddJob<GuildLogImportJob>(obj => obj.ToRunEvery(5).Minutes());
+            JobManager.AddJob<GuildLogImportJob>(obj => obj.NonReentrant().ToRunEvery(20).Seconds());
             JobManager.AddJob<GuildSpecialRankPointsJob>(obj => obj.ToRunEvery(1).Days().At(0, 30));
 
             // Games
@@ -140,6 +141,8 @@ namespace Scruffy.Services.Core.JobScheduler
                     JobManager.AddJob(new CalendarReminderDeletionJob(entry.Id), obj => obj.ToRunOnceAt(entry.TimeStamp));
                 }
             }
+
+#endif
         }
 
         /// <summary>
@@ -208,9 +211,9 @@ namespace Scruffy.Services.Core.JobScheduler
             JobManager.RemoveJob(jobName);
         }
 
-        #endregion // Methods
+#endregion // Methods
 
-        #region IAsyncDisposable
+#region IAsyncDisposable
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously.
@@ -221,6 +224,6 @@ namespace Scruffy.Services.Core.JobScheduler
             await Task.Run(JobManager.StopAndBlock).ConfigureAwait(false);
         }
 
-        #endregion // IAsyncDisposable
+#endregion // IAsyncDisposable
     }
 }

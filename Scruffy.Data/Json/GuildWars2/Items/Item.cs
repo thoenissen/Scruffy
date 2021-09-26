@@ -20,9 +20,21 @@ namespace Scruffy.Data.Json.GuildWars2.Items
         public string Name { get; set; }
 
         /// <summary>
+        /// Type
+        /// </summary>
+        [JsonProperty("type")]
+        public string Type { get; set; }
+
+        /// <summary>
         /// Vendor value
         /// </summary>
         [JsonProperty("vendor_value")]
         public long? VendorValue { get; set; }
+
+        /// <summary>
+        /// Details
+        /// </summary>
+        [JsonProperty("details")]
+        public ItemDetails Details { get; set; }
     }
 }

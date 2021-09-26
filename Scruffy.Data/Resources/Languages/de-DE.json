@@ -23,6 +23,24 @@
       "CreationCompletedMessage": "Erstellung abgeschlossen! Alle Nachrichten der Erstellung werden in 30 Sekunden gelöscht.",
       "ReminderCreated": "Die Erinnerung wurde für den {0} um {1} Uhr eingerichtet."
     },
+    "GuildWars2CommandBuilder": {
+      "GuildWars2Updates": "Guild Wars 2 - Updates",
+      "Release": "Release",
+      "Timespan": "Zeitspanne",
+      "Day": "Tag",
+      "Days": "Tage",
+      "Hour": "Stunde",
+      "Hours": "Stunden",
+      "Minute": "Minute",
+      "Minutes": "Minuten",
+      "Second": "Sekunde",
+      "Seconds": "Sekunden",
+      "Confirmed": "Bestätigt",
+      "Source": "Quelle",
+      "Sources": "Quellen",
+      "UpdateField": "Allgemein",
+      "EodField": "End of Dragons" 
+    },
     "DialogElementBase": {
       "PleaseTryAgain": "Deine Eingabe war ungültig. Versuche es noch einmal."
     },

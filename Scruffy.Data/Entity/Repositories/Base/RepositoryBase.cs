@@ -47,6 +47,19 @@ namespace Scruffy.Data.Entity.Repositories.Base
 
         #endregion // Constructor
 
+        #region Properties
+
+        /// <summary>
+        /// Last error
+        /// </summary>
+        public Exception LastError
+        {
+            get => _dbContext.LastError;
+            protected set => _dbContext.LastError = value;
+        }
+
+        #endregion // Properties
+
         #region Methods
 
         /// <summary>

@@ -380,6 +380,29 @@ namespace Scruffy.Services.WebApi
         }
 
         /// <summary>
+        /// Request the list of all items
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task<List<int>> GetAllItemIds()
+        {
+            return Invoke(async () =>
+                          {
+                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/items")
+                                                          .GetResponseAsync()
+                                                          .ConfigureAwait(false))
+                              {
+                                  using (var reader = new StreamReader(response.GetResponseStream()))
+                                  {
+                                      var jsonResult = await reader.ReadToEndAsync()
+                                                                   .ConfigureAwait(false);
+
+                                      return JsonConvert.DeserializeObject<List<int>>(jsonResult);
+                                  }
+                              }
+                          });
+        }
+
+        /// <summary>
         /// Request the item data
         /// </summary>
         /// <param name="itemId">Id of the item</param>

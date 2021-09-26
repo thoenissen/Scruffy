@@ -463,6 +463,11 @@ namespace Scruffy.Commands
             /// </summary>
             public WorldsService WorldsService { get; set; }
 
+            /// <summary>
+            /// Items
+            /// </summary>
+            public ItemsService ItemsService { get; set; }
+
             #endregion // Properties
 
             #region Methods
@@ -473,10 +478,33 @@ namespace Scruffy.Commands
             /// <param name="commandContext">Current command context</param>
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("worlds")]
-            public async Task ExecuteSpecialRankJob(CommandContext commandContext)
+            public async Task ImportWorlds(CommandContext commandContext)
             {
                 if (await WorldsService.ImportWorlds()
                                        .ConfigureAwait(false))
+                {
+                    await commandContext.Message
+                                        .CreateReactionAsync(DiscordEmojiService.GetCheckEmoji(commandContext.Client))
+                                        .ConfigureAwait(false);
+                }
+                else
+                {
+                    await commandContext.Message
+                                        .CreateReactionAsync(DiscordEmojiService.GetCrossEmoji(commandContext.Client))
+                                        .ConfigureAwait(false);
+                }
+            }
+
+            /// <summary>
+            /// Import worlds
+            /// </summary>
+            /// <param name="commandContext">Current command context</param>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+            [Command("items")]
+            public async Task ImportItems(CommandContext commandContext)
+            {
+                if (await ItemsService.ImportItems()
+                                      .ConfigureAwait(false))
                 {
                     await commandContext.Message
                                         .CreateReactionAsync(DiscordEmojiService.GetCheckEmoji(commandContext.Client))
