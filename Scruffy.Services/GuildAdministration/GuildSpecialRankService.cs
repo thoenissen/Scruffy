@@ -96,7 +96,9 @@ namespace Scruffy.Services.GuildAdministration
                                                                                {
                                                                                    new DataSet<double>
                                                                                    {
-                                                                                       BackgroundColor = "#316ed5",
+                                                                                       BackgroundColor = configuration.Users
+                                                                                                                      .Select(obj => "#316ed5")
+                                                                                                                      .ToList(),
                                                                                        BorderColor = "#274d85",
                                                                                        Data = configuration.Users
                                                                                                            .OrderByDescending(obj => obj.Points)

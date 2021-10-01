@@ -31,7 +31,7 @@ namespace Scruffy.Data.Json.QuickChart
         /// Background color
         /// </summary>
         [JsonProperty("backgroundColor")]
-        public string BackgroundColor { get; set; }
+        public List<string> BackgroundColor { get; set; }
     }
 
     /// <summary>

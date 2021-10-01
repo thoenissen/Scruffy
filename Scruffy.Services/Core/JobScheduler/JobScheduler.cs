@@ -16,6 +16,7 @@ using Scruffy.Services.Fractals;
 using Scruffy.Services.Games;
 using Scruffy.Services.GuildAdministration;
 using Scruffy.Services.Reminder;
+using Scruffy.Services.Statistics;
 
 namespace Scruffy.Services.Core.JobScheduler
 {
@@ -66,6 +67,9 @@ namespace Scruffy.Services.Core.JobScheduler
             // Games
             JobManager.AddJob<CounterGameJob>(obj => obj.ToRunEvery(10).Minutes());
             JobManager.AddJob<WordChainJob>(obj => obj.ToRunEvery(10).Minutes());
+
+            // Statistics
+            JobManager.AddJob<MessageImportJob>(obj => obj.ToRunEvery(1).Days().At(3, 0));
 
             // fractal reminders
             await using (var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider())

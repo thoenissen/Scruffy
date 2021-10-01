@@ -101,6 +101,7 @@ namespace Scruffy.Commands
         [Group("raid")]
         [Aliases("r")]
         [ModuleLifespan(ModuleLifespan.Transient)]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
         public class DebugRaidModule : LocatedCommandModuleBase
         {
             #region Constructor
@@ -156,8 +157,8 @@ namespace Scruffy.Commands
         /// </summary>
         [Group("list")]
         [Aliases("l")]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
         [ModuleLifespan(ModuleLifespan.Transient)]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
         public class DebugListModule : LocatedCommandModuleBase
         {
             #region Constructor
@@ -249,6 +250,7 @@ namespace Scruffy.Commands
         [Group("calendar")]
         [Aliases("c")]
         [ModuleLifespan(ModuleLifespan.Transient)]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
         public class DebugCalendarModule : LocatedCommandModuleBase
         {
             #region Constructor
@@ -341,6 +343,7 @@ namespace Scruffy.Commands
         [Group("user")]
         [Aliases("u")]
         [ModuleLifespan(ModuleLifespan.Transient)]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
         public class DebugUserModule : LocatedCommandModuleBase
         {
             #region Constructor
@@ -397,6 +400,7 @@ namespace Scruffy.Commands
         [Group("guild")]
         [Aliases("g")]
         [ModuleLifespan(ModuleLifespan.Transient)]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
         public class DebugGuildModule : LocatedCommandModuleBase
         {
             #region Constructor
@@ -441,6 +445,7 @@ namespace Scruffy.Commands
         [Group("import")]
         [Aliases("i")]
         [ModuleLifespan(ModuleLifespan.Transient)]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
         public class DebugImportModule : LocatedCommandModuleBase
         {
             #region Constructor
@@ -593,5 +598,59 @@ namespace Scruffy.Commands
         }
 
         #endregion // Raid
+
+        #region Log
+
+        /// <summary>
+        /// Log
+        /// </summary>
+        [Group("log")]
+        [Aliases("d")]
+        [ModuleLifespan(ModuleLifespan.Transient)]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
+        public class DebugLogModule : LocatedCommandModuleBase
+        {
+            #region Constructor
+
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="localizationService">Localization service</param>
+            public DebugLogModule(LocalizationService localizationService)
+                : base(localizationService)
+            {
+            }
+
+            #endregion // Constructor
+
+            #region Properties
+
+            /// <summary>
+            /// Debug-Service
+            /// </summary>
+            public DebugService DebugService { get; set; }
+
+            #endregion // Properties
+
+            #region Methods
+
+            /// <summary>
+            /// Log entry information
+            /// </summary>
+            /// <param name="commandContext">Current command context</param>
+            /// <param name="id">Id</param>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+            [Command("entry")]
+            [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
+            public async Task GetDnsInformation(CommandContext commandContext, int id)
+            {
+                await DebugService.PostLogEntry(commandContext, id)
+                                  .ConfigureAwait(false);
+            }
+
+            #endregion // Methods
+        }
+
+        #endregion // Log
     }
 }

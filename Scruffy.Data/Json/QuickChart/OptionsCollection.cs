@@ -24,5 +24,11 @@ namespace Scruffy.Data.Json.QuickChart
         /// </summary>
         [JsonProperty("plugins")]
         public PluginsCollection Plugins { get; set; }
+
+        /// <summary>
+        /// Title
+        /// </summary>
+        [JsonProperty("title")]
+        public TitleConfiguration Title { get; set; }
     }
 }

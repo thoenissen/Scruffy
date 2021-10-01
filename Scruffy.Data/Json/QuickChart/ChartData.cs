@@ -23,7 +23,7 @@ namespace Scruffy.Data.Json.QuickChart
         /// Pixel ratio
         /// </summary>
         [JsonProperty("devicePixelRatio")]
-        public double DevicePixelRatio { get; set; }
+        public double? DevicePixelRatio { get; set; }
 
         /// <summary>
         /// Background color

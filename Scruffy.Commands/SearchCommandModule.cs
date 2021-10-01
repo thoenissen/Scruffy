@@ -29,7 +29,7 @@ namespace Scruffy.Commands
     /// </summary>
     [ModuleLifespan(ModuleLifespan.Transient)]
     [Group("search")]
-    [Aliases("s")]
+    [Aliases("se")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
     public class SearchCommandModule : LocatedCommandModuleBase
     {

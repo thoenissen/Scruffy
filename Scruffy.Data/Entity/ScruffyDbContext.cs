@@ -15,6 +15,7 @@ using Scruffy.Data.Entity.Tables.GuildAdministration;
 using Scruffy.Data.Entity.Tables.GuildWars2;
 using Scruffy.Data.Entity.Tables.Raid;
 using Scruffy.Data.Entity.Tables.Reminder;
+using Scruffy.Data.Entity.Tables.Statistics;
 
 namespace Scruffy.Data.Entity
 {
@@ -402,6 +403,35 @@ namespace Scruffy.Data.Entity
                                            obj.ItemId,
                                            obj.UpgradeId
                                        });
+
+            // Statistics
+            modelBuilder.Entity<DiscordMessageEntity>();
+            modelBuilder.Entity<DiscordVoiceTimeSpanEntity>();
+            modelBuilder.Entity<DiscordIgnoreChannelEntity>();
+
+            modelBuilder.Entity<DiscordMessageEntity>()
+                        .HasKey(obj => new
+                                       {
+                                           obj.ServerId,
+                                           obj.ChannelId,
+                                           obj.MessageId
+                                       });
+
+            modelBuilder.Entity<DiscordVoiceTimeSpanEntity>()
+                        .HasKey(obj => new
+                                {
+                                    obj.ServerId,
+                                    obj.ChannelId,
+                                    obj.UserId,
+                                    obj.StartTimeStamp
+                                });
+
+            modelBuilder.Entity<DiscordIgnoreChannelEntity>()
+                        .HasKey(obj => new
+                        {
+                            obj.ServerId,
+                            obj.ChannelId
+                        });
 
             // Disabling cascade on delete
             foreach (var foreignKey in modelBuilder.Model.GetEntityTypes()

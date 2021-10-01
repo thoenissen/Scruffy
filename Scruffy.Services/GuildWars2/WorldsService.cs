@@ -138,7 +138,8 @@ namespace Scruffy.Services.GuildWars2
                                                                     {
                                                                         new DataSet<int>
                                                                         {
-                                                                            BackgroundColor = "#316ed5",
+                                                                            BackgroundColor =  worlds.Select(obj => "#316ed5")
+                                                                                                     .ToList(),
                                                                             BorderColor = "#274d85",
                                                                             Data = worlds.OrderByDescending(obj => obj.Count)
                                                                                          .ThenBy(obj => obj.Name)

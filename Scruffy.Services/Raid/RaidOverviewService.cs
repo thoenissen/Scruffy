@@ -84,7 +84,8 @@ namespace Scruffy.Services.Raid
                                                                            {
                                                                                new DataSet<double>
                                                                                {
-                                                                                   BackgroundColor = "#316ed5",
+                                                                                   BackgroundColor = users.Select(obj => "#316ed5")
+                                                                                                          .ToList(),
                                                                                    BorderColor = "#274d85",
                                                                                    Data = users.Select(obj => obj.Points)
                                                                                                .ToList()

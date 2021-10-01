@@ -196,7 +196,7 @@ namespace Scruffy.Data.Entity.Repositories.GuildWars2
                                                                                 SET [Target].[Name] = [Source].[Name],
                                                                                     [Target].[Type] = [Source].[Type],
                                                                                     [Target].[VendorValue] = [Source].[VendorValue]
-                                                               WHEN NOT MATCHED THEN
+                                                                   WHEN NOT MATCHED THEN
                                                                               INSERT ( [ItemId], [Name], [Type], [VendorValue], IsValueReducingActivated )
                                                                               VALUES ( [Source].[ItemId], [Source].[Name], [Source].[Type], [Source].[VendorValue], 0); ",
                                                                  connection))

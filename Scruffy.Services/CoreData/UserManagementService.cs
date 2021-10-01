@@ -51,7 +51,7 @@ namespace Scruffy.Services.CoreData
                 var rank = await dbFactory.GetRepository<UserRepository>()
                                           .GetQuery()
                                           .Where(obj => obj.Id == userId)
-                                          .Select(obj => obj.RaidExperienceLevel.Rank)
+                                          .Select(obj => obj.RaidExperienceLevel != null ? obj.RaidExperienceLevel.Rank : 0)
                                           .FirstOrDefaultAsync()
                                           .ConfigureAwait(false);
 

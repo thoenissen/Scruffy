@@ -9,6 +9,7 @@ using DSharpPlus.Interactivity.Extensions;
 
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord;
+using Scruffy.Services.Statistics;
 
 namespace Scruffy.ServiceHost.Discord
 {
@@ -44,6 +45,11 @@ namespace Scruffy.ServiceHost.Discord
         /// </summary>
         private AdministrationPermissionsValidationService _administrationPermissionsValidationService;
 
+        /// <summary>
+        /// Statistics import
+        /// </summary>
+        private MessageImportService _messageImportService;
+
         #endregion // Fields
 
         #region Methods
@@ -59,6 +65,8 @@ namespace Scruffy.ServiceHost.Discord
                              Token = Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_TOKEN"),
                              TokenType = TokenType.Bot,
                              AutoReconnect = true,
+                             Intents = DiscordIntents.All,
+                             ReconnectIndefinitely = true // TODO Connection handling
                          };
 
             _discordClient = new DiscordClient(config);
@@ -77,6 +85,11 @@ namespace Scruffy.ServiceHost.Discord
             GlobalServiceProvider.Current.AddSingleton(_administrationPermissionsValidationService);
 
             GlobalServiceProvider.Current.AddSingleton(new DiscordStatusService(_discordClient));
+
+#if RELEASE
+            _messageImportService = new MessageImportService(_discordClient);
+            GlobalServiceProvider.Current.AddSingleton(_messageImportService);
+#endif
 
             _commands = _discordClient.UseCommandsNext(new CommandsNextConfiguration
                                                        {
@@ -114,6 +127,9 @@ namespace Scruffy.ServiceHost.Discord
                 _errorHandler = null;
 
                 await _discordClient.DisconnectAsync().ConfigureAwait(false);
+
+                await _messageImportService.DisposeAsync().ConfigureAwait(false);
+                _messageImportService = null;
 
                 _discordClient.Dispose();
             }
