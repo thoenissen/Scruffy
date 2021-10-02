@@ -99,7 +99,7 @@ namespace Scruffy.Services.Calendar
                                 var additionalData = JsonConvert.DeserializeObject<WeekDayOfMonthData>(schedule.AdditionalData);
 
                                 var currentDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-                                var endDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month + 3, 1);
+                                var endDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(3);
 
                                 bool CheckOptions(DateTime timeStamp)
                                 {
@@ -173,7 +173,7 @@ namespace Scruffy.Services.Calendar
                                         }
 
                                         var nextDate = currentDate;
-                                        while (nextDate.Month <= currentDate.Month)
+                                        while (nextDate.Month == currentDate.Month)
                                         {
                                             nextDate = nextDate.AddDays(7);
                                         }

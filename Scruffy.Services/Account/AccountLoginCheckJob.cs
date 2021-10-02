@@ -8,6 +8,7 @@ using Scruffy.Data.Entity.Repositories.General;
 using Scruffy.Data.Entity.Tables.Account;
 using Scruffy.Data.Entity.Tables.General;
 using Scruffy.Data.Enumerations.General;
+using Scruffy.Services.Core;
 using Scruffy.Services.Core.JobScheduler;
 using Scruffy.Services.WebApi;
 
@@ -69,15 +70,7 @@ namespace Scruffy.Services.Account
                     }
                     catch (Exception ex)
                     {
-                        dbFactory.GetRepository<LogEntryRepository>()
-                                 .Add(new LogEntryEntity
-                                          {
-                                              TimeStamp = DateTime.Now,
-                                              Type = LogEntryType.Job,
-                                              QualifiedCommandName = nameof(AccountLoginCheckJob),
-                                              LastUserCommand = account.Name,
-                                              Message = ex.ToString()
-                                          });
+                        LoggingService.AddJobLogEntry(LogEntryLevel.CriticalError, nameof(AccountLoginCheckJob), account.Name, ex.Message, ex.ToString());
                     }
                 }
             }

@@ -107,15 +107,7 @@ namespace Scruffy.Services.Statistics
                                        .BulkInsert(importData, true)
                                        .ConfigureAwait(false) == false)
                     {
-                        dbFactory.GetRepository<LogEntryRepository>()
-                                 .Add(new LogEntryEntity
-                                 {
-                                     Type = LogEntryType.Job,
-                                     QualifiedCommandName = nameof(MessageImportJob),
-                                     Message = dbFactory.LastError?.ToString(),
-                                     TimeStamp = DateTime.Now,
-                                     LastUserCommand = "BulkInsert"
-                                 });
+                        LoggingService.AddJobLogEntry(LogEntryLevel.Error, nameof(MessageImportJob), "BulkInsert", dbFactory.LastError?.Message, dbFactory.LastError?.ToString());
                     }
                 }
             }

@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using System;
+using System.Globalization;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -642,9 +644,41 @@ namespace Scruffy.Commands
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("entry")]
             [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-            public async Task GetDnsInformation(CommandContext commandContext, int id)
+            public async Task ShowLogEntry(CommandContext commandContext, int id)
             {
                 await DebugService.PostLogEntry(commandContext, id)
+                                  .ConfigureAwait(false);
+            }
+
+            /// <summary>
+            /// Log entry information
+            /// </summary>
+            /// <param name="commandContext">Current command context</param>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+            [Command("overview")]
+            [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
+            public async Task ShowLogOverview(CommandContext commandContext)
+            {
+                await DebugService.PostLogOverview(commandContext.Channel, DateTime.Today, false)
+                                  .ConfigureAwait(false);
+            }
+
+            /// <summary>
+            /// Log entry information
+            /// </summary>
+            /// <param name="commandContext">Current command context</param>
+            /// <param name="date">Date</param>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+            [Command("overview")]
+            [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
+            public async Task ShowLogOverview(CommandContext commandContext, string date)
+            {
+                if (DateTime.TryParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateParsed) == false)
+                {
+                    dateParsed = DateTime.Today;
+                }
+
+                await DebugService.PostLogOverview(commandContext.Channel, dateParsed, false)
                                   .ConfigureAwait(false);
             }
 

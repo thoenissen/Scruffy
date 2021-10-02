@@ -77,14 +77,7 @@ namespace Scruffy.Services.GuildWars2
                 }
                 catch (Exception ex)
                 {
-                    dbFactory.GetRepository<LogEntryRepository>()
-                             .Add(new LogEntryEntity
-                                  {
-                                      TimeStamp = DateTime.Now,
-                                      Type = LogEntryType.Job,
-                                      QualifiedCommandName = nameof(AccountLoginCheckJob),
-                                      Message = ex.ToString()
-                                  });
+                    LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(WorldsService), ex.Message, ex.ToString());
                 }
             }
 

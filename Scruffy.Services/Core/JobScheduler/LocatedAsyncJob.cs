@@ -1,8 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 using FluentScheduler;
 
 using Microsoft.Extensions.DependencyInjection;
+
+using Scruffy.Data.Entity.Tables.General;
+using Scruffy.Data.Enumerations.General;
 
 namespace Scruffy.Services.Core.JobScheduler
 {
@@ -46,7 +50,16 @@ namespace Scruffy.Services.Core.JobScheduler
         /// </summary>
         public void Execute()
         {
-            Task.Run(ExecuteAsync).Wait();
+            try
+            {
+                LoggingService.AddJobLogEntry(LogEntryLevel.Information, GetType().Name, "Job started");
+
+                Task.Run(ExecuteAsync).Wait();
+            }
+            catch (Exception ex)
+            {
+                LoggingService.AddJobLogEntry(LogEntryLevel.CriticalError, GetType().Name, ex.Message, ex.ToString());
+            }
         }
 
         #endregion // IJob

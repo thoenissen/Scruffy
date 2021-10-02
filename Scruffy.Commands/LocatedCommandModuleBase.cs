@@ -79,58 +79,53 @@ namespace Scruffy.Commands
             }
             catch (Exception ex)
             {
-                using (var dbFactory = RepositoryFactory.CreateInstance())
+                var logEntryId = LoggingService.AddCommandLogEntry(LogEntryLevel.CriticalError, commandContext.Command?.QualifiedName, commandContextContainer.LastUserMessage?.Content, ex.Message, ex.ToString());
+
+                using (var response = await WebRequest.CreateHttp("https://g.tenor.com/v1/search?q=funny%20cat&key=RXM3VE2UGRU9&limit=50&contentfilter=high&ar_range=all")
+                                                      .GetResponseAsync()
+                                                      .ConfigureAwait(false))
                 {
-                    var logEntry = new LogEntryEntity
-                                   {
-                                       TimeStamp = DateTime.Now,
-                                       Type = LogEntryType.CommandError,
-                                       Message = ex.ToString(),
-                                       QualifiedCommandName = commandContext.Command?.QualifiedName,
-                                       LastUserCommand = commandContextContainer.LastUserMessage?.Content
-                                   };
-
-                    dbFactory.GetRepository<LogEntryRepository>()
-                             .Add(logEntry);
-
-                    using (var response = await WebRequest.CreateHttp("https://g.tenor.com/v1/search?q=funny%20cat&key=RXM3VE2UGRU9&limit=50&contentfilter=high&ar_range=all")
-                                                          .GetResponseAsync()
-                                                          .ConfigureAwait(false))
+                    using (var reader = new StreamReader(response.GetResponseStream()))
                     {
-                        using (var reader = new StreamReader(response.GetResponseStream()))
+                        var jsonResult = await reader.ReadToEndAsync()
+                                                     .ConfigureAwait(false);
+
+                        var searchResult = JsonConvert.DeserializeObject<SearchResultRoot>(jsonResult);
+
+                        using (var webClient = new WebClient())
                         {
-                            var jsonResult = await reader.ReadToEndAsync().ConfigureAwait(false);
+                            var tenorEntry = searchResult.Results[new Random(DateTime.Now.Millisecond).Next(0, searchResult.Results.Count - 1)];
 
-                            var searchResult = JsonConvert.DeserializeObject<SearchResultRoot>(jsonResult);
+                            string gifUrl;
 
-                            using (var webClient = new WebClient())
+                            if (tenorEntry.Media[0]
+                                          .Gif.Size
+                              < 8_388_608)
                             {
-                                var tenorEntry = searchResult.Results[new Random(DateTime.Now.Millisecond).Next(0, searchResult.Results.Count - 1)];
+                                gifUrl = tenorEntry.Media[0]
+                                                   .Gif.Url;
+                            }
+                            else if (tenorEntry.Media[0]
+                                               .MediumGif.Size
+                                   < 8_388_608)
+                            {
+                                gifUrl = tenorEntry.Media[0]
+                                                   .MediumGif.Url;
+                            }
+                            else
+                            {
+                                gifUrl = tenorEntry.Media[0]
+                                                   .NanoGif.Url;
+                            }
 
-                                string gifUrl;
+                            await using (var stream = new MemoryStream(webClient.DownloadData(gifUrl)))
+                            {
+                                var builder = new DiscordMessageBuilder().WithContent(_internalLocalizationGroup.Value.GetFormattedText("CommandFailedMessage", "The command could not be executed. But I have an error code ({0}) and funny cat picture.", logEntryId ?? -1))
+                                                                         .WithFile("cat.gif", stream);
 
-                                if (tenorEntry.Media[0].Gif.Size < 8_388_608)
-                                {
-                                    gifUrl = tenorEntry.Media[0].Gif.Url;
-                                }
-                                else if (tenorEntry.Media[0].MediumGif.Size < 8_388_608)
-                                {
-                                    gifUrl = tenorEntry.Media[0].MediumGif.Url;
-                                }
-                                else
-                                {
-                                    gifUrl = tenorEntry.Media[0].NanoGif.Url;
-                                }
-
-                                await using (var stream = new MemoryStream(webClient.DownloadData(gifUrl)))
-                                {
-                                    var builder = new DiscordMessageBuilder().WithContent(_internalLocalizationGroup.Value.GetFormattedText("CommandFailedMessage", "The command could not be executed. But I have an error code ({0}) and funny cat picture.", logEntry.Id))
-                                                                             .WithFile("cat.gif", stream);
-
-                                    await commandContextContainer.Channel
-                                                                 .SendMessageAsync(builder)
-                                                                 .ConfigureAwait(false);
-                                }
+                                await commandContextContainer.Channel
+                                                             .SendMessageAsync(builder)
+                                                             .ConfigureAwait(false);
                             }
                         }
                     }

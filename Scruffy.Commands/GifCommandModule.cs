@@ -86,7 +86,7 @@ namespace Scruffy.Commands
                                    }
                                    else
                                    {
-                                       await commandContextContainer.ShowHelp("reminder in")
+                                       await commandContextContainer.ShowHelp("gif")
                                                                     .ConfigureAwait(false);
                                    }
                                });

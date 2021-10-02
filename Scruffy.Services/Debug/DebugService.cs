@@ -194,20 +194,20 @@ namespace Scruffy.Services.Debug
                             await writer.WriteAsync(Environment.NewLine)
                                         .ConfigureAwait(false);
 
-                            await writer.WriteAsync(nameof(logEntry.LastUserCommand))
+                            await writer.WriteAsync(nameof(logEntry.Source))
                                         .ConfigureAwait(false);
                             await writer.WriteAsync(": ")
                                         .ConfigureAwait(false);
-                            await writer.WriteAsync(logEntry.LastUserCommand)
+                            await writer.WriteAsync(logEntry.Source)
                                         .ConfigureAwait(false);
                             await writer.WriteAsync(Environment.NewLine)
                                         .ConfigureAwait(false);
 
-                            await writer.WriteAsync(nameof(logEntry.QualifiedCommandName))
+                            await writer.WriteAsync(nameof(logEntry.SubSource))
                                         .ConfigureAwait(false);
                             await writer.WriteAsync(": ")
                                         .ConfigureAwait(false);
-                            await writer.WriteAsync(logEntry.QualifiedCommandName)
+                            await writer.WriteAsync(logEntry.SubSource)
                                         .ConfigureAwait(false);
                             await writer.WriteAsync(Environment.NewLine)
                                         .ConfigureAwait(false);
@@ -237,6 +237,86 @@ namespace Scruffy.Services.Debug
                     await commandContext.Message
                                         .RespondAsync("Unknown log entry")
                                         .ConfigureAwait(false);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Posting log overview
+        /// </summary>
+        /// <param name="channel">Channel</param>
+        /// <param name="date">Date</param>
+        /// <param name="suppressEmpty">Suppress empty overview</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task PostLogOverview(DiscordChannel channel, DateTime date, bool suppressEmpty)
+        {
+            using (var dbFactory = RepositoryFactory.CreateInstance())
+            {
+                var dayStart = date.Date;
+                var dayEnd = date.Date.AddDays(1);
+
+                var logEntries = dbFactory.GetRepository<LogEntryRepository>()
+                                          .GetQuery()
+                                          .Where(obj => obj.TimeStamp >= dayStart
+                                                        && obj.TimeStamp < dayEnd)
+                                          .ToList();
+
+                if (suppressEmpty == false
+                    || logEntries.Count > 0)
+                {
+                    var builder = new DiscordEmbedBuilder().WithTitle($"Log entries {date:yyyy-MM-dd}").WithColor(DiscordColor.Green)
+                                                           .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/ef1f3e1f3f40100fb3750f8d7d25c657.png?size=64")
+                                                           .WithTimestamp(DateTime.Now);
+
+                    var types = logEntries.GroupBy(obj => obj.Type)
+                                          .Select(obj => new
+                                          {
+                                              Type = obj.Key,
+                                              Count = obj.Count()
+                                          });
+
+                    var stringBuilder = new StringBuilder();
+
+                    foreach (var type in types.OrderBy(obj => obj.Type))
+                    {
+                        stringBuilder.AppendLine($"{type.Type}: {type.Count}");
+                    }
+
+                    if (stringBuilder.Length == 0)
+                    {
+                        stringBuilder.Append("\u200b");
+                    }
+
+                    builder.AddField("Types", stringBuilder.ToString());
+
+                    var levels = logEntries.GroupBy(obj => obj.Level)
+                                          .Select(obj => new
+                                                         {
+                                                             Level = obj.Key,
+                                                             Count = obj.Count()
+                                                         });
+
+                    stringBuilder = new StringBuilder();
+
+                    foreach (var level in levels.OrderBy(obj => obj.Level))
+                    {
+                        stringBuilder.AppendLine($"{level.Level}: {level.Count}");
+                    }
+
+                    if (stringBuilder.Length == 0)
+                    {
+                        stringBuilder.Append("\u200b");
+                    }
+
+                    builder.AddField("Levels", stringBuilder.ToString());
+
+                    if (logEntries.Count > 0)
+                    {
+                        builder.AddField("IDs", $"{logEntries.Min(obj => obj.Id)} -> {logEntries.Max(obj => obj.Id)}");
+                    }
+
+                    await channel.SendMessageAsync(builder)
+                                 .ConfigureAwait(false);
                 }
             }
         }

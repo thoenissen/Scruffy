@@ -66,6 +66,7 @@ namespace Scruffy.ServiceHost.Discord
                              TokenType = TokenType.Bot,
                              AutoReconnect = true,
                              Intents = DiscordIntents.All,
+                             LogTimestampFormat = "yyyy-MM-dd HH:mm:ss",
                              ReconnectIndefinitely = true // TODO Connection handling
                          };
 

@@ -13,6 +13,11 @@
         /// <summary>
         /// Returning job
         /// </summary>
-        Job = 2000
+        Job = 2000,
+
+        /// <summary>
+        /// Service
+        /// </summary>
+        Service = 3000,
     }
 }

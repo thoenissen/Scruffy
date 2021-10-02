@@ -12,6 +12,7 @@ using Scruffy.Data.Entity.Repositories.Calendar;
 using Scruffy.Data.Entity.Repositories.Reminder;
 using Scruffy.Services.Account;
 using Scruffy.Services.Calendar;
+using Scruffy.Services.Debug;
 using Scruffy.Services.Fractals;
 using Scruffy.Services.Games;
 using Scruffy.Services.GuildAdministration;
@@ -46,8 +47,10 @@ namespace Scruffy.Services.Core.JobScheduler
         public async Task StartAsync()
         {
             await Task.Run(JobManager.Start).ConfigureAwait(false);
-
 #if RELEASE
+            // Debug
+            JobManager.AddJob<LogOverviewJob>(obj => obj.ToRunEvery(1).Days().At(0, 5));
+
             // Fractals
             JobManager.AddJob<FractalDailyRefreshJob>(obj => obj.ToRunEvery(1).Days().At(0, 0));
 

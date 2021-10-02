@@ -30,19 +30,34 @@ namespace Scruffy.Data.Entity.Tables.General
         public LogEntryType Type { get; set; }
 
         /// <summary>
+        /// Level
+        /// </summary>
+        public LogEntryLevel Level { get; set; }
+
+        /// <summary>
+        /// Source
+        /// <Remarks>
+        /// Command: Command name
+        /// Job:     Class name
+        /// </Remarks>
+        /// </summary>
+        public string Source { get; set; }
+
+        /// <summary>
+        /// Additional source specification
+        /// Last user command
+        /// </summary>
+        public string SubSource { get; set; }
+
+        /// <summary>
         /// Message
         /// </summary>
         public string Message { get; set; }
 
         /// <summary>
-        /// Last user command
+        /// Additional information
         /// </summary>
-        public string LastUserCommand { get; set; }
-
-        /// <summary>
-        /// Command name
-        /// </summary>
-        public string QualifiedCommandName { get; set; }
+        public string AdditionalInformation { get; set; }
 
         #endregion // Properties
     }
