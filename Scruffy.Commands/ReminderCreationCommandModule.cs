@@ -15,9 +15,9 @@ using DSharpPlus.Interactivity.Extensions;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Reminder;
 using Scruffy.Data.Entity.Tables.Reminder;
-using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord.Attributes;
 using Scruffy.Services.Core.JobScheduler;
+using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
 
 namespace Scruffy.Commands

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Scruffy.ServiceHost.Discord;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.JobScheduler;
+using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Fractals;
 
 namespace Scruffy.ServiceHost
@@ -48,7 +49,7 @@ namespace Scruffy.ServiceHost
 
                 GlobalServiceProvider.Current.AddSingleton(jobScheduler);
 
-                using (var fractalReminderService = new FractalReminderService(jobScheduler))
+                using (var fractalReminderService = new FractalLfgReminderService(jobScheduler))
                 {
                     GlobalServiceProvider.Current.AddSingleton(fractalReminderService);
 

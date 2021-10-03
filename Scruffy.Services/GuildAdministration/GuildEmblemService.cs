@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 using DSharpPlus.Entities;
 
-using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord;
+using Scruffy.Services.Core.Localization;
 using Scruffy.Services.WebApi;
 
 using SixLabors.ImageSharp;

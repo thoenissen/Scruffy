@@ -11,7 +11,7 @@ using Scruffy.Data.Entity.Repositories.Reminder;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.JobScheduler;
 
-namespace Scruffy.Services.Reminder
+namespace Scruffy.Services.Reminder.Jobs
 {
     /// <summary>
     /// Execution of a one time reminder

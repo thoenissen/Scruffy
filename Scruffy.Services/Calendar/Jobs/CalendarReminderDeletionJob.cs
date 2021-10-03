@@ -6,16 +6,16 @@ using DSharpPlus;
 using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Data.Entity;
-using Scruffy.Data.Entity.Repositories.Reminder;
+using Scruffy.Data.Entity.Repositories.Calendar;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.JobScheduler;
 
-namespace Scruffy.Services.Reminder
+namespace Scruffy.Services.Calendar.Jobs
 {
     /// <summary>
-    /// Posting a weekly reminder
+    /// Deletion of a weekly reminder
     /// </summary>
-    public class WeeklyReminderPostJob : LocatedAsyncJob
+    public class CalendarReminderDeletionJob : LocatedAsyncJob
     {
         #region Fields
 
@@ -32,7 +32,7 @@ namespace Scruffy.Services.Reminder
         /// Constructor
         /// </summary>
         /// <param name="id">Id</param>
-        public WeeklyReminderPostJob(long id)
+        public CalendarReminderDeletionJob(long id)
         {
             _id = id;
         }
@@ -51,27 +51,37 @@ namespace Scruffy.Services.Reminder
             {
                 using (var dbFactory = RepositoryFactory.CreateInstance())
                 {
-                    var data = dbFactory.GetRepository<WeeklyReminderRepository>()
+                    var data = dbFactory.GetRepository<CalendarAppointmentRepository>()
                                         .GetQuery()
                                         .Where(obj => obj.Id == _id)
                                         .Select(obj => new
-                                                       {
-                                                           obj.ChannelId,
-                                                           obj.Message
-                                                       })
+                                        {
+                                            obj.ReminderChannelId,
+                                            obj.ReminderMessageId
+                                        })
                                         .FirstOrDefault();
 
-                    if (data != null)
+                    if (data?.ReminderChannelId != null
+                     && data.ReminderMessageId != null)
                     {
                         var discordClient = serviceProvider.GetService<DiscordClient>();
 
-                        var channel = await discordClient.GetChannelAsync(data.ChannelId).ConfigureAwait(false);
+                        var channel = await discordClient.GetChannelAsync(data.ReminderChannelId.Value)
+                                                         .ConfigureAwait(false);
 
-                        var message = await channel.SendMessageAsync(data.Message).ConfigureAwait(false);
+                        var message = await channel.GetMessageAsync(data.ReminderMessageId.Value)
+                                                   .ConfigureAwait(false);
 
-                        dbFactory.GetRepository<WeeklyReminderRepository>()
+                        await channel.DeleteMessageAsync(message)
+                                     .ConfigureAwait(false);
+
+                        dbFactory.GetRepository<CalendarAppointmentRepository>()
                                  .Refresh(obj => obj.Id == _id,
-                                          obj => obj.MessageId = message.Id);
+                                          obj =>
+                                          {
+                                              obj.ReminderChannelId = null;
+                                              obj.ReminderMessageId = null;
+                                          });
                     }
                 }
             }

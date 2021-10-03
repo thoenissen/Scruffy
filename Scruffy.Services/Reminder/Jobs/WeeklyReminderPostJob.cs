@@ -10,12 +10,12 @@ using Scruffy.Data.Entity.Repositories.Reminder;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.JobScheduler;
 
-namespace Scruffy.Services.Reminder
+namespace Scruffy.Services.Reminder.Jobs
 {
     /// <summary>
-    /// Deletion of a weekly reminder
+    /// Posting a weekly reminder
     /// </summary>
-    public class WeeklyReminderDeletionJob : LocatedAsyncJob
+    public class WeeklyReminderPostJob : LocatedAsyncJob
     {
         #region Fields
 
@@ -32,7 +32,7 @@ namespace Scruffy.Services.Reminder
         /// Constructor
         /// </summary>
         /// <param name="id">Id</param>
-        public WeeklyReminderDeletionJob(long id)
+        public WeeklyReminderPostJob(long id)
         {
             _id = id;
         }
@@ -57,23 +57,21 @@ namespace Scruffy.Services.Reminder
                                         .Select(obj => new
                                                        {
                                                            obj.ChannelId,
-                                                           obj.MessageId
+                                                           obj.Message
                                                        })
                                         .FirstOrDefault();
 
-                    if (data?.MessageId != null)
+                    if (data != null)
                     {
                         var discordClient = serviceProvider.GetService<DiscordClient>();
 
                         var channel = await discordClient.GetChannelAsync(data.ChannelId).ConfigureAwait(false);
 
-                        var message = await channel.GetMessageAsync(data.MessageId.Value).ConfigureAwait(false);
-
-                        await channel.DeleteMessageAsync(message).ConfigureAwait(false);
+                        var message = await channel.SendMessageAsync(data.Message).ConfigureAwait(false);
 
                         dbFactory.GetRepository<WeeklyReminderRepository>()
                                  .Refresh(obj => obj.Id == _id,
-                                          obj => obj.MessageId = null);
+                                          obj => obj.MessageId = message.Id);
                     }
                 }
             }

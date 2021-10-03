@@ -7,9 +7,9 @@ using DSharpPlus.Entities;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Calendar;
 using Scruffy.Data.Services.Calendar;
-using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Extensions;
+using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
 
 namespace Scruffy.Services.Calendar.DialogElements

@@ -2,14 +2,6 @@
   "CultureInfo": "en-US",
   "Description" : "English",
   "TranslationGroups": {
-    "FractalCommandModule": {
-      "TitlePrompt": "Please enter a title.",
-      "DescriptionPrompt": "Please enter a description.",
-      "AliasNamePrompt": "Please enter an alias name.",
-      "BuildingProgress": "Building...",
-      "CreationCompletedMessage": "Creation completed! All creation messages will be deleted in 30 seconds.",
-      "Today": "Today"
-    },
     "ReminderCreationCommandModule": {
       "CommandProgressed": "Command progressed.",
       "ChooseChannelPrompt": "Please choose one of the following channels.",
@@ -22,7 +14,20 @@
       "CreationCompletedMessage": "Creation completed! All creation messages will be deleted in 30 seconds.",
       "ReminderCreated": "The reminder has been set for {0} {1}."
     },
-    "GuildWars2CommandBuilder": {
+    "FractalLfgService": {
+      "BuildingProgress": "Building...",
+      "CreationCompletedMessage": "Creation completed! All creation messages will be deleted in 30 seconds."
+    },
+    "FractalLfgCreationAliasNameDialogElement": {
+      "Message": "Please enter the alias name which should be used."
+    },
+    "FractalLfgCreationDescriptionDialogElement": {
+      "Message": "Please enter the description which should be used."
+    },
+    "FractalLfgCreationTitleDialogElement": {
+      "Message": "Please enter the title which should be used."
+    },
+    "GuildWarsUpdateService": {
       "GuildWars2Updates": "Guild Wars 2 - Updates",
       "Release": "Release",
       "Timespan": "Timespan",

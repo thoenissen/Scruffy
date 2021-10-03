@@ -3,8 +3,6 @@
 using FluentScheduler;
 
 using Scruffy.Data.Entity;
-using Scruffy.Data.Entity.Repositories.General;
-using Scruffy.Data.Entity.Tables.General;
 using Scruffy.Data.Enumerations.General;
 
 namespace Scruffy.Services.Core

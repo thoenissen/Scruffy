@@ -3,14 +3,6 @@
   "CultureInfo": "de-DE",
   "Description": "Deutsch",
   "TranslationGroups": {
-    "FractalCommandModule": {
-      "TitlePrompt": "Gib bitte den Titel ein.",
-      "DescriptionPrompt": "Gib bitte die Beschreibung ein.",
-      "AliasNamePrompt": "Gib bitte den Alias-Namen ein.",
-      "BuildingProgress": "Erstellung...",
-      "CreationCompletedMessage": "Erstellung abgeschlossen! Alle Nachrichten der Erstellung werden in 30 Sekunden gelöscht.",
-      "Today": "Heute"
-    },
     "ReminderCreationCommandModule": {
       "CommandProgressed": "Der Befehl wurde verarbeitet.",
       "ChooseChannelPrompt": "Wähle bitte einen der folgenden Kanäle aus:",
@@ -23,7 +15,20 @@
       "CreationCompletedMessage": "Erstellung abgeschlossen! Alle Nachrichten der Erstellung werden in 30 Sekunden gelöscht.",
       "ReminderCreated": "Die Erinnerung wurde für den {0} um {1} Uhr eingerichtet."
     },
-    "GuildWars2CommandBuilder": {
+    "FractalLfgService": {
+      "BuildingProgress": "Erstellung...",
+      "CreationCompletedMessage": "Erstellung abgechlossen! Alle Nachrichten der Erstellung werden in 30 Sekunden gelöscht."
+    },
+    "FractalLfgCreationAliasNameDialogElement": {
+      "Message": "Gib bitte den zu verwendende Aliasnamen ein."
+    },
+    "FractalLfgCreationDescriptionDialogElement": {
+      "Message": "Gib bitte die zu verwendende Beschreibung ein."
+    },
+    "FractalLfgCreationTitleDialogElement": {
+      "Message": "Gib bitte den zu verwendenden Titel ein."
+    },
+    "GuildWarsUpdateService": {
       "GuildWars2Updates": "Guild Wars 2 - Updates",
       "Release": "Release",
       "Timespan": "Zeitspanne",
@@ -39,7 +44,7 @@
       "Source": "Quelle",
       "Sources": "Quellen",
       "UpdateField": "Allgemein",
-      "EodField": "End of Dragons" 
+      "EodField": "End of Dragons"
     },
     "DialogElementBase": {
       "PleaseTryAgain": "Deine Eingabe war ungültig. Versuche es noch einmal."

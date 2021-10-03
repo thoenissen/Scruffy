@@ -13,10 +13,11 @@ using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.GuildAdministration;
 using Scruffy.Data.Enumerations.GuildAdministration;
 using Scruffy.Services.Core;
+using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.JobScheduler;
 using Scruffy.Services.CoreData;
 
-namespace Scruffy.Services.GuildAdministration
+namespace Scruffy.Services.GuildAdministration.Jobs
 {
     /// <summary>
     /// Calculating the daily points

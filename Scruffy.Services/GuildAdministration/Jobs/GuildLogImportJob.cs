@@ -10,13 +10,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.GuildAdministration;
 using Scruffy.Data.Entity.Tables.GuildAdministration;
+using Scruffy.Data.Enumerations.General;
 using Scruffy.Data.Enumerations.GuildAdministration;
 using Scruffy.Data.Json.GuildWars2.Guild;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.JobScheduler;
 using Scruffy.Services.WebApi;
 
-namespace Scruffy.Services.GuildAdministration
+namespace Scruffy.Services.GuildAdministration.Jobs
 {
     /// <summary>
     /// Import guild log
@@ -115,7 +116,7 @@ namespace Scruffy.Services.GuildAdministration
                             }
                             catch (Exception ex)
                             {
-                                Console.WriteLine(ex.ToString());
+                                LoggingService.AddJobLogEntry(LogEntryLevel.Warning, nameof(GuildLogImportJob), ex.Message, ex.ToString());
                             }
                         }
                     }

@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
 
 using Scruffy.Data.Json.Tenor;
-using Scruffy.Services.Core;
+using Scruffy.Services.Core.Localization;
 
 namespace Scruffy.Commands
 {

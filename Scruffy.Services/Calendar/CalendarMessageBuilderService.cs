@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,8 +13,8 @@ using Scruffy.Data.Entity.Repositories.Calendar;
 using Scruffy.Data.Entity.Repositories.GuildAdministration;
 using Scruffy.Data.Enumerations.GuildAdministration;
 using Scruffy.Data.Json.Calendar;
-using Scruffy.Services.Core;
 using Scruffy.Services.Core.Extensions;
+using Scruffy.Services.Core.Localization;
 
 namespace Scruffy.Services.Calendar
 {

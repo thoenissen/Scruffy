@@ -5,8 +5,8 @@ using DSharpPlus.EventArgs;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.GuildAdministration;
-using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord;
+using Scruffy.Services.Core.Localization;
 
 namespace Scruffy.Services.GuildAdministration.DialogElements
 {

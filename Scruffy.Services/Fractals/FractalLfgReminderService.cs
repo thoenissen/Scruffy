@@ -8,13 +8,14 @@ using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Fractals;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.JobScheduler;
+using Scruffy.Services.Fractals.Jobs;
 
 namespace Scruffy.Services.Fractals
 {
     /// <summary>
     /// Management of the fractal reminders
     /// </summary>
-    public sealed class FractalReminderService : IDisposable
+    public sealed class FractalLfgReminderService : IDisposable
     {
         #region Fields
 
@@ -46,7 +47,7 @@ namespace Scruffy.Services.Fractals
         /// Constructor
         /// </summary>
         /// <param name="jobScheduler">Job scheduler</param>
-        public FractalReminderService(JobScheduler jobScheduler)
+        public FractalLfgReminderService(JobScheduler jobScheduler)
         {
             _jobScheduler = jobScheduler;
             _lockFactory = new LockFactory();

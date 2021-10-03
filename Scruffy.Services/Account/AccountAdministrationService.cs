@@ -5,8 +5,8 @@ using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Account;
 using Scruffy.Data.Json.GuildWars2.Core;
 using Scruffy.Services.Account.DialogElements;
-using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord;
+using Scruffy.Services.Core.Localization;
 using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.Account

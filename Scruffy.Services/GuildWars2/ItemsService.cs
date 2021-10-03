@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.GuildWars2;
-using Scruffy.Services.Core;
+using Scruffy.Services.Core.Localization;
 using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.GuildWars2

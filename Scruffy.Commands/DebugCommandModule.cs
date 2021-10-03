@@ -9,11 +9,12 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 
 using Scruffy.Services.Calendar;
-using Scruffy.Services.Core;
+using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Discord.Attributes;
+using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
 using Scruffy.Services.Debug;
-using Scruffy.Services.GuildAdministration;
+using Scruffy.Services.GuildAdministration.Jobs;
 using Scruffy.Services.GuildWars2;
 using Scruffy.Services.Raid;
 

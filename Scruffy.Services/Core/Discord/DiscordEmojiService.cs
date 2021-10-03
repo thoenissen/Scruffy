@@ -8,7 +8,7 @@ using DSharpPlus.Entities;
 
 using Newtonsoft.Json;
 
-namespace Scruffy.Services.Core
+namespace Scruffy.Services.Core.Discord
 {
     /// <summary>
     /// Providing emoji

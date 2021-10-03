@@ -9,8 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using Scruffy.Data.Entity.Queryable.GuildWars2;
 using Scruffy.Data.Entity.Repositories.Base;
 using Scruffy.Data.Entity.Tables.GuildWars2;
-using Scruffy.Data.Enumerations.GuildWars2;
-using Scruffy.Data.Json.GuildWars2.Items;
 
 namespace Scruffy.Data.Entity.Repositories.GuildWars2
 {

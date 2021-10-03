@@ -3,8 +3,8 @@ using System.Globalization;
 
 using DSharpPlus.Entities;
 
-using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord;
+using Scruffy.Services.Core.Localization;
 
 namespace Scruffy.Services.Calendar.DialogElements
 {

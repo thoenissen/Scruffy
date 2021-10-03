@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.JobScheduler;
 
-namespace Scruffy.Services.Fractals
+namespace Scruffy.Services.Fractals.Jobs
 {
     /// <summary>
     /// Deletion of the fractal reminder

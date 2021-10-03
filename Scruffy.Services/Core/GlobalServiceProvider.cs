@@ -4,6 +4,7 @@ using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Services.Core.Discord;
+using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
 using Scruffy.Services.Debug;
 

@@ -10,7 +10,9 @@ using DSharpPlus.CommandsNext.Converters;
 using DSharpPlus.CommandsNext.Entities;
 using DSharpPlus.Entities;
 
-namespace Scruffy.Services.Core
+using Scruffy.Services.Core.Localization;
+
+namespace Scruffy.Services.Core.Discord
 {
     /// <summary>
     /// Formatting the help messages

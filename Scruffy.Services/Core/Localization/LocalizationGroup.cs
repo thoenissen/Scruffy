@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace Scruffy.Services.Core
+namespace Scruffy.Services.Core.Localization
 {
     /// <summary>
     /// Located group of texts

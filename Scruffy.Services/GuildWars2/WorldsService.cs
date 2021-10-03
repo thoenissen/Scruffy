@@ -9,14 +9,12 @@ using Newtonsoft.Json;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Account;
-using Scruffy.Data.Entity.Repositories.General;
 using Scruffy.Data.Entity.Repositories.GuildWars2;
-using Scruffy.Data.Entity.Tables.General;
 using Scruffy.Data.Enumerations.General;
 using Scruffy.Data.Json.QuickChart;
-using Scruffy.Services.Account;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord;
+using Scruffy.Services.Core.Localization;
 using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.GuildWars2

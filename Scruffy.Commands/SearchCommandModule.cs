@@ -19,8 +19,8 @@ using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
 
 using Scruffy.Data.Json.MediaWiki;
-using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord.Attributes;
+using Scruffy.Services.Core.Localization;
 
 namespace Scruffy.Commands
 {

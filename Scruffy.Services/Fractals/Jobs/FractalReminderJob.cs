@@ -13,7 +13,7 @@ using Scruffy.Data.Services.Fractal;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.JobScheduler;
 
-namespace Scruffy.Services.Fractals
+namespace Scruffy.Services.Fractals.Jobs
 {
     /// <summary>
     /// Fractal reminder creation
@@ -75,7 +75,7 @@ namespace Scruffy.Services.Fractals
 
                 await using (var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider())
                 {
-                    var reminderService = serviceProvider.GetService<FractalReminderService>();
+                    var reminderService = serviceProvider.GetService<FractalLfgReminderService>();
 
                     foreach (var configuration in configurations)
                     {

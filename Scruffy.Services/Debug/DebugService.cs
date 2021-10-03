@@ -11,7 +11,6 @@ using DSharpPlus.Entities;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.General;
-using Scruffy.Services.Core;
 
 namespace Scruffy.Services.Debug
 {

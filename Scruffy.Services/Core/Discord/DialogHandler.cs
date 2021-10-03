@@ -21,11 +21,6 @@ namespace Scruffy.Services.Core.Discord
         private CommandContextContainer _commandContext;
 
         /// <summary>
-        /// Dialog context
-        /// </summary>
-        private DialogContext _dialogContext;
-
-        /// <summary>
         /// Service provider
         /// </summary>
         private ServiceProvider _serviceProvider;
@@ -41,11 +36,21 @@ namespace Scruffy.Services.Core.Discord
         public DialogHandler(CommandContextContainer commandContext)
         {
             _commandContext = commandContext;
-            _dialogContext = new DialogContext();
             _serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+
+            DialogContext = new DialogContext();
         }
 
         #endregion // Constructor
+
+        #region Properties
+
+        /// <summary>
+        /// Dialog context
+        /// </summary>
+        public DialogContext DialogContext { get; }
+
+        #endregion // Properties
 
         #region Static - Methods
 
@@ -130,7 +135,7 @@ namespace Scruffy.Services.Core.Discord
         {
             var element = _serviceProvider.GetService<T>();
 
-            element.Initialize(_commandContext, _serviceProvider, _dialogContext);
+            element.Initialize(_commandContext, _serviceProvider, DialogContext);
 
             return await element.Run()
                                 .ConfigureAwait(false);
@@ -145,10 +150,41 @@ namespace Scruffy.Services.Core.Discord
         /// <returns>Result</returns>
         public async Task<TData> Run<T, TData>(T element) where T : DialogElementBase<TData>
         {
-            element.Initialize(_commandContext, _serviceProvider, _dialogContext);
+            element.Initialize(_commandContext, _serviceProvider, DialogContext);
 
             return await element.Run()
                                 .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Execution one dialog element
+        /// </summary>
+        /// <typeparam name="TData">Type of the element result</typeparam>
+        /// <returns>Result</returns>
+        public async Task<TData> RunForm<TData>() where TData : new()
+        {
+            var data = new TData();
+
+            foreach (var property in data.GetType()
+                                         .GetProperties())
+            {
+                var attribute = property.GetCustomAttributes(typeof(DialogElementAssignmentAttribute), false)
+                                        .OfType<DialogElementAssignmentAttribute>()
+                                        .FirstOrDefault();
+
+                if (attribute != null)
+                {
+                    var service = (DialogElementBase)_serviceProvider.GetService(attribute.DialogElementType);
+
+                    service.Initialize(_commandContext, _serviceProvider, DialogContext);
+
+                    property.SetValue(data,
+                                      await service.InternalRun()
+                                                   .ConfigureAwait(false));
+                }
+            }
+
+            return data;
         }
 
         /// <summary>
@@ -158,7 +194,7 @@ namespace Scruffy.Services.Core.Discord
         public async Task DeleteMessages()
         {
             await _commandContext.Channel
-                                 .DeleteMessagesAsync(_dialogContext.Messages)
+                                 .DeleteMessagesAsync(DialogContext.Messages)
                                  .ConfigureAwait(false);
         }
 

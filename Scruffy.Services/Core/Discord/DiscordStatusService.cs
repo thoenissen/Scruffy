@@ -5,7 +5,7 @@ using System.Threading;
 using DSharpPlus;
 using DSharpPlus.Entities;
 
-namespace Scruffy.Services.Core
+namespace Scruffy.Services.Core.Discord
 {
     /// <summary>
     /// Managing the discord state of the bot

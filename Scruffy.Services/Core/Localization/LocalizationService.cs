@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 using Scruffy.Data.Services.Core;
 
-namespace Scruffy.Services.Core
+namespace Scruffy.Services.Core.Localization
 {
     /// <summary>
     /// Providing located string

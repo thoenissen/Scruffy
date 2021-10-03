@@ -3,8 +3,8 @@
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 
-using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord.Attributes;
+using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Games;
 
 namespace Scruffy.Commands

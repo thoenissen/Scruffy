@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
 using Scruffy.Data.Json.Tenor;
+using Scruffy.Services.Core.Localization;
 
 namespace Scruffy.Services.Core.Discord
 {

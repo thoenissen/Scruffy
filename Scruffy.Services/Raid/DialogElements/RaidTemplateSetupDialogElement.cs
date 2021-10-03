@@ -9,8 +9,8 @@ using DSharpPlus.Entities;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Data.Entity.Tables.Raid;
-using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord;
+using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Raid.DialogElements.Forms;
 
 namespace Scruffy.Services.Raid.DialogElements

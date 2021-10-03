@@ -8,15 +8,13 @@ using DSharpPlus;
 using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Data.Entity;
-using Scruffy.Data.Entity.Repositories.General;
 using Scruffy.Data.Entity.Repositories.Statistics;
-using Scruffy.Data.Entity.Tables.General;
 using Scruffy.Data.Enumerations.General;
 using Scruffy.Data.Services.Statistics;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.JobScheduler;
 
-namespace Scruffy.Services.Statistics
+namespace Scruffy.Services.Statistics.Jobs
 {
     /// <summary>
     /// Import discord messages

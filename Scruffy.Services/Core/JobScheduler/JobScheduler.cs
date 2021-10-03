@@ -10,14 +10,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Calendar;
 using Scruffy.Data.Entity.Repositories.Reminder;
-using Scruffy.Services.Account;
-using Scruffy.Services.Calendar;
-using Scruffy.Services.Debug;
+using Scruffy.Services.Account.Jobs;
+using Scruffy.Services.Calendar.Jobs;
+using Scruffy.Services.Debug.Jobs;
 using Scruffy.Services.Fractals;
-using Scruffy.Services.Games;
-using Scruffy.Services.GuildAdministration;
-using Scruffy.Services.Reminder;
-using Scruffy.Services.Statistics;
+using Scruffy.Services.Fractals.Jobs;
+using Scruffy.Services.Games.Jobs;
+using Scruffy.Services.GuildAdministration.Jobs;
+using Scruffy.Services.Reminder.Jobs;
+using Scruffy.Services.Statistics.Jobs;
 
 namespace Scruffy.Services.Core.JobScheduler
 {
@@ -77,7 +78,7 @@ namespace Scruffy.Services.Core.JobScheduler
             // fractal reminders
             await using (var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider())
             {
-                var fractalReminderService = serviceProvider.GetService<FractalReminderService>();
+                var fractalReminderService = serviceProvider.GetService<FractalLfgReminderService>();
 
                 await fractalReminderService.CreateNextReminderJobAsync()
                                             .ConfigureAwait(false);

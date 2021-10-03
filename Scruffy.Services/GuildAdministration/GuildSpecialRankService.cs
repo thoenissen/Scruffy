@@ -9,8 +9,8 @@ using Newtonsoft.Json;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.GuildAdministration;
 using Scruffy.Data.Json.QuickChart;
-using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord;
+using Scruffy.Services.Core.Localization;
 using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.GuildAdministration

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Services.Core.Discord.Attributes;
+using Scruffy.Services.Core.Localization;
 
 namespace Scruffy.Services.Core.Discord
 {

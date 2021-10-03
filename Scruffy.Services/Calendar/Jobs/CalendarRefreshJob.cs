@@ -9,7 +9,7 @@ using Scruffy.Data.Entity.Repositories.Calendar;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.JobScheduler;
 
-namespace Scruffy.Services.Calendar
+namespace Scruffy.Services.Calendar.Jobs
 {
     /// <summary>
     /// Refreshing the calendars

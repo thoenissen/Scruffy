@@ -11,7 +11,7 @@ using Scruffy.Data.Enumerations.Games;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.JobScheduler;
 
-namespace Scruffy.Services.Games
+namespace Scruffy.Services.Games.Jobs
 {
     /// <summary>
     /// Counter game

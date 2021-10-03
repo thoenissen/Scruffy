@@ -9,7 +9,7 @@ using Scruffy.Data.Entity.Repositories.Fractals;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.JobScheduler;
 
-namespace Scruffy.Services.Fractals
+namespace Scruffy.Services.Fractals.Jobs
 {
     /// <summary>
     /// Daily creation of the fractal appointments

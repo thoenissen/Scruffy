@@ -9,7 +9,7 @@ using DSharpPlus.Entities;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.CoreData;
 
-namespace Scruffy.Services.Core
+namespace Scruffy.Services.Core.Discord
 {
     /// <summary>
     /// Resolving command prefixes

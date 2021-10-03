@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity.Extensions;
 
+using Scruffy.Services.Core.Localization;
+
 namespace Scruffy.Services.Core.Discord
 {
     /// <summary>

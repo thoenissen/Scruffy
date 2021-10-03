@@ -6,9 +6,9 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 
 using Scruffy.Data.Enumerations.GuildAdministration;
-using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Discord.Attributes;
+using Scruffy.Services.Core.Localization;
 using Scruffy.Services.GuildAdministration;
 using Scruffy.Services.GuildAdministration.DialogElements;
 using Scruffy.Services.GuildWars2;

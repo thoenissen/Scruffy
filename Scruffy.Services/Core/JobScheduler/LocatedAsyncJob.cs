@@ -5,8 +5,8 @@ using FluentScheduler;
 
 using Microsoft.Extensions.DependencyInjection;
 
-using Scruffy.Data.Entity.Tables.General;
 using Scruffy.Data.Enumerations.General;
+using Scruffy.Services.Core.Localization;
 
 namespace Scruffy.Services.Core.JobScheduler
 {

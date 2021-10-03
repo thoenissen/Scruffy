@@ -8,8 +8,8 @@ using Scruffy.Data.Entity.Repositories.GuildAdministration;
 using Scruffy.Data.Enumerations.GuildAdministration;
 using Scruffy.Data.Json.Calendar;
 using Scruffy.Services.Calendar;
-using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord;
+using Scruffy.Services.Core.Localization;
 using Scruffy.Services.GuildAdministration.DialogElements.Forms;
 
 namespace Scruffy.Services.GuildAdministration

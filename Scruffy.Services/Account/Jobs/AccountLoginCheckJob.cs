@@ -4,15 +4,13 @@ using System.Threading.Tasks;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Account;
-using Scruffy.Data.Entity.Repositories.General;
 using Scruffy.Data.Entity.Tables.Account;
-using Scruffy.Data.Entity.Tables.General;
 using Scruffy.Data.Enumerations.General;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.JobScheduler;
 using Scruffy.Services.WebApi;
 
-namespace Scruffy.Services.Account
+namespace Scruffy.Services.Account.Jobs
 {
     /// <summary>
     /// Checking the daily account login
