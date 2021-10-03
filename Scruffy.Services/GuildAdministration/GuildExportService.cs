@@ -196,11 +196,22 @@ namespace Scruffy.Services.GuildAdministration
         {
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
+                var logEntriesQuery = dbFactory.GetRepository<GuildLogEntryRepository>()
+                                               .GetQuery()
+                                               .Select(obj => obj);
+
                 var logEntries = await dbFactory.GetRepository<GuildLogEntryRepository>()
                                                 .GetQuery()
                                                 .Where(obj => obj.Time > sinceDate
+                                                           && obj.User != null
                                                            && obj.Type == "upgrade"
-                                                           && obj.Action == "completed"
+                                                           && (obj.Action == "completed"
+                                                            || (obj.Action == "queued"
+                                                             && logEntriesQuery.Any(obj2 => obj2.Type == "upgrade"
+                                                                                         && obj2.User == obj.User
+                                                                                         && obj2.Time == obj.Time
+                                                                                         && obj2.UpgradeId == obj.UpgradeId
+                                                                                         && obj2.Action == "completed")) == false)
                                                            && obj.Guild.DiscordServerId == commandContext.Guild.Id)
                                                 .OrderBy(obj => obj.Time)
                                                 .Select(obj => new
@@ -280,11 +291,22 @@ namespace Scruffy.Services.GuildAdministration
         {
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
+                var logEntriesQuery = dbFactory.GetRepository<GuildLogEntryRepository>()
+                                               .GetQuery()
+                                               .Select(obj => obj);
+
                 var logEntries = await dbFactory.GetRepository<GuildLogEntryRepository>()
                                                 .GetQuery()
                                                 .Where(obj => obj.Time > sinceDate
+                                                           && obj.User != null
                                                            && obj.Type == "upgrade"
-                                                           && obj.Action == "completed"
+                                                           && (obj.Action == "completed"
+                                                            || (obj.Action == "queued"
+                                                             && logEntriesQuery.Any(obj2 => obj2.Type == "upgrade"
+                                                                                         && obj2.User == obj.User
+                                                                                         && obj2.Time == obj.Time
+                                                                                         && obj2.UpgradeId == obj.UpgradeId
+                                                                                         && obj2.Action == "completed")) == false)
                                                            && obj.Guild.DiscordServerId == commandContext.Guild.Id)
                                                 .GroupBy(obj => new
                                                                 {
@@ -297,7 +319,7 @@ namespace Scruffy.Services.GuildAdministration
                                                                    obj.Key.User,
                                                                    obj.Key.ItemId,
                                                                    obj.Key.UpgradeId,
-                                                                   Count = obj.Sum(obj2 => obj2.Count)
+                                                                   Count = obj.Sum(obj2 => obj2.Count ?? 1)
                                                                })
                                                 .OrderBy(obj => obj.User)
                                                 .ThenBy(obj => obj.ItemId)

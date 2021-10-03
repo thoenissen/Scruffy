@@ -304,7 +304,10 @@
       "BankValidationResult": "Folgend sind die Ergebnis der Überprüfung der Gildenbank aufgelistet.",
       "DuplicationCheck": "Duplikatprüfung",
       "CoinCheck": "Goldbestandsprüfung",
-      "NoApiKey": "Die Gilde wurde noch nicht konfiguriert."
+      "NoApiKey": "Die Gilde wurde noch nicht konfiguriert.",
+      "DyeUnlocksTitle": "Freigeschaltete Farben {0}",
+      "DyesFields": "Farben #{0}",
+      "NoAccountApiKey": "Du hast noch keinen API-Key hinterlegt."
     },
 
     "GuildAdministrationSpecialRankDeletionDialogElement": {

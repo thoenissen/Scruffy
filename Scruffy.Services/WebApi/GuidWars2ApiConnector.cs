@@ -210,6 +210,29 @@ namespace Scruffy.Services.WebApi
         }
 
         /// <summary>
+        /// Get colors
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task<List<int>> GetDyes()
+        {
+            return Invoke(async () =>
+                          {
+                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/account/dyes")
+                                                          .GetResponseAsync()
+                                                          .ConfigureAwait(false))
+                              {
+                                  using (var reader = new StreamReader(response.GetResponseStream()))
+                                  {
+                                      var jsonResult = await reader.ReadToEndAsync()
+                                                                   .ConfigureAwait(false);
+
+                                      return JsonConvert.DeserializeObject<List<int>>(jsonResult);
+                                  }
+                              }
+                          });
+        }
+
+        /// <summary>
         /// Request the guild information
         /// </summary>
         /// <param name="id">Id of the guild</param>

@@ -8,6 +8,7 @@ using DSharpPlus;
 using DSharpPlus.Entities;
 
 using Scruffy.Data.Entity;
+using Scruffy.Data.Entity.Repositories.Account;
 using Scruffy.Data.Entity.Repositories.GuildAdministration;
 using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
@@ -33,6 +34,8 @@ namespace Scruffy.Services.GuildAdministration
 
         #endregion // Constructor
 
+        #region Methods
+
         /// <summary>
         /// Validation the guild bank
         /// </summary>
@@ -43,14 +46,14 @@ namespace Scruffy.Services.GuildAdministration
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
                 var guild = dbFactory.GetRepository<GuildRepository>()
-                                      .GetQuery()
-                                      .Where(obj => obj.DiscordServerId == commandContext.Guild.Id)
-                                      .Select(obj => new
-                                                     {
-                                                         obj.ApiKey,
-                                                         obj.GuildId
-                                                     })
-                                      .FirstOrDefault();
+                                     .GetQuery()
+                                     .Where(obj => obj.DiscordServerId == commandContext.Guild.Id)
+                                     .Select(obj => new
+                                                    {
+                                                        obj.ApiKey,
+                                                        obj.GuildId
+                                                    })
+                                     .FirstOrDefault();
 
                 if (string.IsNullOrWhiteSpace(guild?.ApiKey) == false)
                 {
@@ -139,5 +142,114 @@ namespace Scruffy.Services.GuildAdministration
                 }
             }
         }
+
+        /// <summary>
+        /// Validation the guild bank
+        /// </summary>
+        /// <param name="commandContext">Command context</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task CheckUnlocksDyes(CommandContextContainer commandContext)
+        {
+            using (var dbFactory = RepositoryFactory.CreateInstance())
+            {
+                var guild = dbFactory.GetRepository<GuildRepository>()
+                                     .GetQuery()
+                                     .Where(obj => obj.DiscordServerId == commandContext.Guild.Id)
+                                     .Select(obj => new
+                                                    {
+                                                        obj.ApiKey,
+                                                        obj.GuildId
+                                                    })
+                                     .FirstOrDefault();
+
+                if (string.IsNullOrWhiteSpace(guild?.ApiKey) == false)
+                {
+                    var apiKeys = dbFactory.GetRepository<AccountRepository>()
+                                           .GetQuery()
+                                           .Where(obj => obj.UserId == commandContext.User.Id)
+                                           .Select(obj => new
+                                                   {
+                                                       obj.ApiKey,
+                                                       obj.Name
+                                                   })
+                                           .ToList();
+
+                    if (apiKeys.Count > 0)
+                    {
+                        await using (var guildConnector = new GuidWars2ApiConnector(guild.ApiKey))
+                        {
+                            var vault = await guildConnector.GetGuildVault(guild.GuildId)
+                                                            .ConfigureAwait(false);
+
+                            var itemIds = vault.SelectMany(obj => obj.Slots)
+                                             .Where(obj => obj != null)
+                                             .Select(obj => (int?)obj.ItemId)
+                                             .Distinct()
+                                             .ToList();
+
+                            var items = await guildConnector.GetItems(itemIds)
+                                                            .ConfigureAwait(false);
+
+                            foreach (var apiKey in apiKeys)
+                            {
+                                await using (var accountConnector = new GuidWars2ApiConnector(apiKey.ApiKey))
+                                {
+                                    var dyes = await accountConnector.GetDyes()
+                                                                     .ConfigureAwait(false);
+
+                                    var builder = new DiscordEmbedBuilder().WithTitle(LocalizationGroup.GetFormattedText("DyeUnlocksTitle", "Dye unlocks {0}", apiKey.Name))
+                                                                           .WithColor(DiscordColor.Green)
+                                                                           .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/ef1f3e1f3f40100fb3750f8d7d25c657.png?size=64")
+                                                                           .WithTimestamp(DateTime.Now);
+
+                                    var fieldBuilder = new StringBuilder();
+                                    var fieldCounter = 1;
+
+                                    foreach (var item in items.Where(obj => obj.Type == "Consumable"
+                                                                         && obj.Details?.Type == "Unlock"
+                                                                         && obj.Details?.UnlockType == "Dye")
+                                                              .OrderBy(obj => obj.Name))
+                                    {
+                                        var currentLine = dyes.Contains(item.Details.ColorId ?? 0)
+                                                              ? $"{DiscordEmojiService.GetCheckEmoji(commandContext.Client)} {item.Name}"
+                                                              : $"{DiscordEmojiService.GetCrossEmoji(commandContext.Client)} {item.Name}";
+
+                                        if (fieldBuilder.Length + currentLine.Length > 1024)
+                                        {
+                                            builder.AddField(LocalizationGroup.GetFormattedText("DyesFields", "Dyes #{0}", fieldCounter), fieldBuilder.ToString(), true);
+
+                                            fieldBuilder = new StringBuilder();
+                                            fieldCounter++;
+                                        }
+
+                                        fieldBuilder.AppendLine(currentLine);
+                                    }
+
+                                    builder.AddField(LocalizationGroup.GetFormattedText("DyesFields", "Dyes #{0}", fieldCounter), fieldBuilder.ToString(), true);
+
+                                    await commandContext.Message
+                                                        .RespondAsync(builder)
+                                                        .ConfigureAwait(false);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        await commandContext.Channel
+                                            .SendMessageAsync(LocalizationGroup.GetText("NoAccountApiKey", "You don't have any api keys configured."))
+                                            .ConfigureAwait(false);
+                    }
+                }
+                else
+                {
+                    await commandContext.Channel
+                                        .SendMessageAsync(LocalizationGroup.GetText("NoApiKey", "The guild ist not configured."))
+                                        .ConfigureAwait(false);
+                }
+            }
+        }
+
+        #endregion // Methods
     }
 }

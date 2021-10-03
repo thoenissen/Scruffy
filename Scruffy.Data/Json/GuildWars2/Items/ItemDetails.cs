@@ -18,5 +18,17 @@ namespace Scruffy.Data.Json.GuildWars2.Items
         /// </summary>
         [JsonProperty("guild_upgrade_id")]
         public int GuildUpgradeId { get; set; }
+
+        /// <summary>
+        ///  Unlock type
+        /// </summary>
+        [JsonProperty("unlock_type")]
+        public string UnlockType { get; set; }
+
+        /// <summary>
+        ///  Unlock type
+        /// </summary>
+        [JsonProperty("color_id")]
+        public int? ColorId { get; set; }
     }
 }

@@ -303,7 +303,10 @@
       "BankValidationResult": "In the following message you can see the results of the bank validation.",
       "DuplicationCheck": "Duplication check",
       "CoinCheck": "Coins check",
-      "NoApiKey": "The guild ist not configured."
+      "NoApiKey": "The guild ist not configured.",
+      "DyeUnlocksTitle": "Dye unlocks {0}",
+      "DyesFields": "Dyes #{0}",
+      "NoAccountApiKey": "You don't have any api keys configured."
     },
     "GuildAdministrationSpecialRankDeletionDialogElement": {
       "DeletePrompt": "Are you sure you want to delete the special rank?"

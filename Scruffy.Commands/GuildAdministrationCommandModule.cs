@@ -274,9 +274,67 @@ namespace Scruffy.Commands
             }
 
             #endregion // Methods
+
+            #region Unlocks
+
+            /// <summary>
+            /// Guild bank
+            /// </summary>
+            [Group("unlocks")]
+            [Aliases("u")]
+            [ModuleLifespan(ModuleLifespan.Transient)]
+            [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
+            public class GuildAdministrationBankUnlocksCommandModule : LocatedCommandModuleBase
+            {
+                #region Constructor
+
+                /// <summary>
+                /// Constructor
+                /// </summary>
+                /// <param name="localizationService">Localization service</param>
+                public GuildAdministrationBankUnlocksCommandModule(LocalizationService localizationService)
+                    : base(localizationService)
+                {
+                }
+
+                #endregion // Constructor
+
+                #region Properties
+
+                /// <summary>
+                /// Bank service
+                /// </summary>
+                public GuildBankService BankService { get; set; }
+
+                #endregion // Properties
+
+                #region Methods
+
+                /// <summary>
+                /// Check the guild bank
+                /// </summary>
+                /// <param name="commandContext">Current command context</param>
+                /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+                [Command("dyes")]
+                [RequireGuild]
+                [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
+                public Task SetNotificationChannel(CommandContext commandContext)
+                {
+                    return InvokeAsync(commandContext,
+                                       async commandContextContainer =>
+                                       {
+                                           await BankService.CheckUnlocksDyes(commandContextContainer)
+                                                            .ConfigureAwait(false);
+                                       });
+                }
+
+                #endregion // Methods
+            }
+
+            #endregion
         }
 
-        #endregion Emblem
+        #endregion // Bank
 
         #region Special ranks
 

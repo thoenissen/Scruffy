@@ -81,7 +81,7 @@ namespace Scruffy.Data.Entity
 
             optionsBuilder.UseSqlServer(ConnectionString);
 #if DEBUG
-            optionsBuilder.LogTo(s => Debug.WriteLine(s));
+            optionsBuilder.LogTo(s => System.Diagnostics.Debug.WriteLine(s));
 #endif
             base.OnConfiguring(optionsBuilder);
         }
