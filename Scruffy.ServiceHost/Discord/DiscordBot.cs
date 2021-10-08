@@ -129,8 +129,11 @@ namespace Scruffy.ServiceHost.Discord
 
                 await _discordClient.DisconnectAsync().ConfigureAwait(false);
 
-                await _messageImportService.DisposeAsync().ConfigureAwait(false);
-                _messageImportService = null;
+                if (_messageImportService != null)
+                {
+                    await _messageImportService.DisposeAsync().ConfigureAwait(false);
+                    _messageImportService = null;
+                }
 
                 _discordClient.Dispose();
             }

@@ -64,31 +64,6 @@ namespace Scruffy.Services.WebApi
 
         #endregion // Constructor
 
-        #region IAsyncDisposable
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously.
-        /// </summary>
-        /// <returns>A task that represents the asynchronous dispose operation.</returns>
-        public async ValueTask DisposeAsync()
-        {
-            await Task.Run(Dispose)
-                      .ConfigureAwait(false);
-        }
-
-        #endregion // IAsyncDisposable
-
-        #region IDisposable
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
-        }
-
-        #endregion // IDisposable
-
         #region Methods
 
         /// <summary>
@@ -279,6 +254,30 @@ namespace Scruffy.Services.WebApi
                                   }
                               }
                           });
+        }
+
+        /// <summary>
+        /// Request the guild members
+        /// </summary>
+        /// <param name="guildId">Id of the log</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task<List<GuildMember>> GetGuildMembers(string guildId)
+        {
+            return Invoke(async () =>
+            {
+                using (var response = await CreateRequest($"https://api.guildwars2.com/v2/guild/{guildId}/members")
+                                            .GetResponseAsync()
+                                            .ConfigureAwait(false))
+                {
+                    using (var reader = new StreamReader(response.GetResponseStream()))
+                    {
+                        var jsonResult = await reader.ReadToEndAsync()
+                                                     .ConfigureAwait(false);
+
+                        return JsonConvert.DeserializeObject<List<GuildMember>>(jsonResult);
+                    }
+                }
+            });
         }
 
         /// <summary>
@@ -701,5 +700,30 @@ namespace Scruffy.Services.WebApi
         }
 
         #endregion // Methods
+
+        #region IAsyncDisposable
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous dispose operation.</returns>
+        public async ValueTask DisposeAsync()
+        {
+            await Task.Run(Dispose)
+                      .ConfigureAwait(false);
+        }
+
+        #endregion // IAsyncDisposable
+
+        #region IDisposable
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+        }
+
+        #endregion // IDisposable
     }
 }

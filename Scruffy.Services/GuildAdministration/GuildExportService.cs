@@ -439,7 +439,7 @@ namespace Scruffy.Services.GuildAdministration
         {
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
-                var guildApiKey = dbFactory.GetRepository<GuildRepository>()
+                var guildId = dbFactory.GetRepository<GuildRepository>()
                                            .GetQuery()
                                            .Where(obj => obj.DiscordServerId == commandContext.Guild.Id)
                                            .Select(obj => obj.GuildId)
@@ -479,7 +479,7 @@ namespace Scruffy.Services.GuildAdministration
                             var characters = await connector.GetCharactersAsync()
                                                             .ConfigureAwait(false);
 
-                            accounts.Add((user.TryGetDisplayName(), entry.Name, characters?.Count ?? 0, characters?.Count(obj => obj.Guild == guildApiKey) ?? 0));
+                            accounts.Add((user.TryGetDisplayName(), entry.Name, characters?.Count ?? 0, characters?.Count(obj => obj.Guild == guildId) ?? 0));
                         }
                     }
                 }
@@ -505,6 +505,68 @@ namespace Scruffy.Services.GuildAdministration
 
                         await commandContext.Channel
                                             .SendMessageAsync(new DiscordMessageBuilder().WithFile("representation.csv", memoryStream))
+                                            .ConfigureAwait(false);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Exporting guild members
+        /// </summary>
+        /// <param name="commandContext">Command context</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task ExportGuildMembers(CommandContextContainer commandContext)
+        {
+            using (var dbFactory = RepositoryFactory.CreateInstance())
+            {
+                var guild = dbFactory.GetRepository<GuildRepository>()
+                                           .GetQuery()
+                                           .Where(obj => obj.DiscordServerId == commandContext.Guild.Id)
+                                           .Select(obj => new
+                                                          {
+                                                              obj.GuildId,
+                                                              obj.ApiKey
+                                                          })
+                                           .FirstOrDefault();
+
+                var accounts = await dbFactory.GetRepository<AccountRepository>()
+                                             .GetQuery()
+                                             .Select(obj => obj.Name.ToLower())
+                                             .ToListAsync()
+                                             .ConfigureAwait(false);
+
+                var members = new List<(string Name, DateTime? Joined, bool IsApiKeyValid)>();
+
+                await using (var connector = new GuidWars2ApiConnector(guild.ApiKey))
+                {
+                    foreach (var member in await connector.GetGuildMembers(guild.GuildId)
+                                                          .ConfigureAwait(false))
+                    {
+                        members.Add((member.Name, member.Joined, accounts.Contains(member.Name.ToLower())));
+                    }
+                }
+
+                await using (var memoryStream = new MemoryStream())
+                {
+                    await using (var writer = new StreamWriter(memoryStream))
+                    {
+                        await writer.WriteLineAsync("AccountName;Joined;API-Key")
+                                    .ConfigureAwait(false);
+
+                        foreach (var (name, joined, isApiKeyValid) in members.OrderBy(obj => obj.IsApiKeyValid).ThenBy(obj => obj.Name))
+                        {
+                            await writer.WriteLineAsync($"{name};{joined?.ToString("g", LocalizationGroup.CultureInfo)};{(isApiKeyValid ? "✔️" : "❌")}")
+                                        .ConfigureAwait(false);
+                        }
+
+                        await writer.FlushAsync()
+                                    .ConfigureAwait(false);
+
+                        memoryStream.Position = 0;
+
+                        await commandContext.Channel
+                                            .SendMessageAsync(new DiscordMessageBuilder().WithFile("members.csv", memoryStream))
                                             .ConfigureAwait(false);
                     }
                 }

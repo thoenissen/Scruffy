@@ -679,6 +679,25 @@ namespace Scruffy.Commands
                                    });
             }
 
+            /// <summary>
+            /// Members
+            /// </summary>
+            /// <param name="commandContext">Current command context</param>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+            [Command("members")]
+            [RequireGuild]
+            [RequireAdministratorPermissions]
+            [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
+            public Task ExportGuildMembers(CommandContext commandContext)
+            {
+                return InvokeAsync(commandContext,
+                                   async commandContextContainer =>
+                                   {
+                                       await GuildExportService.ExportGuildMembers(commandContextContainer)
+                                                               .ConfigureAwait(false);
+                                   });
+            }
+
             #endregion // Methods
         }
 

@@ -49,6 +49,7 @@ namespace Scruffy.Commands
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("me")]
         [RequireGuild]
+        [RequireDeveloperPermissions]
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
         public Task Me(CommandContext commandContext)
         {

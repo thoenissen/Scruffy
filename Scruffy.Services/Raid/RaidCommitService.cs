@@ -129,11 +129,8 @@ namespace Scruffy.Services.Raid
                         {
                         }
 
-                        await dialogHandler.DeleteMessages()
-                                           .ConfigureAwait(false);
-
-                        await commandContext.Message
-                                            .DeleteAsync()
+                        await commandContext.Channel
+                                            .SendMessageAsync(LocalizationGroup.GetText("CommitCompleted", "The raid appointment has been commited."))
                                             .ConfigureAwait(false);
 
                         await _messageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
