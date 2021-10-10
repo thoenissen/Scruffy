@@ -55,6 +55,11 @@ namespace Scruffy.Commands
                                        await new CommandsNextExtension.DefaultHelpModule().DefaultHelpAsync(commandContext, command)
                                                                                           .ConfigureAwait(false);
                                    }
+                                   catch (ChecksFailedException)
+                                   {
+                                       await new CommandsNextExtension.DefaultHelpModule().DefaultHelpAsync(commandContext, null)
+                                                                                          .ConfigureAwait(false);
+                                   }
                                    catch (CommandNotFoundException)
                                    {
                                        await new CommandsNextExtension.DefaultHelpModule().DefaultHelpAsync(commandContext, null)

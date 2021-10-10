@@ -69,6 +69,45 @@ namespace Scruffy.Services.Debug
         }
 
         /// <summary>
+        /// List commands
+        /// </summary>
+        /// <param name="commandContext">Context</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        public async Task ListCommands(CommandContext commandContext)
+        {
+            IEnumerable<Command> GetCommands(IEnumerable<Command> commands)
+            {
+                foreach (var command in commands)
+                {
+                    yield return command;
+
+                    if (command is CommandGroup commandGroup)
+                    {
+                        foreach (var subCommand in GetCommands(commandGroup.Children))
+                        {
+                            yield return subCommand;
+                        }
+                    }
+                }
+            }
+
+            var commands = new List<string>();
+
+            foreach (var command in GetCommands(commandContext.Client.GetCommandsNext().RegisteredCommands.Values))
+            {
+                if (commands.Contains(command.QualifiedName) == false
+                 && (command is not CommandGroup
+                  || command is CommandGroup { IsExecutableWithoutSubcommands: true })
+                 && command.QualifiedName.StartsWith("debug") == false)
+                {
+                    commands.Add(command.QualifiedName);
+                }
+            }
+
+            await ListEntries(commandContext, "Commands", commands, false).ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// List emojis
         /// </summary>
         /// <param name="commandContext">Context</param>
@@ -95,8 +134,9 @@ namespace Scruffy.Services.Debug
         /// <param name="commandContext">Context</param>
         /// <param name="description">Description</param>
         /// <param name="entries">Entries</param>
+        /// <param name="isAddInline">Adding inline code</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-        private async Task ListEntries(CommandContext commandContext, string description, IEnumerable<string> entries)
+        private async Task ListEntries(CommandContext commandContext, string description, IEnumerable<string> entries, bool isAddInline = true)
         {
             var embedBuilder = new DiscordEmbedBuilder
                                {
@@ -109,7 +149,9 @@ namespace Scruffy.Services.Debug
 
             foreach (var entry in entries)
             {
-                var currentLine = $"{entry} - {Formatter.InlineCode(entry)}\n";
+                var currentLine = isAddInline
+                    ? $"{entry} - {Formatter.InlineCode(entry)}\n"
+                    : $"{entry}\n";
 
                 if (currentLine.Length + stringBuilder.Length > 1024)
                 {
@@ -216,6 +258,15 @@ namespace Scruffy.Services.Debug
                             await writer.WriteAsync(": ")
                                         .ConfigureAwait(false);
                             await writer.WriteAsync(logEntry.Message)
+                                        .ConfigureAwait(false);
+                            await writer.WriteAsync(Environment.NewLine)
+                                        .ConfigureAwait(false);
+
+                            await writer.WriteAsync(nameof(logEntry.AdditionalInformation))
+                                        .ConfigureAwait(false);
+                            await writer.WriteAsync(": ")
+                                        .ConfigureAwait(false);
+                            await writer.WriteAsync(logEntry.AdditionalInformation)
                                         .ConfigureAwait(false);
                             await writer.WriteAsync(Environment.NewLine)
                                         .ConfigureAwait(false);

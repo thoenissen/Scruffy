@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -114,44 +115,53 @@ namespace Scruffy.Services.Account.DialogElements
 
                                                      if (string.IsNullOrWhiteSpace(apiKey) == false)
                                                      {
-                                                         await using (var connector = new GuidWars2ApiConnector(apiKey))
+                                                         try
                                                          {
-                                                             var tokenInformation = await connector.GetTokenInformationAsync()
-                                                                                                   .ConfigureAwait(false);
+                                                            await using (var connector = new GuidWars2ApiConnector(apiKey))
+                                                            {
+                                                                var tokenInformation = await connector.GetTokenInformationAsync()
+                                                                                                      .ConfigureAwait(false);
 
-                                                             if (tokenInformation?.Permissions != null
-                                                              && tokenInformation.Permissions.Contains(TokenInformation.Permission.Account)
-                                                              && tokenInformation.Permissions.Contains(TokenInformation.Permission.Characters))
-                                                             {
-                                                                 var accountInformation = await connector.GetAccountInformationAsync()
-                                                                                                         .ConfigureAwait(false);
+                                                                if (tokenInformation?.Permissions != null
+                                                                 && tokenInformation.Permissions.Contains(TokenInformation.Permission.Account)
+                                                                 && tokenInformation.Permissions.Contains(TokenInformation.Permission.Characters))
+                                                                {
+                                                                    var accountInformation = await connector.GetAccountInformationAsync()
+                                                                                                            .ConfigureAwait(false);
 
-                                                                 if (accountInformation.Name == DialogContext.GetValue<string>("AccountName"))
-                                                                 {
-                                                                     using (var dbFactory = RepositoryFactory.CreateInstance())
-                                                                     {
-                                                                         if (dbFactory.GetRepository<AccountRepository>()
-                                                                                      .Refresh(obj => obj.UserId == CommandContext.User.Id
-                                                                                                   && obj.Name == accountInformation.Name,
-                                                                                               obj => obj.ApiKey = apiKey))
-                                                                         {
-                                                                             success = true;
-                                                                         }
-                                                                     }
-                                                                 }
-                                                                 else
-                                                                 {
-                                                                     await CommandContext.Channel
-                                                                                         .SendMessageAsync(LocalizationGroup.GetText("AccountNameMismatch", "The provided api key doesn't match the current account name."))
-                                                                                         .ConfigureAwait(false);
-                                                                 }
-                                                             }
-                                                             else
-                                                             {
-                                                                 await CommandContext.Channel
-                                                                                     .SendMessageAsync(LocalizationGroup.GetText("InvalidToken", "The provided token doesn't have the required permissions."))
-                                                                                     .ConfigureAwait(false);
-                                                             }
+                                                                    if (accountInformation.Name == DialogContext.GetValue<string>("AccountName"))
+                                                                    {
+                                                                        using (var dbFactory = RepositoryFactory.CreateInstance())
+                                                                        {
+                                                                            if (dbFactory.GetRepository<AccountRepository>()
+                                                                                         .Refresh(obj => obj.UserId == CommandContext.User.Id
+                                                                                                      && obj.Name == accountInformation.Name,
+                                                                                                  obj => obj.ApiKey = apiKey))
+                                                                            {
+                                                                                success = true;
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        await CommandContext.Channel
+                                                                                            .SendMessageAsync(LocalizationGroup.GetText("AccountNameMismatch", "The provided api key doesn't match the current account name."))
+                                                                                            .ConfigureAwait(false);
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    await CommandContext.Channel
+                                                                                        .SendMessageAsync(LocalizationGroup.GetText("InvalidToken", "The provided token is invalid or doesn't have the required permissions."))
+                                                                                        .ConfigureAwait(false);
+                                                                }
+                                                            }
+                                                         }
+                                                         catch (WebException ex) when (ex.Response is HttpWebResponse response && response.StatusCode == HttpStatusCode.Unauthorized)
+                                                         {
+                                                             await CommandContext.Channel
+                                                                                 .SendMessageAsync(LocalizationGroup.GetText("InvalidToken", "The provided token is invalid or doesn't have the required permissions."))
+                                                                                 .ConfigureAwait(false);
                                                          }
                                                      }
 

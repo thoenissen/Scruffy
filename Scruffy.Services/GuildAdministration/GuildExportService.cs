@@ -67,7 +67,8 @@ namespace Scruffy.Services.GuildAdministration
                                                 .ToListAsync()
                                                 .ConfigureAwait(false);
 
-                var itemIds = logEntries.Select(obj => obj.ItemId)
+                var itemIds = logEntries.Where(obj => obj.ItemId != null)
+                                        .Select(obj => obj.ItemId)
                                         .Distinct()
                                         .ToList();
 
@@ -144,7 +145,8 @@ namespace Scruffy.Services.GuildAdministration
                                                 .ToListAsync()
                                                 .ConfigureAwait(false);
 
-                var itemIds = logEntries.Select(obj => obj.ItemId)
+                var itemIds = logEntries.Where(obj => obj.ItemId != null)
+                                        .Select(obj => obj.ItemId)
                                         .Distinct()
                                         .ToList();
 
@@ -209,9 +211,9 @@ namespace Scruffy.Services.GuildAdministration
                                                             || (obj.Action == "queued"
                                                              && logEntriesQuery.Any(obj2 => obj2.Type == "upgrade"
                                                                                          && obj2.User == obj.User
-                                                                                         && obj2.Time == obj.Time
+                                                                                         && obj2.Time <= obj.Time
                                                                                          && obj2.UpgradeId == obj.UpgradeId
-                                                                                         && obj2.Action == "completed")) == false)
+                                                                                         && obj2.Action == "completed") == false))
                                                            && obj.Guild.DiscordServerId == commandContext.Guild.Id)
                                                 .OrderBy(obj => obj.Time)
                                                 .Select(obj => new
@@ -226,12 +228,13 @@ namespace Scruffy.Services.GuildAdministration
                                                 .ToListAsync()
                                                 .ConfigureAwait(false);
 
-                var itemIds = logEntries.Select(obj => obj.ItemId)
+                var itemIds = logEntries.Where(obj => obj.ItemId != null)
+                                        .Select(obj => obj.ItemId)
                                         .Distinct()
                                         .ToList();
 
                 var upgradeIds = logEntries.Where(obj => obj.ItemId == null
-                                                     &&  obj.UpgradeId != null)
+                                                      && obj.UpgradeId != null)
                                            .Select(obj => obj.UpgradeId)
                                            .Distinct()
                                            .ToList();
@@ -304,9 +307,9 @@ namespace Scruffy.Services.GuildAdministration
                                                             || (obj.Action == "queued"
                                                              && logEntriesQuery.Any(obj2 => obj2.Type == "upgrade"
                                                                                          && obj2.User == obj.User
-                                                                                         && obj2.Time == obj.Time
+                                                                                         && obj2.Time <= obj.Time
                                                                                          && obj2.UpgradeId == obj.UpgradeId
-                                                                                         && obj2.Action == "completed")) == false)
+                                                                                         && obj2.Action == "completed") == false))
                                                            && obj.Guild.DiscordServerId == commandContext.Guild.Id)
                                                 .GroupBy(obj => new
                                                                 {
@@ -327,7 +330,8 @@ namespace Scruffy.Services.GuildAdministration
                                                 .ToListAsync()
                                                 .ConfigureAwait(false);
 
-                var itemIds = logEntries.Select(obj => obj.ItemId)
+                var itemIds = logEntries.Where(obj => obj.ItemId != null)
+                                        .Select(obj => obj.ItemId)
                                         .Distinct()
                                         .ToList();
 

@@ -14,6 +14,8 @@ namespace Scruffy.Commands
     /// </summary>
     [Group("calendar")]
     [Aliases("ca")]
+    [RequireGuild]
+    [RequireAdministratorPermissions]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     [ModuleLifespan(ModuleLifespan.Transient)]
     public class CalendarCommandModule : LocatedCommandModuleBase
@@ -95,6 +97,8 @@ namespace Scruffy.Commands
         /// </summary>
         [Group("templates")]
         [Aliases("t")]
+        [RequireGuild]
+        [RequireAdministratorPermissions]
         [ModuleLifespan(ModuleLifespan.Transient)]
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public class CalendarTemplateCommandModule : LocatedCommandModuleBase
@@ -155,6 +159,8 @@ namespace Scruffy.Commands
         /// </summary>
         [Group("schedules")]
         [Aliases("s")]
+        [RequireGuild]
+        [RequireAdministratorPermissions]
         [ModuleLifespan(ModuleLifespan.Transient)]
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public class CalendarScheduleCommandModule : LocatedCommandModuleBase

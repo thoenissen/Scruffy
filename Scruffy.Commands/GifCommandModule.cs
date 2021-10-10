@@ -11,7 +11,9 @@ using Microsoft.AspNetCore.WebUtilities;
 
 using Newtonsoft.Json;
 
+using Scruffy.Data.Enumerations.General;
 using Scruffy.Data.Json.Tenor;
+using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
 
 namespace Scruffy.Commands
@@ -82,6 +84,8 @@ namespace Scruffy.Commands
                                                                    .SendMessageAsync(searchResult.Results[rnd.Next(searchResult.Results.Count - 1)].ItemUrl)
                                                                    .ConfigureAwait(false);
                                            }
+
+                                           LoggingService.AddCommandLogEntry(LogEntryLevel.Information, commandContext.Command.QualifiedName, searchTerm, commandContext.User.ToString());
                                        }
                                    }
                                    else

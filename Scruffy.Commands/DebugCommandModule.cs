@@ -240,6 +240,19 @@ namespace Scruffy.Commands
                                   .ConfigureAwait(false);
             }
 
+            /// <summary>
+            /// List commands
+            /// </summary>
+            /// <param name="commandContext">Current command context</param>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+            [Command("commands")]
+            [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
+            public async Task Commands(CommandContext commandContext)
+            {
+                await DebugService.ListCommands(commandContext)
+                                  .ConfigureAwait(false);
+            }
+
             #endregion // Methods
         }
 

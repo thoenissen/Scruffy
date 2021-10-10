@@ -158,6 +158,7 @@ namespace Scruffy.Services.Core
                     {
                         var logEntry = new LogEntryEntity
                                        {
+                                           TimeStamp = DateTime.Now,
                                            Level = level,
                                            Type = type,
                                            Source = source,

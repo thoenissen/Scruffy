@@ -149,6 +149,8 @@ namespace Scruffy.Services.Raid
 
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
+                var now = DateTime.Now;
+
                 var registration = dbFactory.GetRepository<RaidRegistrationRepository>()
                                             .GetQuery()
                                             .Where(obj => obj.AppointmentId == appointmentId
@@ -156,7 +158,7 @@ namespace Scruffy.Services.Raid
                                             .Select(obj => new
                                             {
                                                 obj.Id,
-                                                IsDeadlineReached = obj.RaidAppointment.Deadline < obj.RegistrationTimeStamp,
+                                                IsDeadlineReached = obj.RaidAppointment.Deadline < now,
                                                 Registrations = obj.RaidAppointment
                                                                    .RaidRegistrations
                                                                    .Count(obj2 => obj2.LineupExperienceLevelId == obj.User.RaidExperienceLevelId),
@@ -226,9 +228,6 @@ namespace Scruffy.Services.Raid
                         }
                     }
                 }
-
-                await dialogHandler.DeleteMessages()
-                                   .ConfigureAwait(false);
             }
 
             return success;

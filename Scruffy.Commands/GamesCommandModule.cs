@@ -13,6 +13,8 @@ namespace Scruffy.Commands
     /// Games
     /// </summary>
     [Group("games")]
+    [RequireGuild]
+    [RequireAdministratorPermissions]
     [ModuleLifespan(ModuleLifespan.Transient)]
     public class GamesCommandModule : LocatedCommandModuleBase
     {
@@ -35,6 +37,8 @@ namespace Scruffy.Commands
         /// Counter game
         /// </summary>
         [Group("counter")]
+        [RequireGuild]
+        [RequireAdministratorPermissions]
         [ModuleLifespan(ModuleLifespan.Transient)]
         public class GamesCounterCommandModule : LocatedCommandModuleBase
         {
@@ -117,6 +121,8 @@ namespace Scruffy.Commands
         /// Word chain game
         /// </summary>
         [Group("wordchain")]
+        [RequireGuild]
+        [RequireAdministratorPermissions]
         [ModuleLifespan(ModuleLifespan.Transient)]
         public class GamesWordChainCommandModule : LocatedCommandModuleBase
         {

@@ -379,11 +379,11 @@ namespace Scruffy.Commands
                                            {
                                                await MessageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
                                                                    .ConfigureAwait(false);
-                                           }
 
-                                           await commandContextContainer.Message
-                                                                        .DeleteAsync()
-                                                                        .ConfigureAwait(false);
+                                               await commandContextContainer.Channel
+                                                                            .SendMessageAsync(LocalizationGroup.GetText("TemplateChanged", "The template has been changed."))
+                                                                            .ConfigureAwait(false);
+                                           }
                                        }
                                        else
                                        {

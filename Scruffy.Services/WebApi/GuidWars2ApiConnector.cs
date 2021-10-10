@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 using Newtonsoft.Json;
 
+using Scruffy.Data.Enumerations.GuildWars2;
 using Scruffy.Data.Json.GuildWars2.Account;
 using Scruffy.Data.Json.GuildWars2.Characters;
 using Scruffy.Data.Json.GuildWars2.Core;
@@ -18,6 +19,7 @@ using Scruffy.Data.Json.GuildWars2.Quaggans;
 using Scruffy.Data.Json.GuildWars2.TradingPost;
 using Scruffy.Data.Json.GuildWars2.Upgrades;
 using Scruffy.Data.Json.GuildWars2.World;
+using Scruffy.Services.Core.Exceptions.WebApi;
 
 namespace Scruffy.Services.WebApi
 {
@@ -72,7 +74,8 @@ namespace Scruffy.Services.WebApi
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task<TokenInformation> GetTokenInformationAsync()
         {
-            return Invoke(async () =>
+            return Invoke(GuildWars2ApiPermission.Account,
+                          async () =>
                           {
                               using (var response = await CreateRequest("https://api.guildwars2.com/v2/tokeninfo")
                                                           .GetResponseAsync()
@@ -95,7 +98,8 @@ namespace Scruffy.Services.WebApi
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task<AccountInformation> GetAccountInformationAsync()
         {
-            return Invoke(async () =>
+            return Invoke(GuildWars2ApiPermission.Account,
+                          async () =>
                           {
                               using (var response = await CreateRequest("https://api.guildwars2.com/v2/account?v=latest")
                                                           .GetResponseAsync()
@@ -118,7 +122,8 @@ namespace Scruffy.Services.WebApi
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task<List<Character>> GetCharactersAsync()
         {
-            return Invoke(async () =>
+            return Invoke(GuildWars2ApiPermission.Characters,
+                          async () =>
                           {
                               using (var response = await CreateRequest("https://api.guildwars2.com/v2/characters?ids=all")
                                                           .GetResponseAsync()
@@ -143,7 +148,8 @@ namespace Scruffy.Services.WebApi
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task<List<string>> GetCharacterNamesAsync()
         {
-            return Invoke(async () =>
+            return Invoke(GuildWars2ApiPermission.Characters,
+                          async () =>
                           {
                               using (var response = await CreateRequest("https://api.guildwars2.com/v2/characters")
                                                           .GetResponseAsync()
@@ -167,7 +173,8 @@ namespace Scruffy.Services.WebApi
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task<Character> GetCharacterAsync(string characterName)
         {
-            return Invoke(async () =>
+            return Invoke(GuildWars2ApiPermission.Characters,
+                          async () =>
                           {
                               using (var response = await CreateRequest($"https://api.guildwars2.com/v2/characters/{Uri.EscapeUriString(characterName)}?v=latest")
                                                           .GetResponseAsync()
@@ -190,7 +197,8 @@ namespace Scruffy.Services.WebApi
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task<List<int>> GetDyes()
         {
-            return Invoke(async () =>
+            return Invoke(GuildWars2ApiPermission.Unlocks,
+                          async () =>
                           {
                               using (var response = await CreateRequest("https://api.guildwars2.com/v2/account/dyes")
                                                           .GetResponseAsync()
@@ -214,7 +222,8 @@ namespace Scruffy.Services.WebApi
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task<GuildInformation> GetGuildInformation(string id)
         {
-            return Invoke(async () =>
+            return Invoke(GuildWars2ApiPermission.Guilds,
+                          async () =>
                           {
                               using (var response = await CreateRequest($"https://api.guildwars2.com/v2/guild/{id}?v=latest")
                                                           .GetResponseAsync()
@@ -239,7 +248,8 @@ namespace Scruffy.Services.WebApi
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task<List<GuildLogEntry>> GetGuildLogEntries(string guildId, long sinceId)
         {
-            return Invoke(async () =>
+            return Invoke(GuildWars2ApiPermission.Guilds,
+                          async () =>
                           {
                               using (var response = await CreateRequest($"https://api.guildwars2.com/v2/guild/{guildId}/log?since={sinceId}?v=latest")
                                                           .GetResponseAsync()
@@ -263,21 +273,22 @@ namespace Scruffy.Services.WebApi
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task<List<GuildMember>> GetGuildMembers(string guildId)
         {
-            return Invoke(async () =>
-            {
-                using (var response = await CreateRequest($"https://api.guildwars2.com/v2/guild/{guildId}/members")
-                                            .GetResponseAsync()
-                                            .ConfigureAwait(false))
-                {
-                    using (var reader = new StreamReader(response.GetResponseStream()))
-                    {
-                        var jsonResult = await reader.ReadToEndAsync()
-                                                     .ConfigureAwait(false);
+            return Invoke(GuildWars2ApiPermission.Guilds,
+                          async () =>
+                          {
+                              using (var response = await CreateRequest($"https://api.guildwars2.com/v2/guild/{guildId}/members")
+                                                          .GetResponseAsync()
+                                                          .ConfigureAwait(false))
+                              {
+                                  using (var reader = new StreamReader(response.GetResponseStream()))
+                                  {
+                                      var jsonResult = await reader.ReadToEndAsync()
+                                                                   .ConfigureAwait(false);
 
-                        return JsonConvert.DeserializeObject<List<GuildMember>>(jsonResult);
-                    }
-                }
-            });
+                                      return JsonConvert.DeserializeObject<List<GuildMember>>(jsonResult);
+                                  }
+                              }
+                          });
         }
 
         /// <summary>
@@ -286,7 +297,8 @@ namespace Scruffy.Services.WebApi
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task<List<long>> GetGuildEmblemForegrounds()
         {
-            return Invoke(async () =>
+            return Invoke(GuildWars2ApiPermission.None,
+                          async () =>
                           {
                               using (var response = await CreateRequest("https://api.guildwars2.com/v2/emblem/foregrounds")
                                                           .GetResponseAsync()
@@ -309,7 +321,8 @@ namespace Scruffy.Services.WebApi
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task<List<long>> GetGuildEmblemBackgrounds()
         {
-            return Invoke(async () =>
+            return Invoke(GuildWars2ApiPermission.None,
+                          async () =>
                           {
                               using (var response = await CreateRequest("https://api.guildwars2.com/v2/emblem/backgrounds")
                                                           .GetResponseAsync()
@@ -333,7 +346,8 @@ namespace Scruffy.Services.WebApi
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task<GuildEmblemLayerData> GetGuildEmblemBackgroundLayer(long id)
         {
-            return Invoke(async () =>
+            return Invoke(GuildWars2ApiPermission.None,
+                          async () =>
                           {
                               using (var response = await CreateRequest($"https://api.guildwars2.com/v2/emblem/backgrounds?ids={id}")
                                                           .GetResponseAsync()
@@ -358,7 +372,8 @@ namespace Scruffy.Services.WebApi
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task<GuildEmblemLayerData> GetGuildEmblemForegroundLayer(long id)
         {
-            return Invoke(async () =>
+            return Invoke(GuildWars2ApiPermission.None,
+                          async () =>
                           {
                               using (var response = await CreateRequest($"https://api.guildwars2.com/v2/emblem/foregrounds?ids={id}")
                                                           .GetResponseAsync()
@@ -383,7 +398,8 @@ namespace Scruffy.Services.WebApi
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task<List<GuildStash>> GetGuildVault(string guildId)
         {
-            return Invoke(async () =>
+            return Invoke(GuildWars2ApiPermission.Guilds,
+                          async () =>
                           {
                               using (var response = await CreateRequest($"https://api.guildwars2.com/v2/guild/{guildId}/stash")
                                                           .GetResponseAsync()
@@ -406,7 +422,8 @@ namespace Scruffy.Services.WebApi
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task<List<int>> GetAllItemIds()
         {
-            return Invoke(async () =>
+            return Invoke(GuildWars2ApiPermission.None,
+                          async () =>
                           {
                               using (var response = await CreateRequest("https://api.guildwars2.com/v2/items")
                                                           .GetResponseAsync()
@@ -430,7 +447,8 @@ namespace Scruffy.Services.WebApi
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task<Item> GetItem(int itemId)
         {
-            return Invoke(async () =>
+            return Invoke(GuildWars2ApiPermission.None,
+                          async () =>
                           {
                               using (var response = await CreateRequest($"https://api.guildwars2.com/v2/items/{itemId}")
                                                           .GetResponseAsync()
@@ -454,7 +472,8 @@ namespace Scruffy.Services.WebApi
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task<List<Item>> GetItems(List<int?> itemIds)
         {
-            return Invoke(async () =>
+            return Invoke(GuildWars2ApiPermission.None,
+                          async () =>
                           {
                               var pageCount = (int)Math.Ceiling(itemIds.Count / 200.0);
 
@@ -489,7 +508,8 @@ namespace Scruffy.Services.WebApi
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task<List<Upgrade>> GetUpgrades(List<int?> upgradeIds)
         {
-            return Invoke(async () =>
+            return Invoke(GuildWars2ApiPermission.None,
+                          async () =>
                           {
                               var pageCount = (int)Math.Ceiling(upgradeIds.Count / 200.0);
 
@@ -523,7 +543,8 @@ namespace Scruffy.Services.WebApi
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task<List<string>> GetQuaggans()
         {
-            return Invoke(async () =>
+            return Invoke(GuildWars2ApiPermission.None,
+                          async () =>
                           {
                               using (var response = await CreateRequest("https://api.guildwars2.com/v2/quaggans")
                                                           .GetResponseAsync()
@@ -547,7 +568,8 @@ namespace Scruffy.Services.WebApi
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task<QuagganData> GetQuaggan(string name)
         {
-            return Invoke(async () =>
+            return Invoke(GuildWars2ApiPermission.None,
+                          async () =>
                           {
                               using (var response = await CreateRequest($"https://api.guildwars2.com/v2/quaggans/{name}")
                                                           .GetResponseAsync()
@@ -570,7 +592,8 @@ namespace Scruffy.Services.WebApi
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task<List<WorldData>> GetWorlds()
         {
-            return Invoke(async () =>
+            return Invoke(GuildWars2ApiPermission.None,
+                          async () =>
                           {
                               using (var response = await CreateRequest("https://api.guildwars2.com/v2/worlds?ids=all")
                                                           .GetResponseAsync()
@@ -594,7 +617,8 @@ namespace Scruffy.Services.WebApi
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task<List<TradingPostItemPrice>> GetTradingPostPrices(List<int?> itemIds)
         {
-            return Invoke(async () =>
+            return Invoke(GuildWars2ApiPermission.None,
+                          async () =>
                           {
                               var pageCount = (int)Math.Ceiling(itemIds.Count / 200.0);
 
@@ -632,25 +656,27 @@ namespace Scruffy.Services.WebApi
         /// Invoke the web api
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
+        /// <param name="permission">Permission</param>
         /// <param name="func">Func</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        private static async Task<T> Invoke<T>(Func<Task<T>> func)
+        private static async Task<T> Invoke<T>(GuildWars2ApiPermission permission, Func<Task<T>> func)
         {
-            await CheckRateLimit()
-                .ConfigureAwait(false);
+            await CheckRateLimit().ConfigureAwait(false);
 
             try
             {
-                return await func()
-                           .ConfigureAwait(false);
+                return await func().ConfigureAwait(false);
+            }
+            catch (WebException ex) when (ex.Response is HttpWebResponse response && response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                throw new MissingGuildWars2ApiPermissionException(permission);
             }
             catch (WebException ex) when (ex.Response is HttpWebResponse response && response.StatusCode == HttpStatusCode.TooManyRequests)
             {
                 await Task.Delay(5000)
                           .ConfigureAwait(false);
 
-                return await func()
-                           .ConfigureAwait(false);
+                return await func().ConfigureAwait(false);
             }
         }
 

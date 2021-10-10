@@ -12,6 +12,7 @@ using Scruffy.Data.Enumerations.General;
 using Scruffy.Data.Json.Tenor;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord;
+using Scruffy.Services.Core.Exceptions;
 using Scruffy.Services.Core.Localization;
 
 namespace Scruffy.Commands
@@ -75,6 +76,12 @@ namespace Scruffy.Commands
             catch (OperationCanceledException)
             {
             }
+            catch (ScruffyException ex)
+            {
+                await commandContextContainer.Channel
+                                             .SendMessageAsync(ex.GetLocalizedMessage())
+                                             .ConfigureAwait(false);
+            }
             catch (Exception ex)
             {
                 var logEntryId = LoggingService.AddCommandLogEntry(LogEntryLevel.CriticalError, commandContext.Command?.QualifiedName, commandContextContainer.LastUserMessage?.Content, ex.Message, ex.ToString());
@@ -96,24 +103,17 @@ namespace Scruffy.Commands
 
                             string gifUrl;
 
-                            if (tenorEntry.Media[0]
-                                          .Gif.Size
-                              < 8_388_608)
+                            if (tenorEntry.Media[0].Gif.Size < 8_388_608)
                             {
-                                gifUrl = tenorEntry.Media[0]
-                                                   .Gif.Url;
+                                gifUrl = tenorEntry.Media[0].Gif.Url;
                             }
-                            else if (tenorEntry.Media[0]
-                                               .MediumGif.Size
-                                   < 8_388_608)
+                            else if (tenorEntry.Media[0].MediumGif.Size < 8_388_608)
                             {
-                                gifUrl = tenorEntry.Media[0]
-                                                   .MediumGif.Url;
+                                gifUrl = tenorEntry.Media[0].MediumGif.Url;
                             }
                             else
                             {
-                                gifUrl = tenorEntry.Media[0]
-                                                   .NanoGif.Url;
+                                gifUrl = tenorEntry.Media[0].NanoGif.Url;
                             }
 
                             await using (var stream = new MemoryStream(webClient.DownloadData(gifUrl)))

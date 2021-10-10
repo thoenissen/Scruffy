@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 using Scruffy.Data.Entity;
@@ -55,40 +56,53 @@ namespace Scruffy.Services.Account
 
             if (string.IsNullOrWhiteSpace(apiKey) == false)
             {
-                await using (var connector = new GuidWars2ApiConnector(apiKey))
+                try
                 {
-                    var tokenInformation = await connector.GetTokenInformationAsync()
-                                                          .ConfigureAwait(false);
-
-                    if (tokenInformation?.Permissions != null
-                     && tokenInformation.Permissions.Contains(TokenInformation.Permission.Account)
-                     && tokenInformation.Permissions.Contains(TokenInformation.Permission.Characters))
+                    await using (var connector = new GuidWars2ApiConnector(apiKey))
                     {
-                        var accountInformation = await connector.GetAccountInformationAsync()
-                                                                .ConfigureAwait(false);
+                        var tokenInformation = await connector.GetTokenInformationAsync()
+                                                              .ConfigureAwait(false);
 
-                        using (var dbFactory = RepositoryFactory.CreateInstance())
+                        if (tokenInformation?.Permissions != null
+                         && tokenInformation.Permissions.Contains(TokenInformation.Permission.Account)
+                         && tokenInformation.Permissions.Contains(TokenInformation.Permission.Characters))
                         {
-                            if (dbFactory.GetRepository<AccountRepository>()
-                                         .AddOrRefresh(obj => obj.UserId == commandContextContainer.User.Id
-                                                           && obj.Name == accountInformation.Name,
-                                                       obj =>
-                                                       {
-                                                           obj.UserId = commandContextContainer.User.Id;
-                                                           obj.Name = accountInformation.Name;
-                                                           obj.ApiKey = apiKey;
-                                                       }))
+                            var accountInformation = await connector.GetAccountInformationAsync()
+                                                                    .ConfigureAwait(false);
+
+                            using (var dbFactory = RepositoryFactory.CreateInstance())
                             {
-                                await Edit(commandContextContainer, accountInformation.Name).ConfigureAwait(false);
+                                if (dbFactory.GetRepository<AccountRepository>()
+                                             .AddOrRefresh(obj => obj.UserId == commandContextContainer.User.Id
+                                                               && obj.Name == accountInformation.Name,
+                                                           obj =>
+                                                           {
+                                                               obj.UserId = commandContextContainer.User.Id;
+                                                               obj.Name = accountInformation.Name;
+                                                               obj.ApiKey = apiKey;
+                                                           }))
+                                {
+                                    await Edit(commandContextContainer, accountInformation.Name).ConfigureAwait(false);
+                                }
+                                else
+                                {
+                                    throw dbFactory.LastError;
+                                }
                             }
                         }
+                        else
+                        {
+                            await commandContextContainer.Channel
+                                                         .SendMessageAsync(LocalizationGroup.GetText("InvalidToken", "The provided token is invalid or doesn't have the required permissions."))
+                                                         .ConfigureAwait(false);
+                        }
                     }
-                    else
-                    {
-                        await commandContextContainer.Channel
-                                                     .SendMessageAsync(LocalizationGroup.GetText("InvalidToken", "The provided token doesn't have the required permissions."))
-                                                     .ConfigureAwait(false);
-                    }
+                }
+                catch (WebException ex) when (ex.Response is HttpWebResponse response && response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    await commandContextContainer.Channel
+                                                 .SendMessageAsync(LocalizationGroup.GetText("InvalidToken", "The provided token is invalid or doesn't have the required permissions."))
+                                                 .ConfigureAwait(false);
                 }
             }
         }
@@ -121,9 +135,10 @@ namespace Scruffy.Services.Account
 
                 if (names.Count == 0)
                 {
-                    await commandContextContainer.Channel
-                                                 .SendMessageAsync(LocalizationGroup.GetText("NoAccounts", "You don't have any accounts configured."))
-                                                 .ConfigureAwait(false);
+                    if (await DialogHandler.Run<AccountWantToAddDialogElement, bool>(commandContextContainer).ConfigureAwait(false))
+                    {
+                        await Add(commandContextContainer).ConfigureAwait(false);
+                    }
                 }
                 else
                 {

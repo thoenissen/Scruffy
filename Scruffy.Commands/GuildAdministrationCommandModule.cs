@@ -227,6 +227,7 @@ namespace Scruffy.Commands
         /// </summary>
         [Group("bank")]
         [Aliases("b")]
+        [RequireGuild]
         [ModuleLifespan(ModuleLifespan.Transient)]
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public class GuildAdministrationBankCommandModule : LocatedCommandModuleBase
@@ -282,6 +283,7 @@ namespace Scruffy.Commands
             /// </summary>
             [Group("unlocks")]
             [Aliases("u")]
+            [RequireGuild]
             [ModuleLifespan(ModuleLifespan.Transient)]
             [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
             public class GuildAdministrationBankUnlocksCommandModule : LocatedCommandModuleBase
@@ -343,6 +345,8 @@ namespace Scruffy.Commands
         /// </summary>
         [Group("specialrank")]
         [Aliases("s")]
+        [RequireGuild]
+        [RequireAdministratorPermissions]
         [ModuleLifespan(ModuleLifespan.Transient)]
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public class GuildAdministrationSpecialRankCommandModule : LocatedCommandModuleBase
@@ -374,6 +378,7 @@ namespace Scruffy.Commands
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("setup")]
             [RequireGuild]
+            [RequireAdministratorPermissions]
             public Task Setup(CommandContext commandContext)
             {
                 return InvokeAsync(commandContext,
@@ -396,6 +401,7 @@ namespace Scruffy.Commands
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("overview")]
             [RequireGuild]
+            [RequireAdministratorPermissions]
             [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
             public Task Overview(CommandContext commandContext)
             {
@@ -419,6 +425,8 @@ namespace Scruffy.Commands
         /// </summary>
         [Group("charts")]
         [Aliases("c")]
+        [RequireGuild]
+        [RequireAdministratorPermissions]
         [ModuleLifespan(ModuleLifespan.Transient)]
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public class GuildAdministrationChartCommandModule : LocatedCommandModuleBase
@@ -454,6 +462,7 @@ namespace Scruffy.Commands
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("worlds")]
             [RequireGuild]
+            [RequireAdministratorPermissions]
             [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
             public Task SetNotificationChannel(CommandContext commandContext)
             {
@@ -468,15 +477,17 @@ namespace Scruffy.Commands
             #endregion // Methods
         }
 
-        #endregion Emblem
+        #endregion Charts
 
-        #region Charts
+        #region Exports
 
         /// <summary>
         /// Exporting data
         /// </summary>
         [Group("export")]
         [Aliases("e")]
+        [RequireGuild]
+        [RequireAdministratorPermissions]
         [ModuleLifespan(ModuleLifespan.Transient)]
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public class GuildAdministrationExportCommandModule : LocatedCommandModuleBase
@@ -701,6 +712,6 @@ namespace Scruffy.Commands
             #endregion // Methods
         }
 
-        #endregion Emblem
+        #endregion Exports
     }
 }
