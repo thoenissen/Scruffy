@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Scruffy.Data.Enumerations.GuildWars2;
 
-namespace Scruffy.Data.Entity.Tables.GuildWars2
+namespace Scruffy.Data.Entity.Tables.GuildWars2.GameData
 {
     /// <summary>
     /// Item

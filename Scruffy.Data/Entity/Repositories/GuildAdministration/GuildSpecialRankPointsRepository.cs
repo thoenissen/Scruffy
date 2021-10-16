@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity.Queryable.GuildAdministration;
 using Scruffy.Data.Entity.Repositories.Base;
-using Scruffy.Data.Entity.Tables.GuildAdministration;
+using Scruffy.Data.Entity.Tables.Guild;
 using Scruffy.Data.Enumerations.GuildAdministration;
 
 namespace Scruffy.Data.Entity.Repositories.GuildAdministration
@@ -40,7 +40,7 @@ namespace Scruffy.Data.Entity.Repositories.GuildAdministration
         /// <param name="userId">Id of the user</param>
         /// <param name="pointsList">Points list</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task<bool> AddPoints(long configurationId, double maximumPoints, ulong userId, ICollection<double> pointsList)
+        public async Task<bool> AddPoints(long configurationId, double maximumPoints, long userId, ICollection<double> pointsList)
         {
             var success = false;
 

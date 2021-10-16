@@ -164,9 +164,12 @@ namespace Scruffy.Services.GuildAdministration
 
                 if (string.IsNullOrWhiteSpace(guild?.ApiKey) == false)
                 {
+                    var user = await commandContext.GetCurrentUser()
+                                                   .ConfigureAwait(false);
+
                     var apiKeys = dbFactory.GetRepository<AccountRepository>()
                                            .GetQuery()
-                                           .Where(obj => obj.UserId == commandContext.User.Id)
+                                           .Where(obj => obj.UserId == user.Id)
                                            .Select(obj => new
                                                    {
                                                        obj.ApiKey,

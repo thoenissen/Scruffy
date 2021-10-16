@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Account;
-using Scruffy.Data.Entity.Tables.Account;
+using Scruffy.Data.Entity.Tables.GuildWars2.Account;
 using Scruffy.Data.Enumerations.General;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.JobScheduler;
@@ -36,7 +36,7 @@ namespace Scruffy.Services.Account.Jobs
                                                                    obj.Name,
                                                                    obj.ApiKey,
                                                                    obj.LastAge,
-                                                                   obj.WordId
+                                                                   WordId = obj.WorldId
                                                                })
                                                  .ToList())
                 {
@@ -50,7 +50,7 @@ namespace Scruffy.Services.Account.Jobs
                             if (accountInformation.Age != account.LastAge)
                             {
                                 dbFactory.GetRepository<AccountDailyLoginCheckRepository>()
-                                         .Add(new AccountDailyLoginCheckEntity
+                                         .Add(new GuildWarsAccountDailyLoginCheckEntity
                                               {
                                                   Name = account.Name,
                                                   Date = date
@@ -61,7 +61,7 @@ namespace Scruffy.Services.Account.Jobs
                                                   obj =>
                                                   {
                                                       obj.LastAge = accountInformation.Age;
-                                                      obj.WordId = accountInformation.World;
+                                                      obj.WorldId = accountInformation.World;
                                                   });
                             }
                         }

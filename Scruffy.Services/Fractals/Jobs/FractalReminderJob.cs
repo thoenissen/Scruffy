@@ -59,12 +59,16 @@ namespace Scruffy.Services.Fractals.Jobs
                                                     .Select(obj => new
                                                     {
                                                         ConfigurationId = obj.Id,
-                                                        obj.ChannelId,
+                                                        ChannelId = obj.DiscordChannelId,
                                                         Registrations = obj.FractalRegistrations
                                                                            .Select(obj2 => new AppointmentCreationRegistrationData
                                                                            {
                                                                                AppointmentTimeStamp = obj2.AppointmentTimeStamp,
                                                                                UserId = obj2.UserId,
+                                                                               DiscordAccountId = obj2.User
+                                                                                                      .DiscordAccounts
+                                                                                                      .Select(obj3 => obj3.Id)
+                                                                                                      .FirstOrDefault(),
                                                                                RegistrationTimeStamp = obj2.RegistrationTimeStamp
                                                                            })
                                                                            .Where(obj2 => obj2.AppointmentTimeStamp == TimeStamp)
@@ -98,7 +102,7 @@ namespace Scruffy.Services.Fractals.Jobs
                             var appointment = new FractalAppointmentEntity
                                               {
                                                   ConfigurationId = configuration.ConfigurationId,
-                                                  MessageId = messageId,
+                                                  DiscordMessageId = messageId,
                                                   AppointmentTimeStamp = TimeStamp
                                               };
 

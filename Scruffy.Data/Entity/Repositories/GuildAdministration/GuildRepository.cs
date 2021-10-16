@@ -2,7 +2,7 @@
 
 using Scruffy.Data.Entity.Queryable.GuildAdministration;
 using Scruffy.Data.Entity.Repositories.Base;
-using Scruffy.Data.Entity.Tables.GuildAdministration;
+using Scruffy.Data.Entity.Tables.Guild;
 
 namespace Scruffy.Data.Entity.Repositories.GuildAdministration
 {

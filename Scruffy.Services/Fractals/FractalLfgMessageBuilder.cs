@@ -63,15 +63,18 @@ namespace Scruffy.Services.Fractals
                                           .Where(obj => obj.Id == configurationId)
                                           .Select(obj => new
                                                          {
-                                                             obj.ChannelId,
-                                                             obj.MessageId,
+                                                             ChannelId = obj.DiscordChannelId,
+                                                             MessageId = obj.DiscordMessageId,
                                                              obj.Title,
                                                              obj.Description,
                                                              Registrations = obj.FractalRegistrations
                                                                                 .Select(obj2 => new
                                                                                                 {
                                                                                                     obj2.AppointmentTimeStamp,
-                                                                                                    obj2.UserId,
+                                                                                                    UserId = obj2.User
+                                                                                                                 .DiscordAccounts
+                                                                                                                 .Select(obj3 => obj3.Id)
+                                                                                                                 .FirstOrDefault(),
                                                                                                     obj2.RegistrationTimeStamp,
                                                                                                 })
                                                                                 .Where(obj2 => obj2.AppointmentTimeStamp > from)
@@ -158,7 +161,7 @@ namespace Scruffy.Services.Fractals
 
             foreach (var registration in registrations)
             {
-                builder.Append($"> ● {(await _client.GetUserAsync(registration.UserId).ConfigureAwait(false)).Mention}\n");
+                builder.Append($"> ● {(await _client.GetUserAsync(registration.DiscordAccountId).ConfigureAwait(false)).Mention}\n");
             }
 
             return (await channel.SendMessageAsync(builder.ToString()).ConfigureAwait(false)).Id;

@@ -14,7 +14,9 @@ using Newtonsoft.Json;
 using Scruffy.Data.Enumerations.General;
 using Scruffy.Data.Json.Tenor;
 using Scruffy.Services.Core;
+using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.CoreData;
 
 namespace Scruffy.Commands
 {
@@ -31,8 +33,9 @@ namespace Scruffy.Commands
         /// Constructor
         /// </summary>
         /// <param name="localizationService">Localization service</param>
-        public GifCommandModule(LocalizationService localizationService)
-            : base(localizationService)
+        /// <param name="userManagementService">User management service</param>
+        public GifCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
+            : base(localizationService, userManagementService)
         {
         }
 

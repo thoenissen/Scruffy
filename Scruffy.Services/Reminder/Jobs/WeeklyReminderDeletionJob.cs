@@ -56,8 +56,8 @@ namespace Scruffy.Services.Reminder.Jobs
                                         .Where(obj => obj.Id == _id)
                                         .Select(obj => new
                                                        {
-                                                           obj.ChannelId,
-                                                           obj.MessageId
+                                                           ChannelId = obj.DiscordChannelId,
+                                                           MessageId = obj.DiscordMessageId
                                                        })
                                         .FirstOrDefault();
 
@@ -73,7 +73,7 @@ namespace Scruffy.Services.Reminder.Jobs
 
                         dbFactory.GetRepository<WeeklyReminderRepository>()
                                  .Refresh(obj => obj.Id == _id,
-                                          obj => obj.MessageId = null);
+                                          obj => obj.DiscordMessageId = null);
                     }
                 }
             }

@@ -15,7 +15,12 @@ namespace Scruffy.Data.Services.Fractal
         /// <summary>
         /// Id of the user
         /// </summary>
-        public ulong UserId { get; set; }
+        public long UserId { get; set; }
+
+        /// <summary>
+        /// Id of the discord account
+        /// </summary>
+        public ulong DiscordAccountId { get; set; }
 
         /// <summary>
         /// Timestamp of the registration

@@ -36,7 +36,7 @@ namespace Scruffy.Services.Core.Discord
             {
                 _prefixes = new ConcurrentDictionary<ulong, string>(dbFactory.GetRepository<ServerConfigurationRepository>()
                                                                              .GetQuery()
-                                                                             .ToDictionary(obj => obj.ServerId, obj => obj.Prefix));
+                                                                             .ToDictionary(obj => obj.DiscordServerId, obj => obj.Prefix));
             }
         }
 
@@ -54,10 +54,10 @@ namespace Scruffy.Services.Core.Discord
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
                 if (dbFactory.GetRepository<ServerConfigurationRepository>()
-                             .AddOrRefresh(obj => obj.ServerId == serverId,
+                             .AddOrRefresh(obj => obj.DiscordServerId == serverId,
                                            obj =>
                                            {
-                                               obj.ServerId = serverId;
+                                               obj.DiscordServerId = serverId;
                                                obj.Prefix = prefix;
                                            }))
                 {

@@ -8,7 +8,7 @@
         /// <summary>
         /// Id of the user
         /// </summary>
-        public ulong UserId { get; set; }
+        public ulong DiscordUserId { get; set; }
 
         /// <summary>
         /// Points

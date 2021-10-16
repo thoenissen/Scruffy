@@ -3,15 +3,15 @@ using System.Linq;
 
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-
-using Scruffy.Data.Entity.Tables.Account;
 using Scruffy.Data.Entity.Tables.Calendar;
 using Scruffy.Data.Entity.Tables.CoreData;
+using Scruffy.Data.Entity.Tables.Discord;
 using Scruffy.Data.Entity.Tables.Fractals;
 using Scruffy.Data.Entity.Tables.Games;
 using Scruffy.Data.Entity.Tables.General;
-using Scruffy.Data.Entity.Tables.GuildAdministration;
-using Scruffy.Data.Entity.Tables.GuildWars2;
+using Scruffy.Data.Entity.Tables.Guild;
+using Scruffy.Data.Entity.Tables.GuildWars2.Account;
+using Scruffy.Data.Entity.Tables.GuildWars2.GameData;
 using Scruffy.Data.Entity.Tables.Raid;
 using Scruffy.Data.Entity.Tables.Reminder;
 using Scruffy.Data.Entity.Tables.Statistics;
@@ -107,12 +107,6 @@ namespace Scruffy.Data.Entity
             modelBuilder.Entity<ServerConfigurationEntity>();
 
             modelBuilder.Entity<UserEntity>()
-                        .HasMany(obj => obj.OneTimeReminders)
-                        .WithOne(obj => obj.User)
-                        .HasForeignKey(obj => obj.UserId)
-                        .IsRequired();
-
-            modelBuilder.Entity<UserEntity>()
                         .HasMany(obj => obj.RaidRegistrations)
                         .WithOne(obj => obj.User)
                         .HasForeignKey(obj => obj.UserId)
@@ -125,9 +119,24 @@ namespace Scruffy.Data.Entity
                         .IsRequired();
 
             modelBuilder.Entity<UserEntity>()
-                        .HasMany(obj => obj.Accounts)
+                        .HasMany(obj => obj.GuildWarsAccounts)
                         .WithOne(obj => obj.User)
                         .HasForeignKey(obj => obj.UserId)
+                        .IsRequired();
+
+            modelBuilder.Entity<UserEntity>()
+                        .HasMany(obj => obj.DiscordAccounts)
+                        .WithOne(obj => obj.User)
+                        .HasForeignKey(obj => obj.UserId)
+                        .IsRequired();
+
+            // Discord
+            modelBuilder.Entity<DiscordAccountEntity>();
+
+            modelBuilder.Entity<DiscordAccountEntity>()
+                        .HasMany(obj => obj.OneTimeReminders)
+                        .WithOne(obj => obj.DiscordAccount)
+                        .HasForeignKey(obj => obj.DiscordAccountId)
                         .IsRequired();
 
             // General
@@ -378,10 +387,10 @@ namespace Scruffy.Data.Entity
                                        });
 
             // Account
-            modelBuilder.Entity<AccountEntity>();
-            modelBuilder.Entity<AccountDailyLoginCheckEntity>();
+            modelBuilder.Entity<GuildWarsAccountEntity>();
+            modelBuilder.Entity<GuildWarsAccountDailyLoginCheckEntity>();
 
-            modelBuilder.Entity<AccountDailyLoginCheckEntity>()
+            modelBuilder.Entity<GuildWarsAccountDailyLoginCheckEntity>()
                         .HasKey(obj => new
                                        {
                                            obj.Name,
@@ -411,25 +420,25 @@ namespace Scruffy.Data.Entity
             modelBuilder.Entity<DiscordMessageEntity>()
                         .HasKey(obj => new
                                        {
-                                           obj.ServerId,
-                                           obj.ChannelId,
-                                           obj.MessageId
+                                           ServerId = obj.DiscordServerId,
+                                           ChannelId = obj.DiscordChannelId,
+                                           MessageId = obj.DiscordMessageId
                                        });
 
             modelBuilder.Entity<DiscordVoiceTimeSpanEntity>()
                         .HasKey(obj => new
                                 {
-                                    obj.ServerId,
-                                    obj.ChannelId,
-                                    obj.UserId,
+                                    ServerId = obj.DiscordServerId,
+                                    ChannelId = obj.DiscordChannelId,
+                                    UserId = obj.DiscordAccountId,
                                     obj.StartTimeStamp
                                 });
 
             modelBuilder.Entity<DiscordIgnoreChannelEntity>()
                         .HasKey(obj => new
                         {
-                            obj.ServerId,
-                            obj.ChannelId
+                            ServerId = obj.DiscordServerId,
+                            ChannelId = obj.DiscordChannelId
                         });
 
             // Disabling cascade on delete

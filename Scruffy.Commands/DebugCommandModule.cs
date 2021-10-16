@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Net;
 using System.Text;
@@ -36,12 +37,35 @@ namespace Scruffy.Commands
         /// Constructor
         /// </summary>
         /// <param name="localizationService">Localization service</param>
-        public DebugCommandModule(LocalizationService localizationService)
-            : base(localizationService)
+        /// <param name="userManagementService">User management service</param>
+        public DebugCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
+            : base(localizationService, userManagementService)
         {
         }
 
         #endregion // Constructor
+
+        #region Methods
+
+        /// <summary>
+        /// List roles
+        /// </summary>
+        /// <param name="commandContext">Current command context</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("info")]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
+        public async Task Info(CommandContext commandContext)
+        {
+            var embed = new DiscordEmbedBuilder();
+
+            embed.AddField("Information", $"Start time: {Process.GetCurrentProcess()?.StartTime.ToString("g", LocalizationGroup.CultureInfo)}");
+
+            await commandContext.Channel
+                                .SendMessageAsync(embed)
+                                .ConfigureAwait(false);
+        }
+
+        #endregion // Methods
 
         #region Dump
 
@@ -60,8 +84,9 @@ namespace Scruffy.Commands
             /// Constructor
             /// </summary>
             /// <param name="localizationService">Localization service</param>
-            public DebugDumpModule(LocalizationService localizationService)
-                : base(localizationService)
+            /// <param name="userManagementService">User management service</param>
+            public DebugDumpModule(LocalizationService localizationService, UserManagementService userManagementService)
+                : base(localizationService, userManagementService)
             {
             }
 
@@ -113,8 +138,9 @@ namespace Scruffy.Commands
             /// Constructor
             /// </summary>
             /// <param name="localizationService">Localization service</param>
-            public DebugRaidModule(LocalizationService localizationService)
-                : base(localizationService)
+            /// <param name="userManagementService">User management service</param>
+            public DebugRaidModule(LocalizationService localizationService, UserManagementService userManagementService)
+                : base(localizationService, userManagementService)
             {
             }
 
@@ -170,8 +196,9 @@ namespace Scruffy.Commands
             /// Constructor
             /// </summary>
             /// <param name="localizationService">Localization service</param>
-            public DebugListModule(LocalizationService localizationService)
-                : base(localizationService)
+            /// <param name="userManagementService">User management service</param>
+            public DebugListModule(LocalizationService localizationService, UserManagementService userManagementService)
+                : base(localizationService, userManagementService)
             {
             }
 
@@ -275,8 +302,9 @@ namespace Scruffy.Commands
             /// Constructor
             /// </summary>
             /// <param name="localizationService">Localization service</param>
-            public DebugCalendarModule(LocalizationService localizationService)
-                : base(localizationService)
+            /// <param name="userManagementService">User management service</param>
+            public DebugCalendarModule(LocalizationService localizationService, UserManagementService userManagementService)
+                : base(localizationService, userManagementService)
             {
             }
 
@@ -368,8 +396,9 @@ namespace Scruffy.Commands
             /// Constructor
             /// </summary>
             /// <param name="localizationService">Localization service</param>
-            public DebugUserModule(LocalizationService localizationService)
-                : base(localizationService)
+            /// <param name="userManagementService">User management service</param>
+            public DebugUserModule(LocalizationService localizationService, UserManagementService userManagementService)
+                : base(localizationService, userManagementService)
             {
             }
 
@@ -395,7 +424,7 @@ namespace Scruffy.Commands
             [Command("add")]
             public async Task RefreshAppointments(CommandContext commandContext, DiscordUser discordUser)
             {
-                await UserManagementService.CheckUserAsync(discordUser.Id)
+                await UserManagementService.CheckDiscordAccountAsync(discordUser.Id)
                                            .ConfigureAwait(false);
 
                 await commandContext.Message
@@ -425,8 +454,9 @@ namespace Scruffy.Commands
             /// Constructor
             /// </summary>
             /// <param name="localizationService">Localization service</param>
-            public DebugGuildModule(LocalizationService localizationService)
-                : base(localizationService)
+            /// <param name="userManagementService">User management service</param>
+            public DebugGuildModule(LocalizationService localizationService, UserManagementService userManagementService)
+                : base(localizationService, userManagementService)
             {
             }
 
@@ -470,8 +500,9 @@ namespace Scruffy.Commands
             /// Constructor
             /// </summary>
             /// <param name="localizationService">Localization service</param>
-            public DebugImportModule(LocalizationService localizationService)
-                : base(localizationService)
+            /// <param name="userManagementService">User management service</param>
+            public DebugImportModule(LocalizationService localizationService, UserManagementService userManagementService)
+                : base(localizationService, userManagementService)
             {
             }
 
@@ -561,8 +592,9 @@ namespace Scruffy.Commands
             /// Constructor
             /// </summary>
             /// <param name="localizationService">Localization service</param>
-            public DebugNetworkModule(LocalizationService localizationService)
-                : base(localizationService)
+            /// <param name="userManagementService">User management service</param>
+            public DebugNetworkModule(LocalizationService localizationService, UserManagementService userManagementService)
+                : base(localizationService, userManagementService)
             {
             }
 
@@ -632,8 +664,9 @@ namespace Scruffy.Commands
             /// Constructor
             /// </summary>
             /// <param name="localizationService">Localization service</param>
-            public DebugLogModule(LocalizationService localizationService)
-                : base(localizationService)
+            /// <param name="userManagementService">User management service</param>
+            public DebugLogModule(LocalizationService localizationService, UserManagementService userManagementService)
+                : base(localizationService, userManagementService)
             {
             }
 

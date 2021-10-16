@@ -87,9 +87,9 @@ namespace Scruffy.Services.Statistics
 
                 var mostActive = dbFactory.GetRepository<DiscordMessageRepository>()
                                                                     .GetQuery()
-                                                                    .Where(obj => obj.ServerId == commandContext.Guild.Id
-                                                                               && obj.UserId == commandContext.User.Id)
-                                                                    .GroupBy(obj => obj.ChannelId)
+                                                                    .Where(obj => obj.DiscordServerId == commandContext.Guild.Id
+                                                                               && obj.DiscordAccountId == commandContext.User.Id)
+                                                                    .GroupBy(obj => obj.DiscordChannelId)
                                                                     .Select(obj => new
                                                                                    {
                                                                                        Channeld = obj.Key,
@@ -123,8 +123,8 @@ namespace Scruffy.Services.Statistics
                 var limit = now.AddDays(-60);
                 stringBuilder.Append(Formatter.InlineCode(dbFactory.GetRepository<DiscordMessageRepository>()
                                                                    .GetQuery()
-                                                                   .Count(obj => obj.ServerId == commandContext.Guild.Id
-                                                                              && obj.UserId == commandContext.User.Id
+                                                                   .Count(obj => obj.DiscordServerId == commandContext.Guild.Id
+                                                                              && obj.DiscordAccountId == commandContext.User.Id
                                                                               && obj.TimeStamp > limit)
                                                                    .ToString()
                                                         + ' '
@@ -135,8 +135,8 @@ namespace Scruffy.Services.Statistics
                 limit = now.AddDays(-7);
                 stringBuilder.Append(Formatter.InlineCode(dbFactory.GetRepository<DiscordMessageRepository>()
                                                                    .GetQuery()
-                                                                   .Count(obj => obj.ServerId == commandContext.Guild.Id
-                                                                              && obj.UserId == commandContext.User.Id
+                                                                   .Count(obj => obj.DiscordServerId == commandContext.Guild.Id
+                                                                              && obj.DiscordAccountId == commandContext.User.Id
                                                                               && obj.TimeStamp > limit)
                                                                    .ToString()
                                                         + ' '
@@ -147,8 +147,8 @@ namespace Scruffy.Services.Statistics
                 limit = now.AddDays(-1);
                 stringBuilder.Append(Formatter.InlineCode(dbFactory.GetRepository<DiscordMessageRepository>()
                                                                    .GetQuery()
-                                                                   .Count(obj => obj.ServerId == commandContext.Guild.Id
-                                                                              && obj.UserId == commandContext.User.Id
+                                                                   .Count(obj => obj.DiscordServerId == commandContext.Guild.Id
+                                                                              && obj.DiscordAccountId == commandContext.User.Id
                                                                               && obj.TimeStamp > limit)
                                                                    .ToString()
                                      + ' '
@@ -161,9 +161,9 @@ namespace Scruffy.Services.Statistics
                 {
                     var messageChannels = dbFactory.GetRepository<DiscordMessageRepository>()
                                               .GetQuery()
-                                              .Where(obj => obj.ServerId == commandContext.Guild.Id
-                                                         && obj.UserId == commandContext.User.Id)
-                                              .GroupBy(obj => obj.ChannelId)
+                                              .Where(obj => obj.DiscordServerId == commandContext.Guild.Id
+                                                         && obj.DiscordAccountId == commandContext.User.Id)
+                                              .GroupBy(obj => obj.DiscordChannelId)
                                               .Select(obj => new
                                                              {
                                                                  Channeld = obj.Key,
@@ -238,12 +238,12 @@ namespace Scruffy.Services.Statistics
                                                                                              {
                                                                                                  Labels = new List<Label>
                                                                                                  {
-                                                                                                     new Label
+                                                                                                     new ()
                                                                                                      {
                                                                                                          Color = "white",
                                                                                                          Text = messagesSum.ToString()
                                                                                                      },
-                                                                                                     new Label
+                                                                                                     new ()
                                                                                                      {
                                                                                                          Color = "white",
                                                                                                          Text = LocalizationGroup.GetText("MeOverviewMessages", "messages")

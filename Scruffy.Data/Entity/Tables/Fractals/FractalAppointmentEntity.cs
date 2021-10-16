@@ -25,7 +25,7 @@ namespace Scruffy.Data.Entity.Tables.Fractals
         /// <summary>
         /// Id of the message
         /// </summary>
-        public ulong MessageId { get; set; }
+        public ulong DiscordMessageId { get; set; }
 
         /// <summary>
         /// Appointment timestamp

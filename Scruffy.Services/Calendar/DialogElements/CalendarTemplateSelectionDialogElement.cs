@@ -62,7 +62,7 @@ namespace Scruffy.Services.Calendar.DialogElements
                 var mainRoles = dbFactory.GetRepository<CalendarAppointmentTemplateRepository>()
                                          .GetQuery()
                                          .Where(obj => obj.IsDeleted == false
-                                                       && obj.ServerId == serverId)
+                                                       && obj.DiscordServerId == serverId)
                                          .Select(obj => new
                                          {
                                              obj.Id,

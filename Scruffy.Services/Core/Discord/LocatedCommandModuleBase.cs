@@ -10,12 +10,11 @@ using Newtonsoft.Json;
 
 using Scruffy.Data.Enumerations.General;
 using Scruffy.Data.Json.Tenor;
-using Scruffy.Services.Core;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Exceptions;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.CoreData;
 
-namespace Scruffy.Commands
+namespace Scruffy.Services.Core.Discord
 {
     /// <summary>
     /// Command module base class with localization services
@@ -27,7 +26,12 @@ namespace Scruffy.Commands
         /// <summary>
         /// Internal localization group
         /// </summary>
-        private Lazy<LocalizationGroup> _internalLocalizationGroup;
+        private readonly Lazy<LocalizationGroup> _internalLocalizationGroup;
+
+        /// <summary>
+        /// User management service
+        /// </summary>
+        private readonly UserManagementService _userManagementService;
 
         #endregion // Fields
 
@@ -37,10 +41,14 @@ namespace Scruffy.Commands
         /// Constructor
         /// </summary>
         /// <param name="localizationService">Localization service</param>
-        public LocatedCommandModuleBase(LocalizationService localizationService)
+        /// <param name="userManagementService">User management server</param>
+        public LocatedCommandModuleBase(LocalizationService localizationService, UserManagementService userManagementService)
         {
             LocalizationGroup = localizationService.GetGroup(GetType().Name);
+
             _internalLocalizationGroup = new Lazy<LocalizationGroup>(() => localizationService.GetGroup(nameof(LocatedCommandModuleBase)));
+
+            _userManagementService = userManagementService;
         }
 
         #endregion // Constructor
@@ -64,7 +72,7 @@ namespace Scruffy.Commands
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         protected async Task InvokeAsync(CommandContext commandContext, Func<CommandContextContainer, Task> action)
         {
-            var commandContextContainer = new CommandContextContainer(commandContext);
+            var commandContextContainer = new CommandContextContainer(commandContext, _userManagementService);
 
             try
             {

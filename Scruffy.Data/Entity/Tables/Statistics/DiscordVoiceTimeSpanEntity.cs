@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using Scruffy.Data.Entity.Tables.Discord;
 
 namespace Scruffy.Data.Entity.Tables.Statistics
 {
@@ -9,20 +10,22 @@ namespace Scruffy.Data.Entity.Tables.Statistics
     [Table("DiscordVoiceTimeSpans")]
     public class DiscordVoiceTimeSpanEntity
     {
+        #region Properties
+
         /// <summary>
         /// Id of the server
         /// </summary>
-        public ulong ServerId { get; set; }
+        public ulong DiscordServerId { get; set; }
 
         /// <summary>
         /// Id of the channel
         /// </summary>
-        public ulong ChannelId { get; set; }
+        public ulong DiscordChannelId { get; set; }
 
         /// <summary>
         /// Id of the user
         /// </summary>
-        public ulong UserId { get; set; }
+        public ulong DiscordAccountId { get; set; }
 
         /// <summary>
         /// Start of the session
@@ -38,5 +41,17 @@ namespace Scruffy.Data.Entity.Tables.Statistics
         /// Is the voice session completed or ongoing?
         /// </summary>
         public bool IsCompleted { get; set; }
+
+        #region Navigation - Properties
+
+        /// <summary>
+        /// Discord account
+        /// </summary>
+        [ForeignKey(nameof(DiscordAccountId))]
+        public DiscordAccountEntity DiscordAccount { get; set; }
+
+        #endregion // Navigation - Properties
+
+        #endregion // Properties
     }
 }

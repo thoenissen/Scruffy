@@ -43,12 +43,12 @@ namespace Scruffy.Data.Entity.Tables.Raid
         /// <summary>
         /// Discord channel
         /// </summary>
-        public ulong ChannelId { get; set; }
+        public ulong DiscordChannelId { get; set; }
 
         /// <summary>
         /// Discord message
         /// </summary>
-        public ulong MessageId { get; set; }
+        public ulong DiscordMessageId { get; set; }
 
         #region Navigation properties
 

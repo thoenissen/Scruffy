@@ -11,11 +11,11 @@ namespace Scruffy.Data.Entity.Tables.Statistics
         /// <summary>
         /// Id of the server
         /// </summary>
-        public ulong ServerId { get; set; }
+        public ulong DiscordServerId { get; set; }
 
         /// <summary>
         /// Id of the channel
         /// </summary>
-        public ulong ChannelId { get; set; }
+        public ulong DiscordChannelId { get; set; }
     }
 }

@@ -60,12 +60,12 @@ namespace Scruffy.Services.Calendar.Jobs
                     var data = dbFactory.GetRepository<CalendarAppointmentRepository>()
                                         .GetQuery()
                                         .Where(obj => obj.Id == _id
-                                                   && obj.ReminderMessageId == null)
+                                                   && obj.DiscordMessageId == null)
                                         .Select(obj => new
                                                        {
-                                                           ChannelId = channels.Where(obj2 => obj2.Guild.DiscordServerId == obj.CalendarAppointmentTemplate.ServerId
+                                                           ChannelId = channels.Where(obj2 => obj2.Guild.DiscordServerId == obj.CalendarAppointmentTemplate.DiscordServerId
                                                                                            && obj2.Type == GuildChannelConfigurationType.CalendarReminder)
-                                                                               .Select(obj2 => obj2.ChannelId)
+                                                                               .Select(obj2 => obj2.DiscordChannelId)
                                                                                .FirstOrDefault(),
                                                            obj.CalendarAppointmentTemplate.ReminderMessage
                                                        })
@@ -85,8 +85,8 @@ namespace Scruffy.Services.Calendar.Jobs
                                  .Refresh(obj => obj.Id == _id,
                                           obj =>
                                           {
-                                              obj.ReminderChannelId = data.ChannelId;
-                                              obj.ReminderMessageId = message.Id;
+                                              obj.DiscordChannelId = data.ChannelId;
+                                              obj.DiscordMessageId = message.Id;
                                           });
                     }
                 }

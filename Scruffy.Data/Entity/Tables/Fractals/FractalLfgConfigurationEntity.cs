@@ -21,12 +21,12 @@ namespace Scruffy.Data.Entity.Tables.Fractals
         /// <summary>
         /// Id of the channel
         /// </summary>
-        public ulong ChannelId { get; set; }
+        public ulong DiscordChannelId { get; set; }
 
         /// <summary>
         /// Id of the discord message
         /// </summary>
-        public ulong MessageId { get; set; }
+        public ulong DiscordMessageId { get; set; }
 
         /// <summary>
         /// Alias name

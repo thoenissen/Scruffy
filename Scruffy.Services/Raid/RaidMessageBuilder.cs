@@ -65,8 +65,8 @@ namespace Scruffy.Services.Raid
                                            .Select(obj => new
                                                           {
                                                               obj.TimeStamp,
-                                                              obj.RaidDayConfiguration.ChannelId,
-                                                              obj.RaidDayConfiguration.MessageId,
+                                                              ChannelId = obj.RaidDayConfiguration.DiscordChannelId,
+                                                              MessageId = obj.RaidDayConfiguration.DiscordMessageId,
                                                               obj.RaidDayTemplate.Thumbnail,
                                                               obj.RaidDayTemplate.Title,
                                                               obj.RaidDayTemplate.Description,
@@ -86,7 +86,10 @@ namespace Scruffy.Services.Raid
                                                               Registrations = obj.RaidRegistrations
                                                                               .Select(obj3 => new
                                                                                               {
-                                                                                                  obj3.UserId,
+                                                                                                  UserId = obj3.User
+                                                                                                               .DiscordAccounts
+                                                                                                               .Select(obj4 => obj4.Id)
+                                                                                                               .FirstOrDefault(),
                                                                                                   Points = currentRaidPoints.Where(obj4 => obj4.UserId == obj3.UserId)
                                                                                                                             .Select(obj4 => obj4.Points).FirstOrDefault(),
                                                                                                   obj3.LineupExperienceLevelId,
@@ -180,7 +183,7 @@ namespace Scruffy.Services.Raid
                                         lineBuilder.Append(DiscordEmojiService.GetGuildEmoji(_client, registration.ExperienceLevelDiscordEmoji.Value));
                                     }
 
-                                    lineBuilder.Append($"\n");
+                                    lineBuilder.Append('\n');
 
                                     if (lineBuilder.Length + fieldBuilder.Length > 1024)
                                     {

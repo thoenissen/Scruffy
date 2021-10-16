@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Account;
+using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Json.GuildWars2.Core;
 using Scruffy.Services.Account.DialogElements;
 using Scruffy.Services.Core.Discord;
@@ -72,12 +73,18 @@ namespace Scruffy.Services.Account
 
                             using (var dbFactory = RepositoryFactory.CreateInstance())
                             {
+                                var userId = dbFactory.GetRepository<DiscordAccountRepository>()
+                                                       .GetQuery()
+                                                       .Where(obj => obj.Id == commandContextContainer.User.Id)
+                                                       .Select(obj => obj.UserId)
+                                                       .First();
+
                                 if (dbFactory.GetRepository<AccountRepository>()
-                                             .AddOrRefresh(obj => obj.UserId == commandContextContainer.User.Id
+                                             .AddOrRefresh(obj => obj.UserId == userId
                                                                && obj.Name == accountInformation.Name,
                                                            obj =>
                                                            {
-                                                               obj.UserId = commandContextContainer.User.Id;
+                                                               obj.UserId = userId;
                                                                obj.Name = accountInformation.Name;
                                                                obj.ApiKey = apiKey;
                                                            }))
@@ -128,7 +135,7 @@ namespace Scruffy.Services.Account
             {
                 var names = dbFactory.GetRepository<AccountRepository>()
                                      .GetQuery()
-                                     .Where(obj => obj.UserId == commandContextContainer.User.Id)
+                                     .Where(obj => obj.User.DiscordAccounts.Any(obj2 => obj2.Id == commandContextContainer.User.Id))
                                      .Select(obj => obj.Name)
                                      .Take(2)
                                      .ToList();

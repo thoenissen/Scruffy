@@ -44,8 +44,8 @@ namespace Scruffy.Services.Statistics.Jobs
                                                                         .Where(obj => obj.IsBatchCommitted == true)
                                                                         .GroupBy(obj => new
                                                                         {
-                                                                            obj.ServerId,
-                                                                            obj.ChannelId
+                                                                            ServerId = obj.DiscordServerId,
+                                                                            ChannelId = obj.DiscordChannelId
                                                                         })
                                                                         .Select(obj => new
                                                                         {

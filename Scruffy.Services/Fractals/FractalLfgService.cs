@@ -81,8 +81,8 @@ namespace Scruffy.Services.Fractals
                                 Title = creationData.Title,
                                 Description = creationData.Description,
                                 AliasName = creationData.AliasName,
-                                ChannelId = commandContext.Channel.Id,
-                                MessageId = (await commandContext.Channel.SendMessageAsync(LocalizationGroup.GetText("BuildingProgress", "Building...")).ConfigureAwait(false)).Id
+                                DiscordChannelId = commandContext.Channel.Id,
+                                DiscordMessageId = (await commandContext.Channel.SendMessageAsync(LocalizationGroup.GetText("BuildingProgress", "Building...")).ConfigureAwait(false)).Id
                             };
 
                 using (var dbFactory = RepositoryFactory.CreateInstance())
@@ -115,19 +115,22 @@ namespace Scruffy.Services.Fractals
         {
             return EvaluateRegistrationArguments(commandContext,
                                                  arguments,
-                                                 e =>
+                                                 async e =>
                                                  {
+                                                     var user = await commandContext.GetCurrentUser()
+                                                                                    .ConfigureAwait(false);
+
                                                      using (var dbFactory = RepositoryFactory.CreateInstance())
                                                      {
                                                          dbFactory.GetRepository<FractalRegistrationRepository>()
                                                                   .AddOrRefresh(obj => obj.ConfigurationId == e.ConfigurationId
                                                                                     && obj.AppointmentTimeStamp == e.AppointmentTimeStamp
-                                                                                    && obj.UserId == commandContext.User.Id,
+                                                                                    && obj.UserId == user.Id,
                                                                                 obj =>
                                                                                 {
                                                                                     obj.ConfigurationId = e.ConfigurationId;
                                                                                     obj.AppointmentTimeStamp = e.AppointmentTimeStamp;
-                                                                                    obj.UserId = commandContext.User.Id;
+                                                                                    obj.UserId = user.Id;
                                                                                     obj.RegistrationTimeStamp = DateTime.Now;
                                                                                 });
                                                      }
@@ -144,14 +147,17 @@ namespace Scruffy.Services.Fractals
         {
             return EvaluateRegistrationArguments(commandContext,
                                                  arguments,
-                                                 e =>
+                                                 async e =>
                                                  {
+                                                     var user = await commandContext.GetCurrentUser()
+                                                                                    .ConfigureAwait(false);
+
                                                      using (var dbFactory = RepositoryFactory.CreateInstance())
                                                      {
                                                          dbFactory.GetRepository<FractalRegistrationRepository>()
                                                                   .RemoveRange(obj => obj.ConfigurationId == e.ConfigurationId
                                                                                    && obj.AppointmentTimeStamp == e.AppointmentTimeStamp
-                                                                                   && obj.UserId == commandContext.User.Id);
+                                                                                   && obj.UserId == user.Id);
                                                      }
                                                  });
         }
@@ -167,12 +173,12 @@ namespace Scruffy.Services.Fractals
         /// <param name="argumentsEnumerable">Arguments</param>
         /// <param name="action">Action</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-        private async Task EvaluateRegistrationArguments(CommandContextContainer commandContextContainer, IEnumerable<string> argumentsEnumerable, Action<(int ConfigurationId, DateTime AppointmentTimeStamp)> action)
+        private async Task EvaluateRegistrationArguments(CommandContextContainer commandContextContainer, IEnumerable<string> argumentsEnumerable, Func<(int ConfigurationId, DateTime AppointmentTimeStamp), Task> action)
         {
             var arguments = argumentsEnumerable.ToList();
             if (arguments.Count >= 2)
             {
-                var checkUser = _userManagementService.CheckUserAsync(commandContextContainer.User.Id);
+                var checkUser = _userManagementService.CheckDiscordAccountAsync(commandContextContainer.User.Id);
 
                 using (var dbFactory = RepositoryFactory.CreateInstance())
                 {
@@ -186,7 +192,7 @@ namespace Scruffy.Services.Fractals
                         timeSpan = TimeSpan.ParseExact(arguments[0], "hh\\:mm", CultureInfo.InvariantCulture);
                         configurationId = await dbFactory.GetRepository<FractalLfgConfigurationRepository>()
                                                          .GetQuery()
-                                                         .Where(obj => obj.ChannelId == commandContextContainer.Channel.Id)
+                                                         .Where(obj => obj.DiscordChannelId == commandContextContainer.Channel.Id)
                                                          .Select(obj => (int?)obj.Id)
                                                          .FirstOrDefaultAsync()
                                                          .ConfigureAwait(false);
@@ -253,7 +259,7 @@ namespace Scruffy.Services.Fractals
                             {
                                 await checkUser.ConfigureAwait(false);
 
-                                action((configurationId.Value, appointmentTimeStamp.Value));
+                                await action((configurationId.Value, appointmentTimeStamp.Value)).ConfigureAwait(false);
 
                                 if (earliestTimeStamp == null
                                  || earliestTimeStamp > appointmentTimeStamp)

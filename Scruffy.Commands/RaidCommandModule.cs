@@ -13,8 +13,12 @@ using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.CoreData;
+using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Entity.Repositories.Raid;
+using Scruffy.Data.Entity.Tables.CoreData;
+using Scruffy.Data.Entity.Tables.Discord;
 using Scruffy.Data.Entity.Tables.Raid;
+using Scruffy.Data.Enumerations.CoreData;
 using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Discord.Attributes;
 using Scruffy.Services.Core.Localization;
@@ -33,15 +37,26 @@ namespace Scruffy.Commands
     [ModuleLifespan(ModuleLifespan.Transient)]
     public class RaidCommandModule : LocatedCommandModuleBase
     {
+        #region Fields
+
+        /// <summary>
+        /// User management service
+        /// </summary>
+        private UserManagementService _userManagementService;
+
+        #endregion // Fields
+
         #region Constructor
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="localizationService">Localization service</param>
-        public RaidCommandModule(LocalizationService localizationService)
-            : base(localizationService)
+        /// <param name="userManagementService">User management service</param>
+        public RaidCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
+            : base(localizationService, userManagementService)
         {
+            _userManagementService = userManagementService;
         }
 
         #endregion // Constructor
@@ -105,8 +120,8 @@ namespace Scruffy.Commands
                                            Day = data.Day,
                                            RegistrationDeadline = data.RegistrationDeadline,
                                            StartTime = data.StartTime,
-                                           ChannelId = commandContextContainer.Channel.Id,
-                                           MessageId = message.Id
+                                           DiscordChannelId = commandContextContainer.Channel.Id,
+                                           DiscordMessageId = message.Id
                                        };
 
                                        dbFactory.GetRepository<RaidDayConfigurationRepository>()
@@ -273,7 +288,10 @@ namespace Scruffy.Commands
                                                                         .ConfigureAwait(false);
                                        if (appointment != null)
                                        {
-                                           if (await RegistrationService.Leave(appointment.Id, commandContextContainer.User.Id)
+                                           var user = await commandContextContainer.GetCurrentUser()
+                                                                                   .ConfigureAwait(false);
+
+                                           if (await RegistrationService.Leave(appointment.Id, user.Id)
                                                                         .ConfigureAwait(false))
                                            {
                                                await MessageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
@@ -324,7 +342,10 @@ namespace Scruffy.Commands
                                                                         .ConfigureAwait(false);
                                        if (appointment != null)
                                        {
-                                           if (await RegistrationService.Leave(appointment.Id, user.Id)
+                                           var internalUser = await _userManagementService.GetUserByDiscordAccountId(user.Id)
+                                                                                          .ConfigureAwait(false);
+
+                                           if (await RegistrationService.Leave(appointment.Id, internalUser.Id)
                                                                         .ConfigureAwait(false))
                                            {
                                                await MessageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
@@ -510,8 +531,9 @@ namespace Scruffy.Commands
             /// Constructor
             /// </summary>
             /// <param name="localizationService">Localization service</param>
-            public RaidRolesCommandModule(LocalizationService localizationService)
-                : base(localizationService)
+            /// <param name="userManagementService">User management service</param>
+            public RaidRolesCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
+                : base(localizationService, userManagementService)
             {
             }
 
@@ -577,8 +599,9 @@ namespace Scruffy.Commands
             /// Constructor
             /// </summary>
             /// <param name="localizationService">Localization service</param>
-            public RaidTemplatesCommandModule(LocalizationService localizationService)
-                : base(localizationService)
+            /// <param name="userManagementService">User management service</param>
+            public RaidTemplatesCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
+                : base(localizationService, userManagementService)
             {
             }
 
@@ -630,8 +653,9 @@ namespace Scruffy.Commands
             /// Constructor
             /// </summary>
             /// <param name="localizationService">Localization service</param>
-            public RaidExperienceLevelsCommandModule(LocalizationService localizationService)
-                : base(localizationService)
+            /// <param name="userManagementService">User management service</param>
+            public RaidExperienceLevelsCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
+                : base(localizationService, userManagementService)
             {
             }
 
@@ -687,12 +711,12 @@ namespace Scruffy.Commands
             /// </summary>
             /// <param name="commandContext">Command context</param>
             /// <param name="aliasName">Alias name</param>
-            /// <param name="users">Users</param>
+            /// <param name="discordUsers">Users</param>
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("set")]
             [RequireGuild]
             [RequireAdministratorPermissions]
-            public Task SetExperienceLevel(CommandContext commandContext, string aliasName, params DiscordUser[] users)
+            public Task SetExperienceLevel(CommandContext commandContext, string aliasName, params DiscordUser[] discordUsers)
             {
                 return InvokeAsync(commandContext,
                                    async commandContextContainer =>
@@ -710,37 +734,53 @@ namespace Scruffy.Commands
                                            {
                                                var changedRanks = new List<(DiscordUser User, long? OldExperienceLevelId, long NewExperienceLevelId)>();
 
-                                               foreach (var user in users)
+                                               foreach (var discordUser in discordUsers)
                                                {
-                                                   dbFactory.GetRepository<UserRepository>()
-                                                            .AddOrRefresh(obj => obj.Id == user.Id,
-                                                                          obj =>
-                                                                          {
-                                                                              if (obj.Id == default)
-                                                                              {
-                                                                                  obj.Id = user.Id;
-                                                                                  obj.CreationTimeStamp = DateTime.Now;
-                                                                              }
+                                                   if (dbFactory.GetRepository<UserRepository>()
+                                                                .Refresh(obj => obj.DiscordAccounts.Any(obj2 => obj2.Id == discordUser.Id),
+                                                                         obj =>
+                                                                         {
+                                                                             if (obj.RaidExperienceLevelId != experienceLevelId)
+                                                                             {
+                                                                                 changedRanks.Add((discordUser,
+                                                                                     obj.RaidExperienceLevelId, experienceLevelId));
+                                                                             }
 
-                                                                              if (obj.RaidExperienceLevelId != experienceLevelId)
-                                                                              {
-                                                                                  changedRanks.Add((user, obj.RaidExperienceLevelId, experienceLevelId));
-                                                                              }
+                                                                             obj.RaidExperienceLevelId = experienceLevelId;
+                                                                         }) == false)
+                                                   {
+                                                       var user = new UserEntity
+                                                                  {
+                                                                      CreationTimeStamp = DateTime.Now,
+                                                                      Type = UserType.DiscordUser,
+                                                                      RaidExperienceLevelId = experienceLevelId
+                                                                  };
 
-                                                                              obj.RaidExperienceLevelId = experienceLevelId;
-                                                                          });
+                                                       if (dbFactory.GetRepository<UserRepository>()
+                                                                    .Add(user))
+                                                       {
+                                                           dbFactory.GetRepository<DiscordAccountRepository>()
+                                                                    .Add(new DiscordAccountEntity
+                                                                         {
+                                                                             Id = discordUser.Id,
+                                                                             UserId = user.Id
+                                                                         });
+
+                                                           changedRanks.Add((discordUser, null, experienceLevelId));
+                                                       }
+                                                   }
                                                }
 
                                                var now = DateTime.Now;
 
-                                               var userIds = users.Select(obj => obj.Id)
-                                                                  .ToList();
+                                               var discordUserIds = discordUsers.Select(obj => obj.Id)
+                                                                         .ToList();
 
                                                var appointments = dbFactory.GetRepository<RaidAppointmentRepository>()
                                                                            .GetQuery()
                                                                            .Where(obj => obj.IsCommitted == false
                                                                                          && obj.TimeStamp > now
-                                                                                         && obj.RaidRegistrations.Any(obj2 => userIds.Contains(obj2.UserId)))
+                                                                                         && obj.RaidRegistrations.Any(obj2 => obj2.User.DiscordAccounts.Any(obj3 => discordUserIds.Contains(obj3.Id))))
                                                                            .Select(obj => new
                                                                                           {
                                                                                               obj.Id,
@@ -819,8 +859,9 @@ namespace Scruffy.Commands
             /// Constructor
             /// </summary>
             /// <param name="localizationService">Localization service</param>
-            public RaidOverviewCommandModule(LocalizationService localizationService)
-                : base(localizationService)
+            /// <param name="userManagementService">User management service</param>
+            public RaidOverviewCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
+                : base(localizationService, userManagementService)
             {
             }
 

@@ -35,6 +35,7 @@ namespace Scruffy.Services.Core
 
             _serviceCollection.AddTransient<UserManagementService>();
             _serviceCollection.AddTransient<DebugService>();
+            _serviceCollection.AddTransient<CommandContextContainer>();
 
             foreach (var type in Assembly.Load("Scruffy.Services")
                                          .GetTypes()
@@ -53,7 +54,7 @@ namespace Scruffy.Services.Core
         /// <summary>
         /// Current instance
         /// </summary>
-        public static GlobalServiceProvider Current { get; } = new GlobalServiceProvider();
+        public static GlobalServiceProvider Current { get; } = new ();
 
         #endregion // Properties
 

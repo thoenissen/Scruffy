@@ -2,13 +2,13 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Scruffy.Data.Entity.Tables.Account
+namespace Scruffy.Data.Entity.Tables.GuildWars2.Account
 {
     /// <summary>
     /// Daily logins
     /// </summary>
-    [Table("AccountDailyLoginChecks")]
-    public class AccountDailyLoginCheckEntity
+    [Table("GuildWarsAccountDailyLoginChecks")]
+    public class GuildWarsAccountDailyLoginCheckEntity
     {
         #region Properties
 
@@ -29,7 +29,7 @@ namespace Scruffy.Data.Entity.Tables.Account
         /// Account
         /// </summary>
         [ForeignKey(nameof(Name))]
-        public AccountEntity AccountEntity { get; set; }
+        public GuildWarsAccountEntity GuildWarsAccountEntity { get; set; }
 
         #endregion // Navigation properties
 

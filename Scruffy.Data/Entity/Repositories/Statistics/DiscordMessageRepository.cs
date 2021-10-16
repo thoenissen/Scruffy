@@ -53,10 +53,10 @@ namespace Scruffy.Data.Entity.Repositories.Statistics
                                     .ConfigureAwait(false);
 
                     await using (var sqlCommand = new SqlCommand(@"CREATE TABLE #DiscordMessages (
-                                                                       [ServerId] decimal(20,0) NOT NULL,
-                                                                       [ChannelId] decimal(20,0) NOT NULL,
-                                                                       [MessageId] decimal(20,0) NOT NULL,
-                                                                       [UserId] decimal(20,0) NOT NULL,
+                                                                       [DiscordServerId] decimal(20,0) NOT NULL,
+                                                                       [DiscordChannelId] decimal(20,0) NOT NULL,
+                                                                       [DiscordMessageId] decimal(20,0) NOT NULL,
+                                                                       [DiscordAccountId] decimal(20,0) NOT NULL,
                                                                        [TimeStamp] datetime2 NOT NULL,
                                                                    )",
                                                                  connection))
@@ -65,10 +65,10 @@ namespace Scruffy.Data.Entity.Repositories.Statistics
                     }
 
                     var dataTable = new DataTable();
-                    dataTable.Columns.Add(nameof(DiscordMessageEntity.ServerId), typeof(ulong));
-                    dataTable.Columns.Add(nameof(DiscordMessageEntity.ChannelId), typeof(ulong));
-                    dataTable.Columns.Add(nameof(DiscordMessageEntity.MessageId), typeof(ulong));
-                    dataTable.Columns.Add(nameof(DiscordMessageEntity.UserId), typeof(ulong));
+                    dataTable.Columns.Add(nameof(DiscordMessageEntity.DiscordServerId), typeof(ulong));
+                    dataTable.Columns.Add(nameof(DiscordMessageEntity.DiscordChannelId), typeof(ulong));
+                    dataTable.Columns.Add(nameof(DiscordMessageEntity.DiscordMessageId), typeof(ulong));
+                    dataTable.Columns.Add(nameof(DiscordMessageEntity.DiscordAccountId), typeof(ulong));
                     dataTable.Columns.Add(nameof(DiscordMessageEntity.TimeStamp), typeof(DateTime));
 
                     foreach (var entry in entries)
@@ -88,15 +88,15 @@ namespace Scruffy.Data.Entity.Repositories.Statistics
                     {
                         await using (var sqlCommand = new SqlCommand(@"MERGE INTO [DiscordMessages] AS [TARGET]
                                                                                USING #DiscordMessages AS [Source]
-                                                                                  ON [Target].[ServerId] = [Source].[ServerId]
-                                                                                 AND  [Target].[ChannelId] = [Source].[ChannelId]
-                                                                                 AND  [Target].[MessageId] = [Source].[MessageId]
+                                                                                  ON [Target].[DiscordServerId] = [Source].[DiscordServerId]
+                                                                                 AND  [Target].[DiscordChannelId] = [Source].[DiscordChannelId]
+                                                                                 AND  [Target].[DiscordMessageId] = [Source].[DiscordMessageId]
                                                                    WHEN MATCHED THEN
                                                                               UPDATE 
                                                                                 SET [Target].[IsBatchCommitted] = 1
                                                                    WHEN NOT MATCHED THEN
-                                                                              INSERT ( [ServerId], [ChannelId], [MessageId], [UserId], [TimeStamp], [IsBatchCommitted])
-                                                                              VALUES ( [Source].[ServerId], [Source].[ChannelId], [Source].[MessageId], [Source].[UserId], [Source].[TimeStamp], 1); ",
+                                                                              INSERT ( [DiscordServerId], [DiscordChannelId], [DiscordMessageId], [DiscordAccountId], [TimeStamp], [IsBatchCommitted])
+                                                                              VALUES ( [Source].[DiscordServerId], [Source].[DiscordChannelId], [Source].[DiscordMessageId], [Source].[DiscordAccountId], [Source].[TimeStamp], 1); ",
                                                                      connection))
                         {
                             sqlCommand.ExecuteNonQuery();
@@ -110,8 +110,8 @@ namespace Scruffy.Data.Entity.Repositories.Statistics
                                                                                  AND  [Target].[ChannelId] = [Source].[ChannelId]
                                                                                  AND  [Target].[MessageId] = [Source].[MessageId]
                                                                    WHEN NOT MATCHED THEN
-                                                                              INSERT ( [ServerId], [ChannelId], [MessageId], [UserId], [TimeStamp], [IsBatchCommitted])
-                                                                              VALUES ( [Source].[ServerId], [Source].[ChannelId], [Source].[MessageId], [Source].[UserId], [Source].[TimeStamp], 0); ",
+                                                                              INSERT ( [DiscordServerId], [DiscordChannelId], [DiscordMessageId], [DiscordAccountId], [TimeStamp], [IsBatchCommitted])
+                                                                              VALUES ( [Source].[DiscordServerId], [Source].[DiscordChannelId], [Source].[DiscordMessageId], [Source].[DiscordAccountId], [Source].[TimeStamp], 0); ",
                                                                      connection))
                         {
                             sqlCommand.ExecuteNonQuery();

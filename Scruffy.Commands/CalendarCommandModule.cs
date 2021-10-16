@@ -4,8 +4,10 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 
 using Scruffy.Services.Calendar;
+using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Discord.Attributes;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.CoreData;
 
 namespace Scruffy.Commands
 {
@@ -26,8 +28,9 @@ namespace Scruffy.Commands
         /// Constructor
         /// </summary>
         /// <param name="localizationService">Localization service</param>
-        public CalendarCommandModule(LocalizationService localizationService)
-            : base(localizationService)
+        /// <param name="userManagementService">User management service</param>
+        public CalendarCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
+            : base(localizationService, userManagementService)
         {
         }
 
@@ -63,7 +66,7 @@ namespace Scruffy.Commands
             return InvokeAsync(commandContext,
                                async commandContextContainer =>
                                {
-                                   await CalendarScheduleService.AddOneTimeEvent(commandContext)
+                                   await CalendarScheduleService.AddOneTimeEvent(commandContextContainer)
                                                                 .ConfigureAwait(false);
                                });
         }
@@ -109,8 +112,9 @@ namespace Scruffy.Commands
             /// Constructor
             /// </summary>
             /// <param name="localizationService">Localization service</param>
-            public CalendarTemplateCommandModule(LocalizationService localizationService)
-                : base(localizationService)
+            /// <param name="userManagementService">User management service</param>
+            public CalendarTemplateCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
+                : base(localizationService, userManagementService)
             {
             }
 
@@ -141,7 +145,7 @@ namespace Scruffy.Commands
                 return InvokeAsync(commandContext,
                                    async commandContextContainer =>
                                    {
-                                       await CalendarTemplateService.RunAssistantAsync(commandContext)
+                                       await CalendarTemplateService.RunAssistantAsync(commandContextContainer)
                                                                     .ConfigureAwait(false);
                                    });
             }
@@ -171,8 +175,9 @@ namespace Scruffy.Commands
             /// Constructor
             /// </summary>
             /// <param name="localizationService">Localization service</param>
-            public CalendarScheduleCommandModule(LocalizationService localizationService)
-                : base(localizationService)
+            /// <param name="userManagementService">User management service</param>
+            public CalendarScheduleCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
+                : base(localizationService, userManagementService)
             {
             }
 
@@ -203,7 +208,7 @@ namespace Scruffy.Commands
                 return InvokeAsync(commandContext,
                                    async commandContextContainer =>
                                    {
-                                       await CalendarScheduleService.RunAssistantAsync(commandContext)
+                                       await CalendarScheduleService.RunAssistantAsync(commandContextContainer)
                                                                     .ConfigureAwait(false);
                                    });
             }

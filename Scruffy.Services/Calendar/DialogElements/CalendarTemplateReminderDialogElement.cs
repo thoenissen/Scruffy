@@ -52,12 +52,12 @@ namespace Scruffy.Services.Calendar.DialogElements
         {
             return _reactions ??= new List<ReactionData<CalenderTemplateReminderData>>
                                   {
-                                      new ReactionData<CalenderTemplateReminderData>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetCheckEmoji(CommandContext.Client),
                                           Func = RunSubForm<CalenderTemplateReminderData>,
                                       },
-                                      new ReactionData<CalenderTemplateReminderData>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetCrossEmoji(CommandContext.Client),
                                           Func = () => Task.FromResult<CalenderTemplateReminderData>(null)

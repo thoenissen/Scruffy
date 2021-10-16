@@ -50,7 +50,8 @@ namespace Scruffy.Services.Raid
                                                 obj.DiscordEmoji,
                                                 obj.Description,
 
-                                                Users = obj.Users.OrderBy(obj2 => obj2.Id)
+                                                Users = obj.Users.SelectMany(obj2 => obj2.DiscordAccounts)
+                                                                 .OrderBy(obj2 => obj2.Id)
                                                                  .Select(obj2 => obj2.Id)
                                             })
                                             .ToListAsync()

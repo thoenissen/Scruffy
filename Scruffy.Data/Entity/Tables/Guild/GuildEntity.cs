@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-
 using Scruffy.Data.Entity.Tables.CoreData;
 
-namespace Scruffy.Data.Entity.Tables.GuildAdministration
+namespace Scruffy.Data.Entity.Tables.Guild
 {
     /// <summary>
     /// Guilds

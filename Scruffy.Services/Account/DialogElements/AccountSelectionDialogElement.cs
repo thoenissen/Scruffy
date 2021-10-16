@@ -61,7 +61,7 @@ namespace Scruffy.Services.Account.DialogElements
             {
                 foreach (var accountName in dbFactory.GetRepository<AccountRepository>()
                                                      .GetQuery()
-                                                     .Where(obj => obj.UserId == CommandContext.User.Id)
+                                                     .Where(obj => obj.User.DiscordAccounts.Any(obj2 => obj2.Id == CommandContext.User.Id))
                                                      .Select(obj => obj.Name))
                 {
                     typesField.Append('`');

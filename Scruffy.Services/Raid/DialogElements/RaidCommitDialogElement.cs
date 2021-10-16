@@ -13,6 +13,7 @@ using Scruffy.Data.Entity.Tables.Raid;
 using Scruffy.Data.Services.Raid;
 using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.CoreData;
 using Scruffy.Services.Raid.DialogElements.Forms;
 
 namespace Scruffy.Services.Raid.DialogElements
@@ -23,6 +24,11 @@ namespace Scruffy.Services.Raid.DialogElements
     public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
     {
         #region Fields
+
+        /// <summary>
+        /// User management service
+        /// </summary>
+        private readonly UserManagementService _userManagementService;
 
         /// <summary>
         /// Reactions
@@ -47,11 +53,13 @@ namespace Scruffy.Services.Raid.DialogElements
         /// Constructor
         /// </summary>
         /// <param name="commitData">Commit data</param>
+        /// <param name="userManagementService">User management service</param>
         /// <param name="localizationService">Localization service</param>
-        public RaidCommitDialogElement(LocalizationService localizationService, RaidCommitContainer commitData)
+        public RaidCommitDialogElement(LocalizationService localizationService, UserManagementService userManagementService, RaidCommitContainer commitData)
             : base(localizationService)
         {
             _localizationService = localizationService;
+            _userManagementService = userManagementService;
             _commitData = commitData;
         }
 
@@ -80,7 +88,7 @@ namespace Scruffy.Services.Raid.DialogElements
                                             .OrderByDescending(obj => obj.Points))
             {
                 var discordUser = await CommandContext.Client
-                                                      .GetUserAsync(user.UserId)
+                                                      .GetUserAsync(user.DiscordUserId)
                                                       .ConfigureAwait(false);
 
                 var currentLine = $"{Formatter.InlineCode(user.Points.ToString("0.0"))} - {DiscordEmojiService.GetGuildEmoji(CommandContext.Client, user.DiscordEmoji)} {discordUser.Mention}";
@@ -114,7 +122,7 @@ namespace Scruffy.Services.Raid.DialogElements
         {
             return _reactions ??= new List<ReactionData<bool>>
                                   {
-                                      new ReactionData<bool>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetAddEmoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("AddCommand", "{0} Add user", DiscordEmojiService.GetAddEmoji(CommandContext.Client)),
@@ -123,7 +131,7 @@ namespace Scruffy.Services.Raid.DialogElements
                                                      var data = await RunSubForm<RaidCommitUserFormData>().ConfigureAwait(false);
 
                                                      var user = _commitData.Users
-                                                                           .FirstOrDefault(obj => obj.UserId == data.User.Id);
+                                                                           .FirstOrDefault(obj => obj.DiscordUserId == data.User.Id);
 
                                                      if (user != null)
                                                      {
@@ -135,14 +143,14 @@ namespace Scruffy.Services.Raid.DialogElements
                                                                     .Add(new RaidCommitUserData
                                                                          {
                                                                              Points = data.Points,
-                                                                             UserId = data.User.Id
+                                                                             DiscordUserId = data.User.Id
                                                                          });
                                                      }
 
                                                      return true;
                                                  }
                                       },
-                                      new ReactionData<bool>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetEditEmoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("SetPointsCommand", "{0} Set points", DiscordEmojiService.GetEditEmoji(CommandContext.Client)),
@@ -151,7 +159,7 @@ namespace Scruffy.Services.Raid.DialogElements
                                                      var data = await RunSubForm<RaidCommitUserFormData>().ConfigureAwait(false);
 
                                                      var user = _commitData.Users
-                                                                           .FirstOrDefault(obj => obj.UserId == data.User.Id);
+                                                                           .FirstOrDefault(obj => obj.DiscordUserId == data.User.Id);
 
                                                      if (user != null)
                                                      {
@@ -161,7 +169,7 @@ namespace Scruffy.Services.Raid.DialogElements
                                                      return true;
                                                  }
                                       },
-                                      new ReactionData<bool>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("RemoveCommand", "{0} Remove user", DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client)),
@@ -170,7 +178,7 @@ namespace Scruffy.Services.Raid.DialogElements
                                                      var discordUser = await RunSubElement<RaidCommitRemoveUserDialogElement, DiscordUser>(new RaidCommitRemoveUserDialogElement(_localizationService)).ConfigureAwait(false);
 
                                                      var user = _commitData.Users
-                                                                           .FirstOrDefault(obj => obj.UserId == discordUser.Id);
+                                                                           .FirstOrDefault(obj => obj.DiscordUserId == discordUser.Id);
 
                                                      if (user != null)
                                                      {
@@ -180,29 +188,32 @@ namespace Scruffy.Services.Raid.DialogElements
                                                      return true;
                                                  }
                                       },
-                                      new ReactionData<bool>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetCheckEmoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("CommitCommand", "{0} Commit", DiscordEmojiService.GetCheckEmoji(CommandContext.Client)),
-                                          Func = () =>
+                                          Func = async () =>
                                                  {
                                                      using (var dbFactory = RepositoryFactory.CreateInstance())
                                                      {
-                                                         foreach (var user in _commitData.Users)
+                                                         foreach (var commitUser in _commitData.Users)
                                                          {
+                                                             var user = await _userManagementService.GetUserByDiscordAccountId(commitUser.DiscordUserId)
+                                                                                                    .ConfigureAwait(false);
+
                                                              dbFactory.GetRepository<RaidRegistrationRepository>()
                                                                       .AddOrRefresh(obj => obj.AppointmentId == _commitData.AppointmentId
-                                                                                        && obj.UserId == user.UserId,
+                                                                                        && obj.UserId == user.Id,
                                                                                     obj =>
                                                                                     {
                                                                                         if (obj.Id == 0)
                                                                                         {
                                                                                             obj.AppointmentId = _commitData.AppointmentId;
                                                                                             obj.RegistrationTimeStamp = DateTime.Now;
-                                                                                            obj.UserId = user.UserId;
+                                                                                            obj.UserId = user.Id;
                                                                                         }
 
-                                                                                        obj.Points = user.Points;
+                                                                                        obj.Points = commitUser.Points;
                                                                                     });
                                                          }
 
@@ -305,10 +316,10 @@ namespace Scruffy.Services.Raid.DialogElements
                                                                   .Add(nextAppointment);
                                                      }
 
-                                                     return Task.FromResult(false);
+                                                     return false;
                                                  }
                                       },
-                                      new ReactionData<bool>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetCrossEmoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmojiService.GetCrossEmoji(CommandContext.Client)),

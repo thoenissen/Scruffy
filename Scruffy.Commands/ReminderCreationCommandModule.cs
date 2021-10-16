@@ -15,6 +15,7 @@ using DSharpPlus.Interactivity.Extensions;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Reminder;
 using Scruffy.Data.Entity.Tables.Reminder;
+using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Discord.Attributes;
 using Scruffy.Services.Core.JobScheduler;
 using Scruffy.Services.Core.Localization;
@@ -37,8 +38,9 @@ namespace Scruffy.Commands
         /// Constructor
         /// </summary>
         /// <param name="localizationService">Localization service</param>
-        public ReminderCreationCommandModule(LocalizationService localizationService)
-            : base(localizationService)
+        /// <param name="userManagementService">User management service</param>
+        public ReminderCreationCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
+            : base(localizationService, userManagementService)
         {
         }
 
@@ -74,7 +76,7 @@ namespace Scruffy.Commands
             return InvokeAsync(commandContext,
                                async commandContextContainer =>
                                {
-                                   var checkUser = UserManagementService.CheckUserAsync(commandContext.User.Id);
+                                   var checkUser = UserManagementService.CheckDiscordAccountAsync(commandContext.User.Id);
 
                                    var timeSpanValidation = new Regex(@"\d+(h|m|s)");
                                    if (timeSpanValidation.IsMatch(timeSpan))
@@ -87,8 +89,8 @@ namespace Scruffy.Commands
 
                                            var reminderEntity = new OneTimeReminderEntity
                                                                 {
-                                                                    UserId = commandContext.User.Id,
-                                                                    ChannelId = commandContext.Channel.Id,
+                                                                    DiscordAccountId = commandContext.User.Id,
+                                                                    DiscordChannelId = commandContext.Channel.Id,
                                                                     TimeStamp = timeSpan[^1..] switch
                                                                     {
                                                                         "h" => DateTime.Now.AddHours(amount),
@@ -172,7 +174,7 @@ namespace Scruffy.Commands
             return InvokeAsync(commandContext,
                                async commandContextContainer =>
                                {
-                                   var checkUser = UserManagementService.CheckUserAsync(commandContext.User.Id);
+                                   var checkUser = UserManagementService.CheckDiscordAccountAsync(commandContext.User.Id);
 
                                    DateTime? timeStamp = null;
                                    string reminderMessage = null;
@@ -211,8 +213,8 @@ namespace Scruffy.Commands
                                        {
                                            var reminderEntity = new OneTimeReminderEntity
                                                                 {
-                                                                    UserId = commandContext.User.Id,
-                                                                    ChannelId = commandContext.Channel.Id,
+                                                                    DiscordAccountId = commandContext.User.Id,
+                                                                    DiscordChannelId = commandContext.Channel.Id,
                                                                     TimeStamp = timeStamp.Value,
                                                                     Message = reminderMessage
                                                                 };
@@ -437,7 +439,7 @@ namespace Scruffy.Commands
                                                var entity = new WeeklyReminderEntity
                                                {
                                                    DayOfWeek = dayOfWeek,
-                                                   ChannelId = channelId,
+                                                   DiscordChannelId = channelId,
                                                    PostTime = postTimeSpan,
                                                    DeletionTime = deletionTimeSpan,
                                                    Message = userResponse.Result.Content

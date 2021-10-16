@@ -20,7 +20,7 @@ namespace Scruffy.Data.Entity.Tables.Calendar
         /// <summary>
         /// Id of the user
         /// </summary>
-        public ulong UserId { get; set; }
+        public long UserId { get; set; }
 
         /// <summary>
         /// Event leader

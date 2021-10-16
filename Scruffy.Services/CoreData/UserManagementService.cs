@@ -6,8 +6,12 @@ using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.CoreData;
+using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Data.Entity.Tables.CoreData;
+using Scruffy.Data.Entity.Tables.Discord;
+using Scruffy.Data.Enumerations.CoreData;
+using Scruffy.Data.Services.CoreData;
 
 namespace Scruffy.Services.CoreData
 {
@@ -21,20 +25,33 @@ namespace Scruffy.Services.CoreData
         /// <summary>
         /// Checks the given user and creates a new entry of the user doesn't exists
         /// </summary>
-        /// <param name="userId">Id of the user</param>
+        /// <param name="discordUserId">Id of the discord user</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task CheckUserAsync(ulong userId)
+        public async Task CheckDiscordAccountAsync(ulong discordUserId)
         {
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
-                var userRepository = dbFactory.GetRepository<UserRepository>();
-                if (await userRepository.GetQuery().AnyAsync(obj => obj.Id == userId).ConfigureAwait(false) == false)
+                if (await dbFactory.GetRepository<DiscordAccountRepository>()
+                                   .GetQuery()
+                                   .AnyAsync(obj => obj.Id == discordUserId)
+                                   .ConfigureAwait(false) == false)
                 {
-                    userRepository.Add(new UserEntity
-                                       {
-                                           Id = userId,
-                                           CreationTimeStamp = DateTime.Now
-                                       });
+                    var user = new UserEntity
+                               {
+                                   CreationTimeStamp = DateTime.Now,
+                                   Type = UserType.DiscordUser
+                               };
+
+                    if (dbFactory.GetRepository<UserRepository>()
+                                 .Add(user))
+                    {
+                        dbFactory.GetRepository<DiscordAccountRepository>()
+                                 .Add(new DiscordAccountEntity
+                                          {
+                                              Id = discordUserId,
+                                              UserId = user.Id
+                                          });
+                    }
                 }
             }
         }
@@ -42,16 +59,16 @@ namespace Scruffy.Services.CoreData
         /// <summary>
         /// Get user raid experience rank
         /// </summary>
-        /// <param name="userId">Id of the user</param>
+        /// <param name="discordAccountId">Id of the discord account</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task<int> GetRaidExperienceLevelRank(ulong userId)
+        public async Task<int> GetRaidExperienceLevelRankByDiscordUserId(ulong discordAccountId)
         {
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
-                var rank = await dbFactory.GetRepository<UserRepository>()
+                var rank = await dbFactory.GetRepository<DiscordAccountRepository>()
                                           .GetQuery()
-                                          .Where(obj => obj.Id == userId)
-                                          .Select(obj => obj.RaidExperienceLevel != null ? obj.RaidExperienceLevel.Rank : 0)
+                                          .Where(obj => obj.Id == discordAccountId)
+                                          .Select(obj => obj.User.RaidExperienceLevel != null ? obj.User.RaidExperienceLevel.Rank : 0)
                                           .FirstOrDefaultAsync()
                                           .ConfigureAwait(false);
 
@@ -65,21 +82,60 @@ namespace Scruffy.Services.CoreData
 
                     rank = defaultRank.Rank;
 
-                    dbFactory.GetRepository<UserRepository>()
-                             .AddOrRefresh(obj => obj.Id == userId,
-                                           obj =>
-                                           {
-                                               if (obj.Id == 0)
-                                               {
-                                                   obj.Id = userId;
-                                                   obj.CreationTimeStamp = DateTime.Now;
-                                               }
+                    if (dbFactory.GetRepository<UserRepository>()
+                                 .Refresh(obj => obj.DiscordAccounts.Any(obj2 => obj2.Id == discordAccountId),
+                                          obj => obj.RaidExperienceLevelId = defaultRank.Id) == false)
+                    {
+                        var user = new UserEntity
+                                   {
+                                       CreationTimeStamp = DateTime.Now,
+                                       Type = UserType.DiscordUser,
+                                       RaidExperienceLevelId = defaultRank.Id
+                                   };
 
-                                               obj.RaidExperienceLevelId = defaultRank.Id;
-                                           });
+                        if (dbFactory.GetRepository<UserRepository>()
+                                     .Add(user))
+                        {
+                            dbFactory.GetRepository<DiscordAccountRepository>()
+                                     .Add(new DiscordAccountEntity
+                                          {
+                                              Id = discordAccountId,
+                                              UserId = user.Id
+                                          });
+                        }
+                    }
                 }
 
                 return rank;
+            }
+        }
+
+        /// <summary>
+        /// Get user data
+        /// </summary>
+        /// <param name="discordAccountId">Id of the discord account</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task<UserData> GetUserByDiscordAccountId(ulong discordAccountId)
+        {
+            using (var dbFactory = RepositoryFactory.CreateInstance())
+            {
+                var userData =  await dbFactory.GetRepository<DiscordAccountRepository>()
+                                               .GetQuery()
+                                               .Where(obj => obj.Id == discordAccountId)
+                                               .Select(obj => new UserData
+                                                              {
+                                                                  Id = obj.UserId,
+                                                                  ExperienceLevelRank = obj.User.RaidExperienceLevel != null ? obj.User.RaidExperienceLevel.Rank : 0
+                                                              })
+                                               .FirstOrDefaultAsync()
+                                               .ConfigureAwait(false);
+
+                if (userData?.ExperienceLevelRank == 0)
+                {
+                    userData.ExperienceLevelRank = await GetRaidExperienceLevelRankByDiscordUserId(discordAccountId).ConfigureAwait(false);
+                }
+
+                return userData;
             }
         }
 

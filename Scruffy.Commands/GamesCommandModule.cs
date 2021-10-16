@@ -3,8 +3,10 @@
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 
+using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Discord.Attributes;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.CoreData;
 using Scruffy.Services.Games;
 
 namespace Scruffy.Commands
@@ -24,8 +26,9 @@ namespace Scruffy.Commands
         /// Constructor
         /// </summary>
         /// <param name="localizationService">Localization service</param>
-        public GamesCommandModule(LocalizationService localizationService)
-            : base(localizationService)
+        /// <param name="userManagementService">User management service</param>
+        public GamesCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
+            : base(localizationService, userManagementService)
         {
         }
 
@@ -48,8 +51,9 @@ namespace Scruffy.Commands
             /// Constructor
             /// </summary>
             /// <param name="localizationService">Localization service</param>
-            public GamesCounterCommandModule(LocalizationService localizationService)
-                : base(localizationService)
+            /// <param name="userManagementService">User management service</param>
+            public GamesCounterCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
+                : base(localizationService, userManagementService)
             {
             }
 
@@ -132,8 +136,9 @@ namespace Scruffy.Commands
             /// Constructor
             /// </summary>
             /// <param name="localizationService">Localization service</param>
-            public GamesWordChainCommandModule(LocalizationService localizationService)
-                : base(localizationService)
+            /// <param name="userManagementService">User management service</param>
+            public GamesWordChainCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
+                : base(localizationService, userManagementService)
             {
             }
 

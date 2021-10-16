@@ -12,22 +12,22 @@ namespace Scruffy.Data.Entity.Tables.Statistics
         /// <summary>
         /// Id of the server
         /// </summary>
-        public ulong ServerId { get; set; }
+        public ulong DiscordServerId { get; set; }
 
         /// <summary>
         /// Id of the channel
         /// </summary>
-        public ulong ChannelId { get; set; }
+        public ulong DiscordChannelId { get; set; }
 
         /// <summary>
         /// Id of the user
         /// </summary>
-        public ulong UserId { get; set; }
+        public ulong DiscordAccountId { get; set; }
 
         /// <summary>
         /// Id of the message
         /// </summary>
-        public ulong MessageId { get; set; }
+        public ulong DiscordMessageId { get; set; }
 
         /// <summary>
         /// Time stamp

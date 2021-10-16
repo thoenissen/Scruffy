@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-
 using Scruffy.Data.Entity.Tables.CoreData;
 
-namespace Scruffy.Data.Entity.Tables.GuildAdministration
+namespace Scruffy.Data.Entity.Tables.Guild
 {
     /// <summary>
     /// Current special rank points of a user
@@ -20,7 +19,7 @@ namespace Scruffy.Data.Entity.Tables.GuildAdministration
         /// <summary>
         /// Id of the user
         /// </summary>
-        public ulong UserId { get; set; }
+        public long UserId { get; set; }
 
         /// <summary>
         /// Current points

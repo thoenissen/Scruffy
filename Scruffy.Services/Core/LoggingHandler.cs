@@ -23,7 +23,7 @@ namespace Scruffy.Services.Core
         /// <summary>
         /// Lock
         /// </summary>
-        private readonly object _lock = new object();
+        private readonly object _lock = new ();
 
         /// <summary>
         /// Stop watch

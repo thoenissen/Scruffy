@@ -1,15 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
 using Scruffy.Data.Entity.Tables.CoreData;
 
-namespace Scruffy.Data.Entity.Tables.Account
+namespace Scruffy.Data.Entity.Tables.GuildWars2.Account
 {
     /// <summary>
     /// Account
     /// </summary>
-    [Table("Accounts")]
-    public class AccountEntity
+    [Table("GuildWarsAccounts")]
+    public class GuildWarsAccountEntity
     {
         #region Properties
 
@@ -23,7 +22,7 @@ namespace Scruffy.Data.Entity.Tables.Account
         /// <summary>
         /// Id of the user
         /// </summary>
-        public ulong UserId { get; set; }
+        public long UserId { get; set; }
 
         /// <summary>
         /// dps.report user token
@@ -43,13 +42,14 @@ namespace Scruffy.Data.Entity.Tables.Account
         /// <summary>
         /// Id of the word
         /// </summary>
-        public long? WordId { get; set; }
+        public long? WorldId { get; set; }
 
         #region Navigation properties
 
         /// <summary>
         /// User
         /// </summary>
+        [ForeignKey(nameof(UserId))]
         public UserEntity User { get; set; }
 
         #endregion // Navigation properties

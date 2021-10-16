@@ -2,14 +2,14 @@
 
 using Scruffy.Data.Entity.Queryable.Account;
 using Scruffy.Data.Entity.Repositories.Base;
-using Scruffy.Data.Entity.Tables.Account;
+using Scruffy.Data.Entity.Tables.GuildWars2.Account;
 
 namespace Scruffy.Data.Entity.Repositories.Account
 {
     /// <summary>
-    /// Repository for accessing <see cref="AccountDailyLoginCheckEntity"/>
+    /// Repository for accessing <see cref="GuildWarsAccountDailyLoginCheckEntity"/>
     /// </summary>
-    public class AccountDailyLoginCheckRepository : RepositoryBase<AccountDailyLoginCheckQueryable, AccountDailyLoginCheckEntity>
+    public class AccountDailyLoginCheckRepository : RepositoryBase<AccountDailyLoginCheckQueryable, GuildWarsAccountDailyLoginCheckEntity>
     {
         #region Constructor
 

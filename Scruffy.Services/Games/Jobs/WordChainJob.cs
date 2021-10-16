@@ -25,7 +25,7 @@ namespace Scruffy.Services.Games.Jobs
         /// <summary>
         /// Words
         /// </summary>
-        private static ConcurrentBag<string> _words = new ConcurrentBag<string>
+        private static ConcurrentBag<string> _words = new ()
                                                       {
                                                           "Aleepeep",
                                                           "Anroov",

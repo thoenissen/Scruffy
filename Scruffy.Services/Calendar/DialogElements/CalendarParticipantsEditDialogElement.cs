@@ -31,6 +31,9 @@ namespace Scruffy.Services.Calendar.DialogElements
         /// </summary>
         private List<ReactionData<bool>> _reactions;
 
+        /// <summary>
+        /// User management service
+        /// </summary>
         private UserManagementService _userManagementService;
 
         #endregion // Fields
@@ -80,7 +83,10 @@ namespace Scruffy.Services.Calendar.DialogElements
                                                    .Where(obj => obj.AppointmentId == _data.AppointmentId)
                                                    .Select(obj => new
                                                                   {
-                                                                      obj.UserId,
+                                                                      UserId = obj.User
+                                                                                  .DiscordAccounts
+                                                                                  .Select(obj2 => obj2.Id)
+                                                                                  .FirstOrDefault(),
                                                                       obj.IsLeader
                                                                   }))
                     {
@@ -134,7 +140,7 @@ namespace Scruffy.Services.Calendar.DialogElements
         {
             return _reactions ??= new List<ReactionData<bool>>
                                   {
-                                      new ReactionData<bool>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetAddEmoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("AddUserCommand", "{0} Add user", DiscordEmojiService.GetAddEmoji(CommandContext.Client)),
@@ -159,7 +165,7 @@ namespace Scruffy.Services.Calendar.DialogElements
                                                      return true;
                                                  }
                                       },
-                                      new ReactionData<bool>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetAdd2Emoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("AddVoiceChannelCommand", "{0} Add channel", DiscordEmojiService.GetAdd2Emoji(CommandContext.Client)),
@@ -184,7 +190,7 @@ namespace Scruffy.Services.Calendar.DialogElements
                                                      return true;
                                                  }
                                       },
-                                      new ReactionData<bool>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("RemoveUserCommand", "{0} Remove user", DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client)),
@@ -206,7 +212,7 @@ namespace Scruffy.Services.Calendar.DialogElements
                                                      return true;
                                                  }
                                       },
-                                      new ReactionData<bool>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetStarEmoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("SetLeaderCommand", "{0} Leader", DiscordEmojiService.GetStarEmoji(CommandContext.Client)),
@@ -236,7 +242,7 @@ namespace Scruffy.Services.Calendar.DialogElements
                                                      return true;
                                                  }
                                       },
-                                      new ReactionData<bool>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetCheckEmoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("CommitCommand", "{0} Commit", DiscordEmojiService.GetCheckEmoji(CommandContext.Client)),
@@ -249,14 +255,17 @@ namespace Scruffy.Services.Calendar.DialogElements
 
                                                          foreach (var entry in _data.Participants)
                                                          {
-                                                             await _userManagementService.CheckUserAsync(entry.Member.Id)
+                                                             await _userManagementService.CheckDiscordAccountAsync(entry.Member.Id)
                                                                                          .ConfigureAwait(false);
+
+                                                             var user = await _userManagementService.GetUserByDiscordAccountId(entry.Member.Id)
+                                                                                                    .ConfigureAwait(false);
 
                                                              if (dbFactory.GetRepository<CalendarAppointmentParticipantRepository>()
                                                                       .Add(new Data.Entity.Tables.Calendar.CalendarAppointmentParticipantEntity
                                                                            {
                                                                                AppointmentId = _data.AppointmentId,
-                                                                               UserId = entry.Member.Id,
+                                                                               UserId = user.Id,
                                                                                IsLeader = entry.IsLeader
                                                                            }) == false)
                                                              {
@@ -272,7 +281,7 @@ namespace Scruffy.Services.Calendar.DialogElements
                                                      return false;
                                                  }
                                       },
-                                      new ReactionData<bool>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetCrossEmoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmojiService.GetCrossEmoji(CommandContext.Client)),

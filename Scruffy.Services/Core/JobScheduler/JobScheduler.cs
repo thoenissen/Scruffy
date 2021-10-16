@@ -136,11 +136,11 @@ namespace Scruffy.Services.Core.JobScheduler
                                                                   obj.Id,
                                                                   obj.CalendarAppointmentTemplate.ReminderTime,
                                                                   obj.TimeStamp,
-                                                                  obj.ReminderMessageId
+                                                                  obj.DiscordMessageId
                                                               })
                                                .ToList())
                 {
-                    if (entry.ReminderMessageId == null
+                    if (entry.DiscordMessageId == null
                      && entry.TimeStamp > DateTime.Now)
                     {
                         JobManager.AddJob(new CalendarReminderPostJob(entry.Id), obj => obj.ToRunOnceAt(DateTime.Today.Add(entry.ReminderTime.Value)));

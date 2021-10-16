@@ -56,8 +56,8 @@ namespace Scruffy.Services.Calendar.Jobs
                                         .Where(obj => obj.Id == _id)
                                         .Select(obj => new
                                         {
-                                            obj.ReminderChannelId,
-                                            obj.ReminderMessageId
+                                            ReminderChannelId = obj.DiscordChannelId,
+                                            ReminderMessageId = obj.DiscordMessageId
                                         })
                                         .FirstOrDefault();
 
@@ -79,8 +79,8 @@ namespace Scruffy.Services.Calendar.Jobs
                                  .Refresh(obj => obj.Id == _id,
                                           obj =>
                                           {
-                                              obj.ReminderChannelId = null;
-                                              obj.ReminderMessageId = null;
+                                              obj.DiscordChannelId = null;
+                                              obj.DiscordMessageId = null;
                                           });
                     }
                 }

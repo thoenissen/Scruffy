@@ -35,10 +35,10 @@ namespace Scruffy.Services.Core
             {
                 _roles = new ConcurrentDictionary<ulong, ulong>(dbFactory.GetRepository<ServerConfigurationRepository>()
                                                                          .GetQuery()
-                                                                         .Where(obj => obj.AdministratorRoleId != null)
+                                                                         .Where(obj => obj.DiscordAdministratorRoleId != null)
 
                                                                          // ReSharper disable once PossibleInvalidOperationException
-                                                                         .ToDictionary(obj => obj.ServerId, obj => obj.AdministratorRoleId.Value));
+                                                                         .ToDictionary(obj => obj.DiscordServerId, obj => obj.DiscordAdministratorRoleId.Value));
             }
         }
 
@@ -56,11 +56,11 @@ namespace Scruffy.Services.Core
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
                 if (dbFactory.GetRepository<ServerConfigurationRepository>()
-                             .AddOrRefresh(obj => obj.ServerId == serverId,
+                             .AddOrRefresh(obj => obj.DiscordServerId == serverId,
                                            obj =>
                                            {
-                                               obj.ServerId = serverId;
-                                               obj.AdministratorRoleId = roleId;
+                                               obj.DiscordServerId = serverId;
+                                               obj.DiscordAdministratorRoleId = roleId;
                                            }))
                 {
                     _roles[serverId] = roleId;

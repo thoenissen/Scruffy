@@ -93,7 +93,7 @@ namespace Scruffy.Services.Raid.DialogElements
         {
             return _reactions ??= new List<ReactionData<bool>>
                                   {
-                                      new ReactionData<bool>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetEditEmoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("EditAliasCommand", "{0} Edit alias name", DiscordEmojiService.GetEditEmoji(CommandContext.Client)),
@@ -113,7 +113,7 @@ namespace Scruffy.Services.Raid.DialogElements
                                                      return true;
                                                  }
                                       },
-                                      new ReactionData<bool>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetEdit2Emoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("EditTitleCommand", "{0} Edit title", DiscordEmojiService.GetEdit2Emoji(CommandContext.Client)),
@@ -133,7 +133,7 @@ namespace Scruffy.Services.Raid.DialogElements
                                                      return true;
                                                  }
                                       },
-                                      new ReactionData<bool>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetEdit3Emoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("EditDescriptionCommand", "{0} Edit description", DiscordEmojiService.GetEdit3Emoji(CommandContext.Client)),
@@ -153,7 +153,7 @@ namespace Scruffy.Services.Raid.DialogElements
                                                      return true;
                                                  }
                                       },
-                                      new ReactionData<bool>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetImageEmoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("EditThumbnailCommand", "{0} Edit thumbnail", DiscordEmojiService.GetImageEmoji(CommandContext.Client)),
@@ -173,7 +173,7 @@ namespace Scruffy.Services.Raid.DialogElements
                                                      return true;
                                                  }
                                       },
-                                      new ReactionData<bool>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetCrossEmoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmojiService.GetCrossEmoji(CommandContext.Client)),

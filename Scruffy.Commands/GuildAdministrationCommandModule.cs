@@ -9,6 +9,7 @@ using Scruffy.Data.Enumerations.GuildAdministration;
 using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Discord.Attributes;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.CoreData;
 using Scruffy.Services.GuildAdministration;
 using Scruffy.Services.GuildAdministration.DialogElements;
 using Scruffy.Services.GuildWars2;
@@ -30,8 +31,9 @@ namespace Scruffy.Commands
         /// Constructor
         /// </summary>
         /// <param name="localizationService">Localization service</param>
-        public GuildAdministrationCommandModule(LocalizationService localizationService)
-            : base(localizationService)
+        /// <param name="userManagementService">User management service</param>
+        public GuildAdministrationCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
+            : base(localizationService, userManagementService)
         {
         }
 
@@ -179,8 +181,9 @@ namespace Scruffy.Commands
             /// Constructor
             /// </summary>
             /// <param name="localizationService">Localization service</param>
-            public GuildAdministrationEmblemCommandModule(LocalizationService localizationService)
-                : base(localizationService)
+            /// <param name="userManagementService">User management service</param>
+            public GuildAdministrationEmblemCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
+                : base(localizationService, userManagementService)
             {
             }
 
@@ -238,8 +241,9 @@ namespace Scruffy.Commands
             /// Constructor
             /// </summary>
             /// <param name="localizationService">Localization service</param>
-            public GuildAdministrationBankCommandModule(LocalizationService localizationService)
-                : base(localizationService)
+            /// <param name="userManagementService">User management service</param>
+            public GuildAdministrationBankCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
+                : base(localizationService, userManagementService)
             {
             }
 
@@ -294,8 +298,9 @@ namespace Scruffy.Commands
                 /// Constructor
                 /// </summary>
                 /// <param name="localizationService">Localization service</param>
-                public GuildAdministrationBankUnlocksCommandModule(LocalizationService localizationService)
-                    : base(localizationService)
+                /// <param name="userManagementService">User management service</param>
+                public GuildAdministrationBankUnlocksCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
+                    : base(localizationService, userManagementService)
                 {
                 }
 
@@ -357,8 +362,9 @@ namespace Scruffy.Commands
             /// Constructor
             /// </summary>
             /// <param name="localizationService">Localization service</param>
-            public GuildAdministrationSpecialRankCommandModule(LocalizationService localizationService)
-                : base(localizationService)
+            /// <param name="userManagementService">User management service</param>
+            public GuildAdministrationSpecialRankCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
+                : base(localizationService, userManagementService)
             {
             }
 
@@ -437,8 +443,9 @@ namespace Scruffy.Commands
             /// Constructor
             /// </summary>
             /// <param name="localizationService">Localization service</param>
-            public GuildAdministrationChartCommandModule(LocalizationService localizationService)
-                : base(localizationService)
+            /// <param name="userManagementService">User management service</param>
+            public GuildAdministrationChartCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
+                : base(localizationService, userManagementService)
             {
             }
 
@@ -498,8 +505,9 @@ namespace Scruffy.Commands
             /// Constructor
             /// </summary>
             /// <param name="localizationService">Localization service</param>
-            public GuildAdministrationExportCommandModule(LocalizationService localizationService)
-                : base(localizationService)
+            /// <param name="userManagementService">User management service</param>
+            public GuildAdministrationExportCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
+                : base(localizationService, userManagementService)
             {
             }
 

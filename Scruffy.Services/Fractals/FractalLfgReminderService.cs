@@ -144,8 +144,8 @@ namespace Scruffy.Services.Fractals
                                                   .Where(obj => obj.AppointmentTimeStamp >= now)
                                                   .Select(obj => new
                                                                  {
-                                                                     obj.FractalLfgConfiguration.ChannelId,
-                                                                     obj.MessageId,
+                                                                     ChannelId = obj.FractalLfgConfiguration.DiscordChannelId,
+                                                                     MessageId = obj.DiscordMessageId,
                                                                      obj.AppointmentTimeStamp
                                                                  })
                                                   .ToListAsync()

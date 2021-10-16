@@ -1,14 +1,14 @@
 ﻿using System.Linq;
 
 using Scruffy.Data.Entity.Queryable.Base;
-using Scruffy.Data.Entity.Tables.Account;
+using Scruffy.Data.Entity.Tables.GuildWars2.Account;
 
 namespace Scruffy.Data.Entity.Queryable.Account
 {
     /// <summary>
-    /// Queryable for accessing the <see cref="AccountEntity"/>
+    /// Queryable for accessing the <see cref="GuildWarsAccountEntity"/>
     /// </summary>
-    public class AccountQueryable : QueryableBase<AccountEntity>
+    public class AccountQueryable : QueryableBase<GuildWarsAccountEntity>
     {
         #region Constructor
 
@@ -16,7 +16,7 @@ namespace Scruffy.Data.Entity.Queryable.Account
         /// Constructor
         /// </summary>
         /// <param name="queryable"><see cref="IQueryable"/>-object</param>
-        public AccountQueryable(IQueryable<AccountEntity> queryable)
+        public AccountQueryable(IQueryable<GuildWarsAccountEntity> queryable)
             : base(queryable)
         {
         }

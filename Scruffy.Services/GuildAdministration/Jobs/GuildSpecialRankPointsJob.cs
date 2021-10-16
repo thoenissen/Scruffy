@@ -10,6 +10,8 @@ using DSharpPlus.Entities;
 using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Data.Entity;
+using Scruffy.Data.Entity.Repositories.CoreData;
+using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Entity.Repositories.GuildAdministration;
 using Scruffy.Data.Enumerations.GuildAdministration;
 using Scruffy.Services.Core;
@@ -78,19 +80,30 @@ namespace Scruffy.Services.GuildAdministration.Jobs
                             }
                         }
 
+                        var discordUserAccountIds = points.Select(obj => obj.UserId)
+                                                                   .ToList();
+
+                        var users = dbFactory.GetRepository<DiscordAccountRepository>()
+                                             .GetQuery()
+                                             .Where(obj => discordUserAccountIds.Contains(obj.Id))
+                                             .ToDictionary(obj => obj.Id, obj => obj.UserId);
+
                         foreach (var pointsPerUser in points.GroupBy(obj => obj.UserId))
                         {
-                            await userManagementService.CheckUserAsync(pointsPerUser.Key)
+                            await userManagementService.CheckDiscordAccountAsync(pointsPerUser.Key)
                                                        .ConfigureAwait(false);
 
                             await using (var transaction = dbFactory.BeginTransaction(IsolationLevel.RepeatableRead))
                             {
-                                if (await dbFactory.GetRepository<GuildSpecialRankPointsRepository>()
-                                                   .AddPoints(configuration.Id, configuration.MaximumPoints, pointsPerUser.Key, pointsPerUser.Select(obj => obj.Points).ToList())
-                                                   .ConfigureAwait(false))
+                                if (users.TryGetValue(pointsPerUser.Key, out var userId))
                                 {
-                                    await transaction.CommitAsync()
-                                                     .ConfigureAwait(false);
+                                    if (await dbFactory.GetRepository<GuildSpecialRankPointsRepository>()
+                                                       .AddPoints(configuration.Id, configuration.MaximumPoints, userId, pointsPerUser.Select(obj => obj.Points).ToList())
+                                                       .ConfigureAwait(false))
+                                    {
+                                        await transaction.CommitAsync()
+                                                         .ConfigureAwait(false);
+                                    }
                                 }
                             }
                         }
@@ -111,15 +124,17 @@ namespace Scruffy.Services.GuildAdministration.Jobs
                                                                               obj.DiscordRoleId,
                                                                               ChannelId = channels.Where(obj2 => obj2.GuildId == obj.Id
                                                                                                               && obj2.Type == GuildChannelConfigurationType.SpecialRankRankChange)
-                                                                                                  .Select(obj2 => (ulong?)obj2.ChannelId)
+                                                                                                  .Select(obj2 => (ulong?)obj2.DiscordChannelId)
                                                                                                   .FirstOrDefault(),
                                                                               Users = obj.GuildSpecialRankPoints
                                                                                          .Where(obj2 => obj2.Points > obj.RemoveThreshold)
-                                                                                         .Select(obj2 => new
-                                                                                                         {
-                                                                                                             obj2.UserId,
-                                                                                                             IsGrantRole = obj2.Points > obj.GrantThreshold
-                                                                                                         }),
+                                                                                         .SelectMany(obj2 => obj2.User
+                                                                                                                 .DiscordAccounts
+                                                                                                                 .Select(obj3 => new
+                                                                                                                         {
+                                                                                                                             obj3.Id,
+                                                                                                                             IsGrantRole = obj2.Points > obj.GrantThreshold
+                                                                                                                         })),
                                                                               IgnoreRoles = obj.GuildSpecialRankIgnoreRoleAssignments
                                                                                                .Select(obj2 => obj2.DiscordRoleId)
                                                                           })
@@ -138,12 +153,12 @@ namespace Scruffy.Services.GuildAdministration.Jobs
                                 var isRoleAssigned = user.Roles.Any(obj => obj.Id == configuration.DiscordRoleId);
                                 if (isRoleAssigned)
                                 {
-                                    if (configuration.Users.Any(obj => obj.UserId == user.Id) == false)
+                                    if (configuration.Users.Any(obj => obj.Id == user.Id) == false)
                                     {
                                         actions.Add((false, user));
                                     }
                                 }
-                                else if (configuration.Users.FirstOrDefault(obj => obj.UserId == user.Id)?.IsGrantRole == true)
+                                else if (configuration.Users.FirstOrDefault(obj => obj.Id == user.Id)?.IsGrantRole == true)
                                 {
                                     actions.Add((true, user));
                                 }

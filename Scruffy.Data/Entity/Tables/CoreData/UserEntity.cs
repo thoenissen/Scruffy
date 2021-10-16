@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
-using Scruffy.Data.Entity.Tables.Account;
+using Scruffy.Data.Entity.Tables.Discord;
+using Scruffy.Data.Entity.Tables.GuildWars2.Account;
 using Scruffy.Data.Entity.Tables.Raid;
-using Scruffy.Data.Entity.Tables.Reminder;
+using Scruffy.Data.Enumerations.CoreData;
 
 namespace Scruffy.Data.Entity.Tables.CoreData
 {
     /// <summary>
-    /// User
+    /// Discord user
     /// </summary>
     [Table("Users")]
     public class UserEntity
@@ -20,13 +19,18 @@ namespace Scruffy.Data.Entity.Tables.CoreData
         /// <summary>
         /// Id
         /// </summary>
-        [Key]
-        public ulong Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public long Id { get; set; }
 
         /// <summary>
         /// Creation of the user
         /// </summary>
         public DateTime CreationTimeStamp { get; set; }
+
+        /// <summary>
+        /// Type
+        /// </summary>
+        public UserType Type { get; set; }
 
         /// <summary>
         /// Experience level
@@ -41,11 +45,6 @@ namespace Scruffy.Data.Entity.Tables.CoreData
         public virtual RaidExperienceLevelEntity RaidExperienceLevel { get; set; }
 
         /// <summary>
-        /// One time reminders
-        /// </summary>
-        public virtual ICollection<OneTimeReminderEntity> OneTimeReminders { get; set; }
-
-        /// <summary>
         /// Raid registrations
         /// </summary>
         public virtual ICollection<RaidRegistrationEntity> RaidRegistrations { get; set; }
@@ -58,7 +57,12 @@ namespace Scruffy.Data.Entity.Tables.CoreData
         /// <summary>
         /// Accounts
         /// </summary>
-        public virtual ICollection<AccountEntity> Accounts { get; set; }
+        public virtual ICollection<GuildWarsAccountEntity> GuildWarsAccounts { get; set; }
+
+        /// <summary>
+        /// Discord user
+        /// </summary>
+        public virtual ICollection<DiscordAccountEntity> DiscordAccounts { get; set; }
 
         #endregion // Navigation properties
 

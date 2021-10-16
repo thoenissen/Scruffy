@@ -15,7 +15,7 @@ namespace Scruffy.Data.Entity.Tables.CoreData
         /// Id of the server
         /// </summary>
         [Key]
-        public ulong ServerId { get; set; }
+        public ulong DiscordServerId { get; set; }
 
         /// <summary>
         /// Prefix
@@ -25,7 +25,7 @@ namespace Scruffy.Data.Entity.Tables.CoreData
         /// <summary>
         /// Administration role
         /// </summary>
-        public ulong? AdministratorRoleId { get; set; }
+        public ulong? DiscordAdministratorRoleId { get; set; }
 
         #endregion // Properties
     }

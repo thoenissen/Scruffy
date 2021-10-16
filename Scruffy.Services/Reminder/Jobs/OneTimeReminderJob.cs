@@ -18,7 +18,16 @@ namespace Scruffy.Services.Reminder.Jobs
     /// </summary>
     public class OneTimeReminderJob : LocatedAsyncJob
     {
+        #region Fields
+
+        /// <summary>
+        /// Id of the reminder
+        /// </summary>
         private long _id;
+
+        #endregion // Fields
+
+        #region Constructor
 
         /// <summary>
         /// Constructor
@@ -28,6 +37,8 @@ namespace Scruffy.Services.Reminder.Jobs
         {
             _id = id;
         }
+
+        #endregion // Constructor
 
         #region IJob
 
@@ -43,15 +54,24 @@ namespace Scruffy.Services.Reminder.Jobs
                 {
                     var jobEntity = dbFactory.GetRepository<OneTimeReminderRepository>()
                                              .GetQuery()
-                                             .FirstOrDefault(obj => obj.Id == _id);
+                                             .Where(obj => obj.Id == _id)
+                                             .Select(obj => new
+                                                     {
+                                                         ChannelId = obj.DiscordChannelId,
+                                                         obj.IsExecuted,
+                                                         obj.DiscordAccountId,
+                                                         obj.Message
+                                                     })
+                                             .FirstOrDefault();
 
                     if (jobEntity?.IsExecuted == false)
                     {
                         if (dbFactory.GetRepository<OneTimeReminderRepository>()
-                                 .Refresh(obj => obj.Id == _id,
-                                          obj => obj.IsExecuted = true))
+                                     .Refresh(obj => obj.Id == _id,
+                                              obj => obj.IsExecuted = true))
                         {
-                            await transaction.CommitAsync().ConfigureAwait(false);
+                            await transaction.CommitAsync()
+                                             .ConfigureAwait(false);
 
                             await using (var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider())
                             {
@@ -61,7 +81,7 @@ namespace Scruffy.Services.Reminder.Jobs
 
                                 if (channel != null)
                                 {
-                                    var user = await discordClient.GetUserAsync(jobEntity.UserId).ConfigureAwait(false);
+                                    var user = await discordClient.GetUserAsync(jobEntity.DiscordAccountId).ConfigureAwait(false);
 
                                     await discordClient.SendMessageAsync(channel,
                                                                          new DiscordMessageBuilder

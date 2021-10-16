@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Scruffy.Data.Entity.Tables.GuildWars2
+namespace Scruffy.Data.Entity.Tables.GuildWars2.GameData
 {
     /// <summary>
     /// World

@@ -124,7 +124,7 @@ namespace Scruffy.Services.Raid.DialogElements
             {
                 _reactions = new List<ReactionData<bool>>
                              {
-                                 new ReactionData<bool>
+                                 new ()
                                  {
                                      Emoji = DiscordEmojiService.GetAddEmoji(CommandContext.Client),
                                      CommandText = LocalizationGroup.GetFormattedText("AddCommand", "{0} Add level", DiscordEmojiService.GetAddEmoji(CommandContext.Client)),

@@ -102,7 +102,7 @@ namespace Scruffy.Services.GuildAdministration
                                            obj =>
                                            {
                                                obj.Type = type;
-                                               obj.ChannelId = commandContext.Channel.Id;
+                                               obj.DiscordChannelId = commandContext.Channel.Id;
                                            });
                 }
             }
@@ -138,8 +138,8 @@ namespace Scruffy.Services.GuildAdministration
                                                obj =>
                                                {
                                                    obj.Type = GuildChannelConfigurationType.CalendarMessageOfTheDay;
-                                                   obj.ChannelId = commandContext.Channel.Id;
-                                                   obj.MessageId = message.Id;
+                                                   obj.DiscordChannelId = commandContext.Channel.Id;
+                                                   obj.DiscordMessageId = message.Id;
                                                }))
                     {
                         await _calendarScheduleService.CreateAppointments(commandContext.Guild.Id)
@@ -183,8 +183,8 @@ namespace Scruffy.Services.GuildAdministration
                                                     && obj.Type == GuildChannelConfigurationType.CalendarOverview,
                                                 obj =>
                                                 {
-                                                    obj.ChannelId = commandContext.Channel.Id;
-                                                    obj.MessageId = message.Id;
+                                                    obj.DiscordChannelId = commandContext.Channel.Id;
+                                                    obj.DiscordMessageId = message.Id;
                                                     obj.AdditionalData = JsonConvert.SerializeObject(new AdditionalCalendarChannelData
                                                     {
                                                         Title = data.Title,

@@ -2,6 +2,7 @@
 
 using Scruffy.Data.Entity.Queryable.Base;
 using Scruffy.Data.Entity.Tables.GuildWars2;
+using Scruffy.Data.Entity.Tables.GuildWars2.GameData;
 
 namespace Scruffy.Data.Entity.Queryable.GuildWars2
 {

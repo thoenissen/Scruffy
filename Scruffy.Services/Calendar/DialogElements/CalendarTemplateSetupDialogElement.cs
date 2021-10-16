@@ -62,7 +62,7 @@ namespace Scruffy.Services.Calendar.DialogElements
                 {
                     _templates = dbFactory.GetRepository<CalendarAppointmentTemplateRepository>()
                                           .GetQuery()
-                                          .Where(obj => obj.ServerId == serverId
+                                          .Where(obj => obj.DiscordServerId == serverId
                                                      && obj.IsDeleted == false)
                                           .Select(obj => obj.Description)
                                           .ToList();
@@ -116,7 +116,7 @@ namespace Scruffy.Services.Calendar.DialogElements
             {
                 _reactions = new List<ReactionData<bool>>
                              {
-                                 new ReactionData<bool>
+                                 new ()
                                  {
                                      Emoji = DiscordEmojiService.GetAddEmoji(CommandContext.Client),
                                      CommandText = LocalizationGroup.GetFormattedText("AddCommand", "{0} Add template", DiscordEmojiService.GetAddEmoji(CommandContext.Client)),
@@ -129,7 +129,7 @@ namespace Scruffy.Services.Calendar.DialogElements
                                                 {
                                                     var level = new CalendarAppointmentTemplateEntity
                                                                 {
-                                                                    ServerId = CommandContext.Guild.Id,
+                                                                    DiscordServerId = CommandContext.Guild.Id,
                                                                     Description = data.Description,
                                                                     AppointmentTime = data.AppointmentTime,
                                                                     Uri = data.Uri,

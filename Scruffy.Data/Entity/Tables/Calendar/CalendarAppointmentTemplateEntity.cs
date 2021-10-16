@@ -23,7 +23,7 @@ namespace Scruffy.Data.Entity.Tables.Calendar
         /// <summary>
         /// Id of the Server
         /// </summary>
-        public ulong ServerId { get; set; }
+        public ulong DiscordServerId { get; set; }
 
         /// <summary>
         /// Description
@@ -70,7 +70,7 @@ namespace Scruffy.Data.Entity.Tables.Calendar
         /// <summary>
         /// Server
         /// </summary>
-        [ForeignKey(nameof(ServerId))]
+        [ForeignKey(nameof(DiscordServerId))]
         public virtual ServerConfigurationEntity ServerConfiguration { get; set; }
 
         /// <summary>

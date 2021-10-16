@@ -19,8 +19,10 @@ using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
 
 using Scruffy.Data.Json.MediaWiki;
+using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Discord.Attributes;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.CoreData;
 
 namespace Scruffy.Commands
 {
@@ -39,8 +41,9 @@ namespace Scruffy.Commands
         /// Constructor
         /// </summary>
         /// <param name="localizationService">Localization service</param>
-        public SearchCommandModule(LocalizationService localizationService)
-            : base(localizationService)
+        /// <param name="userManagementService">User management service</param>
+        public SearchCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
+            : base(localizationService, userManagementService)
         {
         }
 

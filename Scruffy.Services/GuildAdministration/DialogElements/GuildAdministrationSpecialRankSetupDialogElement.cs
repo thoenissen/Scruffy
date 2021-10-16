@@ -8,7 +8,7 @@ using DSharpPlus.Entities;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.GuildAdministration;
-using Scruffy.Data.Entity.Tables.GuildAdministration;
+using Scruffy.Data.Entity.Tables.Guild;
 using Scruffy.Data.Services.GuildAdministration;
 using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
@@ -123,7 +123,7 @@ namespace Scruffy.Services.GuildAdministration.DialogElements
             {
                 _reactions = new List<ReactionData<bool>>
                              {
-                                 new ReactionData<bool>
+                                 new ()
                                  {
                                      Emoji = DiscordEmojiService.GetAddEmoji(CommandContext.Client),
                                      CommandText = LocalizationGroup.GetFormattedText("AddCommand", "{0} Add rank", DiscordEmojiService.GetAddEmoji(CommandContext.Client)),

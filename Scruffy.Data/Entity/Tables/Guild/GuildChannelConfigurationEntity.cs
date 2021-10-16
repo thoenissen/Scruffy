@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-
 using Scruffy.Data.Enumerations.GuildAdministration;
 
-namespace Scruffy.Data.Entity.Tables.GuildAdministration
+namespace Scruffy.Data.Entity.Tables.Guild
 {
     /// <summary>
     /// Guild notification channel
@@ -25,12 +24,12 @@ namespace Scruffy.Data.Entity.Tables.GuildAdministration
         /// <summary>
         /// Id of the channel
         /// </summary>
-        public ulong ChannelId { get; set; }
+        public ulong DiscordChannelId { get; set; }
 
         /// <summary>
         /// Id of the message
         /// </summary>
-        public ulong? MessageId { get; set; }
+        public ulong? DiscordMessageId { get; set; }
 
         /// <summary>
         /// Additional data

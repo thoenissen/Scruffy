@@ -88,7 +88,7 @@ namespace Scruffy.Services.Calendar.DialogElements
         {
             return _reactions ??= new List<ReactionData<bool>>
                                   {
-                                      new ReactionData<bool>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetEditEmoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("EditDescriptionCommand", "{0} Edit description", DiscordEmojiService.GetEditEmoji(CommandContext.Client)),
@@ -108,7 +108,7 @@ namespace Scruffy.Services.Calendar.DialogElements
                                                      return true;
                                                  }
                                       },
-                                      new ReactionData<bool>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetEdit2Emoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("EditScheduleCommand", "{0} Edit schedule", DiscordEmojiService.GetEdit2Emoji(CommandContext.Client)),
@@ -132,7 +132,7 @@ namespace Scruffy.Services.Calendar.DialogElements
                                                      return true;
                                                  }
                                       },
-                                      new ReactionData<bool>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetEdit3Emoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("EditTemplateCommand", "{0} Edit template", DiscordEmojiService.GetEdit3Emoji(CommandContext.Client)),
@@ -152,7 +152,7 @@ namespace Scruffy.Services.Calendar.DialogElements
                                                      return true;
                                                  }
                                       },
-                                      new ReactionData<bool>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetCrossEmoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmojiService.GetCrossEmoji(CommandContext.Client)),

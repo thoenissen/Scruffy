@@ -3,8 +3,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-using DSharpPlus.CommandsNext;
-
 using Microsoft.EntityFrameworkCore;
 
 using Newtonsoft.Json;
@@ -57,13 +55,13 @@ namespace Scruffy.Services.Calendar
         /// </summary>
         /// <param name="commandContext">Command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task RunAssistantAsync(CommandContext commandContext)
+        public async Task RunAssistantAsync(CommandContextContainer commandContext)
         {
             bool repeat;
 
             do
             {
-                repeat = await DialogHandler.Run<CalendarScheduleSetupDialogElement, bool>(new CommandContextContainer(commandContext)).ConfigureAwait(false);
+                repeat = await DialogHandler.Run<CalendarScheduleSetupDialogElement, bool>(commandContext).ConfigureAwait(false);
             }
             while (repeat);
         }
@@ -80,7 +78,7 @@ namespace Scruffy.Services.Calendar
                 foreach (var schedule in await dbFactory.GetRepository<CalendarAppointmentScheduleRepository>()
                                                         .GetQuery()
                                                         .Where(obj => obj.IsDeleted == false
-                                                                   && (serverId == null || obj.CalendarAppointmentTemplate.ServerId == serverId))
+                                                                   && (serverId == null || obj.CalendarAppointmentTemplate.DiscordServerId == serverId))
                                                         .Select(obj => new
                                                                        {
                                                                            obj.Id,
@@ -198,9 +196,9 @@ namespace Scruffy.Services.Calendar
         /// </summary>
         /// <param name="commandContext">Command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task AddOneTimeEvent(CommandContext commandContext)
+        public async Task AddOneTimeEvent(CommandContextContainer commandContext)
         {
-            var data = await DialogHandler.RunForm<CreateOneTimeEventFormData>(new CommandContextContainer(commandContext), false)
+            var data = await DialogHandler.RunForm<CreateOneTimeEventFormData>(commandContext, false)
                                           .ConfigureAwait(false);
             if (data != null)
             {

@@ -69,19 +69,19 @@ namespace Scruffy.Services.Calendar.DialogElements
         {
             return _reactions ??= new List<ReactionData<WeekDayOfMonthSpecialOptions>>
                                   {
-                                      new ReactionData<WeekDayOfMonthSpecialOptions>
+                                      new ()
                                       {
                                           Emoji = DiscordEmoji.FromName(CommandContext.Client, ":one:"),
                                           CommandText = $"{DiscordEmoji.FromName(CommandContext.Client, ":one:")} {LocalizationGroup.GetText(WeekDayOfMonthSpecialOptions.None.ToString(), "No options")}",
                                           Func = () => Task.FromResult(WeekDayOfMonthSpecialOptions.None)
                                       },
-                                      new ReactionData<WeekDayOfMonthSpecialOptions>
+                                      new ()
                                       {
                                           Emoji = DiscordEmoji.FromName(CommandContext.Client, ":two:"),
                                           CommandText = $"{DiscordEmoji.FromName(CommandContext.Client, ":two:")} {LocalizationGroup.GetText(WeekDayOfMonthSpecialOptions.EvenMonth.ToString(), "Even month")}",
                                           Func = () => Task.FromResult(WeekDayOfMonthSpecialOptions.EvenMonth)
                                       },
-                                      new ReactionData<WeekDayOfMonthSpecialOptions>
+                                      new ()
                                       {
                                           Emoji = DiscordEmoji.FromName(CommandContext.Client, ":three:"),
                                           CommandText = $"{DiscordEmoji.FromName(CommandContext.Client, ":three:")} {LocalizationGroup.GetText(WeekDayOfMonthSpecialOptions.UnevenMonth.ToString(), "Uneven month")}",

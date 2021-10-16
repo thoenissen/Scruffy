@@ -35,7 +35,7 @@ namespace Scruffy.Data.Entity.Tables.Reminder
         /// <summary>
         /// Id of the channel
         /// </summary>
-        public ulong ChannelId { get; set; }
+        public ulong DiscordChannelId { get; set; }
 
         /// <summary>
         /// Message to be posted
@@ -45,7 +45,7 @@ namespace Scruffy.Data.Entity.Tables.Reminder
         /// <summary>
         /// Id of the posted message
         /// </summary>
-        public ulong? MessageId { get; set; }
+        public ulong? DiscordMessageId { get; set; }
 
         #endregion // Properties
     }

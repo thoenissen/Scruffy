@@ -10,6 +10,7 @@ using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Data.Services.Raid;
 using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.CoreData;
 using Scruffy.Services.Raid.DialogElements;
 
 namespace Scruffy.Services.Raid
@@ -31,6 +32,11 @@ namespace Scruffy.Services.Raid
         /// </summary>
         private RaidMessageBuilder _messageBuilder;
 
+        /// <summary>
+        /// User management service
+        /// </summary>
+        private UserManagementService _userManagementService;
+
         #endregion // Fields
 
         #region Constructor
@@ -39,11 +45,13 @@ namespace Scruffy.Services.Raid
         /// Constructor
         /// </summary>
         /// <param name="localizationService">Localization service</param>
+        /// <param name="userManagementService">User management service</param>
         /// <param name="messageBuilder">Message builder</param>
-        public RaidCommitService(LocalizationService localizationService, RaidMessageBuilder messageBuilder)
+        public RaidCommitService(LocalizationService localizationService, UserManagementService userManagementService, RaidMessageBuilder messageBuilder)
             : base(localizationService)
         {
             _localizationService = localizationService;
+            _userManagementService = userManagementService;
             _messageBuilder = messageBuilder;
         }
 
@@ -100,7 +108,10 @@ namespace Scruffy.Services.Raid
                                                    .Where(obj => obj.AppointmentId == appointment.Id)
                                                    .Select(obj => new
                                                                   {
-                                                                      obj.UserId,
+                                                                      UserId = obj.User
+                                                                                  .DiscordAccounts
+                                                                                  .Select(obj2 => obj2.Id)
+                                                                                  .FirstOrDefault(),
                                                                       obj.User.RaidExperienceLevelId,
                                                                       obj.LineupExperienceLevelId
                                                                   })
@@ -110,9 +121,9 @@ namespace Scruffy.Services.Raid
 
                         users.Add(new RaidCommitUserData
                                   {
-                                      UserId = entry.UserId,
+                                      DiscordUserId = entry.UserId,
                                       Points = experienceLevel.ParticipationPoints * (entry.LineupExperienceLevelId == null ? 3.0 : 1.0),
-                                      DiscordEmoji = experienceLevel.DiscordEmoji,
+                                      DiscordEmoji = experienceLevel.DiscordEmoji
                                   });
                     }
 
@@ -125,12 +136,12 @@ namespace Scruffy.Services.Raid
 
                     await using (var dialogHandler = new DialogHandler(commandContext))
                     {
-                        while (await dialogHandler.Run<RaidCommitDialogElement, bool>(new RaidCommitDialogElement(_localizationService, container)).ConfigureAwait(false))
+                        while (await dialogHandler.Run<RaidCommitDialogElement, bool>(new RaidCommitDialogElement(_localizationService, _userManagementService, container)).ConfigureAwait(false))
                         {
                         }
 
                         await commandContext.Channel
-                                            .SendMessageAsync(LocalizationGroup.GetText("CommitCompleted", "The raid appointment has been commited."))
+                                            .SendMessageAsync(LocalizationGroup.GetText("CommitCompleted", "The raid appointment has been committed."))
                                             .ConfigureAwait(false);
 
                         await _messageBuilder.RefreshMessageAsync(appointment.ConfigurationId)

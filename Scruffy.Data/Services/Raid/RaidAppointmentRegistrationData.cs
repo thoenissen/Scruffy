@@ -8,7 +8,7 @@
         /// <summary>
         /// Id of the user
         /// </summary>
-        public ulong UserId { get; set; }
+        public long UserId { get; set; }
 
         /// <summary>
         /// Experience level id

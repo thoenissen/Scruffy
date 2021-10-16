@@ -50,7 +50,10 @@ namespace Scruffy.Services.Raid
                                      .OrderByDescending(obj => obj.Points)
                                      .Select(obj => new
                                                     {
-                                                        obj.UserId,
+                                                        UserId = obj.User
+                                                                    .DiscordAccounts
+                                                                    .Select(obj2 => obj2.Id)
+                                                                    .FirstOrDefault(),
                                                         Points = obj.Points * 100.0
                                                     })
                                      .ToList();
@@ -99,7 +102,7 @@ namespace Scruffy.Services.Raid
                                                                             {
                                                                                 XAxes = new List<XAxis>
                                                                                         {
-                                                                                            new XAxis
+                                                                                            new ()
                                                                                             {
                                                                                                 Ticks = new AxisTicks<double>
                                                                                                         {
@@ -111,7 +114,7 @@ namespace Scruffy.Services.Raid
                                                                                         },
                                                                                 YAxes = new List<YAxis>
                                                                                         {
-                                                                                            new YAxis
+                                                                                            new ()
                                                                                             {
                                                                                                 Ticks = new AxisTicks<double>
                                                                                                         {

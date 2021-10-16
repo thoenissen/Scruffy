@@ -80,43 +80,43 @@ namespace Scruffy.Services.Calendar.DialogElements
         {
             return _reactions ??= new List<ReactionData<DayOfWeek>>
                                   {
-                                      new ReactionData<DayOfWeek>
+                                      new ()
                                       {
                                           Emoji = DiscordEmoji.FromName(CommandContext.Client, ":one:"),
                                           CommandText = $"{DiscordEmoji.FromName(CommandContext.Client, ":one:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Monday)}",
                                           Func = () => GetReturnValue(DayOfWeek.Monday)
                                       },
-                                      new ReactionData<DayOfWeek>
+                                      new ()
                                       {
                                           Emoji = DiscordEmoji.FromName(CommandContext.Client, ":two:"),
                                           CommandText = $"{DiscordEmoji.FromName(CommandContext.Client, ":two:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Tuesday)}",
                                           Func = () => GetReturnValue(DayOfWeek.Tuesday)
                                       },
-                                      new ReactionData<DayOfWeek>
+                                      new ()
                                       {
                                           Emoji = DiscordEmoji.FromName(CommandContext.Client, ":three:"),
                                           CommandText = $"{DiscordEmoji.FromName(CommandContext.Client, ":three:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Wednesday)}",
                                           Func = () => GetReturnValue(DayOfWeek.Wednesday)
                                       },
-                                      new ReactionData<DayOfWeek>
+                                      new ()
                                       {
                                           Emoji = DiscordEmoji.FromName(CommandContext.Client, ":four:"),
                                           CommandText = $"{DiscordEmoji.FromName(CommandContext.Client, ":four:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Thursday)}",
                                           Func = () => GetReturnValue(DayOfWeek.Thursday)
                                       },
-                                      new ReactionData<DayOfWeek>
+                                      new ()
                                       {
                                           Emoji = DiscordEmoji.FromName(CommandContext.Client, ":five:"),
                                           CommandText = $"{DiscordEmoji.FromName(CommandContext.Client, ":five:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Friday)}",
                                           Func = () => GetReturnValue(DayOfWeek.Friday)
                                       },
-                                      new ReactionData<DayOfWeek>
+                                      new ()
                                       {
                                           Emoji = DiscordEmoji.FromName(CommandContext.Client, ":six:"),
                                           CommandText = $"{DiscordEmoji.FromName(CommandContext.Client, ":six:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Saturday)}",
                                           Func = () => GetReturnValue(DayOfWeek.Saturday)
                                       },
-                                      new ReactionData<DayOfWeek>
+                                      new ()
                                       {
                                           Emoji = DiscordEmoji.FromName(CommandContext.Client, ":seven:"),
                                           CommandText = $"{DiscordEmoji.FromName(CommandContext.Client, ":seven:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Sunday)}",

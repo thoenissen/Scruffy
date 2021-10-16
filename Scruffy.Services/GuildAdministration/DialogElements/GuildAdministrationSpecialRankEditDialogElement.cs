@@ -128,7 +128,7 @@ namespace Scruffy.Services.GuildAdministration.DialogElements
         {
             return _reactions ??= new List<ReactionData<bool>>
                                   {
-                                      new ReactionData<bool>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetEditEmoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("EditDescriptionCommand", "{0} Edit description", DiscordEmojiService.GetEditEmoji(CommandContext.Client)),
@@ -148,7 +148,7 @@ namespace Scruffy.Services.GuildAdministration.DialogElements
                                                      return true;
                                                  }
                                       },
-                                      new ReactionData<bool>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetEdit2Emoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("EditRoleCommand", "{0} Edit role", DiscordEmojiService.GetEdit2Emoji(CommandContext.Client)),
@@ -168,7 +168,7 @@ namespace Scruffy.Services.GuildAdministration.DialogElements
                                                      return true;
                                                  }
                                       },
-                                      new ReactionData<bool>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetEdit3Emoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("EditMaximumPointsCommand", "{0} Edit maximum points", DiscordEmojiService.GetEdit3Emoji(CommandContext.Client)),
@@ -188,7 +188,7 @@ namespace Scruffy.Services.GuildAdministration.DialogElements
                                                      return true;
                                                  }
                                       },
-                                      new ReactionData<bool>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetEdit4Emoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("EditGrantThresholdCommand", "{0} Edit grant threshold", DiscordEmojiService.GetEdit4Emoji(CommandContext.Client)),
@@ -208,7 +208,7 @@ namespace Scruffy.Services.GuildAdministration.DialogElements
                                                      return true;
                                                  }
                                       },
-                                      new ReactionData<bool>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetEdit5Emoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("EditRemoveThresholdCommand", "{0} Edit remove threshold", DiscordEmojiService.GetEdit5Emoji(CommandContext.Client)),
@@ -228,7 +228,7 @@ namespace Scruffy.Services.GuildAdministration.DialogElements
                                                      return true;
                                                  }
                                       },
-                                      new ReactionData<bool>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetAddEmoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("AddPointRoleCommand", "{0} Add point role", DiscordEmojiService.GetAddEmoji(CommandContext.Client)),
@@ -254,7 +254,7 @@ namespace Scruffy.Services.GuildAdministration.DialogElements
                                                      return true;
                                                  }
                                       },
-                                      new ReactionData<bool>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("RemovePointRoleCommand", "{0} Remove point role", DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client)),
@@ -274,7 +274,7 @@ namespace Scruffy.Services.GuildAdministration.DialogElements
                                                      return true;
                                                  }
                                       },
-                                      new ReactionData<bool>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetAdd2Emoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("AddIgnoreRoleCommand", "{0} Add ignore role", DiscordEmojiService.GetAdd2Emoji(CommandContext.Client)),
@@ -299,7 +299,7 @@ namespace Scruffy.Services.GuildAdministration.DialogElements
                                                      return true;
                                                  }
                                       },
-                                      new ReactionData<bool>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetTrashCan2Emoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("RemoveIgnoreRoleCommand", "{0} Remove ignore role", DiscordEmojiService.GetTrashCan2Emoji(CommandContext.Client)),
@@ -319,7 +319,7 @@ namespace Scruffy.Services.GuildAdministration.DialogElements
                                                      return true;
                                                  }
                                       },
-                                      new ReactionData<bool>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetCrossEmoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmojiService.GetCrossEmoji(CommandContext.Client)),

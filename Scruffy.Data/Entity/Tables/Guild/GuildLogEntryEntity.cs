@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Scruffy.Data.Entity.Tables.GuildAdministration
+namespace Scruffy.Data.Entity.Tables.Guild
 {
     /// <summary>
     /// Guild log entries

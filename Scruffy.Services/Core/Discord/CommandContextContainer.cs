@@ -3,6 +3,8 @@
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
+using Scruffy.Data.Services.CoreData;
+using Scruffy.Services.CoreData;
 
 namespace Scruffy.Services.Core.Discord
 {
@@ -12,6 +14,16 @@ namespace Scruffy.Services.Core.Discord
     public class CommandContextContainer
     {
         #region Fields
+
+        /// <summary>
+        /// User management
+        /// </summary>
+        private readonly UserManagementService _userManagementService;
+
+        /// <summary>
+        /// User data
+        /// </summary>
+        private UserData _userData;
 
         /// <summary>
         /// Original context
@@ -26,10 +38,12 @@ namespace Scruffy.Services.Core.Discord
         /// Create a wrapper from a normal CommandContext
         /// </summary>
         /// <param name="commandContext">CommandContext</param>
+        /// <param name="userManagementService">User management service</param>
         /// <returns>ICommandContext-implementation</returns>
-        public CommandContextContainer(CommandContext commandContext)
+        public CommandContextContainer(CommandContext commandContext, UserManagementService userManagementService)
         {
             _commandContext = commandContext;
+            _userManagementService = userManagementService;
 
             Client = commandContext.Client;
             CommandsNext = commandContext.CommandsNext;
@@ -115,6 +129,13 @@ namespace Scruffy.Services.Core.Discord
         #endregion // Properties
 
         #region Methods
+
+        /// <summary>
+        /// Get current user data
+        /// </summary>
+        /// <returns>Current user data</returns>
+        public async Task<UserData> GetCurrentUser() => _userData ??= await _userManagementService.GetUserByDiscordAccountId(User.Id)
+                                                                                                  .ConfigureAwait(false);
 
         /// <summary>
         /// Show help of the given command

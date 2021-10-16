@@ -56,7 +56,10 @@ namespace Scruffy.Services.GuildAdministration
                                                                           Users = obj.GuildSpecialRankPoints.Where(obj2 => obj2.Points > 0)
                                                                                      .Select(obj2 => new
                                                                                                      {
-                                                                                                         obj2.UserId,
+                                                                                                         UserId = obj2.User
+                                                                                                                      .DiscordAccounts
+                                                                                                                      .Select(obj3 => obj3.Id)
+                                                                                                                      .FirstOrDefault(),
                                                                                                          obj2.Points
                                                                                                      })
                                                                                      .ToList()
@@ -115,7 +118,7 @@ namespace Scruffy.Services.GuildAdministration
                                                                                     {
                                                                                         Annotations = new List<Annotation>
                                                                                                       {
-                                                                                                          new Annotation
+                                                                                                          new ()
                                                                                                           {
                                                                                                               BorderColor = "#f45b5b",
                                                                                                               BorderWidth = 2,
@@ -124,7 +127,7 @@ namespace Scruffy.Services.GuildAdministration
                                                                                                               Type = "line",
                                                                                                               Value = configuration.RemoveThreshold
                                                                                                           },
-                                                                                                          new Annotation
+                                                                                                          new ()
                                                                                                           {
                                                                                                               BorderColor = "#90ee7e",
                                                                                                               BorderWidth = 2,
@@ -139,7 +142,7 @@ namespace Scruffy.Services.GuildAdministration
                                                                                 {
                                                                                     XAxes = new List<XAxis>
                                                                                             {
-                                                                                                new XAxis
+                                                                                                new ()
                                                                                                 {
                                                                                                     Ticks = new AxisTicks
                                                                                                             {
@@ -149,7 +152,7 @@ namespace Scruffy.Services.GuildAdministration
                                                                                             },
                                                                                     YAxes = new List<YAxis>
                                                                                             {
-                                                                                                new YAxis
+                                                                                                new ()
                                                                                                 {
                                                                                                     Ticks = new AxisTicks
                                                                                                             {

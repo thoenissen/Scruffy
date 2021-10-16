@@ -1,7 +1,5 @@
 ﻿using System.Threading.Tasks;
 
-using DSharpPlus.CommandsNext;
-
 using Scruffy.Services.Calendar.DialogElements;
 using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
@@ -33,13 +31,13 @@ namespace Scruffy.Services.Calendar
         /// </summary>
         /// <param name="commandContext">Command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task RunAssistantAsync(CommandContext commandContext)
+        public async Task RunAssistantAsync(CommandContextContainer commandContext)
         {
             bool repeat;
 
             do
             {
-                repeat = await DialogHandler.Run<CalendarTemplateSetupDialogElement, bool>(new CommandContextContainer(commandContext)).ConfigureAwait(false);
+                repeat = await DialogHandler.Run<CalendarTemplateSetupDialogElement, bool>(commandContext).ConfigureAwait(false);
             }
             while (repeat);
         }

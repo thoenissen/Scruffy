@@ -2,14 +2,14 @@
 
 using Scruffy.Data.Entity.Queryable.Account;
 using Scruffy.Data.Entity.Repositories.Base;
-using Scruffy.Data.Entity.Tables.Account;
+using Scruffy.Data.Entity.Tables.GuildWars2.Account;
 
 namespace Scruffy.Data.Entity.Repositories.Account
 {
     /// <summary>
-    /// Repository for accessing <see cref="AccountEntity"/>
+    /// Repository for accessing <see cref="GuildWarsAccountEntity"/>
     /// </summary>
-    public class AccountRepository : RepositoryBase<AccountQueryable, AccountEntity>
+    public class AccountRepository : RepositoryBase<AccountQueryable, GuildWarsAccountEntity>
     {
         #region Constructor
 

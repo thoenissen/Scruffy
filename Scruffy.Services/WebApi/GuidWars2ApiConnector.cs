@@ -32,7 +32,7 @@ namespace Scruffy.Services.WebApi
         /// <summary>
         /// Lock
         /// </summary>
-        private static object _lock = new object();
+        private static object _lock = new ();
 
         /// <summary>
         /// Current minute

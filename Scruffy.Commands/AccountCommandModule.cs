@@ -4,6 +4,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 
 using Scruffy.Services.Account;
+using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Discord.Attributes;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
@@ -25,8 +26,9 @@ namespace Scruffy.Commands
         /// Constructor
         /// </summary>
         /// <param name="localizationService">Localization service</param>
-        public AccountCommandModule(LocalizationService localizationService)
-            : base(localizationService)
+        /// <param name="userManagementService">User management service</param>
+        public AccountCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
+            : base(localizationService, userManagementService)
         {
         }
 
@@ -60,7 +62,7 @@ namespace Scruffy.Commands
             return InvokeAsync(commandContext,
                                async commandContextContainer =>
                                {
-                                   await UserManagementService.CheckUserAsync(commandContextContainer.User.Id)
+                                   await UserManagementService.CheckDiscordAccountAsync(commandContextContainer.User.Id)
                                                               .ConfigureAwait(false);
 
                                    await AdministrationService.Add(commandContextContainer)
@@ -80,7 +82,7 @@ namespace Scruffy.Commands
             return InvokeAsync(commandContext,
                                async commandContextContainer =>
                                {
-                                   await UserManagementService.CheckUserAsync(commandContextContainer.User.Id)
+                                   await UserManagementService.CheckDiscordAccountAsync(commandContextContainer.User.Id)
                                                               .ConfigureAwait(false);
 
                                    await AdministrationService.Edit(commandContextContainer)

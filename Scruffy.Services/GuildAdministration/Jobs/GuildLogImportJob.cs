@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.GuildAdministration;
-using Scruffy.Data.Entity.Tables.GuildAdministration;
+using Scruffy.Data.Entity.Tables.Guild;
 using Scruffy.Data.Enumerations.General;
 using Scruffy.Data.Enumerations.GuildAdministration;
 using Scruffy.Data.Json.GuildWars2.Guild;
@@ -55,7 +55,7 @@ namespace Scruffy.Services.GuildAdministration.Jobs
                                                                                           .FirstOrDefault(),
                                                                       ChannelId = channels.Where(obj2 => obj2.GuildId == obj.Id
                                                                                                       && obj2.Type == GuildChannelConfigurationType.GuildLogNotification)
-                                                                                          .Select(obj2 => (ulong?)obj2.ChannelId)
+                                                                                          .Select(obj2 => (ulong?)obj2.DiscordChannelId)
                                                                                           .FirstOrDefault()
                                                                   })
                                                    .ToList())

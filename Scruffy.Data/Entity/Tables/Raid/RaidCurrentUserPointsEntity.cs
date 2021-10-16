@@ -17,7 +17,7 @@ namespace Scruffy.Data.Entity.Tables.Raid
         /// Id of the user
         /// </summary>
         [Key]
-        public ulong UserId { get; set; }
+        public long UserId { get; set; }
 
         /// <summary>
         /// Current points

@@ -97,8 +97,8 @@ namespace Scruffy.Services.GuildWars2
 
                 var worlds = dbFactory.GetRepository<AccountRepository>()
                                       .GetQuery()
-                                      .Where(obj => obj.WordId != null)
-                                      .GroupBy(obj => obj.WordId)
+                                      .Where(obj => obj.WorldId != null)
+                                      .GroupBy(obj => obj.WorldId)
                                       .Select(obj => new
                                                      {
                                                          WorldId = obj.Key,
@@ -149,7 +149,7 @@ namespace Scruffy.Services.GuildWars2
                                                          {
                                                              XAxes = new List<XAxis>
                                                                      {
-                                                                         new XAxis
+                                                                         new ()
                                                                          {
                                                                              Ticks = new AxisTicks
                                                                                      {
@@ -159,7 +159,7 @@ namespace Scruffy.Services.GuildWars2
                                                                      },
                                                              YAxes = new List<YAxis>
                                                                      {
-                                                                         new YAxis
+                                                                         new ()
                                                                          {
                                                                              Ticks = new AxisTicks<int>
                                                                                      {

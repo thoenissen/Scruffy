@@ -15,7 +15,7 @@ namespace Scruffy.Data.Entity.Tables.Raid
         /// <summary>
         /// Id of the user
         /// </summary>
-        public ulong UserId { get; set; }
+        public long UserId { get; set; }
 
         /// <summary>
         /// Id of the main role

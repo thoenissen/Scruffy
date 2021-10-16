@@ -402,7 +402,7 @@ namespace Scruffy.Services.GuildAdministration
                                                 .Where(obj => obj.Date >= dateLimit)
                                                 .Select(obj => new
                                                                {
-                                                                   obj.AccountEntity.Name
+                                                                   obj.GuildWarsAccountEntity.Name
                                                                })
                                                 .Distinct()
                                                 .ToListAsync()
@@ -454,7 +454,10 @@ namespace Scruffy.Services.GuildAdministration
                                              .Select(obj => new
                                                             {
                                                                 obj.Name,
-                                                                obj.UserId,
+                                                                DiscordAccountId = obj.User
+                                                                                      .DiscordAccounts
+                                                                                      .Select(obj2 => obj2.Id)
+                                                                                      .FirstOrDefault(),
                                                                 obj.ApiKey
                                                             })
                                              .ToListAsync()
@@ -469,7 +472,7 @@ namespace Scruffy.Services.GuildAdministration
                     try
                     {
                         user = await commandContext.Guild
-                                                   .GetMemberAsync(entry.UserId)
+                                                   .GetMemberAsync(entry.DiscordAccountId)
                                                    .ConfigureAwait(false);
                     }
                     catch

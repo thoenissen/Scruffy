@@ -35,7 +35,7 @@ namespace Scruffy.Services.Raid
         /// Constructor
         /// </summary>
         /// <param name="localizationService">Localization service</param>
-        /// <param name="userManagementService">User mangement</param>
+        /// <param name="userManagementService">User management</param>
         public RaidRegistrationService(LocalizationService localizationService, UserManagementService userManagementService)
             : base(localizationService)
         {
@@ -51,9 +51,9 @@ namespace Scruffy.Services.Raid
         /// </summary>
         /// <param name="commandContext">Command context</param>
         /// <param name="appointmentId">Id of the appointment</param>
-        /// <param name="userId">User id</param>
+        /// <param name="discordUserId">User id</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task<long?> Join(CommandContextContainer commandContext, long appointmentId, ulong userId)
+        public async Task<long?> Join(CommandContextContainer commandContext, long appointmentId, ulong discordUserId)
         {
             long? registrationId = null;
 
@@ -61,23 +61,23 @@ namespace Scruffy.Services.Raid
             {
                 var isAlreadyRegistered = false;
 
-                var userExperienceLevelRank = await _userManagementService.GetRaidExperienceLevelRank(userId)
-                                                                          .ConfigureAwait(false);
+                var user = await _userManagementService.GetUserByDiscordAccountId(discordUserId)
+                                                                                .ConfigureAwait(false);
 
                 if (dbFactory.GetRepository<RaidAppointmentRepository>()
                              .GetQuery()
                              .Any(obj => obj.Id == appointmentId
-                                         && obj.RaidDayTemplate.RaidExperienceAssignments.Any(obj2 => obj2.RaidExperienceLevel.Rank <= userExperienceLevelRank)))
+                                         && obj.RaidDayTemplate.RaidExperienceAssignments.Any(obj2 => obj2.RaidExperienceLevel.Rank <= user.ExperienceLevelRank)))
                 {
                     if (dbFactory.GetRepository<RaidRegistrationRepository>()
                                  .AddOrRefresh(obj => obj.AppointmentId == appointmentId
-                                                   && obj.UserId == userId,
+                                                   && obj.UserId == user.Id,
                                                obj =>
                                                {
                                                    if (obj.Id == 0)
                                                    {
                                                        obj.AppointmentId = appointmentId;
-                                                       obj.UserId = userId;
+                                                       obj.UserId = user.Id;
                                                        obj.RegistrationTimeStamp = DateTime.Now;
                                                    }
                                                    else
@@ -143,7 +143,7 @@ namespace Scruffy.Services.Raid
         /// <param name="appointmentId">Id of the appointment</param>
         /// <param name="userId">User id</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task<bool> Leave(long appointmentId, ulong userId)
+        public async Task<bool> Leave(long appointmentId, long userId)
         {
             var success = false;
 

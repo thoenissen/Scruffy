@@ -20,7 +20,7 @@ namespace Scruffy.ServiceHost
         /// <summary>
         /// Wait for program exit
         /// </summary>
-        private static TaskCompletionSource<bool> _waitForExitTaskSource = new TaskCompletionSource<bool>();
+        private static TaskCompletionSource<bool> _waitForExitTaskSource = new ();
 
         #endregion // Fields
 

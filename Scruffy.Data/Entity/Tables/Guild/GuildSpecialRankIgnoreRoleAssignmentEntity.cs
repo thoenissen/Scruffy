@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Scruffy.Data.Entity.Tables.GuildAdministration
+namespace Scruffy.Data.Entity.Tables.Guild
 {
     /// <summary>
-    /// Assigning roles to the configuration
+    /// Assigning roles to ignore
     /// </summary>
-    [Table("GuildSpecialRankRoleAssignments")]
-    public class GuildSpecialRankRoleAssignmentEntity
+    [Table("GuildSpecialRankIgnoreRoleAssignments")]
+    public class GuildSpecialRankIgnoreRoleAssignmentEntity
     {
         #region Properties
 
@@ -19,11 +19,6 @@ namespace Scruffy.Data.Entity.Tables.GuildAdministration
         /// Id of the discord role
         /// </summary>
         public ulong DiscordRoleId { get; set; }
-
-        /// <summary>
-        /// Points
-        /// </summary>
-        public double Points { get; set; }
 
         #region Navigation properties
 

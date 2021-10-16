@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-using Scruffy.Data.Entity.Tables.CoreData;
+using Scruffy.Data.Entity.Tables.Discord;
 
 namespace Scruffy.Data.Entity.Tables.Reminder
 {
@@ -22,12 +22,12 @@ namespace Scruffy.Data.Entity.Tables.Reminder
         /// <summary>
         /// Id of the user
         /// </summary>
-        public ulong UserId { get; set; }
+        public ulong DiscordAccountId { get; set; }
 
         /// <summary>
         /// Id of the channel
         /// </summary>
-        public ulong ChannelId { get; set; }
+        public ulong DiscordChannelId { get; set; }
 
         /// <summary>
         /// Timestamp of the reminder
@@ -49,8 +49,8 @@ namespace Scruffy.Data.Entity.Tables.Reminder
         /// <summary>
         /// User
         /// </summary>
-        [ForeignKey(nameof(UserId))]
-        public virtual UserEntity User { get; set; }
+        [ForeignKey(nameof(DiscordAccountId))]
+        public virtual DiscordAccountEntity DiscordAccount { get; set; }
 
         #endregion  // Navigation properties
 

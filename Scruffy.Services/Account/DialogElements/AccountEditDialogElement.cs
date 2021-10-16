@@ -63,7 +63,7 @@ namespace Scruffy.Services.Account.DialogElements
 
                 var data = await dbFactory.GetRepository<AccountRepository>()
                                           .GetQuery()
-                                          .Where(obj => obj.UserId == CommandContext.User.Id
+                                          .Where(obj => obj.User.DiscordAccounts.Any(obj2 => obj2.Id == CommandContext.User.Id)
                                                      && obj.Name == name)
                                           .Select(obj => new
                                                          {
@@ -101,7 +101,7 @@ namespace Scruffy.Services.Account.DialogElements
         {
             return _reactions ??= new List<ReactionData<bool>>
                                   {
-                                      new ReactionData<bool>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetEditEmoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("EditApiKeyCommand", "{0} Edit api key", DiscordEmojiService.GetEditEmoji(CommandContext.Client)),
@@ -133,8 +133,11 @@ namespace Scruffy.Services.Account.DialogElements
                                                                     {
                                                                         using (var dbFactory = RepositoryFactory.CreateInstance())
                                                                         {
+                                                                            var user = await CommandContext.GetCurrentUser()
+                                                                                                           .ConfigureAwait(false);
+
                                                                             if (dbFactory.GetRepository<AccountRepository>()
-                                                                                         .Refresh(obj => obj.UserId == CommandContext.User.Id
+                                                                                         .Refresh(obj => obj.UserId == user.Id
                                                                                                       && obj.Name == accountInformation.Name,
                                                                                                   obj => obj.ApiKey = apiKey))
                                                                             {
@@ -157,7 +160,7 @@ namespace Scruffy.Services.Account.DialogElements
                                                                 }
                                                             }
                                                          }
-                                                         catch (WebException ex) when (ex.Response is HttpWebResponse response && response.StatusCode == HttpStatusCode.Unauthorized)
+                                                         catch (WebException ex) when (ex.Response is HttpWebResponse { StatusCode: HttpStatusCode.Unauthorized })
                                                          {
                                                              await CommandContext.Channel
                                                                                  .SendMessageAsync(LocalizationGroup.GetText("InvalidToken", "The provided token is invalid or doesn't have the required permissions."))
@@ -168,7 +171,7 @@ namespace Scruffy.Services.Account.DialogElements
                                                      return success;
                                                  }
                                       },
-                                      new ReactionData<bool>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetEdit2Emoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("EditDpsReportUserTokenCommand", "{0} Edit dps report user token", DiscordEmojiService.GetEdit2Emoji(CommandContext.Client)),
@@ -181,8 +184,11 @@ namespace Scruffy.Services.Account.DialogElements
                                                      {
                                                          var accountName = DialogContext.GetValue<string>("AccountName");
 
+                                                         var user = await CommandContext.GetCurrentUser()
+                                                                                        .ConfigureAwait(false);
+
                                                          dbFactory.GetRepository<AccountRepository>()
-                                                                  .Refresh(obj => obj.UserId == CommandContext.User.Id
+                                                                  .Refresh(obj => obj.UserId == user.Id
                                                                                && obj.Name == accountName,
                                                                            obj => obj.DpsReportUserToken = token);
                                                      }
@@ -190,7 +196,7 @@ namespace Scruffy.Services.Account.DialogElements
                                                      return true;
                                                  }
                                       },
-                                      new ReactionData<bool>
+                                      new ()
                                       {
                                           Emoji = DiscordEmojiService.GetCrossEmoji(CommandContext.Client),
                                           CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmojiService.GetCrossEmoji(CommandContext.Client)),

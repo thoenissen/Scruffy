@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using Scruffy.Data.Entity.Tables.CoreData;
 
 namespace Scruffy.Data.Entity.Tables.Fractals
 {
@@ -24,7 +25,7 @@ namespace Scruffy.Data.Entity.Tables.Fractals
         /// <summary>
         /// Id of the user
         /// </summary>
-        public ulong UserId { get; set; }
+        public long UserId { get; set; }
 
         /// <summary>
         /// Timestamp of the registration
@@ -43,6 +44,12 @@ namespace Scruffy.Data.Entity.Tables.Fractals
         /// </summary>
         [ForeignKey(nameof(ConfigurationId))]
         public virtual FractalLfgConfigurationEntity FractalLfgConfiguration { get; set; }
+
+        /// <summary>
+        /// User
+        /// </summary>
+        [ForeignKey(nameof(UserId))]
+        public virtual UserEntity User { get; set; }
 
         /// <summary>
         /// Appointment

@@ -77,11 +77,11 @@ namespace Scruffy.Services.Calendar
                                                                                                       && obj2.Type == GuildChannelConfigurationType.CalendarMessageOfTheDay)
                                                                                        .Select(obj2 => new
                                                                                                        {
-                                                                                                           obj2.ChannelId,
-                                                                                                           obj2.MessageId
+                                                                                                           ChannelId = obj2.DiscordChannelId,
+                                                                                                           MessageId = obj2.DiscordMessageId
                                                                                                        })
                                                                                        .FirstOrDefault(),
-                                                                     Appointments = templates.Where(obj2 => obj2.ServerId == obj.DiscordServerId)
+                                                                     Appointments = templates.Where(obj2 => obj2.DiscordServerId == obj.DiscordServerId)
                                                                                              .SelectMany(obj2 => obj2.CalendarAppointments
                                                                                                                      .Where(obj3 => obj3.TimeStamp > now
                                                                                                                                  && obj2.CalendarAppointments.Any(obj4 => obj4.TimeStamp > now
@@ -171,12 +171,12 @@ namespace Scruffy.Services.Calendar
                                                                                                       && obj2.Type == GuildChannelConfigurationType.CalendarOverview)
                                                                                        .Select(obj2 => new
                                                                                                        {
-                                                                                                           obj2.ChannelId,
-                                                                                                           obj2.MessageId,
+                                                                                                           ChannelId = obj2.DiscordChannelId,
+                                                                                                           MessageId = obj2.DiscordMessageId,
                                                                                                            obj2.AdditionalData
                                                                                                        })
                                                                                        .FirstOrDefault(),
-                                                                     Appointments = appointments.Where(obj2 => obj2.CalendarAppointmentTemplate.ServerId == obj.DiscordServerId)
+                                                                     Appointments = appointments.Where(obj2 => obj2.CalendarAppointmentTemplate.DiscordServerId == obj.DiscordServerId)
                                                                                                 .Select(obj2 => new
                                                                                                                 {
                                                                                                                     obj2.TimeStamp,
