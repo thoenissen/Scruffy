@@ -11,9 +11,14 @@ namespace Scruffy.Services.Account.DialogElements
     /// <summary>
     /// Do you want to add a new account?
     /// </summary>
-    public class AccountWantToAddDialogElement : DialogReactionElementBase<bool>
+    public class AccountWantToDeleteDialogElement : DialogReactionElementBase<bool>
     {
         #region Fields
+
+        /// <summary>
+        /// Account name
+        /// </summary>
+        private readonly string _name;
 
         /// <summary>
         /// Reactions
@@ -28,9 +33,11 @@ namespace Scruffy.Services.Account.DialogElements
         /// Constructor
         /// </summary>
         /// <param name="localizationService">Localization service</param>
-        public AccountWantToAddDialogElement(LocalizationService localizationService)
+        /// <param name="name">Account name</param>
+        public AccountWantToDeleteDialogElement(LocalizationService localizationService, string name)
             : base(localizationService)
         {
+            _name = name;
         }
 
         #endregion // Constructor
@@ -41,7 +48,7 @@ namespace Scruffy.Services.Account.DialogElements
         /// Editing the message
         /// </summary>
         /// <returns>Message</returns>
-        public override string GetMessage() => LocalizationGroup.GetText("Prompt", "You don't have any accounts configured. Do you want to add one?");
+        public override string GetMessage() => LocalizationGroup.GetFormattedText("Prompt", "Are you sure you want to delete the account '{0}'?", _name);
 
         /// <summary>
         /// Returns the reactions which should be added to the message

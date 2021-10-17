@@ -402,7 +402,7 @@ namespace Scruffy.Services.GuildAdministration
                                                 .Where(obj => obj.Date >= dateLimit)
                                                 .Select(obj => new
                                                                {
-                                                                   obj.GuildWarsAccountEntity.Name
+                                                                   obj.Account.Name
                                                                })
                                                 .Distinct()
                                                 .ToListAsync()

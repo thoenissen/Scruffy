@@ -29,7 +29,7 @@ namespace Scruffy.Data.Entity.Tables.GuildWars2.Account
         /// Account
         /// </summary>
         [ForeignKey(nameof(Name))]
-        public GuildWarsAccountEntity GuildWarsAccountEntity { get; set; }
+        public GuildWarsAccountEntity Account { get; set; }
 
         #endregion // Navigation properties
 

@@ -3,6 +3,16 @@
   "CultureInfo": "de-DE",
   "Description": "Deutsch",
    "TranslationGroups": {
+      "InformationCommandModule": {
+         "GeneralInformationTitle": "Allgemeine Informationen",
+         "GeneralInformationDescription": "Alle Daten, die durch {0} gesammelt werden, dienen nur zur Verwaltung der Gilde. Im folgenden wird auf die einzelnen Bereiche, in denen Daten ermittelt werden, eingegangen.",
+         "GuildWars2ApiTitle": "Guild Wars 2 - API-Key",
+         "GuildWars2ApiDescription": "Über den angegeben API-Key werden die folgenden Daten ermittelt:\n\n - Mit wie vielen Charakteren wird die Gilde repräsentiert?\n - Wann wurde sich das letzte Mal angemeldet?\n - Welchem Server ist der Account zugeordnet?\n\nAlle anderen Daten, werden nur temporär ermittelt, wenn man {0} zur Ausführung eines Befehls auffordert. Dabei hat man auch immer nur Zugriff auf seinen eigenen API-Key.",
+         "DiscordTitle": "Discord",
+         "DiscordDescription": "Ein Teil des Gildenrangsystems ist die Aktivität im Discord. Hierfür wird gespeichert, wie viele Nachrichten verfasst werden und wie viele Minuten man im Sprachchat ist. Der Inhalt der Beiträge ist hierbei irrelevant und wird nicht gespeichert.",
+         "RefreshTitle": "Aktualisierung",
+         "RefreshDescription": "Stand: {0}"
+      },
       "ReminderCreationCommandModule": {
          "CommandProgressed": "Der Befehl wurde verarbeitet.",
          "ChooseChannelPrompt": "Wähle bitte einen der folgenden Kanäle aus:",
@@ -77,7 +87,10 @@
       "AccountAdministrationService": {
          "InvalidToken": "Der angegebene API-Key ist ungültig oder hat nicht alle benötigten Berechtigungen.",
          "SwitchToPrivate": "Ich habe deinen Befehl als private Nachricht beantwortet.",
-         "NoAccounts": "Du hast aktuell keine konfigurierten Acccounts."
+         "NoAccounts": "Du hast aktuell keine konfigurierten Acccounts.",
+         "ApiKeyAdded": "Dein API-Key wurde erfolgreich hinzugefügt.",
+         "NoAccountExisting": "Du hast noch keine hinterlegten Accounts.",
+         "AccountDeleted": "Der Account wurde erfolgreich gelöscht."
       },
       "FractalLfgMessageBuilder": {
          "Today": "Heute",
@@ -85,6 +98,9 @@
       },
       "AccountWantToAddDialogElement": {
          "Prompt": "Du hast noch keinen Account hinterlegt. Möchtest du einen hinzufügen?"
+      },
+      "AccountWantToDeleteDialogElement": {
+         "Prompt": "Bist du sicher, dass der Account '{0}' gelöscht werden soll?"
       },
       "OneTimeReminderJob": {
          "EmptyReminder": "{0} Erinnerung",

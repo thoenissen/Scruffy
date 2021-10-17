@@ -51,7 +51,7 @@ namespace Scruffy.Commands
         #region Command methods
 
         /// <summary>
-        /// Adding a new account
+        /// Adding an account
         /// </summary>
         /// <param name="commandContext">Command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
@@ -71,7 +71,7 @@ namespace Scruffy.Commands
         }
 
         /// <summary>
-        /// Editing a account
+        /// Editing an account
         /// </summary>
         /// <param name="commandContext">Command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
@@ -86,6 +86,26 @@ namespace Scruffy.Commands
                                                               .ConfigureAwait(false);
 
                                    await AdministrationService.Edit(commandContextContainer)
+                                                              .ConfigureAwait(false);
+                               });
+        }
+
+        /// <summary>
+        /// Remove an account
+        /// </summary>
+        /// <param name="commandContext">Command context</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        [Command("remove")]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
+        public Task Remove(CommandContext commandContext)
+        {
+            return InvokeAsync(commandContext,
+                               async commandContextContainer =>
+                               {
+                                   await UserManagementService.CheckDiscordAccountAsync(commandContextContainer.User.Id)
+                                                              .ConfigureAwait(false);
+
+                                   await AdministrationService.Remove(commandContextContainer)
                                                               .ConfigureAwait(false);
                                });
         }
