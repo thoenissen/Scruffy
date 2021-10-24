@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -223,6 +224,40 @@ namespace Scruffy.Data.Entity.Repositories.Base
                 }
 
                 _dbContext.SaveChanges();
+
+                success = true;
+            }
+            catch (Exception ex)
+            {
+                _dbContext.LastError = ex;
+            }
+
+            return success;
+        }
+
+        /// <summary>
+        /// Refresh a range of entity objects
+        /// </summary>
+        /// <param name="expression">Defines the entity objects to be refreshed</param>
+        /// <param name="refreshAction">Action to be performed with the entity objects</param>
+        /// <returns>Is the operation performed successfully?</returns>
+        public async Task<bool> RefreshRangeAsync(Expression<Func<TEntity, bool>> expression, Func<TEntity, Task> refreshAction)
+        {
+            var success = false;
+
+            _dbContext.LastError = null;
+
+            try
+            {
+                var dbSet = _dbContext.Set<TEntity>();
+
+                await foreach (var entry in dbSet.Where(expression).AsAsyncEnumerable())
+                {
+                    await refreshAction(entry).ConfigureAwait(false);
+                }
+
+                await _dbContext.SaveChangesAsync()
+                                .ConfigureAwait(false);
 
                 success = true;
             }

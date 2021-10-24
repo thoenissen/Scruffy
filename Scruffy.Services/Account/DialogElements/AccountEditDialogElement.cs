@@ -14,6 +14,7 @@ using Scruffy.Data.Entity.Repositories.Account;
 using Scruffy.Data.Json.GuildWars2.Core;
 using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.GuildWars2;
 using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.Account.DialogElements
@@ -124,7 +125,8 @@ namespace Scruffy.Services.Account.DialogElements
 
                                                                 if (tokenInformation?.Permissions != null
                                                                  && tokenInformation.Permissions.Contains(TokenInformation.Permission.Account)
-                                                                 && tokenInformation.Permissions.Contains(TokenInformation.Permission.Characters))
+                                                                 && tokenInformation.Permissions.Contains(TokenInformation.Permission.Characters)
+                                                                 && tokenInformation.Permissions.Contains(TokenInformation.Permission.Progression))
                                                                 {
                                                                     var accountInformation = await connector.GetAccountInformationAsync()
                                                                                                             .ConfigureAwait(false);
@@ -139,7 +141,11 @@ namespace Scruffy.Services.Account.DialogElements
                                                                             if (dbFactory.GetRepository<AccountRepository>()
                                                                                          .Refresh(obj => obj.UserId == user.Id
                                                                                                       && obj.Name == accountInformation.Name,
-                                                                                                  obj => obj.ApiKey = apiKey))
+                                                                                                  obj =>
+                                                                                                  {
+                                                                                                      obj.ApiKey = apiKey;
+                                                                                                      obj.Permissions = GuildWars2ApiPermissionConverter.ToPermission(tokenInformation.Permissions);
+                                                                                                  }))
                                                                             {
                                                                                 success = true;
                                                                             }

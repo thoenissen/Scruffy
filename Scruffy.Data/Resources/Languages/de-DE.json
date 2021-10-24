@@ -297,6 +297,9 @@
       "RaidOverviewService": {
          "ParticipationOverview": "Übersicht der Teilnahmepunkte"
       },
+      "RaidRegistrationService": {
+         "RequiredExperienceLevelMissing": "Du hast noch nicht das erforderlichen Erfahrungslevel für diesen Termin."
+      },
       "GuildAdministrationApiKeyDialogElement": {
          "Message": "Gib den zu verwendenden API-Key ein:"
       },

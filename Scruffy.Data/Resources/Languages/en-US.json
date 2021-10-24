@@ -296,6 +296,9 @@
       "RaidOverviewService": {
          "ParticipationOverview": "Participation points overview"
       },
+      "RaidRegistrationService": {
+         "RequiredExperienceLevelMissing": "You don't have the required experience level."
+      },
       "GuildAdministrationApiKeyDialogElement": {
          "Message": "Please enter the api key."
       },

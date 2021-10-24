@@ -285,6 +285,55 @@ namespace Scruffy.Commands
 
         #endregion // List
 
+        #region Account
+
+        /// <summary>
+        /// Guild
+        /// </summary>
+        [Group("account")]
+        [Aliases("a")]
+        [ModuleLifespan(ModuleLifespan.Transient)]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
+        public class DebugAccountModule : LocatedCommandModuleBase
+        {
+            #region Constructor
+
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="localizationService">Localization service</param>
+            /// <param name="userManagementService">User management service</param>
+            public DebugAccountModule(LocalizationService localizationService, UserManagementService userManagementService)
+                : base(localizationService, userManagementService)
+            {
+            }
+
+            #endregion // Constructor
+
+            #region Properties
+
+            /// <summary>
+            /// Debug-Service
+            /// </summary>
+            public DebugService DebugService { get; set; }
+
+            #endregion // Properties
+
+            #region Methods
+
+            /// <summary>
+            /// Refresh accounts
+            /// </summary>
+            /// <param name="commandContext">Current command context</param>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+            [Command("refresh")]
+            public Task ExecuteSpecialRankJob(CommandContext commandContext) => DebugService.RefreshAccount();
+
+            #endregion // Methods
+        }
+
+        #endregion // Guild
+
         #region Calendar
 
         /// <summary>
@@ -481,7 +530,7 @@ namespace Scruffy.Commands
             #endregion // Methods
         }
 
-        #endregion // Raid
+        #endregion // Guild
 
         #region Import
 

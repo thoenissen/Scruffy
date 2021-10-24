@@ -1,10 +1,18 @@
-﻿namespace Scruffy.Data.Enumerations.GuildWars2
+﻿using System;
+
+namespace Scruffy.Data.Enumerations.GuildWars2
 {
     /// <summary>
     /// Guild Wars 2 API Permission
     /// </summary>
+    [Flags]
     public enum GuildWars2ApiPermission : ulong
     {
+        /// <summary>
+        /// Minimum required rights
+        /// </summary>
+        RequiredPermissions = Account | Characters | Progression,
+
         /// <summary>
         /// None
         /// </summary>

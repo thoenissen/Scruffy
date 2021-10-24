@@ -10,7 +10,11 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 
 using Scruffy.Data.Entity;
+using Scruffy.Data.Entity.Repositories.Account;
 using Scruffy.Data.Entity.Repositories.General;
+using Scruffy.Data.Enumerations.GuildWars2;
+using Scruffy.Services.GuildWars2;
+using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.Debug
 {
@@ -368,6 +372,30 @@ namespace Scruffy.Services.Debug
                     await channel.SendMessageAsync(builder)
                                  .ConfigureAwait(false);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Refresh accounts
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task RefreshAccount()
+        {
+            using (var dbFactory = RepositoryFactory.CreateInstance())
+            {
+                await dbFactory.GetRepository<AccountRepository>()
+                               .RefreshRangeAsync(obj => obj.Permissions == GuildWars2ApiPermission.None,
+                                             async obj =>
+                                             {
+                                                 await using (var connector = new GuidWars2ApiConnector(obj.ApiKey))
+                                                 {
+                                                     var tokenInfo = await connector.GetTokenInformationAsync()
+                                                                                    .ConfigureAwait(false);
+
+                                                     obj.Permissions = GuildWars2ApiPermissionConverter.ToPermission(tokenInfo.Permissions);
+                                                 }
+                                             })
+                               .ConfigureAwait(false);
             }
         }
 

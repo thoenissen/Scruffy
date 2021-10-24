@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Scruffy.Data.Entity.Tables.CoreData;
+using Scruffy.Data.Enumerations.GuildWars2;
 
 namespace Scruffy.Data.Entity.Tables.GuildWars2.Account
 {
@@ -43,6 +44,11 @@ namespace Scruffy.Data.Entity.Tables.GuildWars2.Account
         /// Id of the word
         /// </summary>
         public long? WorldId { get; set; }
+
+        /// <summary>
+        /// Permissions
+        /// </summary>
+        public GuildWars2ApiPermission Permissions { get; set; }
 
         #region Navigation properties
 

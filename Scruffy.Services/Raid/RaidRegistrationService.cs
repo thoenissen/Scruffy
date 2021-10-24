@@ -62,12 +62,12 @@ namespace Scruffy.Services.Raid
                 var isAlreadyRegistered = false;
 
                 var user = await _userManagementService.GetUserByDiscordAccountId(discordUserId)
-                                                                                .ConfigureAwait(false);
+                                                       .ConfigureAwait(false);
 
                 if (dbFactory.GetRepository<RaidAppointmentRepository>()
                              .GetQuery()
                              .Any(obj => obj.Id == appointmentId
-                                         && obj.RaidDayTemplate.RaidExperienceAssignments.Any(obj2 => obj2.RaidExperienceLevel.Rank <= user.ExperienceLevelRank)))
+                                         && obj.RaidDayTemplate.RaidExperienceAssignments.Any(obj2 => obj2.RaidExperienceLevel.Rank >= user.ExperienceLevelRank)))
                 {
                     if (dbFactory.GetRepository<RaidRegistrationRepository>()
                                  .AddOrRefresh(obj => obj.AppointmentId == appointmentId
@@ -128,8 +128,8 @@ namespace Scruffy.Services.Raid
                 }
                 else
                 {
-                    await commandContext.Channel
-                                        .SendMessageAsync(LocalizationGroup.GetText("RequiredExperienceLevelMissing", "You don't have the required experience level."))
+                    await commandContext.Message
+                                        .RespondAsync(LocalizationGroup.GetText("RequiredExperienceLevelMissing", "You don't have the required experience level."))
                                         .ConfigureAwait(false);
                 }
             }

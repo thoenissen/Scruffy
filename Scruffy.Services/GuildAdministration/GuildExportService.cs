@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Account;
 using Scruffy.Data.Entity.Repositories.GuildAdministration;
+using Scruffy.Data.Enumerations.GuildWars2;
 using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Extensions;
 using Scruffy.Services.Core.Localization;
@@ -539,18 +540,27 @@ namespace Scruffy.Services.GuildAdministration
 
                 var accounts = await dbFactory.GetRepository<AccountRepository>()
                                              .GetQuery()
-                                             .Select(obj => obj.Name.ToLower())
+                                             .Select(obj => new
+                                                            {
+                                                                Name = obj.Name.ToLower(),
+                                                                Permission = obj.Permissions
+                                                            })
                                              .ToListAsync()
                                              .ConfigureAwait(false);
 
-                var members = new List<(string Name, DateTime? Joined, bool IsApiKeyValid)>();
+                var members = new List<(string Name, DateTime? Joined, bool IsApiKeyValid, bool HasAllPermissions)>();
 
                 await using (var connector = new GuidWars2ApiConnector(guild.ApiKey))
                 {
                     foreach (var member in await connector.GetGuildMembers(guild.GuildId)
                                                           .ConfigureAwait(false))
                     {
-                        members.Add((member.Name, member.Joined, accounts.Contains(member.Name.ToLower())));
+                        var account = accounts.FirstOrDefault(obj => obj.Name == member.Name.ToLower());
+
+                        members.Add((member.Name,
+                                     member.Joined,
+                                     account != null,
+                                     account?.Permission.HasFlag(GuildWars2ApiPermission.RequiredPermissions) == true));
                     }
                 }
 
@@ -558,12 +568,12 @@ namespace Scruffy.Services.GuildAdministration
                 {
                     await using (var writer = new StreamWriter(memoryStream))
                     {
-                        await writer.WriteLineAsync("AccountName;Joined;API-Key")
+                        await writer.WriteLineAsync("AccountName;Joined;API-Key;Permissions")
                                     .ConfigureAwait(false);
 
-                        foreach (var (name, joined, isApiKeyValid) in members.OrderBy(obj => obj.IsApiKeyValid).ThenBy(obj => obj.Name))
+                        foreach (var (name, joined, isApiKeyValid, hasAllPermissions) in members.OrderBy(obj => obj.IsApiKeyValid).ThenBy(obj => obj.Name))
                         {
-                            await writer.WriteLineAsync($"{name};{joined?.ToString("g", LocalizationGroup.CultureInfo)};{(isApiKeyValid ? "✔️" : "❌")}")
+                            await writer.WriteLineAsync($"{name};{joined?.ToString("g", LocalizationGroup.CultureInfo)};{(isApiKeyValid ? "✔️" : "❌")};{(hasAllPermissions ? "✔️" : "❌")}")
                                         .ConfigureAwait(false);
                         }
 

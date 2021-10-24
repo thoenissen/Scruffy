@@ -22,9 +22,49 @@ namespace Scruffy.Data.Json.GuildWars2.Core
             public const string Account = "account";
 
             /// <summary>
+            /// Builds
+            /// </summary>
+            public const string Builds = "builds";
+
+            /// <summary>
             /// Characters
             /// </summary>
             public const string Characters = "characters";
+
+            /// <summary>
+            /// Guilds
+            /// </summary>
+            public const string Guilds = "guilds";
+
+            /// <summary>
+            /// Guilds
+            /// </summary>
+            public const string Inventories = "inventories";
+
+            /// <summary>
+            /// Progression
+            /// </summary>
+            public const string Progression = "progression";
+
+            /// <summary>
+            /// PvP
+            /// </summary>
+            public const string PvP = "pvp";
+
+            /// <summary>
+            /// TradingPost
+            /// </summary>
+            public const string TradingPost = "tradingpost";
+
+            /// <summary>
+            /// Unlocks
+            /// </summary>
+            public const string Unlocks = "unlocks";
+
+            /// <summary>
+            /// Wallet
+            /// </summary>
+            public const string Wallet = "wallet";
         }
 
         #endregion // Permissions
