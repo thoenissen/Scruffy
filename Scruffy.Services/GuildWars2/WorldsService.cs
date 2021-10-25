@@ -75,7 +75,7 @@ namespace Scruffy.Services.GuildWars2
                 }
                 catch (Exception ex)
                 {
-                    LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(WorldsService), ex.Message, ex.ToString());
+                    LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(WorldsService), ex.Message, null, ex);
                 }
             }
 

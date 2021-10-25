@@ -58,7 +58,7 @@ namespace Scruffy.Services.Core.JobScheduler
             }
             catch (Exception ex)
             {
-                LoggingService.AddJobLogEntry(LogEntryLevel.CriticalError, GetType().Name, ex.Message, ex.ToString());
+                LoggingService.AddJobLogEntry(LogEntryLevel.CriticalError, GetType().Name, ex.Message, null, ex);
             }
         }
 

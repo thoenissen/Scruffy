@@ -25,23 +25,23 @@ namespace Scruffy.Services.GuildWars2
                              (combinedPermissions, permissionString) =>
                              {
                                  var permission = permissionString switch
-                                 {
-                                     TokenInformation.Permission.Account => GuildWars2ApiPermission.Account,
-                                     TokenInformation.Permission.Builds => GuildWars2ApiPermission.Builds,
-                                     TokenInformation.Permission.Characters => GuildWars2ApiPermission.Characters,
-                                     TokenInformation.Permission.Guilds => GuildWars2ApiPermission.Guilds,
-                                     TokenInformation.Permission.Inventories => GuildWars2ApiPermission.Inventories,
-                                     TokenInformation.Permission.Progression => GuildWars2ApiPermission.Progression,
-                                     TokenInformation.Permission.PvP => GuildWars2ApiPermission.PvP,
-                                     TokenInformation.Permission.TradingPost => GuildWars2ApiPermission.TradingPost,
-                                     TokenInformation.Permission.Unlocks => GuildWars2ApiPermission.Unlocks,
-                                     TokenInformation.Permission.Wallet => GuildWars2ApiPermission.Wallet,
-                                     _ => GuildWars2ApiPermission.None
-                                 };
+                                                  {
+                                                      TokenInformation.Permission.Account => GuildWars2ApiPermission.Account,
+                                                      TokenInformation.Permission.Builds => GuildWars2ApiPermission.Builds,
+                                                      TokenInformation.Permission.Characters => GuildWars2ApiPermission.Characters,
+                                                      TokenInformation.Permission.Guilds => GuildWars2ApiPermission.Guilds,
+                                                      TokenInformation.Permission.Inventories => GuildWars2ApiPermission.Inventories,
+                                                      TokenInformation.Permission.Progression => GuildWars2ApiPermission.Progression,
+                                                      TokenInformation.Permission.PvP => GuildWars2ApiPermission.PvP,
+                                                      TokenInformation.Permission.TradingPost => GuildWars2ApiPermission.TradingPost,
+                                                      TokenInformation.Permission.Unlocks => GuildWars2ApiPermission.Unlocks,
+                                                      TokenInformation.Permission.Wallet => GuildWars2ApiPermission.Wallet,
+                                                      _ => GuildWars2ApiPermission.None
+                                                  };
 
                                  if (permission == GuildWars2ApiPermission.None)
                                  {
-                                     LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(AccountAdministrationService), "Unknown permission value", permissionString);
+                                     LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(AccountAdministrationService), "Unknown permission value", permissionString, null);
                                  }
 
                                  combinedPermissions |= permission;

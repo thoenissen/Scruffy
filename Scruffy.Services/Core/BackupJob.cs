@@ -23,7 +23,7 @@ namespace Scruffy.Services.Core
             {
                 if (dbFactory.ExecuteSqlCommand($"BACKUP DATABASE [{Environment.GetEnvironmentVariable("SCRUFFY_DB_CATALOG")}] TO  DISK = N'{Environment.GetEnvironmentVariable("SCRUFFY_DB_BACKUP_DIRECTORY")}{Environment.GetEnvironmentVariable("SCRUFFY_DB_CATALOG")}_{DateTime.Now:yyyyMMdd}.bak' WITH NOFORMAT, NOINIT,  NAME = N'{Environment.GetEnvironmentVariable("SCRUFFY_DB_CATALOG")}-Full Database Backup', SKIP, NOREWIND, NOUNLOAD") == null)
                 {
-                    LoggingService.AddJobLogEntry(LogEntryLevel.CriticalError, nameof(BackupJob), dbFactory.LastError.Message, dbFactory.LastError.ToString());
+                    LoggingService.AddJobLogEntry(LogEntryLevel.CriticalError, nameof(BackupJob), dbFactory.LastError.Message, null, dbFactory.LastError.ToString());
                 }
             }
         }

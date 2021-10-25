@@ -35,33 +35,48 @@ namespace Scruffy.ServiceHost
             Console.CancelKeyPress += OnCancelKeyPress;
             AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
 
-            await using (var jobScheduler = new JobScheduler())
+            try
             {
-                // TODO configuration
-                await using (var stream = Assembly.Load("Scruffy.Data").GetManifestResourceStream("Scruffy.Data.Resources.Languages.de-DE.json"))
+                LoggingService.AddServiceLogEntry(Data.Enumerations.General.LogEntryLevel.Information, nameof(Program), "Start", null);
+
+                await using (var jobScheduler = new JobScheduler())
                 {
-                    var localizationService = new LocalizationService();
-
-                    localizationService.Load(stream);
-
-                    GlobalServiceProvider.Current.AddSingleton(localizationService);
-                }
-
-                GlobalServiceProvider.Current.AddSingleton(jobScheduler);
-
-                using (var fractalReminderService = new FractalLfgReminderService(jobScheduler))
-                {
-                    GlobalServiceProvider.Current.AddSingleton(fractalReminderService);
-
-                    await using (var discordBot = new DiscordBot())
+                    // TODO configuration
+                    await using (var stream = Assembly.Load("Scruffy.Data").GetManifestResourceStream("Scruffy.Data.Resources.Languages.de-DE.json"))
                     {
-                        await discordBot.StartAsync().ConfigureAwait(false);
+                        var localizationService = new LocalizationService();
 
-                        await jobScheduler.StartAsync().ConfigureAwait(false);
+                        localizationService.Load(stream);
 
-                        await _waitForExitTaskSource.Task.ConfigureAwait(false);
+                        GlobalServiceProvider.Current.AddSingleton(localizationService);
+                    }
+
+                    GlobalServiceProvider.Current.AddSingleton(jobScheduler);
+
+                    using (var fractalReminderService = new FractalLfgReminderService(jobScheduler))
+                    {
+                        GlobalServiceProvider.Current.AddSingleton(fractalReminderService);
+
+                        await using (var discordBot = new DiscordBot())
+                        {
+                            await discordBot.StartAsync().ConfigureAwait(false);
+
+                            await jobScheduler.StartAsync().ConfigureAwait(false);
+
+                            await _waitForExitTaskSource.Task.ConfigureAwait(false);
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                LoggingService.AddServiceLogEntry(Data.Enumerations.General.LogEntryLevel.CriticalError, nameof(Program), null, null, ex);
+            }
+            finally
+            {
+                LoggingService.AddServiceLogEntry(Data.Enumerations.General.LogEntryLevel.Information, nameof(Program), "End", null);
+
+                LoggingService.CloseAndFlush();
             }
         }
 

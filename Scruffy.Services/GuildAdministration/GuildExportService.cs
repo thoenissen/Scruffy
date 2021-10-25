@@ -209,10 +209,10 @@ namespace Scruffy.Services.GuildAdministration
                                                            && obj.User != null
                                                            && obj.Type == "upgrade"
                                                            && (obj.Action == "completed"
+
+                                                            // Cause of some items, who don't generate 'completed' we have to check also the 'queued' entries.
                                                             || (obj.Action == "queued"
                                                              && logEntriesQuery.Any(obj2 => obj2.Type == "upgrade"
-                                                                                         && obj2.User == obj.User
-                                                                                         && obj2.Time <= obj.Time
                                                                                          && obj2.UpgradeId == obj.UpgradeId
                                                                                          && obj2.Action == "completed") == false))
                                                            && obj.Guild.DiscordServerId == commandContext.Guild.Id)
@@ -305,10 +305,10 @@ namespace Scruffy.Services.GuildAdministration
                                                            && obj.User != null
                                                            && obj.Type == "upgrade"
                                                            && (obj.Action == "completed"
+
+                                                            // Cause of some items, who don't generate 'completed' we have to check also the 'queued' entries.
                                                             || (obj.Action == "queued"
                                                              && logEntriesQuery.Any(obj2 => obj2.Type == "upgrade"
-                                                                                         && obj2.User == obj.User
-                                                                                         && obj2.Time <= obj.Time
                                                                                          && obj2.UpgradeId == obj.UpgradeId
                                                                                          && obj2.Action == "completed") == false))
                                                            && obj.Guild.DiscordServerId == commandContext.Guild.Id)

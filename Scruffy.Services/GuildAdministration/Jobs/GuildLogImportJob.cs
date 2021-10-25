@@ -116,7 +116,7 @@ namespace Scruffy.Services.GuildAdministration.Jobs
                             }
                             catch (Exception ex)
                             {
-                                LoggingService.AddJobLogEntry(LogEntryLevel.Warning, nameof(GuildLogImportJob), ex.Message, ex.ToString());
+                                LoggingService.AddJobLogEntry(LogEntryLevel.Warning, nameof(GuildLogImportJob), ex.Message, null, ex);
                             }
                         }
                     }
