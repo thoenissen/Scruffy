@@ -65,6 +65,18 @@ namespace Scruffy.Services.Core.Discord
         #region Methods
 
         /// <summary>
+        /// Called before a command in the implementing module is executed.
+        /// </summary>
+        /// <param name="commandContext">Context in which the method is being executed.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public override Task BeforeExecutionAsync(CommandContext commandContext)
+        {
+            LoggingService.AddCommandLogEntry(LogEntryLevel.Information, commandContext.Command?.QualifiedName, null, "BeforeExecution");
+
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
         /// Execution
         /// </summary>
         /// <param name="commandContext">Original command context</param>

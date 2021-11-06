@@ -13,6 +13,9 @@
          "RefreshTitle": "Aktualisierung",
          "RefreshDescription": "Stand: {0}"
       },
+      "AdministrationCommandModule": {
+         "NotAllowedToPerform": "Diese Aktion darf ich nicht ausführen."
+      },
       "ReminderCreationCommandModule": {
          "CommandProgressed": "Der Befehl wurde verarbeitet.",
          "ChooseChannelPrompt": "Wähle bitte einen der folgenden Kanäle aus:",

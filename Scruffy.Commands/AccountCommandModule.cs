@@ -15,7 +15,7 @@ namespace Scruffy.Commands
     /// Calendar commands
     /// </summary>
     [Group("account")]
-    [Aliases("a")]
+    [Aliases("ac")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
     [ModuleLifespan(ModuleLifespan.Transient)]
     public class AccountCommandModule : LocatedCommandModuleBase

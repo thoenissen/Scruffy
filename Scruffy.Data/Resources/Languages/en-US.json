@@ -12,6 +12,9 @@
          "RefreshTitle": "State",
          "RefreshDescription": "As of: {0}"
       },
+      "AdministrationCommandModule": {
+         "NotAllowedToPerform": "I'm not allowed to perform this action."
+      },
       "ReminderCreationCommandModule": {
          "CommandProgressed": "Command progressed.",
          "ChooseChannelPrompt": "Please choose one of the following channels.",

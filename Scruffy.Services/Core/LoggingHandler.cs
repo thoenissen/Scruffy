@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 
+using Elasticsearch.Net;
+
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.General;
 using Scruffy.Data.Entity.Tables.General;
@@ -57,21 +59,37 @@ namespace Scruffy.Services.Core
         private LoggingService()
         {
             var environment = Environment.GetEnvironmentVariable("SCRUFFY_ENVIRONMENT");
-            var elasticSearch = Environment.GetEnvironmentVariable("SCRUFFY_ELASTICSEARCH");
+            var openSearch = Environment.GetEnvironmentVariable("SCRUFFY_OPENSEARCH");
 
-            var configuration =  new LoggerConfiguration()
-                                     .Enrich.WithProperty("Environment", environment);
+            var configuration =  new LoggerConfiguration().Enrich.WithProperty("Environment", environment);
 
             if (string.IsNullOrWhiteSpace(environment) == false
-             || string.IsNullOrWhiteSpace(elasticSearch) == false)
+             || string.IsNullOrWhiteSpace(openSearch) == false)
             {
+                Func<ConnectionConfiguration, ConnectionConfiguration> modifyConnectionSettings = null;
+
+                var user = Environment.GetEnvironmentVariable("SCRUFFY_OPENSEARCH_USER");
+                if (string.IsNullOrWhiteSpace(user) == false)
+                {
+                    modifyConnectionSettings = obj =>
+                                               {
+                                                   obj.BasicAuthentication(user, Environment.GetEnvironmentVariable("SCRUFFY_OPENSEARCH_PASSWORD"));
+
+                                                   // HACK / TODO - Create real certificate
+                                                   obj.ServerCertificateValidationCallback(CertificateValidations.AllowAll);
+
+                                                   return obj;
+                                               };
+                }
+
                 configuration.WriteTo
-                             .Elasticsearch(new ElasticsearchSinkOptions(new Uri(elasticSearch))
+                             .Elasticsearch(new ElasticsearchSinkOptions(new Uri(openSearch))
                                             {
                                                 AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv7,
                                                 AutoRegisterTemplate = true,
                                                 MinimumLogEventLevel = Serilog.Events.LogEventLevel.Verbose,
-                                                IndexFormat = $"scruffy-{DateTime.Now:yyyy-MM}"
+                                                IndexFormat = $"scruffy-{environment}-{{0:yyyy-MM}}",
+                                                ModifyConnectionSettings = modifyConnectionSettings
                                             });
             }
 
@@ -97,7 +115,7 @@ namespace Scruffy.Services.Core
         /// <returns>Log entry id</returns>
         public static long? AddCommandLogEntry(LogEntryLevel level, string qualifiedCommandName, string lastUserCommand, string message, string additionalInformation = null, Exception ex = null)
         {
-            return _logger.WriteLine(LogEntryType.CommandError, level, qualifiedCommandName, lastUserCommand, message, additionalInformation, ex);
+            return _logger.WriteLine(LogEntryType.Command, level, qualifiedCommandName, lastUserCommand, message, additionalInformation, ex);
         }
 
         /// <summary>

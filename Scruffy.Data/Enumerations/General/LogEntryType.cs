@@ -8,7 +8,7 @@
         /// <summary>
         /// Command error
         /// </summary>
-        CommandError = 1000,
+        Command = 1000,
 
         /// <summary>
         /// Returning job
