@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,7 @@ using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.CoreData;
 using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Entity.Repositories.GuildAdministration;
+using Scruffy.Data.Enumerations.General;
 using Scruffy.Data.Enumerations.GuildAdministration;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord;
@@ -140,7 +142,7 @@ namespace Scruffy.Services.GuildAdministration.Jobs
                                                                           })
                                                            .ToList())
                     {
-                        var actions = new List<(bool IsGrant, DiscordMember User)>();
+                        var actions = new List<(bool IsGrant, DiscordMember User, ulong RoleId)>();
 
                         var guild = await client.GetGuildAsync(configuration.DiscordServerId)
                                                 .ConfigureAwait(false);
@@ -155,18 +157,49 @@ namespace Scruffy.Services.GuildAdministration.Jobs
                                 {
                                     if (configuration.Users.Any(obj => obj.Id == user.Id) == false)
                                     {
-                                        actions.Add((false, user));
+                                        actions.Add((false, user, configuration.DiscordRoleId));
                                     }
                                 }
                                 else if (configuration.Users.FirstOrDefault(obj => obj.Id == user.Id)?.IsGrantRole == true)
                                 {
-                                    actions.Add((true, user));
+                                    actions.Add((true, user, configuration.DiscordRoleId));
                                 }
                             }
                         }
 
                         if (actions.Count > 0)
                         {
+                            foreach (var action in actions)
+                            {
+                                try
+                                {
+                                    var role = action.User.Guild.GetRole(action.RoleId);
+                                    if (role != null)
+                                    {
+                                        if (action.IsGrant)
+                                        {
+                                            await action.User
+                                                        .GrantRoleAsync(role)
+                                                        .ConfigureAwait(false);
+                                        }
+                                        else
+                                        {
+                                            await action.User
+                                                        .RevokeRoleAsync(role)
+                                                        .ConfigureAwait(false);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        LoggingService.AddJobLogEntry(LogEntryLevel.Error, nameof(GuildSpecialRankPointsJob), "Role assignment", $"Unknown role {action.RoleId} at {action.User.Guild.Id}", null);
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    LoggingService.AddJobLogEntry(LogEntryLevel.Error, nameof(GuildSpecialRankPointsJob), "Role assignment", null, ex);
+                                }
+                            }
+
                             if (configuration.ChannelId != null)
                             {
                                 var builder = new DiscordEmbedBuilder();
