@@ -332,7 +332,56 @@ namespace Scruffy.Commands
             #endregion // Methods
         }
 
-        #endregion // Guild
+        #endregion // Account
+
+        #region Guild Wars
+
+        /// <summary>
+        /// Guild
+        /// </summary>
+        [Group("gw")]
+        [Aliases("g")]
+        [ModuleLifespan(ModuleLifespan.Transient)]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
+        public class DebugGuildWarsModule : LocatedCommandModuleBase
+        {
+            #region Constructor
+
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="localizationService">Localization service</param>
+            /// <param name="userManagementService">User management service</param>
+            public DebugGuildWarsModule(LocalizationService localizationService, UserManagementService userManagementService)
+                : base(localizationService, userManagementService)
+            {
+            }
+
+            #endregion // Constructor
+
+            #region Properties
+
+            /// <summary>
+            /// Debug-Service
+            /// </summary>
+            public AchievementService AchievementService { get; set; }
+
+            #endregion // Properties
+
+            #region Methods
+
+            /// <summary>
+            /// Import achievements
+            /// </summary>
+            /// <param name="commandContext">Current command context</param>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+            [Command("import_achievements")]
+            public Task ExecuteSpecialRankJob(CommandContext commandContext) => AchievementService.ImportAchievements();
+
+            #endregion // Methods
+        }
+
+        #endregion // Guild Wars
 
         #region Calendar
 

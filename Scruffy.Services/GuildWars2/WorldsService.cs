@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Account;
 using Scruffy.Data.Entity.Repositories.GuildWars2;
+using Scruffy.Data.Entity.Repositories.GuildWars2.GameData;
 using Scruffy.Data.Enumerations.General;
 using Scruffy.Data.Json.QuickChart;
 using Scruffy.Services.Core;

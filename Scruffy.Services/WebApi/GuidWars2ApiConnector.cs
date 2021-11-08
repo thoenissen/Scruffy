@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 
 using Scruffy.Data.Enumerations.GuildWars2;
 using Scruffy.Data.Json.GuildWars2.Account;
+using Scruffy.Data.Json.GuildWars2.Achievements;
 using Scruffy.Data.Json.GuildWars2.Characters;
 using Scruffy.Data.Json.GuildWars2.Core;
 using Scruffy.Data.Json.GuildWars2.Guild;
@@ -649,6 +650,66 @@ namespace Scruffy.Services.WebApi
                               }
 
                               return prices;
+                          });
+        }
+
+        /// <summary>
+        /// Request the list of all achievements
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task<List<int>> GetAllAchievementIds()
+        {
+            return Invoke(GuildWars2ApiPermission.None,
+                          async () =>
+                          {
+                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/achievements")
+                                                          .GetResponseAsync()
+                                                          .ConfigureAwait(false))
+                              {
+                                  using (var reader = new StreamReader(response.GetResponseStream()))
+                                  {
+                                      var jsonResult = await reader.ReadToEndAsync()
+                                                                   .ConfigureAwait(false);
+
+                                      return JsonConvert.DeserializeObject<List<int>>(jsonResult);
+                                  }
+                              }
+                          });
+        }
+
+        /// <summary>
+        /// Get items
+        /// </summary>
+        /// <param name="itemIds">Item ids</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task<List<Achievement>> GetAchievements(List<int> itemIds)
+        {
+            return Invoke(GuildWars2ApiPermission.None,
+                          async () =>
+                          {
+                              var pageCount = (int)Math.Ceiling(itemIds.Count / 200.0);
+
+                              var achievements = new List<Achievement>();
+
+                              for (var i = 0; i < pageCount; i++)
+                              {
+                                  var ids = string.Join(",", itemIds.Skip(i * 200).Take(200).Select(obj => obj.ToString()));
+
+                                  using (var response = await CreateRequest("https://api.guildwars2.com/v2/achievements?ids=" + ids)
+                                                              .GetResponseAsync()
+                                                              .ConfigureAwait(false))
+                                  {
+                                      using (var reader = new StreamReader(response.GetResponseStream()))
+                                      {
+                                          var jsonResult = await reader.ReadToEndAsync()
+                                                                       .ConfigureAwait(false);
+
+                                          achievements.AddRange(JsonConvert.DeserializeObject<List<Achievement>>(jsonResult));
+                                      }
+                                  }
+                              }
+
+                              return achievements;
                           });
         }
 

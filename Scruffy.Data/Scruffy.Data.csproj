@@ -59,7 +59,6 @@
     <Folder Include="Entity\Repositories\General\" />
     <Folder Include="Entity\Repositories\Account\" />
     <Folder Include="Entity\Repositories\Games\" />
-    <Folder Include="Entity\Repositories\GuildWars2\" />
     <Folder Include="Entity\Repositories\Raid\" />
     <Folder Include="Entity\Repositories\Reminder\" />
   </ItemGroup>

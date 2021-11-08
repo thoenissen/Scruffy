@@ -1,15 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-using Scruffy.Data.Entity.Queryable.GuildWars2;
+using Scruffy.Data.Entity.Queryable.GuildWars2.GameData;
 using Scruffy.Data.Entity.Repositories.Base;
 using Scruffy.Data.Entity.Tables.GuildWars2.GameData;
 
 namespace Scruffy.Data.Entity.Repositories.GuildWars2.GameData
 {
     /// <summary>
-    /// Repository for accessing <see cref="GuildWarsWorldEntity"/>
+    /// Repository for accessing <see cref="GuildWarsAchievementBitEntity"/>
     /// </summary>
-    public class GuildWarsWorldRepository : RepositoryBase<GuildWarsWorldQueryable, GuildWarsWorldEntity>
+    public class GuildWarsAchievementBitRepository : RepositoryBase<GuildWarsAchievementBitQueryable, GuildWarsAchievementBitEntity>
     {
         #region Constructor
 
@@ -17,7 +17,7 @@ namespace Scruffy.Data.Entity.Repositories.GuildWars2.GameData
         /// Constructor
         /// </summary>
         /// <param name="dbContext"><see cref="DbContext"/>-object</param>
-        public GuildWarsWorldRepository(ScruffyDbContext dbContext)
+        public GuildWarsAchievementBitRepository(ScruffyDbContext dbContext)
             : base(dbContext)
         {
         }

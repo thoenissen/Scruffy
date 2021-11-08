@@ -404,12 +404,53 @@ namespace Scruffy.Data.Entity
             modelBuilder.Entity<GuildWarsWorldEntity>();
             modelBuilder.Entity<GuildWarsItemEntity>();
             modelBuilder.Entity<GuildWarsItemGuildUpgradeConversionEntity>();
+            modelBuilder.Entity<GuildWarsAchievementEntity>();
+            modelBuilder.Entity<GuildWarsAchievementFlagEntity>();
+            modelBuilder.Entity<GuildWarsAchievementPrerequisiteEntity>();
+            modelBuilder.Entity<GuildWarsAchievementBitEntity>();
+            modelBuilder.Entity<GuildWarsAchievementRewardEntity>();
+            modelBuilder.Entity<GuildWarsAchievementTierEntity>();
 
             modelBuilder.Entity<GuildWarsItemGuildUpgradeConversionEntity>()
                         .HasKey(obj => new
                                        {
                                            obj.ItemId,
                                            obj.UpgradeId
+                                       });
+
+            modelBuilder.Entity<GuildWarsAchievementFlagEntity>()
+                        .HasKey(obj => new
+                                       {
+                                           obj.AchievementId,
+                                           obj.Flag
+                                       });
+
+            modelBuilder.Entity<GuildWarsAchievementPrerequisiteEntity>()
+                        .HasKey(obj => new
+                                       {
+                                           obj.AchievementId,
+                                           obj.Id
+                                       });
+
+            modelBuilder.Entity<GuildWarsAchievementBitEntity>()
+                        .HasKey(obj => new
+                                       {
+                                           obj.AchievementId,
+                                           obj.Bit
+                                       });
+
+            modelBuilder.Entity<GuildWarsAchievementRewardEntity>()
+                        .HasKey(obj => new
+                                       {
+                                           obj.AchievementId,
+                                           obj.Counter
+                                       });
+
+            modelBuilder.Entity<GuildWarsAchievementTierEntity>()
+                        .HasKey(obj => new
+                                       {
+                                           obj.AchievementId,
+                                           obj.Counter
                                        });
 
             // Statistics
