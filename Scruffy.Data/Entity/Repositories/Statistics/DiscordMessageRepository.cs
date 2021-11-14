@@ -47,19 +47,22 @@ namespace Scruffy.Data.Entity.Repositories.Statistics
 
             try
             {
-                await using (var connection = new SqlConnection(GetDbContext().ConnectionString))
+                var connection = new SqlConnection(GetDbContext().ConnectionString);
+                await using (connection.ConfigureAwait(false))
                 {
                     await connection.OpenAsync()
                                     .ConfigureAwait(false);
 
-                    await using (var sqlCommand = new SqlCommand(@"CREATE TABLE #DiscordMessages (
+                    var sqlCommand = new SqlCommand(@"CREATE TABLE #DiscordMessages (
                                                                        [DiscordServerId] decimal(20,0) NOT NULL,
                                                                        [DiscordChannelId] decimal(20,0) NOT NULL,
                                                                        [DiscordMessageId] decimal(20,0) NOT NULL,
                                                                        [DiscordAccountId] decimal(20,0) NOT NULL,
                                                                        [TimeStamp] datetime2 NOT NULL,
                                                                    )",
-                                                                 connection))
+                                                                 connection);
+
+                    await using (sqlCommand.ConfigureAwait(false))
                     {
                         sqlCommand.ExecuteNonQuery();
                     }
@@ -86,33 +89,37 @@ namespace Scruffy.Data.Entity.Repositories.Statistics
 
                     if (isBatchCommitted)
                     {
-                        await using (var sqlCommand = new SqlCommand(@"MERGE INTO [DiscordMessages] AS [TARGET]
-                                                                               USING #DiscordMessages AS [Source]
-                                                                                  ON [Target].[DiscordServerId] = [Source].[DiscordServerId]
-                                                                                 AND  [Target].[DiscordChannelId] = [Source].[DiscordChannelId]
-                                                                                 AND  [Target].[DiscordMessageId] = [Source].[DiscordMessageId]
-                                                                   WHEN MATCHED THEN
-                                                                              UPDATE 
-                                                                                SET [Target].[IsBatchCommitted] = 1
-                                                                   WHEN NOT MATCHED THEN
-                                                                              INSERT ( [DiscordServerId], [DiscordChannelId], [DiscordMessageId], [DiscordAccountId], [TimeStamp], [IsBatchCommitted])
-                                                                              VALUES ( [Source].[DiscordServerId], [Source].[DiscordChannelId], [Source].[DiscordMessageId], [Source].[DiscordAccountId], [Source].[TimeStamp], 1); ",
-                                                                     connection))
+                        sqlCommand = new SqlCommand(@"MERGE INTO [DiscordMessages] AS [TARGET]
+                                                                           USING #DiscordMessages AS [Source]
+                                                                              ON [Target].[DiscordServerId] = [Source].[DiscordServerId]
+                                                                             AND  [Target].[DiscordChannelId] = [Source].[DiscordChannelId]
+                                                                             AND  [Target].[DiscordMessageId] = [Source].[DiscordMessageId]
+                                                               WHEN MATCHED THEN
+                                                                          UPDATE 
+                                                                            SET [Target].[IsBatchCommitted] = 1
+                                                               WHEN NOT MATCHED THEN
+                                                                          INSERT ( [DiscordServerId], [DiscordChannelId], [DiscordMessageId], [DiscordAccountId], [TimeStamp], [IsBatchCommitted])
+                                                                          VALUES ( [Source].[DiscordServerId], [Source].[DiscordChannelId], [Source].[DiscordMessageId], [Source].[DiscordAccountId], [Source].[TimeStamp], 1); ",
+                                                                    connection);
+
+                        await using (sqlCommand.ConfigureAwait(false))
                         {
                             sqlCommand.ExecuteNonQuery();
                         }
                     }
                     else
                     {
-                        await using (var sqlCommand = new SqlCommand(@"MERGE INTO [DiscordMessages] AS [TARGET]
-                                                                               USING #DiscordMessages AS [Source]
-                                                                                  ON [Target].[ServerId] = [Source].[ServerId]
-                                                                                 AND  [Target].[ChannelId] = [Source].[ChannelId]
-                                                                                 AND  [Target].[MessageId] = [Source].[MessageId]
-                                                                   WHEN NOT MATCHED THEN
-                                                                              INSERT ( [DiscordServerId], [DiscordChannelId], [DiscordMessageId], [DiscordAccountId], [TimeStamp], [IsBatchCommitted])
-                                                                              VALUES ( [Source].[DiscordServerId], [Source].[DiscordChannelId], [Source].[DiscordMessageId], [Source].[DiscordAccountId], [Source].[TimeStamp], 0); ",
-                                                                     connection))
+                        sqlCommand = new SqlCommand(@"MERGE INTO [DiscordMessages] AS [TARGET]
+                                                                           USING #DiscordMessages AS [Source]
+                                                                              ON [Target].[ServerId] = [Source].[ServerId]
+                                                                             AND  [Target].[ChannelId] = [Source].[ChannelId]
+                                                                             AND  [Target].[MessageId] = [Source].[MessageId]
+                                                               WHEN NOT MATCHED THEN
+                                                                          INSERT ( [DiscordServerId], [DiscordChannelId], [DiscordMessageId], [DiscordAccountId], [TimeStamp], [IsBatchCommitted])
+                                                                          VALUES ( [Source].[DiscordServerId], [Source].[DiscordChannelId], [Source].[DiscordMessageId], [Source].[DiscordAccountId], [Source].[TimeStamp], 0); ",
+                                                                    connection);
+
+                        await using (sqlCommand.ConfigureAwait(false))
                         {
                             sqlCommand.ExecuteNonQuery();
                         }

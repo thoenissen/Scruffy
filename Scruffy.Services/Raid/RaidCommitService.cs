@@ -134,7 +134,8 @@ namespace Scruffy.Services.Raid
                                         Users = users,
                                     };
 
-                    await using (var dialogHandler = new DialogHandler(commandContext))
+                    var dialogHandler = new DialogHandler(commandContext);
+                    await using (dialogHandler.ConfigureAwait(false))
                     {
                         while (await dialogHandler.Run<RaidCommitDialogElement, bool>(new RaidCommitDialogElement(_localizationService, _userManagementService, container)).ConfigureAwait(false))
                         {

@@ -38,7 +38,8 @@ namespace Scruffy.Services.GuildWars2
         {
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
-                await using (var connector = new GuidWars2ApiConnector(null))
+                var connector = new GuidWars2ApiConnector(null);
+                await using (connector.ConfigureAwait(false))
                 {
                     var itemIds = await connector.GetAllItemIds()
                                                  .ConfigureAwait(false);

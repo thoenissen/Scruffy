@@ -50,7 +50,8 @@ namespace Scruffy.Services.Reminder.Jobs
         {
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
-                await using (var transaction = dbFactory.BeginTransaction(System.Data.IsolationLevel.RepeatableRead))
+                var transaction = dbFactory.BeginTransaction(System.Data.IsolationLevel.RepeatableRead);
+                await using (transaction.ConfigureAwait(false))
                 {
                     var jobEntity = dbFactory.GetRepository<OneTimeReminderRepository>()
                                              .GetQuery()
@@ -73,7 +74,8 @@ namespace Scruffy.Services.Reminder.Jobs
                             await transaction.CommitAsync()
                                              .ConfigureAwait(false);
 
-                            await using (var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider())
+                            var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+                            await using (serviceProvider.ConfigureAwait(false))
                             {
                                 var discordClient = serviceProvider.GetService<DiscordClient>();
 

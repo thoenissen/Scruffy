@@ -45,16 +45,18 @@ namespace Scruffy.Data.Entity.Repositories.GuildWars2.GameData
 
             try
             {
-                await using (var connection = new SqlConnection(GetDbContext().ConnectionString))
+                var connection = new SqlConnection(GetDbContext().ConnectionString);
+                await using (connection.ConfigureAwait(false))
                 {
                     await connection.OpenAsync()
                                     .ConfigureAwait(false);
 
-                    await using (var sqlCommand = new SqlCommand(@"CREATE TABLE #GuildWarsItemGuildUpgradeConversions (
+                    var sqlCommand = new SqlCommand(@"CREATE TABLE #GuildWarsItemGuildUpgradeConversions (
                                                                        [ItemId] int NOT NULL,
                                                                        [UpgradeId] bigint NOT NULL
                                                                    )",
-                                                                 connection))
+                                                                 connection);
+                    await using (sqlCommand.ConfigureAwait(false))
                     {
                         sqlCommand.ExecuteNonQuery();
                     }
@@ -76,14 +78,15 @@ namespace Scruffy.Data.Entity.Repositories.GuildWars2.GameData
                                   .ConfigureAwait(false);
                     }
 
-                    await using (var sqlCommand = new SqlCommand(@"MERGE INTO [GuildWarsItemGuildUpgradeConversions] AS [TARGET]
-                                                                               USING #GuildWarsItemGuildUpgradeConversions AS [Source]
-                                                                                  ON [Target].[ItemId] = [Source].[ItemId]
-                                                                                 AND  [Target].[UpgradeId] = [Source].[UpgradeId]
-                                                               WHEN NOT MATCHED THEN
-                                                                              INSERT ( [ItemId], [UpgradeId])
-                                                                              VALUES ( [Source].[ItemId], [Source].[UpgradeId]); ",
-                                                                 connection))
+                    sqlCommand = new SqlCommand(@"MERGE INTO [GuildWarsItemGuildUpgradeConversions] AS [TARGET]
+                                                                           USING #GuildWarsItemGuildUpgradeConversions AS [Source]
+                                                                              ON [Target].[ItemId] = [Source].[ItemId]
+                                                                             AND  [Target].[UpgradeId] = [Source].[UpgradeId]
+                                                           WHEN NOT MATCHED THEN
+                                                                          INSERT ( [ItemId], [UpgradeId])
+                                                                          VALUES ( [Source].[ItemId], [Source].[UpgradeId]); ",
+                                                             connection);
+                    await using (sqlCommand.ConfigureAwait(false))
                     {
                         sqlCommand.ExecuteNonQuery();
                     }

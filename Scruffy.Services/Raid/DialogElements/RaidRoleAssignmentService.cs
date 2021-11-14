@@ -45,7 +45,8 @@ namespace Scruffy.Services.Raid.DialogElements
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task AssignRoles(CommandContextContainer commandContext, long registrationId)
         {
-            await using (var dialogHandler = new DialogHandler(commandContext))
+            var dialogHandler = new DialogHandler(commandContext);
+            await using (dialogHandler.ConfigureAwait(false))
             {
                 using (var dbFactory = RepositoryFactory.CreateInstance())
                 {

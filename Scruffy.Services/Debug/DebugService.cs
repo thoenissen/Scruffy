@@ -34,7 +34,8 @@ namespace Scruffy.Services.Debug
         {
             if (commandContext.Message.ReferencedMessage != null)
             {
-                await using (var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(commandContext.Message.ReferencedMessage.Content)))
+                var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(commandContext.Message.ReferencedMessage.Content));
+                await using (memoryStream.ConfigureAwait(false))
                 {
                     await commandContext.RespondAsync(new DiscordMessageBuilder().WithFile("dump.txt", memoryStream))
                                         .ConfigureAwait(false);
@@ -208,9 +209,11 @@ namespace Scruffy.Services.Debug
 
                 if (logEntry != null)
                 {
-                    await using (var memoryStream = new MemoryStream())
+                    var memoryStream = new MemoryStream();
+                    await using (memoryStream.ConfigureAwait(false))
                     {
-                        await using (var writer = new StreamWriter(memoryStream))
+                        var writer = new StreamWriter(memoryStream);
+                        await using (writer.ConfigureAwait(false))
                         {
                             await writer.WriteAsync(nameof(logEntry.Id))
                                         .ConfigureAwait(false);
@@ -387,7 +390,8 @@ namespace Scruffy.Services.Debug
                                .RefreshRangeAsync(obj => obj.Permissions == GuildWars2ApiPermission.None,
                                              async obj =>
                                              {
-                                                 await using (var connector = new GuidWars2ApiConnector(obj.ApiKey))
+                                                 var connector = new GuidWars2ApiConnector(obj.ApiKey);
+                                                 await using (connector.ConfigureAwait(false))
                                                  {
                                                      var tokenInfo = await connector.GetTokenInformationAsync()
                                                                                     .ConfigureAwait(false);

@@ -52,7 +52,8 @@ namespace Scruffy.Services.Calendar
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task EditParticipants(CommandContextContainer commandContext)
         {
-            await using (var dialogHandler = new DialogHandler(commandContext))
+            var dialogHandler = new DialogHandler(commandContext);
+            await using (dialogHandler.ConfigureAwait(false))
             {
                 var appointmentId = await dialogHandler.Run<CalendarAppointmentSelectionDialogElement, long>()
                                                        .ConfigureAwait(false);

@@ -26,7 +26,8 @@ namespace Scruffy.Services.Debug.Jobs
             var debugChannel = Environment.GetEnvironmentVariable("SCRUFFY_DEBUG_CHANNEL");
             if (string.IsNullOrWhiteSpace(debugChannel) == false)
             {
-                await using (var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider())
+                var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+                await using (serviceProvider.ConfigureAwait(false))
                 {
                     var discordClient = serviceProvider.GetService<DiscordClient>();
                     var debugService = serviceProvider.GetService<DebugService>();

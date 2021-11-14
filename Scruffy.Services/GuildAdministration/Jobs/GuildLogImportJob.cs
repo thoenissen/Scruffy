@@ -34,7 +34,8 @@ namespace Scruffy.Services.GuildAdministration.Jobs
         {
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
-                await using (var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider())
+                var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+                await using (serviceProvider.ConfigureAwait(false))
                 {
                     var discordClient = serviceProvider.GetService<DiscordClient>();
 
@@ -65,7 +66,8 @@ namespace Scruffy.Services.GuildAdministration.Jobs
                                                                       .ConfigureAwait(false)
                                                  : null;
 
-                        await using (var connector = new GuidWars2ApiConnector(guild.ApiKey))
+                        var connector = new GuidWars2ApiConnector(guild.ApiKey);
+                        await using (connector.ConfigureAwait(false))
                         {
                             try
                             {

@@ -31,8 +31,9 @@ namespace Scruffy.Services.WebApi
             request.Method = HttpMethod.Post.ToString();
             request.ContentType = "application/json";
 
-            await using (var requestStream = await request.GetRequestStreamAsync()
-                                                          .ConfigureAwait(false))
+            var requestStream = await request.GetRequestStreamAsync()
+                                             .ConfigureAwait(false);
+            await using (requestStream.ConfigureAwait(false))
             {
                 var jsonData = JsonConvert.SerializeObject(data,
                                                            new JsonSerializerSettings
@@ -49,7 +50,8 @@ namespace Scruffy.Services.WebApi
                 using (var response = await request.GetResponseAsync()
                                                    .ConfigureAwait(false))
                 {
-                    await using (var stream = response.GetResponseStream())
+                    var stream = response.GetResponseStream();
+                    await using (stream.ConfigureAwait(false))
                     {
                         var memoryStream = new MemoryStream();
 

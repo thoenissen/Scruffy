@@ -52,7 +52,8 @@ namespace Scruffy.Services.GuildWars2
             {
                 try
                 {
-                    await using (var connector = new GuidWars2ApiConnector(null))
+                    var connector = new GuidWars2ApiConnector(null);
+                    await using (connector.ConfigureAwait(false))
                     {
                         var worlds = await connector.GetWorlds().ConfigureAwait(false);
 
@@ -119,7 +120,8 @@ namespace Scruffy.Services.GuildWars2
                     embedBuilder.WithColor(DiscordColor.DarkBlue);
                     embedBuilder.WithImageUrl("attachment://chart.png");
 
-                    await using (var connector = new QuickChartConnector())
+                    var connector = new QuickChartConnector();
+                    await using (connector.ConfigureAwait(false))
                     {
                         var chartConfiguration = new ChartConfigurationData
                                                  {
@@ -178,20 +180,21 @@ namespace Scruffy.Services.GuildWars2
                                                      }
                                                  };
 
-                        await using (var chartStream = await connector.GetChartAsStream(new ChartData
-                                                                                        {
-                                                                                            Width = 500,
-                                                                                            Height = 300,
-                                                                                            DevicePixelRatio = 1,
-                                                                                            BackgroundColor = "#262626",
-                                                                                            Format = "png",
-                                                                                            Config = JsonConvert.SerializeObject(chartConfiguration,
-                                                                                                                                 new JsonSerializerSettings
-                                                                                                                                 {
-                                                                                                                                     NullValueHandling = NullValueHandling.Ignore
-                                                                                                                                 })
-                                                                                        })
-                                                                      .ConfigureAwait(false))
+                        var chartStream = await connector.GetChartAsStream(new ChartData
+                                                                           {
+                                                                               Width = 500,
+                                                                               Height = 300,
+                                                                               DevicePixelRatio = 1,
+                                                                               BackgroundColor = "#262626",
+                                                                               Format = "png",
+                                                                               Config = JsonConvert.SerializeObject(chartConfiguration,
+                                                                                                                    new JsonSerializerSettings
+                                                                                                                    {
+                                                                                                                        NullValueHandling = NullValueHandling.Ignore
+                                                                                                                    })
+                                                                           })
+                                                         .ConfigureAwait(false);
+                        await using (chartStream.ConfigureAwait(false))
                         {
                             messageBuilder.WithFile("chart.png", chartStream);
                             messageBuilder.WithEmbed(embedBuilder);

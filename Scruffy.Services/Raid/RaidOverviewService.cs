@@ -76,7 +76,8 @@ namespace Scruffy.Services.Raid
                         userNames.Add($"{(string.IsNullOrWhiteSpace(member.Nickname) ? string.IsNullOrWhiteSpace(member.DisplayName) ? member.Username : member.DisplayName : member.Nickname)} [{user.Points:0.00}]");
                     }
 
-                    await using (var connector = new QuickChartConnector())
+                    var connector = new QuickChartConnector();
+                    await using (connector.ConfigureAwait(false))
                     {
                         var chartConfiguration = new ChartConfigurationData
                                                  {
@@ -130,20 +131,21 @@ namespace Scruffy.Services.Raid
                                                                }
                                                  };
 
-                        await using (var chartStream = await connector.GetChartAsStream(new ChartData
-                                                                                        {
-                                                                                            Width = 500,
-                                                                                            Height = 20 * userNames.Count,
-                                                                                            DevicePixelRatio = 1,
-                                                                                            BackgroundColor = "#262626",
-                                                                                            Format = "png",
-                                                                                            Config = JsonConvert.SerializeObject(chartConfiguration,
-                                                                                                                                 new JsonSerializerSettings
-                                                                                                                                 {
-                                                                                                                                     NullValueHandling = NullValueHandling.Ignore
-                                                                                                                                 })
-                                                                                        })
-                                                                      .ConfigureAwait(false))
+                        var chartStream = await connector.GetChartAsStream(new ChartData
+                                                                           {
+                                                                               Width = 500,
+                                                                               Height = 20 * userNames.Count,
+                                                                               DevicePixelRatio = 1,
+                                                                               BackgroundColor = "#262626",
+                                                                               Format = "png",
+                                                                               Config = JsonConvert.SerializeObject(chartConfiguration,
+                                                                                                                    new JsonSerializerSettings
+                                                                                                                    {
+                                                                                                                        NullValueHandling = NullValueHandling.Ignore
+                                                                                                                    })
+                                                                           })
+                                                         .ConfigureAwait(false);
+                        await using (chartStream.ConfigureAwait(false))
                         {
                             messageBuilder.WithFile("chart.png", chartStream);
                             messageBuilder.WithEmbed(embedBuilder);

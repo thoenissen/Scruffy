@@ -71,7 +71,8 @@ namespace Scruffy.Services.Fractals
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task RunSetupAssistant(CommandContextContainer commandContext)
         {
-            await using (var dialogHandler = new DialogHandler(commandContext))
+            var dialogHandler = new DialogHandler(commandContext);
+            await using (dialogHandler.ConfigureAwait(false))
             {
                 var creationData = await dialogHandler.RunForm<FractalLfgCreationFormData>()
                                                       .ConfigureAwait(false);

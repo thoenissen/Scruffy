@@ -63,7 +63,8 @@ namespace Scruffy.Services.GuildAdministration
                     msg.WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/ef1f3e1f3f40100fb3750f8d7d25c657.png?size=64");
                     msg.WithTimestamp(DateTime.Now);
 
-                    await using (var connector = new GuidWars2ApiConnector(guild.ApiKey))
+                    var connector = new GuidWars2ApiConnector(guild.ApiKey);
+                    await using (connector.ConfigureAwait(false))
                     {
                         var vault =  await connector.GetGuildVault(guild.GuildId)
                                                     .ConfigureAwait(false);
@@ -179,7 +180,8 @@ namespace Scruffy.Services.GuildAdministration
 
                     if (apiKeys.Count > 0)
                     {
-                        await using (var guildConnector = new GuidWars2ApiConnector(guild.ApiKey))
+                        var guildConnector = new GuidWars2ApiConnector(guild.ApiKey);
+                        await using (guildConnector.ConfigureAwait(false))
                         {
                             var vault = await guildConnector.GetGuildVault(guild.GuildId)
                                                             .ConfigureAwait(false);
@@ -195,7 +197,8 @@ namespace Scruffy.Services.GuildAdministration
 
                             foreach (var apiKey in apiKeys)
                             {
-                                await using (var accountConnector = new GuidWars2ApiConnector(apiKey.ApiKey))
+                                var accountConnector = new GuidWars2ApiConnector(apiKey.ApiKey);
+                                await using (accountConnector.ConfigureAwait(false))
                                 {
                                     var dyes = await accountConnector.GetDyes()
                                                                      .ConfigureAwait(false);

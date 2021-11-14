@@ -64,7 +64,8 @@ namespace Scruffy.Services.Core.Discord
         /// <returns>Result</returns>
         public static async Task<TData> Run<T, TData>(CommandContextContainer commandContext, Action<DialogContext> onInitialize = null) where T : DialogElementBase<TData>
         {
-            await using (var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider())
+            var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+            await using (serviceProvider.ConfigureAwait(false))
             {
                 var service = serviceProvider.GetService<T>();
 
@@ -88,7 +89,8 @@ namespace Scruffy.Services.Core.Discord
         /// <returns>Result</returns>
         public static async Task<TData> RunForm<TData>(CommandContextContainer commandContext, bool deleteMessages) where TData : new()
         {
-            await using (var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider())
+            var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+            await using (serviceProvider.ConfigureAwait(false))
             {
                 var data = new TData();
                 var dialogContext = new DialogContext();

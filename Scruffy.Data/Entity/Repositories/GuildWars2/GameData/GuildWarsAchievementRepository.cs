@@ -46,12 +46,13 @@ namespace Scruffy.Data.Entity.Repositories.GuildWars2.GameData
 
             try
             {
-                await using (var connection = new SqlConnection(GetDbContext().ConnectionString))
+                var connection = new SqlConnection(GetDbContext().ConnectionString);
+                await using (connection.ConfigureAwait(false))
                 {
                     await connection.OpenAsync()
                                     .ConfigureAwait(false);
 
-                    await using (var sqlCommand = new SqlCommand(@"CREATE TABLE #GuildWarsAchievements (
+                    var sqlCommand = new SqlCommand(@"CREATE TABLE #GuildWarsAchievements (
                                                                        [Id] int NOT NULL,
                                                                        [Icon] nvarchar(max) NULL,
                                                                        [Name] nvarchar(max) NULL,
@@ -61,7 +62,9 @@ namespace Scruffy.Data.Entity.Repositories.GuildWars2.GameData
                                                                        [Type] nvarchar(max) NULL,
                                                                        [PointCap] int NULL
                                                                    );",
-                                                                 connection))
+                                                                 connection);
+
+                    await using (sqlCommand.ConfigureAwait(false))
                     {
                         sqlCommand.ExecuteNonQuery();
 
@@ -249,22 +252,24 @@ namespace Scruffy.Data.Entity.Repositories.GuildWars2.GameData
                                   .ConfigureAwait(false);
                     }
 
-                    await using (var sqlCommand = new SqlCommand(@"MERGE INTO [GuildWarsAchievements] AS [TARGET]
-                                                                        USING #GuildWarsAchievements AS [Source]
-                                                                           ON [Target].[Id] = [Source].[Id]
-                                                               WHEN     MATCHED THEN
-                                                                              UPDATE 
-                                                                                SET [Target].[Icon] = [Source].[Icon],
-                                                                                    [Target].[Name] = [Source].[Name],
-                                                                                    [Target].[Description] = [Source].[Description],
-                                                                                    [Target].[Requirement] = [Source].[Requirement],
-                                                                                    [Target].[LockedText] = [Source].[LockedText],
-                                                                                    [Target].[Type] = [Source].[Type],
-                                                                                    [Target].[PointCap] = [Source].[PointCap]
-                                                               WHEN NOT MATCHED THEN
-                                                                              INSERT ( [Id], [Icon], [Name], [Description], [Requirement], [LockedText], [Type], [PointCap] )
-                                                                              VALUES ( [Source].[Id], [Source].[Icon], [Source].[Name], [Source].[Description], [Source].[Requirement], [Source].[LockedText], [Source].[Type], [Source].[PointCap] );",
-                                                                 connection))
+                    sqlCommand = new SqlCommand(@"MERGE INTO [GuildWarsAchievements] AS [TARGET]
+                                                                    USING #GuildWarsAchievements AS [Source]
+                                                                       ON [Target].[Id] = [Source].[Id]
+                                                           WHEN     MATCHED THEN
+                                                                          UPDATE 
+                                                                            SET [Target].[Icon] = [Source].[Icon],
+                                                                                [Target].[Name] = [Source].[Name],
+                                                                                [Target].[Description] = [Source].[Description],
+                                                                                [Target].[Requirement] = [Source].[Requirement],
+                                                                                [Target].[LockedText] = [Source].[LockedText],
+                                                                                [Target].[Type] = [Source].[Type],
+                                                                                [Target].[PointCap] = [Source].[PointCap]
+                                                           WHEN NOT MATCHED THEN
+                                                                          INSERT ( [Id], [Icon], [Name], [Description], [Requirement], [LockedText], [Type], [PointCap] )
+                                                                          VALUES ( [Source].[Id], [Source].[Icon], [Source].[Name], [Source].[Description], [Source].[Requirement], [Source].[LockedText], [Source].[Type], [Source].[PointCap] );",
+                                                             connection);
+
+                    await using (sqlCommand.ConfigureAwait(false))
                     {
                         sqlCommand.ExecuteNonQuery();
 

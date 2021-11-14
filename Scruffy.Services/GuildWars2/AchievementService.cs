@@ -34,7 +34,8 @@ namespace Scruffy.Services.GuildWars2
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task<bool> ImportAchievements()
         {
-            await using (var connector = new GuidWars2ApiConnector(null))
+            var connector = new GuidWars2ApiConnector(null);
+            await using (connector.ConfigureAwait(false))
             {
                 var achievementIds = await connector.GetAllAchievementIds()
                                                     .ConfigureAwait(false);

@@ -136,7 +136,8 @@ namespace Scruffy.Services.Core.Discord
                                 gifUrl = tenorEntry.Media[0].NanoGif.Url;
                             }
 
-                            await using (var stream = new MemoryStream(webClient.DownloadData(gifUrl)))
+                            var stream = new MemoryStream(webClient.DownloadData(gifUrl));
+                            await using (stream.ConfigureAwait(false))
                             {
                                 var builder = new DiscordMessageBuilder().WithContent(_internalLocalizationGroup.Value.GetFormattedText("CommandFailedMessage", "The command could not be executed. But I have an error code ({0}) and funny cat picture.", logEntryId ?? -1))
                                                                          .WithFile("cat.gif", stream);

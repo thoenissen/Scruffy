@@ -65,7 +65,7 @@ namespace Scruffy.Services.Fractals
         {
             var timeStamp = DateTime.Now.AddHours(2);
 
-            await using (var unused = await _lockFactory.CreateLockAsync().ConfigureAwait(false))
+            await using (var unused = (await _lockFactory.CreateLockAsync().ConfigureAwait(false)).ConfigureAwait(false))
             {
                 if (_currentJobName != null)
                 {

@@ -118,7 +118,8 @@ namespace Scruffy.Services.Account.DialogElements
                                                      {
                                                          try
                                                          {
-                                                            await using (var connector = new GuidWars2ApiConnector(apiKey))
+                                                            var connector = new GuidWars2ApiConnector(apiKey);
+                                                            await using (connector.ConfigureAwait(false))
                                                             {
                                                                 var tokenInformation = await connector.GetTokenInformationAsync()
                                                                                                       .ConfigureAwait(false);

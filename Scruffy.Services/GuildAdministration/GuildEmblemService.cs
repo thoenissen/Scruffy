@@ -47,7 +47,8 @@ namespace Scruffy.Services.GuildAdministration
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task PostRandomGuildEmblems(CommandContextContainer commandContext, int count)
         {
-            await using (var connector = new GuidWars2ApiConnector(null))
+            var connector = new GuidWars2ApiConnector(null);
+            await using (connector.ConfigureAwait(false))
             {
                 var random = new Random(DateTime.Now.Millisecond);
 
@@ -110,7 +111,8 @@ namespace Scruffy.Services.GuildAdministration
 
                         foreach (var layer in backgroundLayers.Layers)
                         {
-                            await using (var stream = new MemoryStream(webClient.DownloadData(layer)))
+                            var stream = new MemoryStream(webClient.DownloadData(layer));
+                            await using (stream.ConfigureAwait(false))
                             {
                                 stream.Position = 0;
 
@@ -154,7 +156,8 @@ namespace Scruffy.Services.GuildAdministration
 
                         foreach (var layer in foregroundLayers.Layers.AsEnumerable().Skip(1))
                         {
-                            await using (var stream = new MemoryStream(webClient.DownloadData(layer)))
+                            var stream = new MemoryStream(webClient.DownloadData(layer));
+                            await using (stream.ConfigureAwait(false))
                             {
                                 stream.Position = 0;
 
@@ -188,7 +191,8 @@ namespace Scruffy.Services.GuildAdministration
                             }
                         }
 
-                        await using (var memoryStream = new MemoryStream())
+                        var memoryStream = new MemoryStream();
+                        await using (memoryStream.ConfigureAwait(false))
                         {
                             await target.SaveAsPngAsync(memoryStream)
                                         .ConfigureAwait(false);

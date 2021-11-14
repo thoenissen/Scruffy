@@ -210,7 +210,8 @@ namespace Scruffy.Services.Raid
         {
             var success = false;
 
-            await using (var dialogHandler = new DialogHandler(commandContext))
+            var dialogHandler = new DialogHandler(commandContext);
+            await using (dialogHandler.ConfigureAwait(false))
             {
                 var templateId = await dialogHandler.Run<RaidTemplateSelectionDialogElement, long>()
                                                     .ConfigureAwait(false);
@@ -244,7 +245,8 @@ namespace Scruffy.Services.Raid
 
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
-                await using (var transaction = dbFactory.BeginTransaction(System.Data.IsolationLevel.ReadCommitted))
+                var transaction = dbFactory.BeginTransaction(System.Data.IsolationLevel.ReadCommitted);
+                await using (transaction.ConfigureAwait(false))
                 {
                     var defaultRank = dbFactory.GetRepository<RaidExperienceLevelRepository>()
                                                .GetQuery()

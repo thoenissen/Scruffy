@@ -77,7 +77,8 @@ namespace Scruffy.Services.Fractals.Jobs
                                                     .ToListAsync()
                                                     .ConfigureAwait(false);
 
-                await using (var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider())
+                var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+                await using (serviceProvider.ConfigureAwait(false))
                 {
                     var reminderService = serviceProvider.GetService<FractalLfgReminderService>();
 

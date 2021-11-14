@@ -36,7 +36,8 @@ namespace Scruffy.Services.GuildAdministration.Jobs
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public override async Task ExecuteAsync()
         {
-            await using (var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider())
+            var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+            await using (serviceProvider.ConfigureAwait(false))
             {
                 var client = serviceProvider.GetService<DiscordClient>();
                 var userManagementService = serviceProvider.GetService<UserManagementService>();
@@ -95,7 +96,8 @@ namespace Scruffy.Services.GuildAdministration.Jobs
                             await userManagementService.CheckDiscordAccountAsync(pointsPerUser.Key)
                                                        .ConfigureAwait(false);
 
-                            await using (var transaction = dbFactory.BeginTransaction(IsolationLevel.RepeatableRead))
+                            var transaction = dbFactory.BeginTransaction(IsolationLevel.RepeatableRead);
+                            await using (transaction.ConfigureAwait(false))
                             {
                                 if (users.TryGetValue(pointsPerUser.Key, out var userId))
                                 {

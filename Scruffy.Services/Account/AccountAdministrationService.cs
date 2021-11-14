@@ -77,7 +77,8 @@ namespace Scruffy.Services.Account
             {
                 try
                 {
-                    await using (var connector = new GuidWars2ApiConnector(apiKey))
+                    var connector = new GuidWars2ApiConnector(apiKey);
+                    await using (connector.ConfigureAwait(false))
                     {
                         var tokenInformation = await connector.GetTokenInformationAsync()
                                                               .ConfigureAwait(false);
@@ -225,7 +226,8 @@ namespace Scruffy.Services.Account
 
                     if (string.IsNullOrWhiteSpace(name) == false)
                     {
-                        await using (var dialogHandler = new DialogHandler(commandContextContainer))
+                        var dialogHandler = new DialogHandler(commandContextContainer);
+                        await using (dialogHandler.ConfigureAwait(false))
                         {
                             if (await dialogHandler.Run<AccountWantToDeleteDialogElement, bool>(new AccountWantToDeleteDialogElement(_localizationService, name)).ConfigureAwait(false))
                             {

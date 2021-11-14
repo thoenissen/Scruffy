@@ -40,7 +40,8 @@ namespace Scruffy.Services.GuildWars2
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task PostUpdateOverview(CommandContextContainer commandContext)
         {
-            await using (var connector = new ThatShamanConnector())
+            var connector = new ThatShamanConnector();
+            await using (connector.ConfigureAwait(false))
             {
                 var now = DateTime.Now;
 

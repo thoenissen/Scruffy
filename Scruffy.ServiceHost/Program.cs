@@ -39,10 +39,12 @@ namespace Scruffy.ServiceHost
             {
                 LoggingService.AddServiceLogEntry(Data.Enumerations.General.LogEntryLevel.Information, nameof(Program), "Start", null);
 
-                await using (var jobScheduler = new JobScheduler())
+                var jobScheduler = new JobScheduler();
+                await using (jobScheduler.ConfigureAwait(false))
                 {
                     // TODO configuration
-                    await using (var stream = Assembly.Load("Scruffy.Data").GetManifestResourceStream("Scruffy.Data.Resources.Languages.de-DE.json"))
+                    var stream = Assembly.Load("Scruffy.Data").GetManifestResourceStream("Scruffy.Data.Resources.Languages.de-DE.json");
+                    await using (stream.ConfigureAwait(false))
                     {
                         var localizationService = new LocalizationService();
 
@@ -57,7 +59,8 @@ namespace Scruffy.ServiceHost
                     {
                         GlobalServiceProvider.Current.AddSingleton(fractalReminderService);
 
-                        await using (var discordBot = new DiscordBot())
+                        var discordBot = new DiscordBot();
+                        await using (discordBot.ConfigureAwait(false))
                         {
                             await discordBot.StartAsync().ConfigureAwait(false);
 

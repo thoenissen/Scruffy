@@ -47,18 +47,21 @@ namespace Scruffy.Data.Entity.Repositories.GuildWars2.GameData
 
             try
             {
-                await using (var connection = new SqlConnection(GetDbContext().ConnectionString))
+                var connection = new SqlConnection(GetDbContext().ConnectionString);
+                await using (connection.ConfigureAwait(false))
                 {
                     await connection.OpenAsync()
                                     .ConfigureAwait(false);
 
-                    await using (var sqlCommand = new SqlCommand(@"CREATE TABLE #GuildWarsItems (
+                    var sqlCommand = new SqlCommand(@"CREATE TABLE #GuildWarsItems (
                                                                    [ItemId] int NOT NULL,
                                                                    [Name] nvarchar(max) NULL,
                                                                    [Type] int NOT NULL,
                                                                    [VendorValue] bigint NULL
                                                                )",
-                                                                 connection))
+                                                                 connection);
+
+                    await using (sqlCommand.ConfigureAwait(false))
                     {
                         sqlCommand.ExecuteNonQuery();
                     }
@@ -188,18 +191,19 @@ namespace Scruffy.Data.Entity.Repositories.GuildWars2.GameData
                                   .ConfigureAwait(false);
                     }
 
-                    await using (var sqlCommand = new SqlCommand(@"MERGE INTO [GuildWarsItems] AS [TARGET]
-                                                                               USING #GuildWarsItems AS [Source]
-                                                                                  ON [Target].[ItemId] = [Source].[ItemId]
-                                                                   WHEN MATCHED THEN
-                                                                              UPDATE 
-                                                                                SET [Target].[Name] = [Source].[Name],
-                                                                                    [Target].[Type] = [Source].[Type],
-                                                                                    [Target].[VendorValue] = [Source].[VendorValue]
-                                                                   WHEN NOT MATCHED THEN
-                                                                              INSERT ( [ItemId], [Name], [Type], [VendorValue], IsValueReducingActivated )
-                                                                              VALUES ( [Source].[ItemId], [Source].[Name], [Source].[Type], [Source].[VendorValue], 0); ",
-                                                                 connection))
+                    sqlCommand = new SqlCommand(@"MERGE INTO [GuildWarsItems] AS [TARGET]
+                                                                           USING #GuildWarsItems AS [Source]
+                                                                              ON [Target].[ItemId] = [Source].[ItemId]
+                                                               WHEN MATCHED THEN
+                                                                          UPDATE 
+                                                                            SET [Target].[Name] = [Source].[Name],
+                                                                                [Target].[Type] = [Source].[Type],
+                                                                                [Target].[VendorValue] = [Source].[VendorValue]
+                                                               WHEN NOT MATCHED THEN
+                                                                          INSERT ( [ItemId], [Name], [Type], [VendorValue], IsValueReducingActivated )
+                                                                          VALUES ( [Source].[ItemId], [Source].[Name], [Source].[Type], [Source].[VendorValue], 0); ",
+                                                             connection);
+                    await using (sqlCommand.ConfigureAwait(false))
                     {
                         sqlCommand.ExecuteNonQuery();
                     }

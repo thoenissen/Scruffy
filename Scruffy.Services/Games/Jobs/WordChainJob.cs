@@ -172,7 +172,8 @@ namespace Scruffy.Services.Games.Jobs
         {
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
-                await using (var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider())
+                var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+                await using (serviceProvider.ConfigureAwait(false))
                 {
                     var client = serviceProvider.GetService<DiscordClient>();
 

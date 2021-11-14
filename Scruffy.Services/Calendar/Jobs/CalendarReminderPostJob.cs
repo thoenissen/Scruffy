@@ -49,7 +49,8 @@ namespace Scruffy.Services.Calendar.Jobs
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public override async Task ExecuteAsync()
         {
-            await using (var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider())
+            var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+            await using (serviceProvider.ConfigureAwait(false))
             {
                 using (var dbFactory = RepositoryFactory.CreateInstance())
                 {

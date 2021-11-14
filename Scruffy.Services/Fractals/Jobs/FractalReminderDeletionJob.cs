@@ -51,7 +51,8 @@ namespace Scruffy.Services.Fractals.Jobs
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public override async Task ExecuteAsync()
         {
-            await using (var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider())
+            var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+            await using (serviceProvider.ConfigureAwait(false))
             {
                 var discordClient = serviceProvider.GetService<DiscordClient>();
 

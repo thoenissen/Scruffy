@@ -42,7 +42,8 @@ namespace Scruffy.Services.Account.Jobs
                 {
                     try
                     {
-                        await using (var connector = new GuidWars2ApiConnector(account.ApiKey))
+                        var connector = new GuidWars2ApiConnector(account.ApiKey);
+                        await using (connector.ConfigureAwait(false))
                         {
                             var accountInformation = await connector.GetAccountInformationAsync()
                                                                     .ConfigureAwait(false);
@@ -51,10 +52,10 @@ namespace Scruffy.Services.Account.Jobs
                             {
                                 dbFactory.GetRepository<AccountDailyLoginCheckRepository>()
                                          .Add(new GuildWarsAccountDailyLoginCheckEntity
-                                              {
-                                                  Name = account.Name,
-                                                  Date = date
-                                              });
+                                         {
+                                             Name = account.Name,
+                                             Date = date
+                                         });
 
                                 dbFactory.GetRepository<AccountRepository>()
                                          .Refresh(obj => obj.Name == account.Name,

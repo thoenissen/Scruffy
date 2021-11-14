@@ -73,7 +73,8 @@ namespace Scruffy.Services.GuildAdministration
                                         .Distinct()
                                         .ToList();
 
-                await using (var connector = new GuidWars2ApiConnector(null))
+                var connector = new GuidWars2ApiConnector(null);
+                await using (connector.ConfigureAwait(false))
                 {
                     var tradingsPostValues = await connector.GetTradingPostPrices(itemIds)
                                                             .ConfigureAwait(false);
@@ -81,9 +82,11 @@ namespace Scruffy.Services.GuildAdministration
                     var items = await connector.GetItems(itemIds)
                                                .ConfigureAwait(false);
 
-                    await using (var memoryStream = new MemoryStream())
+                    var memoryStream = new MemoryStream();
+                    await using (memoryStream.ConfigureAwait(false))
                     {
-                        await using (var writer = new StreamWriter(memoryStream))
+                        var writer = new StreamWriter(memoryStream);
+                        await using (writer.ConfigureAwait(false))
                         {
                             await writer.WriteLineAsync("TimeStamp;User;Operation;ItemId;ItemName;Count;TradingPostValue;VendorValue")
                                         .ConfigureAwait(false);
@@ -151,7 +154,8 @@ namespace Scruffy.Services.GuildAdministration
                                         .Distinct()
                                         .ToList();
 
-                await using (var connector = new GuidWars2ApiConnector(null))
+                var connector = new GuidWars2ApiConnector(null);
+                await using (connector.ConfigureAwait(false))
                 {
                     var tradingsPostValues = await connector.GetTradingPostPrices(itemIds)
                                                             .ConfigureAwait(false);
@@ -159,9 +163,11 @@ namespace Scruffy.Services.GuildAdministration
                     var items = await connector.GetItems(itemIds)
                                                .ConfigureAwait(false);
 
-                    await using (var memoryStream = new MemoryStream())
+                    var memoryStream = new MemoryStream();
+                    await using (memoryStream.ConfigureAwait(false))
                     {
-                        await using (var writer = new StreamWriter(memoryStream))
+                        var writer = new StreamWriter(memoryStream);
+                        await using (writer.ConfigureAwait(false))
                         {
                             await writer.WriteLineAsync("User;Operation;ItemId;ItemName;Count;TradingPostValue;VendorValue")
                                         .ConfigureAwait(false);
@@ -240,7 +246,8 @@ namespace Scruffy.Services.GuildAdministration
                                            .Distinct()
                                            .ToList();
 
-                await using (var connector = new GuidWars2ApiConnector(null))
+                var connector = new GuidWars2ApiConnector(null);
+                await using (connector.ConfigureAwait(false))
                 {
                     var tradingsPostValues = await connector.GetTradingPostPrices(itemIds)
                                                             .ConfigureAwait(false);
@@ -251,9 +258,11 @@ namespace Scruffy.Services.GuildAdministration
                     var upgrades = await connector.GetUpgrades(upgradeIds)
                                                   .ConfigureAwait(false);
 
-                    await using (var memoryStream = new MemoryStream())
+                    var memoryStream = new MemoryStream();
+                    await using (memoryStream.ConfigureAwait(false))
                     {
-                        await using (var writer = new StreamWriter(memoryStream))
+                        var writer = new StreamWriter(memoryStream);
+                        await using (writer.ConfigureAwait(false))
                         {
                             await writer.WriteLineAsync("TimeStamp;User;ItemId;ItemName;Count;TradingPostValue;VendorValue")
                                         .ConfigureAwait(false);
@@ -342,7 +351,8 @@ namespace Scruffy.Services.GuildAdministration
                                            .Distinct()
                                            .ToList();
 
-                await using (var connector = new GuidWars2ApiConnector(null))
+                var connector = new GuidWars2ApiConnector(null);
+                await using (connector.ConfigureAwait(false))
                 {
                     var tradingsPostValues = await connector.GetTradingPostPrices(itemIds)
                                                             .ConfigureAwait(false);
@@ -353,9 +363,11 @@ namespace Scruffy.Services.GuildAdministration
                     var upgrades = await connector.GetUpgrades(upgradeIds)
                                                   .ConfigureAwait(false);
 
-                    await using (var memoryStream = new MemoryStream())
+                    var memoryStream = new MemoryStream();
+                    await using (memoryStream.ConfigureAwait(false))
                     {
-                        await using (var writer = new StreamWriter(memoryStream))
+                        var writer = new StreamWriter(memoryStream);
+                        await using (writer.ConfigureAwait(false))
                         {
                             await writer.WriteLineAsync("User;ItemId;ItemName;Count;TradingPostValue;VendorValue")
                                         .ConfigureAwait(false);
@@ -409,9 +421,11 @@ namespace Scruffy.Services.GuildAdministration
                                                 .ToListAsync()
                                                 .ConfigureAwait(false);
 
-                await using (var memoryStream = new MemoryStream())
+                var memoryStream = new MemoryStream();
+                await using (memoryStream.ConfigureAwait(false))
                 {
-                    await using (var writer = new StreamWriter(memoryStream))
+                    var writer = new StreamWriter(memoryStream);
+                    await using (writer.ConfigureAwait(false))
                     {
                         await writer.WriteLineAsync("AccountName")
                                     .ConfigureAwait(false);
@@ -482,7 +496,8 @@ namespace Scruffy.Services.GuildAdministration
 
                     if (user != null)
                     {
-                        await using (var connector = new GuidWars2ApiConnector(entry.ApiKey))
+                        var connector = new GuidWars2ApiConnector(entry.ApiKey);
+                        await using (connector.ConfigureAwait(false))
                         {
                             var characters = await connector.GetCharactersAsync()
                                                             .ConfigureAwait(false);
@@ -492,9 +507,11 @@ namespace Scruffy.Services.GuildAdministration
                     }
                 }
 
-                await using (var memoryStream = new MemoryStream())
+                var memoryStream = new MemoryStream();
+                await using (memoryStream.ConfigureAwait(false))
                 {
-                    await using (var writer = new StreamWriter(memoryStream))
+                    var writer = new StreamWriter(memoryStream);
+                    await using (writer.ConfigureAwait(false))
                     {
                         await writer.WriteLineAsync("User;AccountName;Characters;Representation;Percentage")
                                     .ConfigureAwait(false);
@@ -550,7 +567,8 @@ namespace Scruffy.Services.GuildAdministration
 
                 var members = new List<(string Name, DateTime? Joined, bool IsApiKeyValid, bool HasAllPermissions)>();
 
-                await using (var connector = new GuidWars2ApiConnector(guild.ApiKey))
+                var connector = new GuidWars2ApiConnector(guild.ApiKey);
+                await using (connector.ConfigureAwait(false))
                 {
                     foreach (var member in await connector.GetGuildMembers(guild.GuildId)
                                                           .ConfigureAwait(false))
@@ -564,9 +582,11 @@ namespace Scruffy.Services.GuildAdministration
                     }
                 }
 
-                await using (var memoryStream = new MemoryStream())
+                var memoryStream = new MemoryStream();
+                await using (memoryStream.ConfigureAwait(false))
                 {
-                    await using (var writer = new StreamWriter(memoryStream))
+                    var writer = new StreamWriter(memoryStream);
+                    await using (writer.ConfigureAwait(false))
                     {
                         await writer.WriteLineAsync("AccountName;Joined;API-Key;Permissions")
                                     .ConfigureAwait(false);

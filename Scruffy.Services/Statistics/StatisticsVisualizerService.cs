@@ -157,7 +157,8 @@ namespace Scruffy.Services.Statistics
 
                 embedBuilder.AddField(LocalizationGroup.GetText("MeOverviewMessagesField", "Messages"), stringBuilder.ToString());
 
-                await using (var connector = new QuickChartConnector())
+                var connector = new QuickChartConnector();
+                await using (connector.ConfigureAwait(false))
                 {
                     var messageChannels = dbFactory.GetRepository<DiscordMessageRepository>()
                                               .GetQuery()
@@ -261,19 +262,21 @@ namespace Scruffy.Services.Statistics
                                                            }
                                              };
 
-                    await using (var chartStream = await connector.GetChartAsStream(new ChartData
-                                                                                    {
-                                                                                        Width = 400,
-                                                                                        Height = 400,
-                                                                                        BackgroundColor = "#2f3136",
-                                                                                        Format = "png",
-                                                                                        Config = JsonConvert.SerializeObject(chartConfiguration,
-                                                                                                                             new JsonSerializerSettings
-                                                                                                                             {
-                                                                                                                                 NullValueHandling = NullValueHandling.Ignore
-                                                                                                                             })
-                                                                                    })
-                                                                  .ConfigureAwait(false))
+                    var chartStream = await connector.GetChartAsStream(new ChartData
+                                                                       {
+                                                                           Width = 400,
+                                                                           Height = 400,
+                                                                           BackgroundColor = "#2f3136",
+                                                                           Format = "png",
+                                                                           Config = JsonConvert.SerializeObject(chartConfiguration,
+                                                                                                                new JsonSerializerSettings
+                                                                                                                {
+                                                                                                                    NullValueHandling = NullValueHandling.Ignore
+                                                                                                                })
+                                                                       })
+                                                     .ConfigureAwait(false);
+
+                    await using (chartStream.ConfigureAwait(false))
                     {
                         embedBuilder.WithImageUrl("attachment://chart.png");
                         messageBuilder.WithFile("chart.png", chartStream);
