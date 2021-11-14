@@ -124,7 +124,7 @@ namespace Scruffy.Services.GuildAdministration.Jobs
                                                                               obj.Description,
                                                                               obj.Guild.DiscordServerId,
                                                                               obj.DiscordRoleId,
-                                                                              ChannelId = channels.Where(obj2 => obj2.GuildId == obj.Id
+                                                                              ChannelId = channels.Where(obj2 => obj2.GuildId == obj.GuildId
                                                                                                               && obj2.Type == GuildChannelConfigurationType.SpecialRankRankChange)
                                                                                                   .Select(obj2 => (ulong?)obj2.DiscordChannelId)
                                                                                                   .FirstOrDefault(),
@@ -181,12 +181,16 @@ namespace Scruffy.Services.GuildAdministration.Jobs
                                             await action.User
                                                         .GrantRoleAsync(role)
                                                         .ConfigureAwait(false);
+
+                                            LoggingService.AddJobLogEntry(LogEntryLevel.Warning, nameof(GuildSpecialRankPointsJob), $"Role granted: configuration {configuration.Id}; user: {action.User.Id}; role: {role.Id}");
                                         }
                                         else
                                         {
                                             await action.User
                                                         .RevokeRoleAsync(role)
                                                         .ConfigureAwait(false);
+
+                                            LoggingService.AddJobLogEntry(LogEntryLevel.Warning, nameof(GuildSpecialRankPointsJob), $"Role revoked: configuration {configuration.Id}; user: {action.User.Id}; role: {role.Id}");
                                         }
                                     }
                                     else
@@ -236,6 +240,10 @@ namespace Scruffy.Services.GuildAdministration.Jobs
 
                                 await channel.SendMessageAsync(builder)
                                              .ConfigureAwait(false);
+                            }
+                            else
+                            {
+                                LoggingService.AddJobLogEntry(LogEntryLevel.Warning, nameof(GuildSpecialRankPointsJob), $"No notification channel for configuration {configuration.Id}");
                             }
                         }
                     }
