@@ -1,13 +1,12 @@
-﻿namespace Scruffy.Data.Enumerations.Calendar
+﻿namespace Scruffy.Data.Enumerations.Calendar;
+
+/// <summary>
+/// Type of schedule
+/// </summary>
+public enum CalendarAppointmentScheduleType
 {
     /// <summary>
-    /// Type of schedule
+    /// Specific weekday of a month
     /// </summary>
-    public enum CalendarAppointmentScheduleType
-    {
-        /// <summary>
-        /// Specific weekday of a month
-        /// </summary>
-        WeekDayOfMonth,
-    }
+    WeekDayOfMonth,
 }

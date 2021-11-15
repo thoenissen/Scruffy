@@ -2,23 +2,22 @@
 
 using Newtonsoft.Json;
 
-namespace Scruffy.Data.Json.MediaWiki
+namespace Scruffy.Data.Json.MediaWiki;
+
+/// <summary>
+/// Search information
+/// </summary>
+public class SearchQueryQuery
 {
     /// <summary>
-    /// Search information
+    /// Information
     /// </summary>
-    public class SearchQueryQuery
-    {
-        /// <summary>
-        /// Information
-        /// </summary>
-        [JsonProperty("searchinfo")]
-        public SearchQuerySearchInfo SearchInfo { get; set; }
+    [JsonProperty("searchinfo")]
+    public SearchQuerySearchInfo SearchInfo { get; set; }
 
-        /// <summary>
-        /// Search results
-        /// </summary>
-        [JsonProperty("search")]
-        public List<SearchQuerySearch> Search { get; set; }
-    }
+    /// <summary>
+    /// Search results
+    /// </summary>
+    [JsonProperty("search")]
+    public List<SearchQuerySearch> Search { get; set; }
 }

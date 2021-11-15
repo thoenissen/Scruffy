@@ -1,26 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Scruffy.Data.Services.Raid
+namespace Scruffy.Data.Services.Raid;
+
+/// <summary>
+/// Commit data container
+/// </summary>
+public class RaidCommitContainer
 {
     /// <summary>
-    /// Commit data container
+    /// Id of the appointment
     /// </summary>
-    public class RaidCommitContainer
-    {
-        /// <summary>
-        /// Id of the appointment
-        /// </summary>
-        public long AppointmentId { get; set; }
+    public long AppointmentId { get; set; }
 
-        /// <summary>
-        /// Timestamp of the appointment
-        /// </summary>
-        public DateTime AppointmentTimeStamp { get; set; }
+    /// <summary>
+    /// Timestamp of the appointment
+    /// </summary>
+    public DateTime AppointmentTimeStamp { get; set; }
 
-        /// <summary>
-        /// Users
-        /// </summary>
-        public List<RaidCommitUserData> Users { get; set; }
-    }
+    /// <summary>
+    /// Users
+    /// </summary>
+    public List<RaidCommitUserData> Users { get; set; }
 }

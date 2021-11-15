@@ -1,41 +1,40 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Scruffy.Data.Entity.Tables.Raid
+namespace Scruffy.Data.Entity.Tables.Raid;
+
+/// <summary>
+/// Role lineup header
+/// </summary>
+[Table("RaidRoleLineupHeaders")]
+public class RaidRoleLineupHeaderEntity
 {
+    #region Properties
+
     /// <summary>
-    /// Role lineup header
+    /// Id
     /// </summary>
-    [Table("RaidRoleLineupHeaders")]
-    public class RaidRoleLineupHeaderEntity
-    {
-        #region Properties
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public long Id { get; set; }
 
-        /// <summary>
-        /// Id
-        /// </summary>
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long Id { get; set; }
+    /// <summary>
+    /// Description
+    /// </summary>
+    public string Description { get; set; }
 
-        /// <summary>
-        /// Description
-        /// </summary>
-        public string Description { get; set; }
+    #region Navigation properties
 
-        #region Navigation properties
+    /// <summary>
+    /// Lineups
+    /// </summary>
+    public virtual ICollection<RaidRoleLineupAssignmentEntity> RaidRoleLineupAssignments { get; set; }
 
-        /// <summary>
-        /// Lineups
-        /// </summary>
-        public virtual ICollection<RaidRoleLineupAssignmentEntity> RaidRoleLineupAssignments { get; set; }
+    /// <summary>
+    /// Entries
+    /// </summary>
+    public virtual ICollection<RaidRoleLineupEntryEntity> RaidRoleLineupEntries { get; set; }
 
-        /// <summary>
-        /// Entries
-        /// </summary>
-        public virtual ICollection<RaidRoleLineupEntryEntity> RaidRoleLineupEntries { get; set; }
+    #endregion // Navigation properties
 
-        #endregion // Navigation properties
-
-        #endregion // Properties
-    }
+    #endregion // Properties
 }

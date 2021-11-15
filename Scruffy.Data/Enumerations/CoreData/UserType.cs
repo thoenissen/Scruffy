@@ -1,18 +1,17 @@
-﻿namespace Scruffy.Data.Enumerations.CoreData
+﻿namespace Scruffy.Data.Enumerations.CoreData;
+
+/// <summary>
+/// Type of user
+/// </summary>
+public enum UserType
 {
     /// <summary>
-    /// Type of user
+    /// Created by a discord user
     /// </summary>
-    public enum UserType
-    {
-        /// <summary>
-        /// Created by a discord user
-        /// </summary>
-        DiscordUser = 0,
+    DiscordUser = 0,
 
-        /// <summary>
-        /// Managed by an Administrator
-        /// </summary>
-        AdministratorManaged = 1,
-    }
+    /// <summary>
+    /// Managed by an Administrator
+    /// </summary>
+    AdministratorManaged = 1,
 }

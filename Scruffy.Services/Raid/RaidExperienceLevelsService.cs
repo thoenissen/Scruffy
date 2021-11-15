@@ -11,122 +11,121 @@ using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
 
-namespace Scruffy.Services.Raid
+namespace Scruffy.Services.Raid;
+
+/// <summary>
+/// Raid experience levels
+/// </summary>
+public class RaidExperienceLevelsService : LocatedServiceBase
 {
+    #region Constructor
+
     /// <summary>
-    /// Raid experience levels
+    /// Constructor
     /// </summary>
-    public class RaidExperienceLevelsService : LocatedServiceBase
+    /// <param name="localizationService">Localization service</param>
+    public RaidExperienceLevelsService(LocalizationService localizationService)
+        : base(localizationService)
     {
-        #region Constructor
+    }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        public RaidExperienceLevelsService(LocalizationService localizationService)
-            : base(localizationService)
+    #endregion // Constructor
+
+    #region Methods
+
+    /// <summary>
+    /// Post overview of experience roles
+    /// </summary>
+    /// <param name="commandContextContainer">Command context</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public async Task PostExperienceLevelOverview(CommandContextContainer commandContextContainer)
+    {
+        using (var dbFactory = RepositoryFactory.CreateInstance())
         {
-        }
+            var levels = await dbFactory.GetRepository<RaidExperienceLevelRepository>()
+                                        .GetQuery()
+                                        .OrderBy(obj => obj.Description)
+                                        .Select(obj => new
+                                                       {
+                                                           obj.DiscordEmoji,
+                                                           obj.Description,
 
-        #endregion // Constructor
+                                                           Users = obj.Users.SelectMany(obj2 => obj2.DiscordAccounts)
+                                                                      .OrderBy(obj2 => obj2.Id)
+                                                                      .Select(obj2 => obj2.Id)
+                                                       })
+                                        .ToListAsync()
+                                        .ConfigureAwait(false);
 
-        #region Methods
+            var embedBuilder = new DiscordEmbedBuilder
+                               {
+                                   Color = DiscordColor.Green,
+                                   Description = LocalizationGroup.GetText("ExperienceLevels", "Experience levels")
+                               };
 
-        /// <summary>
-        /// Post overview of experience roles
-        /// </summary>
-        /// <param name="commandContextContainer">Command context</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task PostExperienceLevelOverview(CommandContextContainer commandContextContainer)
-        {
-            using (var dbFactory = RepositoryFactory.CreateInstance())
+            var stringBuilder = new StringBuilder();
+            var fieldCounter = 1;
+            var currentFieldTitle = string.Empty;
+
+            foreach (var level in levels)
             {
-                var levels = await dbFactory.GetRepository<RaidExperienceLevelRepository>()
-                                            .GetQuery()
-                                            .OrderBy(obj => obj.Description)
-                                            .Select(obj => new
-                                            {
-                                                obj.DiscordEmoji,
-                                                obj.Description,
+                var levelFieldCounter = 1;
 
-                                                Users = obj.Users.SelectMany(obj2 => obj2.DiscordAccounts)
-                                                                 .OrderBy(obj2 => obj2.Id)
-                                                                 .Select(obj2 => obj2.Id)
-                                            })
-                                            .ToListAsync()
-                                            .ConfigureAwait(false);
+                currentFieldTitle = $"{DiscordEmojiService.GetGuildEmoji(commandContextContainer.Client, level.DiscordEmoji)} {level.Description} #{levelFieldCounter}";
 
-                var embedBuilder = new DiscordEmbedBuilder
-                                   {
-                                       Color = DiscordColor.Green,
-                                       Description = LocalizationGroup.GetText("ExperienceLevels", "Experience levels")
-                                   };
-
-                var stringBuilder = new StringBuilder();
-                var fieldCounter = 1;
-                var currentFieldTitle = string.Empty;
-
-                foreach (var level in levels)
+                foreach (var entry in level.Users)
                 {
-                    var levelFieldCounter = 1;
+                    var user = await commandContextContainer.Client
+                                                            .GetUserAsync(entry)
+                                                            .ConfigureAwait(false);
 
-                    currentFieldTitle = $"{DiscordEmojiService.GetGuildEmoji(commandContextContainer.Client, level.DiscordEmoji)} {level.Description} #{levelFieldCounter}";
+                    var currentLine = $"{user.Mention}\n";
 
-                    foreach (var entry in level.Users)
+                    if (currentLine.Length + stringBuilder.Length > 1024)
                     {
-                        var user = await commandContextContainer.Client
-                                                       .GetUserAsync(entry)
-                                                       .ConfigureAwait(false);
+                        stringBuilder.Append('\u200B');
+                        embedBuilder.AddField(currentFieldTitle, stringBuilder.ToString());
 
-                        var currentLine = $"{user.Mention}\n";
-
-                        if (currentLine.Length + stringBuilder.Length > 1024)
+                        if (fieldCounter == 6)
                         {
-                            stringBuilder.Append('\u200B');
-                            embedBuilder.AddField(currentFieldTitle, stringBuilder.ToString());
+                            fieldCounter = 1;
 
-                            if (fieldCounter == 6)
-                            {
-                                fieldCounter = 1;
+                            await commandContextContainer.Channel
+                                                         .SendMessageAsync(embedBuilder)
+                                                         .ConfigureAwait(false);
 
-                                await commandContextContainer.Channel
-                                                    .SendMessageAsync(embedBuilder)
-                                                    .ConfigureAwait(false);
-
-                                embedBuilder = new DiscordEmbedBuilder
-                                               {
-                                                   Color = DiscordColor.Green
-                                               };
-                            }
-                            else
-                            {
-                                fieldCounter++;
-                            }
-
-                            levelFieldCounter++;
-
-                            currentFieldTitle = $"{DiscordEmojiService.GetGuildEmoji(commandContextContainer.Client, level.DiscordEmoji)} {level.Description} #{levelFieldCounter}";
-
-                            stringBuilder = new StringBuilder();
+                            embedBuilder = new DiscordEmbedBuilder
+                                           {
+                                               Color = DiscordColor.Green
+                                           };
+                        }
+                        else
+                        {
+                            fieldCounter++;
                         }
 
-                        stringBuilder.Append(currentLine);
+                        levelFieldCounter++;
+
+                        currentFieldTitle = $"{DiscordEmojiService.GetGuildEmoji(commandContextContainer.Client, level.DiscordEmoji)} {level.Description} #{levelFieldCounter}";
+
+                        stringBuilder = new StringBuilder();
                     }
 
-                    stringBuilder.Append('\u200B');
-
-                    embedBuilder.AddField(currentFieldTitle, stringBuilder.ToString());
-
-                    stringBuilder = new StringBuilder();
+                    stringBuilder.Append(currentLine);
                 }
 
-                await commandContextContainer.Channel
-                                    .SendMessageAsync(embedBuilder)
-                                    .ConfigureAwait(false);
-            }
-        }
+                stringBuilder.Append('\u200B');
 
-        #endregion // Methods
+                embedBuilder.AddField(currentFieldTitle, stringBuilder.ToString());
+
+                stringBuilder = new StringBuilder();
+            }
+
+            await commandContextContainer.Channel
+                                         .SendMessageAsync(embedBuilder)
+                                         .ConfigureAwait(false);
+        }
     }
+
+    #endregion // Methods
 }

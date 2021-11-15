@@ -1,33 +1,32 @@
-﻿namespace Scruffy.Data.Services.Raid
+﻿namespace Scruffy.Data.Services.Raid;
+
+/// <summary>
+/// Experience level data
+/// </summary>
+public class RaidAppointmentMessageExperienceLevel
 {
     /// <summary>
-    /// Experience level data
+    /// Id
     /// </summary>
-    public class RaidAppointmentMessageExperienceLevel
-    {
-        /// <summary>
-        /// Id
-        /// </summary>
-        public long Id { get; set; }
+    public long Id { get; set; }
 
-        /// <summary>
-        /// Emoji
-        /// </summary>
-        public ulong DiscordEmoji { get; set; }
+    /// <summary>
+    /// Emoji
+    /// </summary>
+    public ulong DiscordEmoji { get; set; }
 
-        /// <summary>
-        /// Description
-        /// </summary>
-        public string Description { get; set; }
+    /// <summary>
+    /// Description
+    /// </summary>
+    public string Description { get; set; }
 
-        /// <summary>
-        /// Count
-        /// </summary>
-        public long Count { get; set; }
+    /// <summary>
+    /// Count
+    /// </summary>
+    public long Count { get; set; }
 
-        /// <summary>
-        /// Rank
-        /// </summary>
-        public int Rank { get; set; }
-    }
+    /// <summary>
+    /// Rank
+    /// </summary>
+    public int Rank { get; set; }
 }

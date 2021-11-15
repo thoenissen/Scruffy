@@ -1,23 +1,22 @@
-﻿namespace Scruffy.Data.Enumerations.Calendar
+﻿namespace Scruffy.Data.Enumerations.Calendar;
+
+/// <summary>
+/// Special options of <see cref="CalendarAppointmentScheduleType.WeekDayOfMonth"/>
+/// </summary>
+public enum  WeekDayOfMonthSpecialOptions
 {
     /// <summary>
-    /// Special options of <see cref="CalendarAppointmentScheduleType.WeekDayOfMonth"/>
+    /// None
     /// </summary>
-    public enum  WeekDayOfMonthSpecialOptions
-    {
-        /// <summary>
-        /// None
-        /// </summary>
-        None,
+    None,
 
-        /// <summary>
-        /// Only even month
-        /// </summary>
-        EvenMonth,
+    /// <summary>
+    /// Only even month
+    /// </summary>
+    EvenMonth,
 
-        /// <summary>
-        /// Only uneven month
-        /// </summary>
-        UnevenMonth
-    }
+    /// <summary>
+    /// Only uneven month
+    /// </summary>
+    UnevenMonth
 }

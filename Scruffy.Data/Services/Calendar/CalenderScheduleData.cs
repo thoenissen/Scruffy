@@ -1,24 +1,23 @@
 ﻿using Scruffy.Data.Enumerations.Calendar;
 
-namespace Scruffy.Data.Services.Calendar
+namespace Scruffy.Data.Services.Calendar;
+
+/// <summary>
+/// Schedule data
+/// </summary>
+public class CalenderScheduleData
 {
+    #region Properties
+
     /// <summary>
-    /// Schedule data
+    /// Type
     /// </summary>
-    public class CalenderScheduleData
-    {
-        #region Properties
+    public CalendarAppointmentScheduleType Type { get; set; }
 
-        /// <summary>
-        /// Type
-        /// </summary>
-        public CalendarAppointmentScheduleType Type { get; set; }
+    /// <summary>
+    /// Additional data
+    /// </summary>
+    public string AdditionalData { get; set; }
 
-        /// <summary>
-        /// Additional data
-        /// </summary>
-        public string AdditionalData { get; set; }
-
-        #endregion // Properties
-    }
+    #endregion // Properties
 }

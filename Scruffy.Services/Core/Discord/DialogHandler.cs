@@ -6,230 +6,229 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Services.Core.Discord.Attributes;
 
-namespace Scruffy.Services.Core.Discord
+namespace Scruffy.Services.Core.Discord;
+
+/// <summary>
+/// Handling dialog elements
+/// </summary>
+public sealed class DialogHandler : IAsyncDisposable, IDisposable
 {
+    #region Fields
+
     /// <summary>
-    /// Handling dialog elements
+    /// Command context
     /// </summary>
-    public sealed class DialogHandler : IAsyncDisposable, IDisposable
+    private CommandContextContainer _commandContext;
+
+    /// <summary>
+    /// Service provider
+    /// </summary>
+    private ServiceProvider _serviceProvider;
+
+    #endregion // Fields
+
+    #region Constructor
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="commandContext">Command context</param>
+    public DialogHandler(CommandContextContainer commandContext)
     {
-        #region Fields
+        _commandContext = commandContext;
+        _serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
 
-        /// <summary>
-        /// Command context
-        /// </summary>
-        private CommandContextContainer _commandContext;
+        DialogContext = new DialogContext();
+    }
 
-        /// <summary>
-        /// Service provider
-        /// </summary>
-        private ServiceProvider _serviceProvider;
+    #endregion // Constructor
 
-        #endregion // Fields
+    #region Properties
 
-        #region Constructor
+    /// <summary>
+    /// Dialog context
+    /// </summary>
+    public DialogContext DialogContext { get; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="commandContext">Command context</param>
-        public DialogHandler(CommandContextContainer commandContext)
+    #endregion // Properties
+
+    #region Static - Methods
+
+    /// <summary>
+    /// Execution one dialog element
+    /// </summary>
+    /// <typeparam name="T">Type of the element</typeparam>
+    /// <typeparam name="TData">Type of the element result</typeparam>
+    /// <param name="commandContext">Current command context</param>
+    /// <param name="onInitialize">Initialization</param>
+    /// <returns>Result</returns>
+    public static async Task<TData> Run<T, TData>(CommandContextContainer commandContext, Action<DialogContext> onInitialize = null) where T : DialogElementBase<TData>
+    {
+        var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+        await using (serviceProvider.ConfigureAwait(false))
         {
-            _commandContext = commandContext;
-            _serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+            var service = serviceProvider.GetService<T>();
 
-            DialogContext = new DialogContext();
-        }
+            var dialogContext = new DialogContext();
 
-        #endregion // Constructor
+            onInitialize?.Invoke(dialogContext);
 
-        #region Properties
+            service.Initialize(commandContext, serviceProvider, dialogContext);
 
-        /// <summary>
-        /// Dialog context
-        /// </summary>
-        public DialogContext DialogContext { get; }
-
-        #endregion // Properties
-
-        #region Static - Methods
-
-        /// <summary>
-        /// Execution one dialog element
-        /// </summary>
-        /// <typeparam name="T">Type of the element</typeparam>
-        /// <typeparam name="TData">Type of the element result</typeparam>
-        /// <param name="commandContext">Current command context</param>
-        /// <param name="onInitialize">Initialization</param>
-        /// <returns>Result</returns>
-        public static async Task<TData> Run<T, TData>(CommandContextContainer commandContext, Action<DialogContext> onInitialize = null) where T : DialogElementBase<TData>
-        {
-            var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
-            await using (serviceProvider.ConfigureAwait(false))
-            {
-                var service = serviceProvider.GetService<T>();
-
-                var dialogContext = new DialogContext();
-
-                onInitialize?.Invoke(dialogContext);
-
-                service.Initialize(commandContext, serviceProvider, dialogContext);
-
-                return await service.Run()
-                                    .ConfigureAwait(false);
-            }
-        }
-
-        /// <summary>
-        /// Execution one dialog element
-        /// </summary>
-        /// <typeparam name="TData">Type of the element result</typeparam>
-        /// <param name="commandContext">Current command context</param>
-        /// <param name="deleteMessages">Should the creation message be deleted?</param>
-        /// <returns>Result</returns>
-        public static async Task<TData> RunForm<TData>(CommandContextContainer commandContext, bool deleteMessages) where TData : new()
-        {
-            var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
-            await using (serviceProvider.ConfigureAwait(false))
-            {
-                var data = new TData();
-                var dialogContext = new DialogContext();
-
-                foreach (var property in data.GetType().GetProperties())
-                {
-                    var attribute = property.GetCustomAttributes(typeof(DialogElementAssignmentAttribute), false)
-                                            .OfType<DialogElementAssignmentAttribute>()
-                                            .FirstOrDefault();
-                    if (attribute != null)
-                    {
-                        var service = (DialogElementBase)serviceProvider.GetService(attribute.DialogElementType);
-
-                        service.Initialize(commandContext, serviceProvider, dialogContext);
-
-                        property.SetValue(data, await service.InternalRun().ConfigureAwait(false));
-                    }
-                }
-
-                if (deleteMessages)
-                {
-                    dialogContext.Messages.Add(commandContext.Message);
-
-                    await commandContext.Channel
-                                        .DeleteMessagesAsync(dialogContext.Messages)
-                                        .ConfigureAwait(false);
-                }
-
-                return data;
-            }
-        }
-
-        #endregion // Methods
-
-        #region Methods
-
-        /// <summary>
-        /// Execution one dialog element
-        /// </summary>
-        /// <typeparam name="T">Type of the element</typeparam>
-        /// <typeparam name="TData">Type of the element result</typeparam>
-        /// <returns>Result</returns>
-        public async Task<TData> Run<T, TData>() where T : DialogElementBase<TData>
-        {
-            var element = _serviceProvider.GetService<T>();
-
-            element.Initialize(_commandContext, _serviceProvider, DialogContext);
-
-            return await element.Run()
+            return await service.Run()
                                 .ConfigureAwait(false);
         }
+    }
 
-        /// <summary>
-        /// Execution one dialog element
-        /// </summary>
-        /// <typeparam name="T">Type of the element</typeparam>
-        /// <typeparam name="TData">Type of the element result</typeparam>
-        /// <param name="element">Dialog element</param>
-        /// <returns>Result</returns>
-        public async Task<TData> Run<T, TData>(T element) where T : DialogElementBase<TData>
-        {
-            element.Initialize(_commandContext, _serviceProvider, DialogContext);
-
-            return await element.Run()
-                                .ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Execution one dialog element
-        /// </summary>
-        /// <typeparam name="TData">Type of the element result</typeparam>
-        /// <returns>Result</returns>
-        public async Task<TData> RunForm<TData>() where TData : new()
+    /// <summary>
+    /// Execution one dialog element
+    /// </summary>
+    /// <typeparam name="TData">Type of the element result</typeparam>
+    /// <param name="commandContext">Current command context</param>
+    /// <param name="deleteMessages">Should the creation message be deleted?</param>
+    /// <returns>Result</returns>
+    public static async Task<TData> RunForm<TData>(CommandContextContainer commandContext, bool deleteMessages) where TData : new()
+    {
+        var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+        await using (serviceProvider.ConfigureAwait(false))
         {
             var data = new TData();
+            var dialogContext = new DialogContext();
 
-            foreach (var property in data.GetType()
-                                         .GetProperties())
+            foreach (var property in data.GetType().GetProperties())
             {
                 var attribute = property.GetCustomAttributes(typeof(DialogElementAssignmentAttribute), false)
                                         .OfType<DialogElementAssignmentAttribute>()
                                         .FirstOrDefault();
-
                 if (attribute != null)
                 {
-                    var service = (DialogElementBase)_serviceProvider.GetService(attribute.DialogElementType);
+                    var service = (DialogElementBase)serviceProvider.GetService(attribute.DialogElementType);
 
-                    service.Initialize(_commandContext, _serviceProvider, DialogContext);
+                    service.Initialize(commandContext, serviceProvider, dialogContext);
 
-                    property.SetValue(data,
-                                      await service.InternalRun()
-                                                   .ConfigureAwait(false));
+                    property.SetValue(data, await service.InternalRun().ConfigureAwait(false));
                 }
+            }
+
+            if (deleteMessages)
+            {
+                dialogContext.Messages.Add(commandContext.Message);
+
+                await commandContext.Channel
+                                    .DeleteMessagesAsync(dialogContext.Messages)
+                                    .ConfigureAwait(false);
             }
 
             return data;
         }
+    }
 
-        /// <summary>
-        /// Deletes all messages
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task DeleteMessages()
+    #endregion // Methods
+
+    #region Methods
+
+    /// <summary>
+    /// Execution one dialog element
+    /// </summary>
+    /// <typeparam name="T">Type of the element</typeparam>
+    /// <typeparam name="TData">Type of the element result</typeparam>
+    /// <returns>Result</returns>
+    public async Task<TData> Run<T, TData>() where T : DialogElementBase<TData>
+    {
+        var element = _serviceProvider.GetService<T>();
+
+        element.Initialize(_commandContext, _serviceProvider, DialogContext);
+
+        return await element.Run()
+                            .ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Execution one dialog element
+    /// </summary>
+    /// <typeparam name="T">Type of the element</typeparam>
+    /// <typeparam name="TData">Type of the element result</typeparam>
+    /// <param name="element">Dialog element</param>
+    /// <returns>Result</returns>
+    public async Task<TData> Run<T, TData>(T element) where T : DialogElementBase<TData>
+    {
+        element.Initialize(_commandContext, _serviceProvider, DialogContext);
+
+        return await element.Run()
+                            .ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Execution one dialog element
+    /// </summary>
+    /// <typeparam name="TData">Type of the element result</typeparam>
+    /// <returns>Result</returns>
+    public async Task<TData> RunForm<TData>() where TData : new()
+    {
+        var data = new TData();
+
+        foreach (var property in data.GetType()
+                                     .GetProperties())
         {
-            await _commandContext.Channel
-                                 .DeleteMessagesAsync(DialogContext.Messages)
-                                 .ConfigureAwait(false);
-        }
+            var attribute = property.GetCustomAttributes(typeof(DialogElementAssignmentAttribute), false)
+                                    .OfType<DialogElementAssignmentAttribute>()
+                                    .FirstOrDefault();
 
-        #endregion // Methods
-
-        #region IAsyncDisposable
-
-        /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously.</summary>
-        /// <returns>A task that represents the asynchronous dispose operation.</returns>
-        public async ValueTask DisposeAsync()
-        {
-            if (_serviceProvider != null)
+            if (attribute != null)
             {
-                await _serviceProvider.DisposeAsync()
-                                      .ConfigureAwait(false);
+                var service = (DialogElementBase)_serviceProvider.GetService(attribute.DialogElementType);
 
-                _serviceProvider = null;
+                service.Initialize(_commandContext, _serviceProvider, DialogContext);
+
+                property.SetValue(data,
+                                  await service.InternalRun()
+                                               .ConfigureAwait(false));
             }
         }
 
-        #endregion // IAsyncDisposable
+        return data;
+    }
 
-        #region IDisposable
+    /// <summary>
+    /// Deletes all messages
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public async Task DeleteMessages()
+    {
+        await _commandContext.Channel
+                             .DeleteMessagesAsync(DialogContext.Messages)
+                             .ConfigureAwait(false);
+    }
 
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
+    #endregion // Methods
+
+    #region IAsyncDisposable
+
+    /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously.</summary>
+    /// <returns>A task that represents the asynchronous dispose operation.</returns>
+    public async ValueTask DisposeAsync()
+    {
+        if (_serviceProvider != null)
         {
-            _serviceProvider?.Dispose();
+            await _serviceProvider.DisposeAsync()
+                                  .ConfigureAwait(false);
+
             _serviceProvider = null;
         }
-
-        #endregion // IDisposable
     }
+
+    #endregion // IAsyncDisposable
+
+    #region IDisposable
+
+    /// <summary>
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// </summary>
+    public void Dispose()
+    {
+        _serviceProvider?.Dispose();
+        _serviceProvider = null;
+    }
+
+    #endregion // IDisposable
 }

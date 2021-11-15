@@ -2,17 +2,16 @@
 
 using Newtonsoft.Json;
 
-namespace Scruffy.Data.Json.QuickChart
+namespace Scruffy.Data.Json.QuickChart;
+
+/// <summary>
+/// Doughnut labels
+/// </summary>
+public class DoughnutLabelCollection
 {
     /// <summary>
-    /// Doughnut labels
+    /// Doughnut label
     /// </summary>
-    public class DoughnutLabelCollection
-    {
-        /// <summary>
-        /// Doughnut label
-        /// </summary>
-        [JsonProperty("labels")]
-        public List<Label> Labels { get; set; }
-    }
+    [JsonProperty("labels")]
+    public List<Label> Labels { get; set; }
 }

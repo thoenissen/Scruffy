@@ -7,51 +7,50 @@ using DSharpPlus.Entities;
 using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
 
-namespace Scruffy.Services.Calendar.DialogElements
+namespace Scruffy.Services.Calendar.DialogElements;
+
+/// <summary>
+/// Adding participants
+/// </summary>
+public class CalendarAddParticipantsDialogElement : DialogMessageElementBase<List<DiscordMember>>
 {
+    #region Constructor
+
     /// <summary>
-    /// Adding participants
+    /// Constructor
     /// </summary>
-    public class CalendarAddParticipantsDialogElement : DialogMessageElementBase<List<DiscordMember>>
+    /// <param name="localizationService">Localization service</param>
+    public CalendarAddParticipantsDialogElement(LocalizationService localizationService)
+        : base(localizationService)
     {
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        public CalendarAddParticipantsDialogElement(LocalizationService localizationService)
-            : base(localizationService)
-        {
-        }
-
-        #endregion // Constructor
-
-        #region DialogMessageElementBase
-
-        /// <summary>
-        /// Return the message of element
-        /// </summary>
-        /// <returns>Message</returns>
-        public override string GetMessage() => LocalizationGroup.GetText("Message", "Please enter the members:");
-
-        /// <summary>
-        /// Converting the response message
-        /// </summary>
-        /// <param name="message">Message</param>
-        /// <returns>Result</returns>
-        public override List<DiscordMember> ConvertMessage(DiscordMessage message)
-        {
-            var members = new List<DiscordMember>();
-
-            foreach (Match match in new Regex("<@\\!?(\\d+?)>").Matches(message.Content))
-            {
-                members.Add(CommandContext.Guild.GetMemberAsync(Convert.ToUInt64(match.Groups[1].Value)).Result);
-            }
-
-            return members;
-        }
-
-        #endregion // DialogMessageElementBase
     }
+
+    #endregion // Constructor
+
+    #region DialogMessageElementBase
+
+    /// <summary>
+    /// Return the message of element
+    /// </summary>
+    /// <returns>Message</returns>
+    public override string GetMessage() => LocalizationGroup.GetText("Message", "Please enter the members:");
+
+    /// <summary>
+    /// Converting the response message
+    /// </summary>
+    /// <param name="message">Message</param>
+    /// <returns>Result</returns>
+    public override List<DiscordMember> ConvertMessage(DiscordMessage message)
+    {
+        var members = new List<DiscordMember>();
+
+        foreach (Match match in new Regex("<@\\!?(\\d+?)>").Matches(message.Content))
+        {
+            members.Add(CommandContext.Guild.GetMemberAsync(Convert.ToUInt64(match.Groups[1].Value)).Result);
+        }
+
+        return members;
+    }
+
+    #endregion // DialogMessageElementBase
 }

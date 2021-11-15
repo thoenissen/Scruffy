@@ -12,203 +12,202 @@ using Scruffy.Services.Calendar.DialogElements.Forms;
 using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
 
-namespace Scruffy.Services.Calendar.DialogElements
+namespace Scruffy.Services.Calendar.DialogElements;
+
+/// <summary>
+/// Starting the calendar schedule assistant
+/// </summary>
+public class CalendarScheduleSetupDialogElement : DialogEmbedReactionElementBase<bool>
 {
+    #region Fields
+
     /// <summary>
-    /// Starting the calendar schedule assistant
+    /// Reactions
     /// </summary>
-    public class CalendarScheduleSetupDialogElement : DialogEmbedReactionElementBase<bool>
+    private List<ReactionData<bool>> _reactions;
+
+    /// <summary>
+    /// Schedules
+    /// </summary>
+    private List<string> _schedules;
+
+    #endregion // Fields
+
+    #region Constructor
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="localizationService">Localization service</param>
+    public CalendarScheduleSetupDialogElement(LocalizationService localizationService)
+        : base(localizationService)
     {
-        #region Fields
+    }
 
-        /// <summary>
-        /// Reactions
-        /// </summary>
-        private List<ReactionData<bool>> _reactions;
+    #endregion // Constructor
 
-        /// <summary>
-        /// Schedules
-        /// </summary>
-        private List<string> _schedules;
+    #region Methods
 
-        #endregion // Fields
-
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        public CalendarScheduleSetupDialogElement(LocalizationService localizationService)
-            : base(localizationService)
+    /// <summary>
+    /// Returns the existing schedules
+    /// </summary>
+    /// <returns>Levels</returns>
+    private List<string> GetSchedules()
+    {
+        if (_schedules == null)
         {
+            var serverId = CommandContext.Guild.Id;
+
+            using (var dbFactory = RepositoryFactory.CreateInstance())
+            {
+                _schedules = dbFactory.GetRepository<CalendarAppointmentScheduleRepository>()
+                                      .GetQuery()
+                                      .Where(obj => obj.DiscordServerId == serverId)
+                                      .Select(obj => obj.Description)
+                                      .ToList();
+            }
         }
 
-        #endregion // Constructor
+        return _schedules;
+    }
 
-        #region Methods
+    #endregion // Methods
 
-        /// <summary>
-        /// Returns the existing schedules
-        /// </summary>
-        /// <returns>Levels</returns>
-        private List<string> GetSchedules()
+    #region DialogReactionElementBase<bool>
+
+    /// <summary>
+    /// Editing the embedded message
+    /// </summary>
+    /// <param name="builder">Builder</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public override Task EditMessage(DiscordEmbedBuilder builder)
+    {
+        builder.WithTitle(LocalizationGroup.GetText("ChooseCommandTitle", "Calendar schedule configuration"));
+        builder.WithDescription(LocalizationGroup.GetText("ChooseCommandDescription", "With this assistant you are able to configure the calendar schedules. The following schedules are already created:"));
+
+        var schedulesBuilder = new StringBuilder();
+
+        var schedules = GetSchedules();
+        if (schedules.Count > 0)
         {
-            if (_schedules == null)
+            foreach (var schedule in schedules)
             {
-                var serverId = CommandContext.Guild.Id;
-
-                using (var dbFactory = RepositoryFactory.CreateInstance())
-                {
-                    _schedules = dbFactory.GetRepository<CalendarAppointmentScheduleRepository>()
-                                          .GetQuery()
-                                          .Where(obj => obj.DiscordServerId == serverId)
-                                          .Select(obj => obj.Description)
-                                          .ToList();
-                }
+                schedulesBuilder.AppendLine(schedule);
             }
-
-            return _schedules;
+        }
+        else
+        {
+            schedulesBuilder.Append('\u200B');
         }
 
-        #endregion // Methods
+        builder.AddField(LocalizationGroup.GetText("SchedulesField", "Schedules"), schedulesBuilder.ToString());
 
-        #region DialogReactionElementBase<bool>
+        return Task.CompletedTask;
+    }
 
-        /// <summary>
-        /// Editing the embedded message
-        /// </summary>
-        /// <param name="builder">Builder</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public override Task EditMessage(DiscordEmbedBuilder builder)
+    /// <summary>
+    /// Returns the reactions which should be added to the message
+    /// </summary>
+    /// <returns>Reactions</returns>
+    public override IReadOnlyList<ReactionData<bool>> GetReactions()
+    {
+        if (_reactions == null)
         {
-            builder.WithTitle(LocalizationGroup.GetText("ChooseCommandTitle", "Calendar schedule configuration"));
-            builder.WithDescription(LocalizationGroup.GetText("ChooseCommandDescription", "With this assistant you are able to configure the calendar schedules. The following schedules are already created:"));
-
-            var schedulesBuilder = new StringBuilder();
-
-            var schedules = GetSchedules();
-            if (schedules.Count > 0)
-            {
-                foreach (var schedule in schedules)
-                {
-                    schedulesBuilder.AppendLine(schedule);
-                }
-            }
-            else
-            {
-                schedulesBuilder.Append('\u200B');
-            }
-
-            builder.AddField(LocalizationGroup.GetText("SchedulesField", "Schedules"), schedulesBuilder.ToString());
-
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// Returns the reactions which should be added to the message
-        /// </summary>
-        /// <returns>Reactions</returns>
-        public override IReadOnlyList<ReactionData<bool>> GetReactions()
-        {
-            if (_reactions == null)
-            {
-                _reactions = new List<ReactionData<bool>>
+            _reactions = new List<ReactionData<bool>>
+                         {
+                             new ()
                              {
-                                 new ()
-                                 {
-                                     Emoji = DiscordEmojiService.GetAddEmoji(CommandContext.Client),
-                                     CommandText = LocalizationGroup.GetFormattedText("AddCommand", "{0} Add schedule", DiscordEmojiService.GetAddEmoji(CommandContext.Client)),
-                                     Func = async () =>
+                                 Emoji = DiscordEmojiService.GetAddEmoji(CommandContext.Client),
+                                 CommandText = LocalizationGroup.GetFormattedText("AddCommand", "{0} Add schedule", DiscordEmojiService.GetAddEmoji(CommandContext.Client)),
+                                 Func = async () =>
+                                        {
+                                            var data = await DialogHandler.RunForm<CreateCalendarScheduleData>(CommandContext, false)
+                                                                          .ConfigureAwait(false);
+
+                                            using (var dbFactory = RepositoryFactory.CreateInstance())
                                             {
-                                                var data = await DialogHandler.RunForm<CreateCalendarScheduleData>(CommandContext, false)
-                                                                              .ConfigureAwait(false);
+                                                var level = new CalendarAppointmentScheduleEntity
+                                                            {
+                                                                DiscordServerId = CommandContext.Guild.Id,
+                                                                Description = data.Description,
+                                                                CalendarAppointmentTemplateId = data.TemplateId,
+                                                                Type = data.Schedule.Type,
+                                                                AdditionalData = data.Schedule.AdditionalData
+                                                            };
 
-                                                using (var dbFactory = RepositoryFactory.CreateInstance())
-                                                {
-                                                    var level = new CalendarAppointmentScheduleEntity
-                                                                {
-                                                                    DiscordServerId = CommandContext.Guild.Id,
-                                                                    Description = data.Description,
-                                                                    CalendarAppointmentTemplateId = data.TemplateId,
-                                                                    Type = data.Schedule.Type,
-                                                                    AdditionalData = data.Schedule.AdditionalData
-                                                                };
-
-                                                    dbFactory.GetRepository<CalendarAppointmentScheduleRepository>()
-                                                             .Add(level);
-                                                }
-
-                                                return true;
+                                                dbFactory.GetRepository<CalendarAppointmentScheduleRepository>()
+                                                         .Add(level);
                                             }
-                                 }
-                             };
 
-                if (GetSchedules().Count > 0)
-                {
-                    _reactions.Add(new ReactionData<bool>
-                                         {
-                                             Emoji = DiscordEmojiService.GetEditEmoji(CommandContext.Client),
-                                             CommandText = LocalizationGroup.GetFormattedText("EditCommand", "{0} Edit schedule", DiscordEmojiService.GetEditEmoji(CommandContext.Client)),
-                                             Func = async () =>
-                                                    {
-                                                        var levelId = await RunSubElement<CalendarScheduleSelectionDialogElement, long>().ConfigureAwait(false);
+                                            return true;
+                                        }
+                             }
+                         };
 
-                                                        DialogContext.SetValue("CalendarScheduleId", levelId);
+            if (GetSchedules().Count > 0)
+            {
+                _reactions.Add(new ReactionData<bool>
+                               {
+                                   Emoji = DiscordEmojiService.GetEditEmoji(CommandContext.Client),
+                                   CommandText = LocalizationGroup.GetFormattedText("EditCommand", "{0} Edit schedule", DiscordEmojiService.GetEditEmoji(CommandContext.Client)),
+                                   Func = async () =>
+                                          {
+                                              var levelId = await RunSubElement<CalendarScheduleSelectionDialogElement, long>().ConfigureAwait(false);
 
-                                                        bool repeat;
+                                              DialogContext.SetValue("CalendarScheduleId", levelId);
 
-                                                        do
-                                                        {
-                                                            repeat = await RunSubElement<CalendarScheduleEditDialogElement, bool>().ConfigureAwait(false);
-                                                        }
-                                                        while (repeat);
+                                              bool repeat;
 
-                                                        return true;
-                                                    }
-                                         });
+                                              do
+                                              {
+                                                  repeat = await RunSubElement<CalendarScheduleEditDialogElement, bool>().ConfigureAwait(false);
+                                              }
+                                              while (repeat);
 
-                    _reactions.Add(new ReactionData<bool>
-                                         {
-                                             Emoji = DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client),
-                                             CommandText = LocalizationGroup.GetFormattedText("DeleteCommand", "{0} Delete schedule", DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client)),
-                                             Func = async () =>
-                                                    {
-                                                        var levelId = await RunSubElement<CalendarScheduleSelectionDialogElement, long>().ConfigureAwait(false);
-
-                                                        DialogContext.SetValue("CalendarScheduleId", levelId);
-
-                                                        return await RunSubElement<CalendarScheduleDeletionDialogElement, bool>().ConfigureAwait(false);
-                                                    }
-                                         });
-                }
+                                              return true;
+                                          }
+                               });
 
                 _reactions.Add(new ReactionData<bool>
-                                     {
-                                         Emoji = DiscordEmojiService.GetCrossEmoji(CommandContext.Client),
-                                         CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmojiService.GetCrossEmoji(CommandContext.Client)),
-                                         Func = () => Task.FromResult(false)
-                                     });
+                               {
+                                   Emoji = DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client),
+                                   CommandText = LocalizationGroup.GetFormattedText("DeleteCommand", "{0} Delete schedule", DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client)),
+                                   Func = async () =>
+                                          {
+                                              var levelId = await RunSubElement<CalendarScheduleSelectionDialogElement, long>().ConfigureAwait(false);
+
+                                              DialogContext.SetValue("CalendarScheduleId", levelId);
+
+                                              return await RunSubElement<CalendarScheduleDeletionDialogElement, bool>().ConfigureAwait(false);
+                                          }
+                               });
             }
 
-            return _reactions;
+            _reactions.Add(new ReactionData<bool>
+                           {
+                               Emoji = DiscordEmojiService.GetCrossEmoji(CommandContext.Client),
+                               CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmojiService.GetCrossEmoji(CommandContext.Client)),
+                               Func = () => Task.FromResult(false)
+                           });
         }
 
-        /// <summary>
-        /// Returns the title of the commands
-        /// </summary>
-        /// <returns>Commands</returns>
-        protected override string GetCommandTitle() => LocalizationGroup.GetText("CommandTitle", "Commands");
-
-        /// <summary>
-        /// Default case if none of the given reactions is used
-        /// </summary>
-        /// <returns>Result</returns>
-        protected override bool DefaultFunc()
-        {
-            return false;
-        }
-
-        #endregion // DialogReactionElementBase<bool>
+        return _reactions;
     }
+
+    /// <summary>
+    /// Returns the title of the commands
+    /// </summary>
+    /// <returns>Commands</returns>
+    protected override string GetCommandTitle() => LocalizationGroup.GetText("CommandTitle", "Commands");
+
+    /// <summary>
+    /// Default case if none of the given reactions is used
+    /// </summary>
+    /// <returns>Result</returns>
+    protected override bool DefaultFunc()
+    {
+        return false;
+    }
+
+    #endregion // DialogReactionElementBase<bool>
 }

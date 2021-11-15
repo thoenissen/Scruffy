@@ -2,27 +2,26 @@
 
 using Scruffy.Services.Core.Discord.Attributes;
 
-namespace Scruffy.Services.Calendar.DialogElements.Forms
+namespace Scruffy.Services.Calendar.DialogElements.Forms;
+
+/// <summary>
+/// Reminder
+/// </summary>
+public class CalenderTemplateReminderData
 {
+    #region Properties
+
     /// <summary>
-    /// Reminder
+    /// Message
     /// </summary>
-    public class CalenderTemplateReminderData
-    {
-        #region Properties
+    [DialogElementAssignment(typeof(CalendarTemplateReminderMessageDialogElement))]
+    public string Message { get; set; }
 
-        /// <summary>
-        /// Message
-        /// </summary>
-        [DialogElementAssignment(typeof(CalendarTemplateReminderMessageDialogElement))]
-        public string Message { get; set; }
+    /// <summary>
+    /// Time
+    /// </summary>
+    [DialogElementAssignment(typeof(CalendarTemplateReminderTimeDialogElement))]
+    public TimeSpan? Time { get; set; }
 
-        /// <summary>
-        /// Time
-        /// </summary>
-        [DialogElementAssignment(typeof(CalendarTemplateReminderTimeDialogElement))]
-        public TimeSpan? Time { get; set; }
-
-        #endregion // Properties
-    }
+    #endregion // Properties
 }

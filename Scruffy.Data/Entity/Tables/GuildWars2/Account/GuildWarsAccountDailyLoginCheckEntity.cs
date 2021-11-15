@@ -2,37 +2,36 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Scruffy.Data.Entity.Tables.GuildWars2.Account
+namespace Scruffy.Data.Entity.Tables.GuildWars2.Account;
+
+/// <summary>
+/// Daily logins
+/// </summary>
+[Table("GuildWarsAccountDailyLoginChecks")]
+public class GuildWarsAccountDailyLoginCheckEntity
 {
+    #region Properties
+
     /// <summary>
-    /// Daily logins
+    /// Account name
     /// </summary>
-    [Table("GuildWarsAccountDailyLoginChecks")]
-    public class GuildWarsAccountDailyLoginCheckEntity
-    {
-        #region Properties
+    [StringLength(42)]
+    public string Name { get; set; }
 
-        /// <summary>
-        /// Account name
-        /// </summary>
-        [StringLength(42)]
-        public string Name { get; set; }
+    /// <summary>
+    /// Day
+    /// </summary>
+    public DateTime Date { get; set; }
 
-        /// <summary>
-        /// Day
-        /// </summary>
-        public DateTime Date { get; set; }
+    #region Navigation properties
 
-        #region Navigation properties
+    /// <summary>
+    /// Account
+    /// </summary>
+    [ForeignKey(nameof(Name))]
+    public GuildWarsAccountEntity Account { get; set; }
 
-        /// <summary>
-        /// Account
-        /// </summary>
-        [ForeignKey(nameof(Name))]
-        public GuildWarsAccountEntity Account { get; set; }
+    #endregion // Navigation properties
 
-        #endregion // Navigation properties
-
-        #endregion // Properties
-    }
+    #endregion // Properties
 }

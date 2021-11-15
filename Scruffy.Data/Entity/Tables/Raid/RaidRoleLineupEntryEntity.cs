@@ -1,46 +1,45 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Scruffy.Data.Entity.Tables.Raid
+namespace Scruffy.Data.Entity.Tables.Raid;
+
+/// <summary>
+/// Role lineup entry
+/// </summary>
+[Table("RaidRoleLineupEntries")]
+public class RaidRoleLineupEntryEntity
 {
+    #region Properties
+
     /// <summary>
-    /// Role lineup entry
+    /// Id of the header
     /// </summary>
-    [Table("RaidRoleLineupEntries")]
-    public class RaidRoleLineupEntryEntity
-    {
-        #region Properties
+    public long LineupHeaderId { get; set; }
 
-        /// <summary>
-        /// Id of the header
-        /// </summary>
-        public long LineupHeaderId { get; set; }
+    /// <summary>
+    /// Lineup position
+    /// </summary>
+    public long Position { get; set; }
 
-        /// <summary>
-        /// Lineup position
-        /// </summary>
-        public long Position { get; set; }
+    /// <summary>
+    /// Id of the role
+    /// </summary>
+    public long RoleId { get; set; }
 
-        /// <summary>
-        /// Id of the role
-        /// </summary>
-        public long RoleId { get; set; }
+    #region Navigation properties
 
-        #region Navigation properties
+    /// <summary>
+    /// Lineup header
+    /// </summary>
+    [ForeignKey(nameof(LineupHeaderId))]
+    public RaidRoleLineupHeaderEntity RaidRoleLineupHeader { get; set; }
 
-        /// <summary>
-        /// Lineup header
-        /// </summary>
-        [ForeignKey(nameof(LineupHeaderId))]
-        public RaidRoleLineupHeaderEntity RaidRoleLineupHeader { get; set; }
+    /// <summary>
+    /// Role
+    /// </summary>
+    [ForeignKey(nameof(RoleId))]
+    public RaidRoleEntity RaidRole { get; set; }
 
-        /// <summary>
-        /// Role
-        /// </summary>
-        [ForeignKey(nameof(RoleId))]
-        public RaidRoleEntity RaidRole { get; set; }
+    #endregion // Navigation properties
 
-        #endregion // Navigation properties
-
-        #endregion // Properties
-    }
+    #endregion // Properties
 }

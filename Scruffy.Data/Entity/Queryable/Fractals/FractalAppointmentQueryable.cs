@@ -3,24 +3,23 @@
 using Scruffy.Data.Entity.Queryable.Base;
 using Scruffy.Data.Entity.Tables.Fractals;
 
-namespace Scruffy.Data.Entity.Queryable.Fractals
+namespace Scruffy.Data.Entity.Queryable.Fractals;
+
+/// <summary>
+/// Queryable for accessing the <see cref="FractalAppointmentEntity"/>
+/// </summary>
+public class FractalAppointmentQueryable : QueryableBase<FractalAppointmentEntity>
 {
+    #region Constructor
+
     /// <summary>
-    /// Queryable for accessing the <see cref="FractalAppointmentEntity"/>
+    /// Constructor
     /// </summary>
-    public class FractalAppointmentQueryable : QueryableBase<FractalAppointmentEntity>
+    /// <param name="queryable"><see cref="IQueryable"/>-object</param>
+    public FractalAppointmentQueryable(IQueryable<FractalAppointmentEntity> queryable)
+        : base(queryable)
     {
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="queryable"><see cref="IQueryable"/>-object</param>
-        public FractalAppointmentQueryable(IQueryable<FractalAppointmentEntity> queryable)
-            : base(queryable)
-        {
-        }
-
-        #endregion // Constructor
     }
+
+    #endregion // Constructor
 }

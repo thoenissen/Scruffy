@@ -10,76 +10,75 @@ using Scruffy.Data.Entity.Repositories.Reminder;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.JobScheduler;
 
-namespace Scruffy.Services.Reminder.Jobs
+namespace Scruffy.Services.Reminder.Jobs;
+
+/// <summary>
+/// Deletion of a weekly reminder
+/// </summary>
+public class WeeklyReminderDeletionJob : LocatedAsyncJob
 {
+    #region Fields
+
     /// <summary>
-    /// Deletion of a weekly reminder
+    /// Id of the reminder
     /// </summary>
-    public class WeeklyReminderDeletionJob : LocatedAsyncJob
+    private long _id;
+
+    #endregion
+
+    #region Constructor
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="id">Id</param>
+    public WeeklyReminderDeletionJob(long id)
     {
-        #region Fields
+        _id = id;
+    }
 
-        /// <summary>
-        /// Id of the reminder
-        /// </summary>
-        private long _id;
+    #endregion // Constructor
 
-        #endregion
+    #region  AsyncJob
 
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">Id</param>
-        public WeeklyReminderDeletionJob(long id)
+    /// <summary>
+    /// Executes the job
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public override async Task ExecuteAsync()
+    {
+        var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+        await using (serviceProvider.ConfigureAwait(false))
         {
-            _id = id;
-        }
-
-        #endregion // Constructor
-
-        #region  AsyncJob
-
-        /// <summary>
-        /// Executes the job
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public override async Task ExecuteAsync()
-        {
-            var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
-            await using (serviceProvider.ConfigureAwait(false))
+            using (var dbFactory = RepositoryFactory.CreateInstance())
             {
-                using (var dbFactory = RepositoryFactory.CreateInstance())
+                var data = dbFactory.GetRepository<WeeklyReminderRepository>()
+                                    .GetQuery()
+                                    .Where(obj => obj.Id == _id)
+                                    .Select(obj => new
+                                                   {
+                                                       ChannelId = obj.DiscordChannelId,
+                                                       MessageId = obj.DiscordMessageId
+                                                   })
+                                    .FirstOrDefault();
+
+                if (data?.MessageId != null)
                 {
-                    var data = dbFactory.GetRepository<WeeklyReminderRepository>()
-                                        .GetQuery()
-                                        .Where(obj => obj.Id == _id)
-                                        .Select(obj => new
-                                                       {
-                                                           ChannelId = obj.DiscordChannelId,
-                                                           MessageId = obj.DiscordMessageId
-                                                       })
-                                        .FirstOrDefault();
+                    var discordClient = serviceProvider.GetService<DiscordClient>();
 
-                    if (data?.MessageId != null)
-                    {
-                        var discordClient = serviceProvider.GetService<DiscordClient>();
+                    var channel = await discordClient.GetChannelAsync(data.ChannelId).ConfigureAwait(false);
 
-                        var channel = await discordClient.GetChannelAsync(data.ChannelId).ConfigureAwait(false);
+                    var message = await channel.GetMessageAsync(data.MessageId.Value).ConfigureAwait(false);
 
-                        var message = await channel.GetMessageAsync(data.MessageId.Value).ConfigureAwait(false);
+                    await channel.DeleteMessageAsync(message).ConfigureAwait(false);
 
-                        await channel.DeleteMessageAsync(message).ConfigureAwait(false);
-
-                        dbFactory.GetRepository<WeeklyReminderRepository>()
-                                 .Refresh(obj => obj.Id == _id,
-                                          obj => obj.DiscordMessageId = null);
-                    }
+                    dbFactory.GetRepository<WeeklyReminderRepository>()
+                             .Refresh(obj => obj.Id == _id,
+                                      obj => obj.DiscordMessageId = null);
                 }
             }
         }
-
-        #endregion // AsyncJob
     }
+
+    #endregion // AsyncJob
 }

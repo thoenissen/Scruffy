@@ -1,20 +1,19 @@
 ﻿using DSharpPlus.Entities;
 
-namespace Scruffy.Data.Services.Calendar
+namespace Scruffy.Data.Services.Calendar;
+
+/// <summary>
+/// Participant
+/// </summary>
+public class CalendarAppointmentParticipantData
 {
     /// <summary>
-    /// Participant
+    /// Member
     /// </summary>
-    public class CalendarAppointmentParticipantData
-    {
-        /// <summary>
-        /// Member
-        /// </summary>
-        public DiscordMember Member { get; set; }
+    public DiscordMember Member { get; set; }
 
-        /// <summary>
-        /// Leader
-        /// </summary>
-        public bool IsLeader { get; set; }
-    }
+    /// <summary>
+    /// Leader
+    /// </summary>
+    public bool IsLeader { get; set; }
 }

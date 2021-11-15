@@ -14,225 +14,224 @@ using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.GuildAdministration.DialogElements.Forms;
 
-namespace Scruffy.Services.GuildAdministration.DialogElements
+namespace Scruffy.Services.GuildAdministration.DialogElements;
+
+/// <summary>
+/// Starting the guild special ranks assistant
+/// </summary>
+public class GuildAdministrationSpecialRankSetupDialogElement : DialogEmbedReactionElementBase<bool>
 {
+    #region Fields
+
     /// <summary>
-    /// Starting the guild special ranks assistant
+    /// Reactions
     /// </summary>
-    public class GuildAdministrationSpecialRankSetupDialogElement : DialogEmbedReactionElementBase<bool>
+    private List<ReactionData<bool>> _reactions;
+
+    /// <summary>
+    /// Special ranks
+    /// </summary>
+    private List<GuildSpecialRankData> _ranks;
+
+    #endregion // Fields
+
+    #region Constructor
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="localizationService">Localization service</param>
+    public GuildAdministrationSpecialRankSetupDialogElement(LocalizationService localizationService)
+        : base(localizationService)
     {
-        #region Fields
+    }
 
-        /// <summary>
-        /// Reactions
-        /// </summary>
-        private List<ReactionData<bool>> _reactions;
+    #endregion // Constructor
 
-        /// <summary>
-        /// Special ranks
-        /// </summary>
-        private List<GuildSpecialRankData> _ranks;
+    #region Methods
 
-        #endregion // Fields
-
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        public GuildAdministrationSpecialRankSetupDialogElement(LocalizationService localizationService)
-            : base(localizationService)
+    /// <summary>
+    /// Returns the existing levels
+    /// </summary>
+    /// <returns>Levels</returns>
+    private List<GuildSpecialRankData> GetRanks()
+    {
+        if (_ranks == null)
         {
+            using (var dbFactory = RepositoryFactory.CreateInstance())
+            {
+                _ranks = dbFactory.GetRepository<GuildSpecialRankConfigurationRepository>()
+                                  .GetQuery()
+                                  .Where(obj => obj.Guild.DiscordServerId == CommandContext.Guild.Id
+                                             && obj.IsDeleted == false)
+                                  .Select(obj => new GuildSpecialRankData
+                                                 {
+                                                     Id = obj.Id,
+                                                     Description = obj.Description,
+                                                     DiscordRoleId = obj.DiscordRoleId
+                                                 })
+                                  .ToList();
+            }
         }
 
-        #endregion // Constructor
+        return _ranks;
+    }
 
-        #region Methods
+    #endregion // Methods
 
-        /// <summary>
-        /// Returns the existing levels
-        /// </summary>
-        /// <returns>Levels</returns>
-        private List<GuildSpecialRankData> GetRanks()
+    #region DialogReactionElementBase<bool>
+
+    /// <summary>
+    /// Editing the embedded message
+    /// </summary>
+    /// <param name="builder">Builder</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public override Task EditMessage(DiscordEmbedBuilder builder)
+    {
+        builder.WithTitle(LocalizationGroup.GetText("ChooseCommandTitle", "Guild special rank configuration"));
+        builder.WithDescription(LocalizationGroup.GetText("ChooseCommandDescription", "With this assistant you are able to configure the guild special ranks. The following special ranks are already created:"));
+
+        var levelsBuilder = new StringBuilder();
+
+        var ranks = GetRanks();
+        if (ranks.Count > 0)
         {
-            if (_ranks == null)
+            foreach (var rank in ranks)
             {
-                using (var dbFactory = RepositoryFactory.CreateInstance())
-                {
-                    _ranks = dbFactory.GetRepository<GuildSpecialRankConfigurationRepository>()
-                                      .GetQuery()
-                                      .Where(obj => obj.Guild.DiscordServerId == CommandContext.Guild.Id
-                                                 && obj.IsDeleted == false)
-                                      .Select(obj => new GuildSpecialRankData
-                                                     {
-                                                         Id = obj.Id,
-                                                         Description = obj.Description,
-                                                         DiscordRoleId = obj.DiscordRoleId
-                                                     })
-                                      .ToList();
-                }
-            }
+                var role = CommandContext.Guild.GetRole(rank.DiscordRoleId);
 
-            return _ranks;
+                levelsBuilder.AppendLine(Formatter.Bold($"{rank.Description} ({role.Mention})"));
+            }
+        }
+        else
+        {
+            levelsBuilder.Append('\u200B');
         }
 
-        #endregion // Methods
+        builder.AddField(LocalizationGroup.GetText("RanksFields", "Ranks"), levelsBuilder.ToString());
 
-        #region DialogReactionElementBase<bool>
+        return Task.CompletedTask;
+    }
 
-        /// <summary>
-        /// Editing the embedded message
-        /// </summary>
-        /// <param name="builder">Builder</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public override Task EditMessage(DiscordEmbedBuilder builder)
+    /// <summary>
+    /// Returns the reactions which should be added to the message
+    /// </summary>
+    /// <returns>Reactions</returns>
+    public override IReadOnlyList<ReactionData<bool>> GetReactions()
+    {
+        if (_reactions == null)
         {
-            builder.WithTitle(LocalizationGroup.GetText("ChooseCommandTitle", "Guild special rank configuration"));
-            builder.WithDescription(LocalizationGroup.GetText("ChooseCommandDescription", "With this assistant you are able to configure the guild special ranks. The following special ranks are already created:"));
-
-            var levelsBuilder = new StringBuilder();
-
-            var ranks = GetRanks();
-            if (ranks.Count > 0)
-            {
-                foreach (var rank in ranks)
-                {
-                    var role = CommandContext.Guild.GetRole(rank.DiscordRoleId);
-
-                    levelsBuilder.AppendLine(Formatter.Bold($"{rank.Description} ({role.Mention})"));
-                }
-            }
-            else
-            {
-                levelsBuilder.Append('\u200B');
-            }
-
-            builder.AddField(LocalizationGroup.GetText("RanksFields", "Ranks"), levelsBuilder.ToString());
-
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// Returns the reactions which should be added to the message
-        /// </summary>
-        /// <returns>Reactions</returns>
-        public override IReadOnlyList<ReactionData<bool>> GetReactions()
-        {
-            if (_reactions == null)
-            {
-                _reactions = new List<ReactionData<bool>>
+            _reactions = new List<ReactionData<bool>>
+                         {
+                             new ()
                              {
-                                 new ()
-                                 {
-                                     Emoji = DiscordEmojiService.GetAddEmoji(CommandContext.Client),
-                                     CommandText = LocalizationGroup.GetFormattedText("AddCommand", "{0} Add rank", DiscordEmojiService.GetAddEmoji(CommandContext.Client)),
-                                     Func = async () =>
+                                 Emoji = DiscordEmojiService.GetAddEmoji(CommandContext.Client),
+                                 CommandText = LocalizationGroup.GetFormattedText("AddCommand", "{0} Add rank", DiscordEmojiService.GetAddEmoji(CommandContext.Client)),
+                                 Func = async () =>
+                                        {
+                                            var data = await DialogHandler.RunForm<CreateGuildSpecialRankData>(CommandContext, false)
+                                                                          .ConfigureAwait(false);
+
+                                            using (var dbFactory = RepositoryFactory.CreateInstance())
                                             {
-                                                var data = await DialogHandler.RunForm<CreateGuildSpecialRankData>(CommandContext, false)
-                                                                              .ConfigureAwait(false);
+                                                var rank = new GuildSpecialRankConfigurationEntity
+                                                           {
+                                                               GuildId = dbFactory.GetRepository<GuildRepository>()
+                                                                                  .GetQuery()
+                                                                                  .Where(obj => obj.DiscordServerId == CommandContext.Guild.Id)
+                                                                                  .Select(obj => obj.Id)
+                                                                                  .First(),
+                                                               Description = data.Description,
+                                                               DiscordRoleId = data.DiscordRoleId,
+                                                               MaximumPoints = data.MaximumPoints,
+                                                               GrantThreshold = data.GrantThreshold,
+                                                               RemoveThreshold = data.RemoveThreshold
+                                                           };
 
-                                                using (var dbFactory = RepositoryFactory.CreateInstance())
-                                                {
-                                                    var rank = new GuildSpecialRankConfigurationEntity
-                                                                {
-                                                                    GuildId = dbFactory.GetRepository<GuildRepository>()
-                                                                                       .GetQuery()
-                                                                                       .Where(obj => obj.DiscordServerId == CommandContext.Guild.Id)
-                                                                                       .Select(obj => obj.Id)
-                                                                                       .First(),
-                                                                    Description = data.Description,
-                                                                    DiscordRoleId = data.DiscordRoleId,
-                                                                    MaximumPoints = data.MaximumPoints,
-                                                                    GrantThreshold = data.GrantThreshold,
-                                                                    RemoveThreshold = data.RemoveThreshold
-                                                                };
-
-                                                    if (dbFactory.GetRepository<GuildSpecialRankConfigurationRepository>()
+                                                if (dbFactory.GetRepository<GuildSpecialRankConfigurationRepository>()
                                                              .Add(rank))
+                                                {
+                                                    DialogContext.SetValue("RankId", rank.Id);
+
+                                                    bool repeat;
+
+                                                    do
                                                     {
-                                                        DialogContext.SetValue("RankId", rank.Id);
-
-                                                        bool repeat;
-
-                                                        do
-                                                        {
-                                                            repeat = await RunSubElement<GuildAdministrationSpecialRankEditDialogElement, bool>().ConfigureAwait(false);
-                                                        }
-                                                        while (repeat);
+                                                        repeat = await RunSubElement<GuildAdministrationSpecialRankEditDialogElement, bool>().ConfigureAwait(false);
                                                     }
+                                                    while (repeat);
                                                 }
-
-                                                return true;
                                             }
-                                 }
-                             };
 
-                if (GetRanks().Count > 0)
-                {
-                    _reactions.Add(new ReactionData<bool>
-                    {
-                        Emoji = DiscordEmojiService.GetEditEmoji(CommandContext.Client),
-                        CommandText = LocalizationGroup.GetFormattedText("EditCommand", "{0} Edit rank", DiscordEmojiService.GetEditEmoji(CommandContext.Client)),
-                        Func = async () =>
-                        {
-                            var levelId = await RunSubElement<GuildAdministrationSpecialRankSelectionDialogElement, long>().ConfigureAwait(false);
+                                            return true;
+                                        }
+                             }
+                         };
 
-                            DialogContext.SetValue("RankId", levelId);
+            if (GetRanks().Count > 0)
+            {
+                _reactions.Add(new ReactionData<bool>
+                               {
+                                   Emoji = DiscordEmojiService.GetEditEmoji(CommandContext.Client),
+                                   CommandText = LocalizationGroup.GetFormattedText("EditCommand", "{0} Edit rank", DiscordEmojiService.GetEditEmoji(CommandContext.Client)),
+                                   Func = async () =>
+                                          {
+                                              var levelId = await RunSubElement<GuildAdministrationSpecialRankSelectionDialogElement, long>().ConfigureAwait(false);
 
-                            bool repeat;
+                                              DialogContext.SetValue("RankId", levelId);
 
-                            do
-                            {
-                                repeat = await RunSubElement<GuildAdministrationSpecialRankEditDialogElement, bool>().ConfigureAwait(false);
-                            }
-                            while (repeat);
+                                              bool repeat;
 
-                            return true;
-                        }
-                    });
+                                              do
+                                              {
+                                                  repeat = await RunSubElement<GuildAdministrationSpecialRankEditDialogElement, bool>().ConfigureAwait(false);
+                                              }
+                                              while (repeat);
 
-                    _reactions.Add(new ReactionData<bool>
-                    {
-                        Emoji = DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client),
-                        CommandText = LocalizationGroup.GetFormattedText("DeleteCommand", "{0} Delete rank", DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client)),
-                        Func = async () =>
-                        {
-                            var rankId = await RunSubElement<GuildAdministrationSpecialRankSelectionDialogElement, long>().ConfigureAwait(false);
-
-                            DialogContext.SetValue("RankId", rankId);
-
-                            return await RunSubElement<GuildAdministrationSpecialRankDeletionDialogElement, bool>().ConfigureAwait(false);
-                        }
-                    });
-                }
+                                              return true;
+                                          }
+                               });
 
                 _reactions.Add(new ReactionData<bool>
-                {
-                    Emoji = DiscordEmojiService.GetCrossEmoji(CommandContext.Client),
-                    CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmojiService.GetCrossEmoji(CommandContext.Client)),
-                    Func = () => Task.FromResult(false)
-                });
+                               {
+                                   Emoji = DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client),
+                                   CommandText = LocalizationGroup.GetFormattedText("DeleteCommand", "{0} Delete rank", DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client)),
+                                   Func = async () =>
+                                          {
+                                              var rankId = await RunSubElement<GuildAdministrationSpecialRankSelectionDialogElement, long>().ConfigureAwait(false);
+
+                                              DialogContext.SetValue("RankId", rankId);
+
+                                              return await RunSubElement<GuildAdministrationSpecialRankDeletionDialogElement, bool>().ConfigureAwait(false);
+                                          }
+                               });
             }
 
-            return _reactions;
+            _reactions.Add(new ReactionData<bool>
+                           {
+                               Emoji = DiscordEmojiService.GetCrossEmoji(CommandContext.Client),
+                               CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmojiService.GetCrossEmoji(CommandContext.Client)),
+                               Func = () => Task.FromResult(false)
+                           });
         }
 
-        /// <summary>
-        /// Returns the title of the commands
-        /// </summary>
-        /// <returns>Commands</returns>
-        protected override string GetCommandTitle() => LocalizationGroup.GetText("CommandTitle", "Commands");
-
-        /// <summary>
-        /// Default case if none of the given reactions is used
-        /// </summary>
-        /// <returns>Result</returns>
-        protected override bool DefaultFunc()
-        {
-            return false;
-        }
-
-        #endregion // DialogReactionElementBase<bool>
+        return _reactions;
     }
+
+    /// <summary>
+    /// Returns the title of the commands
+    /// </summary>
+    /// <returns>Commands</returns>
+    protected override string GetCommandTitle() => LocalizationGroup.GetText("CommandTitle", "Commands");
+
+    /// <summary>
+    /// Default case if none of the given reactions is used
+    /// </summary>
+    /// <returns>Result</returns>
+    protected override bool DefaultFunc()
+    {
+        return false;
+    }
+
+    #endregion // DialogReactionElementBase<bool>
 }

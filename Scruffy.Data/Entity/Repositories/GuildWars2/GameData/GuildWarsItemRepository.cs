@@ -12,186 +12,186 @@ using Scruffy.Data.Entity.Tables.GuildWars2.GameData;
 using Scruffy.Data.Enumerations.GuildWars2;
 using Scruffy.Data.Json.GuildWars2.Items;
 
-namespace Scruffy.Data.Entity.Repositories.GuildWars2.GameData
+namespace Scruffy.Data.Entity.Repositories.GuildWars2.GameData;
+
+/// <summary>
+/// Repository for accessing <see cref="GuildWarsItemEntity"/>
+/// </summary>
+public class GuildWarsItemRepository : RepositoryBase<GuildWarsItemQueryable, GuildWarsItemEntity>
 {
+    #region Constructor
+
     /// <summary>
-    /// Repository for accessing <see cref="GuildWarsItemEntity"/>
+    /// Constructor
     /// </summary>
-    public class GuildWarsItemRepository : RepositoryBase<GuildWarsItemQueryable, GuildWarsItemEntity>
+    /// <param name="dbContext"><see cref="DbContext"/>-object</param>
+    public GuildWarsItemRepository(ScruffyDbContext dbContext)
+        : base(dbContext)
     {
-        #region Constructor
+    }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="dbContext"><see cref="DbContext"/>-object</param>
-        public GuildWarsItemRepository(ScruffyDbContext dbContext)
-            : base(dbContext)
+    #endregion // Constructor
+
+    #region Methods
+
+    /// <summary>
+    /// Bulk insert items
+    /// </summary>
+    /// <param name="items">Items</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public async Task<bool> BulkInsert(List<Item> items)
+    {
+        var success = false;
+
+        LastError = null;
+
+        try
         {
-        }
-
-        #endregion // Constructor
-
-        #region Methods
-
-        /// <summary>
-        /// Bulk insert items
-        /// </summary>
-        /// <param name="items">Items</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task<bool> BulkInsert(List<Item> items)
-        {
-            var success = false;
-
-            LastError = null;
-
-            try
+            var connection = new SqlConnection(GetDbContext().ConnectionString);
+            await using (connection.ConfigureAwait(false))
             {
-                var connection = new SqlConnection(GetDbContext().ConnectionString);
-                await using (connection.ConfigureAwait(false))
-                {
-                    await connection.OpenAsync()
-                                    .ConfigureAwait(false);
+                await connection.OpenAsync()
+                                .ConfigureAwait(false);
 
-                    var sqlCommand = new SqlCommand(@"CREATE TABLE #GuildWarsItems (
+                var sqlCommand = new SqlCommand(@"CREATE TABLE #GuildWarsItems (
                                                                    [ItemId] int NOT NULL,
                                                                    [Name] nvarchar(max) NULL,
                                                                    [Type] int NOT NULL,
                                                                    [VendorValue] bigint NULL
                                                                )",
-                                                                 connection);
+                                                connection);
 
-                    await using (sqlCommand.ConfigureAwait(false))
+                await using (sqlCommand.ConfigureAwait(false))
+                {
+                    sqlCommand.ExecuteNonQuery();
+                }
+
+                var dataTable = new DataTable();
+                dataTable.Columns.Add(nameof(GuildWarsItemEntity.ItemId), typeof(int));
+                dataTable.Columns.Add(nameof(GuildWarsItemEntity.Name), typeof(string));
+                dataTable.Columns.Add(nameof(GuildWarsItemEntity.Type), typeof(int));
+                dataTable.Columns.Add(nameof(GuildWarsItemEntity.VendorValue), typeof(long));
+
+                foreach (var entry in items)
+                {
+                    GuildWars2ItemType type;
+
+                    switch (entry.Type)
                     {
-                        sqlCommand.ExecuteNonQuery();
+                        case "Armor":
+                            {
+                                type = GuildWars2ItemType.Armor;
+                            }
+                            break;
+
+                        case "Back":
+                            {
+                                type = GuildWars2ItemType.Back;
+                            }
+                            break;
+
+                        case "Bag":
+                            {
+                                type = GuildWars2ItemType.Bag;
+                            }
+                            break;
+
+                        case "Consumable":
+                            {
+                                type = GuildWars2ItemType.Consumable;
+                            }
+                            break;
+
+                        case "Container":
+                            {
+                                type = GuildWars2ItemType.Container;
+                            }
+                            break;
+
+                        case "CraftingMaterial":
+                            {
+                                type = GuildWars2ItemType.CraftingMaterial;
+                            }
+                            break;
+
+                        case "Gathering":
+                            {
+                                type = GuildWars2ItemType.Gathering;
+                            }
+                            break;
+
+                        case "Gizmo":
+                            {
+                                type = GuildWars2ItemType.Gizmo;
+                            }
+                            break;
+
+                        case "Key":
+                            {
+                                type = GuildWars2ItemType.Key;
+                            }
+                            break;
+
+                        case "MiniPet":
+                            {
+                                type = GuildWars2ItemType.MiniPet;
+                            }
+                            break;
+
+                        case "Tool":
+                            {
+                                type = GuildWars2ItemType.Tool;
+                            }
+                            break;
+
+                        case "Trait":
+                            {
+                                type = GuildWars2ItemType.Trait;
+                            }
+                            break;
+
+                        case "Trinket":
+                            {
+                                type = GuildWars2ItemType.Trinket;
+                            }
+                            break;
+
+                        case "Trophy":
+                            {
+                                type = GuildWars2ItemType.Trophy;
+                            }
+                            break;
+
+                        case "UpgradeComponent":
+                            {
+                                type = GuildWars2ItemType.UpgradeComponent;
+                            }
+                            break;
+
+                        case "Weapon":
+                            {
+                                type = GuildWars2ItemType.Weapon;
+                            }
+                            break;
+
+                        default:
+                            {
+                                continue;
+                            }
                     }
 
-                    var dataTable = new DataTable();
-                    dataTable.Columns.Add(nameof(GuildWarsItemEntity.ItemId), typeof(int));
-                    dataTable.Columns.Add(nameof(GuildWarsItemEntity.Name), typeof(string));
-                    dataTable.Columns.Add(nameof(GuildWarsItemEntity.Type), typeof(int));
-                    dataTable.Columns.Add(nameof(GuildWarsItemEntity.VendorValue), typeof(long));
+                    dataTable.Rows.Add(entry.Id, entry.Name, type, entry.VendorValue ?? (object)DBNull.Value);
+                }
 
-                    foreach (var entry in items)
-                    {
-                        GuildWars2ItemType type;
+                using (var bulk = new SqlBulkCopy(connection))
+                {
+                    bulk.DestinationTableName = "#GuildWarsItems";
 
-                        switch (entry.Type)
-                        {
-                            case "Armor":
-                                {
-                                    type = GuildWars2ItemType.Armor;
-                                }
-                                break;
+                    await bulk.WriteToServerAsync(dataTable)
+                              .ConfigureAwait(false);
+                }
 
-                            case "Back":
-                                {
-                                    type = GuildWars2ItemType.Back;
-                                }
-                                break;
-
-                            case "Bag":
-                                {
-                                    type = GuildWars2ItemType.Bag;
-                                }
-                                break;
-
-                            case "Consumable":
-                                {
-                                    type = GuildWars2ItemType.Consumable;
-                                }
-                                break;
-
-                            case "Container":
-                                {
-                                    type = GuildWars2ItemType.Container;
-                                }
-                                break;
-
-                            case "CraftingMaterial":
-                                {
-                                    type = GuildWars2ItemType.CraftingMaterial;
-                                }
-                                break;
-
-                            case "Gathering":
-                                {
-                                    type = GuildWars2ItemType.Gathering;
-                                }
-                                break;
-
-                            case "Gizmo":
-                                {
-                                    type = GuildWars2ItemType.Gizmo;
-                                }
-                                break;
-
-                            case "Key":
-                                {
-                                    type = GuildWars2ItemType.Key;
-                                }
-                                break;
-
-                            case "MiniPet":
-                                {
-                                    type = GuildWars2ItemType.MiniPet;
-                                }
-                                break;
-
-                            case "Tool":
-                                {
-                                    type = GuildWars2ItemType.Tool;
-                                }
-                                break;
-
-                            case "Trait":
-                                {
-                                    type = GuildWars2ItemType.Trait;
-                                }
-                                break;
-
-                            case "Trinket":
-                                {
-                                    type = GuildWars2ItemType.Trinket;
-                                }
-                                break;
-
-                            case "Trophy":
-                                {
-                                    type = GuildWars2ItemType.Trophy;
-                                }
-                                break;
-
-                            case "UpgradeComponent":
-                                {
-                                    type = GuildWars2ItemType.UpgradeComponent;
-                                }
-                                break;
-
-                            case "Weapon":
-                                {
-                                    type = GuildWars2ItemType.Weapon;
-                                }
-                                break;
-
-                            default:
-                                {
-                                    continue;
-                                }
-                        }
-
-                        dataTable.Rows.Add(entry.Id, entry.Name, type, entry.VendorValue ?? (object)DBNull.Value);
-                    }
-
-                    using (var bulk = new SqlBulkCopy(connection))
-                    {
-                        bulk.DestinationTableName = "#GuildWarsItems";
-
-                        await bulk.WriteToServerAsync(dataTable)
-                                  .ConfigureAwait(false);
-                    }
-
-                    sqlCommand = new SqlCommand(@"MERGE INTO [GuildWarsItems] AS [TARGET]
+                sqlCommand = new SqlCommand(@"MERGE INTO [GuildWarsItems] AS [TARGET]
                                                                            USING #GuildWarsItems AS [Source]
                                                                               ON [Target].[ItemId] = [Source].[ItemId]
                                                                WHEN MATCHED THEN
@@ -202,23 +202,22 @@ namespace Scruffy.Data.Entity.Repositories.GuildWars2.GameData
                                                                WHEN NOT MATCHED THEN
                                                                           INSERT ( [ItemId], [Name], [Type], [VendorValue], IsValueReducingActivated )
                                                                           VALUES ( [Source].[ItemId], [Source].[Name], [Source].[Type], [Source].[VendorValue], 0); ",
-                                                             connection);
-                    await using (sqlCommand.ConfigureAwait(false))
-                    {
-                        sqlCommand.ExecuteNonQuery();
-                    }
+                                            connection);
+                await using (sqlCommand.ConfigureAwait(false))
+                {
+                    sqlCommand.ExecuteNonQuery();
                 }
-
-                success = true;
-            }
-            catch (Exception ex)
-            {
-                LastError = ex;
             }
 
-            return success;
+            success = true;
+        }
+        catch (Exception ex)
+        {
+            LastError = ex;
         }
 
-        #endregion // Methods
+        return success;
     }
+
+    #endregion // Methods
 }

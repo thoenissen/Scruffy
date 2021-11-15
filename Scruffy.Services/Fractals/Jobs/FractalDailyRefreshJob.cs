@@ -9,46 +9,45 @@ using Scruffy.Data.Entity.Repositories.Fractals;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.JobScheduler;
 
-namespace Scruffy.Services.Fractals.Jobs
+namespace Scruffy.Services.Fractals.Jobs;
+
+/// <summary>
+/// Daily creation of the fractal appointments
+/// </summary>
+public class FractalDailyRefreshJob : LocatedAsyncJob
 {
+    #region AsyncJob
+
     /// <summary>
-    /// Daily creation of the fractal appointments
+    /// Executes the job
     /// </summary>
-    public class FractalDailyRefreshJob : LocatedAsyncJob
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public override async Task ExecuteAsync()
     {
-        #region AsyncJob
-
-        /// <summary>
-        /// Executes the job
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public override async Task ExecuteAsync()
+        using (var dbFactory = RepositoryFactory.CreateInstance())
         {
-            using (var dbFactory = RepositoryFactory.CreateInstance())
+            var configurations = await dbFactory.GetRepository<FractalLfgConfigurationRepository>()
+                                                .GetQuery()
+                                                .Select(obj => new
+                                                               {
+                                                                   obj.Id
+                                                               })
+                                                .ToListAsync()
+                                                .ConfigureAwait(false);
+
+            var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+            await using (serviceProvider.ConfigureAwait(false))
             {
-                var configurations = await dbFactory.GetRepository<FractalLfgConfigurationRepository>()
-                                                    .GetQuery()
-                                                    .Select(obj => new
-                                                                   {
-                                                                       obj.Id
-                                                                   })
-                                                    .ToListAsync()
-                                                    .ConfigureAwait(false);
+                var builder = serviceProvider.GetService<FractalLfgMessageBuilder>();
 
-                var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
-                await using (serviceProvider.ConfigureAwait(false))
+                foreach (var configuration in configurations)
                 {
-                    var builder = serviceProvider.GetService<FractalLfgMessageBuilder>();
-
-                    foreach (var configuration in configurations)
-                    {
-                        // Refreshing of the lfg message
-                        await builder.RefreshMessageAsync(configuration.Id).ConfigureAwait(false);
-                    }
+                    // Refreshing of the lfg message
+                    await builder.RefreshMessageAsync(configuration.Id).ConfigureAwait(false);
                 }
             }
         }
-
-        #endregion // AsyncJob
     }
+
+    #endregion // AsyncJob
 }

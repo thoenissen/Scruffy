@@ -10,84 +10,83 @@ using Scruffy.Data.Entity.Repositories.Calendar;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.JobScheduler;
 
-namespace Scruffy.Services.Calendar.Jobs
+namespace Scruffy.Services.Calendar.Jobs;
+
+/// <summary>
+/// Deletion of a weekly reminder
+/// </summary>
+public class CalendarReminderDeletionJob : LocatedAsyncJob
 {
+    #region Fields
+
     /// <summary>
-    /// Deletion of a weekly reminder
+    /// Id of the reminder
     /// </summary>
-    public class CalendarReminderDeletionJob : LocatedAsyncJob
+    private long _id;
+
+    #endregion
+
+    #region Constructor
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="id">Id</param>
+    public CalendarReminderDeletionJob(long id)
     {
-        #region Fields
+        _id = id;
+    }
 
-        /// <summary>
-        /// Id of the reminder
-        /// </summary>
-        private long _id;
+    #endregion // Constructor
 
-        #endregion
+    #region  AsyncJob
 
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">Id</param>
-        public CalendarReminderDeletionJob(long id)
+    /// <summary>
+    /// Executes the job
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public override async Task ExecuteAsync()
+    {
+        var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+        await using (serviceProvider.ConfigureAwait(false))
         {
-            _id = id;
-        }
-
-        #endregion // Constructor
-
-        #region  AsyncJob
-
-        /// <summary>
-        /// Executes the job
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public override async Task ExecuteAsync()
-        {
-            var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
-            await using (serviceProvider.ConfigureAwait(false))
+            using (var dbFactory = RepositoryFactory.CreateInstance())
             {
-                using (var dbFactory = RepositoryFactory.CreateInstance())
+                var data = dbFactory.GetRepository<CalendarAppointmentRepository>()
+                                    .GetQuery()
+                                    .Where(obj => obj.Id == _id)
+                                    .Select(obj => new
+                                                   {
+                                                       ReminderChannelId = obj.DiscordChannelId,
+                                                       ReminderMessageId = obj.DiscordMessageId
+                                                   })
+                                    .FirstOrDefault();
+
+                if (data?.ReminderChannelId != null
+                 && data.ReminderMessageId != null)
                 {
-                    var data = dbFactory.GetRepository<CalendarAppointmentRepository>()
-                                        .GetQuery()
-                                        .Where(obj => obj.Id == _id)
-                                        .Select(obj => new
-                                        {
-                                            ReminderChannelId = obj.DiscordChannelId,
-                                            ReminderMessageId = obj.DiscordMessageId
-                                        })
-                                        .FirstOrDefault();
+                    var discordClient = serviceProvider.GetService<DiscordClient>();
 
-                    if (data?.ReminderChannelId != null
-                     && data.ReminderMessageId != null)
-                    {
-                        var discordClient = serviceProvider.GetService<DiscordClient>();
+                    var channel = await discordClient.GetChannelAsync(data.ReminderChannelId.Value)
+                                                     .ConfigureAwait(false);
 
-                        var channel = await discordClient.GetChannelAsync(data.ReminderChannelId.Value)
-                                                         .ConfigureAwait(false);
+                    var message = await channel.GetMessageAsync(data.ReminderMessageId.Value)
+                                               .ConfigureAwait(false);
 
-                        var message = await channel.GetMessageAsync(data.ReminderMessageId.Value)
-                                                   .ConfigureAwait(false);
+                    await channel.DeleteMessageAsync(message)
+                                 .ConfigureAwait(false);
 
-                        await channel.DeleteMessageAsync(message)
-                                     .ConfigureAwait(false);
-
-                        dbFactory.GetRepository<CalendarAppointmentRepository>()
-                                 .Refresh(obj => obj.Id == _id,
-                                          obj =>
-                                          {
-                                              obj.DiscordChannelId = null;
-                                              obj.DiscordMessageId = null;
-                                          });
-                    }
+                    dbFactory.GetRepository<CalendarAppointmentRepository>()
+                             .Refresh(obj => obj.Id == _id,
+                                      obj =>
+                                      {
+                                          obj.DiscordChannelId = null;
+                                          obj.DiscordMessageId = null;
+                                      });
                 }
             }
         }
-
-        #endregion // AsyncJob
     }
+
+    #endregion // AsyncJob
 }

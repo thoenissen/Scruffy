@@ -3,24 +3,23 @@
 using Scruffy.Data.Entity.Queryable.Base;
 using Scruffy.Data.Entity.Tables.Statistics;
 
-namespace Scruffy.Data.Entity.Queryable.Statistics
+namespace Scruffy.Data.Entity.Queryable.Statistics;
+
+/// <summary>
+/// Queryable for accessing the <see cref="DiscordMessageEntity"/>
+/// </summary>
+public class DiscordMessageQueryable : QueryableBase<DiscordMessageEntity>
 {
+    #region Constructor
+
     /// <summary>
-    /// Queryable for accessing the <see cref="DiscordMessageEntity"/>
+    /// Constructor
     /// </summary>
-    public class DiscordMessageQueryable : QueryableBase<DiscordMessageEntity>
+    /// <param name="queryable"><see cref="IQueryable"/>-object</param>
+    public DiscordMessageQueryable(IQueryable<DiscordMessageEntity> queryable)
+        : base(queryable)
     {
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="queryable"><see cref="IQueryable"/>-object</param>
-        public DiscordMessageQueryable(IQueryable<DiscordMessageEntity> queryable)
-            : base(queryable)
-        {
-        }
-
-        #endregion // Constructor
     }
+
+    #endregion // Constructor
 }

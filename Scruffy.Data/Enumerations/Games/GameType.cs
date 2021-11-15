@@ -1,18 +1,17 @@
-﻿namespace Scruffy.Data.Enumerations.Games
+﻿namespace Scruffy.Data.Enumerations.Games;
+
+/// <summary>
+/// Game type
+/// </summary>
+public enum GameType
 {
     /// <summary>
-    /// Game type
+    /// Counter
     /// </summary>
-    public enum GameType
-    {
-        /// <summary>
-        /// Counter
-        /// </summary>
-        Counter,
+    Counter,
 
-        /// <summary>
-        /// Word chain
-        /// </summary>
-        WordChain,
-    }
+    /// <summary>
+    /// Word chain
+    /// </summary>
+    WordChain,
 }

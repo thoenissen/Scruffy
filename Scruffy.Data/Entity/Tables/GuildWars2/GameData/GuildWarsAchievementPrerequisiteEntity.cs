@@ -1,35 +1,34 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Scruffy.Data.Entity.Tables.GuildWars2.GameData
+namespace Scruffy.Data.Entity.Tables.GuildWars2.GameData;
+
+/// <summary>
+/// Prerequisites
+/// </summary>
+[Table("GuildWarsAchievementPrerequisites")]
+public class GuildWarsAchievementPrerequisiteEntity
 {
+    #region Properties
+
     /// <summary>
-    /// Prerequisites
+    /// Id of the achievement
     /// </summary>
-    [Table("GuildWarsAchievementPrerequisites")]
-    public class GuildWarsAchievementPrerequisiteEntity
-    {
-        #region Properties
+    public int AchievementId { get; set; }
 
-        /// <summary>
-        /// Id of the achievement
-        /// </summary>
-        public int AchievementId { get; set; }
+    /// <summary>
+    /// Id
+    /// </summary>
+    public int Id { get; set; }
 
-        /// <summary>
-        /// Id
-        /// </summary>
-        public int Id { get; set; }
+    #region Navigation properties
 
-        #region Navigation properties
+    /// <summary>
+    /// Achievement
+    /// </summary>
+    [ForeignKey(nameof(AchievementId))]
+    public virtual GuildWarsAchievementEntity GuildWarsAchievement { get; set; }
 
-        /// <summary>
-        /// Achievement
-        /// </summary>
-        [ForeignKey(nameof(AchievementId))]
-        public virtual GuildWarsAchievementEntity GuildWarsAchievement { get; set; }
+    #endregion // Navigation properties
 
-        #endregion // Navigation properties
-
-        #endregion // Properties
-    }
+    #endregion // Properties
 }

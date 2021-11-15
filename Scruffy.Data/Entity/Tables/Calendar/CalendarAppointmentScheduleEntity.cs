@@ -2,62 +2,61 @@
 
 using Scruffy.Data.Enumerations.Calendar;
 
-namespace Scruffy.Data.Entity.Tables.Calendar
+namespace Scruffy.Data.Entity.Tables.Calendar;
+
+/// <summary>
+/// Calendar appointment schedule
+/// </summary>
+[Table("CalendarAppointmentSchedules")]
+public class CalendarAppointmentScheduleEntity
 {
+    #region Properties
+
     /// <summary>
-    /// Calendar appointment schedule
+    /// Id
     /// </summary>
-    [Table("CalendarAppointmentSchedules")]
-    public class CalendarAppointmentScheduleEntity
-    {
-        #region Properties
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public long Id { get; set; }
 
-        /// <summary>
-        /// Id
-        /// </summary>
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long Id { get; set; }
+    /// <summary>
+    /// Id of the Server
+    /// </summary>
+    public ulong DiscordServerId { get; set; }
 
-        /// <summary>
-        /// Id of the Server
-        /// </summary>
-        public ulong DiscordServerId { get; set; }
+    /// <summary>
+    /// Description
+    /// </summary>
+    public string Description { get; set; }
 
-        /// <summary>
-        /// Description
-        /// </summary>
-        public string Description { get; set; }
+    /// <summary>
+    /// Id of the template
+    /// </summary>
+    public long CalendarAppointmentTemplateId { get; set; }
 
-        /// <summary>
-        /// Id of the template
-        /// </summary>
-        public long CalendarAppointmentTemplateId { get; set; }
+    /// <summary>
+    /// Type
+    /// </summary>
+    public CalendarAppointmentScheduleType Type { get; set; }
 
-        /// <summary>
-        /// Type
-        /// </summary>
-        public CalendarAppointmentScheduleType Type { get; set; }
+    /// <summary>
+    /// Additional data
+    /// </summary>
+    public string AdditionalData { get; set; }
 
-        /// <summary>
-        /// Additional data
-        /// </summary>
-        public string AdditionalData { get; set; }
+    /// <summary>
+    /// Is the schedule deleted?
+    /// </summary>
+    public bool IsDeleted { get; set; }
 
-        /// <summary>
-        /// Is the schedule deleted?
-        /// </summary>
-        public bool IsDeleted { get; set; }
+    #region Navigation properties
 
-        #region Navigation properties
+    /// <summary>
+    /// Appointment template
+    /// </summary>
+    [ForeignKey(nameof(CalendarAppointmentTemplateId))]
+    public virtual CalendarAppointmentTemplateEntity CalendarAppointmentTemplate { get; set; }
 
-        /// <summary>
-        /// Appointment template
-        /// </summary>
-        [ForeignKey(nameof(CalendarAppointmentTemplateId))]
-        public virtual CalendarAppointmentTemplateEntity CalendarAppointmentTemplate { get; set; }
+    #endregion // Navigation properties
 
-        #endregion // Navigation properties
-
-        #endregion // Properties
-    }
+    #endregion // Properties
 }

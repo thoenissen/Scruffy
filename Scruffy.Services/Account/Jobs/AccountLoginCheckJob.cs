@@ -10,71 +10,70 @@ using Scruffy.Services.Core;
 using Scruffy.Services.Core.JobScheduler;
 using Scruffy.Services.WebApi;
 
-namespace Scruffy.Services.Account.Jobs
+namespace Scruffy.Services.Account.Jobs;
+
+/// <summary>
+/// Checking the daily account login
+/// </summary>
+public class AccountLoginCheckJob : LocatedAsyncJob
 {
+    #region LocatedAsyncJob
+
     /// <summary>
-    /// Checking the daily account login
+    /// Executes the job
     /// </summary>
-    public class AccountLoginCheckJob : LocatedAsyncJob
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public override async Task ExecuteAsync()
     {
-        #region LocatedAsyncJob
+        var date = DateTime.Today.AddDays(-1);
 
-        /// <summary>
-        /// Executes the job
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public override async Task ExecuteAsync()
+        using (var dbFactory = RepositoryFactory.CreateInstance())
         {
-            var date = DateTime.Today.AddDays(-1);
-
-            using (var dbFactory = RepositoryFactory.CreateInstance())
+            foreach (var account in dbFactory.GetRepository<AccountRepository>()
+                                             .GetQuery()
+                                             .Select(obj => new
+                                                            {
+                                                                obj.Name,
+                                                                obj.ApiKey,
+                                                                obj.LastAge,
+                                                                WordId = obj.WorldId
+                                                            })
+                                             .ToList())
             {
-                foreach (var account in dbFactory.GetRepository<AccountRepository>()
-                                                 .GetQuery()
-                                                 .Select(obj => new
-                                                               {
-                                                                   obj.Name,
-                                                                   obj.ApiKey,
-                                                                   obj.LastAge,
-                                                                   WordId = obj.WorldId
-                                                               })
-                                                 .ToList())
+                try
                 {
-                    try
+                    var connector = new GuidWars2ApiConnector(account.ApiKey);
+                    await using (connector.ConfigureAwait(false))
                     {
-                        var connector = new GuidWars2ApiConnector(account.ApiKey);
-                        await using (connector.ConfigureAwait(false))
+                        var accountInformation = await connector.GetAccountInformationAsync()
+                                                                .ConfigureAwait(false);
+
+                        if (accountInformation.Age != account.LastAge)
                         {
-                            var accountInformation = await connector.GetAccountInformationAsync()
-                                                                    .ConfigureAwait(false);
+                            dbFactory.GetRepository<AccountDailyLoginCheckRepository>()
+                                     .Add(new GuildWarsAccountDailyLoginCheckEntity
+                                          {
+                                              Name = account.Name,
+                                              Date = date
+                                          });
 
-                            if (accountInformation.Age != account.LastAge)
-                            {
-                                dbFactory.GetRepository<AccountDailyLoginCheckRepository>()
-                                         .Add(new GuildWarsAccountDailyLoginCheckEntity
-                                         {
-                                             Name = account.Name,
-                                             Date = date
-                                         });
-
-                                dbFactory.GetRepository<AccountRepository>()
-                                         .Refresh(obj => obj.Name == account.Name,
-                                                  obj =>
-                                                  {
-                                                      obj.LastAge = accountInformation.Age;
-                                                      obj.WorldId = accountInformation.World;
-                                                  });
-                            }
+                            dbFactory.GetRepository<AccountRepository>()
+                                     .Refresh(obj => obj.Name == account.Name,
+                                              obj =>
+                                              {
+                                                  obj.LastAge = accountInformation.Age;
+                                                  obj.WorldId = accountInformation.World;
+                                              });
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        LoggingService.AddJobLogEntry(LogEntryLevel.CriticalError, nameof(AccountLoginCheckJob), account.Name, ex.Message, ex.ToString());
-                    }
+                }
+                catch (Exception ex)
+                {
+                    LoggingService.AddJobLogEntry(LogEntryLevel.CriticalError, nameof(AccountLoginCheckJob), account.Name, ex.Message, ex.ToString());
                 }
             }
         }
-
-        #endregion // LocatedAsyncJob
     }
+
+    #endregion // LocatedAsyncJob
 }

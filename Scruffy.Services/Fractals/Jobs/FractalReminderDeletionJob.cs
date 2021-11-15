@@ -7,70 +7,69 @@ using Microsoft.Extensions.DependencyInjection;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.JobScheduler;
 
-namespace Scruffy.Services.Fractals.Jobs
+namespace Scruffy.Services.Fractals.Jobs;
+
+/// <summary>
+/// Deletion of the fractal reminder
+/// </summary>
+public class FractalReminderDeletionJob : LocatedAsyncJob
 {
+    #region Fields
+
     /// <summary>
-    /// Deletion of the fractal reminder
+    /// Channel id
     /// </summary>
-    public class FractalReminderDeletionJob : LocatedAsyncJob
+    private readonly ulong _channelId;
+
+    /// <summary>
+    /// Message id
+    /// </summary>
+    private readonly ulong _messageId;
+
+    #endregion // Fields
+
+    #region Constructor
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="channelId">Channel id</param>
+    /// <param name="messageId">Message id</param>
+    public FractalReminderDeletionJob(ulong channelId, ulong messageId)
     {
-        #region Fields
+        _channelId = channelId;
+        _messageId = messageId;
+    }
 
-        /// <summary>
-        /// Channel id
-        /// </summary>
-        private readonly ulong _channelId;
+    #endregion // Constructor
 
-        /// <summary>
-        /// Message id
-        /// </summary>
-        private readonly ulong _messageId;
+    #region LocatedAsyncJob
 
-        #endregion // Fields
-
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="channelId">Channel id</param>
-        /// <param name="messageId">Message id</param>
-        public FractalReminderDeletionJob(ulong channelId, ulong messageId)
+    /// <summary>
+    /// Executes the job
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public override async Task ExecuteAsync()
+    {
+        var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+        await using (serviceProvider.ConfigureAwait(false))
         {
-            _channelId = channelId;
-            _messageId = messageId;
-        }
+            var discordClient = serviceProvider.GetService<DiscordClient>();
 
-        #endregion // Constructor
-
-        #region LocatedAsyncJob
-
-        /// <summary>
-        /// Executes the job
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public override async Task ExecuteAsync()
-        {
-            var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
-            await using (serviceProvider.ConfigureAwait(false))
+            var channel = await discordClient.GetChannelAsync(_channelId)
+                                             .ConfigureAwait(false);
+            if (channel != null)
             {
-                var discordClient = serviceProvider.GetService<DiscordClient>();
-
-                var channel = await discordClient.GetChannelAsync(_channelId)
-                                                 .ConfigureAwait(false);
-                if (channel != null)
+                var message = await channel.GetMessageAsync(_messageId)
+                                           .ConfigureAwait(false);
+                if (message != null)
                 {
-                    var message = await channel.GetMessageAsync(_messageId)
-                                               .ConfigureAwait(false);
-                    if (message != null)
-                    {
-                        await message.DeleteAsync()
-                                     .ConfigureAwait(false);
-                    }
+                    await message.DeleteAsync()
+                                 .ConfigureAwait(false);
                 }
             }
         }
-
-        #endregion LocatedAsyncJob
     }
+
+    #endregion LocatedAsyncJob
 }

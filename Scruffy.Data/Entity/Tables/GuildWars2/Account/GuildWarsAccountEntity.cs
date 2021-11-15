@@ -3,63 +3,62 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Scruffy.Data.Entity.Tables.CoreData;
 using Scruffy.Data.Enumerations.GuildWars2;
 
-namespace Scruffy.Data.Entity.Tables.GuildWars2.Account
+namespace Scruffy.Data.Entity.Tables.GuildWars2.Account;
+
+/// <summary>
+/// Account
+/// </summary>
+[Table("GuildWarsAccounts")]
+public class GuildWarsAccountEntity
 {
+    #region Properties
+
     /// <summary>
-    /// Account
+    /// Account name
     /// </summary>
-    [Table("GuildWarsAccounts")]
-    public class GuildWarsAccountEntity
-    {
-        #region Properties
+    [Key]
+    [StringLength(42)]
+    public string Name { get; set; }
 
-        /// <summary>
-        /// Account name
-        /// </summary>
-        [Key]
-        [StringLength(42)]
-        public string Name { get; set; }
+    /// <summary>
+    /// Id of the user
+    /// </summary>
+    public long UserId { get; set; }
 
-        /// <summary>
-        /// Id of the user
-        /// </summary>
-        public long UserId { get; set; }
+    /// <summary>
+    /// dps.report user token
+    /// </summary>
+    public string DpsReportUserToken { get; set; }
 
-        /// <summary>
-        /// dps.report user token
-        /// </summary>
-        public string DpsReportUserToken { get; set; }
+    /// <summary>
+    /// Api key
+    /// </summary>
+    public string ApiKey { get; set; }
 
-        /// <summary>
-        /// Api key
-        /// </summary>
-        public string ApiKey { get; set; }
+    /// <summary>
+    /// Last age in seconds
+    /// </summary>
+    public long LastAge { get; set; }
 
-        /// <summary>
-        /// Last age in seconds
-        /// </summary>
-        public long LastAge { get; set; }
+    /// <summary>
+    /// Id of the word
+    /// </summary>
+    public long? WorldId { get; set; }
 
-        /// <summary>
-        /// Id of the word
-        /// </summary>
-        public long? WorldId { get; set; }
+    /// <summary>
+    /// Permissions
+    /// </summary>
+    public GuildWars2ApiPermission Permissions { get; set; }
 
-        /// <summary>
-        /// Permissions
-        /// </summary>
-        public GuildWars2ApiPermission Permissions { get; set; }
+    #region Navigation properties
 
-        #region Navigation properties
+    /// <summary>
+    /// User
+    /// </summary>
+    [ForeignKey(nameof(UserId))]
+    public UserEntity User { get; set; }
 
-        /// <summary>
-        /// User
-        /// </summary>
-        [ForeignKey(nameof(UserId))]
-        public UserEntity User { get; set; }
+    #endregion // Navigation properties
 
-        #endregion // Navigation properties
-
-        #endregion // Properties
-    }
+    #endregion // Properties
 }

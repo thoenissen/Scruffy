@@ -1,57 +1,56 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Scruffy.Data.Entity.Tables.Raid
+namespace Scruffy.Data.Entity.Tables.Raid;
+
+/// <summary>
+/// Assigning the required roles
+/// </summary>
+[Table("RaidRequiredRoles")]
+public class RaidRequiredRoleEntity
 {
+    #region Properties
+
     /// <summary>
-    /// Assigning the required roles
+    /// Id of the template
     /// </summary>
-    [Table("RaidRequiredRoles")]
-    public class RaidRequiredRoleEntity
-    {
-        #region Properties
+    public long TemplateId { get; set; }
 
-        /// <summary>
-        /// Id of the template
-        /// </summary>
-        public long TemplateId { get; set; }
+    /// <summary>
+    /// Index
+    /// </summary>
+    public long Index { get; set; }
 
-        /// <summary>
-        /// Index
-        /// </summary>
-        public long Index { get; set; }
+    /// <summary>
+    /// Id of the main role
+    /// </summary>
+    public long MainRoleId { get; set; }
 
-        /// <summary>
-        /// Id of the main role
-        /// </summary>
-        public long MainRoleId { get; set; }
+    /// <summary>
+    /// Id of the sub role
+    /// </summary>
+    public long? SubRoleId { get; set; }
 
-        /// <summary>
-        /// Id of the sub role
-        /// </summary>
-        public long? SubRoleId { get; set; }
+    #region Navigation properties
 
-        #region Navigation properties
+    /// <summary>
+    /// Configuration
+    /// </summary>
+    [ForeignKey(nameof(TemplateId))]
+    public virtual RaidDayTemplateEntity RaidDayTemplateEntity { get; set; }
 
-        /// <summary>
-        /// Configuration
-        /// </summary>
-        [ForeignKey(nameof(TemplateId))]
-        public virtual RaidDayTemplateEntity RaidDayTemplateEntity { get; set; }
+    /// <summary>
+    /// Main role
+    /// </summary>
+    [ForeignKey(nameof(MainRoleId))]
+    public virtual RaidRoleEntity MainRaidRole { get; set; }
 
-        /// <summary>
-        /// Main role
-        /// </summary>
-        [ForeignKey(nameof(MainRoleId))]
-        public virtual RaidRoleEntity MainRaidRole { get; set; }
+    /// <summary>
+    /// Sub role
+    /// </summary>
+    [ForeignKey(nameof(SubRoleId))]
+    public virtual RaidRoleEntity SubRaidRole { get; set; }
 
-        /// <summary>
-        /// Sub role
-        /// </summary>
-        [ForeignKey(nameof(SubRoleId))]
-        public virtual RaidRoleEntity SubRaidRole { get; set; }
+    #endregion // Navigation properties
 
-        #endregion // Navigation properties
-
-        #endregion // Properties
-    }
+    #endregion // Properties
 }

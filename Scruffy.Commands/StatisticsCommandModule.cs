@@ -10,62 +10,61 @@ using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
 using Scruffy.Services.Statistics;
 
-namespace Scruffy.Commands
+namespace Scruffy.Commands;
+
+/// <summary>
+/// Calendar commands
+/// </summary>
+[Group("statistics")]
+[Aliases("stats", "st")]
+[RequireDeveloperPermissions]
+[HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
+[ModuleLifespan(ModuleLifespan.Transient)]
+public class StatisticsCommandModule : LocatedCommandModuleBase
 {
+    #region Constructor
+
     /// <summary>
-    /// Calendar commands
+    /// Constructor
     /// </summary>
-    [Group("statistics")]
-    [Aliases("stats", "st")]
-    [RequireDeveloperPermissions]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-    [ModuleLifespan(ModuleLifespan.Transient)]
-    public class StatisticsCommandModule : LocatedCommandModuleBase
+    /// <param name="localizationService">Localization service</param>
+    /// <param name="userManagementService">User management service</param>
+    /// <param name="httpClientFactory">HttpClient-Factory</param>
+    public StatisticsCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+        : base(localizationService, userManagementService, httpClientFactory)
     {
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="userManagementService">User management service</param>
-        /// <param name="httpClientFactory">HttpClient-Factory</param>
-        public StatisticsCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-            : base(localizationService, userManagementService, httpClientFactory)
-        {
-        }
-
-        #endregion // Constructor
-
-        #region Properties
-
-        /// <summary>
-        /// Visualizer
-        /// </summary>
-        public StatisticsVisualizerService VisualizerService { get; set; }
-
-        #endregion // Properties
-
-        #region Methods
-
-        /// <summary>
-        /// Adding a one time event
-        /// </summary>
-        /// <param name="commandContext">Current command context</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-        [Command("me")]
-        [RequireGuild]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-        public Task Me(CommandContext commandContext)
-        {
-            return InvokeAsync(commandContext,
-                               async commandContextContainer =>
-                               {
-                                   await VisualizerService.PostMeOverview(commandContextContainer)
-                                                          .ConfigureAwait(false);
-                               });
-        }
-
-        #endregion // Methods
     }
+
+    #endregion // Constructor
+
+    #region Properties
+
+    /// <summary>
+    /// Visualizer
+    /// </summary>
+    public StatisticsVisualizerService VisualizerService { get; set; }
+
+    #endregion // Properties
+
+    #region Methods
+
+    /// <summary>
+    /// Adding a one time event
+    /// </summary>
+    /// <param name="commandContext">Current command context</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [Command("me")]
+    [RequireGuild]
+    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
+    public Task Me(CommandContext commandContext)
+    {
+        return InvokeAsync(commandContext,
+                           async commandContextContainer =>
+                           {
+                               await VisualizerService.PostMeOverview(commandContextContainer)
+                                                      .ConfigureAwait(false);
+                           });
+    }
+
+    #endregion // Methods
 }

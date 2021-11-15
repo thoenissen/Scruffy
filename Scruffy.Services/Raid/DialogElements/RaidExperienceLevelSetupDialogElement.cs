@@ -14,219 +14,218 @@ using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Raid.DialogElements.Forms;
 
-namespace Scruffy.Services.Raid.DialogElements
+namespace Scruffy.Services.Raid.DialogElements;
+
+/// <summary>
+/// Starting the raid experience level assistant
+/// </summary>
+public class RaidExperienceLevelSetupDialogElement : DialogEmbedReactionElementBase<bool>
 {
+    #region Fields
+
     /// <summary>
-    /// Starting the raid experience level assistant
+    /// Reactions
     /// </summary>
-    public class RaidExperienceLevelSetupDialogElement : DialogEmbedReactionElementBase<bool>
+    private List<ReactionData<bool>> _reactions;
+
+    /// <summary>
+    /// Experience levels
+    /// </summary>
+    private List<RaidExperienceLevelData> _levels;
+
+    #endregion // Fields
+
+    #region Constructor
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="localizationService">Localization service</param>
+    public RaidExperienceLevelSetupDialogElement(LocalizationService localizationService)
+        : base(localizationService)
     {
-        #region Fields
+    }
 
-        /// <summary>
-        /// Reactions
-        /// </summary>
-        private List<ReactionData<bool>> _reactions;
+    #endregion // Constructor
 
-        /// <summary>
-        /// Experience levels
-        /// </summary>
-        private List<RaidExperienceLevelData> _levels;
+    #region Methods
 
-        #endregion // Fields
-
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        public RaidExperienceLevelSetupDialogElement(LocalizationService localizationService)
-            : base(localizationService)
+    /// <summary>
+    /// Returns the existing levels
+    /// </summary>
+    /// <returns>Levels</returns>
+    private List<RaidExperienceLevelData> GetLevels()
+    {
+        if (_levels == null)
         {
+            using (var dbFactory = RepositoryFactory.CreateInstance())
+            {
+                _levels = dbFactory.GetRepository<RaidExperienceLevelRepository>()
+                                   .GetQuery()
+                                   .Where(obj => obj.IsDeleted == false)
+                                   .Select(obj => new RaidExperienceLevelData
+                                                  {
+                                                      Id = obj.Id,
+                                                      SuperiorExperienceLevelId = obj.SuperiorExperienceLevelId,
+                                                      Description = obj.Description,
+                                                      DiscordEmoji = obj.DiscordEmoji,
+                                                  })
+                                   .ToList();
+            }
         }
 
-        #endregion // Constructor
+        return _levels;
+    }
 
-        #region Methods
+    #endregion // Methods
 
-        /// <summary>
-        /// Returns the existing levels
-        /// </summary>
-        /// <returns>Levels</returns>
-        private List<RaidExperienceLevelData> GetLevels()
+    #region DialogReactionElementBase<bool>
+
+    /// <summary>
+    /// Editing the embedded message
+    /// </summary>
+    /// <param name="builder">Builder</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public override Task EditMessage(DiscordEmbedBuilder builder)
+    {
+        builder.WithTitle(LocalizationGroup.GetText("ChooseCommandTitle", "Raid experience levels configuration"));
+        builder.WithDescription(LocalizationGroup.GetText("ChooseCommandDescription", "With this assistant you are able to configure the raid experience levels. The following experience levels are already created:"));
+
+        var levelsBuilder = new StringBuilder();
+
+        var levels = GetLevels();
+        if (levels.Count > 0)
         {
-            if (_levels == null)
+            var currentLevel = levels.FirstOrDefault(obj => obj.SuperiorExperienceLevelId == null);
+            while (currentLevel != null)
             {
-                using (var dbFactory = RepositoryFactory.CreateInstance())
-                {
-                    _levels = dbFactory.GetRepository<RaidExperienceLevelRepository>()
-                                       .GetQuery()
-                                       .Where(obj => obj.IsDeleted == false)
-                                       .Select(obj => new RaidExperienceLevelData
-                                                      {
-                                                          Id = obj.Id,
-                                                          SuperiorExperienceLevelId = obj.SuperiorExperienceLevelId,
-                                                          Description = obj.Description,
-                                                          DiscordEmoji = obj.DiscordEmoji,
-                                                      })
-                                       .ToList();
-                }
-            }
+                levelsBuilder.AppendLine(Formatter.Bold($"{DiscordEmoji.FromGuildEmote(CommandContext.Client, currentLevel.DiscordEmoji)} {currentLevel.Description}"));
 
-            return _levels;
+                currentLevel = levels.FirstOrDefault(obj => obj.SuperiorExperienceLevelId == currentLevel.Id);
+            }
+        }
+        else
+        {
+            levelsBuilder.Append('\u200B');
         }
 
-        #endregion // Methods
+        builder.AddField(LocalizationGroup.GetText("LevelsFields", "Levels"), levelsBuilder.ToString());
 
-        #region DialogReactionElementBase<bool>
+        return Task.CompletedTask;
+    }
 
-        /// <summary>
-        /// Editing the embedded message
-        /// </summary>
-        /// <param name="builder">Builder</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public override Task EditMessage(DiscordEmbedBuilder builder)
+    /// <summary>
+    /// Returns the reactions which should be added to the message
+    /// </summary>
+    /// <returns>Reactions</returns>
+    public override IReadOnlyList<ReactionData<bool>> GetReactions()
+    {
+        if (_reactions == null)
         {
-            builder.WithTitle(LocalizationGroup.GetText("ChooseCommandTitle", "Raid experience levels configuration"));
-            builder.WithDescription(LocalizationGroup.GetText("ChooseCommandDescription", "With this assistant you are able to configure the raid experience levels. The following experience levels are already created:"));
-
-            var levelsBuilder = new StringBuilder();
-
-            var levels = GetLevels();
-            if (levels.Count > 0)
-            {
-                var currentLevel = levels.FirstOrDefault(obj => obj.SuperiorExperienceLevelId == null);
-                while (currentLevel != null)
-                {
-                    levelsBuilder.AppendLine(Formatter.Bold($"{DiscordEmoji.FromGuildEmote(CommandContext.Client, currentLevel.DiscordEmoji)} {currentLevel.Description}"));
-
-                    currentLevel = levels.FirstOrDefault(obj => obj.SuperiorExperienceLevelId == currentLevel.Id);
-                }
-            }
-            else
-            {
-                levelsBuilder.Append('\u200B');
-            }
-
-            builder.AddField(LocalizationGroup.GetText("LevelsFields", "Levels"), levelsBuilder.ToString());
-
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// Returns the reactions which should be added to the message
-        /// </summary>
-        /// <returns>Reactions</returns>
-        public override IReadOnlyList<ReactionData<bool>> GetReactions()
-        {
-            if (_reactions == null)
-            {
-                _reactions = new List<ReactionData<bool>>
+            _reactions = new List<ReactionData<bool>>
+                         {
+                             new ()
                              {
-                                 new ()
-                                 {
-                                     Emoji = DiscordEmojiService.GetAddEmoji(CommandContext.Client),
-                                     CommandText = LocalizationGroup.GetFormattedText("AddCommand", "{0} Add level", DiscordEmojiService.GetAddEmoji(CommandContext.Client)),
-                                     Func = async () =>
+                                 Emoji = DiscordEmojiService.GetAddEmoji(CommandContext.Client),
+                                 CommandText = LocalizationGroup.GetFormattedText("AddCommand", "{0} Add level", DiscordEmojiService.GetAddEmoji(CommandContext.Client)),
+                                 Func = async () =>
+                                        {
+                                            var data = await DialogHandler.RunForm<CreateRaidExperienceLevelData>(CommandContext, false)
+                                                                          .ConfigureAwait(false);
+
+                                            using (var dbFactory = RepositoryFactory.CreateInstance())
                                             {
-                                                var data = await DialogHandler.RunForm<CreateRaidExperienceLevelData>(CommandContext, false)
-                                                                              .ConfigureAwait(false);
+                                                var level = new RaidExperienceLevelEntity
+                                                            {
+                                                                SuperiorExperienceLevelId = data.SuperiorExperienceLevelId,
+                                                                Description = data.Description,
+                                                                DiscordEmoji = data.DiscordEmoji,
+                                                                DiscordRoleId = data.DiscordRoleId,
+                                                            };
 
-                                                using (var dbFactory = RepositoryFactory.CreateInstance())
-                                                {
-                                                    var level = new RaidExperienceLevelEntity
-                                                                {
-                                                                    SuperiorExperienceLevelId = data.SuperiorExperienceLevelId,
-                                                                    Description = data.Description,
-                                                                    DiscordEmoji = data.DiscordEmoji,
-                                                                    DiscordRoleId = data.DiscordRoleId,
-                                                                };
-
-                                                    if (dbFactory.GetRepository<RaidExperienceLevelRepository>()
+                                                if (dbFactory.GetRepository<RaidExperienceLevelRepository>()
                                                              .Add(level))
+                                                {
+                                                    if (dbFactory.GetRepository<RaidExperienceLevelRepository>()
+                                                                 .RefreshRange(obj => obj.SuperiorExperienceLevelId == data.SuperiorExperienceLevelId
+                                                                                   && obj.Id != level.Id,
+                                                                               obj => obj.SuperiorExperienceLevelId = level.Id))
                                                     {
-                                                        if (dbFactory.GetRepository<RaidExperienceLevelRepository>()
-                                                                     .RefreshRange(obj => obj.SuperiorExperienceLevelId == data.SuperiorExperienceLevelId
-                                                                                       && obj.Id != level.Id,
-                                                                                   obj => obj.SuperiorExperienceLevelId = level.Id))
-                                                        {
-                                                            dbFactory.GetRepository<RaidExperienceLevelRepository>()
-                                                                     .RefreshRanks();
-                                                        }
+                                                        dbFactory.GetRepository<RaidExperienceLevelRepository>()
+                                                                 .RefreshRanks();
                                                     }
                                                 }
-
-                                                return true;
                                             }
-                                 }
-                             };
 
-                if (GetLevels().Count > 0)
-                {
-                    _reactions.Add(new ReactionData<bool>
-                    {
-                        Emoji = DiscordEmojiService.GetEditEmoji(CommandContext.Client),
-                        CommandText = LocalizationGroup.GetFormattedText("EditCommand", "{0} Edit level", DiscordEmojiService.GetEditEmoji(CommandContext.Client)),
-                        Func = async () =>
-                        {
-                            var levelId = await RunSubElement<RaidExperienceLevelSelectionDialogElement, long>().ConfigureAwait(false);
+                                            return true;
+                                        }
+                             }
+                         };
 
-                            DialogContext.SetValue("ExperienceLevelId", levelId);
+            if (GetLevels().Count > 0)
+            {
+                _reactions.Add(new ReactionData<bool>
+                               {
+                                   Emoji = DiscordEmojiService.GetEditEmoji(CommandContext.Client),
+                                   CommandText = LocalizationGroup.GetFormattedText("EditCommand", "{0} Edit level", DiscordEmojiService.GetEditEmoji(CommandContext.Client)),
+                                   Func = async () =>
+                                          {
+                                              var levelId = await RunSubElement<RaidExperienceLevelSelectionDialogElement, long>().ConfigureAwait(false);
 
-                            bool repeat;
+                                              DialogContext.SetValue("ExperienceLevelId", levelId);
 
-                            do
-                            {
-                                repeat = await RunSubElement<RaidExperienceLevelEditDialogElement, bool>().ConfigureAwait(false);
-                            }
-                            while (repeat);
+                                              bool repeat;
 
-                            return true;
-                        }
-                    });
+                                              do
+                                              {
+                                                  repeat = await RunSubElement<RaidExperienceLevelEditDialogElement, bool>().ConfigureAwait(false);
+                                              }
+                                              while (repeat);
 
-                    _reactions.Add(new ReactionData<bool>
-                    {
-                        Emoji = DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client),
-                        CommandText = LocalizationGroup.GetFormattedText("DeleteCommand", "{0} Delete level", DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client)),
-                        Func = async () =>
-                        {
-                            var levelId = await RunSubElement<RaidExperienceLevelSelectionDialogElement, long>().ConfigureAwait(false);
-
-                            DialogContext.SetValue("ExperienceLevelId", levelId);
-
-                            return await RunSubElement<RaidExperienceLevelDeletionDialogElement, bool>().ConfigureAwait(false);
-                        }
-                    });
-                }
+                                              return true;
+                                          }
+                               });
 
                 _reactions.Add(new ReactionData<bool>
                                {
-                                   Emoji = DiscordEmojiService.GetCrossEmoji(CommandContext.Client),
-                                   CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmojiService.GetCrossEmoji(CommandContext.Client)),
-                                   Func = () => Task.FromResult(false)
+                                   Emoji = DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client),
+                                   CommandText = LocalizationGroup.GetFormattedText("DeleteCommand", "{0} Delete level", DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client)),
+                                   Func = async () =>
+                                          {
+                                              var levelId = await RunSubElement<RaidExperienceLevelSelectionDialogElement, long>().ConfigureAwait(false);
+
+                                              DialogContext.SetValue("ExperienceLevelId", levelId);
+
+                                              return await RunSubElement<RaidExperienceLevelDeletionDialogElement, bool>().ConfigureAwait(false);
+                                          }
                                });
             }
 
-            return _reactions;
+            _reactions.Add(new ReactionData<bool>
+                           {
+                               Emoji = DiscordEmojiService.GetCrossEmoji(CommandContext.Client),
+                               CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmojiService.GetCrossEmoji(CommandContext.Client)),
+                               Func = () => Task.FromResult(false)
+                           });
         }
 
-        /// <summary>
-        /// Returns the title of the commands
-        /// </summary>
-        /// <returns>Commands</returns>
-        protected override string GetCommandTitle() => LocalizationGroup.GetText("CommandTitle", "Commands");
-
-        /// <summary>
-        /// Default case if none of the given reactions is used
-        /// </summary>
-        /// <returns>Result</returns>
-        protected override bool DefaultFunc()
-        {
-            return false;
-        }
-
-        #endregion // DialogReactionElementBase<bool>
+        return _reactions;
     }
+
+    /// <summary>
+    /// Returns the title of the commands
+    /// </summary>
+    /// <returns>Commands</returns>
+    protected override string GetCommandTitle() => LocalizationGroup.GetText("CommandTitle", "Commands");
+
+    /// <summary>
+    /// Default case if none of the given reactions is used
+    /// </summary>
+    /// <returns>Result</returns>
+    protected override bool DefaultFunc()
+    {
+        return false;
+    }
+
+    #endregion // DialogReactionElementBase<bool>
 }

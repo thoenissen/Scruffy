@@ -2,56 +2,55 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Scruffy.Data.Entity.Tables.Discord;
 
-namespace Scruffy.Data.Entity.Tables.Statistics
+namespace Scruffy.Data.Entity.Tables.Statistics;
+
+/// <summary>
+/// Discord voice statistics data
+/// </summary>
+[Table("DiscordVoiceTimeSpans")]
+public class DiscordVoiceTimeSpanEntity
 {
+    #region Properties
+
     /// <summary>
-    /// Discord voice statistics data
+    /// Id of the server
     /// </summary>
-    [Table("DiscordVoiceTimeSpans")]
-    public class DiscordVoiceTimeSpanEntity
-    {
-        #region Properties
+    public ulong DiscordServerId { get; set; }
 
-        /// <summary>
-        /// Id of the server
-        /// </summary>
-        public ulong DiscordServerId { get; set; }
+    /// <summary>
+    /// Id of the channel
+    /// </summary>
+    public ulong DiscordChannelId { get; set; }
 
-        /// <summary>
-        /// Id of the channel
-        /// </summary>
-        public ulong DiscordChannelId { get; set; }
+    /// <summary>
+    /// Id of the user
+    /// </summary>
+    public ulong DiscordAccountId { get; set; }
 
-        /// <summary>
-        /// Id of the user
-        /// </summary>
-        public ulong DiscordAccountId { get; set; }
+    /// <summary>
+    /// Start of the session
+    /// </summary>
+    public DateTime StartTimeStamp { get; set; }
 
-        /// <summary>
-        /// Start of the session
-        /// </summary>
-        public DateTime StartTimeStamp { get; set; }
+    /// <summary>
+    /// Ending of the session
+    /// </summary>
+    public DateTime EndTimeStamp { get; set; }
 
-        /// <summary>
-        /// Ending of the session
-        /// </summary>
-        public DateTime EndTimeStamp { get; set; }
+    /// <summary>
+    /// Is the voice session completed or ongoing?
+    /// </summary>
+    public bool IsCompleted { get; set; }
 
-        /// <summary>
-        /// Is the voice session completed or ongoing?
-        /// </summary>
-        public bool IsCompleted { get; set; }
+    #region Navigation - Properties
 
-        #region Navigation - Properties
+    /// <summary>
+    /// Discord account
+    /// </summary>
+    [ForeignKey(nameof(DiscordAccountId))]
+    public DiscordAccountEntity DiscordAccount { get; set; }
 
-        /// <summary>
-        /// Discord account
-        /// </summary>
-        [ForeignKey(nameof(DiscordAccountId))]
-        public DiscordAccountEntity DiscordAccount { get; set; }
+    #endregion // Navigation - Properties
 
-        #endregion // Navigation - Properties
-
-        #endregion // Properties
-    }
+    #endregion // Properties
 }

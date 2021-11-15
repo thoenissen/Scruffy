@@ -2,23 +2,22 @@
 
 using Newtonsoft.Json;
 
-namespace Scruffy.Data.Json.QuickChart
+namespace Scruffy.Data.Json.QuickChart;
+
+/// <summary>
+/// Data
+/// </summary>
+public class Data
 {
     /// <summary>
-    /// Data
+    /// Labels
     /// </summary>
-    public class Data
-    {
-        /// <summary>
-        /// Labels
-        /// </summary>
-        [JsonProperty("labels")]
-        public List<string> Labels { get; set; }
+    [JsonProperty("labels")]
+    public List<string> Labels { get; set; }
 
-        /// <summary>
-        /// Data sets
-        /// </summary>
-        [JsonProperty("datasets")]
-        public List<DataSet> DataSets { get; set; }
-    }
+    /// <summary>
+    /// Data sets
+    /// </summary>
+    [JsonProperty("datasets")]
+    public List<DataSet> DataSets { get; set; }
 }

@@ -13,200 +13,199 @@ using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.WebApi;
 
-namespace Scruffy.Services.GuildAdministration
+namespace Scruffy.Services.GuildAdministration;
+
+/// <summary>
+/// Special rank service
+/// </summary>
+public class GuildSpecialRankService : LocatedServiceBase
 {
+    #region Fields
+
     /// <summary>
-    /// Special rank service
+    /// QuickChart-Connector
     /// </summary>
-    public class GuildSpecialRankService : LocatedServiceBase
+    private readonly QuickChartConnector _quickChartConnector;
+
+    #endregion // Fields
+
+    #region Constructor
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="localizationService">Localization service</param>
+    /// <param name="quickChartConnector">QuickChart-Connector</param>
+    public GuildSpecialRankService(LocalizationService localizationService, QuickChartConnector quickChartConnector)
+        : base(localizationService)
     {
-        #region Fields
+        _quickChartConnector = quickChartConnector;
+    }
 
-        /// <summary>
-        /// QuickChart-Connector
-        /// </summary>
-        private readonly QuickChartConnector _quickChartConnector;
+    #endregion // Constructor
 
-        #endregion // Fields
+    #region Methods
 
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="quickChartConnector">QuickChart-Connector</param>
-        public GuildSpecialRankService(LocalizationService localizationService, QuickChartConnector quickChartConnector)
-            : base(localizationService)
+    /// <summary>
+    /// Post a overview of the current points
+    /// </summary>
+    /// <param name="commandContext">Command context</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public async Task PostOverview(CommandContextContainer commandContext)
+    {
+        using (var dbFactory = RepositoryFactory.CreateInstance())
         {
-            _quickChartConnector = quickChartConnector;
-        }
-
-        #endregion // Constructor
-
-        #region Methods
-
-        /// <summary>
-        /// Post a overview of the current points
-        /// </summary>
-        /// <param name="commandContext">Command context</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task PostOverview(CommandContextContainer commandContext)
-        {
-            using (var dbFactory = RepositoryFactory.CreateInstance())
+            foreach (var configuration in dbFactory.GetRepository<GuildSpecialRankConfigurationRepository>()
+                                                   .GetQuery()
+                                                   .Where(obj => obj.IsDeleted == false && obj.Guild.DiscordServerId == commandContext.Guild.Id)
+                                                   .Select(obj => new
+                                                                  {
+                                                                      obj.Description,
+                                                                      obj.DiscordRoleId,
+                                                                      obj.GrantThreshold,
+                                                                      obj.RemoveThreshold,
+                                                                      Users = obj.GuildSpecialRankPoints.Where(obj2 => obj2.Points > 0)
+                                                                                 .Select(obj2 => new
+                                                                                                 {
+                                                                                                     UserId = obj2.User
+                                                                                                                  .DiscordAccounts
+                                                                                                                  .Select(obj3 => obj3.Id)
+                                                                                                                  .FirstOrDefault(),
+                                                                                                     obj2.Points
+                                                                                                 })
+                                                                                 .ToList()
+                                                                  })
+                                                   .ToList())
             {
-                foreach (var configuration in dbFactory.GetRepository<GuildSpecialRankConfigurationRepository>()
-                                                       .GetQuery()
-                                                       .Where(obj => obj.IsDeleted == false && obj.Guild.DiscordServerId == commandContext.Guild.Id)
-                                                       .Select(obj => new
-                                                                      {
-                                                                          obj.Description,
-                                                                          obj.DiscordRoleId,
-                                                                          obj.GrantThreshold,
-                                                                          obj.RemoveThreshold,
-                                                                          Users = obj.GuildSpecialRankPoints.Where(obj2 => obj2.Points > 0)
-                                                                                     .Select(obj2 => new
-                                                                                                     {
-                                                                                                         UserId = obj2.User
-                                                                                                                      .DiscordAccounts
-                                                                                                                      .Select(obj3 => obj3.Id)
-                                                                                                                      .FirstOrDefault(),
-                                                                                                         obj2.Points
-                                                                                                     })
-                                                                                     .ToList()
-                                                                      })
-                                                       .ToList())
+                if (configuration.Users.Count > 0)
                 {
-                    if (configuration.Users.Count > 0)
+                    var embedBuilder = new DiscordEmbedBuilder();
+                    var messageBuilder = new DiscordMessageBuilder();
+
+                    embedBuilder.WithTitle(LocalizationGroup.GetText("Overview", "Points overview"));
+                    embedBuilder.WithDescription($"{configuration.Description} ({commandContext.Guild.GetRole(configuration.DiscordRoleId).Mention})");
+                    embedBuilder.WithColor(DiscordColor.DarkBlue);
+                    embedBuilder.WithImageUrl("attachment://chart.png");
+
+                    var users = new List<string>();
+
+                    foreach (var user in configuration.Users
+                                                      .OrderByDescending(obj => obj.Points)
+                                                      .ThenBy(obj => obj.UserId))
                     {
-                        var embedBuilder = new DiscordEmbedBuilder();
-                        var messageBuilder = new DiscordMessageBuilder();
+                        var member = await commandContext.Guild
+                                                         .GetMemberAsync(user.UserId)
+                                                         .ConfigureAwait(false);
 
-                        embedBuilder.WithTitle(LocalizationGroup.GetText("Overview", "Points overview"));
-                        embedBuilder.WithDescription($"{configuration.Description} ({commandContext.Guild.GetRole(configuration.DiscordRoleId).Mention})");
-                        embedBuilder.WithColor(DiscordColor.DarkBlue);
-                        embedBuilder.WithImageUrl("attachment://chart.png");
+                        users.Add($"{(string.IsNullOrWhiteSpace(member.Nickname) ? string.IsNullOrWhiteSpace(member.DisplayName) ? member.Username : member.DisplayName : member.Nickname)} ({user.Points:0.##})");
+                    }
 
-                        var users = new List<string>();
-
-                        foreach (var user in configuration.Users
-                                                          .OrderByDescending(obj => obj.Points)
-                                                          .ThenBy(obj => obj.UserId))
-                        {
-                            var member = await commandContext.Guild
-                                                             .GetMemberAsync(user.UserId)
-                                                             .ConfigureAwait(false);
-
-                            users.Add($"{(string.IsNullOrWhiteSpace(member.Nickname) ? string.IsNullOrWhiteSpace(member.DisplayName) ? member.Username : member.DisplayName : member.Nickname)} ({user.Points:0.##})");
-                        }
-
-                        var chartConfiguration = new ChartConfigurationData
-                                                 {
-                                                     Type = "bar",
-                                                     Data = new Data.Json.QuickChart.Data
-                                                            {
-                                                                DataSets = new List<DataSet>
+                    var chartConfiguration = new ChartConfigurationData
+                                             {
+                                                 Type = "bar",
+                                                 Data = new Data.Json.QuickChart.Data
+                                                        {
+                                                            DataSets = new List<DataSet>
+                                                                       {
+                                                                           new DataSet<double>
                                                                            {
-                                                                               new DataSet<double>
-                                                                               {
-                                                                                   BackgroundColor = configuration.Users
-                                                                                                                  .Select(obj => "#316ed5")
-                                                                                                                  .ToList(),
-                                                                                   BorderColor = "#274d85",
-                                                                                   Data = configuration.Users
-                                                                                                       .OrderByDescending(obj => obj.Points)
-                                                                                                       .ThenBy(obj => obj.UserId)
-                                                                                                       .Select(obj => obj.Points)
-                                                                                                       .ToList()
-                                                                               }
-                                                                           },
-                                                                Labels = users
-                                                            },
-                                                     Options = new OptionsCollection
-                                                               {
-                                                                   Annotation = new AnnotationsCollection
-                                                                                {
-                                                                                    Annotations = new List<Annotation>
-                                                                                                  {
-                                                                                                      new ()
-                                                                                                      {
-                                                                                                          BorderColor = "#f45b5b",
-                                                                                                          BorderWidth = 2,
-                                                                                                          Mode = "horizontal",
-                                                                                                          ScaleID = "y-axis-0",
-                                                                                                          Type = "line",
-                                                                                                          Value = configuration.RemoveThreshold
-                                                                                                      },
-                                                                                                      new ()
-                                                                                                      {
-                                                                                                          BorderColor = "#90ee7e",
-                                                                                                          BorderWidth = 2,
-                                                                                                          Mode = "horizontal",
-                                                                                                          ScaleID = "y-axis-0",
-                                                                                                          Type = "line",
-                                                                                                          Value = configuration.GrantThreshold
-                                                                                                      }
-                                                                                                  }
-                                                                                },
-                                                                   Scales = new ScalesCollection
+                                                                               BackgroundColor = configuration.Users
+                                                                                                              .Select(obj => "#316ed5")
+                                                                                                              .ToList(),
+                                                                               BorderColor = "#274d85",
+                                                                               Data = configuration.Users
+                                                                                                   .OrderByDescending(obj => obj.Points)
+                                                                                                   .ThenBy(obj => obj.UserId)
+                                                                                                   .Select(obj => obj.Points)
+                                                                                                   .ToList()
+                                                                           }
+                                                                       },
+                                                            Labels = users
+                                                        },
+                                                 Options = new OptionsCollection
+                                                           {
+                                                               Annotation = new AnnotationsCollection
                                                                             {
-                                                                                XAxes = new List<XAxis>
-                                                                                        {
-                                                                                            new ()
-                                                                                            {
-                                                                                                Ticks = new AxisTicks
-                                                                                                        {
-                                                                                                            FontColor = "#b3b3b3"
-                                                                                                        }
-                                                                                            }
-                                                                                        },
-                                                                                YAxes = new List<YAxis>
-                                                                                        {
-                                                                                            new ()
-                                                                                            {
-                                                                                                Ticks = new AxisTicks
-                                                                                                        {
-                                                                                                            FontColor = "#b3b3b3"
-                                                                                                        }
-                                                                                            }
-                                                                                        }
+                                                                                Annotations = new List<Annotation>
+                                                                                              {
+                                                                                                  new ()
+                                                                                                  {
+                                                                                                      BorderColor = "#f45b5b",
+                                                                                                      BorderWidth = 2,
+                                                                                                      Mode = "horizontal",
+                                                                                                      ScaleID = "y-axis-0",
+                                                                                                      Type = "line",
+                                                                                                      Value = configuration.RemoveThreshold
+                                                                                                  },
+                                                                                                  new ()
+                                                                                                  {
+                                                                                                      BorderColor = "#90ee7e",
+                                                                                                      BorderWidth = 2,
+                                                                                                      Mode = "horizontal",
+                                                                                                      ScaleID = "y-axis-0",
+                                                                                                      Type = "line",
+                                                                                                      Value = configuration.GrantThreshold
+                                                                                                  }
+                                                                                              }
                                                                             },
-                                                                   Plugins = new PluginsCollection
-                                                                             {
-                                                                                 Legend = false
-                                                                             }
-                                                               }
-                                                 };
+                                                               Scales = new ScalesCollection
+                                                                        {
+                                                                            XAxes = new List<XAxis>
+                                                                                    {
+                                                                                        new ()
+                                                                                        {
+                                                                                            Ticks = new AxisTicks
+                                                                                                    {
+                                                                                                        FontColor = "#b3b3b3"
+                                                                                                    }
+                                                                                        }
+                                                                                    },
+                                                                            YAxes = new List<YAxis>
+                                                                                    {
+                                                                                        new ()
+                                                                                        {
+                                                                                            Ticks = new AxisTicks
+                                                                                                    {
+                                                                                                        FontColor = "#b3b3b3"
+                                                                                                    }
+                                                                                        }
+                                                                                    }
+                                                                        },
+                                                               Plugins = new PluginsCollection
+                                                                         {
+                                                                             Legend = false
+                                                                         }
+                                                           }
+                                             };
 
-                        var chartStream = await _quickChartConnector.GetChartAsStream(new ChartData
-                                                                                      {
-                                                                                          Width = 500,
-                                                                                          Height = 300,
-                                                                                          DevicePixelRatio = 1,
-                                                                                          BackgroundColor = "#262626",
-                                                                                          Format = "png",
-                                                                                          Config = JsonConvert.SerializeObject(chartConfiguration,
-                                                                                                                               new JsonSerializerSettings
-                                                                                                                               {
-                                                                                                                                   NullValueHandling = NullValueHandling.Ignore
-                                                                                                                               })
-                                                                                      })
-                                                                    .ConfigureAwait(false);
+                    var chartStream = await _quickChartConnector.GetChartAsStream(new ChartData
+                                                                                  {
+                                                                                      Width = 500,
+                                                                                      Height = 300,
+                                                                                      DevicePixelRatio = 1,
+                                                                                      BackgroundColor = "#262626",
+                                                                                      Format = "png",
+                                                                                      Config = JsonConvert.SerializeObject(chartConfiguration,
+                                                                                                                           new JsonSerializerSettings
+                                                                                                                           {
+                                                                                                                               NullValueHandling = NullValueHandling.Ignore
+                                                                                                                           })
+                                                                                  })
+                                                                .ConfigureAwait(false);
 
-                        await using (chartStream.ConfigureAwait(false))
-                        {
-                            messageBuilder.WithFile("chart.png", chartStream);
-                            messageBuilder.WithEmbed(embedBuilder);
+                    await using (chartStream.ConfigureAwait(false))
+                    {
+                        messageBuilder.WithFile("chart.png", chartStream);
+                        messageBuilder.WithEmbed(embedBuilder);
 
-                            await commandContext.Channel
-                                                .SendMessageAsync(messageBuilder)
-                                                .ConfigureAwait(false);
-                        }
+                        await commandContext.Channel
+                                            .SendMessageAsync(messageBuilder)
+                                            .ConfigureAwait(false);
                     }
                 }
             }
         }
-
-        #endregion // Methods
     }
+
+    #endregion // Methods
 }

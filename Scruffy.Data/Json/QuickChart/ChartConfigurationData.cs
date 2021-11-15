@@ -1,28 +1,27 @@
 ﻿using Newtonsoft.Json;
 
-namespace Scruffy.Data.Json.QuickChart
+namespace Scruffy.Data.Json.QuickChart;
+
+/// <summary>
+/// Chart configuration
+/// </summary>
+public class ChartConfigurationData
 {
     /// <summary>
-    /// Chart configuration
+    /// Type
     /// </summary>
-    public class ChartConfigurationData
-    {
-        /// <summary>
-        /// Type
-        /// </summary>
-        [JsonProperty("type")]
-        public string Type { get; set; }
+    [JsonProperty("type")]
+    public string Type { get; set; }
 
-        /// <summary>
-        /// Data
-        /// </summary>
-        [JsonProperty("data")]
-        public Data Data { get; set; }
+    /// <summary>
+    /// Data
+    /// </summary>
+    [JsonProperty("data")]
+    public Data Data { get; set; }
 
-        /// <summary>
-        /// Options
-        /// </summary>
-        [JsonProperty("options")]
-        public OptionsCollection Options { get; set; }
-    }
+    /// <summary>
+    /// Options
+    /// </summary>
+    [JsonProperty("options")]
+    public OptionsCollection Options { get; set; }
 }

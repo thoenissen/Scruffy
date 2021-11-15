@@ -1,35 +1,34 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Scruffy.Data.Entity.Tables.GuildWars2.GameData
+namespace Scruffy.Data.Entity.Tables.GuildWars2.GameData;
+
+/// <summary>
+/// Item to guild upgrade conversion
+/// </summary>
+[Table("GuildWarsItemGuildUpgradeConversions")]
+public class GuildWarsItemGuildUpgradeConversionEntity
 {
+    #region Properties
+
     /// <summary>
-    /// Item to guild upgrade conversion
+    /// Id of the item
     /// </summary>
-    [Table("GuildWarsItemGuildUpgradeConversions")]
-    public class GuildWarsItemGuildUpgradeConversionEntity
-    {
-        #region Properties
+    public int ItemId { get; set; }
 
-        /// <summary>
-        /// Id of the item
-        /// </summary>
-        public int ItemId { get; set; }
+    /// <summary>
+    /// Id of the upgrade
+    /// </summary>
+    public long UpgradeId { get; set; }
 
-        /// <summary>
-        /// Id of the upgrade
-        /// </summary>
-        public long UpgradeId { get; set; }
+    #region Navigation properties
 
-        #region Navigation properties
+    /// <summary>
+    /// Item
+    /// </summary>
+    [ForeignKey(nameof(ItemId))]
+    public virtual GuildWarsItemEntity Item { get; set; }
 
-        /// <summary>
-        /// Item
-        /// </summary>
-        [ForeignKey(nameof(ItemId))]
-        public virtual GuildWarsItemEntity Item { get; set; }
+    #endregion // Navigation properties
 
-        #endregion // Navigation properties
-
-        #endregion // Properties
-    }
+    #endregion // Properties
 }

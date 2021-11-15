@@ -1,23 +1,22 @@
-﻿namespace Scruffy.Data.Services.GuildAdministration
+﻿namespace Scruffy.Data.Services.GuildAdministration;
+
+/// <summary>
+/// Special rank
+/// </summary>
+public class GuildSpecialRankData
 {
     /// <summary>
-    /// Special rank
+    /// Id
     /// </summary>
-    public class GuildSpecialRankData
-    {
-        /// <summary>
-        /// Id
-        /// </summary>
-        public long Id { get; set; }
+    public long Id { get; set; }
 
-        /// <summary>
-        /// Description
-        /// </summary>
-        public string Description { get; set; }
+    /// <summary>
+    /// Description
+    /// </summary>
+    public string Description { get; set; }
 
-        /// <summary>
-        /// Id of the discord role
-        /// </summary>
-        public ulong DiscordRoleId { get; set; }
-    }
+    /// <summary>
+    /// Id of the discord role
+    /// </summary>
+    public ulong DiscordRoleId { get; set; }
 }

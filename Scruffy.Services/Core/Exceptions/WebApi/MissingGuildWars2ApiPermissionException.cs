@@ -4,77 +4,76 @@ using Microsoft.Extensions.DependencyInjection;
 using Scruffy.Data.Enumerations.GuildWars2;
 using Scruffy.Services.Core.Localization;
 
-namespace Scruffy.Services.Core.Exceptions.WebApi
+namespace Scruffy.Services.Core.Exceptions.WebApi;
+
+/// <summary>
+/// Missing Guild Wars 2 API permission exception
+/// </summary>
+public class MissingGuildWars2ApiPermissionException : ScruffyException
 {
+    #region Fields
+
     /// <summary>
-    /// Missing Guild Wars 2 API permission exception
+    /// Permission
     /// </summary>
-    public class MissingGuildWars2ApiPermissionException : ScruffyException
+    private GuildWars2ApiPermission _permission;
+
+    #endregion // Fields
+
+    #region Constructor
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="permission">Permission</param>
+    public MissingGuildWars2ApiPermissionException(GuildWars2ApiPermission permission)
     {
-        #region Fields
+        _permission = permission;
+    }
 
-        /// <summary>
-        /// Permission
-        /// </summary>
-        private GuildWars2ApiPermission _permission;
+    #endregion // Constructor
 
-        #endregion // Fields
+    #region ScruffyException
 
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="permission">Permission</param>
-        public MissingGuildWars2ApiPermissionException(GuildWars2ApiPermission permission)
+    /// <summary>
+    /// Returns localized message
+    /// </summary>
+    /// <returns>Message</returns>
+    public override string GetLocalizedMessage()
+    {
+        using (var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider())
         {
-            _permission = permission;
-        }
+            var localizationGroup = serviceProvider.GetService<LocalizationService>()
+                                                   .GetGroup(nameof(MissingGuildWars2ApiPermissionException));
 
-        #endregion // Constructor
+            var permissions = string.Empty;
 
-        #region ScruffyException
-
-        /// <summary>
-        /// Returns localized message
-        /// </summary>
-        /// <returns>Message</returns>
-        public override string GetLocalizedMessage()
-        {
-            using (var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider())
+            if (_permission == GuildWars2ApiPermission.None)
             {
-                var localizationGroup = serviceProvider.GetService<LocalizationService>()
-                                                       .GetGroup(nameof(MissingGuildWars2ApiPermissionException));
-
-                var permissions = string.Empty;
-
-                if (_permission == GuildWars2ApiPermission.None)
+                permissions += localizationGroup.GetText("General", "General");
+            }
+            else
+            {
+                foreach (var permission in Enum.GetValues(typeof(GuildWars2ApiPermission)).OfType<GuildWars2ApiPermission>()
+                                               .Skip(1))
                 {
-                    permissions += localizationGroup.GetText("General", "General");
-                }
-                else
-                {
-                    foreach (var permission in Enum.GetValues(typeof(GuildWars2ApiPermission)).OfType<GuildWars2ApiPermission>()
-                                                    .Skip(1))
+                    if (_permission.HasFlag(permission))
                     {
-                        if (_permission.HasFlag(permission))
+                        if (permissions.Length != 0)
                         {
-                            if (permissions.Length != 0)
-                            {
-                                permissions += ", ";
-                            }
-
-                            permissions += localizationGroup.GetText(permission.ToString(), permission.ToString());
+                            permissions += ", ";
                         }
+
+                        permissions += localizationGroup.GetText(permission.ToString(), permission.ToString());
                     }
                 }
-
-                return serviceProvider.GetService<LocalizationService>()
-                                      .GetGroup(nameof(MissingGuildWars2ApiPermissionException))
-                                      .GetFormattedText("MissingPermissions", "The assigned API key does not have permissions ({0}) to execute this command.", permissions);
             }
-        }
 
-        #endregion // ScruffyException
+            return serviceProvider.GetService<LocalizationService>()
+                                  .GetGroup(nameof(MissingGuildWars2ApiPermissionException))
+                                  .GetFormattedText("MissingPermissions", "The assigned API key does not have permissions ({0}) to execute this command.", permissions);
+        }
     }
+
+    #endregion // ScruffyException
 }

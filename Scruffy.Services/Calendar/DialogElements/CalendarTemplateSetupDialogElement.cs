@@ -12,207 +12,206 @@ using Scruffy.Services.Calendar.DialogElements.Forms;
 using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
 
-namespace Scruffy.Services.Calendar.DialogElements
+namespace Scruffy.Services.Calendar.DialogElements;
+
+/// <summary>
+/// Starting the calendar template assistant
+/// </summary>
+public class CalendarTemplateSetupDialogElement : DialogEmbedReactionElementBase<bool>
 {
+    #region Fields
+
     /// <summary>
-    /// Starting the calendar template assistant
+    /// Reactions
     /// </summary>
-    public class CalendarTemplateSetupDialogElement : DialogEmbedReactionElementBase<bool>
+    private List<ReactionData<bool>> _reactions;
+
+    /// <summary>
+    /// Templates
+    /// </summary>
+    private List<string> _templates;
+
+    #endregion // Fields
+
+    #region Constructor
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="localizationService">Localization service</param>
+    public CalendarTemplateSetupDialogElement(LocalizationService localizationService)
+        : base(localizationService)
     {
-        #region Fields
+    }
 
-        /// <summary>
-        /// Reactions
-        /// </summary>
-        private List<ReactionData<bool>> _reactions;
+    #endregion // Constructor
 
-        /// <summary>
-        /// Templates
-        /// </summary>
-        private List<string> _templates;
+    #region Methods
 
-        #endregion // Fields
-
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        public CalendarTemplateSetupDialogElement(LocalizationService localizationService)
-            : base(localizationService)
+    /// <summary>
+    /// Returns the existing templates
+    /// </summary>
+    /// <returns>Levels</returns>
+    private List<string> GetTemplates()
+    {
+        if (_templates == null)
         {
+            var serverId = CommandContext.Guild.Id;
+
+            using (var dbFactory = RepositoryFactory.CreateInstance())
+            {
+                _templates = dbFactory.GetRepository<CalendarAppointmentTemplateRepository>()
+                                      .GetQuery()
+                                      .Where(obj => obj.DiscordServerId == serverId
+                                                 && obj.IsDeleted == false)
+                                      .Select(obj => obj.Description)
+                                      .ToList();
+            }
         }
 
-        #endregion // Constructor
+        return _templates;
+    }
 
-        #region Methods
+    #endregion // Methods
 
-        /// <summary>
-        /// Returns the existing templates
-        /// </summary>
-        /// <returns>Levels</returns>
-        private List<string> GetTemplates()
+    #region DialogReactionElementBase<bool>
+
+    /// <summary>
+    /// Editing the embedded message
+    /// </summary>
+    /// <param name="builder">Builder</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public override Task EditMessage(DiscordEmbedBuilder builder)
+    {
+        builder.WithTitle(LocalizationGroup.GetText("ChooseCommandTitle", "Calendar template configuration"));
+        builder.WithDescription(LocalizationGroup.GetText("ChooseCommandDescription", "With this assistant you are able to configure the calendar templates. The following templates are already created:"));
+
+        var templatesBuilder = new StringBuilder();
+
+        var templates = GetTemplates();
+        if (templates.Count > 0)
         {
-            if (_templates == null)
+            foreach (var template in templates)
             {
-                var serverId = CommandContext.Guild.Id;
-
-                using (var dbFactory = RepositoryFactory.CreateInstance())
-                {
-                    _templates = dbFactory.GetRepository<CalendarAppointmentTemplateRepository>()
-                                          .GetQuery()
-                                          .Where(obj => obj.DiscordServerId == serverId
-                                                     && obj.IsDeleted == false)
-                                          .Select(obj => obj.Description)
-                                          .ToList();
-                }
+                templatesBuilder.AppendLine(template);
             }
-
-            return _templates;
+        }
+        else
+        {
+            templatesBuilder.Append('\u200B');
         }
 
-        #endregion // Methods
+        builder.AddField(LocalizationGroup.GetText("TemplatesField", "Templates"), templatesBuilder.ToString());
 
-        #region DialogReactionElementBase<bool>
+        return Task.CompletedTask;
+    }
 
-        /// <summary>
-        /// Editing the embedded message
-        /// </summary>
-        /// <param name="builder">Builder</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public override Task EditMessage(DiscordEmbedBuilder builder)
+    /// <summary>
+    /// Returns the reactions which should be added to the message
+    /// </summary>
+    /// <returns>Reactions</returns>
+    public override IReadOnlyList<ReactionData<bool>> GetReactions()
+    {
+        if (_reactions == null)
         {
-            builder.WithTitle(LocalizationGroup.GetText("ChooseCommandTitle", "Calendar template configuration"));
-            builder.WithDescription(LocalizationGroup.GetText("ChooseCommandDescription", "With this assistant you are able to configure the calendar templates. The following templates are already created:"));
-
-            var templatesBuilder = new StringBuilder();
-
-            var templates = GetTemplates();
-            if (templates.Count > 0)
-            {
-                foreach (var template in templates)
-                {
-                    templatesBuilder.AppendLine(template);
-                }
-            }
-            else
-            {
-                templatesBuilder.Append('\u200B');
-            }
-
-            builder.AddField(LocalizationGroup.GetText("TemplatesField", "Templates"), templatesBuilder.ToString());
-
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// Returns the reactions which should be added to the message
-        /// </summary>
-        /// <returns>Reactions</returns>
-        public override IReadOnlyList<ReactionData<bool>> GetReactions()
-        {
-            if (_reactions == null)
-            {
-                _reactions = new List<ReactionData<bool>>
+            _reactions = new List<ReactionData<bool>>
+                         {
+                             new ()
                              {
-                                 new ()
-                                 {
-                                     Emoji = DiscordEmojiService.GetAddEmoji(CommandContext.Client),
-                                     CommandText = LocalizationGroup.GetFormattedText("AddCommand", "{0} Add template", DiscordEmojiService.GetAddEmoji(CommandContext.Client)),
-                                     Func = async () =>
+                                 Emoji = DiscordEmojiService.GetAddEmoji(CommandContext.Client),
+                                 CommandText = LocalizationGroup.GetFormattedText("AddCommand", "{0} Add template", DiscordEmojiService.GetAddEmoji(CommandContext.Client)),
+                                 Func = async () =>
+                                        {
+                                            var data = await DialogHandler.RunForm<CreateCalendarTemplateData>(CommandContext, false)
+                                                                          .ConfigureAwait(false);
+
+                                            using (var dbFactory = RepositoryFactory.CreateInstance())
                                             {
-                                                var data = await DialogHandler.RunForm<CreateCalendarTemplateData>(CommandContext, false)
-                                                                              .ConfigureAwait(false);
+                                                var level = new CalendarAppointmentTemplateEntity
+                                                            {
+                                                                DiscordServerId = CommandContext.Guild.Id,
+                                                                Description = data.Description,
+                                                                AppointmentTime = data.AppointmentTime,
+                                                                Uri = data.Uri,
+                                                                ReminderMessage = data.Reminder?.Message,
+                                                                ReminderTime = data.Reminder?.Time,
+                                                                GuildPoints = data.GuildPoints?.Points,
+                                                                IsRaisingGuildPointCap = data.GuildPoints?.IsRaisingPointCap
+                                                            };
 
-                                                using (var dbFactory = RepositoryFactory.CreateInstance())
-                                                {
-                                                    var level = new CalendarAppointmentTemplateEntity
-                                                                {
-                                                                    DiscordServerId = CommandContext.Guild.Id,
-                                                                    Description = data.Description,
-                                                                    AppointmentTime = data.AppointmentTime,
-                                                                    Uri = data.Uri,
-                                                                    ReminderMessage = data.Reminder?.Message,
-                                                                    ReminderTime = data.Reminder?.Time,
-                                                                    GuildPoints = data.GuildPoints?.Points,
-                                                                    IsRaisingGuildPointCap = data.GuildPoints?.IsRaisingPointCap
-                                                                };
-
-                                                    dbFactory.GetRepository<CalendarAppointmentTemplateRepository>()
-                                                             .Add(level);
-                                                }
-
-                                                return true;
+                                                dbFactory.GetRepository<CalendarAppointmentTemplateRepository>()
+                                                         .Add(level);
                                             }
-                                 }
-                             };
 
-                if (GetTemplates().Count > 0)
-                {
-                    _reactions.Add(new ReactionData<bool>
-                                         {
-                                             Emoji = DiscordEmojiService.GetEditEmoji(CommandContext.Client),
-                                             CommandText = LocalizationGroup.GetFormattedText("EditCommand", "{0} Edit template", DiscordEmojiService.GetEditEmoji(CommandContext.Client)),
-                                             Func = async () =>
-                                                    {
-                                                        var levelId = await RunSubElement<CalendarTemplateSelectionDialogElement, long>().ConfigureAwait(false);
+                                            return true;
+                                        }
+                             }
+                         };
 
-                                                        DialogContext.SetValue("CalendarTemplateId", levelId);
+            if (GetTemplates().Count > 0)
+            {
+                _reactions.Add(new ReactionData<bool>
+                               {
+                                   Emoji = DiscordEmojiService.GetEditEmoji(CommandContext.Client),
+                                   CommandText = LocalizationGroup.GetFormattedText("EditCommand", "{0} Edit template", DiscordEmojiService.GetEditEmoji(CommandContext.Client)),
+                                   Func = async () =>
+                                          {
+                                              var levelId = await RunSubElement<CalendarTemplateSelectionDialogElement, long>().ConfigureAwait(false);
 
-                                                        bool repeat;
+                                              DialogContext.SetValue("CalendarTemplateId", levelId);
 
-                                                        do
-                                                        {
-                                                            repeat = await RunSubElement<CalendarTemplateEditDialogElement, bool>().ConfigureAwait(false);
-                                                        }
-                                                        while (repeat);
+                                              bool repeat;
 
-                                                        return true;
-                                                    }
-                                         });
+                                              do
+                                              {
+                                                  repeat = await RunSubElement<CalendarTemplateEditDialogElement, bool>().ConfigureAwait(false);
+                                              }
+                                              while (repeat);
 
-                    _reactions.Add(new ReactionData<bool>
-                                         {
-                                             Emoji = DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client),
-                                             CommandText = LocalizationGroup.GetFormattedText("DeleteCommand", "{0} Delete template", DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client)),
-                                             Func = async () =>
-                                                    {
-                                                        var levelId = await RunSubElement<CalendarTemplateSelectionDialogElement, long>().ConfigureAwait(false);
-
-                                                        DialogContext.SetValue("CalendarTemplateId", levelId);
-
-                                                        return await RunSubElement<CalendarTemplateDeletionDialogElement, bool>().ConfigureAwait(false);
-                                                    }
-                                         });
-                }
+                                              return true;
+                                          }
+                               });
 
                 _reactions.Add(new ReactionData<bool>
-                                     {
-                                         Emoji = DiscordEmojiService.GetCrossEmoji(CommandContext.Client),
-                                         CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmojiService.GetCrossEmoji(CommandContext.Client)),
-                                         Func = () => Task.FromResult(false)
-                                     });
+                               {
+                                   Emoji = DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client),
+                                   CommandText = LocalizationGroup.GetFormattedText("DeleteCommand", "{0} Delete template", DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client)),
+                                   Func = async () =>
+                                          {
+                                              var levelId = await RunSubElement<CalendarTemplateSelectionDialogElement, long>().ConfigureAwait(false);
+
+                                              DialogContext.SetValue("CalendarTemplateId", levelId);
+
+                                              return await RunSubElement<CalendarTemplateDeletionDialogElement, bool>().ConfigureAwait(false);
+                                          }
+                               });
             }
 
-            return _reactions;
+            _reactions.Add(new ReactionData<bool>
+                           {
+                               Emoji = DiscordEmojiService.GetCrossEmoji(CommandContext.Client),
+                               CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmojiService.GetCrossEmoji(CommandContext.Client)),
+                               Func = () => Task.FromResult(false)
+                           });
         }
 
-        /// <summary>
-        /// Returns the title of the commands
-        /// </summary>
-        /// <returns>Commands</returns>
-        protected override string GetCommandTitle() => LocalizationGroup.GetText("CommandTitle", "Commands");
-
-        /// <summary>
-        /// Default case if none of the given reactions is used
-        /// </summary>
-        /// <returns>Result</returns>
-        protected override bool DefaultFunc()
-        {
-            return false;
-        }
-
-        #endregion // DialogReactionElementBase<bool>
+        return _reactions;
     }
+
+    /// <summary>
+    /// Returns the title of the commands
+    /// </summary>
+    /// <returns>Commands</returns>
+    protected override string GetCommandTitle() => LocalizationGroup.GetText("CommandTitle", "Commands");
+
+    /// <summary>
+    /// Default case if none of the given reactions is used
+    /// </summary>
+    /// <returns>Result</returns>
+    protected override bool DefaultFunc()
+    {
+        return false;
+    }
+
+    #endregion // DialogReactionElementBase<bool>
 }

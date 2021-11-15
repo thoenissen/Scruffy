@@ -1,34 +1,33 @@
 ﻿using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
 
-namespace Scruffy.Services.Account.DialogElements
+namespace Scruffy.Services.Account.DialogElements;
+
+/// <summary>
+/// Acquisition of the api key
+/// </summary>
+public class AccountApiKeyDialogElement : DialogMessageElementBase<string>
 {
+    #region Constructor
+
     /// <summary>
-    /// Acquisition of the api key
+    /// Constructor
     /// </summary>
-    public class AccountApiKeyDialogElement : DialogMessageElementBase<string>
+    /// <param name="localizationService">Localization service</param>
+    public AccountApiKeyDialogElement(LocalizationService localizationService)
+        : base(localizationService)
     {
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        public AccountApiKeyDialogElement(LocalizationService localizationService)
-            : base(localizationService)
-        {
-        }
-
-        #endregion // Constructor
-
-        #region DialogMessageElementBase<string>
-
-        /// <summary>
-        /// Return the message of element
-        /// </summary>
-        /// <returns>Message</returns>
-        public override string GetMessage() => LocalizationGroup.GetText("Message", "Please enter the api key which should be used.");
-
-        #endregion // DialogMessageElementBase<string>
     }
+
+    #endregion // Constructor
+
+    #region DialogMessageElementBase<string>
+
+    /// <summary>
+    /// Return the message of element
+    /// </summary>
+    /// <returns>Message</returns>
+    public override string GetMessage() => LocalizationGroup.GetText("Message", "Please enter the api key which should be used.");
+
+    #endregion // DialogMessageElementBase<string>
 }

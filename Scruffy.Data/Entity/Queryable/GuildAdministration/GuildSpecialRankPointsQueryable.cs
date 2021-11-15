@@ -3,24 +3,23 @@
 using Scruffy.Data.Entity.Queryable.Base;
 using Scruffy.Data.Entity.Tables.Guild;
 
-namespace Scruffy.Data.Entity.Queryable.GuildAdministration
+namespace Scruffy.Data.Entity.Queryable.GuildAdministration;
+
+/// <summary>
+/// Queryable for accessing the <see cref="GuildSpecialRankPointsEntity"/>
+/// </summary>
+public class GuildSpecialRankPointsQueryable : QueryableBase<GuildSpecialRankPointsEntity>
 {
+    #region Constructor
+
     /// <summary>
-    /// Queryable for accessing the <see cref="GuildSpecialRankPointsEntity"/>
+    /// Constructor
     /// </summary>
-    public class GuildSpecialRankPointsQueryable : QueryableBase<GuildSpecialRankPointsEntity>
+    /// <param name="queryable"><see cref="IQueryable"/>-object</param>
+    public GuildSpecialRankPointsQueryable(IQueryable<GuildSpecialRankPointsEntity> queryable)
+        : base(queryable)
     {
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="queryable"><see cref="IQueryable"/>-object</param>
-        public GuildSpecialRankPointsQueryable(IQueryable<GuildSpecialRankPointsEntity> queryable)
-            : base(queryable)
-        {
-        }
-
-        #endregion // Constructor
     }
+
+    #endregion // Constructor
 }

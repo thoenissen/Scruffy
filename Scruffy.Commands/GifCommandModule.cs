@@ -17,97 +17,96 @@ using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
 
-namespace Scruffy.Commands
+namespace Scruffy.Commands;
+
+/// <summary>
+/// GIF commands
+/// </summary>
+[Group("gif")]
+[Aliases("gi")]
+public class GifCommandModule : LocatedCommandModuleBase
 {
+    #region Constructor
+
     /// <summary>
-    /// GIF commands
+    /// Constructor
     /// </summary>
-    [Group("gif")]
-    [Aliases("gi")]
-    public class GifCommandModule : LocatedCommandModuleBase
+    /// <param name="localizationService">Localization service</param>
+    /// <param name="userManagementService">User management service</param>
+    /// <param name="httpClientFactory">HttpClient-Factory</param>
+    public GifCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+        : base(localizationService, userManagementService, httpClientFactory)
     {
-        #region Constructor
+    }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="userManagementService">User management service</param>
-        /// <param name="httpClientFactory">HttpClient-Factory</param>
-        public GifCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-            : base(localizationService, userManagementService, httpClientFactory)
-        {
-        }
+    #endregion // Constructor
 
-        #endregion // Constructor
+    #region Properties
 
-        #region Properties
+    /// <summary>
+    /// HttpClient-Factory
+    /// </summary>
+    public IHttpClientFactory HttpClientFactory { get; set; }
 
-        /// <summary>
-        /// HttpClient-Factory
-        /// </summary>
-        public IHttpClientFactory HttpClientFactory { get; set; }
+    #endregion // Properties
 
-        #endregion // Properties
+    #region Methods
 
-        #region Methods
-
-        /// <summary>
-        /// GIF related to a string
-        /// </summary>
-        /// <param name="commandContext">Command context</param>
-        /// <param name="searchTerm">Search term</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        [GroupCommand]
-        public Task GroupCommand(CommandContext commandContext, [RemainingText]string searchTerm)
-        {
-            return InvokeAsync(commandContext,
-                               async commandContextContainer =>
+    /// <summary>
+    /// GIF related to a string
+    /// </summary>
+    /// <param name="commandContext">Command context</param>
+    /// <param name="searchTerm">Search term</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [GroupCommand]
+    public Task GroupCommand(CommandContext commandContext, [RemainingText]string searchTerm)
+    {
+        return InvokeAsync(commandContext,
+                           async commandContextContainer =>
+                           {
+                               if (string.IsNullOrWhiteSpace(searchTerm) == false)
                                {
-                                   if (string.IsNullOrWhiteSpace(searchTerm) == false)
+                                   await commandContext.Message
+                                                       .DeleteAsync()
+                                                       .ConfigureAwait(false);
+
+                                   var rnd = new Random(DateTime.Now.Millisecond);
+
+                                   var client = HttpClientFactory.CreateClient();
+
+                                   using (var request = await client.GetAsync(QueryHelpers.AddQueryString("https://g.tenor.com/v1/search",
+                                                                                                          new Dictionary<string, string>
+                                                                                                          {
+                                                                                                              ["q"] = searchTerm,
+                                                                                                              ["key"] = "RXM3VE2UGRU9",
+                                                                                                              ["limit"] = "10",
+                                                                                                              ["contentfilter"] = "high",
+                                                                                                              ["ar_range"] = "all",
+                                                                                                              ["media_filter"] = "minimal"
+                                                                                                          }))
+                                                                    .ConfigureAwait(false))
                                    {
-                                       await commandContext.Message
-                                                           .DeleteAsync()
+                                       var jsonResult = await request.Content
+                                                                     .ReadAsStringAsync()
+                                                                     .ConfigureAwait(false);
+
+                                       var searchResult = JsonConvert.DeserializeObject<SearchResultRoot>(jsonResult);
+
+                                       await commandContext.Channel
+                                                           .SendMessageAsync(searchResult.Results[rnd.Next(searchResult.Results.Count - 1)]
+                                                                                         .ItemUrl)
                                                            .ConfigureAwait(false);
 
-                                       var rnd = new Random(DateTime.Now.Millisecond);
-
-                                       var client = HttpClientFactory.CreateClient();
-
-                                       using (var request = await client.GetAsync(QueryHelpers.AddQueryString("https://g.tenor.com/v1/search",
-                                                                                                                new Dictionary<string, string>
-                                                                                                                {
-                                                                                                                    ["q"] = searchTerm,
-                                                                                                                    ["key"] = "RXM3VE2UGRU9",
-                                                                                                                    ["limit"] = "10",
-                                                                                                                    ["contentfilter"] = "high",
-                                                                                                                    ["ar_range"] = "all",
-                                                                                                                    ["media_filter"] = "minimal"
-                                                                                                                }))
-                                                                        .ConfigureAwait(false))
-                                       {
-                                           var jsonResult = await request.Content
-                                                                         .ReadAsStringAsync()
-                                                                         .ConfigureAwait(false);
-
-                                           var searchResult = JsonConvert.DeserializeObject<SearchResultRoot>(jsonResult);
-
-                                           await commandContext.Channel
-                                                               .SendMessageAsync(searchResult.Results[rnd.Next(searchResult.Results.Count - 1)]
-                                                                                             .ItemUrl)
-                                                               .ConfigureAwait(false);
-
-                                           LoggingService.AddCommandLogEntry(LogEntryLevel.Information, commandContext.Command.QualifiedName, searchTerm, commandContext.User.ToString());
-                                       }
+                                       LoggingService.AddCommandLogEntry(LogEntryLevel.Information, commandContext.Command.QualifiedName, searchTerm, commandContext.User.ToString());
                                    }
-                                   else
-                                   {
-                                       await commandContextContainer.ShowHelp("gif")
-                                                                    .ConfigureAwait(false);
-                                   }
-                               });
-        }
-
-        #endregion // Methods
+                               }
+                               else
+                               {
+                                   await commandContextContainer.ShowHelp("gif")
+                                                                .ConfigureAwait(false);
+                               }
+                           });
     }
+
+    #endregion // Methods
 }

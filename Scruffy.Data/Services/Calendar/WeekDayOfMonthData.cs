@@ -2,30 +2,29 @@
 
 using Scruffy.Data.Enumerations.Calendar;
 
-namespace Scruffy.Data.Services.Calendar
+namespace Scruffy.Data.Services.Calendar;
+
+/// <summary>
+/// Additional data of the type <see cref="CalendarAppointmentScheduleType.WeekDayOfMonth"/>
+/// </summary>
+public class WeekDayOfMonthData
 {
+    #region Propertes
+
     /// <summary>
-    /// Additional data of the type <see cref="CalendarAppointmentScheduleType.WeekDayOfMonth"/>
+    /// Occurence count of the week day
     /// </summary>
-    public class WeekDayOfMonthData
-    {
-        #region Propertes
+    public int OccurenceCount { get; set; }
 
-        /// <summary>
-        /// Occurence count of the week day
-        /// </summary>
-        public int OccurenceCount { get; set; }
+    /// <summary>
+    /// Day of week
+    /// </summary>
+    public DayOfWeek DayOfWeek { get; set; }
 
-        /// <summary>
-        /// Day of week
-        /// </summary>
-        public DayOfWeek DayOfWeek { get; set; }
+    /// <summary>
+    /// Options
+    /// </summary>
+    public WeekDayOfMonthSpecialOptions Options { get; set; }
 
-        /// <summary>
-        /// Options
-        /// </summary>
-        public WeekDayOfMonthSpecialOptions Options { get; set; }
-
-        #endregion // Properties
-    }
+    #endregion // Properties
 }

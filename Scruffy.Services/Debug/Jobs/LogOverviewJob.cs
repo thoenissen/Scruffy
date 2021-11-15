@@ -8,39 +8,38 @@ using Microsoft.Extensions.DependencyInjection;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.JobScheduler;
 
-namespace Scruffy.Services.Debug.Jobs
+namespace Scruffy.Services.Debug.Jobs;
+
+/// <summary>
+/// Posting the log overview
+/// </summary>
+public class LogOverviewJob : LocatedAsyncJob
 {
+    #region LocatedAsyncJob
+
     /// <summary>
-    /// Posting the log overview
+    /// Executes the job
     /// </summary>
-    public class LogOverviewJob : LocatedAsyncJob
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public override async Task ExecuteAsync()
     {
-        #region LocatedAsyncJob
-
-        /// <summary>
-        /// Executes the job
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public override async Task ExecuteAsync()
+        var debugChannel = Environment.GetEnvironmentVariable("SCRUFFY_DEBUG_CHANNEL");
+        if (string.IsNullOrWhiteSpace(debugChannel) == false)
         {
-            var debugChannel = Environment.GetEnvironmentVariable("SCRUFFY_DEBUG_CHANNEL");
-            if (string.IsNullOrWhiteSpace(debugChannel) == false)
+            var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+            await using (serviceProvider.ConfigureAwait(false))
             {
-                var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
-                await using (serviceProvider.ConfigureAwait(false))
-                {
-                    var discordClient = serviceProvider.GetService<DiscordClient>();
-                    var debugService = serviceProvider.GetService<DebugService>();
+                var discordClient = serviceProvider.GetService<DiscordClient>();
+                var debugService = serviceProvider.GetService<DebugService>();
 
-                    await debugService.PostLogOverview(await discordClient.GetChannelAsync(Convert.ToUInt64(debugChannel))
-                                                                          .ConfigureAwait(false),
-                                                       DateTime.Today.AddDays(-1),
-                                                       true)
-                                      .ConfigureAwait(false);
-                }
+                await debugService.PostLogOverview(await discordClient.GetChannelAsync(Convert.ToUInt64(debugChannel))
+                                                                      .ConfigureAwait(false),
+                                                   DateTime.Today.AddDays(-1),
+                                                   true)
+                                  .ConfigureAwait(false);
             }
         }
-
-        #endregion // LocatedAsyncJob
     }
+
+    #endregion // LocatedAsyncJob
 }
