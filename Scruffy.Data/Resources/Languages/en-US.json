@@ -6,7 +6,7 @@
          "GeneralInformationTitle": "General information",
          "GeneralInformationDescription": "All data collected by {0} is used only for the administration of the guild. The individual areas where data is collected are discussed below.",
          "GuildWars2ApiTitle": "Guild Wars 2 - API-Token",
-         "GuildWars2ApiDescription": "The following data is determined via the specified API token:\n\n - With how many characters is the guild represented?\n - When was the last login?\n - Which server is the account assigned to?\n\nAll other data is only determined temporarily when you request {0} to execute a command. You only ever have access to your own API token.",
+         "GuildWars2ApiDescription": "The following data is determined via the specified API token:\n\n - With how many characters is the guild represented?\n - When was the last login?\n - Which server is the account assigned to?\n - How many achievement points does the account have?\n\nAll other data is only determined temporarily when you request {0} to execute a command. You only ever have access to your own API token.",
          "DiscordTitle": "Discord",
          "DiscordDescription": "Part of the guild ranking system is the activity in Discord. For this, how many messages are written and how many minutes you are in the voice chat are saved. The content of the posts is irrelevant and is not saved.",
          "RefreshTitle": "State",
