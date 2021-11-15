@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net.Http;
+using System.Threading.Tasks;
 
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
@@ -27,8 +28,9 @@ namespace Scruffy.Commands
         /// </summary>
         /// <param name="localizationService">Localization service</param>
         /// <param name="userManagementService">User management service</param>
-        public GamesCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
-            : base(localizationService, userManagementService)
+        /// <param name="httpClientFactory">HttpClient-Factory</param>
+        public GamesCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+            : base(localizationService, userManagementService, httpClientFactory)
         {
         }
 
@@ -52,8 +54,9 @@ namespace Scruffy.Commands
             /// </summary>
             /// <param name="localizationService">Localization service</param>
             /// <param name="userManagementService">User management service</param>
-            public GamesCounterCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
-                : base(localizationService, userManagementService)
+            /// <param name="httpClientFactory">HttpClient-Factory</param>
+            public GamesCounterCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+                : base(localizationService, userManagementService, httpClientFactory)
             {
             }
 
@@ -137,8 +140,9 @@ namespace Scruffy.Commands
             /// </summary>
             /// <param name="localizationService">Localization service</param>
             /// <param name="userManagementService">User management service</param>
-            public GamesWordChainCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
-                : base(localizationService, userManagementService)
+            /// <param name="httpClientFactory">HttpClient-Factory</param>
+            public GamesWordChainCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+                : base(localizationService, userManagementService, httpClientFactory)
             {
             }
 

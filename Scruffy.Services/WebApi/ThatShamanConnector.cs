@@ -1,6 +1,5 @@
 ﻿using System;
-using System.IO;
-using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 using Newtonsoft.Json;
@@ -14,6 +13,28 @@ namespace Scruffy.Services.WebApi
     /// </summary>
     public sealed class ThatShamanConnector : IAsyncDisposable, IDisposable
     {
+        #region Fields
+
+        /// <summary>
+        /// Factory
+        /// </summary>
+        private readonly IHttpClientFactory _httpClientFactory;
+
+        #endregion // Fields
+
+        #region Constructor
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="httpClientFactory">Http client factory</param>
+        public ThatShamanConnector(IHttpClientFactory httpClientFactory)
+        {
+            _httpClientFactory = httpClientFactory;
+        }
+
+        #endregion // Constructor
+
         #region Methods
 
         /// <summary>
@@ -22,17 +43,15 @@ namespace Scruffy.Services.WebApi
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task<NextUpdateData> GetNextUpdate()
         {
-            using (var response = await WebRequest.Create("https://thatshaman.com/tools/countdown/?format=json")
-                                                  .GetResponseAsync()
-                                                  .ConfigureAwait(false))
+            var client = _httpClientFactory.CreateClient();
+            using (var response = await client.GetAsync("https://thatshaman.com/tools/countdown/?format=json")
+                                              .ConfigureAwait(false))
             {
-                using (var reader = new StreamReader(response.GetResponseStream()))
-                {
-                    var jsonResult = await reader.ReadToEndAsync()
-                                                 .ConfigureAwait(false);
+                var jsonResult = await response.Content
+                                               .ReadAsStringAsync()
+                                               .ConfigureAwait(false);
 
-                    return JsonConvert.DeserializeObject<NextUpdateData>(jsonResult);
-                }
+                return JsonConvert.DeserializeObject<NextUpdateData>(jsonResult);
             }
         }
 
@@ -42,17 +61,15 @@ namespace Scruffy.Services.WebApi
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task<NextUpdateData> GetEODRelease()
         {
-            using (var response = await WebRequest.Create("https://thatshaman.com/tools/eod/?format=json")
-                                                  .GetResponseAsync()
-                                                  .ConfigureAwait(false))
+            var client = _httpClientFactory.CreateClient();
+            using (var response = await client.GetAsync("https://thatshaman.com/tools/eod/?format=json")
+                                              .ConfigureAwait(false))
             {
-                using (var reader = new StreamReader(response.GetResponseStream()))
-                {
-                    var jsonResult = await reader.ReadToEndAsync()
-                                                 .ConfigureAwait(false);
+                var jsonResult = await response.Content
+                                               .ReadAsStringAsync()
+                                               .ConfigureAwait(false);
 
-                    return JsonConvert.DeserializeObject<NextUpdateData>(jsonResult);
-                }
+                return JsonConvert.DeserializeObject<NextUpdateData>(jsonResult);
             }
         }
 
@@ -78,7 +95,6 @@ namespace Scruffy.Services.WebApi
         /// </summary>
         public void Dispose()
         {
-            GC.SuppressFinalize(this);
         }
 
         #endregion // IDisposable

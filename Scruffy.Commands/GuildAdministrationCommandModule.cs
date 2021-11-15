@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 using DSharpPlus.CommandsNext;
@@ -32,8 +33,9 @@ namespace Scruffy.Commands
         /// </summary>
         /// <param name="localizationService">Localization service</param>
         /// <param name="userManagementService">User management service</param>
-        public GuildAdministrationCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
-            : base(localizationService, userManagementService)
+        /// <param name="httpClientFactory">HttpClient-Factory</param>
+        public GuildAdministrationCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+            : base(localizationService, userManagementService, httpClientFactory)
         {
         }
 
@@ -182,8 +184,9 @@ namespace Scruffy.Commands
             /// </summary>
             /// <param name="localizationService">Localization service</param>
             /// <param name="userManagementService">User management service</param>
-            public GuildAdministrationEmblemCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
-                : base(localizationService, userManagementService)
+            /// <param name="httpClientFactory">HttpClient-Factory</param>
+            public GuildAdministrationEmblemCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+                : base(localizationService, userManagementService, httpClientFactory)
             {
             }
 
@@ -242,8 +245,9 @@ namespace Scruffy.Commands
             /// </summary>
             /// <param name="localizationService">Localization service</param>
             /// <param name="userManagementService">User management service</param>
-            public GuildAdministrationBankCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
-                : base(localizationService, userManagementService)
+            /// <param name="httpClientFactory">HttpClient-Factory</param>
+            public GuildAdministrationBankCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+                : base(localizationService, userManagementService, httpClientFactory)
             {
             }
 
@@ -299,8 +303,9 @@ namespace Scruffy.Commands
                 /// </summary>
                 /// <param name="localizationService">Localization service</param>
                 /// <param name="userManagementService">User management service</param>
-                public GuildAdministrationBankUnlocksCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
-                    : base(localizationService, userManagementService)
+                /// <param name="httpClientFactory">HttpClient-Factory</param>
+                public GuildAdministrationBankUnlocksCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+                    : base(localizationService, userManagementService, httpClientFactory)
                 {
                 }
 
@@ -363,8 +368,9 @@ namespace Scruffy.Commands
             /// </summary>
             /// <param name="localizationService">Localization service</param>
             /// <param name="userManagementService">User management service</param>
-            public GuildAdministrationSpecialRankCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
-                : base(localizationService, userManagementService)
+            /// <param name="httpClientFactory">HttpClient-Factory</param>
+            public GuildAdministrationSpecialRankCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+                : base(localizationService, userManagementService, httpClientFactory)
             {
             }
 
@@ -444,8 +450,9 @@ namespace Scruffy.Commands
             /// </summary>
             /// <param name="localizationService">Localization service</param>
             /// <param name="userManagementService">User management service</param>
-            public GuildAdministrationChartCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
-                : base(localizationService, userManagementService)
+            /// <param name="httpClientFactory">HttpClient-Factory</param>
+            public GuildAdministrationChartCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+                : base(localizationService, userManagementService, httpClientFactory)
             {
             }
 
@@ -506,8 +513,9 @@ namespace Scruffy.Commands
             /// </summary>
             /// <param name="localizationService">Localization service</param>
             /// <param name="userManagementService">User management service</param>
-            public GuildAdministrationExportCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
-                : base(localizationService, userManagementService)
+            /// <param name="httpClientFactory">HttpClient-Factory</param>
+            public GuildAdministrationExportCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+                : base(localizationService, userManagementService, httpClientFactory)
             {
             }
 

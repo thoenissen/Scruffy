@@ -9,7 +9,6 @@ using Newtonsoft.Json;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Account;
-using Scruffy.Data.Entity.Repositories.GuildWars2;
 using Scruffy.Data.Entity.Repositories.GuildWars2.GameData;
 using Scruffy.Data.Enumerations.General;
 using Scruffy.Data.Json.QuickChart;
@@ -25,15 +24,26 @@ namespace Scruffy.Services.GuildWars2
     /// </summary>
     public class WorldsService : LocatedServiceBase
     {
+        #region Fields
+
+        /// <summary>
+        /// Fields
+        /// </summary>
+        private readonly QuickChartConnector _quickChartConnector;
+
+        #endregion // Fields
+
         #region Constructor
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="localizationService">Localization service</param>
-        public WorldsService(LocalizationService localizationService)
+        /// <param name="quickChartConnector">QuickChart-Connector</param>
+        public WorldsService(LocalizationService localizationService, QuickChartConnector quickChartConnector)
             : base(localizationService)
         {
+            _quickChartConnector = quickChartConnector;
         }
 
         #endregion // Constructor
@@ -120,89 +130,86 @@ namespace Scruffy.Services.GuildWars2
                     embedBuilder.WithColor(DiscordColor.DarkBlue);
                     embedBuilder.WithImageUrl("attachment://chart.png");
 
-                    var connector = new QuickChartConnector();
-                    await using (connector.ConfigureAwait(false))
-                    {
-                        var chartConfiguration = new ChartConfigurationData
-                                                 {
-                                                     Type = "bar",
-                                                     Data = new Data.Json.QuickChart.Data
-                                                     {
-                                                         DataSets = new List<DataSet>
-                                                                    {
-                                                                        new DataSet<int>
-                                                                        {
-                                                                            BackgroundColor =  worlds.Select(obj => "#316ed5")
-                                                                                                     .ToList(),
-                                                                            BorderColor = "#274d85",
-                                                                            Data = worlds.OrderByDescending(obj => obj.Count)
-                                                                                         .ThenBy(obj => obj.Name)
-                                                                                         .Select(obj => obj.Count)
-                                                                                         .ToList()
-                                                                        }
-                                                                    },
-                                                         Labels = worlds.OrderByDescending(obj => obj.Count)
-                                                                        .ThenBy(obj => obj.Name)
-                                                                        .Select(obj => obj.Name)
-                                                                        .ToList()
-                                                     },
-                                                     Options = new OptionsCollection
-                                                     {
-                                                         Scales = new ScalesCollection
-                                                         {
-                                                             XAxes = new List<XAxis>
-                                                                     {
-                                                                         new ()
-                                                                         {
-                                                                             Ticks = new AxisTicks
-                                                                                     {
-                                                                                         FontColor = "#b3b3b3"
-                                                                                     }
-                                                                         }
-                                                                     },
-                                                             YAxes = new List<YAxis>
-                                                                     {
-                                                                         new ()
-                                                                         {
-                                                                             Ticks = new AxisTicks<int>
-                                                                                     {
-                                                                                         MinValue = 0,
-                                                                                         MaxValue = ((worlds.Max(obj => obj.Count) / 10) + 1) * 10,
-                                                                                         FontColor = "#b3b3b3"
-                                                                                     }
-                                                                         }
-                                                                     }
-                                                         },
-                                                         Plugins = new PluginsCollection
-                                                         {
-                                                             Legend = false
-                                                         }
-                                                     }
-                                                 };
-
-                        var chartStream = await connector.GetChartAsStream(new ChartData
+                    var chartConfiguration = new ChartConfigurationData
+                                             {
+                                                 Type = "bar",
+                                                 Data = new Data.Json.QuickChart.Data
+                                                        {
+                                                            DataSets = new List<DataSet>
+                                                                       {
+                                                                           new DataSet<int>
                                                                            {
-                                                                               Width = 500,
-                                                                               Height = 300,
-                                                                               DevicePixelRatio = 1,
-                                                                               BackgroundColor = "#262626",
-                                                                               Format = "png",
-                                                                               Config = JsonConvert.SerializeObject(chartConfiguration,
-                                                                                                                    new JsonSerializerSettings
-                                                                                                                    {
-                                                                                                                        NullValueHandling = NullValueHandling.Ignore
-                                                                                                                    })
-                                                                           })
-                                                         .ConfigureAwait(false);
-                        await using (chartStream.ConfigureAwait(false))
-                        {
-                            messageBuilder.WithFile("chart.png", chartStream);
-                            messageBuilder.WithEmbed(embedBuilder);
+                                                                               BackgroundColor = worlds.Select(obj => "#316ed5")
+                                                                                                       .ToList(),
+                                                                               BorderColor = "#274d85",
+                                                                               Data = worlds.OrderByDescending(obj => obj.Count)
+                                                                                            .ThenBy(obj => obj.Name)
+                                                                                            .Select(obj => obj.Count)
+                                                                                            .ToList()
+                                                                           }
+                                                                       },
+                                                            Labels = worlds.OrderByDescending(obj => obj.Count)
+                                                                           .ThenBy(obj => obj.Name)
+                                                                           .Select(obj => obj.Name)
+                                                                           .ToList()
+                                                        },
+                                                 Options = new OptionsCollection
+                                                           {
+                                                               Scales = new ScalesCollection
+                                                                        {
+                                                                            XAxes = new List<XAxis>
+                                                                                    {
+                                                                                        new ()
+                                                                                        {
+                                                                                            Ticks = new AxisTicks
+                                                                                                    {
+                                                                                                        FontColor = "#b3b3b3"
+                                                                                                    }
+                                                                                        }
+                                                                                    },
+                                                                            YAxes = new List<YAxis>
+                                                                                    {
+                                                                                        new ()
+                                                                                        {
+                                                                                            Ticks = new AxisTicks<int>
+                                                                                                    {
+                                                                                                        MinValue = 0,
+                                                                                                        MaxValue = ((worlds.Max(obj => obj.Count) / 10) + 1) * 10,
+                                                                                                        FontColor = "#b3b3b3"
+                                                                                                    }
+                                                                                        }
+                                                                                    }
+                                                                        },
+                                                               Plugins = new PluginsCollection
+                                                                         {
+                                                                             Legend = false
+                                                                         }
+                                                           }
+                                             };
 
-                            await commandContext.Channel
-                                                .SendMessageAsync(messageBuilder)
-                                                .ConfigureAwait(false);
-                        }
+                    var chartStream = await _quickChartConnector.GetChartAsStream(new ChartData
+                                                                                  {
+                                                                                      Width = 500,
+                                                                                      Height = 300,
+                                                                                      DevicePixelRatio = 1,
+                                                                                      BackgroundColor = "#262626",
+                                                                                      Format = "png",
+                                                                                      Config = JsonConvert.SerializeObject(chartConfiguration,
+                                                                                                                           new JsonSerializerSettings
+                                                                                                                           {
+                                                                                                                               NullValueHandling = NullValueHandling.Ignore
+                                                                                                                           })
+                                                                                  })
+                                                                .ConfigureAwait(false);
+
+                    await using (chartStream.ConfigureAwait(false))
+                    {
+                        messageBuilder.WithFile("chart.png", chartStream);
+                        messageBuilder.WithEmbed(embedBuilder);
+
+                        await commandContext.Channel
+                                            .SendMessageAsync(messageBuilder)
+                                            .ConfigureAwait(false);
                     }
                 }
             }

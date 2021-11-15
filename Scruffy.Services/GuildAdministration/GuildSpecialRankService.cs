@@ -20,15 +20,26 @@ namespace Scruffy.Services.GuildAdministration
     /// </summary>
     public class GuildSpecialRankService : LocatedServiceBase
     {
+        #region Fields
+
+        /// <summary>
+        /// QuickChart-Connector
+        /// </summary>
+        private readonly QuickChartConnector _quickChartConnector;
+
+        #endregion // Fields
+
         #region Constructor
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="localizationService">Localization service</param>
-        public GuildSpecialRankService(LocalizationService localizationService)
+        /// <param name="quickChartConnector">QuickChart-Connector</param>
+        public GuildSpecialRankService(LocalizationService localizationService, QuickChartConnector quickChartConnector)
             : base(localizationService)
         {
+            _quickChartConnector = quickChartConnector;
         }
 
         #endregion // Constructor
@@ -76,123 +87,120 @@ namespace Scruffy.Services.GuildAdministration
                         embedBuilder.WithColor(DiscordColor.DarkBlue);
                         embedBuilder.WithImageUrl("attachment://chart.png");
 
-                        var connector = new QuickChartConnector();
-                        await using (connector.ConfigureAwait(false))
+                        var users = new List<string>();
+
+                        foreach (var user in configuration.Users
+                                                          .OrderByDescending(obj => obj.Points)
+                                                          .ThenBy(obj => obj.UserId))
                         {
-                            var users = new List<string>();
-                            foreach (var user in configuration.Users
-                                                              .OrderByDescending(obj => obj.Points)
-                                                              .ThenBy(obj => obj.UserId))
-                            {
-                                var member = await commandContext.Guild
-                                                                 .GetMemberAsync(user.UserId)
-                                                                 .ConfigureAwait(false);
+                            var member = await commandContext.Guild
+                                                             .GetMemberAsync(user.UserId)
+                                                             .ConfigureAwait(false);
 
-                                users.Add($"{(string.IsNullOrWhiteSpace(member.Nickname) ? string.IsNullOrWhiteSpace(member.DisplayName) ? member.Username : member.DisplayName : member.Nickname)} ({user.Points:0.##})");
-                            }
+                            users.Add($"{(string.IsNullOrWhiteSpace(member.Nickname) ? string.IsNullOrWhiteSpace(member.DisplayName) ? member.Username : member.DisplayName : member.Nickname)} ({user.Points:0.##})");
+                        }
 
-                            var chartConfiguration = new ChartConfigurationData
-                                                     {
-                                                         Type = "bar",
-                                                         Data = new Data.Json.QuickChart.Data
-                                                                {
-                                                                    DataSets = new List<DataSet>
+                        var chartConfiguration = new ChartConfigurationData
+                                                 {
+                                                     Type = "bar",
+                                                     Data = new Data.Json.QuickChart.Data
+                                                            {
+                                                                DataSets = new List<DataSet>
+                                                                           {
+                                                                               new DataSet<double>
                                                                                {
-                                                                                   new DataSet<double>
-                                                                                   {
-                                                                                       BackgroundColor = configuration.Users
-                                                                                                                      .Select(obj => "#316ed5")
-                                                                                                                      .ToList(),
-                                                                                       BorderColor = "#274d85",
-                                                                                       Data = configuration.Users
-                                                                                                           .OrderByDescending(obj => obj.Points)
-                                                                                                           .ThenBy(obj => obj.UserId)
-                                                                                                           .Select(obj => obj.Points)
-                                                                                                           .ToList()
-                                                                                   }
-                                                                               },
-                                                                    Labels = users
-                                                                },
-                                                         Options = new OptionsCollection
-                                                                   {
-                                                                       Annotation = new AnnotationsCollection
-                                                                                    {
-                                                                                        Annotations = new List<Annotation>
-                                                                                                      {
-                                                                                                          new ()
-                                                                                                          {
-                                                                                                              BorderColor = "#f45b5b",
-                                                                                                              BorderWidth = 2,
-                                                                                                              Mode = "horizontal",
-                                                                                                              ScaleID = "y-axis-0",
-                                                                                                              Type = "line",
-                                                                                                              Value = configuration.RemoveThreshold
-                                                                                                          },
-                                                                                                          new ()
-                                                                                                          {
-                                                                                                              BorderColor = "#90ee7e",
-                                                                                                              BorderWidth = 2,
-                                                                                                              Mode = "horizontal",
-                                                                                                              ScaleID = "y-axis-0",
-                                                                                                              Type = "line",
-                                                                                                              Value = configuration.GrantThreshold
-                                                                                                          }
-                                                                                                      }
-                                                                                    },
-                                                                       Scales = new ScalesCollection
+                                                                                   BackgroundColor = configuration.Users
+                                                                                                                  .Select(obj => "#316ed5")
+                                                                                                                  .ToList(),
+                                                                                   BorderColor = "#274d85",
+                                                                                   Data = configuration.Users
+                                                                                                       .OrderByDescending(obj => obj.Points)
+                                                                                                       .ThenBy(obj => obj.UserId)
+                                                                                                       .Select(obj => obj.Points)
+                                                                                                       .ToList()
+                                                                               }
+                                                                           },
+                                                                Labels = users
+                                                            },
+                                                     Options = new OptionsCollection
+                                                               {
+                                                                   Annotation = new AnnotationsCollection
                                                                                 {
-                                                                                    XAxes = new List<XAxis>
-                                                                                            {
-                                                                                                new ()
-                                                                                                {
-                                                                                                    Ticks = new AxisTicks
-                                                                                                            {
-                                                                                                                FontColor = "#b3b3b3"
-                                                                                                            }
-                                                                                                }
-                                                                                            },
-                                                                                    YAxes = new List<YAxis>
-                                                                                            {
-                                                                                                new ()
-                                                                                                {
-                                                                                                    Ticks = new AxisTicks
-                                                                                                            {
-                                                                                                                FontColor = "#b3b3b3"
-                                                                                                            }
-                                                                                                }
-                                                                                            }
+                                                                                    Annotations = new List<Annotation>
+                                                                                                  {
+                                                                                                      new ()
+                                                                                                      {
+                                                                                                          BorderColor = "#f45b5b",
+                                                                                                          BorderWidth = 2,
+                                                                                                          Mode = "horizontal",
+                                                                                                          ScaleID = "y-axis-0",
+                                                                                                          Type = "line",
+                                                                                                          Value = configuration.RemoveThreshold
+                                                                                                      },
+                                                                                                      new ()
+                                                                                                      {
+                                                                                                          BorderColor = "#90ee7e",
+                                                                                                          BorderWidth = 2,
+                                                                                                          Mode = "horizontal",
+                                                                                                          ScaleID = "y-axis-0",
+                                                                                                          Type = "line",
+                                                                                                          Value = configuration.GrantThreshold
+                                                                                                      }
+                                                                                                  }
                                                                                 },
-                                                                       Plugins = new PluginsCollection
-                                                                                 {
-                                                                                     Legend = false
-                                                                                 }
-                                                                   }
-                                                     };
+                                                                   Scales = new ScalesCollection
+                                                                            {
+                                                                                XAxes = new List<XAxis>
+                                                                                        {
+                                                                                            new ()
+                                                                                            {
+                                                                                                Ticks = new AxisTicks
+                                                                                                        {
+                                                                                                            FontColor = "#b3b3b3"
+                                                                                                        }
+                                                                                            }
+                                                                                        },
+                                                                                YAxes = new List<YAxis>
+                                                                                        {
+                                                                                            new ()
+                                                                                            {
+                                                                                                Ticks = new AxisTicks
+                                                                                                        {
+                                                                                                            FontColor = "#b3b3b3"
+                                                                                                        }
+                                                                                            }
+                                                                                        }
+                                                                            },
+                                                                   Plugins = new PluginsCollection
+                                                                             {
+                                                                                 Legend = false
+                                                                             }
+                                                               }
+                                                 };
 
-                            var chartStream = await connector.GetChartAsStream(new ChartData
-                                                                               {
-                                                                                   Width = 500,
-                                                                                   Height = 300,
-                                                                                   DevicePixelRatio = 1,
-                                                                                   BackgroundColor = "#262626",
-                                                                                   Format = "png",
-                                                                                   Config = JsonConvert.SerializeObject(chartConfiguration,
-                                                                                                                        new JsonSerializerSettings
-                                                                                                                        {
-                                                                                                                            NullValueHandling = NullValueHandling.Ignore
-                                                                                                                        })
-                                                                               })
-                                                                          .ConfigureAwait(false);
+                        var chartStream = await _quickChartConnector.GetChartAsStream(new ChartData
+                                                                                      {
+                                                                                          Width = 500,
+                                                                                          Height = 300,
+                                                                                          DevicePixelRatio = 1,
+                                                                                          BackgroundColor = "#262626",
+                                                                                          Format = "png",
+                                                                                          Config = JsonConvert.SerializeObject(chartConfiguration,
+                                                                                                                               new JsonSerializerSettings
+                                                                                                                               {
+                                                                                                                                   NullValueHandling = NullValueHandling.Ignore
+                                                                                                                               })
+                                                                                      })
+                                                                    .ConfigureAwait(false);
 
-                            await using (chartStream.ConfigureAwait(false))
-                            {
-                                messageBuilder.WithFile("chart.png", chartStream);
-                                messageBuilder.WithEmbed(embedBuilder);
+                        await using (chartStream.ConfigureAwait(false))
+                        {
+                            messageBuilder.WithFile("chart.png", chartStream);
+                            messageBuilder.WithEmbed(embedBuilder);
 
-                                await commandContext.Channel
-                                                    .SendMessageAsync(messageBuilder)
-                                                    .ConfigureAwait(false);
-                            }
+                            await commandContext.Channel
+                                                .SendMessageAsync(messageBuilder)
+                                                .ConfigureAwait(false);
                         }
                     }
                 }

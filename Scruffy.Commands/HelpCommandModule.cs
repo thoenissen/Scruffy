@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -31,8 +32,9 @@ namespace Scruffy.Commands
         /// </summary>
         /// <param name="localizationService">Localization service</param>
         /// <param name="userManagementService">User management service</param>
-        public HelpCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
-            : base(localizationService, userManagementService)
+        /// <param name="httpClientFactory">HttpClient-Factory</param>
+        public HelpCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+            : base(localizationService, userManagementService, httpClientFactory)
         {
         }
 
@@ -102,8 +104,9 @@ namespace Scruffy.Commands
             /// </summary>
             /// <param name="localizationService">Localization service</param>
             /// <param name="userManagementService">User management service</param>
-            public HelpOverviewCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
-                : base(localizationService, userManagementService)
+            /// <param name="httpClientFactory">HttpClient-Factory</param>
+            public HelpOverviewCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+                : base(localizationService, userManagementService, httpClientFactory)
             {
                 _localizationService = localizationService;
             }

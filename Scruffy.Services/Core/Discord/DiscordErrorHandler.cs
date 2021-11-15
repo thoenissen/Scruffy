@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -77,19 +75,23 @@ namespace Scruffy.Services.Core.Discord
         {
             if (e.Exception is CommandNotFoundException)
             {
-                using (var response = await WebRequest.CreateHttp("https://g.tenor.com/v1/search?q=what&key=RXM3VE2UGRU9&limit=100&contentfilter=high&ar_range=all")
-                                                      .GetResponseAsync()
-                                                      .ConfigureAwait(false))
+                var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+                await using (serviceProvider.ConfigureAwait(false))
                 {
-                    using (var reader = new StreamReader(response.GetResponseStream()))
+                    var client = serviceProvider.GetService<IHttpClientFactory>().CreateClient();
+
+                    using (var response = await client.GetAsync("https://g.tenor.com/v1/search?q=what&key=RXM3VE2UGRU9&limit=100&contentfilter=high&ar_range=all")
+                                                      .ConfigureAwait(false))
                     {
-                        var jsonResult = await reader.ReadToEndAsync().ConfigureAwait(false);
+                        var jsonResult = await response.Content.ReadAsStringAsync()
+                                                       .ConfigureAwait(false);
 
                         var searchResult = JsonConvert.DeserializeObject<SearchResultRoot>(jsonResult);
 
                         await e.Context
                                .Message
-                               .RespondAsync(searchResult.Results[_rnd.Next(0, searchResult.Results.Count - 1)].ItemUrl)
+                               .RespondAsync(searchResult.Results[_rnd.Next(0, searchResult.Results.Count - 1)]
+                                                         .ItemUrl)
                                .ConfigureAwait(false);
                     }
                 }

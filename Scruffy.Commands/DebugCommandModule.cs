@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -38,8 +39,9 @@ namespace Scruffy.Commands
         /// </summary>
         /// <param name="localizationService">Localization service</param>
         /// <param name="userManagementService">User management service</param>
-        public DebugCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
-            : base(localizationService, userManagementService)
+        /// <param name="httpClientFactory">HttpClient-Factory</param>
+        public DebugCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+            : base(localizationService, userManagementService, httpClientFactory)
         {
         }
 
@@ -85,8 +87,9 @@ namespace Scruffy.Commands
             /// </summary>
             /// <param name="localizationService">Localization service</param>
             /// <param name="userManagementService">User management service</param>
-            public DebugDumpModule(LocalizationService localizationService, UserManagementService userManagementService)
-                : base(localizationService, userManagementService)
+            /// <param name="httpClientFactory">HttpClient-Factory</param>
+            public DebugDumpModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+                : base(localizationService, userManagementService, httpClientFactory)
             {
             }
 
@@ -139,8 +142,9 @@ namespace Scruffy.Commands
             /// </summary>
             /// <param name="localizationService">Localization service</param>
             /// <param name="userManagementService">User management service</param>
-            public DebugRaidModule(LocalizationService localizationService, UserManagementService userManagementService)
-                : base(localizationService, userManagementService)
+            /// <param name="httpClientFactory">HttpClient-Factory</param>
+            public DebugRaidModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+                : base(localizationService, userManagementService, httpClientFactory)
             {
             }
 
@@ -197,8 +201,9 @@ namespace Scruffy.Commands
             /// </summary>
             /// <param name="localizationService">Localization service</param>
             /// <param name="userManagementService">User management service</param>
-            public DebugListModule(LocalizationService localizationService, UserManagementService userManagementService)
-                : base(localizationService, userManagementService)
+            /// <param name="httpClientFactory">HttpClient-Factory</param>
+            public DebugListModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+                : base(localizationService, userManagementService, httpClientFactory)
             {
             }
 
@@ -303,8 +308,9 @@ namespace Scruffy.Commands
             /// </summary>
             /// <param name="localizationService">Localization service</param>
             /// <param name="userManagementService">User management service</param>
-            public DebugAccountModule(LocalizationService localizationService, UserManagementService userManagementService)
-                : base(localizationService, userManagementService)
+            /// <param name="httpClientFactory">HttpClient-Factory</param>
+            public DebugAccountModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+                : base(localizationService, userManagementService, httpClientFactory)
             {
             }
 
@@ -352,8 +358,9 @@ namespace Scruffy.Commands
             /// </summary>
             /// <param name="localizationService">Localization service</param>
             /// <param name="userManagementService">User management service</param>
-            public DebugGuildWarsModule(LocalizationService localizationService, UserManagementService userManagementService)
-                : base(localizationService, userManagementService)
+            /// <param name="httpClientFactory">HttpClient-Factory</param>
+            public DebugGuildWarsModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+                : base(localizationService, userManagementService, httpClientFactory)
             {
             }
 
@@ -401,8 +408,9 @@ namespace Scruffy.Commands
             /// </summary>
             /// <param name="localizationService">Localization service</param>
             /// <param name="userManagementService">User management service</param>
-            public DebugCalendarModule(LocalizationService localizationService, UserManagementService userManagementService)
-                : base(localizationService, userManagementService)
+            /// <param name="httpClientFactory">HttpClient-Factory</param>
+            public DebugCalendarModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+                : base(localizationService, userManagementService, httpClientFactory)
             {
             }
 
@@ -495,8 +503,9 @@ namespace Scruffy.Commands
             /// </summary>
             /// <param name="localizationService">Localization service</param>
             /// <param name="userManagementService">User management service</param>
-            public DebugUserModule(LocalizationService localizationService, UserManagementService userManagementService)
-                : base(localizationService, userManagementService)
+            /// <param name="httpClientFactory">HttpClient-Factory</param>
+            public DebugUserModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+                : base(localizationService, userManagementService, httpClientFactory)
             {
             }
 
@@ -553,8 +562,9 @@ namespace Scruffy.Commands
             /// </summary>
             /// <param name="localizationService">Localization service</param>
             /// <param name="userManagementService">User management service</param>
-            public DebugGuildModule(LocalizationService localizationService, UserManagementService userManagementService)
-                : base(localizationService, userManagementService)
+            /// <param name="httpClientFactory">HttpClient-Factory</param>
+            public DebugGuildModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+                : base(localizationService, userManagementService, httpClientFactory)
             {
             }
 
@@ -599,8 +609,9 @@ namespace Scruffy.Commands
             /// </summary>
             /// <param name="localizationService">Localization service</param>
             /// <param name="userManagementService">User management service</param>
-            public DebugImportModule(LocalizationService localizationService, UserManagementService userManagementService)
-                : base(localizationService, userManagementService)
+            /// <param name="httpClientFactory">HttpClient-Factory</param>
+            public DebugImportModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+                : base(localizationService, userManagementService, httpClientFactory)
             {
             }
 
@@ -691,8 +702,9 @@ namespace Scruffy.Commands
             /// </summary>
             /// <param name="localizationService">Localization service</param>
             /// <param name="userManagementService">User management service</param>
-            public DebugNetworkModule(LocalizationService localizationService, UserManagementService userManagementService)
-                : base(localizationService, userManagementService)
+            /// <param name="httpClientFactory">HttpClient-Factory</param>
+            public DebugNetworkModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+                : base(localizationService, userManagementService, httpClientFactory)
             {
             }
 
@@ -763,8 +775,9 @@ namespace Scruffy.Commands
             /// </summary>
             /// <param name="localizationService">Localization service</param>
             /// <param name="userManagementService">User management service</param>
-            public DebugLogModule(LocalizationService localizationService, UserManagementService userManagementService)
-                : base(localizationService, userManagementService)
+            /// <param name="httpClientFactory">HttpClient-Factory</param>
+            public DebugLogModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+                : base(localizationService, userManagementService, httpClientFactory)
             {
             }
 

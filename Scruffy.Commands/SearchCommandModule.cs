@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -42,12 +41,22 @@ namespace Scruffy.Commands
         /// </summary>
         /// <param name="localizationService">Localization service</param>
         /// <param name="userManagementService">User management service</param>
-        public SearchCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
-            : base(localizationService, userManagementService)
+        /// <param name="httpClientFactory">HttpClient-Factory</param>
+        public SearchCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+            : base(localizationService, userManagementService, httpClientFactory)
         {
         }
 
         #endregion // Constructor
+
+        #region Properties
+
+        /// <summary>
+        /// HttpClient-Factory
+        /// </summary>
+        public IHttpClientFactory HttpClientFactory { get; set; }
+
+        #endregion // Properties
 
         #region Command methods
 
@@ -130,46 +139,48 @@ namespace Scruffy.Commands
 
                                    embedBuilder.WithTitle(LocalizationGroup.GetText("SearchResults", "Search results"));
 
-                                   using (var response = await WebRequest.CreateHttp(QueryHelpers.AddQueryString("https://wiki.guildwars2.com/api.php",
-                                                                                                                 new Dictionary<string, string>
-                                                                                                                 {
-                                                                                                                     ["action"] = "query",
-                                                                                                                     ["srwhat"] = "title",
-                                                                                                                     ["list"] = "search",
-                                                                                                                     ["format"] = "json",
-                                                                                                                     ["srsearch"] = searchTerm,
-                                                                                                                 }))
-                                                                         .GetResponseAsync()
-                                                                         .ConfigureAwait(false))
+                                   var client = HttpClientFactory.CreateClient();
+
+                                   using (var response = await client.GetAsync(QueryHelpers.AddQueryString("https://wiki.guildwars2.com/api.php",
+                                                                                                             new Dictionary<string, string>
+                                                                                                             {
+                                                                                                                 ["action"] = "query",
+                                                                                                                 ["srwhat"] = "title",
+                                                                                                                 ["list"] = "search",
+                                                                                                                 ["format"] = "json",
+                                                                                                                 ["srsearch"] = searchTerm,
+                                                                                                             }))
+                                                                     .ConfigureAwait(false))
                                    {
-                                       using (var reader = new StreamReader(response.GetResponseStream()))
+                                       var jsonResult = await response.Content
+                                                                      .ReadAsStringAsync()
+                                                                      .ConfigureAwait(false);
+
+                                       var stringBuilder = new StringBuilder(1024);
+
+                                       var searchResult = JsonConvert.DeserializeObject<SearchQueryRoot>(jsonResult);
+
+                                       if (searchResult?.Query?.Search?.Count > 0)
                                        {
-                                           var jsonResult = await reader.ReadToEndAsync().ConfigureAwait(false);
-
-                                           var stringBuilder = new StringBuilder(1024);
-
-                                           var searchResult = JsonConvert.DeserializeObject<SearchQueryRoot>(jsonResult);
-                                           if (searchResult?.Query?.Search?.Count > 0)
+                                           foreach (var result in searchResult.Query.Search)
                                            {
-                                               foreach (var result in searchResult?.Query?.Search)
+                                               var current = "> " + Formatter.MaskedUrl(result.Title, new Uri("https://wiki.guildwars2.com/?curid=" + result.PageId)) + "\n";
+
+                                               if (current.Length + stringBuilder.Length > stringBuilder.Capacity)
                                                {
-                                                   var current = "> " + Formatter.MaskedUrl(result.Title, new Uri("https://wiki.guildwars2.com/?curid=" + result.PageId)) + "\n";
-                                                   if (current.Length + stringBuilder.Length > stringBuilder.Capacity)
-                                                   {
-                                                       break;
-                                                   }
-
-                                                   stringBuilder.Append(current);
+                                                   break;
                                                }
+
+                                               stringBuilder.Append(current);
                                            }
-
-                                           stringBuilder.Append("\u200B");
-
-                                           embedBuilder.AddField(LocalizationGroup.GetText("TitleSearch", "Title search"), stringBuilder.ToString());
                                        }
+
+                                       stringBuilder.Append("\u200B");
+
+                                       embedBuilder.AddField(LocalizationGroup.GetText("TitleSearch", "Title search"), stringBuilder.ToString());
                                    }
 
-                                   using (var response = await WebRequest.CreateHttp(QueryHelpers.AddQueryString("https://wiki.guildwars2.com/api.php",
+                                   using (var response = await client.GetAsync(QueryHelpers.AddQueryString("https://wiki.guildwars2.com/api.php",
                                                                                                                  new Dictionary<string, string>
                                                                                                                  {
                                                                                                                      ["action"] = "query",
@@ -178,34 +189,34 @@ namespace Scruffy.Commands
                                                                                                                      ["format"] = "json",
                                                                                                                      ["srsearch"] = searchTerm,
                                                                                                                  }))
-                                                                         .GetResponseAsync()
-                                                                         .ConfigureAwait(false))
+                                                                     .ConfigureAwait(false))
                                    {
-                                       using (var reader = new StreamReader(response.GetResponseStream()))
+                                       var jsonResult = await response.Content
+                                                                      .ReadAsStringAsync()
+                                                                      .ConfigureAwait(false);
+
+                                       var stringBuilder = new StringBuilder(1024);
+
+                                       var searchResult = JsonConvert.DeserializeObject<SearchQueryRoot>(jsonResult);
+
+                                       if (searchResult?.Query?.Search?.Count > 0)
                                        {
-                                           var jsonResult = await reader.ReadToEndAsync().ConfigureAwait(false);
-
-                                           var stringBuilder = new StringBuilder(1024);
-
-                                           var searchResult = JsonConvert.DeserializeObject<SearchQueryRoot>(jsonResult);
-                                           if (searchResult?.Query?.Search?.Count > 0)
+                                           foreach (var result in searchResult.Query.Search)
                                            {
-                                               foreach (var result in searchResult?.Query?.Search)
+                                               var current = "> " + Formatter.MaskedUrl(result.Title, new Uri("https://wiki.guildwars2.com/?curid=" + result.PageId)) + "\n";
+
+                                               if (current.Length + stringBuilder.Length > stringBuilder.Capacity)
                                                {
-                                                   var current = "> " + Formatter.MaskedUrl(result.Title, new Uri("https://wiki.guildwars2.com/?curid=" + result.PageId)) + "\n";
-                                                   if (current.Length + stringBuilder.Length > stringBuilder.Capacity)
-                                                   {
-                                                       break;
-                                                   }
-
-                                                   stringBuilder.Append(current);
+                                                   break;
                                                }
+
+                                               stringBuilder.Append(current);
                                            }
-
-                                           stringBuilder.Append("\u200B");
-
-                                           embedBuilder.AddField(LocalizationGroup.GetText("TextSearch", "Text search"), stringBuilder.ToString());
                                        }
+
+                                       stringBuilder.Append("\u200B");
+
+                                       embedBuilder.AddField(LocalizationGroup.GetText("TextSearch", "Text search"), stringBuilder.ToString());
                                    }
 
                                    embedBuilder.WithThumbnail("https://media.discordapp.net/attachments/847555191842537552/861182143987712010/gw2.png");

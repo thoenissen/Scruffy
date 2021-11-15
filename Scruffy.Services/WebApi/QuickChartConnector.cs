@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +16,28 @@ namespace Scruffy.Services.WebApi
     public sealed class QuickChartConnector : IDisposable,
                                               IAsyncDisposable
     {
+        #region Fields
+
+        /// <summary>
+        /// Factory
+        /// </summary>
+        private readonly IHttpClientFactory _httpClientFactory;
+
+        #endregion // Fields
+
+        #region Constructor
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="httpClientFactory">Http client factory</param>
+        public QuickChartConnector(IHttpClientFactory httpClientFactory)
+        {
+            _httpClientFactory = httpClientFactory;
+        }
+
+        #endregion // Constructor
+
         #region Methods
 
         /// <summary>
@@ -26,43 +47,33 @@ namespace Scruffy.Services.WebApi
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task<Stream> GetChartAsStream(ChartData data)
         {
-            var request = WebRequest.CreateHttp("https://quickchart.io:443/chart");
+            var client = _httpClientFactory.CreateClient();
 
-            request.Method = HttpMethod.Post.ToString();
-            request.ContentType = "application/json";
+            var jsonData = JsonConvert.SerializeObject(data,
+                                                       new JsonSerializerSettings
+                                                       {
+                                                           NullValueHandling = NullValueHandling.Ignore
+                                                       });
 
-            var requestStream = await request.GetRequestStreamAsync()
-                                             .ConfigureAwait(false);
-            await using (requestStream.ConfigureAwait(false))
+            var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+
+            using (var response = await client.PostAsync("https://quickchart.io:443/chart", content)
+                                              .ConfigureAwait(false))
             {
-                var jsonData = JsonConvert.SerializeObject(data,
-                                                           new JsonSerializerSettings
-                                                           {
-                                                               NullValueHandling = NullValueHandling.Ignore
-                                                           });
+                var memoryStream = new MemoryStream();
 
-                await requestStream.WriteAsync(Encoding.UTF8.GetBytes(jsonData))
-                                   .ConfigureAwait(false);
+                var stream = await response.Content.ReadAsStreamAsync()
+                                           .ConfigureAwait(false);
 
-                await requestStream.FlushAsync()
-                                   .ConfigureAwait(false);
-
-                using (var response = await request.GetResponseAsync()
-                                                   .ConfigureAwait(false))
+                await using (stream.ConfigureAwait(false))
                 {
-                    var stream = response.GetResponseStream();
-                    await using (stream.ConfigureAwait(false))
-                    {
-                        var memoryStream = new MemoryStream();
+                    await stream.CopyToAsync(memoryStream)
+                                .ConfigureAwait(false);
 
-                        await stream.CopyToAsync(memoryStream)
-                                    .ConfigureAwait(false);
-
-                        memoryStream.Position = 0;
-
-                        return memoryStream;
-                    }
+                    memoryStream.Position = 0;
                 }
+
+                return memoryStream;
             }
         }
 

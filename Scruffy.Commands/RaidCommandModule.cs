@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -53,8 +54,9 @@ namespace Scruffy.Commands
         /// </summary>
         /// <param name="localizationService">Localization service</param>
         /// <param name="userManagementService">User management service</param>
-        public RaidCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
-            : base(localizationService, userManagementService)
+        /// <param name="httpClientFactory">HttpClient-Factory</param>
+        public RaidCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+            : base(localizationService, userManagementService, httpClientFactory)
         {
             _userManagementService = userManagementService;
         }
@@ -532,8 +534,9 @@ namespace Scruffy.Commands
             /// </summary>
             /// <param name="localizationService">Localization service</param>
             /// <param name="userManagementService">User management service</param>
-            public RaidRolesCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
-                : base(localizationService, userManagementService)
+            /// <param name="httpClientFactory">HttpClient-Factory</param>
+            public RaidRolesCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+                : base(localizationService, userManagementService, httpClientFactory)
             {
             }
 
@@ -600,8 +603,9 @@ namespace Scruffy.Commands
             /// </summary>
             /// <param name="localizationService">Localization service</param>
             /// <param name="userManagementService">User management service</param>
-            public RaidTemplatesCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
-                : base(localizationService, userManagementService)
+            /// <param name="httpClientFactory">HttpClient-Factory</param>
+            public RaidTemplatesCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+                : base(localizationService, userManagementService, httpClientFactory)
             {
             }
 
@@ -654,8 +658,9 @@ namespace Scruffy.Commands
             /// </summary>
             /// <param name="localizationService">Localization service</param>
             /// <param name="userManagementService">User management service</param>
-            public RaidExperienceLevelsCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
-                : base(localizationService, userManagementService)
+            /// <param name="httpClientFactory">HttpClient-Factory</param>
+            public RaidExperienceLevelsCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+                : base(localizationService, userManagementService, httpClientFactory)
             {
             }
 
@@ -860,8 +865,9 @@ namespace Scruffy.Commands
             /// </summary>
             /// <param name="localizationService">Localization service</param>
             /// <param name="userManagementService">User management service</param>
-            public RaidOverviewCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
-                : base(localizationService, userManagementService)
+            /// <param name="httpClientFactory">HttpClient-Factory</param>
+            public RaidOverviewCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+                : base(localizationService, userManagementService, httpClientFactory)
             {
             }
 

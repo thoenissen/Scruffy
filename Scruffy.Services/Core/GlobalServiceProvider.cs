@@ -7,6 +7,7 @@ using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
 using Scruffy.Services.Debug;
+using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.Core
 {
@@ -36,6 +37,8 @@ namespace Scruffy.Services.Core
             _serviceCollection.AddTransient<UserManagementService>();
             _serviceCollection.AddTransient<DebugService>();
             _serviceCollection.AddTransient<CommandContextContainer>();
+            _serviceCollection.AddTransient<ThatShamanConnector>();
+            _serviceCollection.AddTransient<QuickChartConnector>();
 
             foreach (var type in Assembly.Load("Scruffy.Services")
                                          .GetTypes()
@@ -45,6 +48,8 @@ namespace Scruffy.Services.Core
             {
                 _serviceCollection.AddTransient(type);
             }
+
+            _serviceCollection.AddHttpClient();
         }
 
         #endregion

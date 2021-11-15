@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+
+using Microsoft.Extensions.DependencyInjection;
 
 using Newtonsoft.Json;
 
@@ -20,6 +22,7 @@ using Scruffy.Data.Json.GuildWars2.Quaggans;
 using Scruffy.Data.Json.GuildWars2.TradingPost;
 using Scruffy.Data.Json.GuildWars2.Upgrades;
 using Scruffy.Data.Json.GuildWars2.World;
+using Scruffy.Services.Core;
 using Scruffy.Services.Core.Exceptions.WebApi;
 
 namespace Scruffy.Services.WebApi
@@ -48,6 +51,16 @@ namespace Scruffy.Services.WebApi
         #region Fields
 
         /// <summary>
+        /// Service provider
+        /// </summary>
+        private ServiceProvider _serviceProvider;
+
+        /// <summary>
+        /// Http client
+        /// </summary>
+        private HttpClient _httpClient;
+
+        /// <summary>
         /// Api key
         /// </summary>
         private string _apiKey;
@@ -63,9 +76,20 @@ namespace Scruffy.Services.WebApi
         public GuidWars2ApiConnector(string apiKey)
         {
             _apiKey = apiKey;
+            _serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
         }
 
         #endregion // Constructor
+
+        #region Properties
+
+        /// <summary>
+        /// Http client
+        /// </summary>
+        public HttpClient HttpClient => _httpClient ??= _serviceProvider?.GetService<IHttpClientFactory>()
+                                                                        .CreateClient();
+
+        #endregion // Properties
 
         #region Methods
 
@@ -78,17 +102,13 @@ namespace Scruffy.Services.WebApi
             return Invoke(GuildWars2ApiPermission.Account,
                           async () =>
                           {
-                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/tokeninfo")
-                                                          .GetResponseAsync()
-                                                          .ConfigureAwait(false))
+                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/tokeninfo").ConfigureAwait(false))
                               {
-                                  using (var reader = new StreamReader(response.GetResponseStream()))
-                                  {
-                                      var jsonResult = await reader.ReadToEndAsync()
-                                                                   .ConfigureAwait(false);
+                                  var jsonResult = await response.Content
+                                                                 .ReadAsStringAsync()
+                                                                 .ConfigureAwait(false);
 
-                                      return JsonConvert.DeserializeObject<TokenInformation>(jsonResult);
-                                  }
+                                  return JsonConvert.DeserializeObject<TokenInformation>(jsonResult);
                               }
                           });
         }
@@ -102,17 +122,13 @@ namespace Scruffy.Services.WebApi
             return Invoke(GuildWars2ApiPermission.Account,
                           async () =>
                           {
-                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/account?v=latest")
-                                                          .GetResponseAsync()
-                                                          .ConfigureAwait(false))
+                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/account?v=latest").ConfigureAwait(false))
                               {
-                                  using (var reader = new StreamReader(response.GetResponseStream()))
-                                  {
-                                      var jsonResult = await reader.ReadToEndAsync()
-                                                                   .ConfigureAwait(false);
+                                  var jsonResult = await response.Content
+                                                                 .ReadAsStringAsync()
+                                                                 .ConfigureAwait(false);
 
-                                      return JsonConvert.DeserializeObject<AccountInformation>(jsonResult);
-                                  }
+                                  return JsonConvert.DeserializeObject<AccountInformation>(jsonResult);
                               }
                           });
         }
@@ -126,19 +142,15 @@ namespace Scruffy.Services.WebApi
             return Invoke(GuildWars2ApiPermission.Characters,
                           async () =>
                           {
-                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/characters?ids=all")
-                                                          .GetResponseAsync()
-                                                          .ConfigureAwait(false))
+                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/characters?ids=all").ConfigureAwait(false))
                               {
-                                  using (var reader = new StreamReader(response.GetResponseStream()))
-                                  {
-                                      var jsonResult = await reader.ReadToEndAsync()
-                                                                   .ConfigureAwait(false);
+                                  var jsonResult = await response.Content
+                                                                 .ReadAsStringAsync()
+                                                                 .ConfigureAwait(false);
 
-                                      return JsonConvert.DeserializeObject<List<Character>>(jsonResult)
-                                                        .Where(obj => obj.Flags?.Contains("Beta") != true)
-                                                        .ToList();
-                                  }
+                                  return JsonConvert.DeserializeObject<List<Character>>(jsonResult)
+                                                    .Where(obj => obj.Flags?.Contains("Beta") != true)
+                                                    .ToList();
                               }
                           });
         }
@@ -152,17 +164,13 @@ namespace Scruffy.Services.WebApi
             return Invoke(GuildWars2ApiPermission.Characters,
                           async () =>
                           {
-                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/characters")
-                                                          .GetResponseAsync()
-                                                          .ConfigureAwait(false))
+                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/characters").ConfigureAwait(false))
                               {
-                                  using (var reader = new StreamReader(response.GetResponseStream()))
-                                  {
-                                      var jsonResult = await reader.ReadToEndAsync()
-                                                                   .ConfigureAwait(false);
+                                  var jsonResult = await response.Content
+                                                                 .ReadAsStringAsync()
+                                                                 .ConfigureAwait(false);
 
-                                      return JsonConvert.DeserializeObject<List<string>>(jsonResult);
-                                  }
+                                  return JsonConvert.DeserializeObject<List<string>>(jsonResult);
                               }
                           });
         }
@@ -177,17 +185,13 @@ namespace Scruffy.Services.WebApi
             return Invoke(GuildWars2ApiPermission.Characters,
                           async () =>
                           {
-                              using (var response = await CreateRequest($"https://api.guildwars2.com/v2/characters/{Uri.EscapeUriString(characterName)}?v=latest")
-                                                          .GetResponseAsync()
-                                                          .ConfigureAwait(false))
+                              using (var response = await CreateRequest($"https://api.guildwars2.com/v2/characters/{Uri.EscapeDataString(characterName)}?v=latest").ConfigureAwait(false))
                               {
-                                  using (var reader = new StreamReader(response.GetResponseStream()))
-                                  {
-                                      var jsonResult = await reader.ReadToEndAsync()
-                                                                   .ConfigureAwait(false);
+                                  var jsonResult = await response.Content
+                                                                 .ReadAsStringAsync()
+                                                                 .ConfigureAwait(false);
 
-                                      return JsonConvert.DeserializeObject<Character>(jsonResult);
-                                  }
+                                  return JsonConvert.DeserializeObject<Character>(jsonResult);
                               }
                           });
         }
@@ -201,17 +205,13 @@ namespace Scruffy.Services.WebApi
             return Invoke(GuildWars2ApiPermission.Unlocks,
                           async () =>
                           {
-                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/account/dyes")
-                                                          .GetResponseAsync()
-                                                          .ConfigureAwait(false))
+                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/account/dyes").ConfigureAwait(false))
                               {
-                                  using (var reader = new StreamReader(response.GetResponseStream()))
-                                  {
-                                      var jsonResult = await reader.ReadToEndAsync()
-                                                                   .ConfigureAwait(false);
+                                  var jsonResult = await response.Content
+                                                                 .ReadAsStringAsync()
+                                                                 .ConfigureAwait(false);
 
-                                      return JsonConvert.DeserializeObject<List<int>>(jsonResult);
-                                  }
+                                  return JsonConvert.DeserializeObject<List<int>>(jsonResult);
                               }
                           });
         }
@@ -226,17 +226,13 @@ namespace Scruffy.Services.WebApi
             return Invoke(GuildWars2ApiPermission.Guilds,
                           async () =>
                           {
-                              using (var response = await CreateRequest($"https://api.guildwars2.com/v2/guild/{id}?v=latest")
-                                                          .GetResponseAsync()
-                                                          .ConfigureAwait(false))
+                              using (var response = await CreateRequest($"https://api.guildwars2.com/v2/guild/{id}?v=latest").ConfigureAwait(false))
                               {
-                                  using (var reader = new StreamReader(response.GetResponseStream()))
-                                  {
-                                      var jsonResult = await reader.ReadToEndAsync()
-                                                                   .ConfigureAwait(false);
+                                  var jsonResult = await response.Content
+                                                                 .ReadAsStringAsync()
+                                                                 .ConfigureAwait(false);
 
-                                      return JsonConvert.DeserializeObject<GuildInformation>(jsonResult);
-                                  }
+                                  return JsonConvert.DeserializeObject<GuildInformation>(jsonResult);
                               }
                           });
         }
@@ -252,17 +248,13 @@ namespace Scruffy.Services.WebApi
             return Invoke(GuildWars2ApiPermission.Guilds,
                           async () =>
                           {
-                              using (var response = await CreateRequest($"https://api.guildwars2.com/v2/guild/{guildId}/log?since={sinceId}?v=latest")
-                                                          .GetResponseAsync()
-                                                          .ConfigureAwait(false))
+                              using (var response = await CreateRequest($"https://api.guildwars2.com/v2/guild/{guildId}/log?since={sinceId}?v=latest").ConfigureAwait(false))
                               {
-                                  using (var reader = new StreamReader(response.GetResponseStream()))
-                                  {
-                                      var jsonResult = await reader.ReadToEndAsync()
-                                                                   .ConfigureAwait(false);
+                                  var jsonResult = await response.Content
+                                                                 .ReadAsStringAsync()
+                                                                 .ConfigureAwait(false);
 
-                                      return JsonConvert.DeserializeObject<List<GuildLogEntry>>(jsonResult);
-                                  }
+                                  return JsonConvert.DeserializeObject<List<GuildLogEntry>>(jsonResult);
                               }
                           });
         }
@@ -277,17 +269,13 @@ namespace Scruffy.Services.WebApi
             return Invoke(GuildWars2ApiPermission.Guilds,
                           async () =>
                           {
-                              using (var response = await CreateRequest($"https://api.guildwars2.com/v2/guild/{guildId}/members")
-                                                          .GetResponseAsync()
-                                                          .ConfigureAwait(false))
+                              using (var response = await CreateRequest($"https://api.guildwars2.com/v2/guild/{guildId}/members").ConfigureAwait(false))
                               {
-                                  using (var reader = new StreamReader(response.GetResponseStream()))
-                                  {
-                                      var jsonResult = await reader.ReadToEndAsync()
-                                                                   .ConfigureAwait(false);
+                                  var jsonResult = await response.Content
+                                                                 .ReadAsStringAsync()
+                                                                 .ConfigureAwait(false);
 
-                                      return JsonConvert.DeserializeObject<List<GuildMember>>(jsonResult);
-                                  }
+                                  return JsonConvert.DeserializeObject<List<GuildMember>>(jsonResult);
                               }
                           });
         }
@@ -301,17 +289,13 @@ namespace Scruffy.Services.WebApi
             return Invoke(GuildWars2ApiPermission.None,
                           async () =>
                           {
-                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/emblem/foregrounds")
-                                                          .GetResponseAsync()
-                                                          .ConfigureAwait(false))
+                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/emblem/foregrounds").ConfigureAwait(false))
                               {
-                                  using (var reader = new StreamReader(response.GetResponseStream()))
-                                  {
-                                      var jsonResult = await reader.ReadToEndAsync()
-                                                                   .ConfigureAwait(false);
+                                  var jsonResult = await response.Content
+                                                                 .ReadAsStringAsync()
+                                                                 .ConfigureAwait(false);
 
-                                      return JsonConvert.DeserializeObject<List<long>>(jsonResult);
-                                  }
+                                  return JsonConvert.DeserializeObject<List<long>>(jsonResult);
                               }
                           });
         }
@@ -325,17 +309,13 @@ namespace Scruffy.Services.WebApi
             return Invoke(GuildWars2ApiPermission.None,
                           async () =>
                           {
-                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/emblem/backgrounds")
-                                                          .GetResponseAsync()
-                                                          .ConfigureAwait(false))
+                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/emblem/backgrounds").ConfigureAwait(false))
                               {
-                                  using (var reader = new StreamReader(response.GetResponseStream()))
-                                  {
-                                      var jsonResult = await reader.ReadToEndAsync()
-                                                                   .ConfigureAwait(false);
+                                  var jsonResult = await response.Content
+                                                                 .ReadAsStringAsync()
+                                                                 .ConfigureAwait(false);
 
-                                      return JsonConvert.DeserializeObject<List<long>>(jsonResult);
-                                  }
+                                  return JsonConvert.DeserializeObject<List<long>>(jsonResult);
                               }
                           });
         }
@@ -350,18 +330,14 @@ namespace Scruffy.Services.WebApi
             return Invoke(GuildWars2ApiPermission.None,
                           async () =>
                           {
-                              using (var response = await CreateRequest($"https://api.guildwars2.com/v2/emblem/backgrounds?ids={id}")
-                                                          .GetResponseAsync()
-                                                          .ConfigureAwait(false))
+                              using (var response = await CreateRequest($"https://api.guildwars2.com/v2/emblem/backgrounds?ids={id}").ConfigureAwait(false))
                               {
-                                  using (var reader = new StreamReader(response.GetResponseStream()))
-                                  {
-                                      var jsonResult = await reader.ReadToEndAsync()
-                                                                   .ConfigureAwait(false);
+                                  var jsonResult = await response.Content
+                                                                 .ReadAsStringAsync()
+                                                                 .ConfigureAwait(false);
 
-                                      return JsonConvert.DeserializeObject<List<GuildEmblemLayerData>>(jsonResult)
-                                                        .FirstOrDefault();
-                                  }
+                                  return JsonConvert.DeserializeObject<List<GuildEmblemLayerData>>(jsonResult)
+                                                    .FirstOrDefault();
                               }
                           });
         }
@@ -376,18 +352,14 @@ namespace Scruffy.Services.WebApi
             return Invoke(GuildWars2ApiPermission.None,
                           async () =>
                           {
-                              using (var response = await CreateRequest($"https://api.guildwars2.com/v2/emblem/foregrounds?ids={id}")
-                                                          .GetResponseAsync()
-                                                          .ConfigureAwait(false))
+                              using (var response = await CreateRequest($"https://api.guildwars2.com/v2/emblem/foregrounds?ids={id}").ConfigureAwait(false))
                               {
-                                  using (var reader = new StreamReader(response.GetResponseStream()))
-                                  {
-                                      var jsonResult = await reader.ReadToEndAsync()
-                                                                   .ConfigureAwait(false);
+                                  var jsonResult = await response.Content
+                                                                 .ReadAsStringAsync()
+                                                                 .ConfigureAwait(false);
 
-                                      return JsonConvert.DeserializeObject<List<GuildEmblemLayerData>>(jsonResult)
-                                                        .FirstOrDefault();
-                                  }
+                                  return JsonConvert.DeserializeObject<List<GuildEmblemLayerData>>(jsonResult)
+                                                    .FirstOrDefault();
                               }
                           });
         }
@@ -402,17 +374,13 @@ namespace Scruffy.Services.WebApi
             return Invoke(GuildWars2ApiPermission.Guilds,
                           async () =>
                           {
-                              using (var response = await CreateRequest($"https://api.guildwars2.com/v2/guild/{guildId}/stash")
-                                                          .GetResponseAsync()
-                                                          .ConfigureAwait(false))
+                              using (var response = await CreateRequest($"https://api.guildwars2.com/v2/guild/{guildId}/stash").ConfigureAwait(false))
                               {
-                                  using (var reader = new StreamReader(response.GetResponseStream()))
-                                  {
-                                      var jsonResult = await reader.ReadToEndAsync()
-                                                                   .ConfigureAwait(false);
+                                  var jsonResult = await response.Content
+                                                                 .ReadAsStringAsync()
+                                                                 .ConfigureAwait(false);
 
-                                      return JsonConvert.DeserializeObject<List<GuildStash>>(jsonResult);
-                                  }
+                                  return JsonConvert.DeserializeObject<List<GuildStash>>(jsonResult);
                               }
                           });
         }
@@ -426,17 +394,13 @@ namespace Scruffy.Services.WebApi
             return Invoke(GuildWars2ApiPermission.None,
                           async () =>
                           {
-                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/items")
-                                                          .GetResponseAsync()
-                                                          .ConfigureAwait(false))
+                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/items").ConfigureAwait(false))
                               {
-                                  using (var reader = new StreamReader(response.GetResponseStream()))
-                                  {
-                                      var jsonResult = await reader.ReadToEndAsync()
-                                                                   .ConfigureAwait(false);
+                                  var jsonResult = await response.Content
+                                                                 .ReadAsStringAsync()
+                                                                 .ConfigureAwait(false);
 
-                                      return JsonConvert.DeserializeObject<List<int>>(jsonResult);
-                                  }
+                                  return JsonConvert.DeserializeObject<List<int>>(jsonResult);
                               }
                           });
         }
@@ -451,17 +415,13 @@ namespace Scruffy.Services.WebApi
             return Invoke(GuildWars2ApiPermission.None,
                           async () =>
                           {
-                              using (var response = await CreateRequest($"https://api.guildwars2.com/v2/items/{itemId}")
-                                                          .GetResponseAsync()
-                                                          .ConfigureAwait(false))
+                              using (var response = await CreateRequest($"https://api.guildwars2.com/v2/items/{itemId}").ConfigureAwait(false))
                               {
-                                  using (var reader = new StreamReader(response.GetResponseStream()))
-                                  {
-                                      var jsonResult = await reader.ReadToEndAsync()
-                                                                   .ConfigureAwait(false);
+                                  var jsonResult = await response.Content
+                                                                 .ReadAsStringAsync()
+                                                                 .ConfigureAwait(false);
 
-                                      return JsonConvert.DeserializeObject<Item>(jsonResult);
-                                  }
+                                  return JsonConvert.DeserializeObject<Item>(jsonResult);
                               }
                           });
         }
@@ -484,17 +444,13 @@ namespace Scruffy.Services.WebApi
                               {
                                   var ids = string.Join(",", itemIds.Skip(i * 200).Take(200).Select(obj => obj.ToString()));
 
-                                  using (var response = await CreateRequest("https://api.guildwars2.com/v2/items?ids=" + ids)
-                                                              .GetResponseAsync()
-                                                              .ConfigureAwait(false))
+                                  using (var response = await CreateRequest("https://api.guildwars2.com/v2/items?ids=" + ids).ConfigureAwait(false))
                                   {
-                                      using (var reader = new StreamReader(response.GetResponseStream()))
-                                      {
-                                          var jsonResult = await reader.ReadToEndAsync()
-                                                                       .ConfigureAwait(false);
+                                      var jsonResult = await response.Content
+                                                                     .ReadAsStringAsync()
+                                                                     .ConfigureAwait(false);
 
-                                          items.AddRange(JsonConvert.DeserializeObject<List<Item>>(jsonResult));
-                                      }
+                                      items.AddRange(JsonConvert.DeserializeObject<List<Item>>(jsonResult));
                                   }
                               }
 
@@ -520,17 +476,13 @@ namespace Scruffy.Services.WebApi
                               {
                                   var ids = string.Join(",", upgradeIds.Skip(i * 200).Take(200).Select(obj => obj.ToString()));
 
-                                  using (var response = await CreateRequest("https://api.guildwars2.com/v2/guild/upgrades?ids=" + ids)
-                                                              .GetResponseAsync()
-                                                              .ConfigureAwait(false))
+                                  using (var response = await CreateRequest("https://api.guildwars2.com/v2/guild/upgrades?ids=" + ids).ConfigureAwait(false))
                                   {
-                                      using (var reader = new StreamReader(response.GetResponseStream()))
-                                      {
-                                          var jsonResult = await reader.ReadToEndAsync()
-                                                                       .ConfigureAwait(false);
+                                      var jsonResult = await response.Content
+                                                                     .ReadAsStringAsync()
+                                                                     .ConfigureAwait(false);
 
-                                          upgrades.AddRange(JsonConvert.DeserializeObject<List<Upgrade>>(jsonResult));
-                                      }
+                                      upgrades.AddRange(JsonConvert.DeserializeObject<List<Upgrade>>(jsonResult));
                                   }
                               }
 
@@ -547,17 +499,13 @@ namespace Scruffy.Services.WebApi
             return Invoke(GuildWars2ApiPermission.None,
                           async () =>
                           {
-                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/quaggans")
-                                                          .GetResponseAsync()
-                                                          .ConfigureAwait(false))
+                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/quaggans").ConfigureAwait(false))
                               {
-                                  using (var reader = new StreamReader(response.GetResponseStream()))
-                                  {
-                                      var jsonResult = await reader.ReadToEndAsync()
-                                                                   .ConfigureAwait(false);
+                                  var jsonResult = await response.Content
+                                                                 .ReadAsStringAsync()
+                                                                 .ConfigureAwait(false);
 
-                                      return JsonConvert.DeserializeObject<List<string>>(jsonResult);
-                                  }
+                                  return JsonConvert.DeserializeObject<List<string>>(jsonResult);
                               }
                           });
         }
@@ -572,17 +520,13 @@ namespace Scruffy.Services.WebApi
             return Invoke(GuildWars2ApiPermission.None,
                           async () =>
                           {
-                              using (var response = await CreateRequest($"https://api.guildwars2.com/v2/quaggans/{name}")
-                                                          .GetResponseAsync()
-                                                          .ConfigureAwait(false))
+                              using (var response = await CreateRequest($"https://api.guildwars2.com/v2/quaggans/{name}").ConfigureAwait(false))
                               {
-                                  using (var reader = new StreamReader(response.GetResponseStream()))
-                                  {
-                                      var jsonResult = await reader.ReadToEndAsync()
-                                                                   .ConfigureAwait(false);
+                                  var jsonResult = await response.Content
+                                                                 .ReadAsStringAsync()
+                                                                 .ConfigureAwait(false);
 
-                                      return JsonConvert.DeserializeObject<QuagganData>(jsonResult);
-                                  }
+                                  return JsonConvert.DeserializeObject<QuagganData>(jsonResult);
                               }
                           });
         }
@@ -596,17 +540,13 @@ namespace Scruffy.Services.WebApi
             return Invoke(GuildWars2ApiPermission.None,
                           async () =>
                           {
-                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/worlds?ids=all")
-                                                          .GetResponseAsync()
-                                                          .ConfigureAwait(false))
+                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/worlds?ids=all").ConfigureAwait(false))
                               {
-                                  using (var reader = new StreamReader(response.GetResponseStream()))
-                                  {
-                                      var jsonResult = await reader.ReadToEndAsync()
-                                                                   .ConfigureAwait(false);
+                                  var jsonResult = await response.Content
+                                                                 .ReadAsStringAsync()
+                                                                 .ConfigureAwait(false);
 
-                                      return JsonConvert.DeserializeObject<List<WorldData>>(jsonResult);
-                                  }
+                                  return JsonConvert.DeserializeObject<List<WorldData>>(jsonResult);
                               }
                           });
         }
@@ -631,17 +571,13 @@ namespace Scruffy.Services.WebApi
 
                                   try
                                   {
-                                      using (var response = await CreateRequest("https://api.guildwars2.com/v2/commerce/prices?ids=" + ids)
-                                                                  .GetResponseAsync()
-                                                                  .ConfigureAwait(false))
+                                      using (var response = await CreateRequest("https://api.guildwars2.com/v2/commerce/prices?ids=" + ids).ConfigureAwait(false))
                                       {
-                                          using (var reader = new StreamReader(response.GetResponseStream()))
-                                          {
-                                              var jsonResult = await reader.ReadToEndAsync()
-                                                                           .ConfigureAwait(false);
+                                          var jsonResult = await response.Content
+                                                                         .ReadAsStringAsync()
+                                                                         .ConfigureAwait(false);
 
-                                              prices.AddRange(JsonConvert.DeserializeObject<List<TradingPostItemPrice>>(jsonResult));
-                                          }
+                                          prices.AddRange(JsonConvert.DeserializeObject<List<TradingPostItemPrice>>(jsonResult));
                                       }
                                   }
                                   catch (WebException ex) when (ex.Response is HttpWebResponse { StatusCode: HttpStatusCode.NotFound })
@@ -662,17 +598,13 @@ namespace Scruffy.Services.WebApi
             return Invoke(GuildWars2ApiPermission.None,
                           async () =>
                           {
-                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/achievements")
-                                                          .GetResponseAsync()
-                                                          .ConfigureAwait(false))
+                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/achievements").ConfigureAwait(false))
                               {
-                                  using (var reader = new StreamReader(response.GetResponseStream()))
-                                  {
-                                      var jsonResult = await reader.ReadToEndAsync()
-                                                                   .ConfigureAwait(false);
+                                  var jsonResult = await response.Content
+                                                                 .ReadAsStringAsync()
+                                                                 .ConfigureAwait(false);
 
-                                      return JsonConvert.DeserializeObject<List<int>>(jsonResult);
-                                  }
+                                  return JsonConvert.DeserializeObject<List<int>>(jsonResult);
                               }
                           });
         }
@@ -695,17 +627,13 @@ namespace Scruffy.Services.WebApi
                               {
                                   var ids = string.Join(",", itemIds.Skip(i * 200).Take(200).Select(obj => obj.ToString()));
 
-                                  using (var response = await CreateRequest("https://api.guildwars2.com/v2/achievements?ids=" + ids)
-                                                              .GetResponseAsync()
-                                                              .ConfigureAwait(false))
+                                  using (var response = await CreateRequest("https://api.guildwars2.com/v2/achievements?ids=" + ids).ConfigureAwait(false))
                                   {
-                                      using (var reader = new StreamReader(response.GetResponseStream()))
-                                      {
-                                          var jsonResult = await reader.ReadToEndAsync()
-                                                                       .ConfigureAwait(false);
+                                      var jsonResult = await response.Content
+                                                                     .ReadAsStringAsync()
+                                                                     .ConfigureAwait(false);
 
-                                          achievements.AddRange(JsonConvert.DeserializeObject<List<Achievement>>(jsonResult));
-                                      }
+                                      achievements.AddRange(JsonConvert.DeserializeObject<List<Achievement>>(jsonResult));
                                   }
                               }
 
@@ -728,11 +656,11 @@ namespace Scruffy.Services.WebApi
             {
                 return await func().ConfigureAwait(false);
             }
-            catch (WebException ex) when (ex.Response is HttpWebResponse response && response.StatusCode == HttpStatusCode.Unauthorized)
+            catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
             {
                 throw new MissingGuildWars2ApiPermissionException(permission);
             }
-            catch (WebException ex) when (ex.Response is HttpWebResponse response && response.StatusCode == HttpStatusCode.TooManyRequests)
+            catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.TooManyRequests)
             {
                 await Task.Delay(5000)
                           .ConfigureAwait(false);
@@ -774,14 +702,19 @@ namespace Scruffy.Services.WebApi
         /// </summary>
         /// <param name="uri">Uri</param>
         /// <returns>The created request</returns>
-        private HttpWebRequest CreateRequest(string uri)
+        private async Task<HttpResponseMessage> CreateRequest(string uri)
         {
-            var request = WebRequest.CreateHttp(uri);
+            var message = new HttpRequestMessage(HttpMethod.Get, uri);
 
             if (_apiKey != null)
             {
-                request.Headers.Add("Authorization", "Bearer " + _apiKey);
+                message.Headers.Add("Authorization", "Bearer " + _apiKey);
             }
+
+            var request = await HttpClient.SendAsync(message)
+                                          .ConfigureAwait(false);
+
+            request.EnsureSuccessStatusCode();
 
             return request;
         }
@@ -796,8 +729,13 @@ namespace Scruffy.Services.WebApi
         /// <returns>A task that represents the asynchronous dispose operation.</returns>
         public async ValueTask DisposeAsync()
         {
-            await Task.Run(Dispose)
-                      .ConfigureAwait(false);
+            if (_serviceProvider != null)
+            {
+                await _serviceProvider.DisposeAsync()
+                                      .ConfigureAwait(false);
+
+                _serviceProvider = null;
+            }
         }
 
         #endregion // IAsyncDisposable
@@ -809,6 +747,8 @@ namespace Scruffy.Services.WebApi
         /// </summary>
         public void Dispose()
         {
+            _serviceProvider?.Dispose();
+            _serviceProvider = null;
         }
 
         #endregion // IDisposable

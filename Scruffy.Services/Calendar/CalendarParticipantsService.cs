@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net.Http;
+using System.Threading.Tasks;
 
 using Scruffy.Data.Services.Calendar;
 using Scruffy.Services.Calendar.DialogElements;
@@ -34,7 +35,8 @@ namespace Scruffy.Services.Calendar
         /// </summary>
         /// <param name="localizationService">Localization service</param>
         /// <param name="userManagementService">User management</param>
-        public CalendarParticipantsService(LocalizationService localizationService, UserManagementService userManagementService)
+        /// <param name="httpClientFactory">HttpClient-Factory</param>
+        public CalendarParticipantsService(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
             : base(localizationService)
         {
             _localizationService = localizationService;

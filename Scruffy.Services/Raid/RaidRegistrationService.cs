@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
@@ -36,7 +37,8 @@ namespace Scruffy.Services.Raid
         /// </summary>
         /// <param name="localizationService">Localization service</param>
         /// <param name="userManagementService">User management</param>
-        public RaidRegistrationService(LocalizationService localizationService, UserManagementService userManagementService)
+        /// <param name="httpClientFactory">HttpClient-Factory</param>
+        public RaidRegistrationService(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
             : base(localizationService)
         {
             _userManagementService = userManagementService;

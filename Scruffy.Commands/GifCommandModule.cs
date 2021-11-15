@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 using DSharpPlus.CommandsNext;
@@ -34,12 +33,22 @@ namespace Scruffy.Commands
         /// </summary>
         /// <param name="localizationService">Localization service</param>
         /// <param name="userManagementService">User management service</param>
-        public GifCommandModule(LocalizationService localizationService, UserManagementService userManagementService)
-            : base(localizationService, userManagementService)
+        /// <param name="httpClientFactory">HttpClient-Factory</param>
+        public GifCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+            : base(localizationService, userManagementService, httpClientFactory)
         {
         }
 
         #endregion // Constructor
+
+        #region Properties
+
+        /// <summary>
+        /// HttpClient-Factory
+        /// </summary>
+        public IHttpClientFactory HttpClientFactory { get; set; }
+
+        #endregion // Properties
 
         #region Methods
 
@@ -63,30 +72,30 @@ namespace Scruffy.Commands
 
                                        var rnd = new Random(DateTime.Now.Millisecond);
 
-                                       using (var request = await WebRequest.CreateHttp(QueryHelpers.AddQueryString("https://g.tenor.com/v1/search",
-                                                                                                         new Dictionary<string, string>
-                                                                                                         {
-                                                                                                             ["q"] = searchTerm,
-                                                                                                             ["key"] = "RXM3VE2UGRU9",
-                                                                                                             ["limit"] = "10",
-                                                                                                             ["contentfilter"] = "high",
-                                                                                                             ["ar_range"] = "all",
-                                                                                                             ["media_filter"] = "minimal"
-                                                                                                         }))
-                                                                 .GetResponseAsync()
-                                                                 .ConfigureAwait(false))
+                                       var client = HttpClientFactory.CreateClient();
+
+                                       using (var request = await client.GetAsync(QueryHelpers.AddQueryString("https://g.tenor.com/v1/search",
+                                                                                                                new Dictionary<string, string>
+                                                                                                                {
+                                                                                                                    ["q"] = searchTerm,
+                                                                                                                    ["key"] = "RXM3VE2UGRU9",
+                                                                                                                    ["limit"] = "10",
+                                                                                                                    ["contentfilter"] = "high",
+                                                                                                                    ["ar_range"] = "all",
+                                                                                                                    ["media_filter"] = "minimal"
+                                                                                                                }))
+                                                                        .ConfigureAwait(false))
                                        {
-                                           using (var reader = new StreamReader(request.GetResponseStream()))
-                                           {
-                                               var jsonResult = await reader.ReadToEndAsync()
-                                                                            .ConfigureAwait(false);
+                                           var jsonResult = await request.Content
+                                                                         .ReadAsStringAsync()
+                                                                         .ConfigureAwait(false);
 
-                                               var searchResult = JsonConvert.DeserializeObject<SearchResultRoot>(jsonResult);
+                                           var searchResult = JsonConvert.DeserializeObject<SearchResultRoot>(jsonResult);
 
-                                               await commandContext.Channel
-                                                                   .SendMessageAsync(searchResult.Results[rnd.Next(searchResult.Results.Count - 1)].ItemUrl)
-                                                                   .ConfigureAwait(false);
-                                           }
+                                           await commandContext.Channel
+                                                               .SendMessageAsync(searchResult.Results[rnd.Next(searchResult.Results.Count - 1)]
+                                                                                             .ItemUrl)
+                                                               .ConfigureAwait(false);
 
                                            LoggingService.AddCommandLogEntry(LogEntryLevel.Information, commandContext.Command.QualifiedName, searchTerm, commandContext.User.ToString());
                                        }

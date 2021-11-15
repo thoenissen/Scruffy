@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,15 +24,26 @@ namespace Scruffy.Services.GuildAdministration
     /// </summary>
     public class GuildEmblemService : LocatedServiceBase
     {
+        #region Fields
+
+        /// <summary>
+        /// Factory
+        /// </summary>
+        private readonly IHttpClientFactory _httpClientFactory;
+
+        #endregion // Fields
+
         #region Constructor
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="localizationService">Localization service</param>
-        public GuildEmblemService(LocalizationService localizationService)
+        /// <param name="httpClientFactory">Http client factory</param>
+        public GuildEmblemService(LocalizationService localizationService, IHttpClientFactory httpClientFactory)
             : base(localizationService)
         {
+            _httpClientFactory = httpClientFactory;
         }
 
         #endregion // Constructor
@@ -97,7 +108,7 @@ namespace Scruffy.Services.GuildAdministration
                     fileName.Append(foregroundId);
 
                     var backgroundId = backgrounds[random.Next(0, backgrounds.Count - 1)];
-                    fileName.Append("_");
+                    fileName.Append('_');
                     fileName.Append(backgroundId);
 
                     var foregroundLayers = await connector.GetGuildEmblemForegroundLayer(foregroundId)
@@ -105,106 +116,119 @@ namespace Scruffy.Services.GuildAdministration
                     var backgroundLayers = await connector.GetGuildEmblemBackgroundLayer(backgroundId)
                                                           .ConfigureAwait(false);
 
-                    using (var webClient = new WebClient())
+                    var client = _httpClientFactory.CreateClient();
+
+                    Image target = null;
+
+                    foreach (var layer in backgroundLayers.Layers)
                     {
-                        Image target = null;
+                        var response = await client.GetAsync(layer)
+                                                   .ConfigureAwait(false);
 
-                        foreach (var layer in backgroundLayers.Layers)
+                        var stream = await response.Content
+                                                   .ReadAsStreamAsync()
+                                                   .ConfigureAwait(false);
+
+                        await using (stream.ConfigureAwait(false))
                         {
-                            var stream = new MemoryStream(webClient.DownloadData(layer));
-                            await using (stream.ConfigureAwait(false))
+                            stream.Position = 0;
+
+                            stream.Position = 0;
+
+                            var tempImage = await Image.LoadAsync<Rgba32>(stream)
+                                                       .ConfigureAwait(false);
+
+                            var colorIndex = random.Next(0, colors.Count - 1);
+                            fileName.Append('_');
+                            fileName.Append(colorIndex);
+
+                            tempImage.Mutate(o => o.Fill(new RecolorBrush(new Color(new Rgba32(176, 35, 33)), colors[colorIndex], 0.3f)));
+
+                            if (target == null)
                             {
-                                stream.Position = 0;
-
-                                stream.Position = 0;
-
-                                var tempImage = await Image.LoadAsync<Rgba32>(stream)
-                                                           .ConfigureAwait(false);
-
-                                var colorIndex = random.Next(0, colors.Count - 1);
-                                fileName.Append("_");
-                                fileName.Append(colorIndex);
-
-                                tempImage.Mutate(o => o.Fill(new RecolorBrush(new Color(new Rgba32(176, 35, 33)), colors[colorIndex], 0.3f)));
-
-                                if (target == null)
-                                {
-                                    target = tempImage;
-                                }
-                                else
-                                {
-                                    target.Mutate(o => o.DrawImage(tempImage, new Point(0, 0), 1f));
-                                }
+                                target = tempImage;
                             }
-                        }
-
-                        var isFlipHorizontal = random.Next(0, 10) <= 2;
-                        var isFlipVertical = random.Next(0, 10) <= 2;
-
-                        if (isFlipHorizontal)
-                        {
-                            target.Mutate(o => o.Flip(FlipMode.Horizontal));
-                        }
-
-                        if (isFlipVertical)
-                        {
-                            target.Mutate(o => o.Flip(FlipMode.Vertical));
-                        }
-
-                        isFlipHorizontal = random.Next(0, 10) <= 2;
-                        isFlipVertical = random.Next(0, 10) <= 2;
-
-                        foreach (var layer in foregroundLayers.Layers.AsEnumerable().Skip(1))
-                        {
-                            var stream = new MemoryStream(webClient.DownloadData(layer));
-                            await using (stream.ConfigureAwait(false))
+                            else
                             {
-                                stream.Position = 0;
-
-                                var tempImage = await Image.LoadAsync<Rgba32>(stream)
-                                                           .ConfigureAwait(false);
-
-                                if (layer != foregroundLayers.Layers.First())
-                                {
-                                    var colorIndex = random.Next(0, colors.Count - 1);
-                                    fileName.Append("_");
-                                    fileName.Append(colorIndex);
-
-                                    tempImage.Mutate(o => o.Fill(new GraphicsOptions
-                                                                 {
-                                                                     AlphaCompositionMode = PixelAlphaCompositionMode.SrcIn,
-                                                                 },
-                                                                 new RecolorBrush(Color.White, colors[colorIndex], 0.26f)));
-                                }
-
-                                if (isFlipHorizontal)
-                                {
-                                    tempImage.Mutate(o => o.Flip(FlipMode.Horizontal));
-                                }
-
-                                if (isFlipVertical)
-                                {
-                                    tempImage.Mutate(o => o.Flip(FlipMode.Vertical));
-                                }
-
                                 target.Mutate(o => o.DrawImage(tempImage, new Point(0, 0), 1f));
                             }
                         }
+                    }
 
-                        var memoryStream = new MemoryStream();
-                        await using (memoryStream.ConfigureAwait(false))
+                    var isFlipHorizontal = random.Next(0, 10) <= 2;
+                    var isFlipVertical = random.Next(0, 10) <= 2;
+
+                    if (isFlipHorizontal)
+                    {
+                        target.Mutate(o => o.Flip(FlipMode.Horizontal));
+                    }
+
+                    if (isFlipVertical)
+                    {
+                        target.Mutate(o => o.Flip(FlipMode.Vertical));
+                    }
+
+                    isFlipHorizontal = random.Next(0, 10) <= 2;
+                    isFlipVertical = random.Next(0, 10) <= 2;
+
+                    foreach (var layer in foregroundLayers.Layers.AsEnumerable()
+                                                          .Skip(1))
+                    {
+                        var response = await client.GetAsync(layer)
+                                                   .ConfigureAwait(false);
+
+                        var stream = await response.Content
+                                                   .ReadAsStreamAsync()
+                                                   .ConfigureAwait(false);
+
+                        await using (stream.ConfigureAwait(false))
                         {
-                            await target.SaveAsPngAsync(memoryStream)
-                                        .ConfigureAwait(false);
+                            stream.Position = 0;
 
-                            memoryStream.Position = 0;
+                            var tempImage = await Image.LoadAsync<Rgba32>(stream)
+                                                       .ConfigureAwait(false);
 
-                            fileName.Append(".png");
+                            if (layer != foregroundLayers.Layers.First())
+                            {
+                                var colorIndex = random.Next(0, colors.Count - 1);
+                                fileName.Append('_');
+                                fileName.Append(colorIndex);
 
-                            await commandContext.Channel
-                                                .SendMessageAsync(new DiscordMessageBuilder().WithFile(fileName.ToString(), memoryStream, true))
-                                                .ConfigureAwait(false);
+                                tempImage.Mutate(o => o.Fill(new GraphicsOptions
+                                                             {
+                                                                 AlphaCompositionMode = PixelAlphaCompositionMode.SrcIn,
+                                                             },
+                                                             new RecolorBrush(Color.White, colors[colorIndex], 0.26f)));
+                            }
+
+                            if (isFlipHorizontal)
+                            {
+                                tempImage.Mutate(o => o.Flip(FlipMode.Horizontal));
+                            }
+
+                            if (isFlipVertical)
+                            {
+                                tempImage.Mutate(o => o.Flip(FlipMode.Vertical));
+                            }
+
+                            target.Mutate(o => o.DrawImage(tempImage, new Point(0, 0), 1f));
                         }
+                    }
+
+                    var memoryStream = new MemoryStream();
+
+                    await using (memoryStream.ConfigureAwait(false))
+                    {
+                        await target.SaveAsPngAsync(memoryStream)
+                                    .ConfigureAwait(false);
+
+                        memoryStream.Position = 0;
+
+                        fileName.Append(".png");
+
+                        await commandContext.Channel
+                                            .SendMessageAsync(new DiscordMessageBuilder().WithFile(fileName.ToString(), memoryStream, true))
+                                            .ConfigureAwait(false);
                     }
                 }
             }

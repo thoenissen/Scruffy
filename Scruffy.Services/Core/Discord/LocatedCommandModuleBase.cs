@@ -1,6 +1,5 @@
 ﻿using System;
-using System.IO;
-using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 using DSharpPlus.CommandsNext;
@@ -33,6 +32,11 @@ namespace Scruffy.Services.Core.Discord
         /// </summary>
         private readonly UserManagementService _userManagementService;
 
+        /// <summary>
+        /// HttpClient-Factory
+        /// </summary>
+        private readonly IHttpClientFactory _httpClientFactory;
+
         #endregion // Fields
 
         #region Constructor
@@ -42,13 +46,17 @@ namespace Scruffy.Services.Core.Discord
         /// </summary>
         /// <param name="localizationService">Localization service</param>
         /// <param name="userManagementService">User management server</param>
-        public LocatedCommandModuleBase(LocalizationService localizationService, UserManagementService userManagementService)
+        /// <param name="httpClientFactory">HttpClient-Factory</param>
+        public LocatedCommandModuleBase(LocalizationService localizationService,
+                                        UserManagementService userManagementService,
+                                        IHttpClientFactory httpClientFactory)
         {
             LocalizationGroup = localizationService.GetGroup(GetType().Name);
 
             _internalLocalizationGroup = new Lazy<LocalizationGroup>(() => localizationService.GetGroup(nameof(LocatedCommandModuleBase)));
 
             _userManagementService = userManagementService;
+            _httpClientFactory = httpClientFactory;
         }
 
         #endregion // Constructor
@@ -106,46 +114,40 @@ namespace Scruffy.Services.Core.Discord
             {
                 var logEntryId = LoggingService.AddCommandLogEntry(LogEntryLevel.CriticalError, commandContext.Command?.QualifiedName, commandContextContainer.LastUserMessage?.Content, ex.Message, ex.ToString());
 
-                using (var response = await WebRequest.CreateHttp("https://g.tenor.com/v1/search?q=funny%20cat&key=RXM3VE2UGRU9&limit=50&contentfilter=high&ar_range=all")
-                                                      .GetResponseAsync()
-                                                      .ConfigureAwait(false))
+                var client = _httpClientFactory.CreateClient();
+
+                using (var response = await client.GetAsync("https://g.tenor.com/v1/search?q=funny%20cat&key=RXM3VE2UGRU9&limit=50&contentfilter=high&ar_range=all")
+                                                  .ConfigureAwait(false))
                 {
-                    using (var reader = new StreamReader(response.GetResponseStream()))
+                    var jsonResult = await response.Content
+                                                   .ReadAsStringAsync()
+                                                   .ConfigureAwait(false);
+
+                    var searchResult = JsonConvert.DeserializeObject<SearchResultRoot>(jsonResult);
+
+                    var tenorEntry = searchResult.Results[new Random(DateTime.Now.Millisecond).Next(0, searchResult.Results.Count - 1)];
+
+                    var gifUrl = tenorEntry.Media[0].Gif.Size < 8_388_608
+                                     ? tenorEntry.Media[0].Gif.Url
+                                     : tenorEntry.Media[0].MediumGif.Size < 8_388_608
+                                         ? tenorEntry.Media[0].MediumGif.Url
+                                         : tenorEntry.Media[0].NanoGif.Url;
+
+                    using (var downloadResponse = await client.GetAsync(gifUrl)
+                                                              .ConfigureAwait(false))
                     {
-                        var jsonResult = await reader.ReadToEndAsync()
-                                                     .ConfigureAwait(false);
+                        var stream = await downloadResponse.Content
+                                                           .ReadAsStreamAsync()
+                                                           .ConfigureAwait(false);
 
-                        var searchResult = JsonConvert.DeserializeObject<SearchResultRoot>(jsonResult);
-
-                        using (var webClient = new WebClient())
+                        await using (stream.ConfigureAwait(false))
                         {
-                            var tenorEntry = searchResult.Results[new Random(DateTime.Now.Millisecond).Next(0, searchResult.Results.Count - 1)];
+                            var builder = new DiscordMessageBuilder().WithContent(_internalLocalizationGroup.Value.GetFormattedText("CommandFailedMessage", "The command could not be executed. But I have an error code ({0}) and funny cat picture.", logEntryId ?? -1))
+                                                                     .WithFile("cat.gif", stream);
 
-                            string gifUrl;
-
-                            if (tenorEntry.Media[0].Gif.Size < 8_388_608)
-                            {
-                                gifUrl = tenorEntry.Media[0].Gif.Url;
-                            }
-                            else if (tenorEntry.Media[0].MediumGif.Size < 8_388_608)
-                            {
-                                gifUrl = tenorEntry.Media[0].MediumGif.Url;
-                            }
-                            else
-                            {
-                                gifUrl = tenorEntry.Media[0].NanoGif.Url;
-                            }
-
-                            var stream = new MemoryStream(webClient.DownloadData(gifUrl));
-                            await using (stream.ConfigureAwait(false))
-                            {
-                                var builder = new DiscordMessageBuilder().WithContent(_internalLocalizationGroup.Value.GetFormattedText("CommandFailedMessage", "The command could not be executed. But I have an error code ({0}) and funny cat picture.", logEntryId ?? -1))
-                                                                         .WithFile("cat.gif", stream);
-
-                                await commandContextContainer.Channel
-                                                             .SendMessageAsync(builder)
-                                                             .ConfigureAwait(false);
-                            }
+                            await commandContextContainer.Channel
+                                                         .SendMessageAsync(builder)
+                                                         .ConfigureAwait(false);
                         }
                     }
                 }
