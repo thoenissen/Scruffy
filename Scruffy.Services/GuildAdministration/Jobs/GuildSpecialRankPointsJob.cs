@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data;
 
 using DSharpPlus;
 using DSharpPlus.Entities;
@@ -11,7 +6,6 @@ using DSharpPlus.Entities;
 using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Data.Entity;
-using Scruffy.Data.Entity.Repositories.CoreData;
 using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Entity.Repositories.GuildAdministration;
 using Scruffy.Data.Enumerations.General;

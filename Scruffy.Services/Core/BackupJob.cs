@@ -1,6 +1,4 @@
-﻿using System;
-
-using FluentScheduler;
+﻿using FluentScheduler;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Enumerations.General;

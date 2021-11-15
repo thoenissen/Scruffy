@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-using DSharpPlus.Entities;
+﻿using DSharpPlus.Entities;
 
 namespace Scruffy.Services.Core.Discord;
 

@@ -1,9 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using Scruffy.Data.Entity;
-using Scruffy.Data.Entity.Repositories.GuildWars2;
+﻿using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.GuildWars2.GameData;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.WebApi;

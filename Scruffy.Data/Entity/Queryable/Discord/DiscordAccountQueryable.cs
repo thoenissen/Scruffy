@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Scruffy.Data.Entity.Queryable.Base;
+﻿using Scruffy.Data.Entity.Queryable.Base;
 using Scruffy.Data.Entity.Tables.Discord;
 
 namespace Scruffy.Data.Entity.Queryable.Discord;

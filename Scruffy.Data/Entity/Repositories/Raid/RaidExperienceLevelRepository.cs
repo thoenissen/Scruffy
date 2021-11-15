@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity.Queryable.Raid;
 using Scruffy.Data.Entity.Repositories.Base;

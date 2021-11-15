@@ -1,5 +1,4 @@
 ﻿using System.Net.Http;
-using System.Threading.Tasks;
 
 using Scruffy.Data.Services.Calendar;
 using Scruffy.Services.Calendar.DialogElements;

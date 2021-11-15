@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-using DSharpPlus;
+﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using Scruffy.Data.Services.CoreData;

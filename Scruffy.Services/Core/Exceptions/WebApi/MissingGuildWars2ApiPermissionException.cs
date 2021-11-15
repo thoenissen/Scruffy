@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Scruffy.Data.Enumerations.GuildWars2;
 using Scruffy.Services.Core.Localization;
 

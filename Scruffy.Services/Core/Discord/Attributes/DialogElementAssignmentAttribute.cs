@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Scruffy.Services.Core.Discord.Attributes;
+﻿namespace Scruffy.Services.Core.Discord.Attributes;
 
 /// <summary>
 /// Assigning the dialog element to determinate the data

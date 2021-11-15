@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-
-using DSharpPlus.EventArgs;
+﻿using DSharpPlus.EventArgs;
 
 using Scruffy.Services.Calendar.DialogElements.Forms;
 using Scruffy.Services.Core.Discord;

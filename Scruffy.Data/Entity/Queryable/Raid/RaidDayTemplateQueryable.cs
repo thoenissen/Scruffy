@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-using Scruffy.Data.Entity.Queryable.Base;
+﻿using Scruffy.Data.Entity.Queryable.Base;
 using Scruffy.Data.Entity.Tables.Raid;
 
 namespace Scruffy.Data.Entity.Queryable.Raid;

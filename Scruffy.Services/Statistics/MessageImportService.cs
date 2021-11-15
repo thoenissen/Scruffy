@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-using DSharpPlus;
+﻿using DSharpPlus;
 using DSharpPlus.EventArgs;
 
 using Scruffy.Data.Entity;

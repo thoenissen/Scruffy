@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-using DSharpPlus.EventArgs;
+﻿using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity.Extensions;
 
 using Scruffy.Services.Core.Localization;

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Scruffy.Data.Services.Raid;
+﻿namespace Scruffy.Data.Services.Raid;
 
 /// <summary>
 /// Appointment slot data

@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-using DSharpPlus.Entities;
+﻿using DSharpPlus.Entities;
 
 using Scruffy.Services.Core.Localization;
 

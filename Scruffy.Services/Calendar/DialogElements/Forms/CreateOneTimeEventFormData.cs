@@ -1,6 +1,4 @@
-﻿using System;
-
-using Scruffy.Services.Core.Discord.Attributes;
+﻿using Scruffy.Services.Core.Discord.Attributes;
 
 namespace Scruffy.Services.Calendar.DialogElements.Forms;
 

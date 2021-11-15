@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-using Scruffy.Data.Enumerations.General;
+﻿using Scruffy.Data.Enumerations.General;
 using Scruffy.Data.Enumerations.GuildWars2;
 using Scruffy.Data.Json.GuildWars2.Core;
 using Scruffy.Services.Account;

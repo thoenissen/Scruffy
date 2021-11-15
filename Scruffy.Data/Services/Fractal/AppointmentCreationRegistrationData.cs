@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Scruffy.Data.Services.Fractal;
+﻿namespace Scruffy.Data.Services.Fractal;
 
 /// <summary>
 /// Data of the registration

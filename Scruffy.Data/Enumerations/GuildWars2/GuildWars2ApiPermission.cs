@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Scruffy.Data.Enumerations.GuildWars2;
+﻿namespace Scruffy.Data.Enumerations.GuildWars2;
 
 /// <summary>
 /// Guild Wars 2 API Permission

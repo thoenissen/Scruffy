@@ -1,6 +1,4 @@
-﻿using System;
-
-using Scruffy.Data.Enumerations.Calendar;
+﻿using Scruffy.Data.Enumerations.Calendar;
 
 namespace Scruffy.Data.Services.Calendar;
 

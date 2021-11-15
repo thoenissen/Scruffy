@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-using Scruffy.Data.Entity;
+﻿using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Games;
 using Scruffy.Data.Enumerations.Games;
 using Scruffy.Services.Core.Discord;

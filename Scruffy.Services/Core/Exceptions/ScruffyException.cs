@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Scruffy.Services.Core.Exceptions;
+﻿namespace Scruffy.Services.Core.Exceptions;
 
 /// <summary>
 /// Exception base class

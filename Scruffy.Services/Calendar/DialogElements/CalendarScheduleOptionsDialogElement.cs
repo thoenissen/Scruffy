@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-using DSharpPlus.Entities;
+﻿using DSharpPlus.Entities;
 
 using Scruffy.Data.Enumerations.Calendar;
 using Scruffy.Services.Core.Discord;

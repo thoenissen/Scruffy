@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-using DSharpPlus;
+﻿using DSharpPlus;
 
 using Microsoft.Extensions.DependencyInjection;
 

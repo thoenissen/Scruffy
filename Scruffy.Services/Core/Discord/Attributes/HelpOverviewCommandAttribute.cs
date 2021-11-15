@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Scruffy.Services.Core.Discord.Attributes;
+﻿namespace Scruffy.Services.Core.Discord.Attributes;
 
 /// <summary>
 /// Command of the help overview

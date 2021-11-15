@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-using Scruffy.Data.Entity.Queryable.Base;
+﻿using Scruffy.Data.Entity.Queryable.Base;
 using Scruffy.Data.Entity.Tables.GuildWars2.GameData;
 
 namespace Scruffy.Data.Entity.Queryable.GuildWars2.GameData;

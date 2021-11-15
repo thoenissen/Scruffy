@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Scruffy.Data.Services.Calendar;
+﻿namespace Scruffy.Data.Services.Calendar;
 
 /// <summary>
 /// Participants data

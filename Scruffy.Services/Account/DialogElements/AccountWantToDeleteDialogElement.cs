@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-
-using DSharpPlus.EventArgs;
+﻿using DSharpPlus.EventArgs;
 
 using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;

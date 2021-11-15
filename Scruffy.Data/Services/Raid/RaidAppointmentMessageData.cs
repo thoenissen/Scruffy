@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Scruffy.Data.Services.Raid;
+﻿namespace Scruffy.Data.Services.Raid;
 
 /// <summary>
 /// Raid appointment message data

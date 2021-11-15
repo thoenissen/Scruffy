@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Scruffy.Data.Services.Core;
+﻿namespace Scruffy.Data.Services.Core;
 
 /// <summary>
 /// Localization data

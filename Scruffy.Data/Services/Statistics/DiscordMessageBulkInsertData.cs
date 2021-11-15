@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Scruffy.Data.Services.Statistics;
+﻿namespace Scruffy.Data.Services.Statistics;
 
 /// <summary>
 /// Message data
