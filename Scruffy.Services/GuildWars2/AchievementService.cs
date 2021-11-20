@@ -1,4 +1,5 @@
 ﻿using Scruffy.Data.Entity;
+using Scruffy.Data.Entity.Repositories.GuildWars2.Account;
 using Scruffy.Data.Entity.Repositories.GuildWars2.GameData;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.WebApi;
@@ -44,6 +45,29 @@ public class AchievementService : LocatedServiceBase
             {
                 return await dbFactory.GetRepository<GuildWarsAchievementRepository>()
                                       .BulkInsert(achievements)
+                                      .ConfigureAwait(false);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Import all achievement of an user
+    /// </summary>
+    /// <param name="accountName">Account name</param>
+    /// <param name="apiKey">API-Key</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public async Task<bool> ImportAccountAchievements(string accountName, string apiKey)
+    {
+        var connector = new GuidWars2ApiConnector(apiKey);
+        await using (connector.ConfigureAwait(false))
+        {
+            var achievements = await connector.GetAccountAchievements()
+                                              .ConfigureAwait(false);
+
+            using (var dbFactory = RepositoryFactory.CreateInstance())
+            {
+                return await dbFactory.GetRepository<GuildWarsAccountAchievementRepository>()
+                                      .BulkInsert(accountName, achievements)
                                       .ConfigureAwait(false);
             }
         }

@@ -606,7 +606,7 @@ public sealed class GuidWars2ApiConnector : IAsyncDisposable,
     }
 
     /// <summary>
-    /// Get items
+    /// Get achievements
     /// </summary>
     /// <param name="itemIds">Item ids</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
@@ -634,6 +634,26 @@ public sealed class GuidWars2ApiConnector : IAsyncDisposable,
                           }
 
                           return achievements;
+                      });
+    }
+
+    /// <summary>
+    /// Get account achievements
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public Task<List<AccountAchievement>> GetAccountAchievements()
+    {
+        return Invoke(GuildWars2ApiPermission.Account | GuildWars2ApiPermission.Progression,
+                      async () =>
+                      {
+                          using (var response = await CreateRequest("https://api.guildwars2.com/v2/account/achievements").ConfigureAwait(false))
+                          {
+                              var jsonResult = await response.Content
+                                                             .ReadAsStringAsync()
+                                                             .ConfigureAwait(false);
+
+                              return JsonConvert.DeserializeObject<List<AccountAchievement>>(jsonResult);
+                          }
                       });
     }
 
