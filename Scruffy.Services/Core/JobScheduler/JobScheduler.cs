@@ -13,6 +13,7 @@ using Scruffy.Services.Fractals;
 using Scruffy.Services.Fractals.Jobs;
 using Scruffy.Services.Games.Jobs;
 using Scruffy.Services.GuildAdministration.Jobs;
+using Scruffy.Services.GuildWars2.Jobs;
 using Scruffy.Services.Reminder.Jobs;
 using Scruffy.Services.Statistics.Jobs;
 
@@ -59,6 +60,7 @@ public class JobScheduler : IAsyncDisposable
 
         // Account
         JobManager.AddJob<AccountLoginCheckJob>(obj => obj.ToRunEvery(1).Days().At(0, 5));
+        JobManager.AddJob<AchievementImportJob>(obj => obj.ToRunEvery(1).Days().At(0, 15));
 
         // Guild
         JobManager.AddJob<GuildLogImportJob>(obj => obj.NonReentrant().ToRunEvery(20).Seconds());
@@ -72,7 +74,8 @@ public class JobScheduler : IAsyncDisposable
         JobManager.AddJob<MessageImportJob>(obj => obj.ToRunEvery(1).Days().At(3, 0));
 
         // fractal reminders
-        await using (var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider())
+        var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+        await using (serviceProvider.ConfigureAwait(false))
         {
             var fractalReminderService = serviceProvider.GetService<FractalLfgReminderService>();
 
@@ -145,7 +148,6 @@ public class JobScheduler : IAsyncDisposable
                 JobManager.AddJob(new CalendarReminderDeletionJob(entry.Id), obj => obj.ToRunOnceAt(entry.TimeStamp));
             }
         }
-
 #endif
     }
 
