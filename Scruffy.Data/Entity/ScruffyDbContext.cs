@@ -78,7 +78,7 @@ public class ScruffyDbContext : DbContext
 
         optionsBuilder.UseSqlServer(ConnectionString);
 #if DEBUG
-            optionsBuilder.LogTo(s => System.Diagnostics.Debug.WriteLine(s));
+        optionsBuilder.LogTo(s => System.Diagnostics.Debug.WriteLine(s));
 #endif
         base.OnConfiguring(optionsBuilder);
     }
@@ -383,21 +383,14 @@ public class ScruffyDbContext : DbContext
                                        obj.DiscordRoleId
                                    });
 
-        // Account
-        modelBuilder.Entity<GuildWarsAccountEntity>();
-        modelBuilder.Entity<GuildWarsAccountDailyLoginCheckEntity>();
-
-        modelBuilder.Entity<GuildWarsAccountDailyLoginCheckEntity>()
-                    .HasKey(obj => new
-                                   {
-                                       obj.Name,
-                                       obj.Date
-                                   });
-
         // Games
         modelBuilder.Entity<GameChannelEntity>();
 
         // Guild Wars 2
+        modelBuilder.Entity<GuildWarsAccountEntity>();
+        modelBuilder.Entity<GuildWarsAccountDailyLoginCheckEntity>();
+        modelBuilder.Entity<GuildWarsAccountAchievementEntity>();
+        modelBuilder.Entity<GuildWarsAccountAchievementBitEntity>();
         modelBuilder.Entity<GuildWarsWorldEntity>();
         modelBuilder.Entity<GuildWarsItemEntity>();
         modelBuilder.Entity<GuildWarsItemGuildUpgradeConversionEntity>();
@@ -407,6 +400,38 @@ public class ScruffyDbContext : DbContext
         modelBuilder.Entity<GuildWarsAchievementBitEntity>();
         modelBuilder.Entity<GuildWarsAchievementRewardEntity>();
         modelBuilder.Entity<GuildWarsAchievementTierEntity>();
+
+        modelBuilder.Entity<GuildWarsAccountDailyLoginCheckEntity>()
+                    .HasKey(obj => new
+                                   {
+                                       obj.Name,
+                                       obj.Date
+                                   });
+
+        modelBuilder.Entity<GuildWarsAccountAchievementEntity>()
+                    .HasKey(obj => new
+                                   {
+                                       obj.AccountName,
+                                       obj.AchievementId
+                                   });
+
+        modelBuilder.Entity<GuildWarsAccountAchievementEntity>()
+                    .HasMany(obj => obj.GuildWarsAccountAchievementBits)
+                    .WithOne(obj => obj.GuildWarsAccountAchievement)
+                    .HasForeignKey(obj => new { obj.AccountName, obj.AchievementId });
+
+        modelBuilder.Entity<GuildWarsAccountAchievementBitEntity>()
+                    .HasKey(obj => new
+                                   {
+                                       obj.AccountName,
+                                       obj.AchievementId,
+                                       obj.Bit
+                                   });
+
+        modelBuilder.Entity<GuildWarsAccountAchievementBitEntity>()
+                    .HasOne(obj => obj.GuildWarsAccountAchievement)
+                    .WithMany(obj => obj.GuildWarsAccountAchievementBits)
+                    .HasForeignKey(obj => new { obj.AccountName, obj.AchievementId });
 
         modelBuilder.Entity<GuildWarsItemGuildUpgradeConversionEntity>()
                     .HasKey(obj => new
