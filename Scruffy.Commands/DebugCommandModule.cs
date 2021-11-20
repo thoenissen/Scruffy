@@ -380,7 +380,17 @@ public class DebugCommandModule : LocatedCommandModuleBase
         /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("import_achievements")]
-        public Task ExecuteSpecialRankJob(CommandContext commandContext) => AchievementService.ImportAchievements();
+        public Task ImportAchievements(CommandContext commandContext) => AchievementService.ImportAchievements();
+
+        /// <summary>
+        /// Import achievements
+        /// </summary>
+        /// <param name="commandContext">Current command context</param>
+        /// <param name="accountName">Account name</param>
+        /// <param name="apiKey">API-Key</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("import_account_achievements")]
+        public Task ImportAchievements(CommandContext commandContext, string accountName, string apiKey) => AchievementService.ImportAccountAchievements(accountName, apiKey);
 
         #endregion // Methods
     }

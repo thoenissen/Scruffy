@@ -642,7 +642,7 @@ public class RaidCommandModule : LocatedCommandModuleBase
     /// Template administration
     /// </summary>
     [Group("levels")]
-    [Aliases("l")]
+    [Aliases("l", "level")]
     [ModuleLifespan(ModuleLifespan.Transient)]
     public class RaidExperienceLevelsCommandModule : LocatedCommandModuleBase
     {
