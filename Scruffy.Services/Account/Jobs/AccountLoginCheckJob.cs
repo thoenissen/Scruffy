@@ -59,6 +59,8 @@ public class AccountLoginCheckJob : LocatedAsyncJob
                                               {
                                                   obj.LastAge = accountInformation.Age;
                                                   obj.WorldId = accountInformation.World;
+                                                  obj.DailyAchievementPoints = accountInformation.DailyAchievementPoints;
+                                                  obj.MonthlyAchievementPoints = accountInformation.MonthlyAchievementPoints;
                                               });
                         }
                     }
