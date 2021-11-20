@@ -46,6 +46,16 @@ public class GuildWarsAccountEntity
     public long? WorldId { get; set; }
 
     /// <summary>
+    /// Daily achievement points
+    /// </summary>
+    public int? DailyAchievementPoints { get; set;  }
+
+    /// <summary>
+    /// Monthly achievements points
+    /// </summary>
+    public int? MonthlyAchievementPoints { get; set; }
+
+    /// <summary>
     /// Permissions
     /// </summary>
     public GuildWars2ApiPermission Permissions { get; set; }
