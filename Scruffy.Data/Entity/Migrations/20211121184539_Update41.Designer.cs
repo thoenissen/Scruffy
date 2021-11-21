@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Scruffy.Data.Entity;
 
 namespace Scruffy.Data.Entity.Migrations
 {
     [DbContext(typeof(ScruffyDbContext))]
-    partial class ScruffyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211121184539_Update41")]
+    partial class Update41
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

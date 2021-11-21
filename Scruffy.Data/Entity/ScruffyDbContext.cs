@@ -321,6 +321,7 @@ public class ScruffyDbContext : DbContext
         modelBuilder.Entity<GuildSpecialRankRoleAssignmentEntity>();
         modelBuilder.Entity<GuildSpecialRankIgnoreRoleAssignmentEntity>();
         modelBuilder.Entity<GuildChannelConfigurationEntity>();
+        modelBuilder.Entity<GuildRankEntity>();
 
         modelBuilder.Entity<GuildLogEntryEntity>()
                     .HasKey(obj => new
