@@ -3,7 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.GuildWars2.Account;
+using Scruffy.Data.Enumerations.General;
 using Scruffy.Services.Core;
+using Scruffy.Services.Core.Exceptions.WebApi;
 using Scruffy.Services.Core.JobScheduler;
 
 namespace Scruffy.Services.GuildWars2.Jobs
@@ -41,8 +43,15 @@ namespace Scruffy.Services.GuildWars2.Jobs
                                                            .ToListAsync()
                                                            .ConfigureAwait(false))
                     {
-                        await achievementService.ImportAccountAchievements(account.Name, account.ApiKey)
-                                                .ConfigureAwait(false);
+                        try
+                        {
+                            await achievementService.ImportAccountAchievements(account.Name, account.ApiKey)
+                                                    .ConfigureAwait(false);
+                        }
+                        catch (MissingGuildWars2ApiPermissionException ex)
+                        {
+                            LoggingService.AddJobLogEntry(LogEntryLevel.Error, nameof(AchievementImportJob), $"Missing permissions {account}", null, ex);
+                        }
                     }
                 }
             }
