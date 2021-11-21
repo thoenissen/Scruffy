@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Net.Http;
 
 using DSharpPlus;
 using DSharpPlus.Entities;
@@ -163,7 +164,7 @@ public class AccountEditDialogElement : DialogEmbedReactionElementBase<bool>
                                                              }
                                                          }
                                                      }
-                                                     catch (WebException ex) when (ex.Response is HttpWebResponse { StatusCode: HttpStatusCode.Unauthorized })
+                                                     catch (HttpRequestException ex) when (ex.StatusCode is HttpStatusCode.Unauthorized or HttpStatusCode.Forbidden)
                                                      {
                                                          await CommandContext.Channel
                                                                              .SendMessageAsync(LocalizationGroup.GetText("InvalidToken", "The provided token is invalid or doesn't have the required permissions."))

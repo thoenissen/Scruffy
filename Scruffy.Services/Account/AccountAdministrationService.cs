@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Net.Http;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Account;
@@ -120,7 +121,7 @@ public class AccountAdministrationService : LocatedServiceBase
                     }
                 }
             }
-            catch (WebException ex) when (ex.Response is HttpWebResponse response && response.StatusCode == HttpStatusCode.Unauthorized)
+            catch (HttpRequestException ex) when (ex.StatusCode is HttpStatusCode.Unauthorized or HttpStatusCode.Forbidden)
             {
                 await commandContextContainer.Channel
                                              .SendMessageAsync(LocalizationGroup.GetText("InvalidToken", "The provided token is invalid or doesn't have the required permissions."))

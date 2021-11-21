@@ -576,7 +576,7 @@ public sealed class GuidWars2ApiConnector : IAsyncDisposable,
                                       prices.AddRange(JsonConvert.DeserializeObject<List<TradingPostItemPrice>>(jsonResult));
                                   }
                               }
-                              catch (WebException ex) when (ex.Response is HttpWebResponse { StatusCode: HttpStatusCode.NotFound })
+                              catch (HttpRequestException ex) when (ex.StatusCode is HttpStatusCode.NotFound)
                               {
                               }
                           }
