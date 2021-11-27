@@ -1,700 +1,750 @@
 ﻿{
   "CultureInfo": "en-US",
-  "Description" : "English",
-   "TranslationGroups": {
-      "InformationCommandModule": {
-         "GeneralInformationTitle": "General information",
-         "GeneralInformationDescription": "All data collected by {0} is used only for the administration of the guild. The individual areas where data is collected are discussed below.",
-         "GuildWars2ApiTitle": "Guild Wars 2 - API-Token",
-         "GuildWars2ApiDescription": "The following data is determined via the specified API token:\n\n - With how many characters is the guild represented?\n - When was the last login?\n - Which server is the account assigned to?\n - How many achievement points does the account have?\n\nAll other data is only determined temporarily when you request {0} to execute a command. You only ever have access to your own API token.",
-         "DiscordTitle": "Discord",
-         "DiscordDescription": "Part of the guild ranking system is the activity in Discord. For this, how many messages are written and how many minutes you are in the voice chat are saved. The content of the posts is irrelevant and is not saved.",
-         "RefreshTitle": "State",
-         "RefreshDescription": "As of: {0}"
-      },
-      "AdministrationCommandModule": {
-         "NotAllowedToPerform": "I'm not allowed to perform this action."
-      },
-      "ReminderCreationCommandModule": {
-         "CommandProgressed": "Command progressed.",
-         "ChooseChannelPrompt": "Please choose one of the following channels.",
-         "ChannelSelectionTitle": "Channel selection",
-         "SelectDayPrompt": "Please select one of the following days.",
-         "WeekdaySelectionTitle": "Weekday selection",
-         "ReminderTimePrompt": "Please enter the reminder time. (Format: hh:mm)",
-         "DeletionTimePrompt": "Please enter the deletion times. (Format: hh:mm)",
-         "ReminderMessagePrompt": "Please enter the message of the reminder.",
-         "CreationCompletedMessage": "Creation completed! All creation messages will be deleted in 30 seconds.",
-         "ReminderCreated": "The reminder has been set for {0} {1}."
-      },
-      "FractalLfgService": {
-         "BuildingProgress": "Building...",
-         "CreationCompletedMessage": "Creation completed! All creation messages will be deleted in 30 seconds."
-      },
-      "FractalLfgCreationAliasNameDialogElement": {
-         "Message": "Please enter the alias name which should be used."
-      },
-      "FractalLfgCreationDescriptionDialogElement": {
-         "Message": "Please enter the description which should be used."
-      },
-      "FractalLfgCreationTitleDialogElement": {
-         "Message": "Please enter the title which should be used."
-      },
-      "GuildWarsUpdateService": {
-         "GuildWars2Updates": "Guild Wars 2 - Updates",
-         "Release": "Release",
-         "Timespan": "Timespan",
-         "Day": "Day",
-         "Days": "Days",
-         "Hour": "Hour",
-         "Hours": "Hours",
-         "Minute": "Minute",
-         "Minutes": "Minutes",
-         "Second": "Second",
-         "Seconds": "Seconds",
-         "Confirmed": "Confirmed",
-         "Source": "Source",
-         "Sources": "Sources",
-         "UpdateField": "General",
-         "EodField": "End of Dragons"
-      },
-      "DialogElementBase": {
-         "PleaseTryAgain": "Your input was invalid. Please try again."
-      },
-      "AccountApiKeyDialogElement": {
-         "Message": "Please enter the api key which should be used."
-      },
-      "AccountDpsReportUserTokenDialogElement": {
-         "Message": "Please enter the dps.report user token which should be used."
-      },
-      "AccountEditDialogElement": {
-         "ChooseCommandTitle": "Account configuration",
-         "ChooseCommandDescription": "With this assistant you are able to configure your Guild Wars 2 account configuration.",
-         "Name": "Name",
-         "IsApiKeyAvailable": "Api Key",
-         "DpsReportUserToken": "dps.report user token",
-         "Data": "Data",
-         "CommandTitle": "Commands",
-         "EditApiKeyCommand": "{0} Edit api key",
-         "EditDpsReportUserTokenCommand": "{0} Edit dps report user token",
-         "AccountNameMismatch": "The provided api key doesn't match the current account name.",
-         "InvalidToken": "The provided token is invalid or doesn't have the required permissions.",
-         "CancelCommand": "{0} Cancel"
-      },
-      "AccountSelectionDialogElement": {
-         "ChooseTitle": "Account selection",
-         "ChooseDescription": "Please choose one of the following accounts:",
-         "AccountsField": "Accounts"
-      },
-      "AccountAdministrationService": {
-         "InvalidToken": "The provided token is invalid or doesn't have the required permissions.",
-         "SwitchToPrivate": "I answered your command as a private message.",
-         "NoAccounts": "You don't have any accounts configured.",
-         "ApiKeyAdded": "Your API token has been added successfully.",
-         "NoAccountExisting": "You don't have any accounts configured.",
-         "AccountDeleted": "Your account has been successfully deleted."
-      },
-      "AccountWantToAddDialogElement": {
-         "Prompt": "You don't have any accounts configurated. Do you want to a one?"
-      },
-      "AccountWantToDeleteDialogElement": {
-         "Prompt": "Are you sure you want to delete the account '{0}'?"
-      },
-      "FractalLfgMessageBuilder": {
-         "Today": "Today",
-         "AppointmentReminder": "{0} - Appointment reminder"
-      },
-      "OneTimeReminderJob": {
-         "EmptyReminder": "{0} Reminder",
-         "SingleLineReminder": "{0} Reminder: {1}",
-         "MultiLineReminder": "{0} Reminder:\n\n{1}"
-      },
-      "ServerConfigurationCommandModule": {
-         "UsingNewPrefix": "I will use the following prefix: {0}"
-      },
-      "RaidCommandModule": {
-         "NoActiveAppointment": "Currently there is no active appointment.",
-         "TemplateChanged": "The template has been changed."
-      },
-      "RaidExperienceLevelsCommandModule": {
-         "UnknownExperienceLevel": "The experience role by the given name does not exist.",
-         "NewRankFormat": "New level for {0}: {1} {2} {3}"
-      },
-      "RaidRolesService": {
-         "AssistantTitle": "Raid role configuration",
-         "AssistantDescription": "With this assistant you are able to configure the raid roles. The following roles are already created:",
-         "AssistantRolesField": "Roles",
-         "AssistantCommandsField": "Commands",
-         "AssistantAddCommand": "{0} Add role",
-         "AssistantEditCommand": "{0} Edit role",
-         "AssistantDeleteCommand": "{0} Delete role",
-         "AssistantCancelCommand": "{0} Cancel",
+  "Description": "English",
+  "TranslationGroups": {
+    "InformationCommandModule": {
+      "GeneralInformationTitle": "General information",
+      "GeneralInformationDescription": "All data collected by {0} is used only for the administration of the guild. The individual areas where data is collected are discussed below.",
+      "GuildWars2ApiTitle": "Guild Wars 2 - API-Token",
+      "GuildWars2ApiDescription": "The following data is determined via the specified API token:\n\n - With how many characters is the guild represented?\n - When was the last login?\n - Which server is the account assigned to?\n - How many achievement points does the account have?\n\nAll other data is only determined temporarily when you request {0} to execute a command. You only ever have access to your own API token.",
+      "DiscordTitle": "Discord",
+      "DiscordDescription": "Part of the guild ranking system is the activity in Discord. For this, how many messages are written and how many minutes you are in the voice chat are saved. The content of the posts is irrelevant and is not saved.",
+      "RefreshTitle": "State",
+      "RefreshDescription": "As of: {0}"
+    },
+    "AdministrationCommandModule": {
+      "NotAllowedToPerform": "I'm not allowed to perform this action."
+    },
+    "ReminderCreationCommandModule": {
+      "CommandProgressed": "Command progressed.",
+      "ChooseChannelPrompt": "Please choose one of the following channels.",
+      "ChannelSelectionTitle": "Channel selection",
+      "SelectDayPrompt": "Please select one of the following days.",
+      "WeekdaySelectionTitle": "Weekday selection",
+      "ReminderTimePrompt": "Please enter the reminder time. (Format: hh:mm)",
+      "DeletionTimePrompt": "Please enter the deletion times. (Format: hh:mm)",
+      "ReminderMessagePrompt": "Please enter the message of the reminder.",
+      "CreationCompletedMessage": "Creation completed! All creation messages will be deleted in 30 seconds.",
+      "ReminderCreated": "The reminder has been set for {0} {1}."
+    },
+    "FractalLfgService": {
+      "BuildingProgress": "Building...",
+      "CreationCompletedMessage": "Creation completed! All creation messages will be deleted in 30 seconds."
+    },
+    "FractalLfgCreationAliasNameDialogElement": {
+      "Message": "Please enter the alias name which should be used."
+    },
+    "FractalLfgCreationDescriptionDialogElement": {
+      "Message": "Please enter the description which should be used."
+    },
+    "FractalLfgCreationTitleDialogElement": {
+      "Message": "Please enter the title which should be used."
+    },
+    "GuildWarsUpdateService": {
+      "GuildWars2Updates": "Guild Wars 2 - Updates",
+      "Release": "Release",
+      "Timespan": "Timespan",
+      "Day": "Day",
+      "Days": "Days",
+      "Hour": "Hour",
+      "Hours": "Hours",
+      "Minute": "Minute",
+      "Minutes": "Minutes",
+      "Second": "Second",
+      "Seconds": "Seconds",
+      "Confirmed": "Confirmed",
+      "Source": "Source",
+      "Sources": "Sources",
+      "UpdateField": "General",
+      "EodField": "End of Dragons"
+    },
+    "DialogElementBase": {
+      "PleaseTryAgain": "Your input was invalid. Please try again."
+    },
+    "AccountApiKeyDialogElement": {
+      "Message": "Please enter the api key which should be used."
+    },
+    "AccountDpsReportUserTokenDialogElement": {
+      "Message": "Please enter the dps.report user token which should be used."
+    },
+    "AccountEditDialogElement": {
+      "ChooseCommandTitle": "Account configuration",
+      "ChooseCommandDescription": "With this assistant you are able to configure your Guild Wars 2 account configuration.",
+      "Name": "Name",
+      "IsApiKeyAvailable": "Api Key",
+      "DpsReportUserToken": "dps.report user token",
+      "Data": "Data",
+      "CommandTitle": "Commands",
+      "EditApiKeyCommand": "{0} Edit api key",
+      "EditDpsReportUserTokenCommand": "{0} Edit dps report user token",
+      "AccountNameMismatch": "The provided api key doesn't match the current account name.",
+      "InvalidToken": "The provided token is invalid or doesn't have the required permissions.",
+      "CancelCommand": "{0} Cancel"
+    },
+    "AccountSelectionDialogElement": {
+      "ChooseTitle": "Account selection",
+      "ChooseDescription": "Please choose one of the following accounts:",
+      "AccountsField": "Accounts"
+    },
+    "AccountAdministrationService": {
+      "InvalidToken": "The provided token is invalid or doesn't have the required permissions.",
+      "SwitchToPrivate": "I answered your command as a private message.",
+      "NoAccounts": "You don't have any accounts configured.",
+      "ApiKeyAdded": "Your API token has been added successfully.",
+      "NoAccountExisting": "You don't have any accounts configured.",
+      "AccountDeleted": "Your account has been successfully deleted."
+    },
+    "AccountWantToAddDialogElement": {
+      "Prompt": "You don't have any accounts configurated. Do you want to a one?"
+    },
+    "AccountWantToDeleteDialogElement": {
+      "Prompt": "Are you sure you want to delete the account '{0}'?"
+    },
+    "FractalLfgMessageBuilder": {
+      "Today": "Today",
+      "AppointmentReminder": "{0} - Appointment reminder"
+    },
+    "OneTimeReminderJob": {
+      "EmptyReminder": "{0} Reminder",
+      "SingleLineReminder": "{0} Reminder: {1}",
+      "MultiLineReminder": "{0} Reminder:\n\n{1}"
+    },
+    "ServerConfigurationCommandModule": {
+      "UsingNewPrefix": "I will use the following prefix: {0}"
+    },
+    "RaidCommandModule": {
+      "NoActiveAppointment": "Currently there is no active appointment.",
+      "TemplateChanged": "The template has been changed."
+    },
+    "RaidExperienceLevelsCommandModule": {
+      "UnknownExperienceLevel": "The experience role by the given name does not exist.",
+      "NewRankFormat": "New level for {0}: {1} {2} {3}"
+    },
+    "RaidRolesService": {
+      "AssistantTitle": "Raid role configuration",
+      "AssistantDescription": "With this assistant you are able to configure the raid roles. The following roles are already created:",
+      "AssistantRolesField": "Roles",
+      "AssistantCommandsField": "Commands",
+      "AssistantAddCommand": "{0} Add role",
+      "AssistantEditCommand": "{0} Edit role",
+      "AssistantDeleteCommand": "{0} Delete role",
+      "AssistantCancelCommand": "{0} Cancel",
 
-         "ReactWithEmojiPrompt": "Please react with emoji which should be assigned to the role.",
-         "DescriptionPrompt": "Please enter the description of the role.",
-         "AddSubRolesPrompt": "Do you want to add sub roles?",
-         "AddAdditionalSubRolesPrompt": "Do you want to add additional sub roles?",
-         "CreationCompletedMessage": "The creation is completed.",
+      "ReactWithEmojiPrompt": "Please react with emoji which should be assigned to the role.",
+      "DescriptionPrompt": "Please enter the description of the role.",
+      "AddSubRolesPrompt": "Do you want to add sub roles?",
+      "AddAdditionalSubRolesPrompt": "Do you want to add additional sub roles?",
+      "CreationCompletedMessage": "The creation is completed.",
 
-         "ChooseRoleTitle": "Raid role selection",
-         "ChooseRoleDescription": "Please choose one of the following roles:",
+      "ChooseRoleTitle": "Raid role selection",
+      "ChooseRoleDescription": "Please choose one of the following roles:",
 
-         "RoleEditTitle": "Raid role configuration",
-         "RoleEditEditDescriptionCommand": "{0} Edit description",
-         "RoleEditEditEmojiCommand": "{0} Edit emoji",
-         "RoleEditAddSubRoleCommand": "{0} Add sub role",
-         "RoleEditEditSubRoleCommand": "{0} Edit sub role",
-         "RoleEditDeleteSubRoleCommand": "{0} Delete sub role",
+      "RoleEditTitle": "Raid role configuration",
+      "RoleEditEditDescriptionCommand": "{0} Edit description",
+      "RoleEditEditEmojiCommand": "{0} Edit emoji",
+      "RoleEditAddSubRoleCommand": "{0} Add sub role",
+      "RoleEditEditSubRoleCommand": "{0} Edit sub role",
+      "RoleEditDeleteSubRoleCommand": "{0} Delete sub role",
 
-         "DeleteRolePrompt": "Are you sure you want to delete the role?"
-      },
-      "RaidTemplateAliasNameDialogElement": {
-         "Message": "Please enter the alias name which should be used."
-      },
-      "RaidTemplateDeletionElementBase": {
-         "DeleteRolePrompt": "Are you sure you want to delete the template?"
-      },
-      "RaidTemplateDescriptionDialogElement": {
-         "Message": "Please enter the description which should be used."
-      },
-      "RaidTemplateEditDialogElement": {
-         "ChooseCommandTitle": "Raid template configuration",
-         "ChooseCommandDescription": "With this assistant you are able to configure the raid template.",
-         "AliasName": "Alias name",
-         "Title": "Title",
-         "Description": "Description",
-         "CommandTitle": "Commands",
-         "EditAliasCommand": "{0} Edit alias name",
-         "EditTitleCommand": "{0} Edit title",
-         "EditDescriptionCommand": "{0} Edit description",
-         "EditThumbnailCommand": "{0} Edit thumbnail",
-         "CancelCommand": "{0} Cancel"
-      },
-      "RaidTemplateSelectionDialogElement": {
-         "ChooseTemplateTitle": "Raid template selection",
-         "ChooseTemplateDescription": "Please choose one of the following templates:",
-         "TemplatesField": "Templates"
-      },
-      "RaidTemplateSetupDialogElement": {
-         "ChooseCommandTitle": "Raid template configuration",
-         "ChooseCommandDescription": "With this assistant you are able to configure the raid templates. The following templates are already created:",
-         "TemplatesField": "Templates",
-         "CommandTitle": "Commands",
-         "AddCommand": "{0} Add template",
-         "EditCommand": "{0} Edit template",
-         "DeleteCommand": "{0} Delete template",
-         "CancelCommand": "{0} Cancel"
-      },
-      "RaidTemplateThumbnailDialogElement": {
-         "Message": "Please enter the link to the thumbnail which should be used."
-      },
-      "RaidTemplateTitleDialogElement": {
-         "Message": "Please enter the title which should be used."
-      },
-      "RaidDayDayOfWeekDialogElement": {
-         "Title": "Raid day selection",
-         "Description": "Please choose the day of the week:",
-         "Reactions": "Days"
-      },
-      "RaidDayRegistrationDeadlineDialogElement": {
-         "Message": "Please enter the registration deadline (hh:mm):"
-      },
-      "RaidDayStartTimeDialogElement": {
-         "Message": "Please enter the start time (hh:mm):"
-      },
-      "RaidExperienceLevelDeletionDialogElement": {
-         "DeleteLevelPrompt": "Are you sure you want to delete the level?"
-      },
-      "RaidExperienceLevelDescriptionDialogElement": {
-         "Message": "Please enter the description which should be used."
-      },
-      "RaidExperienceLevelEditDialogElement": {
-         "ChooseCommandTitle": "Raid experience level configuration",
-         "ChooseCommandDescription": "With this assistant you are able to configure the raid experience level.",
-         "AliasName": "Alias name",
-         "Description": "Description",
-         "Emoji": "Emoji",
-         "Role": "Role",
-         "CommandTitle": "Commands",
-         "EditSuperiorRoleCommand": "{0} Edit superior role",
-         "EditAliasNameCommand": "{0} Edit alias name",
-         "EditDescriptionCommand": "{0} Edit description",
-         "EditRoleCommand": "{0} Edit role",
-         "EditEmojiCommand": "{0} Edit emoji",
-         "CancelCommand": "{0} Cancel"
-      },
-      "RaidExperienceLevelEmojiDialogElement": {
-         "EmojiPrompt": "Please react with emoji which should be used."
-      },
-      "RaidExperienceLevelRoleDialogElement": {
-         "ChooseLevelTitle": "Raid experience level role selection",
-         "ChooseLevelDescription": "Please choose one of the following roles:",
-         "NoDiscordRole": "No role",
-         "RolesField": "Roles"
-      },
-      "RaidExperienceLevelSelectionDialogElement": {
-         "ChooseLevelTitle": "Raid experience level selection",
-         "ChooseLevelDescription": "Please choose one of the following experience levels:",
-         "LevelsField": "Levels"
-      },
-      "RaidExperienceLevelSetupDialogElement": {
-         "ChooseCommandTitle": "Raid experience levels configuration",
-         "ChooseCommandDescription": "With this assistant you are able to configure the raid experience levels. The following experience levels are already created:",
-         "LevelsFields": "Levels",
-         "AddCommand": "{0} Add level",
-         "EditCommand": "{0} Edit level",
-         "DeleteCommand": "{0} Delete level",
-         "CancelCommand": "{0} Cancel",
-         "CommandTitle": "Commands"
-      },
-      "RaidExperienceLevelSuperiorLevelDialogElement": {
-         "ChooseLevelTitle": "Raid experience level selection",
-         "ChooseLevelDescription": "Please choose one of the following experience levels:",
-         "NoExperienceLevel": "No superior level",
-         "LevelsField": "Levels"
-      },
-      "RaidExperienceLevelAliasNameDialogElement": {
-         "Message": "Please enter the alias name which should be used."
-      },
-      "RaidCommitService": {
-         "CommitCompleted": "The raid appointment has been commited.",
-         "NoOpenAppointment": "There is no uncommitted appointment available."
-      },
-      "RaidExperienceLevelsService": {
-         "ExperienceLevels": "Experience levels"
-      },
-      "RaidMessageBuilder": {
-         "SubstitutesBench": "Substitutes bench"
-      },
-      "RaidCommitDialogElement": {
-         "CommitTitle": "Fortschreibung der Teilnahmepunkte",
-         "CommitText": "Die folgenden Punkte werden fortgeschrieben:",
-         "Users": "Benutzer",
-         "AddCommand": "{0} Benutzer hinzufügen",
-         "SetPointsCommand": "{0} Punkte bearbeiten",
-         "RemoveCommand": "{0} Benutzer entfernen",
-         "CommitCommand": "{0} Bestätigen",
-         "CancelCommand": "{0} Abbrechen",
-         "CommandTitle": "Befehle"
-      },
-      "RaidCommitPointDialogElement": {
-         "Message": "Wie viele Punkte sollen zugewiesen werden?"
-      },
-      "RaidCommitRemoveUserDialogElement": {
-         "Message": "Welcher Benutzer soll entfernt werden?"
-      },
-      "RaidCommitUserDialogElement": {
-         "Message": "Welcher Benutzer soll angepasst werden?"
-      },
-      "RaidRoleSelectionDialogElement": {
-         "ChooseLevelTitle": "Raid role selection",
-         "ChooseLevelDescription": "Please choose one of the following roles:",
-         "NoRole": "No additional role",
-         "RolesField": "Roles"
-      },
-      "RaidRoleSelectionNextDialogElement": {
-         "MessageFirst": "Do you want to add a role preference?",
-         "MessageNext": "Do you want to add another role preference?"
-      },
-      "RaidOverviewService": {
-         "ParticipationOverview": "Participation points overview"
-      },
-      "RaidRegistrationService": {
-         "RequiredExperienceLevelMissing": "You don't have the required experience level."
-      },
-      "GuildAdministrationApiKeyDialogElement": {
-         "Message": "Please enter the api key."
-      },
-      "GuildAdministrationGuildDialogElement": {
-         "ChooseGuildTitle": "Guild selection",
-         "ChooseGuildDescription": "Please choose one of the following guilds:",
-         "GuildsField": "Guilds"
-      },
-      "GuildLogImportJob": {
-         "MemberJoined": "**{0}** joined the guild.",
-         "MemberLeft": "**{0}** left the guild.",
-         "MemberKicked": "**{0}** got kicked out of the guild by **{1}**."
-      },
-      "GuildAdministrationCalendarTitleDialogElement": {
-         "Message": "Please enter the calendar title."
-      },
-      "GuildAdministrationCalendarDescriptionDialogElement": {
-         "Message": "Please enter the description."
-      },
-      "GuildAdministrationConfigurationService": {
-         "MotdBuilding": "The message of the day will be build with the next refresh.",
-         "CalendarBuilding": "The calendar will be build with the next refresh."
-      },
-      "GuildBankService": {
-         "BankValidation": "Guild bank validation",
-         "BankValidationResult": "In the following message you can see the results of the bank validation.",
-         "DuplicationCheck": "Duplication check",
-         "CoinCheck": "Coins check",
-         "NoApiKey": "The guild ist not configured.",
-         "DyeUnlocksTitle": "Dye unlocks {0}",
-         "DyesFields": "Dyes #{0}",
-         "NoAccountApiKey": "You don't have any api keys configured."
-      },
-      "GuildAdministrationSpecialRankDeletionDialogElement": {
-         "DeletePrompt": "Are you sure you want to delete the special rank?"
-      },
-      "GuildAdministrationSpecialRankDescriptionDialogElement": {
-         "Message": "Please enter the description which should be used."
-      },
-      "GuildAdministrationSpecialRankDiscordRoleDialogElement": {
-         "ChooseRoleTitle": "Role selection",
-         "ChooseRoleDescription": "Please choose one of the following roles:",
-         "RolesField": "Roles"
-      },
-      "GuildAdministrationSpecialRankEditDialogElement": {
-         "ChooseCommandTitle": "Special rank configuration",
-         "ChooseCommandDescription": "With this assistant you are able to configure the special rank.",
-         "Description": "Description",
-         "DiscordRole": "Discord role",
-         "MaximumPoints": "Maximum points",
-         "GrantThreshold": "Grant threshold",
-         "RemoveThreshold": "Remove threshold",
-         "General": "General",
-         "Roles": "Roles",
-         "IgnoreRoles": "Ignore roles",
-         "CommandTitle": "Commands",
-         "EditDescriptionCommand": "{0} Edit description",
-         "EditRoleCommand": "{0} Edit role",
-         "EditMaximumPointsCommand": "{0} Edit maximum points",
-         "EditGrantThresholdCommand": "{0} Edit grant threshold",
-         "EditRemoveThresholdCommand": "{0} Edit remove threshold",
-         "AddPointRoleCommand": "{0} Add point role",
-         "RemovePointRoleCommand": "{0} Remove point role",
-         "AddIgnoreRoleCommand": "{0} Add ignore role",
-         "RemoveIgnoreRoleCommand": "{0} Remove ignore role",
-         "CancelCommand": "{0} Cancel"
-      },
-      "GuildAdministrationSpecialRankGrantThresholdDialogElement": {
-         "Message": "Please enter the grant threshold which should be used."
-      },
-      "GuildAdministrationSpecialRankMaximumPointsDialogElement": {
-         "Message": "Please enter the maximum points which can be acquired."
-      },
-      "GuildAdministrationSpecialRankRemoveThresholdDialogElement": {
-         "Message": "Please enter the remove threshold which should be used."
-      },
-      "GuildAdministrationSpecialRankRoleAssignmentDiscordRoleDialogElement": {
-         "ChooseRoleTitle": "Role selection",
-         "ChooseRoleDescription": "Please choose one of the following roles:",
-         "RolesField": "Roles"
-      },
-      "GuildAdministrationSpecialRankRoleAssignmentPointsDialogElement": {
-         "Message": "Please enter the points which should be used."
-      },
-      "GuildAdministrationSpecialRankRoleAssignmentSelectionDialogElement": {
-         "ChooseAssignmentTitle": "Assignment selection",
-         "ChooseAssignmentDescription": "Please choose one of the following assignments:",
-         "AssignmentsField": "Assignments"
-      },
-      "GuildAdministrationSpecialRankSelectionDialogElement": {
-         "ChooseSpecialRankTitle": "Special rank selection",
-         "ChooseSpecialRankDescription": "Please choose one of the following special ranks:",
-         "RanksField": "Ranks"
-      },
-      "GuildAdministrationSpecialRankSetupDialogElement": {
-         "ChooseCommandTitle": "Guild special rank configuration",
-         "ChooseCommandDescription": "With this assistant you are able to configure the guild special ranks. The following special ranks are already created:",
-         "RanksFields": "Ranks",
-         "AddCommand": "{0} Add rank",
-         "EditCommand": "{0} Edit rank",
-         "DeleteCommand": "{0} Delete rank",
-         "CancelCommand": "{0} Cancel",
-         "CommandTitle": "Commands"
-      },
-      "GuildSpecialRankService": {
-         "Overview": "Points overview"
-      },
-      "GuildSpecialRankPointsJob": {
-         "RoleAssignment": "Role assignment",
-         "RemovedRoles": "Removals",
-         "GrantedRoles": "Assignments"
-      },
-      "WorldsService": {
-         "Overview": "Worlds overview"
-      },
-      "CalendarTemplateDeletionDialogElement": {
-         "DeletePrompt": "Are you sure you want to delete the template?"
-      },
-      "CalendarTemplateDescriptionDialogElement": {
-         "Message": "Please enter the description which should be used."
-      },
-      "CalendarTemplateEditDialogElement": {
-         "ChooseCommandTitle": "Calendar template configuration",
-         "ChooseCommandDescription": "With this assistant you are able to configure the calendar template",
-         "Description": "Description",
-         "ReminderTime": "Reminder time",
-         "ReminderMessage": "Reminder message",
-         "GuildPoints": "Points",
-         "CommandTitle": "Commands",
-         "EditDescriptionCommand": "{0} Edit description",
-         "EditUriCommand": "{0} Edit link",
-         "EditAppointmentTimeCommand": "{0} Edit appointment time",
-         "EditReminderCommand": "{0} Edit reminder",
-         "EditGuildPointsCommand": "{0} Edit guild points",
-         "CancelCommand": "{0} Cancel"
-      },
-      "CalendarTemplateGuildPointsCapDialogElement": {
-         "Prompt": "Is the guild points cap raised by this event?"
-      },
-      "CalendarTemplateGuildPointsDialogElement": {
-         "Prompt": "Do you want to add guild points to this event?"
-      },
-      "CalendarTemplateGuildPointsPointsDialogElement": {
-         "Message": "Please enter the number of guild points which can be earned by this event."
-      },
-      "CalendarTemplateReminderDialogElement": {
-         "Prompt": "Do you want to add a reminder?"
-      },
-      "CalendarTemplateReminderMessageDialogElement": {
-         "Message": "Please enter the reminder message which should be used."
-      },
-      "CalendarTemplateReminderTimeDialogElement": {
-         "Message": "Please enter the reminder time (hh:mm):"
-      },
-      "CalendarTemplateSelectionDialogElement": {
-         "ChooseTemplateTitle": "Calendar template selection",
-         "ChooseTemplateDescription": "Please choose one of the following calendar templates:",
-         "TemplateField": "Templates"
-      },
-      "CalendarTemplateSetupDialogElement": {
-         "ChooseCommandTitle": "Calendar template configuration",
-         "ChooseCommandDescription": "With this assistant you are able to configure the calendar templates. The following templates are already created:",
-         "TemplatesField": "Templates",
-         "AddCommand": "{0} Add template",
-         "EditCommand": "{0} Edit template",
-         "DeleteCommand": "{0} Delete template",
-         "CancelCommand": "{0} Cancel",
-         "CommandTitle": "Commands"
-      },
-      "CalendarTemplateUriDialogElement": {
-         "Prompt": "Do you want to add link?"
-      },
-      "CalendarTemplateUriUriDialogElement": {
-         "Message": "Please enter the link which should be used."
-      },
-      "CalendarScheduleDayOfWeekDialogElement": {
-         "Title": "Schedule selection",
-         "Description": "Please choose the day of the week:",
-         "Reactions": "Days"
-      },
-      "CalendarScheduleDeletionDialogElement": {
-         "DeletePrompt": "Are you sure you want to delete the schedule?"
-      },
-      "CalendarScheduleDescriptionDialogElement": {
-         "Message": "Please enter the description which should be used."
-      },
-      "CalendarScheduleEditDialogElement": {
-         "ChooseCommandTitle": "Calendar schedule configuration",
-         "ChooseCommandDescription": "With this assistant you are able to configure the calendar schedule",
-         "Description": "Description",
-         "CommandTitle": "Commands",
-         "EditDescriptionCommand": "{0} Edit description",
-         "EditScheduleCommand": "{0} Edit schedule",
-         "EditTemplateCommand": "{0} Edit template",
-         "CancelCommand": "{0} Cancel"
-      },
-      "CalendarScheduleOccurenceCountDialogElement": {
-         "Message": "Please enter on which {0} of the month the appointment should be created or zero if it should be created every week."
-      },
-      "CalendarScheduleOptionsDialogElement": {
-         "Title": "Schedule options selection",
-         "Description": "Please choose one of the following options:",
-         "Reactions": "Options",
-         "None": "No options",
-         "EvenMonth": "Even month",
-         "UnevenMonth": "Uneven month"
-      },
-      "CalendarScheduleScheduleDialogElement": {
-         "ChooseTypeTitle": "Type selection",
-         "ChooseTypeDescription": "Please choose one of the following types:",
-         "TypesField": "Types",
-         "WeekDayOfMonth": "Weekday"
-      },
-      "CalendarScheduleSelectionDialogElement": {
-         "ChooseScheduleTitle": "Calendar schedule selection",
-         "ChooseScheduleDescription": "Please choose one of the following calendar schedules:",
-         "ScheduleField": "Schedules"
-      },
-      "CalendarScheduleSetupDialogElement": {
-         "ChooseCommandTitle": "Calendar schedule configuration",
-         "ChooseCommandDescription": "With this assistant you are able to configure the calendar schedules. The following schedules are already created:",
-         "SchedulesField": "Schedules",
-         "AddCommand": "{0} Add schedule",
-         "EditCommand": "{0} Edit schedule",
-         "DeleteCommand": "{0} Delete schedule",
-         "CancelCommand": "{0} Cancel"
-      },
-      "CalendarTemplateAppointmentTimeDialogElement": {
-         "Message": "Please enter the appointment time (hh:mm):"
-      },
-      "CalendarMessageBuilderService": {
-         "WeekNumber": "Week",
-         "Motd": "Message of the day:",
-         "MotdFormat": "{0} - {1}, {2:dd.MM.} at {2:HH:mm}"
-      },
-      "CalendarOneTimeDayDialogElement": {
-         "Message": "Please enter the day. (yyyy-MM-dd)"
-      },
-      "CalendarAddParticipantsDialogElement": {
-         "Message": "Please enter the members:"
-      },
-      "CalendarAddVoiceChannelDialogElement": {
-         "ChooseTitle": "Voice channel selection",
-         "ChooseDescription": "Please choose one of the voice channels:",
-         "Field": "Channels"
-      },
-      "CalendarAppointmentSelectionDialogElement": {
-         "ChooseTitle": "Appointment selection",
-         "ChooseDescription": "Please choose one of the following appointments:",
-         "Field": "Appointments"
-      },
-      "CalendarParticipantsEditDialogElement": {
-         "CommitTitle": "Participants",
-         "CommitText": "The following participants are recorded:",
-         "Participants": "Participants",
-         "Commands": "Commands",
-         "AddUserCommand": "{0} Add user",
-         "AddVoiceChannelCommand": "{0} Add channel",
-         "RemoveUserCommand": "{0} Remove user",
-         "SetLeaderCommand": "{0} Leader",
-         "CommitCommand": "{0} Commit",
-         "CommitSuccess": "The participants list has been refreshed.",
-         "CancelCommand": "{0} Cancel"
-      },
-      "CalendarRemoveParticipantsDialogElement": {
-         "Message": "Please enter the members:"
-      },
-      "CalendarSetLeaderParticipantsDialogElement": {
-         "Message": "Please enter the members:"
-      },
-      "SearchCommandModule": {
-         "SearchResults": "Search results",
-         "NoResults": "I couldn't find anything.",
-         "TitleSearch": "Title search",
-         "TextSearch": "Text search"
-      },
-      "MissingGuildWars2ApiPermissionException": {
-         "General": "General",
-         "Account": "account",
-         "Builds": "builds",
-         "Characters": "characters",
-         "Guilds": "guilds",
-         "Inventories": "inventories",
-         "Progression": "progression",
-         "PvP": "pvp",
-         "TradingPost": "tradingpost",
-         "Unlocks": "unlocks",
-         "Wallet": "wallet",
-         "MissingPermissions": "The assigned API key does not have permissions ({0}) to execute this command."
-      },
-      "LocatedCommandModuleBase": {
-         "CommandFailedMessage": "The command could not be executed. But I have an error code ({0}) and funny cat picture."
-      },
-      "HelpCommandFormatter": {
-         "Help": "Help",
-         "GeneralHelp": "Listing all top-level commands and groups. Specify a command to see more information.",
-         "NoDescription": "No description provided",
-         "Arguments": "Arguments",
-         "Commands": "Commands",
-         "Subcommands": "Subcommands",
+      "DeleteRolePrompt": "Are you sure you want to delete the role?"
+    },
+    "RaidTemplateAliasNameDialogElement": {
+      "Message": "Please enter the alias name which should be used."
+    },
+    "RaidTemplateDeletionElementBase": {
+      "DeleteRolePrompt": "Are you sure you want to delete the template?"
+    },
+    "RaidTemplateDescriptionDialogElement": {
+      "Message": "Please enter the description which should be used."
+    },
+    "RaidTemplateEditDialogElement": {
+      "ChooseCommandTitle": "Raid template configuration",
+      "ChooseCommandDescription": "With this assistant you are able to configure the raid template.",
+      "AliasName": "Alias name",
+      "Title": "Title",
+      "Description": "Description",
+      "CommandTitle": "Commands",
+      "EditAliasCommand": "{0} Edit alias name",
+      "EditTitleCommand": "{0} Edit title",
+      "EditDescriptionCommand": "{0} Edit description",
+      "EditThumbnailCommand": "{0} Edit thumbnail",
+      "CancelCommand": "{0} Cancel"
+    },
+    "RaidTemplateSelectionDialogElement": {
+      "ChooseTemplateTitle": "Raid template selection",
+      "ChooseTemplateDescription": "Please choose one of the following templates:",
+      "TemplatesField": "Templates"
+    },
+    "RaidTemplateSetupDialogElement": {
+      "ChooseCommandTitle": "Raid template configuration",
+      "ChooseCommandDescription": "With this assistant you are able to configure the raid templates. The following templates are already created:",
+      "TemplatesField": "Templates",
+      "CommandTitle": "Commands",
+      "AddCommand": "{0} Add template",
+      "EditCommand": "{0} Edit template",
+      "DeleteCommand": "{0} Delete template",
+      "CancelCommand": "{0} Cancel"
+    },
+    "RaidTemplateThumbnailDialogElement": {
+      "Message": "Please enter the link to the thumbnail which should be used."
+    },
+    "RaidTemplateTitleDialogElement": {
+      "Message": "Please enter the title which should be used."
+    },
+    "RaidDayDayOfWeekDialogElement": {
+      "Title": "Raid day selection",
+      "Description": "Please choose the day of the week:",
+      "Reactions": "Days"
+    },
+    "RaidDayRegistrationDeadlineDialogElement": {
+      "Message": "Please enter the registration deadline (hh:mm):"
+    },
+    "RaidDayStartTimeDialogElement": {
+      "Message": "Please enter the start time (hh:mm):"
+    },
+    "RaidExperienceLevelDeletionDialogElement": {
+      "DeleteLevelPrompt": "Are you sure you want to delete the level?"
+    },
+    "RaidExperienceLevelDescriptionDialogElement": {
+      "Message": "Please enter the description which should be used."
+    },
+    "RaidExperienceLevelEditDialogElement": {
+      "ChooseCommandTitle": "Raid experience level configuration",
+      "ChooseCommandDescription": "With this assistant you are able to configure the raid experience level.",
+      "AliasName": "Alias name",
+      "Description": "Description",
+      "Emoji": "Emoji",
+      "Role": "Role",
+      "CommandTitle": "Commands",
+      "EditSuperiorRoleCommand": "{0} Edit superior role",
+      "EditAliasNameCommand": "{0} Edit alias name",
+      "EditDescriptionCommand": "{0} Edit description",
+      "EditRoleCommand": "{0} Edit role",
+      "EditEmojiCommand": "{0} Edit emoji",
+      "CancelCommand": "{0} Cancel"
+    },
+    "RaidExperienceLevelEmojiDialogElement": {
+      "EmojiPrompt": "Please react with emoji which should be used."
+    },
+    "RaidExperienceLevelRoleDialogElement": {
+      "ChooseLevelTitle": "Raid experience level role selection",
+      "ChooseLevelDescription": "Please choose one of the following roles:",
+      "NoDiscordRole": "No role",
+      "RolesField": "Roles"
+    },
+    "RaidExperienceLevelSelectionDialogElement": {
+      "ChooseLevelTitle": "Raid experience level selection",
+      "ChooseLevelDescription": "Please choose one of the following experience levels:",
+      "LevelsField": "Levels"
+    },
+    "RaidExperienceLevelSetupDialogElement": {
+      "ChooseCommandTitle": "Raid experience levels configuration",
+      "ChooseCommandDescription": "With this assistant you are able to configure the raid experience levels. The following experience levels are already created:",
+      "LevelsFields": "Levels",
+      "AddCommand": "{0} Add level",
+      "EditCommand": "{0} Edit level",
+      "DeleteCommand": "{0} Delete level",
+      "CancelCommand": "{0} Cancel",
+      "CommandTitle": "Commands"
+    },
+    "RaidExperienceLevelSuperiorLevelDialogElement": {
+      "ChooseLevelTitle": "Raid experience level selection",
+      "ChooseLevelDescription": "Please choose one of the following experience levels:",
+      "NoExperienceLevel": "No superior level",
+      "LevelsField": "Levels"
+    },
+    "RaidExperienceLevelAliasNameDialogElement": {
+      "Message": "Please enter the alias name which should be used."
+    },
+    "RaidCommitService": {
+      "CommitCompleted": "The raid appointment has been commited.",
+      "NoOpenAppointment": "There is no uncommitted appointment available."
+    },
+    "RaidExperienceLevelsService": {
+      "ExperienceLevels": "Experience levels"
+    },
+    "RaidMessageBuilder": {
+      "SubstitutesBench": "Substitutes bench"
+    },
+    "RaidCommitDialogElement": {
+      "CommitTitle": "Fortschreibung der Teilnahmepunkte",
+      "CommitText": "Die folgenden Punkte werden fortgeschrieben:",
+      "Users": "Benutzer",
+      "AddCommand": "{0} Benutzer hinzufügen",
+      "SetPointsCommand": "{0} Punkte bearbeiten",
+      "RemoveCommand": "{0} Benutzer entfernen",
+      "CommitCommand": "{0} Bestätigen",
+      "CancelCommand": "{0} Abbrechen",
+      "CommandTitle": "Befehle"
+    },
+    "RaidCommitPointDialogElement": {
+      "Message": "Wie viele Punkte sollen zugewiesen werden?"
+    },
+    "RaidCommitRemoveUserDialogElement": {
+      "Message": "Welcher Benutzer soll entfernt werden?"
+    },
+    "RaidCommitUserDialogElement": {
+      "Message": "Welcher Benutzer soll angepasst werden?"
+    },
+    "RaidRoleSelectionDialogElement": {
+      "ChooseLevelTitle": "Raid role selection",
+      "ChooseLevelDescription": "Please choose one of the following roles:",
+      "NoRole": "No additional role",
+      "RolesField": "Roles"
+    },
+    "RaidRoleSelectionNextDialogElement": {
+      "MessageFirst": "Do you want to add a role preference?",
+      "MessageNext": "Do you want to add another role preference?"
+    },
+    "RaidOverviewService": {
+      "ParticipationOverview": "Participation points overview"
+    },
+    "RaidRegistrationService": {
+      "RequiredExperienceLevelMissing": "You don't have the required experience level."
+    },
+    "GuildAdministrationApiKeyDialogElement": {
+      "Message": "Please enter the api key."
+    },
+    "GuildAdministrationGuildDialogElement": {
+      "ChooseGuildTitle": "Guild selection",
+      "ChooseGuildDescription": "Please choose one of the following guilds:",
+      "GuildsField": "Guilds"
+    },
+    "GuildLogImportJob": {
+      "MemberJoined": "**{0}** joined the guild.",
+      "MemberLeft": "**{0}** left the guild.",
+      "MemberKicked": "**{0}** got kicked out of the guild by **{1}**."
+    },
+    "GuildAdministrationCalendarTitleDialogElement": {
+      "Message": "Please enter the calendar title."
+    },
+    "GuildAdministrationCalendarDescriptionDialogElement": {
+      "Message": "Please enter the description."
+    },
+    "GuildAdministrationConfigurationService": {
+      "MotdBuilding": "The message of the day will be build with the next refresh.",
+      "CalendarBuilding": "The calendar will be build with the next refresh."
+    },
+    "GuildBankService": {
+      "BankValidation": "Guild bank validation",
+      "BankValidationResult": "In the following message you can see the results of the bank validation.",
+      "DuplicationCheck": "Duplication check",
+      "CoinCheck": "Coins check",
+      "NoApiKey": "The guild ist not configured.",
+      "DyeUnlocksTitle": "Dye unlocks {0}",
+      "DyesFields": "Dyes #{0}",
+      "NoAccountApiKey": "You don't have any api keys configured."
+    },
+    "GuildAdministrationSpecialRankDeletionDialogElement": {
+      "DeletePrompt": "Are you sure you want to delete the special rank?"
+    },
+    "GuildAdministrationSpecialRankDescriptionDialogElement": {
+      "Message": "Please enter the description which should be used."
+    },
+    "GuildAdministrationSpecialRankDiscordRoleDialogElement": {
+      "ChooseRoleTitle": "Role selection",
+      "ChooseRoleDescription": "Please choose one of the following roles:",
+      "RolesField": "Roles"
+    },
+    "GuildAdministrationSpecialRankEditDialogElement": {
+      "ChooseCommandTitle": "Special rank configuration",
+      "ChooseCommandDescription": "With this assistant you are able to configure the special rank.",
+      "Description": "Description",
+      "DiscordRole": "Discord role",
+      "MaximumPoints": "Maximum points",
+      "GrantThreshold": "Grant threshold",
+      "RemoveThreshold": "Remove threshold",
+      "General": "General",
+      "Roles": "Roles",
+      "IgnoreRoles": "Ignore roles",
+      "CommandTitle": "Commands",
+      "EditDescriptionCommand": "{0} Edit description",
+      "EditRoleCommand": "{0} Edit role",
+      "EditMaximumPointsCommand": "{0} Edit maximum points",
+      "EditGrantThresholdCommand": "{0} Edit grant threshold",
+      "EditRemoveThresholdCommand": "{0} Edit remove threshold",
+      "AddPointRoleCommand": "{0} Add point role",
+      "RemovePointRoleCommand": "{0} Remove point role",
+      "AddIgnoreRoleCommand": "{0} Add ignore role",
+      "RemoveIgnoreRoleCommand": "{0} Remove ignore role",
+      "CancelCommand": "{0} Cancel"
+    },
+    "GuildAdministrationSpecialRankGrantThresholdDialogElement": {
+      "Message": "Please enter the grant threshold which should be used."
+    },
+    "GuildAdministrationSpecialRankMaximumPointsDialogElement": {
+      "Message": "Please enter the maximum points which can be acquired."
+    },
+    "GuildAdministrationSpecialRankRemoveThresholdDialogElement": {
+      "Message": "Please enter the remove threshold which should be used."
+    },
+    "GuildAdministrationSpecialRankRoleAssignmentDiscordRoleDialogElement": {
+      "ChooseRoleTitle": "Role selection",
+      "ChooseRoleDescription": "Please choose one of the following roles:",
+      "RolesField": "Roles"
+    },
+    "GuildAdministrationSpecialRankRoleAssignmentPointsDialogElement": {
+      "Message": "Please enter the points which should be used."
+    },
+    "GuildAdministrationSpecialRankRoleAssignmentSelectionDialogElement": {
+      "ChooseAssignmentTitle": "Assignment selection",
+      "ChooseAssignmentDescription": "Please choose one of the following assignments:",
+      "AssignmentsField": "Assignments"
+    },
+    "GuildAdministrationSpecialRankSelectionDialogElement": {
+      "ChooseSpecialRankTitle": "Special rank selection",
+      "ChooseSpecialRankDescription": "Please choose one of the following special ranks:",
+      "RanksField": "Ranks"
+    },
+    "GuildAdministrationSpecialRankSetupDialogElement": {
+      "ChooseCommandTitle": "Guild special rank configuration",
+      "ChooseCommandDescription": "With this assistant you are able to configure the guild special ranks. The following special ranks are already created:",
+      "RanksFields": "Ranks",
+      "AddCommand": "{0} Add rank",
+      "EditCommand": "{0} Edit rank",
+      "DeleteCommand": "{0} Delete rank",
+      "CancelCommand": "{0} Cancel",
+      "CommandTitle": "Commands"
+    },
+    "GuildSpecialRankService": {
+      "Overview": "Points overview"
+    },
+    "GuildSpecialRankPointsJob": {
+      "RoleAssignment": "Role assignment",
+      "RemovedRoles": "Removals",
+      "GrantedRoles": "Assignments"
+    },
+    "GuildAdministrationRankSuperiorRankDialogElement": {
+      "ChooseTitle": "Superior rank selection",
+      "ChooseDescription": "Please choose one of the following ranks:",
+      "NoSuperior": "No superior rank",
+      "RanksField": "Ranks"
+    },
+    "GuildAdministrationRankDeletionDialogElement": {
+      "DeletePrompt": "Are you sure you want to delete the rank?"
+    },
+    "GuildAdministrationRankDiscordRoleDialogElement": {
+      "ChooseTitle": "Role selection",
+      "ChooseDescription": "Please choose one of the following roles:",
+      "RolesField": "Roles" 
+    },
+    "GuildAdministrationRankEditDialogElement": {
+      "ChooseCommandTitle": "Rank configuration",
+      "ChooseCommandDescription": "With this assistant you are able to configure the rank.",
+      "InGameName": "In game name",
+      "DiscordRoleId": "Discord role",
+      "Percentage": "Percentage quota",
+      "General": "General",
+      "CommandTitle": "Commands",
+      "EditInGameNameCommand": "{0} Edit in game name",
+      "EditDiscordCommand": "{0} Edit discord role",
+      "EditPercentageCommand": "{0} Edit percentage",
+      "CancelCommand": "{0} Cancel"
+    },
+    "GuildAdministrationRankInGameNameDialogElement": {
+      "ChooseTitle": "In game rank selection",
+      "ChooseDescription": "Please choose one of the following ranks:",
+      "RanksField": "Ranks"
+    },
+    "GuildAdministrationRankPercentageDialogElement": {
+      "Message": "Please enter the quota in percent. (#.###)"
+    },
+    "GuildAdministrationRankSelectionDialogElement": {
+      "ChooseTitle": "Rank selection",
+      "ChooseDescription": "Please choose one of the following ranks:",
+      "RanksField": "Ranks"
+    },
+    "GuildAdministrationRankSetupDialogElement": {
+      "ChooseCommandTitle": "Guild rank configuration",
+      "ChooseCommandDescription": "With this assistant you are able to configure the guild ranks. The following ranks are already created:",
+      "RanksFields": "Ranks",
+      "AddCommand": "{0} Add rank",
+      "EditCommand": "{0} Edit rank",
+      "DeleteCommand": "{0} Delete rank",
+      "CancelCommand": "{0} Cancel",
+      "CommandTitle": "Commands"
+    },
+    "WorldsService": {
+      "Overview": "Worlds overview"
+    },
+    "CalendarTemplateDeletionDialogElement": {
+      "DeletePrompt": "Are you sure you want to delete the template?"
+    },
+    "CalendarTemplateDescriptionDialogElement": {
+      "Message": "Please enter the description which should be used."
+    },
+    "CalendarTemplateEditDialogElement": {
+      "ChooseCommandTitle": "Calendar template configuration",
+      "ChooseCommandDescription": "With this assistant you are able to configure the calendar template",
+      "Description": "Description",
+      "ReminderTime": "Reminder time",
+      "ReminderMessage": "Reminder message",
+      "GuildPoints": "Points",
+      "CommandTitle": "Commands",
+      "EditDescriptionCommand": "{0} Edit description",
+      "EditUriCommand": "{0} Edit link",
+      "EditAppointmentTimeCommand": "{0} Edit appointment time",
+      "EditReminderCommand": "{0} Edit reminder",
+      "EditGuildPointsCommand": "{0} Edit guild points",
+      "CancelCommand": "{0} Cancel"
+    },
+    "CalendarTemplateGuildPointsCapDialogElement": {
+      "Prompt": "Is the guild points cap raised by this event?"
+    },
+    "CalendarTemplateGuildPointsDialogElement": {
+      "Prompt": "Do you want to add guild points to this event?"
+    },
+    "CalendarTemplateGuildPointsPointsDialogElement": {
+      "Message": "Please enter the number of guild points which can be earned by this event."
+    },
+    "CalendarTemplateReminderDialogElement": {
+      "Prompt": "Do you want to add a reminder?"
+    },
+    "CalendarTemplateReminderMessageDialogElement": {
+      "Message": "Please enter the reminder message which should be used."
+    },
+    "CalendarTemplateReminderTimeDialogElement": {
+      "Message": "Please enter the reminder time (hh:mm):"
+    },
+    "CalendarTemplateSelectionDialogElement": {
+      "ChooseTemplateTitle": "Calendar template selection",
+      "ChooseTemplateDescription": "Please choose one of the following calendar templates:",
+      "TemplateField": "Templates"
+    },
+    "CalendarTemplateSetupDialogElement": {
+      "ChooseCommandTitle": "Calendar template configuration",
+      "ChooseCommandDescription": "With this assistant you are able to configure the calendar templates. The following templates are already created:",
+      "TemplatesField": "Templates",
+      "AddCommand": "{0} Add template",
+      "EditCommand": "{0} Edit template",
+      "DeleteCommand": "{0} Delete template",
+      "CancelCommand": "{0} Cancel",
+      "CommandTitle": "Commands"
+    },
+    "CalendarTemplateUriDialogElement": {
+      "Prompt": "Do you want to add link?"
+    },
+    "CalendarTemplateUriUriDialogElement": {
+      "Message": "Please enter the link which should be used."
+    },
+    "CalendarScheduleDayOfWeekDialogElement": {
+      "Title": "Schedule selection",
+      "Description": "Please choose the day of the week:",
+      "Reactions": "Days"
+    },
+    "CalendarScheduleDeletionDialogElement": {
+      "DeletePrompt": "Are you sure you want to delete the schedule?"
+    },
+    "CalendarScheduleDescriptionDialogElement": {
+      "Message": "Please enter the description which should be used."
+    },
+    "CalendarScheduleEditDialogElement": {
+      "ChooseCommandTitle": "Calendar schedule configuration",
+      "ChooseCommandDescription": "With this assistant you are able to configure the calendar schedule",
+      "Description": "Description",
+      "CommandTitle": "Commands",
+      "EditDescriptionCommand": "{0} Edit description",
+      "EditScheduleCommand": "{0} Edit schedule",
+      "EditTemplateCommand": "{0} Edit template",
+      "CancelCommand": "{0} Cancel"
+    },
+    "CalendarScheduleOccurenceCountDialogElement": {
+      "Message": "Please enter on which {0} of the month the appointment should be created or zero if it should be created every week."
+    },
+    "CalendarScheduleOptionsDialogElement": {
+      "Title": "Schedule options selection",
+      "Description": "Please choose one of the following options:",
+      "Reactions": "Options",
+      "None": "No options",
+      "EvenMonth": "Even month",
+      "UnevenMonth": "Uneven month"
+    },
+    "CalendarScheduleScheduleDialogElement": {
+      "ChooseTypeTitle": "Type selection",
+      "ChooseTypeDescription": "Please choose one of the following types:",
+      "TypesField": "Types",
+      "WeekDayOfMonth": "Weekday"
+    },
+    "CalendarScheduleSelectionDialogElement": {
+      "ChooseScheduleTitle": "Calendar schedule selection",
+      "ChooseScheduleDescription": "Please choose one of the following calendar schedules:",
+      "ScheduleField": "Schedules"
+    },
+    "CalendarScheduleSetupDialogElement": {
+      "ChooseCommandTitle": "Calendar schedule configuration",
+      "ChooseCommandDescription": "With this assistant you are able to configure the calendar schedules. The following schedules are already created:",
+      "SchedulesField": "Schedules",
+      "AddCommand": "{0} Add schedule",
+      "EditCommand": "{0} Edit schedule",
+      "DeleteCommand": "{0} Delete schedule",
+      "CancelCommand": "{0} Cancel"
+    },
+    "CalendarTemplateAppointmentTimeDialogElement": {
+      "Message": "Please enter the appointment time (hh:mm):"
+    },
+    "CalendarMessageBuilderService": {
+      "WeekNumber": "Week",
+      "Motd": "Message of the day:",
+      "MotdFormat": "{0} - {1}, {2:dd.MM.} at {2:HH:mm}"
+    },
+    "CalendarOneTimeDayDialogElement": {
+      "Message": "Please enter the day. (yyyy-MM-dd)"
+    },
+    "CalendarAddParticipantsDialogElement": {
+      "Message": "Please enter the members:"
+    },
+    "CalendarAddVoiceChannelDialogElement": {
+      "ChooseTitle": "Voice channel selection",
+      "ChooseDescription": "Please choose one of the voice channels:",
+      "Field": "Channels"
+    },
+    "CalendarAppointmentSelectionDialogElement": {
+      "ChooseTitle": "Appointment selection",
+      "ChooseDescription": "Please choose one of the following appointments:",
+      "Field": "Appointments"
+    },
+    "CalendarParticipantsEditDialogElement": {
+      "CommitTitle": "Participants",
+      "CommitText": "The following participants are recorded:",
+      "Participants": "Participants",
+      "Commands": "Commands",
+      "AddUserCommand": "{0} Add user",
+      "AddVoiceChannelCommand": "{0} Add channel",
+      "RemoveUserCommand": "{0} Remove user",
+      "SetLeaderCommand": "{0} Leader",
+      "CommitCommand": "{0} Commit",
+      "CommitSuccess": "The participants list has been refreshed.",
+      "CancelCommand": "{0} Cancel"
+    },
+    "CalendarRemoveParticipantsDialogElement": {
+      "Message": "Please enter the members:"
+    },
+    "CalendarSetLeaderParticipantsDialogElement": {
+      "Message": "Please enter the members:"
+    },
+    "SearchCommandModule": {
+      "SearchResults": "Search results",
+      "NoResults": "I couldn't find anything.",
+      "TitleSearch": "Title search",
+      "TextSearch": "Text search"
+    },
+    "MissingGuildWars2ApiPermissionException": {
+      "General": "General",
+      "Account": "account",
+      "Builds": "builds",
+      "Characters": "characters",
+      "Guilds": "guilds",
+      "Inventories": "inventories",
+      "Progression": "progression",
+      "PvP": "pvp",
+      "TradingPost": "tradingpost",
+      "Unlocks": "unlocks",
+      "Wallet": "wallet",
+      "MissingPermissions": "The assigned API key does not have permissions ({0}) to execute this command."
+    },
+    "LocatedCommandModuleBase": {
+      "CommandFailedMessage": "The command could not be executed. But I have an error code ({0}) and funny cat picture."
+    },
+    "HelpCommandFormatter": {
+      "Help": "Help",
+      "GeneralHelp": "Listing all top-level commands and groups. Specify a command to see more information.",
+      "NoDescription": "No description provided",
+      "Arguments": "Arguments",
+      "Commands": "Commands",
+      "Subcommands": "Subcommands",
 
-         "help": "Help",
+      "help": "Help",
 
-         "account": "Guild Wars 2 account configuration",
-         "account add": "Add a new account",
-         "account edit": "Edit a existing account",
+      "account": "Guild Wars 2 account configuration",
+      "account add": "Add a new account",
+      "account edit": "Edit a existing account",
 
-         "fractal": "Fractal lfg",
+      "fractal": "Fractal lfg",
 
-         "fractal setup": "Fractal lfg creation",
+      "fractal setup": "Fractal lfg creation",
 
-         "fractal join": "Joining a lfg",
-         "fractal join alias": "Alias",
-         "fractal join timeSpan": "Time",
-         "fractal join timeSpan format": "hh:mm",
-         "fractal join days": "Day/s",
-         "fractal join days format": "Mo/Tu/We/Th/Fr/Sa/Su",
+      "fractal join": "Joining a lfg",
+      "fractal join alias": "Alias",
+      "fractal join timeSpan": "Time",
+      "fractal join timeSpan format": "hh:mm",
+      "fractal join days": "Day/s",
+      "fractal join days format": "Mo/Tu/We/Th/Fr/Sa/Su",
 
-         "fractal leave": "Leaving a lfg",
-         "fractal leave alias": "Alias",
-         "fractal leave timeSpan": "Time",
-         "fractal leave timeSpan format": "hh:mm",
-         "fractal leave days": "Day/s",
-         "fractal leave days format": "Mo/Tu/We/Th/Fr/Sa/Su",
+      "fractal leave": "Leaving a lfg",
+      "fractal leave alias": "Alias",
+      "fractal leave timeSpan": "Time",
+      "fractal leave timeSpan format": "hh:mm",
+      "fractal leave days": "Day/s",
+      "fractal leave days format": "Mo/Tu/We/Th/Fr/Sa/Su",
 
-         "raid": "Raid lfg",
+      "raid": "Raid lfg",
 
-         "raid setup": "Raid lfg creation",
-         "raid join": "Joining a lfg",
-         "raid join name": "Name",
-         "raid join name description": "Lfg name",
-         "raid join role": "Role",
-         "raid join role description": "Role name",
-         "raid leave": "Leaving a lfg",
-         "raid leave alias": "Name",
-         "raid leave alias description": "Lfg name",
-         "raid leave role": "Role",
-         "raid leave role description": "Role name",
-         "raid commit": "Commit appointment",
-         "raid roles": "Role overview",
-         "raid roles own": "Player",
-         "raid roles setup": "Configuration",
-         "raid templates": "Templates",
-         "raid templates setup": "Configuration",
-         "raid levels": "Levels",
-         "raid levels setup": "Configuration",
-         "raid levels set": "Assign a level to users",
-         "raid levels set aliasName": "Alias name",
-         "raid levels set users": "Users",
-         "raid levels overview": "Levels overview",
+      "raid setup": "Raid lfg creation",
+      "raid join": "Joining a lfg",
+      "raid join name": "Name",
+      "raid join name description": "Lfg name",
+      "raid join role": "Role",
+      "raid join role description": "Role name",
+      "raid leave": "Leaving a lfg",
+      "raid leave alias": "Name",
+      "raid leave alias description": "Lfg name",
+      "raid leave role": "Role",
+      "raid leave role description": "Role name",
+      "raid commit": "Commit appointment",
+      "raid roles": "Role overview",
+      "raid roles own": "Player",
+      "raid roles setup": "Configuration",
+      "raid templates": "Templates",
+      "raid templates setup": "Configuration",
+      "raid levels": "Levels",
+      "raid levels setup": "Configuration",
+      "raid levels set": "Assign a level to users",
+      "raid levels set aliasName": "Alias name",
+      "raid levels set users": "Users",
+      "raid levels overview": "Levels overview",
 
-         "guild": "Guild administration",
-         "guild setup": "Setup the guild administration",
-         "guild setNotificationChannel": "Set the notification channel",
-         "guild setReminderChannel": "Set the reminder channel",
-         "guild motd": "Setup the message of the day message",
-         "guild calendar": "Calendar setup",
-         "guild emblem random": "Random generation of guild emblems",
-         "guild bank": "Guild bank",
-         "guild bank check": "Validation",
+      "guild": "Guild administration",
+      "guild setup": "Setup the guild administration",
+      "guild setNotificationChannel": "Set the notification channel",
+      "guild setReminderChannel": "Set the reminder channel",
+      "guild motd": "Setup the message of the day message",
+      "guild calendar": "Calendar setup",
+      "guild emblem random": "Random generation of guild emblems",
+      "guild bank": "Guild bank",
+      "guild bank check": "Validation",
 
-         "calendar": "Calendar administration",
-         "calendar add": "Adding a one time event",
-         "calendar templates": "Template administration",
-         "calendar templates setup": "Template assistant",
-         "calendar schedules": "Schedules administration",
-         "calendar schedules setup": "Schedules assistant",
+      "calendar": "Calendar administration",
+      "calendar add": "Adding a one time event",
+      "calendar templates": "Template administration",
+      "calendar templates setup": "Template assistant",
+      "calendar schedules": "Schedules administration",
+      "calendar schedules setup": "Schedules assistant",
 
-         "config": "Bot configuration",
+      "config": "Bot configuration",
 
-         "config prefix": "Prefix definition",
-         "config prefix prefix": "Prefix",
-         "config adminRole": "Administrator role definition",
-         "config adminRole role": "Administrator role",
+      "config prefix": "Prefix definition",
+      "config prefix prefix": "Prefix",
+      "config adminRole": "Administrator role definition",
+      "config adminRole role": "Administrator role",
 
-         "reminder": "Reminder creation",
+      "reminder": "Reminder creation",
 
-         "reminder in": "Reminder after the given time",
-         "reminder in timeSpan": "Time",
-         "reminder in timeSpan format": "xh/m/s",
-         "reminder in message": "Message",
-         "reminder at": "Reminder at the given time",
-         "reminder at time": "Time",
-         "reminder at time format": "mm:dd",
-         "reminder at date": "Date",
-         "reminder at date format": "yyyy-MM-dd",
-         "reminder at message": "Message",
+      "reminder in": "Reminder after the given time",
+      "reminder in timeSpan": "Time",
+      "reminder in timeSpan format": "xh/m/s",
+      "reminder in message": "Message",
+      "reminder at": "Reminder at the given time",
+      "reminder at time": "Time",
+      "reminder at time format": "mm:dd",
+      "reminder at date": "Date",
+      "reminder at date format": "yyyy-MM-dd",
+      "reminder at message": "Message",
 
-         "reminder weekly": "Weekly reminder creation",
+      "reminder weekly": "Weekly reminder creation",
 
-         "search": "Search",
-         "search google": "Google",
-         "search gw2wiki": "Guild Wars 2 Wiki"
-      }
-   }
+      "search": "Search",
+      "search google": "Google",
+      "search gw2wiki": "Guild Wars 2 Wiki"
+    }
+  }
 }

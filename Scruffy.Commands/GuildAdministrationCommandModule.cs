@@ -346,6 +346,64 @@ public class GuildAdministrationCommandModule : LocatedCommandModuleBase
 
     #endregion // Bank
 
+    #region Ranks
+
+    /// <summary>
+    /// Special ranks
+    /// </summary>
+    [Group("rank")]
+    [Aliases("r")]
+    [RequireGuild]
+    [RequireAdministratorPermissions]
+    [ModuleLifespan(ModuleLifespan.Transient)]
+    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
+    public class GuildAdministrationRankCommandModule : LocatedCommandModuleBase
+    {
+        #region Constructor
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="localizationService">Localization service</param>
+        /// <param name="userManagementService">User management service</param>
+        /// <param name="httpClientFactory">HttpClient-Factory</param>
+        public GuildAdministrationRankCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
+            : base(localizationService, userManagementService, httpClientFactory)
+        {
+        }
+
+        #endregion // Constructor
+
+        #region Methods
+
+        /// <summary>
+        /// Special ranks configuration
+        /// </summary>
+        /// <param name="commandContext">Current command context</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("setup")]
+        [RequireGuild]
+        [RequireAdministratorPermissions]
+        public Task Setup(CommandContext commandContext)
+        {
+            return InvokeAsync(commandContext,
+                               async commandContextContainer =>
+                               {
+                                   bool repeat;
+
+                                   do
+                                   {
+                                       repeat = await DialogHandler.Run<GuildAdministrationRankSetupDialogElement, bool>(commandContextContainer).ConfigureAwait(false);
+                                   }
+                                   while (repeat);
+                               });
+        }
+
+        #endregion // Methods
+    }
+
+    #endregion // Ranks
+
     #region Special ranks
 
     /// <summary>
@@ -374,10 +432,14 @@ public class GuildAdministrationCommandModule : LocatedCommandModuleBase
 
         #endregion // Constructor
 
+        #region Properties
+
         /// <summary>
         /// Special rank service
         /// </summary>
         public GuildSpecialRankService SpecialRankService { get; set; }
+
+        #endregion // Properties
 
         #region Methods
 

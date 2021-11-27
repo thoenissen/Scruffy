@@ -6,9 +6,9 @@ using Scruffy.Services.Core.Localization;
 namespace Scruffy.Services.GuildAdministration.DialogElements;
 
 /// <summary>
-/// Selection of a discord role
+/// Selection of the discord role
 /// </summary>
-public class GuildAdministrationSpecialRankRoleAssignmentDiscordRoleDialogElement : DialogEmbedMessageElementBase<ulong>
+public class GuildAdministrationRankDiscordRoleDialogElement : DialogEmbedMessageElementBase<ulong>
 {
     #region Fields
 
@@ -25,7 +25,7 @@ public class GuildAdministrationSpecialRankRoleAssignmentDiscordRoleDialogElemen
     /// Constructor
     /// </summary>
     /// <param name="localizationService">Localization service</param>
-    public GuildAdministrationSpecialRankRoleAssignmentDiscordRoleDialogElement(LocalizationService localizationService)
+    public GuildAdministrationRankDiscordRoleDialogElement(LocalizationService localizationService)
         : base(localizationService)
     {
     }
@@ -41,8 +41,8 @@ public class GuildAdministrationSpecialRankRoleAssignmentDiscordRoleDialogElemen
     public override DiscordEmbedBuilder GetMessage()
     {
         var builder = new DiscordEmbedBuilder();
-        builder.WithTitle(LocalizationGroup.GetText("ChooseRoleTitle", "Role selection"));
-        builder.WithDescription(LocalizationGroup.GetText("ChooseRoleDescription", "Please choose one of the following roles:"));
+        builder.WithTitle(LocalizationGroup.GetText("ChooseTitle", "Role selection"));
+        builder.WithDescription(LocalizationGroup.GetText("ChooseDescription", "Please choose one of the following roles:"));
 
         _roles = new Dictionary<int, ulong>();
         var stringBuilder = new StringBuilder();

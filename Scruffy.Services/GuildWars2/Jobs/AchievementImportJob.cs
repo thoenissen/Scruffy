@@ -8,55 +8,54 @@ using Scruffy.Services.Core;
 using Scruffy.Services.Core.Exceptions.WebApi;
 using Scruffy.Services.Core.JobScheduler;
 
-namespace Scruffy.Services.GuildWars2.Jobs
+namespace Scruffy.Services.GuildWars2.Jobs;
+
+/// <summary>
+/// Importing achievements
+/// </summary>
+public class AchievementImportJob : LocatedAsyncJob
 {
+    #region LocatedAsyncJob
+
     /// <summary>
-    /// Importing achievements
+    /// Executes the job
     /// </summary>
-    public class AchievementImportJob : LocatedAsyncJob
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public override async Task ExecuteAsync()
     {
-        #region LocatedAsyncJob
-
-        /// <summary>
-        /// Executes the job
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public override async Task ExecuteAsync()
+        using (var dbFactory = RepositoryFactory.CreateInstance())
         {
-            using (var dbFactory = RepositoryFactory.CreateInstance())
+            var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+            await using (serviceProvider.ConfigureAwait(false))
             {
-                var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
-                await using (serviceProvider.ConfigureAwait(false))
+                var achievementService = serviceProvider.GetService<AchievementService>();
+
+                await achievementService.ImportAchievements()
+                                        .ConfigureAwait(false);
+
+                foreach (var account in await dbFactory.GetRepository<GuildWarsAccountRepository>()
+                                                       .GetQuery()
+                                                       .Select(obj => new
+                                                                      {
+                                                                          obj.Name,
+                                                                          obj.ApiKey
+                                                                      })
+                                                       .ToListAsync()
+                                                       .ConfigureAwait(false))
                 {
-                    var achievementService = serviceProvider.GetService<AchievementService>();
-
-                    await achievementService.ImportAchievements()
-                                            .ConfigureAwait(false);
-
-                    foreach (var account in await dbFactory.GetRepository<GuildWarsAccountRepository>()
-                                                           .GetQuery()
-                                                           .Select(obj => new
-                                                                          {
-                                                                              obj.Name,
-                                                                              obj.ApiKey
-                                                                          })
-                                                           .ToListAsync()
-                                                           .ConfigureAwait(false))
+                    try
                     {
-                        try
-                        {
-                            await achievementService.ImportAccountAchievements(account.Name, account.ApiKey)
-                                                    .ConfigureAwait(false);
-                        }
-                        catch (MissingGuildWars2ApiPermissionException ex)
-                        {
-                            LoggingService.AddJobLogEntry(LogEntryLevel.Error, nameof(AchievementImportJob), $"Missing permissions {account}", null, ex);
-                        }
+                        await achievementService.ImportAccountAchievements(account.Name, account.ApiKey)
+                                                .ConfigureAwait(false);
+                    }
+                    catch (MissingGuildWars2ApiPermissionException ex)
+                    {
+                        LoggingService.AddJobLogEntry(LogEntryLevel.Error, nameof(AchievementImportJob), $"Missing permissions {account}", null, ex);
                     }
                 }
             }
         }
-
-        #endregion // LocatedAsyncJob
     }
+
+    #endregion // LocatedAsyncJob
 }

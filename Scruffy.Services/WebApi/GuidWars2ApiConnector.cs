@@ -277,6 +277,27 @@ public sealed class GuidWars2ApiConnector : IAsyncDisposable,
     }
 
     /// <summary>
+    /// Request the guild ranks
+    /// </summary>
+    /// <param name="guildId">Id of the guild</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public Task<List<GuildRank>> GetGuildRanks(string guildId)
+    {
+        return Invoke(GuildWars2ApiPermission.Account | GuildWars2ApiPermission.Guilds,
+                      async () =>
+                      {
+                          using (var response = await CreateRequest($"https://api.guildwars2.com/v2/guild/{guildId}/ranks").ConfigureAwait(false))
+                          {
+                              var jsonResult = await response.Content
+                                                             .ReadAsStringAsync()
+                                                             .ConfigureAwait(false);
+
+                              return JsonConvert.DeserializeObject<List<GuildRank>>(jsonResult);
+                          }
+                      });
+    }
+
+    /// <summary>
     /// Request all available guild emblem foregrounds
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
