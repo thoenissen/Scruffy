@@ -119,20 +119,13 @@ public class CalendarMessageBuilderService : LocatedServiceBase
 
                 if (channel != null)
                 {
-                    var message = await channel.GetMessageAsync(calendar.Channel.MessageId.Value)
-                                               .ConfigureAwait(false);
-
-                    if (message != null)
-                    {
-                        await message.ModifyAsync(null,
-                                                  new DiscordEmbedBuilder().WithTitle(LocalizationGroup.GetText("Motd", "Message of the day:"))
-                                                                           .WithDescription(Formatter.BlockCode(messageBuilder.ToString()))
-                                                                           .WithColor(DiscordColor.Green)
-                                                                           .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/ef1f3e1f3f40100fb3750f8d7d25c657.png?size=64")
-                                                                           .WithTimestamp(DateTime.Now)
-                                                                           .Build())
-                                     .ConfigureAwait(false);
-                    }
+                    await channel.SendMessageAsync(new DiscordEmbedBuilder().WithTitle(LocalizationGroup.GetText("Motd", "Message of the day:"))
+                                                                            .WithDescription(Formatter.BlockCode(messageBuilder.ToString()))
+                                                                            .WithColor(DiscordColor.Green)
+                                                                            .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/ef1f3e1f3f40100fb3750f8d7d25c657.png?size=64")
+                                                                            .WithTimestamp(DateTime.Now)
+                                                                            .Build())
+                                 .ConfigureAwait(false);
                 }
             }
         }
