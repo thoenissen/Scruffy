@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
 using System.Net;
-using System.Net.Http;
 
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
@@ -10,8 +9,6 @@ using DSharpPlus.Entities;
 using Scruffy.Services.Calendar;
 using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Discord.Attributes;
-using Scruffy.Services.Core.Localization;
-using Scruffy.Services.CoreData;
 using Scruffy.Services.Debug;
 using Scruffy.Services.GuildAdministration.Jobs;
 using Scruffy.Services.GuildWars2;
@@ -30,21 +27,6 @@ namespace Scruffy.Commands;
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
 public class DebugCommandModule : LocatedCommandModuleBase
 {
-    #region Constructor
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="localizationService">Localization service</param>
-    /// <param name="userManagementService">User management service</param>
-    /// <param name="httpClientFactory">HttpClient-Factory</param>
-    public DebugCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-        : base(localizationService, userManagementService, httpClientFactory)
-    {
-    }
-
-    #endregion // Constructor
-
     #region Methods
 
     /// <summary>
@@ -78,21 +60,6 @@ public class DebugCommandModule : LocatedCommandModuleBase
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugDumpModule : LocatedCommandModuleBase
     {
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="userManagementService">User management service</param>
-        /// <param name="httpClientFactory">HttpClient-Factory</param>
-        public DebugDumpModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-            : base(localizationService, userManagementService, httpClientFactory)
-        {
-        }
-
-        #endregion // Constructor
-
         #region Properties
 
         /// <summary>
@@ -133,21 +100,6 @@ public class DebugCommandModule : LocatedCommandModuleBase
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugRaidModule : LocatedCommandModuleBase
     {
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="userManagementService">User management service</param>
-        /// <param name="httpClientFactory">HttpClient-Factory</param>
-        public DebugRaidModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-            : base(localizationService, userManagementService, httpClientFactory)
-        {
-        }
-
-        #endregion // Constructor
-
         #region Properties
 
         /// <summary>
@@ -192,21 +144,6 @@ public class DebugCommandModule : LocatedCommandModuleBase
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugListModule : LocatedCommandModuleBase
     {
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="userManagementService">User management service</param>
-        /// <param name="httpClientFactory">HttpClient-Factory</param>
-        public DebugListModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-            : base(localizationService, userManagementService, httpClientFactory)
-        {
-        }
-
-        #endregion // Constructor
-
         #region Properties
 
         /// <summary>
@@ -299,21 +236,6 @@ public class DebugCommandModule : LocatedCommandModuleBase
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugAccountModule : LocatedCommandModuleBase
     {
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="userManagementService">User management service</param>
-        /// <param name="httpClientFactory">HttpClient-Factory</param>
-        public DebugAccountModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-            : base(localizationService, userManagementService, httpClientFactory)
-        {
-        }
-
-        #endregion // Constructor
-
         #region Properties
 
         /// <summary>
@@ -349,21 +271,6 @@ public class DebugCommandModule : LocatedCommandModuleBase
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugGuildWarsModule : LocatedCommandModuleBase
     {
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="userManagementService">User management service</param>
-        /// <param name="httpClientFactory">HttpClient-Factory</param>
-        public DebugGuildWarsModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-            : base(localizationService, userManagementService, httpClientFactory)
-        {
-        }
-
-        #endregion // Constructor
-
         #region Properties
 
         /// <summary>
@@ -417,21 +324,6 @@ public class DebugCommandModule : LocatedCommandModuleBase
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugCalendarModule : LocatedCommandModuleBase
     {
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="userManagementService">User management service</param>
-        /// <param name="httpClientFactory">HttpClient-Factory</param>
-        public DebugCalendarModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-            : base(localizationService, userManagementService, httpClientFactory)
-        {
-        }
-
-        #endregion // Constructor
-
         #region Properties
 
         /// <summary>
@@ -512,30 +404,6 @@ public class DebugCommandModule : LocatedCommandModuleBase
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugUserModule : LocatedCommandModuleBase
     {
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="userManagementService">User management service</param>
-        /// <param name="httpClientFactory">HttpClient-Factory</param>
-        public DebugUserModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-            : base(localizationService, userManagementService, httpClientFactory)
-        {
-        }
-
-        #endregion // Constructor
-
-        #region Properties
-
-        /// <summary>
-        /// User management service
-        /// </summary>
-        public UserManagementService UserManagementService { get; set; }
-
-        #endregion // Properties
-
         #region Methods
 
         /// <summary>
@@ -571,21 +439,6 @@ public class DebugCommandModule : LocatedCommandModuleBase
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugGuildModule : LocatedCommandModuleBase
     {
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="userManagementService">User management service</param>
-        /// <param name="httpClientFactory">HttpClient-Factory</param>
-        public DebugGuildModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-            : base(localizationService, userManagementService, httpClientFactory)
-        {
-        }
-
-        #endregion // Constructor
-
         #region Methods
 
         /// <summary>
@@ -618,21 +471,6 @@ public class DebugCommandModule : LocatedCommandModuleBase
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugImportModule : LocatedCommandModuleBase
     {
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="userManagementService">User management service</param>
-        /// <param name="httpClientFactory">HttpClient-Factory</param>
-        public DebugImportModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-            : base(localizationService, userManagementService, httpClientFactory)
-        {
-        }
-
-        #endregion // Constructor
-
         #region Properties
 
         /// <summary>
@@ -711,21 +549,6 @@ public class DebugCommandModule : LocatedCommandModuleBase
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugNetworkModule : LocatedCommandModuleBase
     {
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="userManagementService">User management service</param>
-        /// <param name="httpClientFactory">HttpClient-Factory</param>
-        public DebugNetworkModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-            : base(localizationService, userManagementService, httpClientFactory)
-        {
-        }
-
-        #endregion // Constructor
-
         #region Properties
 
         /// <summary>
@@ -784,21 +607,6 @@ public class DebugCommandModule : LocatedCommandModuleBase
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugLogModule : LocatedCommandModuleBase
     {
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="userManagementService">User management service</param>
-        /// <param name="httpClientFactory">HttpClient-Factory</param>
-        public DebugLogModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-            : base(localizationService, userManagementService, httpClientFactory)
-        {
-        }
-
-        #endregion // Constructor
-
         #region Properties
 
         /// <summary>

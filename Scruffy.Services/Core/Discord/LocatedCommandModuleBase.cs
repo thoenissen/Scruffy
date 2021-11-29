@@ -21,50 +21,33 @@ public class LocatedCommandModuleBase : BaseCommandModule
     #region Fields
 
     /// <summary>
-    /// Internal localization group
+    /// Localization group
     /// </summary>
-    private readonly Lazy<LocalizationGroup> _internalLocalizationGroup;
-
-    /// <summary>
-    /// User management service
-    /// </summary>
-    private readonly UserManagementService _userManagementService;
-
-    /// <summary>
-    /// HttpClient-Factory
-    /// </summary>
-    private readonly IHttpClientFactory _httpClientFactory;
+    private LocalizationGroup _localizationGroup;
 
     #endregion // Fields
-
-    #region Constructor
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="localizationService">Localization service</param>
-    /// <param name="userManagementService">User management server</param>
-    /// <param name="httpClientFactory">HttpClient-Factory</param>
-    public LocatedCommandModuleBase(LocalizationService localizationService,
-                                    UserManagementService userManagementService,
-                                    IHttpClientFactory httpClientFactory)
-    {
-        LocalizationGroup = localizationService.GetGroup(GetType().Name);
-
-        _internalLocalizationGroup = new Lazy<LocalizationGroup>(() => localizationService.GetGroup(nameof(LocatedCommandModuleBase)));
-
-        _userManagementService = userManagementService;
-        _httpClientFactory = httpClientFactory;
-    }
-
-    #endregion // Constructor
 
     #region Properties
 
     /// <summary>
+    /// Localization service
+    /// </summary>
+    public LocalizationService LocalizationService { protected get; set; }
+
+    /// <summary>
+    /// User management service
+    /// </summary>
+    public UserManagementService UserManagementService { protected get; set; }
+
+    /// <summary>
+    /// HttpClient-Factory
+    /// </summary>
+    public IHttpClientFactory HttpClientFactory { protected get; set; }
+
+    /// <summary>
     /// Localization group
     /// </summary>
-    public LocalizationGroup LocalizationGroup { get; }
+    public LocalizationGroup LocalizationGroup => _localizationGroup ??= LocalizationService.GetGroup(GetType().Name);
 
     #endregion // Properties
 
@@ -90,7 +73,7 @@ public class LocatedCommandModuleBase : BaseCommandModule
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     protected async Task InvokeAsync(CommandContext commandContext, Func<CommandContextContainer, Task> action)
     {
-        var commandContextContainer = new CommandContextContainer(commandContext, _userManagementService);
+        var commandContextContainer = new CommandContextContainer(commandContext, UserManagementService);
 
         try
         {
@@ -112,7 +95,7 @@ public class LocatedCommandModuleBase : BaseCommandModule
         {
             var logEntryId = LoggingService.AddCommandLogEntry(LogEntryLevel.CriticalError, commandContext.Command?.QualifiedName, commandContextContainer.LastUserMessage?.Content, ex.Message, ex.ToString());
 
-            var client = _httpClientFactory.CreateClient();
+            var client = HttpClientFactory.CreateClient();
 
             using (var response = await client.GetAsync("https://g.tenor.com/v1/search?q=funny%20cat&key=RXM3VE2UGRU9&limit=50&contentfilter=high&ar_range=all")
                                               .ConfigureAwait(false))
@@ -140,7 +123,9 @@ public class LocatedCommandModuleBase : BaseCommandModule
 
                     await using (stream.ConfigureAwait(false))
                     {
-                        var builder = new DiscordMessageBuilder().WithContent(_internalLocalizationGroup.Value.GetFormattedText("CommandFailedMessage", "The command could not be executed. But I have an error code ({0}) and funny cat picture.", logEntryId ?? -1))
+                        var internalLocalizationGroup = LocalizationService.GetGroup(nameof(LocatedCommandModuleBase));
+
+                        var builder = new DiscordMessageBuilder().WithContent(internalLocalizationGroup.GetFormattedText("CommandFailedMessage", "The command could not be executed. But I have an error code ({0}) and funny cat picture.", logEntryId ?? -1))
                                                                  .WithFile("cat.gif", stream);
 
                         await commandContextContainer.Channel

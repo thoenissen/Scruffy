@@ -1,6 +1,4 @@
-﻿using System.Net.Http;
-
-using DSharpPlus;
+﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
@@ -17,8 +15,6 @@ using Scruffy.Data.Entity.Tables.Raid;
 using Scruffy.Data.Enumerations.CoreData;
 using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Discord.Attributes;
-using Scruffy.Services.Core.Localization;
-using Scruffy.Services.CoreData;
 using Scruffy.Services.Raid;
 using Scruffy.Services.Raid.DialogElements;
 using Scruffy.Services.Raid.DialogElements.Forms;
@@ -33,37 +29,7 @@ namespace Scruffy.Commands;
 [ModuleLifespan(ModuleLifespan.Transient)]
 public class RaidCommandModule : LocatedCommandModuleBase
 {
-    #region Fields
-
-    /// <summary>
-    /// User management service
-    /// </summary>
-    private UserManagementService _userManagementService;
-
-    #endregion // Fields
-
-    #region Constructor
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="localizationService">Localization service</param>
-    /// <param name="userManagementService">User management service</param>
-    /// <param name="httpClientFactory">HttpClient-Factory</param>
-    public RaidCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-        : base(localizationService, userManagementService, httpClientFactory)
-    {
-        _userManagementService = userManagementService;
-    }
-
-    #endregion // Constructor
-
     #region Properties
-
-    /// <summary>
-    /// User management service
-    /// </summary>
-    public UserManagementService UserManagementService { get; set; }
 
     /// <summary>
     /// Message builder
@@ -339,8 +305,8 @@ public class RaidCommandModule : LocatedCommandModuleBase
                                                                     .ConfigureAwait(false);
                                    if (appointment != null)
                                    {
-                                       var internalUser = await _userManagementService.GetUserByDiscordAccountId(user.Id)
-                                                                                      .ConfigureAwait(false);
+                                       var internalUser = await UserManagementService.GetUserByDiscordAccountId(user.Id)
+                                                                                     .ConfigureAwait(false);
 
                                        if (await RegistrationService.Leave(appointment.Id, internalUser.Id)
                                                                     .ConfigureAwait(false))
@@ -522,27 +488,7 @@ public class RaidCommandModule : LocatedCommandModuleBase
     [ModuleLifespan(ModuleLifespan.Transient)]
     public class RaidRolesCommandModule : LocatedCommandModuleBase
     {
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="userManagementService">User management service</param>
-        /// <param name="httpClientFactory">HttpClient-Factory</param>
-        public RaidRolesCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-            : base(localizationService, userManagementService, httpClientFactory)
-        {
-        }
-
-        #endregion // Constructor
-
         #region Properties
-
-        /// <summary>
-        /// User management service
-        /// </summary>
-        public UserManagementService UserManagementService { get; set; }
 
         /// <summary>
         /// Message builder
@@ -591,21 +537,6 @@ public class RaidCommandModule : LocatedCommandModuleBase
     [ModuleLifespan(ModuleLifespan.Transient)]
     public class RaidTemplatesCommandModule : LocatedCommandModuleBase
     {
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="userManagementService">User management service</param>
-        /// <param name="httpClientFactory">HttpClient-Factory</param>
-        public RaidTemplatesCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-            : base(localizationService, userManagementService, httpClientFactory)
-        {
-        }
-
-        #endregion // Constructor
-
         #region Methods
 
         /// <summary>
@@ -646,21 +577,6 @@ public class RaidCommandModule : LocatedCommandModuleBase
     [ModuleLifespan(ModuleLifespan.Transient)]
     public class RaidExperienceLevelsCommandModule : LocatedCommandModuleBase
     {
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="userManagementService">User management service</param>
-        /// <param name="httpClientFactory">HttpClient-Factory</param>
-        public RaidExperienceLevelsCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-            : base(localizationService, userManagementService, httpClientFactory)
-        {
-        }
-
-        #endregion // Constructor
-
         #region Properties
 
         /// <summary>
@@ -853,21 +769,6 @@ public class RaidCommandModule : LocatedCommandModuleBase
     [ModuleLifespan(ModuleLifespan.Transient)]
     public class RaidOverviewCommandModule : LocatedCommandModuleBase
     {
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="userManagementService">User management service</param>
-        /// <param name="httpClientFactory">HttpClient-Factory</param>
-        public RaidOverviewCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-            : base(localizationService, userManagementService, httpClientFactory)
-        {
-        }
-
-        #endregion // Constructor
-
         #region Properties
 
         /// <summary>

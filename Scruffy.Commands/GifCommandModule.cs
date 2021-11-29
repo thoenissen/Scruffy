@@ -11,8 +11,6 @@ using Scruffy.Data.Enumerations.General;
 using Scruffy.Data.Json.Tenor;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord;
-using Scruffy.Services.Core.Localization;
-using Scruffy.Services.CoreData;
 
 namespace Scruffy.Commands;
 
@@ -23,30 +21,6 @@ namespace Scruffy.Commands;
 [Aliases("gi")]
 public class GifCommandModule : LocatedCommandModuleBase
 {
-    #region Constructor
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="localizationService">Localization service</param>
-    /// <param name="userManagementService">User management service</param>
-    /// <param name="httpClientFactory">HttpClient-Factory</param>
-    public GifCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-        : base(localizationService, userManagementService, httpClientFactory)
-    {
-    }
-
-    #endregion // Constructor
-
-    #region Properties
-
-    /// <summary>
-    /// HttpClient-Factory
-    /// </summary>
-    public IHttpClientFactory HttpClientFactory { get; set; }
-
-    #endregion // Properties
-
     #region Methods
 
     /// <summary>

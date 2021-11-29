@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using System.Net.Http;
 using System.Text.RegularExpressions;
 
 using DSharpPlus;
@@ -14,8 +13,6 @@ using Scruffy.Data.Entity.Tables.Reminder;
 using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Discord.Attributes;
 using Scruffy.Services.Core.JobScheduler;
-using Scruffy.Services.Core.Localization;
-using Scruffy.Services.CoreData;
 
 namespace Scruffy.Commands;
 
@@ -28,27 +25,7 @@ namespace Scruffy.Commands;
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
 public class ReminderCreationCommandModule : LocatedCommandModuleBase
 {
-    #region Constructor
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="localizationService">Localization service</param>
-    /// <param name="userManagementService">User management service</param>
-    /// <param name="httpClientFactory">HttpClient-Factory</param>
-    public ReminderCreationCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-        : base(localizationService, userManagementService, httpClientFactory)
-    {
-    }
-
-    #endregion // Constructor
-
     #region Properties
-
-    /// <summary>
-    /// User management service
-    /// </summary>
-    public UserManagementService UserManagementService { get; set; }
 
     /// <summary>
     /// Scheduling jobs

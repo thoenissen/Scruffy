@@ -1,14 +1,10 @@
-﻿using System.Net.Http;
-
-using DSharpPlus.CommandsNext;
+﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.CommandsNext.Exceptions;
 using DSharpPlus.Entities;
 
 using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Discord.Attributes;
-using Scruffy.Services.Core.Localization;
-using Scruffy.Services.CoreData;
 
 namespace Scruffy.Commands;
 
@@ -20,21 +16,6 @@ namespace Scruffy.Commands;
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
 public class HelpCommandModule : LocatedCommandModuleBase
 {
-    #region Constructor
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="localizationService">Localization service</param>
-    /// <param name="userManagementService">User management service</param>
-    /// <param name="httpClientFactory">HttpClient-Factory</param>
-    public HelpCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-        : base(localizationService, userManagementService, httpClientFactory)
-    {
-    }
-
-    #endregion // Constructor
-
     #region Methods
 
     /// <summary>
@@ -79,34 +60,7 @@ public class HelpCommandModule : LocatedCommandModuleBase
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
     public class HelpOverviewCommandModule : LocatedCommandModuleBase
     {
-        #region Fields
-
-        #region FIelds
-
-        /// <summary>
-        /// Localization service
-        /// </summary>
-        private LocalizationService _localizationService;
-
-        #endregion // Fields
-
-        #endregion
-
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="userManagementService">User management service</param>
-        /// <param name="httpClientFactory">HttpClient-Factory</param>
-        public HelpOverviewCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-            : base(localizationService, userManagementService, httpClientFactory)
-        {
-            _localizationService = localizationService;
-        }
-
-        #endregion // Constructor
+        #region Methods
 
         /// <summary>
         /// Overview
@@ -169,7 +123,7 @@ public class HelpCommandModule : LocatedCommandModuleBase
             return InvokeAsync(commandContext,
                                async commandContextContainer =>
                                {
-                                   var localizationGroup = _localizationService.GetGroup(nameof(HelpCommandFormatter));
+                                   var localizationGroup = LocalizationService.GetGroup(nameof(HelpCommandFormatter));
 
                                    var builder = new DiscordEmbedBuilder()
                                                  .WithTitle(LocalizationGroup.GetText("HelpCommandOverviewTitle", "Overview of the most important commands"))
@@ -178,7 +132,7 @@ public class HelpCommandModule : LocatedCommandModuleBase
                                                  .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/ef1f3e1f3f40100fb3750f8d7d25c657.png?size=64")
                                                  .WithTimestamp(DateTime.Now);
 
-                                   var formatter = new HelpCommandFormatter(commandContext, _localizationService);
+                                   var formatter = new HelpCommandFormatter(commandContext, LocalizationService);
 
                                    var fieldCounter = 0;
                                    var builderCounter = 1;
@@ -261,6 +215,8 @@ public class HelpCommandModule : LocatedCommandModuleBase
                                                                 .ConfigureAwait(false);
                                });
         }
+
+        #endregion // Methods
     }
 
     #endregion // Overview

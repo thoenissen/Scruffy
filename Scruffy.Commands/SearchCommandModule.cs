@@ -15,8 +15,6 @@ using Newtonsoft.Json;
 using Scruffy.Data.Json.MediaWiki;
 using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Discord.Attributes;
-using Scruffy.Services.Core.Localization;
-using Scruffy.Services.CoreData;
 
 namespace Scruffy.Commands;
 
@@ -29,30 +27,6 @@ namespace Scruffy.Commands;
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
 public class SearchCommandModule : LocatedCommandModuleBase
 {
-    #region Constructor
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="localizationService">Localization service</param>
-    /// <param name="userManagementService">User management service</param>
-    /// <param name="httpClientFactory">HttpClient-Factory</param>
-    public SearchCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-        : base(localizationService, userManagementService, httpClientFactory)
-    {
-    }
-
-    #endregion // Constructor
-
-    #region Properties
-
-    /// <summary>
-    /// HttpClient-Factory
-    /// </summary>
-    public IHttpClientFactory HttpClientFactory { get; set; }
-
-    #endregion // Properties
-
     #region Command methods
 
     /// <summary>

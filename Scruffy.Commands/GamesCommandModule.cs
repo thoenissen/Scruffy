@@ -1,12 +1,8 @@
-﻿using System.Net.Http;
-
-using DSharpPlus.CommandsNext;
+﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 
 using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Discord.Attributes;
-using Scruffy.Services.Core.Localization;
-using Scruffy.Services.CoreData;
 using Scruffy.Services.Games;
 
 namespace Scruffy.Commands;
@@ -20,21 +16,6 @@ namespace Scruffy.Commands;
 [ModuleLifespan(ModuleLifespan.Transient)]
 public class GamesCommandModule : LocatedCommandModuleBase
 {
-    #region Constructor
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="localizationService">Localization service</param>
-    /// <param name="userManagementService">User management service</param>
-    /// <param name="httpClientFactory">HttpClient-Factory</param>
-    public GamesCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-        : base(localizationService, userManagementService, httpClientFactory)
-    {
-    }
-
-    #endregion // Constructor
-
     #region Counter
 
     /// <summary>
@@ -46,21 +27,6 @@ public class GamesCommandModule : LocatedCommandModuleBase
     [ModuleLifespan(ModuleLifespan.Transient)]
     public class GamesCounterCommandModule : LocatedCommandModuleBase
     {
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="userManagementService">User management service</param>
-        /// <param name="httpClientFactory">HttpClient-Factory</param>
-        public GamesCounterCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-            : base(localizationService, userManagementService, httpClientFactory)
-        {
-        }
-
-        #endregion // Constructor
-
         #region Properties
 
         /// <summary>
@@ -132,21 +98,6 @@ public class GamesCommandModule : LocatedCommandModuleBase
     [ModuleLifespan(ModuleLifespan.Transient)]
     public class GamesWordChainCommandModule : LocatedCommandModuleBase
     {
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="userManagementService">User management service</param>
-        /// <param name="httpClientFactory">HttpClient-Factory</param>
-        public GamesWordChainCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-            : base(localizationService, userManagementService, httpClientFactory)
-        {
-        }
-
-        #endregion // Constructor
-
         #region Properties
 
         /// <summary>

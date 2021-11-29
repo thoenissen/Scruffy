@@ -86,7 +86,12 @@ public class Program
     /// </summary>
     /// <param name="sender">Sender</param>
     /// <param name="e">Arguments</param>
-    private static void OnCancelKeyPress(object sender, ConsoleCancelEventArgs e) => _waitForExitTaskSource.SetResult(true);
+    private static void OnCancelKeyPress(object sender, ConsoleCancelEventArgs e)
+    {
+        e.Cancel = false;
+
+        _waitForExitTaskSource.SetResult(true);
+    }
 
     /// <summary>
     /// Occurs when the default application domain's parent process exits.

@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using System.Net.Http;
 
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
@@ -7,8 +6,6 @@ using DSharpPlus.CommandsNext.Attributes;
 using Scruffy.Data.Enumerations.GuildAdministration;
 using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Discord.Attributes;
-using Scruffy.Services.Core.Localization;
-using Scruffy.Services.CoreData;
 using Scruffy.Services.GuildAdministration;
 using Scruffy.Services.GuildAdministration.DialogElements;
 using Scruffy.Services.GuildWars2;
@@ -24,21 +21,6 @@ namespace Scruffy.Commands;
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
 public class GuildAdministrationCommandModule : LocatedCommandModuleBase
 {
-    #region Constructor
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="localizationService">Localization service</param>
-    /// <param name="userManagementService">User management service</param>
-    /// <param name="httpClientFactory">HttpClient-Factory</param>
-    public GuildAdministrationCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-        : base(localizationService, userManagementService, httpClientFactory)
-    {
-    }
-
-    #endregion // Constructor
-
     #region Properties
 
     /// <summary>
@@ -175,21 +157,6 @@ public class GuildAdministrationCommandModule : LocatedCommandModuleBase
     [ModuleLifespan(ModuleLifespan.Transient)]
     public class GuildAdministrationEmblemCommandModule : LocatedCommandModuleBase
     {
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="userManagementService">User management service</param>
-        /// <param name="httpClientFactory">HttpClient-Factory</param>
-        public GuildAdministrationEmblemCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-            : base(localizationService, userManagementService, httpClientFactory)
-        {
-        }
-
-        #endregion // Constructor
-
         #region Properties
 
         /// <summary>
@@ -236,21 +203,6 @@ public class GuildAdministrationCommandModule : LocatedCommandModuleBase
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public class GuildAdministrationBankCommandModule : LocatedCommandModuleBase
     {
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="userManagementService">User management service</param>
-        /// <param name="httpClientFactory">HttpClient-Factory</param>
-        public GuildAdministrationBankCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-            : base(localizationService, userManagementService, httpClientFactory)
-        {
-        }
-
-        #endregion // Constructor
-
         #region Properties
 
         /// <summary>
@@ -295,17 +247,6 @@ public class GuildAdministrationCommandModule : LocatedCommandModuleBase
         public class GuildAdministrationBankUnlocksCommandModule : LocatedCommandModuleBase
         {
             #region Constructor
-
-            /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="localizationService">Localization service</param>
-            /// <param name="userManagementService">User management service</param>
-            /// <param name="httpClientFactory">HttpClient-Factory</param>
-            public GuildAdministrationBankUnlocksCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-                : base(localizationService, userManagementService, httpClientFactory)
-            {
-            }
 
             #endregion // Constructor
 
@@ -359,21 +300,6 @@ public class GuildAdministrationCommandModule : LocatedCommandModuleBase
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public class GuildAdministrationRankCommandModule : LocatedCommandModuleBase
     {
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="userManagementService">User management service</param>
-        /// <param name="httpClientFactory">HttpClient-Factory</param>
-        public GuildAdministrationRankCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-            : base(localizationService, userManagementService, httpClientFactory)
-        {
-        }
-
-        #endregion // Constructor
-
         #region Methods
 
         /// <summary>
@@ -417,21 +343,6 @@ public class GuildAdministrationCommandModule : LocatedCommandModuleBase
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public class GuildAdministrationSpecialRankCommandModule : LocatedCommandModuleBase
     {
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="userManagementService">User management service</param>
-        /// <param name="httpClientFactory">HttpClient-Factory</param>
-        public GuildAdministrationSpecialRankCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-            : base(localizationService, userManagementService, httpClientFactory)
-        {
-        }
-
-        #endregion // Constructor
-
         #region Properties
 
         /// <summary>
@@ -503,21 +414,6 @@ public class GuildAdministrationCommandModule : LocatedCommandModuleBase
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public class GuildAdministrationChartCommandModule : LocatedCommandModuleBase
     {
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="userManagementService">User management service</param>
-        /// <param name="httpClientFactory">HttpClient-Factory</param>
-        public GuildAdministrationChartCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-            : base(localizationService, userManagementService, httpClientFactory)
-        {
-        }
-
-        #endregion // Constructor
-
         #region Properties
 
         /// <summary>
@@ -566,21 +462,6 @@ public class GuildAdministrationCommandModule : LocatedCommandModuleBase
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public class GuildAdministrationExportCommandModule : LocatedCommandModuleBase
     {
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="userManagementService">User management service</param>
-        /// <param name="httpClientFactory">HttpClient-Factory</param>
-        public GuildAdministrationExportCommandModule(LocalizationService localizationService, UserManagementService userManagementService, IHttpClientFactory httpClientFactory)
-            : base(localizationService, userManagementService, httpClientFactory)
-        {
-        }
-
-        #endregion // Constructor
-
         #region Properties
 
         /// <summary>
