@@ -304,6 +304,7 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
                                                                            nextAppointment.TemplateId = obj.TemplateId;
                                                                            nextAppointment.TimeStamp = obj.TimeStamp.AddDays(7);
                                                                            nextAppointment.Deadline = obj.Deadline.AddDays(7);
+                                                                           nextAppointment.GroupCount = 1;
                                                                        });
 
                                                      dbFactory.GetRepository<RaidAppointmentRepository>()

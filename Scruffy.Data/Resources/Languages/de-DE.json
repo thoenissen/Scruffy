@@ -115,7 +115,8 @@
     },
     "RaidCommandModule": {
       "NoActiveAppointment": "Es besteht kein aktiver Termin.",
-      "TemplateChanged": "Die Schablone wurde angepasst."
+      "TemplateChanged": "Die Schablone wurde angepasst.",
+      "GroupCountChanged": "Die Anzahl der Gruppen wurde angepasst." 
     },
     "RaidExperienceLevelsCommandModule": {
       "UnknownExperienceLevel": "Das angegebene Erfahrungslevel existiert nicht.",

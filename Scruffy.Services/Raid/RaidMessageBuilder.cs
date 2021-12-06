@@ -65,6 +65,7 @@ public class RaidMessageBuilder : LocatedServiceBase
                                                           obj.RaidDayTemplate.Thumbnail,
                                                           obj.RaidDayTemplate.Title,
                                                           obj.RaidDayTemplate.Description,
+                                                          obj.GroupCount,
 
                                                           ExperienceLevels  = obj.RaidDayTemplate
                                                                                  .RaidExperienceAssignments
@@ -117,10 +118,6 @@ public class RaidMessageBuilder : LocatedServiceBase
                     if (message != null)
                     {
                         var fieldBuilder = new StringBuilder();
-
-                        var slotCountFactor = appointment.Registrations.Count / appointment.ExperienceLevels.Sum(obj => (double)obj.Count) >= 1.4
-                                                  ? 2
-                                                  : 1;
 
                         // Building the message
                         foreach (var slot in appointment.ExperienceLevels
@@ -182,7 +179,7 @@ public class RaidMessageBuilder : LocatedServiceBase
 
                                 if (lineBuilder.Length + fieldBuilder.Length > 1024)
                                 {
-                                    builder.AddField($"{DiscordEmojiService.GetGuildEmoji(_client, slot.DiscordEmoji)} {slot.Description} ({registrations.Count}/{slot.Count * slotCountFactor}) #{fieldCounter}", fieldBuilder.ToString());
+                                    builder.AddField($"{DiscordEmojiService.GetGuildEmoji(_client, slot.DiscordEmoji)} {slot.Description} ({registrations.Count}/{slot.Count * appointment.GroupCount}) #{fieldCounter}", fieldBuilder.ToString());
                                     fieldBuilder = new StringBuilder();
                                     fieldCounter++;
                                 }
@@ -192,7 +189,7 @@ public class RaidMessageBuilder : LocatedServiceBase
 
                             fieldBuilder.Append('\u200B');
 
-                            var fieldName = $"{DiscordEmojiService.GetGuildEmoji(_client, slot.DiscordEmoji)} {slot.Description} ({registrations.Count}/{slot.Count * slotCountFactor})";
+                            var fieldName = $"{DiscordEmojiService.GetGuildEmoji(_client, slot.DiscordEmoji)} {slot.Description} ({registrations.Count}/{slot.Count * appointment.GroupCount})";
                             if (fieldCounter != 1)
                             {
                                 fieldName = $"{fieldName} #{fieldCounter}";

@@ -114,7 +114,8 @@
     },
     "RaidCommandModule": {
       "NoActiveAppointment": "Currently there is no active appointment.",
-      "TemplateChanged": "The template has been changed."
+      "TemplateChanged": "The template has been changed.",
+      "GroupCountChanged": "The group count has been changed." 
     },
     "RaidExperienceLevelsCommandModule": {
       "UnknownExperienceLevel": "The experience role by the given name does not exist.",

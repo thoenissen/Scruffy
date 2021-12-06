@@ -37,6 +37,11 @@ public class RaidAppointmentEntity
     public DateTime Deadline { get; set; }
 
     /// <summary>
+    /// Group count
+    /// </summary>
+    public int GroupCount { get; set; }
+
+    /// <summary>
     /// Is the appointment already commit?
     /// </summary>
     public bool IsCommitted { get; set; }

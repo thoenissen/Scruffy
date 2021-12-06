@@ -233,6 +233,32 @@ public class RaidRegistrationService : LocatedServiceBase
     }
 
     /// <summary>
+    /// Set group count
+    /// </summary>
+    /// <param name="commandContext">Command context</param>
+    /// <param name="appointmentId">Id of the appointment</param>
+    /// <param name="groupCount">Group count</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public async Task<bool> SetGroupCount(CommandContextContainer commandContext, long appointmentId, int groupCount)
+    {
+        var success = false;
+
+        using (var dbFactory = RepositoryFactory.CreateInstance())
+        {
+            success = dbFactory.GetRepository<RaidAppointmentRepository>()
+                               .Refresh(obj => obj.Id == appointmentId,
+                                        obj => obj.GroupCount = groupCount);
+
+            if (success)
+            {
+                await RefreshAppointment(appointmentId).ConfigureAwait(false);
+            }
+        }
+
+        return success;
+    }
+
+    /// <summary>
     /// Refreshing the appointment
     /// </summary>
     /// <param name="appointmentId">Id of the appointment</param>
@@ -259,6 +285,7 @@ public class RaidRegistrationService : LocatedServiceBase
                                                  .Where(obj => obj.Id == appointmentId)
                                                  .Select(obj => new
                                                                 {
+                                                                    obj.GroupCount,
                                                                     ExperienceLevels = obj.RaidDayTemplate
                                                                                           .RaidExperienceAssignments
                                                                                           .Select(obj2 => new
@@ -285,10 +312,6 @@ public class RaidRegistrationService : LocatedServiceBase
 
                 if (appointment != null)
                 {
-                    var slotCountFactor = appointment.Registrations.Count / appointment.ExperienceLevels.Sum(obj => (double)obj.Count) >= 1.4
-                                              ? 2
-                                              : 1;
-
                     var slots = appointment.ExperienceLevels
                                            .OrderBy(obj => obj.Rank)
                                            .Select(obj => new RaidAppointmentSlotData
@@ -296,7 +319,7 @@ public class RaidRegistrationService : LocatedServiceBase
                                                               ExperienceLevelId = obj.ExperienceLevelId,
                                                               Registrations = new List<long>(),
                                                               Rank = obj.Rank,
-                                                              SlotCount = obj.Count * slotCountFactor
+                                                              SlotCount = obj.Count * appointment.GroupCount
                                                           })
                                            .ToList();
 

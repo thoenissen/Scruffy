@@ -104,7 +104,8 @@ public class RaidCommandModule : LocatedCommandModuleBase
                                                      TemplateId = data.TemplateId,
                                                      TimeStamp = appointmentTimeStamp,
                                                      Deadline = appointmentTimeStamp.Date
-                                                                                    .Add(data.RegistrationDeadline)
+                                                                                    .Add(data.RegistrationDeadline),
+                                                     GroupCount = 1
                                                  });
 
                                    await MessageBuilder.RefreshMessageAsync(configuration.Id)
@@ -366,6 +367,57 @@ public class RaidCommandModule : LocatedCommandModuleBase
 
                                            await commandContextContainer.Channel
                                                                         .SendMessageAsync(LocalizationGroup.GetText("TemplateChanged", "The template has been changed."))
+                                                                        .ConfigureAwait(false);
+                                       }
+                                   }
+                                   else
+                                   {
+                                       await commandContextContainer.Message
+                                                                    .RespondAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."))
+                                                                    .ConfigureAwait(false);
+                                   }
+                               }
+                           });
+    }
+
+    /// <summary>
+    /// Commiting the current raid appointment
+    /// </summary>
+    /// <param name="commandContext">Command context</param>
+    /// <param name="name">Alias name</param>
+    /// <param name="count">Count</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [Command("setGroupCount")]
+    [RequireGuild]
+    [RequireAdministratorPermissions]
+    public Task SetTemplate(CommandContext commandContext, string name, int count)
+    {
+        return InvokeAsync(commandContext,
+                           async commandContextContainer =>
+                           {
+                               using (var dbFactory = RepositoryFactory.CreateInstance())
+                               {
+                                   var appointment = await dbFactory.GetRepository<RaidAppointmentRepository>()
+                                                                    .GetQuery()
+                                                                    .Where(obj => obj.TimeStamp > DateTime.Now
+                                                                               && obj.RaidDayConfiguration.AliasName == name)
+                                                                    .Select(obj => new
+                                                                    {
+                                                                        obj.Id,
+                                                                        obj.ConfigurationId
+                                                                    })
+                                                                    .FirstOrDefaultAsync()
+                                                                    .ConfigureAwait(false);
+                                   if (appointment != null)
+                                   {
+                                       if (await RegistrationService.SetGroupCount(commandContextContainer, appointment.Id, count)
+                                                                    .ConfigureAwait(false))
+                                       {
+                                           await MessageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
+                                                               .ConfigureAwait(false);
+
+                                           await commandContextContainer.Channel
+                                                                        .SendMessageAsync(LocalizationGroup.GetText("GroupCountChanged", "The group count has been changed."))
                                                                         .ConfigureAwait(false);
                                        }
                                    }

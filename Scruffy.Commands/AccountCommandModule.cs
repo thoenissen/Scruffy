@@ -24,11 +24,6 @@ public class AccountCommandModule : LocatedCommandModuleBase
     /// </summary>
     public AccountAdministrationService AdministrationService { get; set; }
 
-    /// <summary>
-    /// Users service
-    /// </summary>
-    public UserManagementService UserManagementService { get; set; }
-
     #endregion // Properties
 
     #region Command methods
