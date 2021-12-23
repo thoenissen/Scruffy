@@ -9,6 +9,7 @@ using Scruffy.Data.Entity.Tables.General;
 using Scruffy.Data.Entity.Tables.Guild;
 using Scruffy.Data.Entity.Tables.GuildWars2.Account;
 using Scruffy.Data.Entity.Tables.GuildWars2.GameData;
+using Scruffy.Data.Entity.Tables.GuildWars2.Guild;
 using Scruffy.Data.Entity.Tables.Raid;
 using Scruffy.Data.Entity.Tables.Reminder;
 using Scruffy.Data.Entity.Tables.Statistics;
@@ -401,6 +402,7 @@ public class ScruffyDbContext : DbContext
         modelBuilder.Entity<GuildWarsAchievementBitEntity>();
         modelBuilder.Entity<GuildWarsAchievementRewardEntity>();
         modelBuilder.Entity<GuildWarsAchievementTierEntity>();
+        modelBuilder.Entity<GuildWarsGuildMemberEntity>();
 
         modelBuilder.Entity<GuildWarsAccountDailyLoginCheckEntity>()
                     .HasKey(obj => new
@@ -474,6 +476,13 @@ public class ScruffyDbContext : DbContext
                                    {
                                        obj.AchievementId,
                                        obj.Counter
+                                   });
+
+        modelBuilder.Entity<GuildWarsGuildMemberEntity>()
+                    .HasKey(obj => new
+                                   {
+                                       obj.GuildId,
+                                       obj.Name
                                    });
 
         // Statistics
