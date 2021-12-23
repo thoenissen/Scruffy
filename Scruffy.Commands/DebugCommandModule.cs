@@ -10,7 +10,7 @@ using Scruffy.Services.Calendar;
 using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Discord.Attributes;
 using Scruffy.Services.Debug;
-using Scruffy.Services.GuildAdministration.Jobs;
+using Scruffy.Services.Guild.Jobs;
 using Scruffy.Services.GuildWars2;
 using Scruffy.Services.GuildWars2.Jobs;
 using Scruffy.Services.Raid;

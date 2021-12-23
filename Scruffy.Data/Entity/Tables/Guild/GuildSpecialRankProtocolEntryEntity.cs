@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using Scruffy.Data.Entity.Tables.CoreData;
-using Scruffy.Data.Enumerations.GuildAdministration;
+using Scruffy.Data.Enumerations.Guild;
 
 namespace Scruffy.Data.Entity.Tables.Guild;
 

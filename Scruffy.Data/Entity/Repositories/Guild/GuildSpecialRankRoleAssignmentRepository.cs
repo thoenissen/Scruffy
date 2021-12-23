@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
 using Scruffy.Data.Entity.Queryable.Guild;
 using Scruffy.Data.Entity.Repositories.Base;
 using Scruffy.Data.Entity.Tables.Guild;

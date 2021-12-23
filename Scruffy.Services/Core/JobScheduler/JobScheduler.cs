@@ -12,7 +12,7 @@ using Scruffy.Services.Debug.Jobs;
 using Scruffy.Services.Fractals;
 using Scruffy.Services.Fractals.Jobs;
 using Scruffy.Services.Games.Jobs;
-using Scruffy.Services.GuildAdministration.Jobs;
+using Scruffy.Services.Guild.Jobs;
 using Scruffy.Services.GuildWars2.Jobs;
 using Scruffy.Services.Reminder.Jobs;
 using Scruffy.Services.Statistics.Jobs;
@@ -45,6 +45,7 @@ public class JobScheduler : IAsyncDisposable
     public async Task StartAsync()
     {
         await Task.Run(JobManager.Start).ConfigureAwait(false);
+
 #if RELEASE
         // Debug
         JobManager.AddJob<LogOverviewJob>(obj => obj.ToRunEvery(1).Days().At(0, 5));

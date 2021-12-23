@@ -303,10 +303,10 @@
     "RaidRegistrationService": {
       "RequiredExperienceLevelMissing": "You don't have the required experience level."
     },
-    "GuildAdministrationApiKeyDialogElement": {
+    "GuildApiKeyDialogElement": {
       "Message": "Please enter the api key."
     },
-    "GuildAdministrationGuildDialogElement": {
+    "GuildGuildDialogElement": {
       "ChooseGuildTitle": "Guild selection",
       "ChooseGuildDescription": "Please choose one of the following guilds:",
       "GuildsField": "Guilds"
@@ -316,13 +316,13 @@
       "MemberLeft": "**{0}** left the guild.",
       "MemberKicked": "**{0}** got kicked out of the guild by **{1}**."
     },
-    "GuildAdministrationCalendarTitleDialogElement": {
+    "GuildCalendarTitleDialogElement": {
       "Message": "Please enter the calendar title."
     },
-    "GuildAdministrationCalendarDescriptionDialogElement": {
+    "GuildCalendarDescriptionDialogElement": {
       "Message": "Please enter the description."
     },
-    "GuildAdministrationConfigurationService": {
+    "GuildConfigurationService": {
       "MotdBuilding": "The message of the day will be build with the next refresh.",
       "CalendarBuilding": "The calendar will be build with the next refresh."
     },
@@ -336,18 +336,18 @@
       "DyesFields": "Dyes #{0}",
       "NoAccountApiKey": "You don't have any api keys configured."
     },
-    "GuildAdministrationSpecialRankDeletionDialogElement": {
+    "GuildSpecialRankDeletionDialogElement": {
       "DeletePrompt": "Are you sure you want to delete the special rank?"
     },
-    "GuildAdministrationSpecialRankDescriptionDialogElement": {
+    "GuildSpecialRankDescriptionDialogElement": {
       "Message": "Please enter the description which should be used."
     },
-    "GuildAdministrationSpecialRankDiscordRoleDialogElement": {
+    "GuildSpecialRankDiscordRoleDialogElement": {
       "ChooseRoleTitle": "Role selection",
       "ChooseRoleDescription": "Please choose one of the following roles:",
       "RolesField": "Roles"
     },
-    "GuildAdministrationSpecialRankEditDialogElement": {
+    "GuildSpecialRankEditDialogElement": {
       "ChooseCommandTitle": "Special rank configuration",
       "ChooseCommandDescription": "With this assistant you are able to configure the special rank.",
       "Description": "Description",
@@ -370,34 +370,34 @@
       "RemoveIgnoreRoleCommand": "{0} Remove ignore role",
       "CancelCommand": "{0} Cancel"
     },
-    "GuildAdministrationSpecialRankGrantThresholdDialogElement": {
+    "GuildSpecialRankGrantThresholdDialogElement": {
       "Message": "Please enter the grant threshold which should be used."
     },
-    "GuildAdministrationSpecialRankMaximumPointsDialogElement": {
+    "GuildSpecialRankMaximumPointsDialogElement": {
       "Message": "Please enter the maximum points which can be acquired."
     },
-    "GuildAdministrationSpecialRankRemoveThresholdDialogElement": {
+    "GuildSpecialRankRemoveThresholdDialogElement": {
       "Message": "Please enter the remove threshold which should be used."
     },
-    "GuildAdministrationSpecialRankRoleAssignmentDiscordRoleDialogElement": {
+    "GuildSpecialRankRoleAssignmentDiscordRoleDialogElement": {
       "ChooseRoleTitle": "Role selection",
       "ChooseRoleDescription": "Please choose one of the following roles:",
       "RolesField": "Roles"
     },
-    "GuildAdministrationSpecialRankRoleAssignmentPointsDialogElement": {
+    "GuildSpecialRankRoleAssignmentPointsDialogElement": {
       "Message": "Please enter the points which should be used."
     },
-    "GuildAdministrationSpecialRankRoleAssignmentSelectionDialogElement": {
+    "GuildSpecialRankRoleAssignmentSelectionDialogElement": {
       "ChooseAssignmentTitle": "Assignment selection",
       "ChooseAssignmentDescription": "Please choose one of the following assignments:",
       "AssignmentsField": "Assignments"
     },
-    "GuildAdministrationSpecialRankSelectionDialogElement": {
+    "GuildSpecialRankSelectionDialogElement": {
       "ChooseSpecialRankTitle": "Special rank selection",
       "ChooseSpecialRankDescription": "Please choose one of the following special ranks:",
       "RanksField": "Ranks"
     },
-    "GuildAdministrationSpecialRankSetupDialogElement": {
+    "GuildSpecialRankSetupDialogElement": {
       "ChooseCommandTitle": "Guild special rank configuration",
       "ChooseCommandDescription": "With this assistant you are able to configure the guild special ranks. The following special ranks are already created:",
       "RanksFields": "Ranks",
@@ -415,21 +415,21 @@
       "RemovedRoles": "Removals",
       "GrantedRoles": "Assignments"
     },
-    "GuildAdministrationRankSuperiorRankDialogElement": {
+    "GuildRankSuperiorRankDialogElement": {
       "ChooseTitle": "Superior rank selection",
       "ChooseDescription": "Please choose one of the following ranks:",
       "NoSuperior": "No superior rank",
       "RanksField": "Ranks"
     },
-    "GuildAdministrationRankDeletionDialogElement": {
+    "GuildRankDeletionDialogElement": {
       "DeletePrompt": "Are you sure you want to delete the rank?"
     },
-    "GuildAdministrationRankDiscordRoleDialogElement": {
+    "GuildRankDiscordRoleDialogElement": {
       "ChooseTitle": "Role selection",
       "ChooseDescription": "Please choose one of the following roles:",
       "RolesField": "Roles" 
     },
-    "GuildAdministrationRankEditDialogElement": {
+    "GuildRankEditDialogElement": {
       "ChooseCommandTitle": "Rank configuration",
       "ChooseCommandDescription": "With this assistant you are able to configure the rank.",
       "InGameName": "In game name",
@@ -442,20 +442,20 @@
       "EditPercentageCommand": "{0} Edit percentage",
       "CancelCommand": "{0} Cancel"
     },
-    "GuildAdministrationRankInGameNameDialogElement": {
+    "GuildRankInGameNameDialogElement": {
       "ChooseTitle": "In game rank selection",
       "ChooseDescription": "Please choose one of the following ranks:",
       "RanksField": "Ranks"
     },
-    "GuildAdministrationRankPercentageDialogElement": {
+    "GuildRankPercentageDialogElement": {
       "Message": "Please enter the quota in percent. (#.###)"
     },
-    "GuildAdministrationRankSelectionDialogElement": {
+    "GuildRankSelectionDialogElement": {
       "ChooseTitle": "Rank selection",
       "ChooseDescription": "Please choose one of the following ranks:",
       "RanksField": "Ranks"
     },
-    "GuildAdministrationRankSetupDialogElement": {
+    "GuildRankSetupDialogElement": {
       "ChooseCommandTitle": "Guild rank configuration",
       "ChooseCommandDescription": "With this assistant you are able to configure the guild ranks. The following ranks are already created:",
       "RanksFields": "Ranks",

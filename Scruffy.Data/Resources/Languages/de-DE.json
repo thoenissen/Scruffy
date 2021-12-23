@@ -304,10 +304,10 @@
     "RaidRegistrationService": {
       "RequiredExperienceLevelMissing": "Du hast noch nicht das erforderlichen Erfahrungslevel für diesen Termin."
     },
-    "GuildAdministrationApiKeyDialogElement": {
+    "GuildApiKeyDialogElement": {
       "Message": "Gib den zu verwendenden API-Key ein:"
     },
-    "GuildAdministrationGuildDialogElement": {
+    "GuildGuildDialogElement": {
       "ChooseGuildTitle": "Gildenauswahl",
       "ChooseGuildDescription": "Bitte wähle eine der folgenden Gilden aus:",
       "GuildsField": "Gilden"
@@ -317,13 +317,13 @@
       "MemberLeft": "**{0}** hat die Gilde verlassen.",
       "MemberKicked": "**{0}** wurde von **{1}** aus der Gilde geworfen."
     },
-    "GuildAdministrationCalendarTitleDialogElement": {
+    "GuildCalendarTitleDialogElement": {
       "Message": "Gib bitte den Titel der Kalenders ein."
     },
-    "GuildAdministrationCalendarDescriptionDialogElement": {
+    "GuildCalendarDescriptionDialogElement": {
       "Message": "Gib bitte die Beschreibung des Kalenders ein."
     },
-    "GuildAdministrationConfigurationService": {
+    "GuildConfigurationService": {
       "MotdBuilding": "Die Nachricht des Tages wird mit der nächste Aktualisierung angepasst.",
       "CalendarBuilding": "Der Kalender wird mit der nächsten Aktualisierung aufgebaut."
     },
@@ -338,18 +338,18 @@
       "NoAccountApiKey": "Du hast noch keinen API-Key hinterlegt."
     },
 
-    "GuildAdministrationSpecialRankDeletionDialogElement": {
+    "GuildSpecialRankDeletionDialogElement": {
       "DeletePrompt": "Soll der Spezial-Rang wirklich gelöscht werden?"
     },
-    "GuildAdministrationSpecialRankDescriptionDialogElement": {
+    "GuildSpecialRankDescriptionDialogElement": {
       "Message": "Gib bitte die zu verwendende Bezeichnung ein."
     },
-    "GuildAdministrationSpecialRankDiscordRoleDialogElement": {
+    "GuildSpecialRankDiscordRoleDialogElement": {
       "ChooseRoleTitle": "Rollenauswahl",
       "ChooseRoleDescription": "Wähle bitte eine der folgenden Rollen aus:",
       "RolesField": "Rollen"
     },
-    "GuildAdministrationSpecialRankEditDialogElement": {
+    "GuildSpecialRankEditDialogElement": {
       "ChooseCommandTitle": "Spezial-Rang Konfiguration",
       "ChooseCommandDescription": "Mit diesem Assistenten kannst du die Spezial-Ränge konfigurieren.",
       "Description": "Bezeichnung",
@@ -372,34 +372,34 @@
       "RemoveIgnoreRoleCommand": "{0} Zu ignorierende Rolle entfernen",
       "CancelCommand": "{0} Abbrechen"
     },
-    "GuildAdministrationSpecialRankGrantThresholdDialogElement": {
+    "GuildSpecialRankGrantThresholdDialogElement": {
       "Message": "Gib bitte den zu verwendenden 'Hinzufügen'-Schwellenwert ein."
     },
-    "GuildAdministrationSpecialRankMaximumPointsDialogElement": {
+    "GuildSpecialRankMaximumPointsDialogElement": {
       "Message": "Gib bitte die maximal zu erreichenden Punkte ein."
     },
-    "GuildAdministrationSpecialRankRemoveThresholdDialogElement": {
+    "GuildSpecialRankRemoveThresholdDialogElement": {
       "Message": "Gib bitte den zu verwendenden 'Entfernen'-Schwellenwert ein."
     },
-    "GuildAdministrationSpecialRankRoleAssignmentDiscordRoleDialogElement": {
+    "GuildSpecialRankRoleAssignmentDiscordRoleDialogElement": {
       "ChooseRoleTitle": "Rollenauswahl",
       "ChooseRoleDescription": "Wähle bitte eine der folgenden Rollen aus:",
       "RolesField": "Rollen"
     },
-    "GuildAdministrationSpecialRankRoleAssignmentPointsDialogElement": {
+    "GuildSpecialRankRoleAssignmentPointsDialogElement": {
       "Message": "Gibt die zuverwendende Anzahl Punkte ein."
     },
-    "GuildAdministrationSpecialRankRoleAssignmentSelectionDialogElement": {
+    "GuildSpecialRankRoleAssignmentSelectionDialogElement": {
       "ChooseAssignmentTitle": "Zuweisungsauswahl",
       "ChooseAssignmentDescription": "Wähle bitte eine der folgenden Zuweisungen aus:",
       "AssignmentsField": "Zuweisungen"
     },
-    "GuildAdministrationSpecialRankSelectionDialogElement": {
+    "GuildSpecialRankSelectionDialogElement": {
       "ChooseSpecialRankTitle": "Spezial-Rang-Auswahl",
       "ChooseSpecialRankDescription": "Wähle bitte einen der folgenden Spezial-Ränge:",
       "RanksField": "Ränge"
     },
-    "GuildAdministrationSpecialRankSetupDialogElement": {
+    "GuildSpecialRankSetupDialogElement": {
       "ChooseCommandTitle": "Spezial-Rang-Konfiguration",
       "ChooseCommandDescription": "Mit diesem Assistenten können die Spezial-Ränge konfiguriert werden. Die folgenden Spezial-Ränge wurden bereits erstellt:",
       "RanksFields": "Ränge",
@@ -417,21 +417,21 @@
       "RemovedRoles": "Entfernung",
       "GrantedRoles": "Zuweisung"
     },
-    "GuildAdministrationRankSuperiorRankDialogElement": {
+    "GuildRankSuperiorRankDialogElement": {
       "ChooseTitle": "Auswahl des übergeordneten Rangs",
       "ChooseDescription": "Wähle bitte einen der folgenden Ränge aus:",
       "NoSuperior": "Kein übergeordneter Rang",
       "RanksField": "Ränge"
     },
-    "GuildAdministrationRankDeletionDialogElement": {
+    "GuildRankDeletionDialogElement": {
       "DeletePrompt": "Bist du sicher, dass der Rang gelöscht werden soll?"
     },
-    "GuildAdministrationRankDiscordRoleDialogElement": {
+    "GuildRankDiscordRoleDialogElement": {
       "ChooseTitle": "Rollenauswahl",
       "ChooseDescription": "Wähle bitte eine der folgenden Rollen:",
       "RolesField": "Rollen"
     },
-    "GuildAdministrationRankEditDialogElement": {
+    "GuildRankEditDialogElement": {
       "ChooseCommandTitle": "Rangkonfiguration",
       "ChooseCommandDescription": "Mit diesem Assistenten kannst du den Rang konfigurieren.",
       "InGameName": "In-Game-Name",
@@ -444,20 +444,20 @@
       "EditPercentageCommand": "{0} Prozentualen Anteil bearbeiten",
       "CancelCommand": "{0} Abbrechen"
     },
-    "GuildAdministrationRankInGameNameDialogElement": {
+    "GuildRankInGameNameDialogElement": {
       "ChooseTitle": "Auswahl des In-Game-Namens",
       "ChooseDescription": "Wähle bitte einen der folgenden Ränge aus:",
       "RanksField": "Ränge"
     },
-    "GuildAdministrationRankPercentageDialogElement": {
+    "GuildRankPercentageDialogElement": {
       "Message": "Gib bitte den prozentualen Anteil ein. (#.###)"
     },
-    "GuildAdministrationRankSelectionDialogElement": {
+    "GuildRankSelectionDialogElement": {
       "ChooseTitle": "Rangauswahl",
       "ChooseDescription": "Wähle bitte einen der folgenden Ränge aus:",
       "RanksField": "Ränge"
     },
-    "GuildAdministrationRankSetupDialogElement": {
+    "GuildRankSetupDialogElement": {
       "ChooseCommandTitle": "Gildenrangkonfiguration",
       "ChooseCommandDescription": "Mit diesem Assistenten kannst du die Gildenränge bearbeiten. Die folgenden Ränge wurden bereits erstellt:",
       "RanksFields": "Ränge",

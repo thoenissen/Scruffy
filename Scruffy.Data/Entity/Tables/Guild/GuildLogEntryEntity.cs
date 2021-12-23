@@ -22,6 +22,11 @@ public class GuildLogEntryEntity
         /// Kick
         /// </summary>
         public const string Kick = "kick";
+
+        /// <summary>
+        /// Rank change
+        /// </summary>
+        public const string RankChange = "rank_change";
     }
 
     #region Properties

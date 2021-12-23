@@ -5,8 +5,8 @@ using Newtonsoft.Json;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Calendar;
-using Scruffy.Data.Entity.Repositories.GuildAdministration;
-using Scruffy.Data.Enumerations.GuildAdministration;
+using Scruffy.Data.Entity.Repositories.Guild;
+using Scruffy.Data.Enumerations.Guild;
 using Scruffy.Data.Json.Calendar;
 using Scruffy.Services.Core.Extensions;
 using Scruffy.Services.Core.Localization;

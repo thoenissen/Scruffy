@@ -50,7 +50,6 @@
   <ItemGroup>
     <Folder Include="Entity\Queryable\Fractals\" />
     <Folder Include="Entity\Queryable\General\" />
-    <Folder Include="Entity\Queryable\GuildAdministration\" />
     <Folder Include="Entity\Queryable\Account\" />
     <Folder Include="Entity\Queryable\Games\" />
     <Folder Include="Entity\Queryable\GuildWars2\" />
