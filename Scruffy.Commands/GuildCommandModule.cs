@@ -666,6 +666,24 @@ public class GuildCommandModule : LocatedCommandModuleBase
                                });
         }
 
+        /// <summary>
+        /// Roles
+        /// </summary>
+        /// <param name="commandContext">Current command context</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("roles")]
+        [RequireGuild]
+        [RequireAdministratorPermissions]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
+        public Task ExportGuildRoles(CommandContext commandContext)
+        {
+            return InvokeAsync(commandContext,
+                               async commandContextContainer =>
+                               {
+                                   await GuildExportService.ExportGuildRoles(commandContextContainer)
+                                                           .ConfigureAwait(false);
+                               });
+        }
         #endregion // Methods
     }
 

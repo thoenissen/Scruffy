@@ -606,5 +606,54 @@ public class GuildExportService : LocatedServiceBase
         }
     }
 
+    /// <summary>
+    /// Exporting guild roles
+    /// </summary>
+    /// <param name="commandContext">Command context</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public async Task ExportGuildRoles(CommandContextContainer commandContext)
+    {
+        var members = new List<(string Role, string User)>();
+
+        foreach (var user in await commandContext.Guild
+                                                 .GetAllMembersAsync()
+                                                 .ConfigureAwait(false))
+        {
+            foreach (var role in user.Roles)
+            {
+                members.Add((role.Name, user.TryGetDisplayName()));
+            }
+        }
+
+        var memoryStream = new MemoryStream();
+
+        await using (memoryStream.ConfigureAwait(false))
+        {
+            var writer = new StreamWriter(memoryStream);
+
+            await using (writer.ConfigureAwait(false))
+            {
+                await writer.WriteLineAsync("Role;User")
+                            .ConfigureAwait(false);
+
+                foreach (var (role, user) in members.OrderBy(obj => obj.Role)
+                                                    .ThenBy(obj => obj.User))
+                {
+                    await writer.WriteLineAsync($"{role};{user}")
+                                .ConfigureAwait(false);
+                }
+
+                await writer.FlushAsync()
+                            .ConfigureAwait(false);
+
+                memoryStream.Position = 0;
+
+                await commandContext.Channel
+                                    .SendMessageAsync(new DiscordMessageBuilder().WithFile("roles.csv", memoryStream))
+                                    .ConfigureAwait(false);
+            }
+        }
+    }
+
     #endregion // Methods
 }
