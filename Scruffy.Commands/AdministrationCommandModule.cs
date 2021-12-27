@@ -39,7 +39,8 @@ public class AdministrationCommandModule : LocatedCommandModuleBase
     /// <param name="name">name</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("rename")]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
+    [RequireAdministratorPermissions]
+    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public Task Rename(CommandContext commandContext, DiscordMember member, [RemainingText] string name)
     {
         return InvokeAsync(commandContext,
@@ -66,7 +67,8 @@ public class AdministrationCommandModule : LocatedCommandModuleBase
     /// <param name="name">name</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("rename")]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
+    [RequireAdministratorPermissions]
+    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public Task Rename(CommandContext commandContext, DiscordRole role, [RemainingText] string name)
     {
         return InvokeAsync(commandContext,
