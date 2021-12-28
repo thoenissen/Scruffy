@@ -10,6 +10,7 @@ using Scruffy.Services.Calendar;
 using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Discord.Attributes;
 using Scruffy.Services.Debug;
+using Scruffy.Services.Guild;
 using Scruffy.Services.Guild.Jobs;
 using Scruffy.Services.GuildWars2;
 using Scruffy.Services.GuildWars2.Jobs;
@@ -439,6 +440,15 @@ public class DebugCommandModule : LocatedCommandModuleBase
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugGuildModule : LocatedCommandModuleBase
     {
+        #region Properties
+
+        /// <summary>
+        /// Guild rank service
+        /// </summary>
+        public GuildRankService GuildRankService { get; set; }
+
+        #endregion // Properties
+
         #region Methods
 
         /// <summary>
@@ -453,6 +463,18 @@ public class DebugCommandModule : LocatedCommandModuleBase
 
             await job.ExecuteAsync()
                      .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Refresh calendar message
+        /// </summary>
+        /// <param name="commandContext">Current command context</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("import_members")]
+        public async Task ImportMembers(CommandContext commandContext)
+        {
+            await GuildRankService.ImportGuildRanks(null)
+                                  .ConfigureAwait(false);
         }
 
         #endregion // Methods

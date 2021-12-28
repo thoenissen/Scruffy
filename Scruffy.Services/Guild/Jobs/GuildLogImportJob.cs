@@ -34,6 +34,7 @@ public class GuildLogImportJob : LocatedAsyncJob
             await using (serviceProvider.ConfigureAwait(false))
             {
                 var discordClient = serviceProvider.GetService<DiscordClient>();
+                var guildRankService = new Lazy<GuildRankService>(() => serviceProvider.GetService<GuildRankService>());
 
                 var channels = dbFactory.GetRepository<GuildChannelConfigurationRepository>()
                                         .GetQuery()
@@ -108,6 +109,12 @@ public class GuildLogImportJob : LocatedAsyncJob
                                                 await OnKick(discordChannel, entry).ConfigureAwait(false);
                                             }
                                             break;
+
+                                        case GuildLogEntryEntity.Types.RankChange:
+                                            {
+                                                await OnRankChanged(guildRankService.Value, guild.Id, entry).ConfigureAwait(false);
+                                            }
+                                            break;
                                     }
                                 }
                             }
@@ -158,6 +165,18 @@ public class GuildLogImportJob : LocatedAsyncJob
                                     .ConfigureAwait(false);
             }
         }
+    }
+
+    /// <summary>
+    /// Rank changed
+    /// </summary>
+    /// <param name="guildRankService">Guild rank service</param>
+    /// <param name="guildId">Id of the guild</param>
+    /// <param name="entry">Entry</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    private Task OnRankChanged(GuildRankService guildRankService, long guildId, GuildLogEntry entry)
+    {
+        return guildRankService.RefreshDiscordRank(guildId, entry.User, entry.NewRank);
     }
 
     #endregion // LocatedAsyncJob
