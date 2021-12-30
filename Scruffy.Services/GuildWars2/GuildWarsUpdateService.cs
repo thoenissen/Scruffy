@@ -52,7 +52,7 @@ public class GuildWarsUpdateService : LocatedServiceBase
                       .WithThumbnail("https://cdn.discordapp.com/attachments/847555191842537552/861182143987712010/gw2.png")
                       .WithTitle(LocalizationGroup.GetText("GuildWars2Updates", "Guild Wars 2 - Updates"))
                       .WithColor(DiscordColor.Green)
-                      .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/ef1f3e1f3f40100fb3750f8d7d25c657.png?size=64")
+                      .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
                       .WithTimestamp(now);
 
         void AddField(string fieldName, NextUpdateData data)

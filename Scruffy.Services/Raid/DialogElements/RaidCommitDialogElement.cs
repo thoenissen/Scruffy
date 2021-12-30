@@ -71,7 +71,7 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
         builder.WithTitle(LocalizationGroup.GetText("CommitTitle", "Raid points commit"));
         builder.WithDescription(LocalizationGroup.GetText("CommitText", "The following points will be committed:"));
         builder.WithColor(DiscordColor.Green);
-        builder.WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/ef1f3e1f3f40100fb3750f8d7d25c657.png?size=64");
+        builder.WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64");
         builder.WithTimestamp(DateTime.Now);
 
         var message = new StringBuilder();

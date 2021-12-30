@@ -73,7 +73,7 @@ public class SearchCommandModule : LocatedCommandModuleBase
                                        }
 
                                        embedBuilder.WithThumbnail("https://cdn.discordapp.com/attachments/847555191842537552/861182135000236032/google.png");
-                                       embedBuilder.WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/ef1f3e1f3f40100fb3750f8d7d25c657.png?size=64");
+                                       embedBuilder.WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64");
                                        embedBuilder.WithTimestamp(DateTime.Now);
 
                                        await commandContext.RespondAsync(embedBuilder)
@@ -189,7 +189,7 @@ public class SearchCommandModule : LocatedCommandModuleBase
                                }
 
                                embedBuilder.WithThumbnail("https://media.discordapp.net/attachments/847555191842537552/861182143987712010/gw2.png");
-                               embedBuilder.WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/ef1f3e1f3f40100fb3750f8d7d25c657.png?size=64");
+                               embedBuilder.WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64");
                                embedBuilder.WithTimestamp(DateTime.Now);
 
                                await commandContextContainer.Message

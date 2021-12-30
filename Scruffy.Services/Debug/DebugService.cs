@@ -317,7 +317,7 @@ public class DebugService
              || logEntries.Count > 0)
             {
                 var builder = new DiscordEmbedBuilder().WithTitle($"Log entries {date:yyyy-MM-dd}").WithColor(DiscordColor.Green)
-                                                       .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/ef1f3e1f3f40100fb3750f8d7d25c657.png?size=64")
+                                                       .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
                                                        .WithTimestamp(DateTime.Now);
 
                 var types = logEntries.GroupBy(obj => obj.Type)

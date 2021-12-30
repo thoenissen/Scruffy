@@ -122,7 +122,7 @@ public class CalendarMessageBuilderService : LocatedServiceBase
                     await channel.SendMessageAsync(new DiscordEmbedBuilder().WithTitle(LocalizationGroup.GetText("Motd", "Message of the day:"))
                                                                             .WithDescription(Formatter.BlockCode(messageBuilder.ToString()))
                                                                             .WithColor(DiscordColor.Green)
-                                                                            .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/ef1f3e1f3f40100fb3750f8d7d25c657.png?size=64")
+                                                                            .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
                                                                             .WithTimestamp(DateTime.Now)
                                                                             .Build())
                                  .ConfigureAwait(false);
@@ -183,7 +183,7 @@ public class CalendarMessageBuilderService : LocatedServiceBase
 
                 builder.WithTitle(additionalData.Title);
                 builder.WithDescription(additionalData.Description);
-                builder.WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/836238701046398987/d7d1b509a23aa9789885127da9107fe0.png?size=256");
+                builder.WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64");
                 builder.WithThumbnail("https://cdn.discordapp.com/attachments/847555191842537552/870776562943946782/12382200801557740332-512.png");
                 builder.WithColor(DiscordColor.Green);
                 builder.WithTimestamp(DateTime.Now);

@@ -268,7 +268,7 @@ public class RaidMessageBuilder : LocatedServiceBase
                         builder.WithDescription(appointment.Description);
                         builder.WithThumbnail(appointment.Thumbnail);
                         builder.WithColor(DiscordColor.Green);
-                        builder.WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/836238701046398987/d7d1b509a23aa9789885127da9107fe0.png?size=256");
+                        builder.WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64");
                         builder.WithTimestamp(DateTime.Now);
 
                         await message.ModifyAsync(null, builder.Build())
