@@ -59,14 +59,22 @@ public class GuildRankDeletionDialogElement : DialogReactionElementBase<bool>
                                                  {
                                                      var rankId = DialogContext.GetValue<int>("RankId");
 
-                                                     dbFactory.GetRepository<GuildRankRepository>()
-                                                              .Remove(obj => obj.Id == rankId,
-                                                                      obj =>
-                                                                      {
-                                                                          dbFactory.GetRepository<GuildRankRepository>()
-                                                                                   .Refresh(obj2 => obj2.SuperiorId == obj.Id,
-                                                                                            obj2 => obj2.SuperiorId = obj.SuperiorId);
-                                                                      });
+                                                     if (dbFactory.GetRepository<GuildRankRepository>()
+                                                                  .Remove(obj => obj.Id == rankId))
+                                                     {
+                                                         var order = 0;
+
+                                                         foreach (var currentRankId in dbFactory.GetRepository<GuildRankRepository>()
+                                                                                         .GetQuery()
+                                                                                         .OrderBy(obj => obj.Order)
+                                                                                         .Select(obj => obj.Id))
+                                                         {
+                                                             dbFactory.GetRepository<GuildRankRepository>()
+                                                                      .Refresh(obj => obj.Id == currentRankId,
+                                                                               obj => obj.Order = order);
+                                                             order++;
+                                                         }
+                                                     }
                                                  }
 
                                                  return Task.FromResult(true);

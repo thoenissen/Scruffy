@@ -21,9 +21,9 @@ public class GuildRankEntity
     public long GuildId { get; set; }
 
     /// <summary>
-    /// Superior Rank
+    /// Ordering the ranks
     /// </summary>
-    public int? SuperiorId { get; set; }
+    public int Order { get; set; }
 
     /// <summary>
     /// Discord role id
@@ -47,12 +47,6 @@ public class GuildRankEntity
     /// </summary>
     [ForeignKey(nameof(GuildId))]
     public GuildEntity Guild { get; set; }
-
-    /// <summary>
-    /// Superior rank
-    /// </summary>
-    [ForeignKey(nameof(SuperiorId))]
-    public GuildRankEntity SuperiorRank { get; set; }
 
     #endregion // Navigation properties
 

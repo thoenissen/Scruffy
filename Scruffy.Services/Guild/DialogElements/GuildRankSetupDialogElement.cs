@@ -60,17 +60,16 @@ public class GuildRankSetupDialogElement : DialogEmbedReactionElementBase<bool>
                 var ranks = dbFactory.GetRepository<GuildRankRepository>()
                                      .GetQuery()
                                      .Where(obj => obj.Guild.DiscordServerId == CommandContext.Guild.Id)
+                                     .OrderBy(obj => obj.Order)
                                      .Select(obj => new
                                                     {
-                                                        obj.SuperiorId,
                                                         obj.Id,
                                                         obj.InGameName,
                                                         obj.DiscordRoleId
                                                     })
                                      .ToList();
 
-                var rank = ranks.FirstOrDefault(obj => obj.SuperiorId == null);
-                while (rank != null)
+                foreach (var rank in ranks)
                 {
                     _ranks.Add(new GuildRankData
                                {
@@ -78,8 +77,6 @@ public class GuildRankSetupDialogElement : DialogEmbedReactionElementBase<bool>
                                    InGameName = rank.InGameName,
                                    DiscordRoleId = rank.DiscordRoleId
                                });
-
-                    rank = ranks.FirstOrDefault(obj => obj.SuperiorId == rank.Id);
                 }
             }
         }
@@ -152,12 +149,32 @@ public class GuildRankSetupDialogElement : DialogEmbedReactionElementBase<bool>
                                                                DiscordRoleId = data.DiscordRoleId,
                                                                InGameName = data.InGameName,
                                                                Percentage = data.Percentage,
-                                                               SuperiorId = data.SuperiorId
+                                                               Order = data.SuperiorId != null
+                                                                           ? dbFactory.GetRepository<GuildRankRepository>()
+                                                                                      .GetQuery()
+                                                                                      .Where(obj => obj.Id == data.SuperiorId)
+                                                                                      .Select(obj => obj.Order)
+                                                                                      .First() + 1
+                                                                           : 0,
                                                            };
 
                                                 if (dbFactory.GetRepository<GuildRankRepository>()
                                                              .Add(rank))
                                                 {
+                                                    var order = rank.Order + 1;
+
+                                                    foreach (var currentRankId in dbFactory.GetRepository<GuildRankRepository>()
+                                                                                           .GetQuery()
+                                                                                           .Where(obj => obj.Order >= rank.Order)
+                                                                                           .OrderBy(obj => obj.Order)
+                                                                                           .Select(obj => obj.Id))
+                                                    {
+                                                        dbFactory.GetRepository<GuildRankRepository>()
+                                                                 .Refresh(obj => obj.Id == currentRankId,
+                                                                          obj => obj.Order = order);
+                                                        order++;
+                                                    }
+
                                                     DialogContext.SetValue("RankId", rank.Id);
 
                                                     bool repeat;

@@ -57,13 +57,13 @@ public class GuildRankSuperiorRankDialogElement : DialogEmbedMessageElementBase<
             var ranks = dbFactory.GetRepository<GuildRankRepository>()
                                  .GetQuery()
                                  .Where(obj => obj.Guild.DiscordServerId == CommandContext.Guild.Id)
+                                 .OrderBy(obj => obj.Order)
                                  .Select(obj => new
-                                                {
-                                                    obj.SuperiorId,
-                                                    obj.Id,
-                                                    obj.InGameName,
-                                                    obj.DiscordRoleId
-                                                })
+                                 {
+                                     obj.Id,
+                                     obj.InGameName,
+                                     obj.DiscordRoleId
+                                 })
                                  .ToList();
 
             stringBuilder.Append("`0` - ");
@@ -72,8 +72,7 @@ public class GuildRankSuperiorRankDialogElement : DialogEmbedMessageElementBase<
 
             _ranks[0] = null;
 
-            var rank = ranks.FirstOrDefault(obj => obj.SuperiorId == null);
-            while (rank != null)
+            foreach (var rank in ranks)
             {
                 var currentLine = $"`{ranksCounter}` -  {rank.InGameName} {CommandContext.Guild.GetRole(rank.DiscordRoleId).Mention}\n";
                 if (currentLine.Length + stringBuilder.Length > 1024)
@@ -88,8 +87,6 @@ public class GuildRankSuperiorRankDialogElement : DialogEmbedMessageElementBase<
                 _ranks[ranksCounter] = rank.Id;
 
                 ranksCounter++;
-
-                rank = ranks.FirstOrDefault(obj => obj.SuperiorId == rank.Id);
             }
         }
 
