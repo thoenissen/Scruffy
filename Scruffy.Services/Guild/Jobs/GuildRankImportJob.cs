@@ -22,9 +22,13 @@ namespace Scruffy.Services.Guild.Jobs
 
             await using (serviceProvider.ConfigureAwait(false))
             {
-                await serviceProvider.GetService<GuildRankService>()
-                                     .ImportGuildRanks(null)
-                                     .ConfigureAwait(false);
+                var guildRankService = serviceProvider.GetService<GuildRankService>();
+
+                await guildRankService.ImportGuildRanks(null)
+                                      .ConfigureAwait(false);
+
+                await guildRankService.RefreshDiscordRoles(null)
+                                      .ConfigureAwait(false);
             }
         }
 
