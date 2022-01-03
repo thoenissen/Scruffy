@@ -466,7 +466,7 @@ public class DebugCommandModule : LocatedCommandModuleBase
         }
 
         /// <summary>
-        /// Refresh calendar message
+        /// Import members
         /// </summary>
         /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
@@ -474,6 +474,18 @@ public class DebugCommandModule : LocatedCommandModuleBase
         public async Task ImportMembers(CommandContext commandContext)
         {
             await GuildRankService.ImportGuildRanks(null)
+                                  .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Refresh discord roles
+        /// </summary>
+        /// <param name="commandContext">Current command context</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("refresh_roles")]
+        public async Task RefreshDiscordRoles(CommandContext commandContext)
+        {
+            await GuildRankService.RefreshDiscordRoles(null)
                                   .ConfigureAwait(false);
         }
 
