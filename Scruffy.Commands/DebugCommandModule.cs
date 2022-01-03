@@ -489,6 +489,21 @@ public class DebugCommandModule : LocatedCommandModuleBase
                                   .ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Refresh guild member rank
+        /// </summary>
+        /// <param name="commandContext">Current command context</param>
+        /// <param name="guidId">Id of the guild</param>
+        /// <param name="accountName">Account name</param>
+        /// <param name="rank">rank</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("refresh_roles")]
+        public async Task RefreshRank(CommandContext commandContext, long guidId, string accountName, string rank)
+        {
+            await GuildRankService.RefreshDiscordRank(guidId, accountName, rank)
+                                  .ConfigureAwait(false);
+        }
+
         #endregion // Methods
     }
 

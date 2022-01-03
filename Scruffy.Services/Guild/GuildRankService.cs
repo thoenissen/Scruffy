@@ -87,6 +87,8 @@ namespace Scruffy.Services.Guild
         {
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
+                var isChanged = false;
+
                 dbFactory.GetRepository<GuildWarsGuildMemberRepository>()
                          .AddOrRefresh(obj => obj.GuildId == guildId
                                            && obj.Name == accountName,
@@ -94,8 +96,116 @@ namespace Scruffy.Services.Guild
                                        {
                                            obj.GuildId = guildId;
                                            obj.Name = accountName;
+
+                                           isChanged = obj.Rank != rankName;
+
                                            obj.Rank = rankName;
                                        });
+
+                if (isChanged)
+                {
+                    var guildMemberQuery = dbFactory.GetRepository<GuildWarsGuildMemberRepository>()
+                                                    .GetQuery()
+                                                    .Select(obj => obj);
+
+                    var guildWarsAccountQuery = dbFactory.GetRepository<GuildWarsAccountRepository>()
+                                                         .GetQuery()
+                                                         .Select(obj => obj);
+
+                    var guildRankQuery = dbFactory.GetRepository<GuildRankRepository>()
+                                                  .GetQuery()
+                                                  .Select(obj => obj);
+
+                    var discordAccountQuery = dbFactory.GetRepository<DiscordAccountRepository>()
+                                                       .GetQuery()
+                                                       .Select(obj => obj);
+
+                    var guild = dbFactory.GetRepository<GuildRepository>()
+                                                   .GetQuery()
+                                                   .Where(obj => obj.Id == guildId)
+                                                   .Select(obj => new
+                                                   {
+                                                       obj.Id,
+                                                       obj.DiscordServerId,
+                                                       Roles = guildRankQuery.Where(obj2 => obj2.GuildId == obj.Id)
+                                                                             .Select(obj2 => obj2.DiscordRoleId)
+                                                                             .ToList()
+                                                   })
+                                                   .FirstOrDefault();
+
+                    if (guild != null)
+                    {
+                        var discordServer = await _discordClient.GetGuildAsync(guild.DiscordServerId)
+                                                                .ConfigureAwait(false);
+
+                        var users = guildWarsAccountQuery.Where(obj => obj.Name == accountName)
+                                                         .Join(guildWarsAccountQuery,
+                                                               obj => obj.UserId,
+                                                               obj => obj.UserId,
+                                                               (obj1, obj2) => new
+                                                                               {
+                                                                                   obj2.UserId,
+                                                                                   obj2.Name,
+                                                                               })
+                                                         .Join(guildMemberQuery,
+                                                               obj => obj.Name,
+                                                               obj => obj.Name,
+                                                               (obj1, obj2) => new
+                                                                               {
+                                                                                   obj1.UserId,
+                                                                                   obj2.Rank
+                                                                               })
+                                                         .Join(guildRankQuery.Where(obj => obj.GuildId == guild.Id),
+                                                               obj => obj.Rank,
+                                                               obj => obj.InGameName,
+                                                               (obj1, obj2) => new
+                                                                               {
+                                                                                   obj1.UserId,
+                                                                                   obj2.Order
+                                                                               })
+                                                         .GroupBy(obj => obj.UserId)
+                                                         .Select(obj => new
+                                                                        {
+                                                                            UserId = obj.Key,
+                                                                            Order = obj.Min(obj2 => obj2.Order)
+                                                                        })
+                                                         .Join(discordAccountQuery,
+                                                               obj => obj.UserId,
+                                                               obj => obj.UserId,
+                                                               (obj1, obj2) => new
+                                                                               {
+                                                                                   DiscordUserId = obj2.Id,
+                                                                                   DiscordRoleId = guildRankQuery.Where(obj => obj.GuildId == guild.Id
+                                                                                                                            && obj.Order == obj1.Order)
+                                                                                                                 .Select(obj => obj.DiscordRoleId)
+                                                                                                                 .FirstOrDefault()
+                                                                               })
+                                                         .Distinct()
+                                                         .ToList();
+
+                        foreach (var user in users)
+                        {
+                            var member = await discordServer.GetMemberAsync(user.DiscordUserId)
+                                                            .ConfigureAwait(false);
+
+                            foreach (var role in member.Roles.ToList())
+                            {
+                                if (user.DiscordRoleId != role.Id
+                                 && guild.Roles.Contains(role.Id))
+                                {
+                                    await member.RevokeRoleAsync(role)
+                                                .ConfigureAwait(false);
+                                }
+                            }
+
+                            if (member.Roles.Any(obj => obj.Id == user.DiscordRoleId) == false)
+                            {
+                                await member.GrantRoleAsync(discordServer.GetRole(user.DiscordRoleId))
+                                            .ConfigureAwait(false);
+                            }
+                        }
+                    }
+                }
             }
         }
 
