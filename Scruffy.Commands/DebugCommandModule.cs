@@ -497,7 +497,7 @@ public class DebugCommandModule : LocatedCommandModuleBase
         /// <param name="accountName">Account name</param>
         /// <param name="rank">rank</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-        [Command("refresh_roles")]
+        [Command("refresh_rank")]
         public async Task RefreshRank(CommandContext commandContext, long guidId, string accountName, string rank)
         {
             await GuildRankService.RefreshDiscordRank(guidId, accountName, rank)

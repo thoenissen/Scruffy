@@ -38,7 +38,12 @@ public class GuildWarsItemEntity
     public long? CustomValue { get; set; }
 
     /// <summary>
+    /// Valid date of the custom value
+    /// </summary>
+    public DateTime? CustomValueValidDate { get; set; }
+
+    /// <summary>
     /// Should the value be reduced after n inserts.
     /// </summary>
-    public bool IsValueReducingActivated { get; set; }
+    public int? CustomValueThreshold { get; set; }
 }

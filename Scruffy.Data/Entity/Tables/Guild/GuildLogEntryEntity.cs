@@ -31,6 +31,8 @@ public class GuildLogEntryEntity
 
     #region Properties
 
+    #region Data
+
     /// <summary>
     /// Id of the guild
     /// </summary>
@@ -176,6 +178,17 @@ public class GuildLogEntryEntity
     /// The new MOTD.
     /// </summary>
     public string MessageOfTheDay { get; set; }
+
+    #endregion // Data
+
+    #region Flags
+
+    /// <summary>
+    /// Is the entry processed by the guild administration services?
+    /// </summary>
+    public bool IsProcessed { get; set; }
+
+    #endregion // Flags
 
     #region Navigation - Properties
 
