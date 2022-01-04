@@ -1,8 +1,10 @@
 ﻿using System.Data;
 
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
+using Scruffy.Data.Entity.Keyless;
 using Scruffy.Data.Entity.Repositories.Base;
 
 namespace Scruffy.Data.Entity;
@@ -109,6 +111,36 @@ public sealed class RepositoryFactory : IDisposable
 
         return value;
     }
+
+    #region Query
+
+    /// <summary>
+    /// Select date range as query
+    /// </summary>
+    /// <param name="from">From</param>
+    /// <param name="to">To</param>
+    /// <returns>Date-Range-Query</returns>
+    public IQueryable<DateValue> SelectDateRange(DateTime from, DateTime to)
+    {
+        return _dbContext.Set<DateValue>()
+                         .FromSqlRaw(@"WITH [DAY_RANGE] AS
+                                       (
+                                            SELECT @from AS [Value],
+                                                   1 AS [Level]
+                                      UNION ALL
+                                            SELECT DATEADD (DAY, 1, [Value]),
+                                                   [Level] +1
+                                              FROM [DAY_RANGE]
+                                             WHERE [Value] < @to
+                                       )
+
+                                       SELECT [Value]
+                                       FROM [DAY_RANGE]",
+                                     new SqlParameter("@from", from),
+                                     new SqlParameter("@to", to));
+    }
+
+    #endregion // Query
 
     #endregion // Methods
 

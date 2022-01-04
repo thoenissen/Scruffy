@@ -1,5 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+
+using Scruffy.Data.Entity.Keyless;
 using Scruffy.Data.Entity.Tables.Calendar;
 using Scruffy.Data.Entity.Tables.CoreData;
 using Scruffy.Data.Entity.Tables.Discord;
@@ -522,6 +524,8 @@ public class ScruffyDbContext : DbContext
                                        ServerId = obj.DiscordServerId,
                                        ChannelId = obj.DiscordChannelId
                                    });
+
+        modelBuilder.Entity<DateValue>().HasNoKey();
 
         // Disabling cascade on delete
         foreach (var foreignKey in modelBuilder.Model.GetEntityTypes()
