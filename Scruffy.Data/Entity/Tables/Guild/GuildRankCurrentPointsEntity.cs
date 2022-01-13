@@ -8,6 +8,7 @@ namespace Scruffy.Data.Entity.Tables.Guild
     /// <summary>
     /// Current guild rank points
     /// </summary>
+    [Table("GuildRankCurrentPoints")]
     public class GuildRankCurrentPointsEntity
     {
         #region Properties
