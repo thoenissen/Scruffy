@@ -65,8 +65,9 @@ public class JobScheduler : IAsyncDisposable
 
         // Guild
         JobManager.AddJob<GuildLogImportJob>(obj => obj.NonReentrant().ToRunEvery(20).Seconds());
-        JobManager.AddJob<GuildSpecialRankPointsJob>(obj => obj.ToRunEvery(1).Days().At(0, 30));
         JobManager.AddJob<GuildRankImportJob>(obj => obj.ToRunEvery(1).Days().At(0, 20));
+        JobManager.AddJob<GuildSpecialRankPointsJob>(obj => obj.ToRunEvery(1).Days().At(0, 30));
+        JobManager.AddJob<GuildRankCurrentPointsJob>(obj => obj.ToRunEvery(1).Days().At(0, 40));
 
         // Games
         JobManager.AddJob<CounterGameJob>(obj => obj.ToRunEvery(10).Minutes());

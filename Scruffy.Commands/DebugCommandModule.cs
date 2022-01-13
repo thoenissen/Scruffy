@@ -504,6 +504,18 @@ public class DebugCommandModule : LocatedCommandModuleBase
                                   .ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Refresh current rank points
+        /// </summary>
+        /// <param name="commandContext">Current command context</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("refresh_rank_points")]
+        public async Task RefreshCurrentPoints(CommandContext commandContext)
+        {
+            await GuildRankService.RefreshCurrentPoints(null)
+                                  .ConfigureAwait(false);
+        }
+
         #endregion // Methods
     }
 
