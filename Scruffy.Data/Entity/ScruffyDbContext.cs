@@ -525,7 +525,13 @@ public class ScruffyDbContext : DbContext
                                        ChannelId = obj.DiscordChannelId
                                    });
 
-        modelBuilder.Entity<DateValue>().HasNoKey();
+        // Keyless
+        modelBuilder.Entity<DateValue>(eb =>
+                                       {
+                                           eb.HasNoKey();
+                                           eb.ToTable("__Unmapped_Query_Type_DateValue__",
+                                                      t => t.ExcludeFromMigrations());
+                                       });
 
         // Disabling cascade on delete
         foreach (var foreignKey in modelBuilder.Model.GetEntityTypes()

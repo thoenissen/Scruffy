@@ -15,6 +15,7 @@ public class ServerConfigurationEntity
     /// Id of the server
     /// </summary>
     [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public ulong DiscordServerId { get; set; }
 
     /// <summary>

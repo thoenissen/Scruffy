@@ -17,6 +17,7 @@ public class DiscordAccountEntity
     /// Id
     /// </summary>
     [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public ulong Id { get; set; }
 
     /// <summary>
