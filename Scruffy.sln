@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30011.22
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scruffy.ServiceHost", "Scruffy.ServiceHost\Scruffy.ServiceHost.csproj", "{7FA49663-BEE1-45B9-9147-0F95ABDC0324}"
 EndProject
@@ -18,12 +18,15 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04_Misc", "04_Misc", "{8BFFB022-9DEA-4B7D-ABD7-A817F1BCAB16}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		.gitignore = .gitignore
 		StyleCop.Debug.ruleset = StyleCop.Debug.ruleset
 		stylecop.json = stylecop.json
 		StyleCop.Release.ruleset = StyleCop.Release.ruleset
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scruffy.Services", "Scruffy.Services\Scruffy.Services.csproj", "{6CF70C6D-BBD6-4781-87B6-4793A78C6990}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scruffy.ManualTesting", "Scruffy.ManualTesting\Scruffy.ManualTesting.csproj", "{4D69B0A9-6300-4E4D-9FE5-EDAB430C97AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +50,10 @@ Global
 		{6CF70C6D-BBD6-4781-87B6-4793A78C6990}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6CF70C6D-BBD6-4781-87B6-4793A78C6990}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6CF70C6D-BBD6-4781-87B6-4793A78C6990}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D69B0A9-6300-4E4D-9FE5-EDAB430C97AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D69B0A9-6300-4E4D-9FE5-EDAB430C97AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D69B0A9-6300-4E4D-9FE5-EDAB430C97AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D69B0A9-6300-4E4D-9FE5-EDAB430C97AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -56,6 +63,7 @@ Global
 		{68FE318A-0198-42E6-96FA-2D982EBB5B19} = {CAABFF59-13F9-4D7F-9C19-E0DCD7AA97D7}
 		{5E477133-D9BD-4325-9AE3-36E5714D9286} = {0A4BE441-DD39-4293-9FF8-B5C8E5E3BFA0}
 		{6CF70C6D-BBD6-4781-87B6-4793A78C6990} = {CAABFF59-13F9-4D7F-9C19-E0DCD7AA97D7}
+		{4D69B0A9-6300-4E4D-9FE5-EDAB430C97AB} = {6CF14D6E-04D8-4E78-A84A-697AF9E286B1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ADE571FA-90CA-4B6B-8634-0AE4F774B904}

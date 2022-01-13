@@ -351,3 +351,5 @@ MigrationBackup/
 
 # Ignoring private configuration
 /Scruffy.ServiceHost/Docker.env
+/Scruffy.ServiceHost/Docker_Test.env
+/Scruffy.ServiceHost/Docker_Productive.env
