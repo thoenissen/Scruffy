@@ -1,5 +1,8 @@
 ﻿using DSharpPlus;
 
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Entity.Repositories.Guild;
@@ -316,6 +319,78 @@ namespace Scruffy.Services.Guild
                                         .ConfigureAwait(false);
                         }
                     }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Refresh current guild rank points
+        /// </summary>
+        /// <param name="guildId">Id of the guild</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task RefreshCurrentPoints(long? guildId)
+        {
+            using (var dbFactory = RepositoryFactory.CreateInstance())
+            {
+                foreach (var guild in dbFactory.GetRepository<GuildRepository>()
+                                               .GetQuery()
+                                               .Where(obj => guildId == null
+                                                          || obj.Id == guildId)
+                                               .Select(obj => new
+                                                              {
+                                                                  obj.Id
+                                                              })
+                                               .ToList())
+                {
+                    await dbFactory.ExecuteSqlRawAsync(@"WITH [CurrentPoints]
+                                                         AS
+                                                         (
+                                                             SELECT [DateRange].[Value] AS [Date],
+                                                                    [GuildWarsAccount].[UserId], 
+                                                                    CASE
+                                                                        WHEN MAX([DailyLogin].[Date]) IS NULL THEN -0.7
+                                                                        WHEN DATEDIFF(day, MAX([DailyLogin].[Date]), [DateRange].[Value]) > 28 THEN -0.57
+                                                                        WHEN DATEDIFF(day, MAX([DailyLogin].[Date]), [DateRange].[Value]) > 21 THEN -0.43
+                                                                        WHEN DATEDIFF(day, MAX([DailyLogin].[Date]), [DateRange].[Value]) > 14 THEN -0.29
+                                                                        WHEN DATEDIFF(day, MAX([DailyLogin].[Date]), [DateRange].[Value]) > 7 THEN -0.11
+                                                                        WHEN DATEDIFF(day, MAX([DailyLogin].[Date]), [DateRange].[Value]) > 3 THEN 0.11
+                                                                        ELSE 0.18
+                                                                    END AS [Points]
+                                                         
+                                                               FROM ( SELECT [Value] FROM [GetDateRange](@from, @to)) AS [DateRange]
+                                                         
+                                                          LEFT JOIN [GuildWarsGuildMembers] AS [Member]
+                                                                 ON 1 = 1
+                                                         INNER JOIN [GuildWarsAccounts] AS [GuildWarsAccount]
+                                                                 ON [Member].[Name] = [GuildWarsAccount].[Name]
+                                                          LEFT JOIN [GuildWarsAccountDailyLoginChecks] AS [DailyLogin]
+                                                                 ON [Member].[Name] = [DailyLogin].[Name]
+                                                         
+                                                              WHERE [Member].[GuildId] = @guildId
+                                                         
+                                                           GROUP BY [DateRange].[Value], 
+                                                                    [GuildWarsAccount].[UserId]
+                                                         )
+                                                         
+                                                         MERGE INTO [GuildRankCurrentPoints] AS [Target]
+                                                              USING [CurrentPoints] AS [SOURCE]
+                                                         
+                                                                 ON [Target].[GuildId] = @guildId
+                                                                AND [Target].[UserId] = [Source].[UserId]
+                                                                AND [Target].[Date] = [Source].[Date]
+                                                                AND [Target].[Type] = 0
+                                                         
+                                                         WHEN MATCHED 
+                                                           THEN UPDATE
+                                                                SET [Target].[Points] = [Source].[Points]
+                                                         
+                                                         WHEN NOT MATCHED
+                                                            THEN INSERT ( [GuildId], [UserId], [Date], [Type], [Points] )
+                                                                 VALUES ( @guildId, [Source].[UserId], [Source].[Date], 0, [Source].[Points] );",
+                                                        new SqlParameter("@from", DateTime.Today.AddDays(-61)),
+                                                        new SqlParameter("@to", DateTime.Today.AddDays(-1)),
+                                                        new SqlParameter("@guildId", guild.Id))
+                                   .ConfigureAwait(false);
                 }
             }
         }

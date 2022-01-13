@@ -33,8 +33,8 @@ namespace Scruffy.Data.Entity.Migrations
                                           FROM [DAY_RANGE]
                                          WHERE [Value] < @to)
 
-                                   SELECT[Value]1
-                                   FROM[DAY_RANGE]");
+                                   SELECT [Value]
+                                   FROM   [DAY_RANGE]");
         }
 
         /// <summary>
