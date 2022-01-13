@@ -123,21 +123,9 @@ public sealed class RepositoryFactory : IDisposable
     public IQueryable<DateValue> SelectDateRange(DateTime from, DateTime to)
     {
         return _dbContext.Set<DateValue>()
-                         .FromSqlRaw(@"WITH [DAY_RANGE] AS
-                                       (
-                                            SELECT @from AS [Value],
-                                                   1 AS [Level]
-                                      UNION ALL
-                                            SELECT DATEADD (DAY, 1, [Value]),
-                                                   [Level] +1
-                                              FROM [DAY_RANGE]
-                                             WHERE [Value] < @to
-                                       )
-
-                                       SELECT [Value]
-                                       FROM [DAY_RANGE]",
-                                     new SqlParameter("@from", from),
-                                     new SqlParameter("@to", to));
+                         .FromSqlRaw(@"SELECT [Value] FROM GetDateRange(@from, @to)",
+                                                      new SqlParameter("@from", from),
+                                                      new SqlParameter("@to", to));
     }
 
     #endregion // Query
