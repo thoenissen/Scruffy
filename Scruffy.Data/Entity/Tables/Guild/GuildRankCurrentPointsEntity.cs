@@ -23,6 +23,11 @@ namespace Scruffy.Data.Entity.Tables.Guild
         public long UserId { get; set; }
 
         /// <summary>
+        /// Date
+        /// </summary>
+        public DateTime Date { get; set; }
+
+        /// <summary>
         /// Type
         /// </summary>
         public GuildRankPointType Type { get; set; }

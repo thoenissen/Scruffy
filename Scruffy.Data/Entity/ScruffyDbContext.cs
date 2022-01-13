@@ -393,6 +393,7 @@ public class ScruffyDbContext : DbContext
                                    {
                                        obj.GuildId,
                                        obj.UserId,
+                                       obj.Date,
                                        obj.Type
                                    });
 
