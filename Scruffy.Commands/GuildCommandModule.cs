@@ -684,6 +684,30 @@ public class GuildCommandModule : LocatedCommandModuleBase
                                                            .ConfigureAwait(false);
                                });
         }
+
+        /// <summary>
+        /// Current rank points
+        /// </summary>
+        /// <param name="commandContext">Current command context</param>
+        /// <param name="sinceDate">Since date</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("points")]
+        [RequireGuild]
+        [RequireAdministratorPermissions]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
+        public Task ExportCurrentRankPoints(CommandContext commandContext, string sinceDate)
+        {
+            return InvokeAsync(commandContext,
+                               async commandContextContainer =>
+                               {
+                                   if (DateTime.TryParseExact(sinceDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
+                                   {
+                                       await GuildExportService.ExportGuildRankPoints(commandContextContainer, date)
+                                                               .ConfigureAwait(false);
+                                   }
+                               });
+        }
+
         #endregion // Methods
     }
 

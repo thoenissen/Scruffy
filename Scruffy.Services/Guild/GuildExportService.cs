@@ -6,7 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Account;
+using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Entity.Repositories.Guild;
+using Scruffy.Data.Enumerations.Guild;
 using Scruffy.Data.Enumerations.GuildWars2;
 using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Extensions;
@@ -641,6 +643,72 @@ public class GuildExportService : LocatedServiceBase
                 {
                     await writer.WriteLineAsync($"{role};{user}")
                                 .ConfigureAwait(false);
+                }
+
+                await writer.FlushAsync()
+                            .ConfigureAwait(false);
+
+                memoryStream.Position = 0;
+
+                await commandContext.Channel
+                                    .SendMessageAsync(new DiscordMessageBuilder().WithFile("roles.csv", memoryStream))
+                                    .ConfigureAwait(false);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Exporting current guild rank points
+    /// </summary>
+    /// <param name="commandContext">Command context</param>
+    /// <param name="sinceDate">Since date</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public async Task ExportGuildRankPoints(CommandContextContainer commandContext, DateTime sinceDate)
+    {
+        var members = new Dictionary<ulong, string>();
+
+        foreach (var user in await commandContext.Guild
+                                                 .GetAllMembersAsync()
+                                                 .ConfigureAwait(false))
+        {
+            members[user.Id] = user.TryGetDisplayName();
+        }
+
+        var memoryStream = new MemoryStream();
+
+        await using (memoryStream.ConfigureAwait(false))
+        {
+            var writer = new StreamWriter(memoryStream);
+
+            await using (writer.ConfigureAwait(false))
+            {
+                await writer.WriteLineAsync("Date;User;Login")
+                            .ConfigureAwait(false);
+
+                using (var dbFactory = RepositoryFactory.CreateInstance())
+                {
+                    var discordAccounts = dbFactory.GetRepository<DiscordAccountRepository>()
+                                                   .GetQuery()
+                                                   .Select(obj => obj);
+
+                    foreach (var entry in dbFactory.GetRepository<GuildRankCurrentPointsRepository>()
+                                                   .GetQuery()
+                                                   .Where(obj => obj.Date >= sinceDate
+                                                              && obj.Guild.DiscordServerId == commandContext.Guild.Id
+                                                              && obj.Type == GuildRankPointType.Login)
+                                                   .Select(obj => new
+                                                   {
+                                                       obj.Date,
+                                                       DiscordUserId = discordAccounts.Where(obj2 => obj2.UserId == obj.UserId)
+                                                                                                     .Select(obj2 => (ulong?)obj2.Id)
+                                                                                                     .FirstOrDefault(),
+                                                       obj.Points
+                                                   })
+                                                   .ToList())
+                    {
+                        await writer.WriteLineAsync($"{entry.Date:yyyy-MM-dd};{(members.TryGetValue(entry.DiscordUserId ?? 0, out var userDisplayName) ? userDisplayName : "Unknown")};{entry.Points}")
+                                    .ConfigureAwait(false);
+                    }
                 }
 
                 await writer.FlushAsync()
