@@ -133,6 +133,7 @@ public class ScruffyDbContext : DbContext
         // Discord
         modelBuilder.Entity<DiscordAccountEntity>();
         modelBuilder.Entity<BlockedDiscordChannelEntity>();
+        modelBuilder.Entity<DiscordAccountRoleAssignmentHistoryEntity>();
 
         modelBuilder.Entity<DiscordAccountEntity>()
                     .HasMany(obj => obj.OneTimeReminders)
@@ -145,6 +146,14 @@ public class ScruffyDbContext : DbContext
                                    {
                                        obj.ServerId,
                                        obj.ChannelId
+                                   });
+
+        modelBuilder.Entity<DiscordAccountRoleAssignmentHistoryEntity>()
+                    .HasKey(obj => new
+                                   {
+                                       obj.ServerId,
+                                       obj.RoleId,
+                                       obj.AccountId
                                    });
 
         // General
@@ -423,6 +432,8 @@ public class ScruffyDbContext : DbContext
         modelBuilder.Entity<GuildWarsAchievementRewardEntity>();
         modelBuilder.Entity<GuildWarsAchievementTierEntity>();
         modelBuilder.Entity<GuildWarsGuildMemberEntity>();
+        modelBuilder.Entity<GuildWarsAccountRankingDataEntity>();
+        modelBuilder.Entity<GuildWarsAccountRankingGuildDataEntity>();
 
         modelBuilder.Entity<GuildWarsAccountDailyLoginCheckEntity>()
                     .HasKey(obj => new
@@ -503,6 +514,21 @@ public class ScruffyDbContext : DbContext
                                    {
                                        obj.GuildId,
                                        obj.Name
+                                   });
+
+        modelBuilder.Entity<GuildWarsAccountRankingDataEntity>()
+                    .HasKey(obj => new
+                                   {
+                                       obj.AccountName,
+                                       obj.Date
+                                   });
+
+        modelBuilder.Entity<GuildWarsAccountRankingGuildDataEntity>()
+                    .HasKey(obj => new
+                                   {
+                                       obj.AccountName,
+                                       obj.GuildId,
+                                       obj.Date
                                    });
 
         // Statistics
