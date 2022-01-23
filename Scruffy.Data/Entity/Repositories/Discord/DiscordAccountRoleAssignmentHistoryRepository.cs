@@ -7,9 +7,9 @@ using Scruffy.Data.Entity.Tables.Discord;
 namespace Scruffy.Data.Entity.Repositories.Discord;
 
 /// <summary>
-/// Repository for accessing <see cref="BlockedDiscordChannelEntity"/>
+/// Repository for accessing <see cref="DiscordAccountRoleAssignmentHistoryEntity"/>
 /// </summary>
-public class BlockedDiscordChannelRepository : RepositoryBase<BlockedDiscordChannelQueryable, BlockedDiscordChannelEntity>
+public class DiscordAccountRoleAssignmentHistoryRepository : RepositoryBase<DiscordAccountRoleAssignmentHistoryQueryable, DiscordAccountRoleAssignmentHistoryEntity>
 {
     #region Constructor
 
@@ -17,7 +17,7 @@ public class BlockedDiscordChannelRepository : RepositoryBase<BlockedDiscordChan
     /// Constructor
     /// </summary>
     /// <param name="dbContext"><see cref="DbContext"/>-object</param>
-    public BlockedDiscordChannelRepository(ScruffyDbContext dbContext)
+    public DiscordAccountRoleAssignmentHistoryRepository(ScruffyDbContext dbContext)
         : base(dbContext)
     {
     }

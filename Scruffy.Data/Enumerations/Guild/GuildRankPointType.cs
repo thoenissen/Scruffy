@@ -1,48 +1,47 @@
-﻿namespace Scruffy.Data.Enumerations.Guild
+﻿namespace Scruffy.Data.Enumerations.Guild;
+
+/// <summary>
+/// Type of the rank points
+/// </summary>
+public enum GuildRankPointType
 {
     /// <summary>
-    /// Type of the rank points
+    /// Daily login
     /// </summary>
-    public enum GuildRankPointType
-    {
-        /// <summary>
-        /// Daily login
-        /// </summary>
-        Login,
+    Login,
 
-        /// <summary>
-        /// Guild representation
-        /// </summary>
-        Representation,
+    /// <summary>
+    /// Guild representation
+    /// </summary>
+    Representation,
 
-        /// <summary>
-        /// Achievement points
-        /// </summary>
-        AchievementPoints,
+    /// <summary>
+    /// Achievement points
+    /// </summary>
+    AchievementPoints,
 
-        /// <summary>
-        /// Membership
-        /// </summary>
-        Membership,
+    /// <summary>
+    /// Membership
+    /// </summary>
+    Membership,
 
-        /// <summary>
-        /// Donations
-        /// </summary>
-        Donation,
+    /// <summary>
+    /// Donations
+    /// </summary>
+    Donation,
 
-        /// <summary>
-        /// Discord voice activity
-        /// </summary>
-        DiscordVoiceActivity,
+    /// <summary>
+    /// Discord voice activity
+    /// </summary>
+    DiscordVoiceActivity,
 
-        /// <summary>
-        /// Discord message activity
-        /// </summary>
-        DiscordMessageActivity,
+    /// <summary>
+    /// Discord message activity
+    /// </summary>
+    DiscordMessageActivity,
 
-        /// <summary>
-        /// Events
-        /// </summary>
-        Events,
-    }
+    /// <summary>
+    /// Events
+    /// </summary>
+    Events,
 }

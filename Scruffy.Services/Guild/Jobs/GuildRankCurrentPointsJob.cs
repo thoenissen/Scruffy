@@ -3,30 +3,29 @@
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.JobScheduler;
 
-namespace Scruffy.Services.Guild.Jobs
+namespace Scruffy.Services.Guild.Jobs;
+
+/// <summary>
+/// Daily point refresh
+/// </summary>
+public class GuildRankCurrentPointsJob : LocatedAsyncJob
 {
+    #region LocatedAsyncJob
+
     /// <summary>
-    /// Daily point refresh
+    /// Executes the job
     /// </summary>
-    public class GuildRankCurrentPointsJob : LocatedAsyncJob
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public override async Task ExecuteAsync()
     {
-        #region LocatedAsyncJob
-
-        /// <summary>
-        /// Executes the job
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public override async Task ExecuteAsync()
+        var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+        await using (serviceProvider.ConfigureAwait(false))
         {
-            var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
-            await using (serviceProvider.ConfigureAwait(false))
-            {
-                await serviceProvider.GetService<GuildRankService>()
-                                     .RefreshCurrentPoints(null)
-                                     .ConfigureAwait(false);
-            }
+            await serviceProvider.GetService<GuildRankService>()
+                                 .RefreshCurrentPoints(null)
+                                 .ConfigureAwait(false);
         }
-
-        #endregion // LocatedAsyncJob
     }
+
+    #endregion // LocatedAsyncJob
 }

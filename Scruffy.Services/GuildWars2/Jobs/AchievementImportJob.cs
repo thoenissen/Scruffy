@@ -53,6 +53,10 @@ public class AchievementImportJob : LocatedAsyncJob
                         LoggingService.AddJobLogEntry(LogEntryLevel.Error, nameof(AchievementImportJob), $"Missing permissions {account}", null, ex);
                     }
                 }
+
+                await dbFactory.GetRepository<GuildWarsAccountRankingDataRepository>()
+                               .InsertCurrentAchievementPoints()
+                               .ConfigureAwait(false);
             }
         }
     }

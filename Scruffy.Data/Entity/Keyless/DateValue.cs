@@ -1,13 +1,12 @@
-﻿namespace Scruffy.Data.Entity.Keyless
+﻿namespace Scruffy.Data.Entity.Keyless;
+
+/// <summary>
+/// Date value
+/// </summary>
+public class DateValue
 {
     /// <summary>
-    /// Date value
+    /// Value
     /// </summary>
-    public class DateValue
-    {
-        /// <summary>
-        /// Value
-        /// </summary>
-        public DateTime Value { get; set; }
-    }
+    public DateTime Value { get; set; }
 }
