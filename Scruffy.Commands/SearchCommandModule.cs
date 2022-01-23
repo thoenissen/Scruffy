@@ -22,6 +22,7 @@ namespace Scruffy.Commands;
 /// Searching the web
 /// </summary>
 [ModuleLifespan(ModuleLifespan.Transient)]
+[BlockedChannelCheck]
 [Group("search")]
 [Aliases("se")]
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]

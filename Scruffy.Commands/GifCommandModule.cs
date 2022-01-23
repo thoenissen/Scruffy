@@ -11,6 +11,7 @@ using Scruffy.Data.Enumerations.General;
 using Scruffy.Data.Json.Tenor;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord;
+using Scruffy.Services.Core.Discord.Attributes;
 
 namespace Scruffy.Commands;
 
@@ -19,6 +20,7 @@ namespace Scruffy.Commands;
 /// </summary>
 [Group("gif")]
 [Aliases("gi")]
+[BlockedChannelCheck]
 public class GifCommandModule : LocatedCommandModuleBase
 {
     #region Methods

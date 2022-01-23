@@ -12,6 +12,7 @@ namespace Scruffy.Commands;
 /// </summary>
 [Group("account")]
 [Aliases("ac")]
+[BlockedChannelCheck]
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
 [ModuleLifespan(ModuleLifespan.Transient)]
 public class AccountCommandModule : LocatedCommandModuleBase

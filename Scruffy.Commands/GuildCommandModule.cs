@@ -18,6 +18,7 @@ namespace Scruffy.Commands;
 [Group("guild")]
 [Aliases("g")]
 [ModuleLifespan(ModuleLifespan.Transient)]
+[BlockedChannelCheck]
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
 public class GuildCommandModule : LocatedCommandModuleBase
 {

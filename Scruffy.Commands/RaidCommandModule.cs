@@ -26,6 +26,7 @@ namespace Scruffy.Commands;
 /// </summary>
 [Group("raid")]
 [Aliases("ra")]
+[BlockedChannelCheck]
 [ModuleLifespan(ModuleLifespan.Transient)]
 public class RaidCommandModule : LocatedCommandModuleBase
 {
@@ -811,7 +812,7 @@ public class RaidCommandModule : LocatedCommandModuleBase
 
     #endregion // Templates
 
-    #region Levels
+    #region Overview
 
     /// <summary>
     /// Overviews
@@ -874,5 +875,5 @@ public class RaidCommandModule : LocatedCommandModuleBase
         #endregion // Methods
     }
 
-    #endregion // Templates
+    #endregion // Overview
 }

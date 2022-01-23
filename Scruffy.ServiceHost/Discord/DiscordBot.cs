@@ -48,6 +48,11 @@ public sealed class DiscordBot : IAsyncDisposable
     /// </summary>
     private MessageImportService _messageImportService;
 
+    /// <summary>
+    /// Blocked channel service
+    /// </summary>
+    private BlockedChannelService _blockedChannelService;
+
     #endregion // Fields
 
     #region Methods
@@ -55,8 +60,9 @@ public sealed class DiscordBot : IAsyncDisposable
     /// <summary>
     /// Start the discord bot
     /// </summary>
+    /// <param name="localizationService">Localization service</param>
     /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-    public async Task StartAsync()
+    public async Task StartAsync(Services.Core.Localization.LocalizationService localizationService)
     {
         var config = new DiscordConfiguration
                      {
@@ -69,20 +75,18 @@ public sealed class DiscordBot : IAsyncDisposable
                      };
 
         _discordClient = new DiscordClient(config);
-
         _discordClient.UseInteractivity(new InteractivityConfiguration
                                         {
                                             Timeout = TimeSpan.FromMinutes(2)
                                         });
+        _prefixResolver = new PrefixResolvingService();
+        _administrationPermissionsValidationService = new AdministrationPermissionsValidationService();
+        _blockedChannelService = new BlockedChannelService(localizationService);
 
         GlobalServiceProvider.Current.AddSingleton(_discordClient);
-
-        _prefixResolver = new PrefixResolvingService();
         GlobalServiceProvider.Current.AddSingleton(_prefixResolver);
-
-        _administrationPermissionsValidationService = new AdministrationPermissionsValidationService();
         GlobalServiceProvider.Current.AddSingleton(_administrationPermissionsValidationService);
-
+        GlobalServiceProvider.Current.AddSingleton(_blockedChannelService);
         GlobalServiceProvider.Current.AddSingleton(new DiscordStatusService(_discordClient));
 
 #if RELEASE

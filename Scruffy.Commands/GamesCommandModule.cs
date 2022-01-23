@@ -13,6 +13,7 @@ namespace Scruffy.Commands;
 [Group("games")]
 [RequireGuild]
 [RequireAdministratorPermissions]
+[BlockedChannelCheck]
 [ModuleLifespan(ModuleLifespan.Transient)]
 public class GamesCommandModule : LocatedCommandModuleBase
 {

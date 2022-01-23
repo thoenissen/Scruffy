@@ -16,6 +16,9 @@
     "AdministrationCommandModule": {
       "NotAllowedToPerform": "Diese Aktion darf ich nicht ausführen."
     },
+    "BlockedChannelService": {
+      "ChannelIsBlocked": "Dieser Befehl kann in diesem Kanal nicht verwendet werden. Bitte verwende einen dafür vorgesehenen Kanal."
+    },
     "ReminderCreationCommandModule": {
       "CommandProgressed": "Der Befehl wurde verarbeitet.",
       "ChooseChannelPrompt": "Wähle bitte einen der folgenden Kanäle aus:",
@@ -116,7 +119,7 @@
     "RaidCommandModule": {
       "NoActiveAppointment": "Es besteht kein aktiver Termin.",
       "TemplateChanged": "Die Schablone wurde angepasst.",
-      "GroupCountChanged": "Die Anzahl der Gruppen wurde angepasst." 
+      "GroupCountChanged": "Die Anzahl der Gruppen wurde angepasst."
     },
     "RaidExperienceLevelsCommandModule": {
       "UnknownExperienceLevel": "Das angegebene Erfahrungslevel existiert nicht.",

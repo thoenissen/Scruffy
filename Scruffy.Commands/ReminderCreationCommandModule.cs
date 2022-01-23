@@ -20,6 +20,7 @@ namespace Scruffy.Commands;
 /// Reminder module
 /// </summary>
 [ModuleLifespan(ModuleLifespan.Transient)]
+[BlockedChannelCheck]
 [Group("reminder")]
 [Aliases("re")]
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]

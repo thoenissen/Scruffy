@@ -10,7 +10,7 @@ using Scruffy.Services.Core.Discord.Attributes;
 namespace Scruffy.Commands;
 
 /// <summary>
-/// Calendar commands
+/// Admin commands
 /// </summary>
 [Group("admin")]
 [Aliases("ad")]
@@ -88,4 +88,71 @@ public class AdministrationCommandModule : LocatedCommandModuleBase
     }
 
     #endregion // Methods
+
+    #region Channel
+
+    /// <summary>
+    /// Channel commands
+    /// </summary>
+    [Group("channel")]
+    [Aliases("c")]
+    [RequireGuild]
+    [RequireAdministratorPermissions]
+    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
+    [ModuleLifespan(ModuleLifespan.Transient)]
+    public class AdministrationChannelCommandModule : LocatedCommandModuleBase
+    {
+        #region Properties
+
+        /// <summary>
+        /// Blocked channels
+        /// </summary>
+        public BlockedChannelService BlockedChannelService { get; set; }
+
+        #endregion // Properties
+
+        #region Methods
+
+        /// <summary>
+        /// Block channel
+        /// </summary>
+        /// <param name="commandContext">Current command context</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("block")]
+        [RequireAdministratorPermissions]
+        public Task BlockChannel(CommandContext commandContext)
+        {
+            return InvokeAsync(commandContext,
+                               async commandContextContainer =>
+                               {
+                                   BlockedChannelService.AddChannel(commandContextContainer.Channel);
+
+                                   await commandContext.Message.DeleteAsync()
+                                                       .ConfigureAwait(false);
+                               });
+        }
+
+        /// <summary>
+        /// Block channel
+        /// </summary>
+        /// <param name="commandContext">Current command context</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("unblock")]
+        [RequireAdministratorPermissions]
+        public Task UnblockChannel(CommandContext commandContext)
+        {
+            return InvokeAsync(commandContext,
+                               async commandContextContainer =>
+                               {
+                                   BlockedChannelService.RemoveChannel(commandContextContainer.Channel);
+
+                                   await commandContext.Message.DeleteAsync()
+                                                       .ConfigureAwait(false);
+                               });
+        }
+
+        #endregion // Methods
+    }
+
+    #endregion // Channel
 }

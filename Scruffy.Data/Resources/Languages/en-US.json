@@ -15,6 +15,9 @@
     "AdministrationCommandModule": {
       "NotAllowedToPerform": "I'm not allowed to perform this action."
     },
+    "BlockedChannelService": {
+      "ChannelIsBlocked": "You can't use this command here. Please use the designated channels."
+    },
     "ReminderCreationCommandModule": {
       "CommandProgressed": "Command progressed.",
       "ChooseChannelPrompt": "Please choose one of the following channels.",
@@ -115,7 +118,7 @@
     "RaidCommandModule": {
       "NoActiveAppointment": "Currently there is no active appointment.",
       "TemplateChanged": "The template has been changed.",
-      "GroupCountChanged": "The group count has been changed." 
+      "GroupCountChanged": "The group count has been changed."
     },
     "RaidExperienceLevelsCommandModule": {
       "UnknownExperienceLevel": "The experience role by the given name does not exist.",
@@ -427,7 +430,7 @@
     "GuildRankDiscordRoleDialogElement": {
       "ChooseTitle": "Role selection",
       "ChooseDescription": "Please choose one of the following roles:",
-      "RolesField": "Roles" 
+      "RolesField": "Roles"
     },
     "GuildRankEditDialogElement": {
       "ChooseCommandTitle": "Rank configuration",

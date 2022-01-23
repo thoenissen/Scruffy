@@ -40,17 +40,16 @@ public class Program
             var jobScheduler = new JobScheduler();
             await using (jobScheduler.ConfigureAwait(false))
             {
+                var localizationService = new LocalizationService();
+
                 // TODO configuration
                 var stream = Assembly.Load("Scruffy.Data").GetManifestResourceStream("Scruffy.Data.Resources.Languages.de-DE.json");
                 await using (stream.ConfigureAwait(false))
                 {
-                    var localizationService = new LocalizationService();
-
                     localizationService.Load(stream);
-
-                    GlobalServiceProvider.Current.AddSingleton(localizationService);
                 }
 
+                GlobalServiceProvider.Current.AddSingleton(localizationService);
                 GlobalServiceProvider.Current.AddSingleton(jobScheduler);
 
                 using (var fractalReminderService = new FractalLfgReminderService(jobScheduler))
@@ -60,7 +59,7 @@ public class Program
                     var discordBot = new DiscordBot();
                     await using (discordBot.ConfigureAwait(false))
                     {
-                        await discordBot.StartAsync().ConfigureAwait(false);
+                        await discordBot.StartAsync(localizationService).ConfigureAwait(false);
 
                         await jobScheduler.StartAsync().ConfigureAwait(false);
 

@@ -14,6 +14,7 @@ namespace Scruffy.Commands;
 [Aliases("ca")]
 [RequireGuild]
 [RequireAdministratorPermissions]
+[BlockedChannelCheck]
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
 [ModuleLifespan(ModuleLifespan.Transient)]
 public class CalendarCommandModule : LocatedCommandModuleBase

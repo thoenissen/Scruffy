@@ -12,6 +12,7 @@ namespace Scruffy.Commands;
 /// </summary>
 [Group("gw2")]
 [ModuleLifespan(ModuleLifespan.Transient)]
+[BlockedChannelCheck]
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
 public class GuildWars2CommandBuilder : LocatedCommandModuleBase
 {

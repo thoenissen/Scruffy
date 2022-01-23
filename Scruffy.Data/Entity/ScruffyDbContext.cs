@@ -132,12 +132,20 @@ public class ScruffyDbContext : DbContext
 
         // Discord
         modelBuilder.Entity<DiscordAccountEntity>();
+        modelBuilder.Entity<BlockedDiscordChannelEntity>();
 
         modelBuilder.Entity<DiscordAccountEntity>()
                     .HasMany(obj => obj.OneTimeReminders)
                     .WithOne(obj => obj.DiscordAccount)
                     .HasForeignKey(obj => obj.DiscordAccountId)
                     .IsRequired();
+
+        modelBuilder.Entity<BlockedDiscordChannelEntity>()
+                    .HasKey(obj => new
+                                   {
+                                       obj.ServerId,
+                                       obj.ChannelId
+                                   });
 
         // General
         modelBuilder.Entity<LogEntryEntity>();

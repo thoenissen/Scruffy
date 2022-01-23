@@ -13,6 +13,7 @@ namespace Scruffy.Commands;
 [Group("fractal")]
 [Aliases("f")]
 [ModuleLifespan(ModuleLifespan.Transient)]
+[BlockedChannelCheck]
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
 public class FractalCommandModule : LocatedCommandModuleBase
 {

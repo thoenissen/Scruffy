@@ -13,6 +13,7 @@ namespace Scruffy.Commands;
 /// </summary>
 [Group("information")]
 [Aliases("info", "i")]
+[BlockedChannelCheck]
 [ModuleLifespan(ModuleLifespan.Transient)]
 public class InformationCommandModule : LocatedCommandModuleBase
 {

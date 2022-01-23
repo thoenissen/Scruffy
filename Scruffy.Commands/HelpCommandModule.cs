@@ -13,6 +13,7 @@ namespace Scruffy.Commands;
 /// </summary>
 [Group("help")]
 [ModuleLifespan(ModuleLifespan.Transient)]
+[BlockedChannelCheck]
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
 public class HelpCommandModule : LocatedCommandModuleBase
 {

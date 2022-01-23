@@ -13,6 +13,7 @@ namespace Scruffy.Commands;
 [Group("statistics")]
 [Aliases("stats", "st")]
 [RequireDeveloperPermissions]
+[BlockedChannelCheck]
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
 [ModuleLifespan(ModuleLifespan.Transient)]
 public class StatisticsCommandModule : LocatedCommandModuleBase
