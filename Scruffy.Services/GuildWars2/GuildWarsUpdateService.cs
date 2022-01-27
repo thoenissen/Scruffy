@@ -1,6 +1,4 @@
-﻿using DSharpPlus;
-using DSharpPlus.Entities;
-
+﻿
 using Scruffy.Data.Json.ThatShaman;
 using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;

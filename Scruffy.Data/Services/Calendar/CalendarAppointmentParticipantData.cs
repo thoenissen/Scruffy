@@ -1,6 +1,4 @@
-﻿using DSharpPlus.Entities;
-
-namespace Scruffy.Data.Services.Calendar;
+﻿namespace Scruffy.Data.Services.Calendar;
 
 /// <summary>
 /// Participant

@@ -1,6 +1,4 @@
-﻿using DSharpPlus;
-using DSharpPlus.Entities;
-
+﻿
 using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;

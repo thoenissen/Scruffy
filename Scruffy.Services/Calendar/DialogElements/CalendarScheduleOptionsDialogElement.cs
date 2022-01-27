@@ -1,5 +1,4 @@
-﻿using DSharpPlus.Entities;
-
+﻿
 using Scruffy.Data.Enumerations.Calendar;
 using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;

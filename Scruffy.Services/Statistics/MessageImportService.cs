@@ -1,6 +1,4 @@
-﻿using DSharpPlus;
-using DSharpPlus.EventArgs;
-
+﻿
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Statistics;
 using Scruffy.Data.Services.Statistics;

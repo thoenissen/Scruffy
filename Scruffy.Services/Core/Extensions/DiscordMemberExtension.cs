@@ -1,6 +1,4 @@
-﻿using DSharpPlus.Entities;
-
-namespace Scruffy.Services.Core.Extensions;
+﻿namespace Scruffy.Services.Core.Extensions;
 
 /// <summary>
 /// <see cref="DiscordMember"/>-Extensions

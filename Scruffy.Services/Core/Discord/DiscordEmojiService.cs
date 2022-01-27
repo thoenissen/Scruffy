@@ -2,9 +2,6 @@
 using System.IO;
 using System.Reflection;
 
-using DSharpPlus;
-using DSharpPlus.Entities;
-
 using Newtonsoft.Json;
 
 namespace Scruffy.Services.Core.Discord;

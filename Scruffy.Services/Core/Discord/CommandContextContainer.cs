@@ -1,7 +1,4 @@
-﻿using DSharpPlus;
-using DSharpPlus.CommandsNext;
-using DSharpPlus.Entities;
-using Scruffy.Data.Services.CoreData;
+﻿using Scruffy.Data.Services.CoreData;
 using Scruffy.Services.CoreData;
 
 namespace Scruffy.Services.Core.Discord;

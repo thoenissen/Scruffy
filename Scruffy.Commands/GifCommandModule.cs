@@ -1,8 +1,5 @@
 ﻿using System.Net.Http;
 
-using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
-
 using Microsoft.AspNetCore.WebUtilities;
 
 using Newtonsoft.Json;

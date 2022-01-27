@@ -1,6 +1,4 @@
-﻿using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
-
+﻿
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Scruffy.Services.Core.Discord.Attributes;

@@ -1,5 +1,4 @@
-﻿using DSharpPlus.Entities;
-
+﻿
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Services.Core.Discord;

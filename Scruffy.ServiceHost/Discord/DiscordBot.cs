@@ -1,10 +1,5 @@
 ﻿using System.Reflection;
 
-using DSharpPlus;
-using DSharpPlus.CommandsNext;
-using DSharpPlus.Interactivity;
-using DSharpPlus.Interactivity.Extensions;
-
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Statistics;

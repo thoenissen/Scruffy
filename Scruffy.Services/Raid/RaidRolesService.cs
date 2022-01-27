@@ -1,6 +1,4 @@
-﻿using DSharpPlus.Entities;
-using DSharpPlus.Interactivity.Extensions;
-
+﻿
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Data.Entity.Tables.Raid;

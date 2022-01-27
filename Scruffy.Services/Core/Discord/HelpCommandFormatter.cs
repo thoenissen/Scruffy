@@ -1,9 +1,4 @@
-﻿using DSharpPlus;
-using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Converters;
-using DSharpPlus.CommandsNext.Entities;
-using DSharpPlus.Entities;
-
+﻿
 using Scruffy.Services.Core.Localization;
 
 namespace Scruffy.Services.Core.Discord;

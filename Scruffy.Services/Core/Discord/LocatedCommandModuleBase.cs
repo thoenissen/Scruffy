@@ -1,8 +1,5 @@
 ﻿using System.Net.Http;
 
-using DSharpPlus.CommandsNext;
-using DSharpPlus.Entities;
-
 using Newtonsoft.Json;
 
 using Scruffy.Data.Enumerations.General;

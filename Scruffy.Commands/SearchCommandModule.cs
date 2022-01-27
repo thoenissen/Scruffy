@@ -1,10 +1,5 @@
 ﻿using System.Net.Http;
 
-using DSharpPlus;
-using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
-
 using Google.Apis.Customsearch.v1;
 using Google.Apis.Services;
 

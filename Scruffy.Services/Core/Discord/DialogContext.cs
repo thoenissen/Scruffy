@@ -1,6 +1,4 @@
-﻿using DSharpPlus.Entities;
-
-namespace Scruffy.Services.Core.Discord;
+﻿namespace Scruffy.Services.Core.Discord;
 
 /// <summary>
 /// Dialog context

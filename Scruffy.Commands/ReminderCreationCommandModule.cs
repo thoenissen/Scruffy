@@ -1,12 +1,6 @@
 ﻿using System.Globalization;
 using System.Text.RegularExpressions;
 
-using DSharpPlus;
-using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
-using DSharpPlus.Interactivity.Extensions;
-
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Reminder;
 using Scruffy.Data.Entity.Tables.Reminder;

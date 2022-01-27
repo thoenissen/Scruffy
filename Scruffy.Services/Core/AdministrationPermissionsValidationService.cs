@@ -1,8 +1,5 @@
 ﻿using System.Collections.Concurrent;
 
-using DSharpPlus;
-using DSharpPlus.CommandsNext;
-
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.CoreData;
 

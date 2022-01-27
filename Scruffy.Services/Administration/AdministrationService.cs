@@ -1,5 +1,4 @@
-﻿using DSharpPlus.Entities;
-
+﻿
 using Scruffy.Services.Core.Localization;
 
 namespace Scruffy.Services.Administration;

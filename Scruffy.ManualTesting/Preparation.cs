@@ -3,8 +3,6 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 
-using DSharpPlus;
-
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
 

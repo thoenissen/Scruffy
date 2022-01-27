@@ -1,5 +1,4 @@
-﻿using DSharpPlus.Entities;
-
+﻿
 using Scruffy.Services.Core.Discord.Attributes;
 
 namespace Scruffy.Services.Raid.DialogElements.Forms;

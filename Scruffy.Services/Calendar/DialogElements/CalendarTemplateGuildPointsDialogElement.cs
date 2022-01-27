@@ -1,5 +1,4 @@
-﻿using DSharpPlus.EventArgs;
-
+﻿
 using Scruffy.Services.Calendar.DialogElements.Forms;
 using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;

@@ -1,8 +1,5 @@
 ﻿using System.Collections.Concurrent;
 
-using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
-
 namespace Scruffy.Services.Core.Discord.Attributes;
 
 /// <summary>

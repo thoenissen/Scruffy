@@ -1,7 +1,5 @@
 ﻿using System.IO;
 
-using DSharpPlus.Entities;
-
 using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;

@@ -1,7 +1,5 @@
 ﻿using System.Collections.Concurrent;
 
-using DSharpPlus;
-
 using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Data.Entity;

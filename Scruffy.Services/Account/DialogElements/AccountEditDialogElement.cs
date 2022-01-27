@@ -1,9 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http;
 
-using DSharpPlus;
-using DSharpPlus.Entities;
-
 using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;

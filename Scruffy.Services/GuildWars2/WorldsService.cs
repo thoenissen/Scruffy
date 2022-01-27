@@ -1,5 +1,4 @@
-﻿using DSharpPlus.Entities;
-
+﻿
 using Newtonsoft.Json;
 
 using Scruffy.Data.Entity;

@@ -1,5 +1,4 @@
-﻿using DSharpPlus;
-
+﻿
 using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Data.Entity;

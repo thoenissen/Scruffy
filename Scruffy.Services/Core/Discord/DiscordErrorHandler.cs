@@ -1,8 +1,5 @@
 ﻿using System.Net.Http;
 
-using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Exceptions;
-
 using Microsoft.Extensions.DependencyInjection;
 
 using Newtonsoft.Json;

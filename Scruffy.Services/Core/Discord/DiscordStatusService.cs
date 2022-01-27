@@ -1,8 +1,5 @@
 ﻿using System.Threading;
 
-using DSharpPlus;
-using DSharpPlus.Entities;
-
 namespace Scruffy.Services.Core.Discord;
 
 /// <summary>
