@@ -44,9 +44,12 @@ public class Program
 
                 // TODO configuration
                 var stream = Assembly.Load("Scruffy.Data").GetManifestResourceStream("Scruffy.Data.Resources.Languages.de-DE.json");
-                await using (stream.ConfigureAwait(false))
+                if (stream != null)
                 {
-                    localizationService.Load(stream);
+                    await using (stream.ConfigureAwait(false))
+                    {
+                        localizationService.Load(stream);
+                    }
                 }
 
                 GlobalServiceProvider.Current.AddSingleton(localizationService);
