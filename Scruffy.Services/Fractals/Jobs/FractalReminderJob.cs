@@ -52,22 +52,22 @@ public class FractalReminderJob : LocatedAsyncJob
             var configurations = await dbFactory.GetRepository<FractalLfgConfigurationRepository>()
                                                 .GetQuery()
                                                 .Select(obj => new
-                                                               {
-                                                                   ConfigurationId = obj.Id,
-                                                                   ChannelId = obj.DiscordChannelId,
-                                                                   Registrations = obj.FractalRegistrations
-                                                                                      .Select(obj2 => new AppointmentCreationRegistrationData
-                                                                                                      {
-                                                                                                          AppointmentTimeStamp = obj2.AppointmentTimeStamp,
-                                                                                                          UserId = obj2.UserId,
-                                                                                                          DiscordAccountId = obj2.User
-                                                                                                                                 .DiscordAccounts
-                                                                                                                                 .Select(obj3 => obj3.Id)
-                                                                                                                                 .FirstOrDefault(),
-                                                                                                          RegistrationTimeStamp = obj2.RegistrationTimeStamp
-                                                                                                      })
-                                                                                      .Where(obj2 => obj2.AppointmentTimeStamp == TimeStamp)
-                                                               })
+                                                {
+                                                    ConfigurationId = obj.Id,
+                                                    ChannelId = obj.DiscordChannelId,
+                                                    Registrations = obj.FractalRegistrations
+                                                                       .Select(obj2 => new AppointmentCreationRegistrationData
+                                                                                       {
+                                                                                           AppointmentTimeStamp = obj2.AppointmentTimeStamp,
+                                                                                           UserId = obj2.UserId,
+                                                                                           DiscordAccountId = obj2.User
+                                                                                                                  .DiscordAccounts
+                                                                                                                  .Select(obj3 => obj3.Id)
+                                                                                                                  .FirstOrDefault(),
+                                                                                           RegistrationTimeStamp = obj2.RegistrationTimeStamp
+                                                                                       })
+                                                                       .Where(obj2 => obj2.AppointmentTimeStamp == TimeStamp)
+                                                })
                                                 .Where(obj => obj.Registrations.Count() >= 5)
                                                 .ToListAsync()
                                                 .ConfigureAwait(false);
@@ -75,7 +75,7 @@ public class FractalReminderJob : LocatedAsyncJob
             var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
             await using (serviceProvider.ConfigureAwait(false))
             {
-                var reminderService = serviceProvider.GetService<FractalLfgReminderService>();
+                var reminderService = serviceProvider.GetService<FractalLfgReminderService>() ?? throw new InvalidOperationException();
 
                 foreach (var configuration in configurations)
                 {
@@ -90,17 +90,17 @@ public class FractalReminderJob : LocatedAsyncJob
                             registrations.Add(registrationsStack.Pop());
                         }
 
-                        builder ??= serviceProvider.GetService<FractalLfgMessageBuilder>();
+                        builder ??= serviceProvider.GetService<FractalLfgMessageBuilder>() ?? throw new InvalidOperationException();
 
                         var messageId = await builder.CreateAppointmentMessage(configuration.ChannelId, TimeStamp, registrations)
                                                      .ConfigureAwait(false);
 
                         var appointment = new FractalAppointmentEntity
-                                          {
-                                              ConfigurationId = configuration.ConfigurationId,
-                                              DiscordMessageId = messageId,
-                                              AppointmentTimeStamp = TimeStamp
-                                          };
+                        {
+                            ConfigurationId = configuration.ConfigurationId,
+                            DiscordMessageId = messageId,
+                            AppointmentTimeStamp = TimeStamp
+                        };
 
                         if (dbFactory.GetRepository<FractalAppointmentRepository>()
                                      .Add(appointment))

@@ -12,10 +12,10 @@ using Newtonsoft.Json;
 using Scruffy.Data.Enumerations.General;
 using Scruffy.Data.Json.Tenor;
 using Scruffy.Services.Core;
-using Scruffy.Services.Core.Discord;
-using Scruffy.Services.Core.Discord.Extensions;
 using Scruffy.Services.Core.Exceptions;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
+using Scruffy.Services.Discord.Extensions;
 
 namespace Scruffy.ServiceHost.Discord;
 

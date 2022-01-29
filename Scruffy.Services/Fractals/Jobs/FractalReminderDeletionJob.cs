@@ -1,4 +1,7 @@
 ﻿
+using Discord;
+using Discord.WebSocket;
+
 using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Services.Core;
@@ -51,18 +54,20 @@ public class FractalReminderDeletionJob : LocatedAsyncJob
         var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
         await using (serviceProvider.ConfigureAwait(false))
         {
-            var discordClient = serviceProvider.GetService<DiscordClient>();
-
-            var channel = await discordClient.GetChannelAsync(_channelId)
-                                             .ConfigureAwait(false);
-            if (channel != null)
+            var discordClient = serviceProvider.GetService<DiscordSocketClient>();
+            if (discordClient != null)
             {
-                var message = await channel.GetMessageAsync(_messageId)
-                                           .ConfigureAwait(false);
-                if (message != null)
+                var channel = await discordClient.GetChannelAsync(_channelId)
+                                                 .ConfigureAwait(false);
+                if (channel is ITextChannel textChannel)
                 {
-                    await message.DeleteAsync()
-                                 .ConfigureAwait(false);
+                    var message = await textChannel.GetMessageAsync(_messageId)
+                                                   .ConfigureAwait(false);
+                    if (message != null)
+                    {
+                        await message.DeleteAsync()
+                                     .ConfigureAwait(false);
+                    }
                 }
             }
         }

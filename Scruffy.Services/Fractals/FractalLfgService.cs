@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Fractals;
 using Scruffy.Data.Entity.Tables.Fractals;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
+using Scruffy.Services.Discord;
 using Scruffy.Services.Fractals.DialogElements.Forms;
 
 namespace Scruffy.Services.Fractals;
@@ -74,13 +74,13 @@ public class FractalLfgService : LocatedServiceBase
                                                   .ConfigureAwait(false);
 
             var entry = new FractalLfgConfigurationEntity
-                        {
-                            Title = creationData.Title,
-                            Description = creationData.Description,
-                            AliasName = creationData.AliasName,
-                            DiscordChannelId = commandContext.Channel.Id,
-                            DiscordMessageId = (await commandContext.Channel.SendMessageAsync(LocalizationGroup.GetText("BuildingProgress", "Building...")).ConfigureAwait(false)).Id
-                        };
+            {
+                Title = creationData.Title,
+                Description = creationData.Description,
+                AliasName = creationData.AliasName,
+                DiscordChannelId = commandContext.Channel.Id,
+                DiscordMessageId = (await commandContext.Channel.SendMessageAsync(LocalizationGroup.GetText("BuildingProgress", "Building...")).ConfigureAwait(false)).Id
+            };
 
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {

@@ -1,4 +1,6 @@
-﻿
+﻿using Discord;
+using Discord.WebSocket;
+
 using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;
@@ -18,7 +20,7 @@ public class FractalLfgMessageBuilder : LocatedServiceBase
     /// <summary>
     /// Discord client
     /// </summary>
-    private DiscordClient _client;
+    private DiscordSocketClient _client;
 
     #endregion // Fields
 
@@ -29,7 +31,7 @@ public class FractalLfgMessageBuilder : LocatedServiceBase
     /// </summary>
     /// <param name="client">Discord client</param>
     /// <param name="localizationService">Localization service</param>
-    public FractalLfgMessageBuilder(DiscordClient client, LocalizationService localizationService)
+    public FractalLfgMessageBuilder(DiscordSocketClient client, LocalizationService localizationService)
         : base(localizationService)
     {
         _client = client;
@@ -54,23 +56,23 @@ public class FractalLfgMessageBuilder : LocatedServiceBase
                                       .GetQuery()
                                       .Where(obj => obj.Id == configurationId)
                                       .Select(obj => new
-                                                     {
-                                                         ChannelId = obj.DiscordChannelId,
-                                                         MessageId = obj.DiscordMessageId,
-                                                         obj.Title,
-                                                         obj.Description,
-                                                         Registrations = obj.FractalRegistrations
-                                                                            .Select(obj2 => new
-                                                                                            {
-                                                                                                obj2.AppointmentTimeStamp,
-                                                                                                UserId = obj2.User
-                                                                                                             .DiscordAccounts
-                                                                                                             .Select(obj3 => obj3.Id)
-                                                                                                             .FirstOrDefault(),
-                                                                                                obj2.RegistrationTimeStamp,
-                                                                                            })
-                                                                            .Where(obj2 => obj2.AppointmentTimeStamp > from)
-                                                     })
+                                      {
+                                          ChannelId = obj.DiscordChannelId,
+                                          MessageId = obj.DiscordMessageId,
+                                          obj.Title,
+                                          obj.Description,
+                                          Registrations = obj.FractalRegistrations
+                                                             .Select(obj2 => new
+                                                                             {
+                                                                                 obj2.AppointmentTimeStamp,
+                                                                                 UserId = obj2.User
+                                                                                              .DiscordAccounts
+                                                                                              .Select(obj3 => obj3.Id)
+                                                                                              .FirstOrDefault(),
+                                                                                 obj2.RegistrationTimeStamp,
+                                                                             })
+                                                             .Where(obj2 => obj2.AppointmentTimeStamp > from)
+                                      })
                                       .FirstOrDefaultAsync().ConfigureAwait(false);
 
             if (data != null)
@@ -80,10 +82,10 @@ public class FractalLfgMessageBuilder : LocatedServiceBase
                                         .GroupBy(obj2 => obj2.Key.Date)
                                         .ToList();
 
-                var messageBuilder = new DiscordEmbedBuilder
+                var messageBuilder = new EmbedBuilder
                                      {
                                          Title = data.Title,
-                                         Color = DiscordColor.Green,
+                                         Color = Color.Green,
                                          Description = data.Description
                                      };
 
@@ -125,11 +127,13 @@ public class FractalLfgMessageBuilder : LocatedServiceBase
                 messageBuilder.WithTimestamp(DateTime.Now);
 
                 var channel = await _client.GetChannelAsync(data.ChannelId).ConfigureAwait(false);
-                if (channel != null)
+                if (channel is ITextChannel textChannel)
                 {
-                    var message = await channel.GetMessageAsync(data.MessageId).ConfigureAwait(false);
-
-                    await message.ModifyAsync(null, messageBuilder.Build()).ConfigureAwait(false);
+                    var message = await textChannel.GetMessageAsync(data.MessageId).ConfigureAwait(false);
+                    if (message is IUserMessage userMessage)
+                    {
+                        await userMessage.ModifyAsync(obj => obj.Embed = messageBuilder.Build()).ConfigureAwait(false);
+                    }
                 }
             }
         }
@@ -147,16 +151,21 @@ public class FractalLfgMessageBuilder : LocatedServiceBase
         var channel = await _client.GetChannelAsync(channelId)
                                    .ConfigureAwait(false);
 
-        var builder = new StringBuilder();
-        builder.Append(LocalizationGroup.GetFormattedText("AppointmentReminder", "{0} - Appointment reminder", appointmentTimeStamp.ToString("g", LocalizationGroup.CultureInfo)));
-        builder.Append('\n');
-
-        foreach (var registration in registrations)
+        if (channel is ITextChannel textChannel)
         {
-            builder.Append($"> ● {(await _client.GetUserAsync(registration.DiscordAccountId).ConfigureAwait(false)).Mention}\n");
+            var builder = new StringBuilder();
+            builder.Append(LocalizationGroup.GetFormattedText("AppointmentReminder", "{0} - Appointment reminder", appointmentTimeStamp.ToString("g", LocalizationGroup.CultureInfo)));
+            builder.Append('\n');
+
+            foreach (var registration in registrations)
+            {
+                builder.Append($"> ● {(await _client.GetUserAsync(registration.DiscordAccountId).ConfigureAwait(false)).Mention}\n");
+            }
+
+            return (await textChannel.SendMessageAsync(builder.ToString()).ConfigureAwait(false)).Id;
         }
 
-        return (await channel.SendMessageAsync(builder.ToString()).ConfigureAwait(false)).Id;
+        throw new InvalidOperationException();
     }
 
     #endregion // Methods
