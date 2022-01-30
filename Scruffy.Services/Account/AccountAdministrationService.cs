@@ -1,14 +1,16 @@
 ﻿using System.Net;
 using System.Net.Http;
 
+using Discord;
+
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Account;
 using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Entity.Repositories.GuildWars2.Account;
 using Scruffy.Data.Json.GuildWars2.Core;
 using Scruffy.Services.Account.DialogElements;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 using Scruffy.Services.GuildWars2;
 using Scruffy.Services.WebApi;
 
@@ -51,10 +53,10 @@ public class AccountAdministrationService : LocatedServiceBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public async Task Add(CommandContextContainer commandContextContainer)
     {
-        if (commandContextContainer.Message.Channel.IsPrivate == false)
+        if (commandContextContainer.Message.Channel is not IDMChannel)
         {
             await commandContextContainer.Message
-                                         .RespondAsync(LocalizationGroup.GetText("SwitchToPrivate", "I answered your command as a private message."))
+                                         .ReplyAsync(LocalizationGroup.GetText("SwitchToPrivate", "I answered your command as a private message."))
                                          .ConfigureAwait(false);
         }
 
@@ -137,10 +139,10 @@ public class AccountAdministrationService : LocatedServiceBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public async Task Edit(CommandContextContainer commandContextContainer)
     {
-        if (commandContextContainer.Message.Channel.IsPrivate == false)
+        if (commandContextContainer.Message.Channel is not IDMChannel)
         {
             await commandContextContainer.Message
-                                         .RespondAsync(LocalizationGroup.GetText("SwitchToPrivate", "I answered your command as a private message."))
+                                         .ReplyAsync(LocalizationGroup.GetText("SwitchToPrivate", "I answered your command as a private message."))
                                          .ConfigureAwait(false);
         }
 
@@ -185,10 +187,10 @@ public class AccountAdministrationService : LocatedServiceBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public async Task Remove(CommandContextContainer commandContextContainer)
     {
-        if (commandContextContainer.Message.Channel.IsPrivate == false)
+        if (commandContextContainer.Message.Channel is not IDMChannel)
         {
             await commandContextContainer.Message
-                                         .RespondAsync(LocalizationGroup.GetText("SwitchToPrivate", "I answered your command as a private message."))
+                                         .ReplyAsync(LocalizationGroup.GetText("SwitchToPrivate", "I answered your command as a private message."))
                                          .ConfigureAwait(false);
         }
 
