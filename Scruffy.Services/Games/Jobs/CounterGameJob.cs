@@ -1,4 +1,7 @@
 ﻿
+using Discord;
+using Discord.WebSocket;
+
 using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Data.Entity;
@@ -27,7 +30,7 @@ public class CounterGameJob : LocatedAsyncJob
             var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
             await using (serviceProvider.ConfigureAwait(false))
             {
-                var client = serviceProvider.GetService<DiscordClient>();
+                var client = serviceProvider.GetService<DiscordSocketClient>();
 
                 foreach (var gameChannel in dbFactory.GetRepository<GameChannelRepository>()
                                                      .GetQuery()
@@ -41,20 +44,27 @@ public class CounterGameJob : LocatedAsyncJob
                     var channel = await client.GetChannelAsync(gameChannel.DiscordChannelId)
                                               .ConfigureAwait(false);
 
-                    var messages = await channel.GetMessagesAsync(15)
-                                                .ConfigureAwait(false);
-
-                    if (messages?.Count == 15
-                     && messages.Any(obj => obj.Author.IsCurrent) == false
-                     && messages[0].Id % 3 == 2
-                     && messages[0].Content?.All(char.IsDigit) == true
-                     && messages[1].Content?.All(char.IsDigit) == true
-                     && int.TryParse(messages[0].Content, out var currentNumber)
-                     && int.TryParse(messages[1].Content, out var lastNumber)
-                     && currentNumber == lastNumber + 1)
+                    if (channel is ITextChannel textChannel)
                     {
-                        await channel.SendMessageAsync((++currentNumber).ToString())
-                                     .ConfigureAwait(false);
+                        var messages = new List<IMessage>();
+
+                        await foreach (var collection in textChannel.GetMessagesAsync(15).ConfigureAwait(false))
+                        {
+                            messages.AddRange(collection);
+                        }
+
+                        if (messages?.Count == 15
+                         && messages.Any(obj => obj.Author.Id == client.CurrentUser.Id) == false
+                         && messages[0].Id % 3 == 2
+                         && messages[0].Content?.All(char.IsDigit) == true
+                         && messages[1].Content?.All(char.IsDigit) == true
+                         && int.TryParse(messages[0].Content, out var currentNumber)
+                         && int.TryParse(messages[1].Content, out var lastNumber)
+                         && currentNumber == lastNumber + 1)
+                        {
+                            await textChannel.SendMessageAsync((++currentNumber).ToString())
+                                             .ConfigureAwait(false);
+                        }
                     }
                 }
             }
