@@ -1,5 +1,8 @@
 ﻿using System.IO;
 
+using Discord;
+using Discord.Commands;
+
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Account;
 using Scruffy.Data.Entity.Repositories.General;
@@ -28,7 +31,8 @@ public class DebugService
             var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(commandContext.Message.ReferencedMessage.Content));
             await using (memoryStream.ConfigureAwait(false))
             {
-                await commandContext.RespondAsync(new DiscordMessageBuilder().WithFile("dump.txt", memoryStream))
+                await commandContext.Channel
+                                    .SendFileAsync(new FileAttachment(memoryStream, "dump.txt"), messageReference: new MessageReference(commandContext.Message.Id, commandContext.Channel?.Id, commandContext.Guild?.Id))
                                     .ConfigureAwait(false);
             }
         }
@@ -41,7 +45,7 @@ public class DebugService
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task ListRoles(CommandContext commandContext)
     {
-        await ListEntries(commandContext, "Roles", commandContext.Guild.Roles.Select(obj => obj.Value.Mention).OrderBy(obj => obj)).ConfigureAwait(false);
+        await ListEntries(commandContext, "Roles", commandContext.Guild.Roles.Select(obj => obj.Mention).OrderBy(obj => obj)).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -51,7 +55,11 @@ public class DebugService
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task ListChannels(CommandContext commandContext)
     {
-        await ListEntries(commandContext, "Channels", commandContext.Guild.Channels.Select(obj => obj.Value.Mention).OrderBy(obj => obj)).ConfigureAwait(false);
+        var channels = await commandContext.Guild
+                                           .GetChannelsAsync()
+                                           .ConfigureAwait(false);
+
+        await ListEntries(commandContext, "Channels", channels.Select(obj => MentionUtils.MentionChannel(obj.Id)).OrderBy(obj => obj)).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -61,46 +69,7 @@ public class DebugService
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task ListEmojis(CommandContext commandContext)
     {
-        await ListEntries(commandContext, "Emojis", commandContext.Guild.Emojis.Select(obj => obj.Value.ToString()).OrderBy(obj => obj)).ConfigureAwait(false);
-    }
-
-    /// <summary>
-    /// List commands
-    /// </summary>
-    /// <param name="commandContext">Context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task ListCommands(CommandContext commandContext)
-    {
-        IEnumerable<Command> GetCommands(IEnumerable<Command> commands)
-        {
-            foreach (var command in commands)
-            {
-                yield return command;
-
-                if (command is CommandGroup commandGroup)
-                {
-                    foreach (var subCommand in GetCommands(commandGroup.Children))
-                    {
-                        yield return subCommand;
-                    }
-                }
-            }
-        }
-
-        var commands = new List<string>();
-
-        foreach (var command in GetCommands(commandContext.Client.GetCommandsNext().RegisteredCommands.Values))
-        {
-            if (commands.Contains(command.QualifiedName) == false
-             && (command is not CommandGroup
-              || command is CommandGroup { IsExecutableWithoutSubcommands: true })
-             && command.QualifiedName.StartsWith("debug") == false)
-            {
-                commands.Add(command.QualifiedName);
-            }
-        }
-
-        await ListEntries(commandContext, "Commands", commands, false).ConfigureAwait(false);
+        await ListEntries(commandContext, "Emojis", commandContext.Guild.Emotes.Select(obj => obj.ToString()).OrderBy(obj => obj)).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -110,18 +79,15 @@ public class DebugService
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task ListUsers(CommandContext commandContext)
     {
-        try
-        {
-            var members = await commandContext.Guild
-                                              .GetAllMembersAsync()
-                                              .ConfigureAwait(true);
+        var members = await commandContext.Guild
+                                          .GetUsersAsync()
+                                          .ConfigureAwait(true);
 
-            await ListEntries(commandContext, "Users", members.Select(obj => obj.Mention).OrderBy(obj => obj).ToList()).ConfigureAwait(false);
-        }
-        catch
-        {
-            await ListEntries(commandContext, "Users", commandContext.Guild.Members.Select(obj => obj.Value.Mention).OrderBy(obj => obj).ToList()).ConfigureAwait(false);
-        }
+        await ListEntries(commandContext,
+                          "Users",
+                          members.Select(obj => obj.Mention)
+                                 .OrderBy(obj => obj)
+                                 .ToList()).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -134,9 +100,9 @@ public class DebugService
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task ListEntries(CommandContext commandContext, string description, IEnumerable<string> entries, bool isAddInline = true)
     {
-        var embedBuilder = new DiscordEmbedBuilder
+        var embedBuilder = new EmbedBuilder
                            {
-                               Color = DiscordColor.Green,
+                               Color = Color.Green,
                                Description = description
                            };
 
@@ -146,7 +112,7 @@ public class DebugService
         foreach (var entry in entries)
         {
             var currentLine = isAddInline
-                                  ? $"{entry} - {Formatter.InlineCode(entry)}\n"
+                                  ? $"{entry} - {Format.Code(entry)}\n"
                                   : $"{entry}\n";
 
             if (currentLine.Length + stringBuilder.Length > 1024)
@@ -158,12 +124,12 @@ public class DebugService
                     fieldCounter = 1;
 
                     await commandContext.Channel
-                                        .SendMessageAsync(embedBuilder)
+                                        .SendMessageAsync(embed: embedBuilder.Build())
                                         .ConfigureAwait(false);
 
-                    embedBuilder = new DiscordEmbedBuilder
+                    embedBuilder = new EmbedBuilder
                                    {
-                                       Color = DiscordColor.Green
+                                       Color = Color.Green
                                    };
                 }
                 else
@@ -180,7 +146,7 @@ public class DebugService
         embedBuilder.AddField($"#{fieldCounter}", stringBuilder.ToString());
 
         await commandContext.Channel
-                            .SendMessageAsync(embedBuilder)
+                            .SendMessageAsync(embed: embedBuilder.Build())
                             .ConfigureAwait(false);
     }
 
@@ -275,7 +241,7 @@ public class DebugService
                         memoryStream.Position = 0;
 
                         await commandContext.Channel
-                                            .SendMessageAsync(new DiscordMessageBuilder().WithFile("entry.txt", memoryStream))
+                                            .SendFileAsync(new FileAttachment(memoryStream, "entry.txt"))
                                             .ConfigureAwait(false);
                     }
                 }
@@ -283,7 +249,7 @@ public class DebugService
             else
             {
                 await commandContext.Message
-                                    .RespondAsync("Unknown log entry")
+                                    .ReplyAsync("Unknown log entry")
                                     .ConfigureAwait(false);
             }
         }
@@ -296,7 +262,7 @@ public class DebugService
     /// <param name="date">Date</param>
     /// <param name="suppressEmpty">Suppress empty overview</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task PostLogOverview(DiscordChannel channel, DateTime date, bool suppressEmpty)
+    public async Task PostLogOverview(ITextChannel channel, DateTime date, bool suppressEmpty)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
@@ -312,9 +278,10 @@ public class DebugService
             if (suppressEmpty == false
              || logEntries.Count > 0)
             {
-                var builder = new DiscordEmbedBuilder().WithTitle($"Log entries {date:yyyy-MM-dd}").WithColor(DiscordColor.Green)
-                                                       .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
-                                                       .WithTimestamp(DateTime.Now);
+                var builder = new EmbedBuilder().WithTitle($"Log entries {date:yyyy-MM-dd}")
+                                                .WithColor(Color.Green)
+                                                .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
+                                                .WithTimestamp(DateTime.Now);
 
                 var types = logEntries.GroupBy(obj => obj.Type)
                                       .Select(obj => new
@@ -363,7 +330,7 @@ public class DebugService
                     builder.AddField("IDs", $"{logEntries.Min(obj => obj.Id)} -> {logEntries.Max(obj => obj.Id)}");
                 }
 
-                await channel.SendMessageAsync(builder)
+                await channel.SendMessageAsync(embed: builder.Build())
                              .ConfigureAwait(false);
             }
         }
