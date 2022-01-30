@@ -1,4 +1,7 @@
 ﻿
+using Discord;
+using Discord.WebSocket;
+
 using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Data.Entity;
@@ -26,7 +29,7 @@ public class MessageImportJob : LocatedAsyncJob
         var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
         await using (serviceProvider.ConfigureAwait(false))
         {
-            var client = serviceProvider.GetService<DiscordClient>();
+            var client = serviceProvider.GetService<DiscordSocketClient>();
 
             var maximumImportLimit = DateTime.Now.AddDays(-60);
 
@@ -50,30 +53,34 @@ public class MessageImportJob : LocatedAsyncJob
                                                           })
                                            .ToList();
 
-                foreach (var (guildId, guild) in client.Guilds)
+                foreach (var guild in client.Guilds)
                 {
-                    foreach (var (channelId, channel) in guild.Channels
-                                                              .Where(obj => obj.Value.Type == ChannelType.Text))
+                    foreach (var channel in guild.Channels
+                                                 .OfType<ITextChannel>())
                     {
-                        var lastImport = lastImports.FirstOrDefault(obj => obj.ServerId == guildId
-                                                                        && obj.ChannelId == channelId);
+                        var lastImport = lastImports.FirstOrDefault(obj => obj.ServerId == guild.Id
+                                                                        && obj.ChannelId == channel.Id);
 
                         var importLimit = lastImport?.TimeStamp ?? maximumImportLimit;
 
-                        var messages = await channel.GetMessagesAsync(1)
-                                                    .ConfigureAwait(false);
+                        var messages = new List<IMessage>();
+
+                        await foreach (var collection in channel.GetMessagesAsync(1).ConfigureAwait(false))
+                        {
+                            messages.AddRange(collection);
+                        }
 
                         while (messages?.Count > 0)
                         {
-                            foreach (var message in messages.Where(obj => obj.Author.IsBot == false
-                                                                       && obj.WebhookId == null))
+                            foreach (var message in messages.OfType<IUserMessage>()
+                                                            .Where(obj => obj.Author.IsBot == false))
                             {
                                 if (message.Timestamp.LocalDateTime > importLimit)
                                 {
                                     importData.Add(new DiscordMessageBulkInsertData
                                                    {
-                                                       ServerId = guildId,
-                                                       ChannelId = channelId,
+                                                       ServerId = guild.Id,
+                                                       ChannelId = channel.Id,
                                                        UserId = message.Author.Id,
                                                        MessageId = message.Id,
                                                        TimeStamp = message.Timestamp.LocalDateTime
@@ -89,8 +96,12 @@ public class MessageImportJob : LocatedAsyncJob
 
                             if (messages != null)
                             {
-                                messages = await channel.GetMessagesBeforeAsync(messages[^1].Id)
-                                                        .ConfigureAwait(false);
+                                messages = new List<IMessage>();
+
+                                await foreach (var collection in channel.GetMessagesAsync(messages[^1], Direction.Before).ConfigureAwait(false))
+                                {
+                                    messages.AddRange(collection);
+                                }
                             }
                         }
                     }
