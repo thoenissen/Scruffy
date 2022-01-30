@@ -1,4 +1,6 @@
-﻿
+﻿using Discord;
+using Discord.WebSocket;
+
 using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Data.Entity;
@@ -60,15 +62,17 @@ public class WeeklyReminderPostJob : LocatedAsyncJob
 
                 if (data != null)
                 {
-                    var discordClient = serviceProvider.GetService<DiscordClient>();
+                    var discordClient = serviceProvider.GetService<DiscordSocketClient>();
 
                     var channel = await discordClient.GetChannelAsync(data.ChannelId).ConfigureAwait(false);
+                    if (channel is ITextChannel textChannel)
+                    {
+                        var message = await textChannel.SendMessageAsync(data.Message).ConfigureAwait(false);
 
-                    var message = await channel.SendMessageAsync(data.Message).ConfigureAwait(false);
-
-                    dbFactory.GetRepository<WeeklyReminderRepository>()
-                             .Refresh(obj => obj.Id == _id,
-                                      obj => obj.DiscordMessageId = message.Id);
+                        dbFactory.GetRepository<WeeklyReminderRepository>()
+                                 .Refresh(obj => obj.Id == _id,
+                                          obj => obj.DiscordMessageId = message.Id);
+                    }
                 }
             }
         }
