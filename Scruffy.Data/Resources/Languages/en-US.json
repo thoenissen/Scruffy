@@ -646,7 +646,7 @@
       "Wallet": "wallet",
       "MissingPermissions": "The assigned API key does not have permissions ({0}) to execute this command."
     },
-    "LocatedCommandModuleBase": {
+    "DiscordBot": {
       "CommandFailedMessage": "The command could not be executed. But I have an error code ({0}) and funny cat picture."
     },
     "HelpCommandFormatter": {

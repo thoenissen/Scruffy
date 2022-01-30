@@ -1,4 +1,6 @@
-﻿namespace Scruffy.Data.Services.Calendar;
+﻿using Discord;
+
+namespace Scruffy.Data.Services.Calendar;
 
 /// <summary>
 /// Participant
@@ -8,7 +10,7 @@ public class CalendarAppointmentParticipantData
     /// <summary>
     /// Member
     /// </summary>
-    public DiscordMember Member { get; set; }
+    public IGuildUser Member { get; set; }
 
     /// <summary>
     /// Leader
