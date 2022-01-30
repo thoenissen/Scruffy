@@ -1,4 +1,5 @@
-﻿
+﻿using Discord;
+
 using Newtonsoft.Json;
 
 using Scruffy.Data.Entity;
@@ -7,8 +8,8 @@ using Scruffy.Data.Entity.Repositories.GuildWars2.GameData;
 using Scruffy.Data.Enumerations.General;
 using Scruffy.Data.Json.QuickChart;
 using Scruffy.Services.Core;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.GuildWars2;
@@ -117,11 +118,10 @@ public class WorldsService : LocatedServiceBase
 
             if (worlds.Count > 0)
             {
-                var embedBuilder = new DiscordEmbedBuilder();
-                var messageBuilder = new DiscordMessageBuilder();
+                var embedBuilder = new EmbedBuilder();
 
                 embedBuilder.WithTitle(LocalizationGroup.GetText("Overview", "Worlds overview"));
-                embedBuilder.WithColor(DiscordColor.DarkBlue);
+                embedBuilder.WithColor(Color.DarkBlue);
                 embedBuilder.WithImageUrl("attachment://chart.png");
 
                 var chartConfiguration = new ChartConfigurationData
@@ -198,11 +198,8 @@ public class WorldsService : LocatedServiceBase
 
                 await using (chartStream.ConfigureAwait(false))
                 {
-                    messageBuilder.WithFile("chart.png", chartStream);
-                    messageBuilder.WithEmbed(embedBuilder);
-
                     await commandContext.Channel
-                                        .SendMessageAsync(messageBuilder)
+                                        .SendFileAsync(new FileAttachment(chartStream, "chart.png"), embed: embedBuilder.Build())
                                         .ConfigureAwait(false);
                 }
             }
