@@ -1,11 +1,12 @@
-﻿
+﻿using Discord;
+
 using Newtonsoft.Json;
 
 using Scruffy.Data.Enumerations.Calendar;
 using Scruffy.Data.Services.Calendar;
 using Scruffy.Services.Calendar.DialogElements.Forms;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Calendar.DialogElements;
 
@@ -42,9 +43,9 @@ public class CalendarScheduleScheduleDialogElement : DialogEmbedMessageElementBa
     /// Return the message of element
     /// </summary>
     /// <returns>Message</returns>
-    public override DiscordEmbedBuilder GetMessage()
+    public override EmbedBuilder GetMessage()
     {
-        var builder = new DiscordEmbedBuilder();
+        var builder = new EmbedBuilder();
         builder.WithTitle(LocalizationGroup.GetText("ChooseTypeTitle", "Type selection"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseTypeDescription", "Please choose one of the following types:"));
 
@@ -78,7 +79,7 @@ public class CalendarScheduleScheduleDialogElement : DialogEmbedMessageElementBa
     /// </summary>
     /// <param name="message">Message</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public override async Task<CalenderScheduleData> ConvertMessage(DiscordMessage message)
+    public override async Task<CalenderScheduleData> ConvertMessage(IUserMessage message)
     {
         var data = new CalenderScheduleData();
 

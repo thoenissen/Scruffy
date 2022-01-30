@@ -11,8 +11,8 @@ using Scruffy.Data.Enumerations.Calendar;
 using Scruffy.Data.Services.Calendar;
 using Scruffy.Services.Calendar.DialogElements;
 using Scruffy.Services.Calendar.DialogElements.Forms;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Calendar;
 

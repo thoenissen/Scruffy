@@ -2,9 +2,9 @@
 
 using Scruffy.Data.Services.Calendar;
 using Scruffy.Services.Calendar.DialogElements;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Calendar;
 

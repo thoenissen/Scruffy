@@ -1,11 +1,12 @@
-﻿
+﻿using Discord;
+
 using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Calendar;
 using Scruffy.Data.Services.Calendar;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Calendar.DialogElements;
 
@@ -43,7 +44,7 @@ public class CalendarScheduleEditDialogElement : DialogEmbedReactionElementBase<
     /// </summary>
     /// <param name="builder">Builder</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public override async Task EditMessage(DiscordEmbedBuilder builder)
+    public override async Task EditMessage(EmbedBuilder builder)
     {
         builder.WithTitle(LocalizationGroup.GetText("ChooseCommandTitle", "Calendar schedule configuration"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseCommandDescription", "With this assistant you are able to configure the calendar schedule"));
@@ -85,8 +86,8 @@ public class CalendarScheduleEditDialogElement : DialogEmbedReactionElementBase<
                               {
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetEditEmoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("EditDescriptionCommand", "{0} Edit description", DiscordEmojiService.GetEditEmoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetEditEmote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("EditDescriptionCommand", "{0} Edit description", DiscordEmoteService.GetEditEmote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  var description = await RunSubElement<CalendarScheduleDescriptionDialogElement, string>()
@@ -105,8 +106,8 @@ public class CalendarScheduleEditDialogElement : DialogEmbedReactionElementBase<
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetEdit2Emoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("EditScheduleCommand", "{0} Edit schedule", DiscordEmojiService.GetEdit2Emoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetEdit2Emote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("EditScheduleCommand", "{0} Edit schedule", DiscordEmoteService.GetEdit2Emote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  var data = await RunSubElement<CalendarScheduleScheduleDialogElement, CalenderScheduleData>()
@@ -129,8 +130,8 @@ public class CalendarScheduleEditDialogElement : DialogEmbedReactionElementBase<
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetEdit3Emoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("EditTemplateCommand", "{0} Edit template", DiscordEmojiService.GetEdit3Emoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetEdit3Emote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("EditTemplateCommand", "{0} Edit template", DiscordEmoteService.GetEdit3Emote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  var templateId = await RunSubElement<CalendarTemplateSelectionDialogElement, long>()
@@ -149,8 +150,8 @@ public class CalendarScheduleEditDialogElement : DialogEmbedReactionElementBase<
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetCrossEmoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmojiService.GetCrossEmoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmoteService.GetCrossEmote(CommandContext.Client)),
                                       Func = () => Task.FromResult(false)
                                   }
                               };

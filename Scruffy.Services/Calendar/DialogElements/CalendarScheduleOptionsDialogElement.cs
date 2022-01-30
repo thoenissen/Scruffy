@@ -1,7 +1,8 @@
-﻿
+﻿using Discord;
+
 using Scruffy.Data.Enumerations.Calendar;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Calendar.DialogElements;
 
@@ -39,7 +40,7 @@ public class CalendarScheduleOptionsDialogElement : DialogEmbedReactionElementBa
     /// </summary>
     /// <param name="builder">Builder</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public override Task EditMessage(DiscordEmbedBuilder builder)
+    public override Task EditMessage(EmbedBuilder builder)
     {
         builder.WithTitle(LocalizationGroup.GetText("Title", "Schedule options selection"));
         builder.WithDescription(LocalizationGroup.GetText("Description", "Please choose one of the following options:"));
@@ -66,20 +67,20 @@ public class CalendarScheduleOptionsDialogElement : DialogEmbedReactionElementBa
                               {
                                   new ()
                                   {
-                                      Emoji = DiscordEmoji.FromName(CommandContext.Client, ":one:"),
-                                      CommandText = $"{DiscordEmoji.FromName(CommandContext.Client, ":one:")} {LocalizationGroup.GetText(WeekDayOfMonthSpecialOptions.None.ToString(), "No options")}",
+                                      Emote = Emoji.Parse(":one:"),
+                                      CommandText = $"{Emoji.Parse(":one:")} {LocalizationGroup.GetText(WeekDayOfMonthSpecialOptions.None.ToString(), "No options")}",
                                       Func = () => Task.FromResult(WeekDayOfMonthSpecialOptions.None)
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmoji.FromName(CommandContext.Client, ":two:"),
-                                      CommandText = $"{DiscordEmoji.FromName(CommandContext.Client, ":two:")} {LocalizationGroup.GetText(WeekDayOfMonthSpecialOptions.EvenMonth.ToString(), "Even month")}",
+                                      Emote = Emoji.Parse(":two:"),
+                                      CommandText = $"{Emoji.Parse(":two:")} {LocalizationGroup.GetText(WeekDayOfMonthSpecialOptions.EvenMonth.ToString(), "Even month")}",
                                       Func = () => Task.FromResult(WeekDayOfMonthSpecialOptions.EvenMonth)
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmoji.FromName(CommandContext.Client, ":three:"),
-                                      CommandText = $"{DiscordEmoji.FromName(CommandContext.Client, ":three:")} {LocalizationGroup.GetText(WeekDayOfMonthSpecialOptions.UnevenMonth.ToString(), "Uneven month")}",
+                                      Emote = Emoji.Parse(":three:"),
+                                      CommandText = $"{Emoji.Parse(":three:")} {LocalizationGroup.GetText(WeekDayOfMonthSpecialOptions.UnevenMonth.ToString(), "Uneven month")}",
                                       Func = () => Task.FromResult(WeekDayOfMonthSpecialOptions.UnevenMonth)
                                   }
                               };

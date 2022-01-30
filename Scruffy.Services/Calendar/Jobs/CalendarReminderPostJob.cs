@@ -1,4 +1,6 @@
-﻿
+﻿using Discord;
+using Discord.WebSocket;
+
 using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Data.Entity;
@@ -57,7 +59,7 @@ public class CalendarReminderPostJob : LocatedAsyncJob
                 var data = dbFactory.GetRepository<CalendarAppointmentRepository>()
                                     .GetQuery()
                                     .Where(obj => obj.Id == _id
-                                               && obj.DiscordMessageId == null)
+                                               && obj.IUserMessageId == null)
                                     .Select(obj => new
                                                    {
                                                        ChannelId = channels.Where(obj2 => obj2.Guild.DiscordServerId == obj.CalendarAppointmentTemplate.DiscordServerId
@@ -70,21 +72,24 @@ public class CalendarReminderPostJob : LocatedAsyncJob
 
                 if (data?.ChannelId != null)
                 {
-                    var discordClient = serviceProvider.GetService<DiscordClient>();
+                    var discordClient = serviceProvider.GetService<DiscordSocketClient>();
 
                     var channel = await discordClient.GetChannelAsync(data.ChannelId)
                                                      .ConfigureAwait(false);
 
-                    var message = await channel.SendMessageAsync(data.ReminderMessage)
-                                               .ConfigureAwait(false);
+                    if (channel is ITextChannel textChannel)
+                    {
+                        var message = await textChannel.SendMessageAsync(data.ReminderMessage)
+                                                       .ConfigureAwait(false);
 
-                    dbFactory.GetRepository<CalendarAppointmentRepository>()
-                             .Refresh(obj => obj.Id == _id,
-                                      obj =>
-                                      {
-                                          obj.DiscordChannelId = data.ChannelId;
-                                          obj.DiscordMessageId = message.Id;
-                                      });
+                        dbFactory.GetRepository<CalendarAppointmentRepository>()
+                                 .Refresh(obj => obj.Id == _id,
+                                          obj =>
+                                          {
+                                              obj.DiscordChannelId = data.ChannelId;
+                                              obj.IUserMessageId = message.Id;
+                                          });
+                    }
                 }
             }
         }

@@ -1,10 +1,11 @@
-﻿
+﻿using Discord;
+
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Calendar;
 using Scruffy.Data.Entity.Tables.Calendar;
 using Scruffy.Services.Calendar.DialogElements.Forms;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Calendar.DialogElements;
 
@@ -74,7 +75,7 @@ public class CalendarScheduleSetupDialogElement : DialogEmbedReactionElementBase
     /// </summary>
     /// <param name="builder">Builder</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public override Task EditMessage(DiscordEmbedBuilder builder)
+    public override Task EditMessage(EmbedBuilder builder)
     {
         builder.WithTitle(LocalizationGroup.GetText("ChooseCommandTitle", "Calendar schedule configuration"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseCommandDescription", "With this assistant you are able to configure the calendar schedules. The following schedules are already created:"));
@@ -111,8 +112,8 @@ public class CalendarScheduleSetupDialogElement : DialogEmbedReactionElementBase
                          {
                              new ()
                              {
-                                 Emoji = DiscordEmojiService.GetAddEmoji(CommandContext.Client),
-                                 CommandText = LocalizationGroup.GetFormattedText("AddCommand", "{0} Add schedule", DiscordEmojiService.GetAddEmoji(CommandContext.Client)),
+                                 Emote = DiscordEmoteService.GetAddEmote(CommandContext.Client),
+                                 CommandText = LocalizationGroup.GetFormattedText("AddCommand", "{0} Add schedule", DiscordEmoteService.GetAddEmote(CommandContext.Client)),
                                  Func = async () =>
                                         {
                                             var data = await DialogHandler.RunForm<CreateCalendarScheduleData>(CommandContext, false)
@@ -142,8 +143,8 @@ public class CalendarScheduleSetupDialogElement : DialogEmbedReactionElementBase
             {
                 _reactions.Add(new ReactionData<bool>
                                {
-                                   Emoji = DiscordEmojiService.GetEditEmoji(CommandContext.Client),
-                                   CommandText = LocalizationGroup.GetFormattedText("EditCommand", "{0} Edit schedule", DiscordEmojiService.GetEditEmoji(CommandContext.Client)),
+                                   Emote = DiscordEmoteService.GetEditEmote(CommandContext.Client),
+                                   CommandText = LocalizationGroup.GetFormattedText("EditCommand", "{0} Edit schedule", DiscordEmoteService.GetEditEmote(CommandContext.Client)),
                                    Func = async () =>
                                           {
                                               var levelId = await RunSubElement<CalendarScheduleSelectionDialogElement, long>().ConfigureAwait(false);
@@ -164,8 +165,8 @@ public class CalendarScheduleSetupDialogElement : DialogEmbedReactionElementBase
 
                 _reactions.Add(new ReactionData<bool>
                                {
-                                   Emoji = DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client),
-                                   CommandText = LocalizationGroup.GetFormattedText("DeleteCommand", "{0} Delete schedule", DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client)),
+                                   Emote = DiscordEmoteService.GetTrashCanEmote(CommandContext.Client),
+                                   CommandText = LocalizationGroup.GetFormattedText("DeleteCommand", "{0} Delete schedule", DiscordEmoteService.GetTrashCanEmote(CommandContext.Client)),
                                    Func = async () =>
                                           {
                                               var levelId = await RunSubElement<CalendarScheduleSelectionDialogElement, long>().ConfigureAwait(false);
@@ -179,8 +180,8 @@ public class CalendarScheduleSetupDialogElement : DialogEmbedReactionElementBase
 
             _reactions.Add(new ReactionData<bool>
                            {
-                               Emoji = DiscordEmojiService.GetCrossEmoji(CommandContext.Client),
-                               CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmojiService.GetCrossEmoji(CommandContext.Client)),
+                               Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
+                               CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmoteService.GetCrossEmote(CommandContext.Client)),
                                Func = () => Task.FromResult(false)
                            });
         }

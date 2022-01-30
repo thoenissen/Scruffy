@@ -1,11 +1,12 @@
-﻿
+﻿using Discord;
+
 using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Calendar;
 using Scruffy.Services.Calendar.DialogElements.Forms;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Calendar.DialogElements;
 
@@ -43,7 +44,7 @@ public class CalendarTemplateEditDialogElement : DialogEmbedReactionElementBase<
     /// </summary>
     /// <param name="builder">Builder</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public override async Task EditMessage(DiscordEmbedBuilder builder)
+    public override async Task EditMessage(EmbedBuilder builder)
     {
         builder.WithTitle(LocalizationGroup.GetText("ChooseCommandTitle", "Calendar template configuration"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseCommandDescription", "With this assistant you are able to configure the calendar template"));
@@ -103,8 +104,8 @@ public class CalendarTemplateEditDialogElement : DialogEmbedReactionElementBase<
                               {
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetEditEmoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("EditDescriptionCommand", "{0} Edit description", DiscordEmojiService.GetEditEmoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetEditEmote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("EditDescriptionCommand", "{0} Edit description", DiscordEmoteService.GetEditEmote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  var description = await RunSubElement<CalendarTemplateDescriptionDialogElement, string>()
@@ -123,8 +124,8 @@ public class CalendarTemplateEditDialogElement : DialogEmbedReactionElementBase<
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetEdit2Emoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("EditUriCommand", "{0} Edit link", DiscordEmojiService.GetEdit2Emoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetEdit2Emote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("EditUriCommand", "{0} Edit link", DiscordEmoteService.GetEdit2Emote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  var uri = await RunSubElement<CalendarTemplateUriDialogElement, string>()
@@ -143,8 +144,8 @@ public class CalendarTemplateEditDialogElement : DialogEmbedReactionElementBase<
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetEdit3Emoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("EditAppointmentTimeCommand", "{0} Edit appointment time", DiscordEmojiService.GetEdit3Emoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetEdit3Emote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("EditAppointmentTimeCommand", "{0} Edit appointment time", DiscordEmoteService.GetEdit3Emote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  var time = await RunSubElement<CalendarTemplateAppointmentTimeDialogElement, TimeSpan>()
@@ -163,8 +164,8 @@ public class CalendarTemplateEditDialogElement : DialogEmbedReactionElementBase<
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetEdit4Emoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("EditReminderCommand", "{0} Edit reminder", DiscordEmojiService.GetEdit4Emoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetEdit4Emote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("EditReminderCommand", "{0} Edit reminder", DiscordEmoteService.GetEdit4Emote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  var reminder = await RunSubElement<CalendarTemplateReminderDialogElement, CalenderTemplateReminderData>().ConfigureAwait(false);
@@ -187,8 +188,8 @@ public class CalendarTemplateEditDialogElement : DialogEmbedReactionElementBase<
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetEdit5Emoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("EditGuildPointsCommand", "{0} Edit guild points", DiscordEmojiService.GetEdit5Emoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetEdit5Emote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("EditGuildPointsCommand", "{0} Edit guild points", DiscordEmoteService.GetEdit5Emote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  var guildPoints = await RunSubElement<CalendarTemplateGuildPointsDialogElement, CalenderTemplateGuildData>().ConfigureAwait(false);
@@ -211,8 +212,8 @@ public class CalendarTemplateEditDialogElement : DialogEmbedReactionElementBase<
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetCrossEmoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmojiService.GetCrossEmoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmoteService.GetCrossEmote(CommandContext.Client)),
                                       Func = () => Task.FromResult(false)
                                   }
                               };

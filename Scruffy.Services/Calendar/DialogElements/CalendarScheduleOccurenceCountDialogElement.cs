@@ -1,6 +1,7 @@
-﻿
-using Scruffy.Services.Core.Discord;
+﻿using Discord;
+
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Calendar.DialogElements;
 
@@ -35,7 +36,7 @@ public class CalendarScheduleOccurenceCountDialogElement : DialogMessageElementB
     /// </summary>
     /// <param name="message">Message</param>
     /// <returns>Result</returns>
-    public override int ConvertMessage(DiscordMessage message)
+    public override int ConvertMessage(IUserMessage message)
     {
         return int.TryParse(message.Content, out var result) ? result : 0;
     }

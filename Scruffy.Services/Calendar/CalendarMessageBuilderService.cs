@@ -1,4 +1,6 @@
-﻿
+﻿using Discord;
+using Discord.WebSocket;
+
 using Newtonsoft.Json;
 
 using Scruffy.Data.Entity;
@@ -21,7 +23,7 @@ public class CalendarMessageBuilderService : LocatedServiceBase
     /// <summary>
     /// Client
     /// </summary>
-    private DiscordClient _discordClient;
+    private DiscordSocketClient _discordClient;
 
     #endregion // Fields
 
@@ -32,7 +34,7 @@ public class CalendarMessageBuilderService : LocatedServiceBase
     /// </summary>
     /// <param name="localizationService">Localization service</param>
     /// <param name="discordClient">Discord client</param>
-    public CalendarMessageBuilderService(LocalizationService localizationService, DiscordClient discordClient)
+    public CalendarMessageBuilderService(LocalizationService localizationService, DiscordSocketClient discordClient)
         : base(localizationService)
     {
         _discordClient = discordClient;
@@ -71,7 +73,7 @@ public class CalendarMessageBuilderService : LocatedServiceBase
                                                                                    .Select(obj2 => new
                                                                                                    {
                                                                                                        ChannelId = obj2.DiscordChannelId,
-                                                                                                       MessageId = obj2.DiscordMessageId
+                                                                                                       MessageId = obj2.IUserMessageId
                                                                                                    })
                                                                                    .FirstOrDefault(),
                                                                  Appointments = templates.Where(obj2 => obj2.DiscordServerId == obj.DiscordServerId)
@@ -115,15 +117,15 @@ public class CalendarMessageBuilderService : LocatedServiceBase
                 var channel = await _discordClient.GetChannelAsync(calendar.Channel.ChannelId)
                                                   .ConfigureAwait(false);
 
-                if (channel != null)
+                if (channel is ITextChannel textChannel)
                 {
-                    await channel.SendMessageAsync(new DiscordEmbedBuilder().WithTitle(LocalizationGroup.GetText("Motd", "Message of the day:"))
-                                                                            .WithDescription(Formatter.BlockCode(messageBuilder.ToString()))
-                                                                            .WithColor(DiscordColor.Green)
-                                                                            .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
-                                                                            .WithTimestamp(DateTime.Now)
-                                                                            .Build())
-                                 .ConfigureAwait(false);
+                    await textChannel.SendMessageAsync(embed: new EmbedBuilder().WithTitle(LocalizationGroup.GetText("Motd", "Message of the day:"))
+                                                                                .WithDescription(Format.Code(messageBuilder.ToString()))
+                                                                                .WithColor(Color.Green)
+                                                                                .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
+                                                                                .WithTimestamp(DateTime.Now)
+                                                                                .Build())
+                                     .ConfigureAwait(false);
                 }
             }
         }
@@ -158,7 +160,7 @@ public class CalendarMessageBuilderService : LocatedServiceBase
                                                                                    .Select(obj2 => new
                                                                                                    {
                                                                                                        ChannelId = obj2.DiscordChannelId,
-                                                                                                       MessageId = obj2.DiscordMessageId,
+                                                                                                       MessageId = obj2.IUserMessageId,
                                                                                                        obj2.AdditionalData
                                                                                                    })
                                                                                    .FirstOrDefault(),
@@ -175,15 +177,15 @@ public class CalendarMessageBuilderService : LocatedServiceBase
                                               .Where(obj => obj.Channel.ChannelId > 0)
                                               .ToList())
             {
-                var builder = new DiscordEmbedBuilder();
+                var builder = new EmbedBuilder();
 
                 var additionalData = JsonConvert.DeserializeObject<AdditionalCalendarChannelData>(calendar.Channel.AdditionalData);
 
                 builder.WithTitle(additionalData.Title);
                 builder.WithDescription(additionalData.Description);
                 builder.WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64");
-                builder.WithThumbnail("https://cdn.discordapp.com/attachments/847555191842537552/870776562943946782/12382200801557740332-512.png");
-                builder.WithColor(DiscordColor.Green);
+                builder.WithThumbnailUrl("https://cdn.discordapp.com/attachments/847555191842537552/870776562943946782/12382200801557740332-512.png");
+                builder.WithColor(Color.Green);
                 builder.WithTimestamp(DateTime.Now);
 
                 if (calendar.Appointments.Count > 0)
@@ -199,7 +201,7 @@ public class CalendarMessageBuilderService : LocatedServiceBase
 
                     foreach (var appointment in calendar.Appointments)
                     {
-                        var currentLine = $@"`({LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(appointment.TimeStamp.DayOfWeek).Substring(0, 2)}) {appointment.TimeStamp.ToString("g", LocalizationGroup.CultureInfo)}` {(string.IsNullOrWhiteSpace(appointment.Uri) ? appointment.Description : Formatter.MaskedUrl(appointment.Description, new Uri(appointment.Uri)))}";
+                        var currentLine = $@"`({LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(appointment.TimeStamp.DayOfWeek)[..2]}) {appointment.TimeStamp.ToString("g", LocalizationGroup.CultureInfo)}` {(string.IsNullOrWhiteSpace(appointment.Uri) ? appointment.Description : Format.Url(appointment.Description, appointment.Uri))}";
 
                         if (currentMonth != appointment.TimeStamp.Month
                          || currentWeekOfYear != appointment.TimeStamp.GetIso8601WeekOfYear()
@@ -242,15 +244,15 @@ public class CalendarMessageBuilderService : LocatedServiceBase
                 var channel = await _discordClient.GetChannelAsync(calendar.Channel.ChannelId)
                                                   .ConfigureAwait(false);
 
-                if (channel != null)
+                if (channel is ITextChannel textChannel)
                 {
-                    var message = await channel.GetMessageAsync(calendar.Channel.MessageId.Value)
-                                               .ConfigureAwait(false);
+                    var message = await textChannel.GetMessageAsync(calendar.Channel.MessageId.Value)
+                                                   .ConfigureAwait(false);
 
-                    if (message != null)
+                    if (message is IUserMessage userMessage)
                     {
-                        await message.ModifyAsync(null, builder.Build())
-                                     .ConfigureAwait(false);
+                        await userMessage.ModifyAsync(obj => obj.Embed = builder.Build())
+                                         .ConfigureAwait(false);
                     }
                 }
             }

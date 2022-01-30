@@ -1,8 +1,9 @@
-﻿
+﻿using Discord;
+
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Calendar;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Calendar.DialogElements;
 
@@ -39,9 +40,9 @@ public class CalendarAppointmentSelectionDialogElement : DialogEmbedMessageEleme
     /// Return the message of element
     /// </summary>
     /// <returns>Message</returns>
-    public override DiscordEmbedBuilder GetMessage()
+    public override EmbedBuilder GetMessage()
     {
-        var builder = new DiscordEmbedBuilder();
+        var builder = new EmbedBuilder();
         builder.WithTitle(LocalizationGroup.GetText("ChooseTitle", "Appointment selection"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseDescription", "Please choose one of the following appointments:"));
 
@@ -72,7 +73,7 @@ public class CalendarAppointmentSelectionDialogElement : DialogEmbedMessageEleme
                 fieldText.Append(i);
                 fieldText.Append("` - ");
                 fieldText.Append(' ');
-                fieldText.Append(Formatter.Bold(entry.Description));
+                fieldText.Append(Format.Bold(entry.Description));
                 fieldText.Append(' ');
                 fieldText.Append('(');
                 fieldText.Append(entry.TimeStamp.ToString("g", LocalizationGroup.CultureInfo));
@@ -95,7 +96,7 @@ public class CalendarAppointmentSelectionDialogElement : DialogEmbedMessageEleme
     /// </summary>
     /// <param name="message">Message</param>
     /// <returns>Result</returns>
-    public override Task<long> ConvertMessage(DiscordMessage message)
+    public override Task<long> ConvertMessage(IUserMessage message)
     {
         return Task.FromResult(int.TryParse(message.Content, out var index) && _appointments.TryGetValue(index, out var selected) ? selected : throw new InvalidOperationException());
     }

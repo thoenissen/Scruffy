@@ -1,13 +1,14 @@
-﻿
-using Scruffy.Services.Core.Discord;
+﻿using Discord;
+
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Calendar.DialogElements;
 
 /// <summary>
 /// Adding participants
 /// </summary>
-public class CalendarAddVoiceChannelDialogElement : DialogEmbedMessageElementBase<List<DiscordMember>>
+public class CalendarAddVoiceChannelDialogElement : DialogEmbedMessageElementBase<List<IGuildUser>>
 {
     #region Fields
 
@@ -37,9 +38,9 @@ public class CalendarAddVoiceChannelDialogElement : DialogEmbedMessageElementBas
     /// Return the message of element
     /// </summary>
     /// <returns>Message</returns>
-    public override DiscordEmbedBuilder GetMessage()
+    public override EmbedBuilder GetMessage()
     {
-        var builder = new DiscordEmbedBuilder();
+        var builder = new EmbedBuilder();
         builder.WithTitle(LocalizationGroup.GetText("ChooseTitle", "Voice channel selection"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseDescription", "Please choose one of the voice channels:"));
 
@@ -48,7 +49,8 @@ public class CalendarAddVoiceChannelDialogElement : DialogEmbedMessageElementBas
 
         var i = 0;
 
-        foreach (var (key, channel) in CommandContext.Guild.Channels.Where(obj => obj.Value.Type == ChannelType.Voice))
+        // TODO Async
+        foreach (var channel in CommandContext.Guild.GetChannelsAsync().Result.OfType<IVoiceChannel>())
         {
             fieldText.Append('`');
             fieldText.Append(i);
@@ -57,7 +59,7 @@ public class CalendarAddVoiceChannelDialogElement : DialogEmbedMessageElementBas
             fieldText.Append(channel.Mention);
             fieldText.Append('\n');
 
-            _channels[i] = key;
+            _channels[i] = channel.Id;
 
             i++;
         }
@@ -72,19 +74,22 @@ public class CalendarAddVoiceChannelDialogElement : DialogEmbedMessageElementBas
     /// </summary>
     /// <param name="message">Message</param>
     /// <returns>Result</returns>
-    public override async Task<List<DiscordMember>> ConvertMessage(DiscordMessage message)
+    public override async Task<List<IGuildUser>> ConvertMessage(IUserMessage message)
     {
-        var members = new List<DiscordMember>();
+        var members = new List<IGuildUser>();
 
         if (int.TryParse(message.Content, out var index)
          && _channels.TryGetValue(index, out var selected))
         {
-            foreach (var entry in CommandContext.Guild.VoiceStates.Where(obj => obj.Value.Channel?.Id == selected
-                                                                             && obj.Value.User != null))
+            if (await CommandContext.Guild.GetChannelAsync(selected).ConfigureAwait(false) is IVoiceChannel voiceChannel)
             {
-                members.Add(await CommandContext.Guild
-                                                .GetMemberAsync(entry.Value.User.Id)
-                                                .ConfigureAwait(false));
+                await foreach (var entry in voiceChannel.GetUsersAsync())
+                {
+                    foreach (var user in entry)
+                    {
+                        members.Add(user);
+                    }
+                }
             }
         }
 

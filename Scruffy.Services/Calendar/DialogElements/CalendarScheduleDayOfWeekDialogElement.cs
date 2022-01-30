@@ -1,6 +1,7 @@
-﻿
-using Scruffy.Services.Core.Discord;
+﻿using Discord;
+
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Calendar.DialogElements;
 
@@ -50,7 +51,7 @@ public class CalendarScheduleDayOfWeekDialogElement : DialogEmbedReactionElement
     /// </summary>
     /// <param name="builder">Builder</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public override Task EditMessage(DiscordEmbedBuilder builder)
+    public override Task EditMessage(EmbedBuilder builder)
     {
         builder.WithTitle(LocalizationGroup.GetText("Title", "Schedule selection"));
         builder.WithDescription(LocalizationGroup.GetText("Description", "Please choose the day of the week:"));
@@ -77,44 +78,44 @@ public class CalendarScheduleDayOfWeekDialogElement : DialogEmbedReactionElement
                               {
                                   new ()
                                   {
-                                      Emoji = DiscordEmoji.FromName(CommandContext.Client, ":one:"),
-                                      CommandText = $"{DiscordEmoji.FromName(CommandContext.Client, ":one:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Monday)}",
+                                      Emote = Emoji.Parse(":one:"),
+                                      CommandText = $"{Emoji.Parse(":one:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Monday)}",
                                       Func = () => GetReturnValue(DayOfWeek.Monday)
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmoji.FromName(CommandContext.Client, ":two:"),
-                                      CommandText = $"{DiscordEmoji.FromName(CommandContext.Client, ":two:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Tuesday)}",
+                                      Emote = Emoji.Parse(":two:"),
+                                      CommandText = $"{Emoji.Parse(":two:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Tuesday)}",
                                       Func = () => GetReturnValue(DayOfWeek.Tuesday)
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmoji.FromName(CommandContext.Client, ":three:"),
-                                      CommandText = $"{DiscordEmoji.FromName(CommandContext.Client, ":three:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Wednesday)}",
+                                      Emote = Emoji.Parse(":three:"),
+                                      CommandText = $"{Emoji.Parse(":three:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Wednesday)}",
                                       Func = () => GetReturnValue(DayOfWeek.Wednesday)
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmoji.FromName(CommandContext.Client, ":four:"),
-                                      CommandText = $"{DiscordEmoji.FromName(CommandContext.Client, ":four:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Thursday)}",
+                                      Emote = Emoji.Parse(":four:"),
+                                      CommandText = $"{Emoji.Parse(":four:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Thursday)}",
                                       Func = () => GetReturnValue(DayOfWeek.Thursday)
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmoji.FromName(CommandContext.Client, ":five:"),
-                                      CommandText = $"{DiscordEmoji.FromName(CommandContext.Client, ":five:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Friday)}",
+                                      Emote = Emoji.Parse(":five:"),
+                                      CommandText = $"{Emoji.Parse(":five:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Friday)}",
                                       Func = () => GetReturnValue(DayOfWeek.Friday)
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmoji.FromName(CommandContext.Client, ":six:"),
-                                      CommandText = $"{DiscordEmoji.FromName(CommandContext.Client, ":six:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Saturday)}",
+                                      Emote = Emoji.Parse(":six:"),
+                                      CommandText = $"{Emoji.Parse(":six:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Saturday)}",
                                       Func = () => GetReturnValue(DayOfWeek.Saturday)
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmoji.FromName(CommandContext.Client, ":seven:"),
-                                      CommandText = $"{DiscordEmoji.FromName(CommandContext.Client, ":seven:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Sunday)}",
+                                      Emote = Emoji.Parse(":seven:"),
+                                      CommandText = $"{Emoji.Parse(":seven:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Sunday)}",
                                       Func = () => GetReturnValue(DayOfWeek.Sunday)
                                   },
                               };

@@ -1,7 +1,8 @@
-﻿
+﻿using Discord;
+
 using Scruffy.Services.Calendar.DialogElements.Forms;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Calendar.DialogElements;
 
@@ -50,12 +51,12 @@ public class CalendarTemplateGuildPointsDialogElement : DialogReactionElementBas
                               {
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetCheckEmoji(CommandContext.Client),
+                                      Emote = DiscordEmoteService.GetCheckEmote(CommandContext.Client),
                                       Func = RunSubForm<CalenderTemplateGuildData>,
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetCrossEmoji(CommandContext.Client),
+                                      Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
                                       Func = () => Task.FromResult<CalenderTemplateGuildData>(null)
                                   }
                               };
@@ -66,7 +67,7 @@ public class CalendarTemplateGuildPointsDialogElement : DialogReactionElementBas
     /// </summary>
     /// <param name="reaction">Reaction</param>
     /// <returns>Result</returns>
-    protected override CalenderTemplateGuildData DefaultFunc(MessageReactionAddEventArgs reaction) => null;
+    protected override CalenderTemplateGuildData DefaultFunc(IReaction reaction) => null;
 
     #endregion // DialogReactionElementBase<bool>
 }
