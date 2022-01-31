@@ -1,13 +1,14 @@
-﻿
-using Scruffy.Services.Core.Discord;
+﻿using Discord;
+
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Raid.DialogElements;
 
 /// <summary>
 /// Removing a user from the commit
 /// </summary>
-public class RaidCommitRemoveUserDialogElement : DialogMessageElementBase<DiscordUser>
+public class RaidCommitRemoveUserDialogElement : DialogMessageElementBase<IUser>
 {
     #region Constructor
 
@@ -35,11 +36,9 @@ public class RaidCommitRemoveUserDialogElement : DialogMessageElementBase<Discor
     /// </summary>
     /// <param name="message">Message</param>
     /// <returns>Result</returns>
-    public override DiscordUser ConvertMessage(DiscordMessage message)
+    public override IUser ConvertMessage(IUserMessage message)
     {
-        var converter = (IArgumentConverter<DiscordUser>)new DiscordUserConverter();
-
-        return converter.ConvertAsync(message.Content, CommandContext.GetCommandContext()).Result.Value;
+        return CommandContext.Client.GetUser(MentionUtils.ParseUser(message.Content));
     }
 
     #endregion // DialogMessageElementBase

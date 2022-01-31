@@ -1,8 +1,9 @@
-﻿
+﻿using Discord;
+
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Raid.DialogElements;
 
@@ -39,9 +40,9 @@ public class RaidExperienceLevelSelectionDialogElement : DialogEmbedMessageEleme
     /// Return the message of element
     /// </summary>
     /// <returns>Message</returns>
-    public override DiscordEmbedBuilder GetMessage()
+    public override EmbedBuilder GetMessage()
     {
-        var builder = new DiscordEmbedBuilder();
+        var builder = new EmbedBuilder();
         builder.WithTitle(LocalizationGroup.GetText("ChooseLevelTitle", "Raid experience level selection"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseLevelDescription", "Please choose one of the following experience levels:"));
 
@@ -87,7 +88,7 @@ public class RaidExperienceLevelSelectionDialogElement : DialogEmbedMessageEleme
     /// </summary>
     /// <param name="message">Message</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public override Task<long> ConvertMessage(DiscordMessage message)
+    public override Task<long> ConvertMessage(IUserMessage message)
     {
         return Task.FromResult(int.TryParse(message.Content, out var index) && _levels.TryGetValue(index, out var selectedRoleId) ? selectedRoleId : throw new InvalidOperationException());
     }

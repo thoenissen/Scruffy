@@ -1,6 +1,7 @@
-﻿
-using Scruffy.Services.Core.Discord;
+﻿using Discord;
+
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Raid.DialogElements;
 
@@ -35,7 +36,7 @@ public class RaidExperienceLevelEmojiDialogElement : DialogReactionElementBase<u
     /// </summary>
     /// <param name="reaction">Reaction</param>
     /// <returns>Result</returns>
-    protected override ulong DefaultFunc(MessageReactionAddEventArgs reaction) => reaction.Emoji.Id;
+    protected override ulong DefaultFunc(IReaction reaction) => (reaction.Emote as ISnowflakeEntity)?.Id ?? throw new InvalidOperationException();
 
     #endregion // DialogReactionElementBase<bool>
 }

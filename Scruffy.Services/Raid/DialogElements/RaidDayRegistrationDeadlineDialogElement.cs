@@ -1,7 +1,9 @@
 ﻿using System.Globalization;
 
-using Scruffy.Services.Core.Discord;
+using Discord;
+
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Raid.DialogElements;
 
@@ -36,7 +38,7 @@ public class RaidDayRegistrationDeadlineDialogElement : DialogMessageElementBase
     /// </summary>
     /// <param name="message">Message</param>
     /// <returns>Result</returns>
-    public override TimeSpan ConvertMessage(DiscordMessage message)
+    public override TimeSpan ConvertMessage(IUserMessage message)
     {
         return TimeSpan.TryParseExact(message.Content, "hh\\:mm", CultureInfo.InvariantCulture, out var timeSpan)
                    ? timeSpan

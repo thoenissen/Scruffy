@@ -1,6 +1,7 @@
-﻿
-using Scruffy.Services.Core.Discord;
+﻿using Discord;
+
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Raid.DialogElements;
 
@@ -57,12 +58,12 @@ public class RaidRoleSelectionNextDialogElement : DialogReactionElementBase<bool
                               {
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetCheckEmoji(CommandContext.Client),
+                                      Emote = DiscordEmoteService.GetCheckEmote(CommandContext.Client),
                                       Func = () => Task.FromResult(true)
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetCrossEmoji(CommandContext.Client),
+                                      Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
                                       Func = () => Task.FromResult(false)
                                   },
                               };
@@ -73,7 +74,7 @@ public class RaidRoleSelectionNextDialogElement : DialogReactionElementBase<bool
     /// </summary>
     /// <param name="reaction">Reaction</param>
     /// <returns>Result</returns>
-    protected override bool DefaultFunc(MessageReactionAddEventArgs reaction) => false;
+    protected override bool DefaultFunc(IReaction reaction) => false;
 
     #endregion // DialogReactionElementBase
 }

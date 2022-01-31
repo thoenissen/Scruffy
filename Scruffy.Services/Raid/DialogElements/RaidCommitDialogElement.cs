@@ -1,11 +1,12 @@
-﻿
+﻿using Discord;
+
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Data.Entity.Tables.Raid;
 using Scruffy.Data.Services.Raid;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
+using Scruffy.Services.Discord;
 using Scruffy.Services.Raid.DialogElements.Forms;
 
 namespace Scruffy.Services.Raid.DialogElements;
@@ -64,11 +65,11 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
     /// </summary>
     /// <param name="builder">Builder</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public override async Task EditMessage(DiscordEmbedBuilder builder)
+    public override async Task EditMessage(EmbedBuilder builder)
     {
         builder.WithTitle(LocalizationGroup.GetText("CommitTitle", "Raid points commit"));
         builder.WithDescription(LocalizationGroup.GetText("CommitText", "The following points will be committed:"));
-        builder.WithColor(DiscordColor.Green);
+        builder.WithColor(Color.Green);
         builder.WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64");
         builder.WithTimestamp(DateTime.Now);
 
@@ -83,7 +84,7 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
                                                   .GetUserAsync(user.DiscordUserId)
                                                   .ConfigureAwait(false);
 
-            var currentLine = $"{Formatter.InlineCode(user.Points.ToString("0.0"))} - {DiscordEmojiService.GetGuildEmoji(CommandContext.Client, user.DiscordEmoji)} {discordUser.Mention}";
+            var currentLine = $"{Format.Code(user.Points.ToString("0.0"))} - {DiscordEmoteService.GetGuildEmote(CommandContext.Client, user.DiscordEmoji)} {discordUser.Mention}";
             if (currentLine.Length + message.Length > 1024)
             {
                 builder.AddField(LocalizationGroup.GetText("Users", "Users") + " #" + fieldCounter, message.ToString());
@@ -116,8 +117,8 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
                               {
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetAddEmoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("AddCommand", "{0} Add user", DiscordEmojiService.GetAddEmoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetAddEmote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("AddCommand", "{0} Add user", DiscordEmoteService.GetAddEmote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  var data = await RunSubForm<RaidCommitUserFormData>().ConfigureAwait(false);
@@ -144,8 +145,8 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetEditEmoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("SetPointsCommand", "{0} Set points", DiscordEmojiService.GetEditEmoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetEditEmote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("SetPointsCommand", "{0} Set points", DiscordEmoteService.GetEditEmote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  var data = await RunSubForm<RaidCommitUserFormData>().ConfigureAwait(false);
@@ -163,11 +164,11 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("RemoveCommand", "{0} Remove user", DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetTrashCanEmote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("RemoveCommand", "{0} Remove user", DiscordEmoteService.GetTrashCanEmote(CommandContext.Client)),
                                       Func = async () =>
                                              {
-                                                 var discordUser = await RunSubElement<RaidCommitRemoveUserDialogElement, DiscordUser>(new RaidCommitRemoveUserDialogElement(_localizationService)).ConfigureAwait(false);
+                                                 var discordUser = await RunSubElement<RaidCommitRemoveUserDialogElement, IUser>(new RaidCommitRemoveUserDialogElement(_localizationService)).ConfigureAwait(false);
 
                                                  var user = _commitData.Users
                                                                        .FirstOrDefault(obj => obj.DiscordUserId == discordUser.Id);
@@ -182,8 +183,8 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetCheckEmoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("CommitCommand", "{0} Commit", DiscordEmojiService.GetCheckEmoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetCheckEmote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("CommitCommand", "{0} Commit", DiscordEmoteService.GetCheckEmote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  using (var dbFactory = RepositoryFactory.CreateInstance())
@@ -314,8 +315,8 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetCrossEmoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmojiService.GetCrossEmoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmoteService.GetCrossEmote(CommandContext.Client)),
                                       Func = () => Task.FromResult(false)
                                   },
                               };

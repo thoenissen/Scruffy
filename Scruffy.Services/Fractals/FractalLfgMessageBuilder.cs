@@ -56,23 +56,23 @@ public class FractalLfgMessageBuilder : LocatedServiceBase
                                       .GetQuery()
                                       .Where(obj => obj.Id == configurationId)
                                       .Select(obj => new
-                                      {
-                                          ChannelId = obj.DiscordChannelId,
-                                          MessageId = obj.DiscordMessageId,
-                                          obj.Title,
-                                          obj.Description,
-                                          Registrations = obj.FractalRegistrations
-                                                             .Select(obj2 => new
-                                                                             {
-                                                                                 obj2.AppointmentTimeStamp,
-                                                                                 UserId = obj2.User
-                                                                                              .DiscordAccounts
-                                                                                              .Select(obj3 => obj3.Id)
-                                                                                              .FirstOrDefault(),
-                                                                                 obj2.RegistrationTimeStamp,
-                                                                             })
-                                                             .Where(obj2 => obj2.AppointmentTimeStamp > from)
-                                      })
+                                                     {
+                                                         ChannelId = obj.DiscordChannelId,
+                                                         MessageId = obj.DiscordMessageId,
+                                                         obj.Title,
+                                                         obj.Description,
+                                                         Registrations = obj.FractalRegistrations
+                                                                            .Select(obj2 => new
+                                                                                            {
+                                                                                                obj2.AppointmentTimeStamp,
+                                                                                                UserId = obj2.User
+                                                                                                             .DiscordAccounts
+                                                                                                             .Select(obj3 => obj3.Id)
+                                                                                                             .FirstOrDefault(),
+                                                                                                obj2.RegistrationTimeStamp,
+                                                                                            })
+                                                                            .Where(obj2 => obj2.AppointmentTimeStamp > from)
+                                                     })
                                       .FirstOrDefaultAsync().ConfigureAwait(false);
 
             if (data != null)

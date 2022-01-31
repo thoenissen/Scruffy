@@ -1,6 +1,7 @@
-﻿
-using Scruffy.Services.Core.Discord;
+﻿using Discord;
+
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Raid.DialogElements;
 
@@ -35,10 +36,10 @@ public class RaidTemplateThumbnailDialogElement : DialogMessageElementBase<strin
     /// </summary>
     /// <param name="message">Message</param>
     /// <returns>Result</returns>
-    public override string ConvertMessage(DiscordMessage message)
+    public override string ConvertMessage(IUserMessage message)
     {
         return message.Attachments?.Count > 0
-                   ? message.Attachments[0].Url
+                   ? message.Attachments.First().Url
                    : base.ConvertMessage(message);
     }
 

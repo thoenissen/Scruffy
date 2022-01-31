@@ -73,7 +73,7 @@ public class CalendarMessageBuilderService : LocatedServiceBase
                                                                                    .Select(obj2 => new
                                                                                                    {
                                                                                                        ChannelId = obj2.DiscordChannelId,
-                                                                                                       MessageId = obj2.IUserMessageId
+                                                                                                       MessageId = obj2.DiscordMessageId
                                                                                                    })
                                                                                    .FirstOrDefault(),
                                                                  Appointments = templates.Where(obj2 => obj2.DiscordServerId == obj.DiscordServerId)
@@ -160,7 +160,7 @@ public class CalendarMessageBuilderService : LocatedServiceBase
                                                                                    .Select(obj2 => new
                                                                                                    {
                                                                                                        ChannelId = obj2.DiscordChannelId,
-                                                                                                       MessageId = obj2.IUserMessageId,
+                                                                                                       MessageId = obj2.DiscordMessageId,
                                                                                                        obj2.AdditionalData
                                                                                                    })
                                                                                    .FirstOrDefault(),

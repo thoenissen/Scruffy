@@ -56,7 +56,7 @@ public class CalendarReminderDeletionJob : LocatedAsyncJob
                                     .Select(obj => new
                                                    {
                                                        ReminderChannelId = obj.DiscordChannelId,
-                                                       ReminderMessageId = obj.IUserMessageId
+                                                       ReminderMessageId = obj.DiscordMessageId
                                                    })
                                     .FirstOrDefault();
 
@@ -81,7 +81,7 @@ public class CalendarReminderDeletionJob : LocatedAsyncJob
                                           obj =>
                                           {
                                               obj.DiscordChannelId = null;
-                                              obj.IUserMessageId = null;
+                                              obj.DiscordMessageId = null;
                                           });
                     }
                 }

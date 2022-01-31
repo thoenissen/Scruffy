@@ -1,8 +1,10 @@
-﻿
+﻿using Discord;
+using Discord.WebSocket;
+
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Raid;
 
@@ -16,7 +18,7 @@ public class RaidMessageBuilder : LocatedServiceBase
     /// <summary>
     /// Discord client
     /// </summary>
-    private DiscordClient _client;
+    private DiscordSocketClient _client;
 
     #endregion // Fields
 
@@ -27,7 +29,7 @@ public class RaidMessageBuilder : LocatedServiceBase
     /// </summary>
     /// <param name="client">Discord client</param>
     /// <param name="localizationService">Localization service</param>
-    public RaidMessageBuilder(DiscordClient client, LocalizationService localizationService)
+    public RaidMessageBuilder(DiscordSocketClient client, LocalizationService localizationService)
         : base(localizationService)
     {
         _client = client;
@@ -88,12 +90,12 @@ public class RaidMessageBuilder : LocatedServiceBase
                                                                                                                            .Select(obj4 => obj4.Points).FirstOrDefault(),
                                                                                  obj3.LineupExperienceLevelId,
                                                                                  ExperienceLevelId = (int?)obj3.User.RaidExperienceLevel.Id,
-                                                                                 ExperienceLevelDiscordEmoji = (ulong?)obj3.User.RaidExperienceLevel.DiscordEmoji,
+                                                                                 ExperienceLevelDiscordEmote = (ulong?)obj3.User.RaidExperienceLevel.DiscordEmoji,
                                                                                  Roles = obj3.RaidRegistrationRoleAssignments
                                                                                                              .Select(obj4 => new
                                                                                                              {
-                                                                                                                 MainRoleEmoji = obj4.MainRaidRole.DiscordEmojiId,
-                                                                                                                 SubRoleEmoji = (ulong?)obj4.SubRaidRole.DiscordEmojiId
+                                                                                                                 MainRoleEmote = obj4.MainRaidRole.DiscordEmojiId,
+                                                                                                                 SubRoleEmote = (ulong?)obj4.SubRaidRole.DiscordEmojiId
                                                                                                              })
                                                                                                              .ToList()
                                                                              })
@@ -103,17 +105,17 @@ public class RaidMessageBuilder : LocatedServiceBase
 
             if (appointment != null)
             {
-                var builder = new DiscordEmbedBuilder();
+                var builder = new EmbedBuilder();
 
                 var channel = await _client.GetChannelAsync(appointment.ChannelId)
                                            .ConfigureAwait(false);
 
-                if (channel != null)
+                if (channel is ITextChannel textChannel)
                 {
-                    var message = await channel.GetMessageAsync(appointment.MessageId)
-                                               .ConfigureAwait(false);
+                    var message = await textChannel.GetMessageAsync(appointment.MessageId)
+                                                   .ConfigureAwait(false);
 
-                    if (message != null)
+                    if (message is IUserMessage userMessage)
                     {
                         var fieldBuilder = new StringBuilder();
 
@@ -153,33 +155,33 @@ public class RaidMessageBuilder : LocatedServiceBase
                                             first = false;
                                         }
 
-                                        lineBuilder.Append(DiscordEmojiService.GetGuildEmoji(_client, role.MainRoleEmoji));
+                                        lineBuilder.Append(DiscordEmoteService.GetGuildEmote(_client, role.MainRoleEmote));
 
-                                        if (role.SubRoleEmoji != null)
+                                        if (role.SubRoleEmote != null)
                                         {
-                                            lineBuilder.Append(DiscordEmojiService.GetGuildEmoji(_client, role.SubRoleEmoji.Value));
+                                            lineBuilder.Append(DiscordEmoteService.GetGuildEmote(_client, role.SubRoleEmote.Value));
                                         }
                                     }
                                 }
                                 else
                                 {
-                                    lineBuilder.Append(DiscordEmojiService.GetQuestionMarkEmoji(_client));
+                                    lineBuilder.Append(DiscordEmoteService.GetQuestionMarkEmote(_client));
                                 }
 
                                 lineBuilder.Append($" {discordUser.Mention}");
 
                                 if (registration.LineupExperienceLevelId != registration.ExperienceLevelId
-                                 && registration.ExperienceLevelDiscordEmoji != null)
+                                 && registration.ExperienceLevelDiscordEmote != null)
                                 {
                                     lineBuilder.Append(' ');
-                                    lineBuilder.Append(DiscordEmojiService.GetGuildEmoji(_client, registration.ExperienceLevelDiscordEmoji.Value));
+                                    lineBuilder.Append(DiscordEmoteService.GetGuildEmote(_client, registration.ExperienceLevelDiscordEmote.Value));
                                 }
 
                                 lineBuilder.Append('\n');
 
                                 if (lineBuilder.Length + fieldBuilder.Length > 1024)
                                 {
-                                    builder.AddField($"{DiscordEmojiService.GetGuildEmoji(_client, slot.DiscordEmoji)} {slot.Description} ({registrations.Count}/{slot.Count * appointment.GroupCount}) #{fieldCounter}", fieldBuilder.ToString());
+                                    builder.AddField($"{DiscordEmoteService.GetGuildEmote(_client, slot.DiscordEmoji)} {slot.Description} ({registrations.Count}/{slot.Count * appointment.GroupCount}) #{fieldCounter}", fieldBuilder.ToString());
                                     fieldBuilder = new StringBuilder();
                                     fieldCounter++;
                                 }
@@ -189,7 +191,7 @@ public class RaidMessageBuilder : LocatedServiceBase
 
                             fieldBuilder.Append('\u200B');
 
-                            var fieldName = $"{DiscordEmojiService.GetGuildEmoji(_client, slot.DiscordEmoji)} {slot.Description} ({registrations.Count}/{slot.Count * appointment.GroupCount})";
+                            var fieldName = $"{DiscordEmoteService.GetGuildEmote(_client, slot.DiscordEmoji)} {slot.Description} ({registrations.Count}/{slot.Count * appointment.GroupCount})";
                             if (fieldCounter > 1)
                             {
                                 fieldName = $"{fieldName} #{fieldCounter}";
@@ -227,20 +229,20 @@ public class RaidMessageBuilder : LocatedServiceBase
                                         first = false;
                                     }
 
-                                    lineBuilder.Append(DiscordEmojiService.GetGuildEmoji(_client, role.MainRoleEmoji));
+                                    lineBuilder.Append(DiscordEmoteService.GetGuildEmote(_client, role.MainRoleEmote));
 
-                                    if (role.SubRoleEmoji != null)
+                                    if (role.SubRoleEmote != null)
                                     {
-                                        lineBuilder.Append(DiscordEmojiService.GetGuildEmoji(_client, role.SubRoleEmoji.Value));
+                                        lineBuilder.Append(DiscordEmoteService.GetGuildEmote(_client, role.SubRoleEmote.Value));
                                     }
                                 }
                             }
                             else
                             {
-                                lineBuilder.Append(DiscordEmojiService.GetQuestionMarkEmoji(_client));
+                                lineBuilder.Append(DiscordEmoteService.GetQuestionMarkEmote(_client));
                             }
 
-                            lineBuilder.AppendLine($" {discordUser.Mention} {(entry.ExperienceLevelDiscordEmoji != null ? DiscordEmojiService.GetGuildEmoji(_client, entry.ExperienceLevelDiscordEmoji.Value) : null)}");
+                            lineBuilder.AppendLine($" {discordUser.Mention} {(entry.ExperienceLevelDiscordEmote != null ? DiscordEmoteService.GetGuildEmote(_client, entry.ExperienceLevelDiscordEmote.Value) : null)}");
 
                             if (lineBuilder.Length + fieldBuilder.Length > 1024)
                             {
@@ -264,13 +266,13 @@ public class RaidMessageBuilder : LocatedServiceBase
 
                         builder.WithTitle($"{appointment.Title} - {appointment.TimeStamp.ToString("g", LocalizationGroup.CultureInfo)}");
                         builder.WithDescription(appointment.Description);
-                        builder.WithThumbnail(appointment.Thumbnail);
-                        builder.WithColor(DiscordColor.Green);
+                        builder.WithThumbnailUrl(appointment.Thumbnail);
+                        builder.WithColor(Color.Green);
                         builder.WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64");
                         builder.WithTimestamp(DateTime.Now);
 
-                        await message.ModifyAsync(null, builder.Build())
-                                     .ConfigureAwait(false);
+                        await userMessage.ModifyAsync(obj => obj.Embed = builder.Build())
+                                         .ConfigureAwait(false);
                     }
                 }
             }

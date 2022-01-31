@@ -1,9 +1,10 @@
-﻿
+﻿using Discord;
+
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Data.Entity.Tables.Raid;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Raid;
 
@@ -34,7 +35,7 @@ public class RaidRolesService : LocatedServiceBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public async Task RunAssistantAsync(CommandContextContainer commandContextContainer)
     {
-        var builder = new DiscordEmbedBuilder();
+        var builder = new EmbedBuilder();
         builder.WithTitle(LocalizationGroup.GetText("AssistantTitle", "Raid role configuration"));
         builder.WithDescription(LocalizationGroup.GetText("AssistantDescription", "With this assistant you are able to configure the raid roles. The following roles are already created:"));
 
@@ -72,7 +73,7 @@ public class RaidRolesService : LocatedServiceBase
                     foreach (var subRole in role.SubRoles)
                     {
                         roles.Append("> ");
-                        roles.Append(DiscordEmojiService.GetGuildEmoji(commandContextContainer.Client, subRole.DiscordEmojiId));
+                        roles.Append(DiscordEmoteService.GetGuildEmote(commandContextContainer.Client, subRole.DiscordEmojiId));
                         roles.Append(' ');
                         roles.Append(subRole.Description);
                         roles.Append('\n');
@@ -80,59 +81,58 @@ public class RaidRolesService : LocatedServiceBase
 
                     roles.Append('\n');
 
-                    builder.AddField($"{DiscordEmojiService.GetGuildEmoji(commandContextContainer.Client, role.DiscordEmojiId)} {role.Description}", roles.ToString());
+                    builder.AddField($"{DiscordEmoteService.GetGuildEmote(commandContextContainer.Client, role.DiscordEmojiId)} {role.Description}", roles.ToString());
                 }
             }
         }
 
-        var addEmoji = DiscordEmojiService.GetAddEmoji(commandContextContainer.Client);
-        var editEmoji = DiscordEmojiService.GetEditEmoji(commandContextContainer.Client);
-        var deleteEmoji = DiscordEmojiService.GetTrashCanEmoji(commandContextContainer.Client);
-        var cancelEmoji = DiscordEmojiService.GetCrossEmoji(commandContextContainer.Client);
+        var addEmote = DiscordEmoteService.GetAddEmote(commandContextContainer.Client);
+        var editEmote = DiscordEmoteService.GetEditEmote(commandContextContainer.Client);
+        var deleteEmote = DiscordEmoteService.GetTrashCanEmote(commandContextContainer.Client);
+        var cancelEmote = DiscordEmoteService.GetCrossEmote(commandContextContainer.Client);
 
         var commands = new StringBuilder();
-        commands.AppendLine(LocalizationGroup.GetFormattedText("AssistantAddCommand", "{0} Add role", addEmoji));
+        commands.AppendLine(LocalizationGroup.GetFormattedText("AssistantAddCommand", "{0} Add role", addEmote));
 
         if (areRolesAvailable)
         {
-            commands.AppendLine(LocalizationGroup.GetFormattedText("AssistantEditCommand", "{0} Edit role", editEmoji));
-            commands.AppendLine(LocalizationGroup.GetFormattedText("AssistantDeleteCommand", "{0} Delete role", deleteEmoji));
+            commands.AppendLine(LocalizationGroup.GetFormattedText("AssistantEditCommand", "{0} Edit role", editEmote));
+            commands.AppendLine(LocalizationGroup.GetFormattedText("AssistantDeleteCommand", "{0} Delete role", deleteEmote));
         }
 
-        commands.AppendLine(LocalizationGroup.GetFormattedText("AssistantCancelCommand", "{0} Cancel", cancelEmoji));
+        commands.AppendLine(LocalizationGroup.GetFormattedText("AssistantCancelCommand", "{0} Cancel", cancelEmote));
 
         builder.AddField(LocalizationGroup.GetText("AssistantCommandsField", "Commands"), commands.ToString());
 
         var message = await commandContextContainer.Channel
-                                                   .SendMessageAsync(builder)
+                                                   .SendMessageAsync(embed: builder.Build())
                                                    .ConfigureAwait(false);
 
-        var userReactionTask = commandContextContainer.Client
-                                                      .GetInteractivity()
+        var userReactionTask = commandContextContainer.Interaction
                                                       .WaitForReactionAsync(message, commandContextContainer.User);
 
-        await message.CreateReactionAsync(addEmoji).ConfigureAwait(false);
-        await message.CreateReactionAsync(editEmoji).ConfigureAwait(false);
+        await message.AddReactionAsync(addEmote).ConfigureAwait(false);
+        await message.AddReactionAsync(editEmote).ConfigureAwait(false);
 
         if (areRolesAvailable)
         {
-            await message.CreateReactionAsync(deleteEmoji).ConfigureAwait(false);
-            await message.CreateReactionAsync(cancelEmoji).ConfigureAwait(false);
+            await message.AddReactionAsync(deleteEmote).ConfigureAwait(false);
+            await message.AddReactionAsync(cancelEmote).ConfigureAwait(false);
         }
 
         var userReaction = await userReactionTask.ConfigureAwait(false);
 
-        if (userReaction.TimedOut == false)
+        if (userReaction?.Emote is GuildEmote emote)
         {
-            if (userReaction.Result.Emoji.Id == addEmoji.Id)
+            if (emote.Name == addEmote.Name)
             {
                 await RunAddAssistantAsync(commandContextContainer).ConfigureAwait(false);
             }
-            else if (userReaction.Result.Emoji.Id == editEmoji.Id && areRolesAvailable)
+            else if (emote.Name == editEmote.Name && areRolesAvailable)
             {
                 await RunEditAssistantAsync(commandContextContainer).ConfigureAwait(false);
             }
-            else if (userReaction.Result.Emoji.Id == deleteEmoji.Id)
+            else if (emote.Name == deleteEmote.Name)
             {
                 await RunDeleteAssistantAsync(commandContextContainer).ConfigureAwait(false);
             }
@@ -150,35 +150,34 @@ public class RaidRolesService : LocatedServiceBase
                                                              .SendMessageAsync(LocalizationGroup.GetText("ReactWithEmojiPrompt", "Please react with emoji which should be assigned to the role."))
                                                              .ConfigureAwait(false);
 
-        var interactivity = commandContextContainer.Client
-                                                   .GetInteractivity();
+        var reaction = await commandContextContainer.Interaction
+                                                    .WaitForReactionAsync(currentBotMessage, commandContextContainer.User)
+                                                    .ConfigureAwait(false);
 
-        var reaction = await interactivity.WaitForReactionAsync(currentBotMessage, commandContextContainer.User)
-                                          .ConfigureAwait(false);
-
-        if (reaction.TimedOut == false && reaction.Result.Emoji.Id > 0)
+        if (reaction?.Emote is GuildEmote guildEmote)
         {
             var roleData = new RaidRoleEntity
                            {
-                               DiscordEmojiId = reaction.Result.Emoji.Id
+                               DiscordEmojiId = guildEmote.Id
                            };
 
             currentBotMessage = await commandContextContainer.Channel
                                                              .SendMessageAsync(LocalizationGroup.GetText("DescriptionPrompt", "Please enter the description of the role."))
                                                              .ConfigureAwait(false);
 
-            var currentUserResponse = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContextContainer.User.Id
-                                                                                  && obj.ChannelId == commandContextContainer.Channel.Id)
-                                                         .ConfigureAwait(false);
+            var currentUserResponse = await commandContextContainer.Interaction
+                                                                   .WaitForMessage(obj => obj.Author.Id == commandContextContainer.User.Id
+                                                                                       && obj.Channel.Id == commandContextContainer.Channel.Id)
+                                                                   .ConfigureAwait(false);
 
-            if (currentUserResponse.TimedOut == false)
+            if (currentUserResponse != null)
             {
-                roleData.Description = currentUserResponse.Result.Content;
+                roleData.Description = currentUserResponse.Content;
 
                 var continueCreation = true;
                 var subRolesData = new List<RaidRoleEntity>();
-                var checkEmoji = DiscordEmojiService.GetCheckEmoji(commandContextContainer.Client);
-                var crossEmoji = DiscordEmojiService.GetCrossEmoji(commandContextContainer.Client);
+                var checkEmote = DiscordEmoteService.GetCheckEmote(commandContextContainer.Client);
+                var crossEmote = DiscordEmoteService.GetCrossEmote(commandContextContainer.Client);
 
                 var addSubRoles = true;
                 while (addSubRoles)
@@ -191,43 +190,44 @@ public class RaidRolesService : LocatedServiceBase
                                                                      .SendMessageAsync(promptText)
                                                                      .ConfigureAwait(false);
 
-                    var userReactionTask = commandContextContainer.Client
-                                                                  .GetInteractivity()
+                    var userReactionTask = commandContextContainer.Interaction
                                                                   .WaitForReactionAsync(currentBotMessage, commandContextContainer.User);
 
-                    await currentBotMessage.CreateReactionAsync(checkEmoji).ConfigureAwait(false);
-                    await currentBotMessage.CreateReactionAsync(crossEmoji).ConfigureAwait(false);
+                    await currentBotMessage.AddReactionAsync(checkEmote).ConfigureAwait(false);
+                    await currentBotMessage.AddReactionAsync(crossEmote).ConfigureAwait(false);
 
                     var userReaction = await userReactionTask.ConfigureAwait(false);
-                    if (userReaction.TimedOut == false)
+                    if (userReaction != null)
                     {
-                        if (userReaction.Result.Emoji.Id == checkEmoji.Id)
+                        if (userReaction.Emote.Name == checkEmote.Name)
                         {
                             currentBotMessage = await commandContextContainer.Channel
                                                                              .SendMessageAsync(LocalizationGroup.GetText("ReactWithEmojiPrompt", "Please react with emoji which should be assigned to the role."))
                                                                              .ConfigureAwait(false);
 
-                            reaction = await interactivity.WaitForReactionAsync(currentBotMessage, commandContextContainer.User)
-                                                          .ConfigureAwait(false);
+                            reaction = await commandContextContainer.Interaction
+                                                                    .WaitForReactionAsync(currentBotMessage, commandContextContainer.User)
+                                                                    .ConfigureAwait(false);
 
-                            if (reaction.TimedOut == false && reaction.Result.Emoji.Id > 0)
+                            if (reaction?.Emote is GuildEmote roleEmote)
                             {
                                 var subRoleData = new RaidRoleEntity
                                                   {
-                                                      DiscordEmojiId = reaction.Result.Emoji.Id
+                                                      DiscordEmojiId = roleEmote.Id
                                                   };
 
                                 currentBotMessage = await commandContextContainer.Channel
                                                                                  .SendMessageAsync(LocalizationGroup.GetText("DescriptionPrompt", "Please enter the description of the role."))
                                                                                  .ConfigureAwait(false);
 
-                                currentUserResponse = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContextContainer.User.Id
-                                                                                                  && obj.ChannelId == commandContextContainer.Channel.Id)
-                                                                         .ConfigureAwait(false);
+                                currentUserResponse = await commandContextContainer.Interaction
+                                                                                   .WaitForMessage(obj => obj.Author.Id == commandContextContainer.User.Id
+                                                                                                       && obj.Channel.Id == commandContextContainer.Channel.Id)
+                                                                                   .ConfigureAwait(false);
 
-                                if (currentUserResponse.TimedOut == false)
+                                if (currentUserResponse != null)
                                 {
-                                    subRoleData.Description = currentUserResponse.Result.Content;
+                                    subRoleData.Description = currentUserResponse.Content;
 
                                     subRolesData.Add(subRoleData);
                                 }
@@ -287,7 +287,7 @@ public class RaidRolesService : LocatedServiceBase
         var roleId = await SelectRoleAsync(commandContextContainer, null).ConfigureAwait(false);
         if (roleId != null)
         {
-            var builder = new DiscordEmbedBuilder();
+            var builder = new EmbedBuilder();
             builder.WithTitle(LocalizationGroup.GetText("RoleEditTitle", "Raid role configuration"));
 
             var areRolesAvailable = false;
@@ -314,7 +314,7 @@ public class RaidRolesService : LocatedServiceBase
                                      .OrderBy(obj => obj.Description)
                                      .First();
 
-                builder.WithDescription($"{DiscordEmoji.FromGuildEmote(commandContextContainer.Client, roles.DiscordEmojiId)} - {roles.Description}");
+                builder.WithDescription($"{DiscordEmoteService.GetGuildEmote(commandContextContainer.Client, roles.DiscordEmojiId)} - {roles.Description}");
 
                 if (roles.SubRoles.Any())
                 {
@@ -322,7 +322,7 @@ public class RaidRolesService : LocatedServiceBase
 
                     foreach (var role in roles.SubRoles)
                     {
-                        rolesFieldText.Append(DiscordEmoji.FromGuildEmote(commandContextContainer.Client, role.DiscordEmojiId));
+                        rolesFieldText.Append(DiscordEmoteService.GetGuildEmote(commandContextContainer.Client, role.DiscordEmojiId));
                         rolesFieldText.Append(" - ");
                         rolesFieldText.Append(role.Description);
                         rolesFieldText.Append('\n');
@@ -332,68 +332,67 @@ public class RaidRolesService : LocatedServiceBase
                 }
             }
 
-            var addSubRoleEmoji = DiscordEmojiService.GetAddEmoji(commandContextContainer.Client);
-            var descriptionEmoji = DiscordEmojiService.GetEditEmoji(commandContextContainer.Client);
-            var editSubRoleEmoji = DiscordEmojiService.GetEdit2Emoji(commandContextContainer.Client);
-            var emojiEmoji = DiscordEmojiService.GetEmojiEmoji(commandContextContainer.Client);
-            var deleteSubRoleEmoji = DiscordEmojiService.GetTrashCanEmoji(commandContextContainer.Client);
-            var cancelEmoji = DiscordEmojiService.GetCrossEmoji(commandContextContainer.Client);
+            var addSubRoleEmote = DiscordEmoteService.GetAddEmote(commandContextContainer.Client);
+            var descriptionEmote = DiscordEmoteService.GetEditEmote(commandContextContainer.Client);
+            var editSubRoleEmote = DiscordEmoteService.GetEdit2Emote(commandContextContainer.Client);
+            var emojiEmote = DiscordEmoteService.GetEmojiEmote(commandContextContainer.Client);
+            var deleteSubRoleEmote = DiscordEmoteService.GetTrashCanEmote(commandContextContainer.Client);
+            var cancelEmote = DiscordEmoteService.GetCrossEmote(commandContextContainer.Client);
 
             var commands = new StringBuilder();
-            commands.AppendLine(LocalizationGroup.GetFormattedText("RoleEditEditDescriptionCommand", "{0} Edit description", descriptionEmoji));
-            commands.AppendLine(LocalizationGroup.GetFormattedText("RoleEditEditEmojiCommand", "{0} Edit emoji", emojiEmoji));
-            commands.AppendLine(LocalizationGroup.GetFormattedText("RoleEditAddSubRoleCommand", "{0} Add sub role", addSubRoleEmoji));
+            commands.AppendLine(LocalizationGroup.GetFormattedText("RoleEditEditDescriptionCommand", "{0} Edit description", descriptionEmote));
+            commands.AppendLine(LocalizationGroup.GetFormattedText("RoleEditEditEmojiCommand", "{0} Edit emoji", emojiEmote));
+            commands.AppendLine(LocalizationGroup.GetFormattedText("RoleEditAddSubRoleCommand", "{0} Add sub role", addSubRoleEmote));
 
             if (areRolesAvailable)
             {
-                commands.AppendLine(LocalizationGroup.GetFormattedText("RoleEditEditSubRoleCommand", "{0} Edit sub role", editSubRoleEmoji));
-                commands.AppendLine(LocalizationGroup.GetFormattedText("RoleEditDeleteSubRoleCommand", "{0} Delete sub role", deleteSubRoleEmoji));
+                commands.AppendLine(LocalizationGroup.GetFormattedText("RoleEditEditSubRoleCommand", "{0} Edit sub role", editSubRoleEmote));
+                commands.AppendLine(LocalizationGroup.GetFormattedText("RoleEditDeleteSubRoleCommand", "{0} Delete sub role", deleteSubRoleEmote));
             }
 
-            commands.AppendLine(LocalizationGroup.GetFormattedText("AssistantCancelCommand", "{0} Cancel", cancelEmoji));
+            commands.AppendLine(LocalizationGroup.GetFormattedText("AssistantCancelCommand", "{0} Cancel", cancelEmote));
 
             builder.AddField(LocalizationGroup.GetText("AssistantCommandsField", "Commands"), commands.ToString());
 
             var message = await commandContextContainer.Channel
-                                                       .SendMessageAsync(builder)
+                                                       .SendMessageAsync(embed: builder.Build())
                                                        .ConfigureAwait(false);
 
-            var userReactionTask = commandContextContainer.Client
-                                                          .GetInteractivity()
+            var userReactionTask = commandContextContainer.Interaction
                                                           .WaitForReactionAsync(message, commandContextContainer.User);
 
-            await message.CreateReactionAsync(descriptionEmoji).ConfigureAwait(false);
-            await message.CreateReactionAsync(emojiEmoji).ConfigureAwait(false);
-            await message.CreateReactionAsync(addSubRoleEmoji).ConfigureAwait(false);
+            await message.AddReactionAsync(descriptionEmote).ConfigureAwait(false);
+            await message.AddReactionAsync(emojiEmote).ConfigureAwait(false);
+            await message.AddReactionAsync(addSubRoleEmote).ConfigureAwait(false);
 
             if (areRolesAvailable)
             {
-                await message.CreateReactionAsync(editSubRoleEmoji).ConfigureAwait(false);
-                await message.CreateReactionAsync(deleteSubRoleEmoji).ConfigureAwait(false);
+                await message.AddReactionAsync(editSubRoleEmote).ConfigureAwait(false);
+                await message.AddReactionAsync(deleteSubRoleEmote).ConfigureAwait(false);
             }
 
-            await message.CreateReactionAsync(cancelEmoji).ConfigureAwait(false);
+            await message.AddReactionAsync(cancelEmote).ConfigureAwait(false);
 
             var userReaction = await userReactionTask.ConfigureAwait(false);
-            if (userReaction.TimedOut == false)
+            if (userReaction != null)
             {
-                if (userReaction.Result.Emoji.Id == addSubRoleEmoji.Id)
+                if (userReaction.Emote.Name == addSubRoleEmote.Name)
                 {
                     await RunAddSubRoleAssistantAsync(commandContextContainer, roleId.Value).ConfigureAwait(false);
                 }
-                else if (userReaction.Result.Emoji.Id == descriptionEmoji.Id)
+                else if (userReaction.Emote.Name == descriptionEmote.Name)
                 {
                     await RunEditDescriptionAssistantAsync(commandContextContainer, roleId.Value).ConfigureAwait(false);
                 }
-                else if (userReaction.Result.Emoji.Id == editSubRoleEmoji.Id)
+                else if (userReaction.Emote.Name == editSubRoleEmote.Name)
                 {
                     await RunEditSubRoleAssistantAsync(commandContextContainer, roleId.Value).ConfigureAwait(false);
                 }
-                else if (userReaction.Result.Emoji.Id == emojiEmoji.Id)
+                else if (userReaction.Emote.Name == emojiEmote.Name)
                 {
                     await RunEditEmojiAssistantAsync(commandContextContainer, roleId.Value).ConfigureAwait(false);
                 }
-                else if (userReaction.Result.Emoji.Id == deleteSubRoleEmoji.Id)
+                else if (userReaction.Emote.Name == deleteSubRoleEmote.Name)
                 {
                     await RunDeleteSubRoleAssistantAsync(commandContextContainer, roleId.Value).ConfigureAwait(false);
                 }
@@ -413,19 +412,18 @@ public class RaidRolesService : LocatedServiceBase
                                      .SendMessageAsync(LocalizationGroup.GetText("DescriptionPrompt", "Please enter the description of the role."))
                                      .ConfigureAwait(false);
 
-        var response = await commandContextContainer.Client
-                                                    .GetInteractivity()
-                                                    .WaitForMessageAsync(obj => obj.ChannelId == commandContextContainer.Channel.Id
-                                                                             && obj.Author.Id == commandContextContainer.Member.Id)
+        var response = await commandContextContainer.Interaction
+                                                    .WaitForMessage(obj => obj.Channel.Id == commandContextContainer.Channel.Id
+                                                                        && obj.Author.Id == commandContextContainer.Member.Id)
                                                     .ConfigureAwait(false);
 
-        if (response.TimedOut == false)
+        if (response != null)
         {
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
                 dbFactory.GetRepository<RaidRoleRepository>()
                          .Refresh(obj => obj.Id == roleId,
-                                  obj => obj.Description = response.Result.Content);
+                                  obj => obj.Description = response.Content);
             }
         }
     }
@@ -442,18 +440,17 @@ public class RaidRolesService : LocatedServiceBase
                                                    .SendMessageAsync(LocalizationGroup.GetText("ReactWithEmojiPrompt", "Please react with emoji which should be assigned to the role."))
                                                    .ConfigureAwait(false);
 
-        var response = await commandContextContainer.Client
-                                                    .GetInteractivity()
+        var response = await commandContextContainer.Interaction
                                                     .WaitForReactionAsync(message, commandContextContainer.Member)
                                                     .ConfigureAwait(false);
 
-        if (response.TimedOut == false)
+        if (response?.Emote is GuildEmote guildEmote)
         {
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
                 dbFactory.GetRepository<RaidRoleRepository>()
                          .Refresh(obj => obj.Id == roleId,
-                                  obj => obj.DiscordEmojiId = response.Result.Emoji.Id);
+                                  obj => obj.DiscordEmojiId = guildEmote.Id);
             }
         }
     }
@@ -466,34 +463,34 @@ public class RaidRolesService : LocatedServiceBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     private async Task RunAddSubRoleAssistantAsync(CommandContextContainer commandContextContainer, long mainRoleId)
     {
-        var interactivity = commandContextContainer.Client.GetInteractivity();
-
         var currentBotMessage = await commandContextContainer.Channel
                                                              .SendMessageAsync(LocalizationGroup.GetText("ReactWithEmojiPrompt", "Please react with emoji which should be assigned to the role."))
                                                              .ConfigureAwait(false);
 
-        var reaction = await interactivity.WaitForReactionAsync(currentBotMessage, commandContextContainer.User)
-                                          .ConfigureAwait(false);
+        var reaction = await commandContextContainer.Interaction
+                                                    .WaitForReactionAsync(currentBotMessage, commandContextContainer.User)
+                                                    .ConfigureAwait(false);
 
-        if (reaction.TimedOut == false && reaction.Result.Emoji.Id > 0)
+        if (reaction?.Emote is GuildEmote guildEmote)
         {
             var subRoleData = new RaidRoleEntity
                               {
                                   MainRoleId = mainRoleId,
-                                  DiscordEmojiId = reaction.Result.Emoji.Id
+                                  DiscordEmojiId = guildEmote.Id
                               };
 
             currentBotMessage = await commandContextContainer.Channel
                                                              .SendMessageAsync(LocalizationGroup.GetText("DescriptionPrompt", "Please enter the description of the role."))
                                                              .ConfigureAwait(false);
 
-            var currentUserResponse = await interactivity.WaitForMessageAsync(obj => obj.Author.Id == commandContextContainer.User.Id
-                                                                                  && obj.ChannelId == commandContextContainer.Channel.Id)
+            var currentUserResponse = await commandContextContainer.Interaction
+                                                                   .WaitForMessage(obj => obj.Author.Id == commandContextContainer.User.Id
+                                                                                       && obj.Channel.Id == commandContextContainer.Channel.Id)
                                                          .ConfigureAwait(false);
 
-            if (currentUserResponse.TimedOut == false)
+            if (currentUserResponse != null)
             {
-                subRoleData.Description = currentUserResponse.Result.Content;
+                subRoleData.Description = currentUserResponse.Content;
 
                 using (var dbFactory = RepositoryFactory.CreateInstance())
                 {
@@ -515,40 +512,39 @@ public class RaidRolesService : LocatedServiceBase
         var roleId = await SelectRoleAsync(commandContextContainer, mainRoleId).ConfigureAwait(false);
         if (roleId != null)
         {
-            var builder = new DiscordEmbedBuilder();
+            var builder = new EmbedBuilder();
             builder.WithTitle(LocalizationGroup.GetText("RoleEditTitle", "Raid role configuration"));
 
-            var descriptionEmoji = DiscordEmojiService.GetEditEmoji(commandContextContainer.Client);
-            var emojiEmoji = DiscordEmojiService.GetEmojiEmoji(commandContextContainer.Client);
-            var cancelEmoji = DiscordEmojiService.GetCrossEmoji(commandContextContainer.Client);
+            var descriptionEmote = DiscordEmoteService.GetEditEmote(commandContextContainer.Client);
+            var emojiEmote = DiscordEmoteService.GetEmojiEmote(commandContextContainer.Client);
+            var cancelEmote = DiscordEmoteService.GetCrossEmote(commandContextContainer.Client);
 
             var commands = new StringBuilder();
-            commands.AppendLine(LocalizationGroup.GetFormattedText("RoleEditEditDescriptionCommand", "{0} Edit description", descriptionEmoji));
-            commands.AppendLine(LocalizationGroup.GetFormattedText("RoleEditEditEmojiCommand", "{0} Edit emoji", emojiEmoji));
-            commands.AppendLine(LocalizationGroup.GetFormattedText("AssistantCancelCommand", "{0} Cancel", cancelEmoji));
+            commands.AppendLine(LocalizationGroup.GetFormattedText("RoleEditEditDescriptionCommand", "{0} Edit description", descriptionEmote));
+            commands.AppendLine(LocalizationGroup.GetFormattedText("RoleEditEditEmojiCommand", "{0} Edit emoji", emojiEmote));
+            commands.AppendLine(LocalizationGroup.GetFormattedText("AssistantCancelCommand", "{0} Cancel", cancelEmote));
 
             builder.AddField(LocalizationGroup.GetText("AssistantCommandsField", "Commands"), commands.ToString());
 
             var message = await commandContextContainer.Channel
-                                                       .SendMessageAsync(builder)
+                                                       .SendMessageAsync(embed: builder.Build())
                                                        .ConfigureAwait(false);
 
-            var userReactionTask = commandContextContainer.Client
-                                                          .GetInteractivity()
+            var userReactionTask = commandContextContainer.Interaction
                                                           .WaitForReactionAsync(message, commandContextContainer.User);
 
-            await message.CreateReactionAsync(descriptionEmoji).ConfigureAwait(false);
-            await message.CreateReactionAsync(emojiEmoji).ConfigureAwait(false);
-            await message.CreateReactionAsync(cancelEmoji).ConfigureAwait(false);
+            await message.AddReactionAsync(descriptionEmote).ConfigureAwait(false);
+            await message.AddReactionAsync(emojiEmote).ConfigureAwait(false);
+            await message.AddReactionAsync(cancelEmote).ConfigureAwait(false);
 
             var userReaction = await userReactionTask.ConfigureAwait(false);
-            if (userReaction.TimedOut == false)
+            if (userReaction != null)
             {
-                if (userReaction.Result.Emoji.Id == descriptionEmoji.Id)
+                if (userReaction.Emote.Name == descriptionEmote.Name)
                 {
                     await RunEditDescriptionAssistantAsync(commandContextContainer, roleId.Value).ConfigureAwait(false);
                 }
-                else if (userReaction.Result.Emoji.Id == emojiEmoji.Id)
+                else if (userReaction.Emote.Name == emojiEmote.Name)
                 {
                     await RunEditEmojiAssistantAsync(commandContextContainer, roleId.Value).ConfigureAwait(false);
                 }
@@ -567,22 +563,21 @@ public class RaidRolesService : LocatedServiceBase
         var roleId = await SelectRoleAsync(commandContextContainer, mainRoleId).ConfigureAwait(false);
         if (roleId != null)
         {
-            var checkEmoji = DiscordEmojiService.GetCheckEmoji(commandContextContainer.Client);
-            var crossEmoji = DiscordEmojiService.GetCrossEmoji(commandContextContainer.Client);
+            var checkEmote = DiscordEmoteService.GetCheckEmote(commandContextContainer.Client);
+            var crossEmote = DiscordEmoteService.GetCrossEmote(commandContextContainer.Client);
 
             var message = await commandContextContainer.Channel
                                                        .SendMessageAsync(LocalizationGroup.GetText("DeleteRolePrompt", "Are you sure you want to delete the role?"))
                                                        .ConfigureAwait(false);
 
-            var userReactionTask = commandContextContainer.Client
-                                                          .GetInteractivity()
+            var userReactionTask = commandContextContainer.Interaction
                                                           .WaitForReactionAsync(message, commandContextContainer.User);
 
-            await message.CreateReactionAsync(checkEmoji).ConfigureAwait(false);
-            await message.CreateReactionAsync(crossEmoji).ConfigureAwait(false);
+            await message.AddReactionAsync(checkEmote).ConfigureAwait(false);
+            await message.AddReactionAsync(crossEmote).ConfigureAwait(false);
 
             var userReaction = await userReactionTask.ConfigureAwait(false);
-            if (userReaction.TimedOut == false)
+            if (userReaction != null)
             {
                 using (var dbFactory = RepositoryFactory.CreateInstance())
                 {
@@ -604,22 +599,21 @@ public class RaidRolesService : LocatedServiceBase
         var roleId = await SelectRoleAsync(commandContextContainer, null).ConfigureAwait(false);
         if (roleId != null)
         {
-            var checkEmoji = DiscordEmojiService.GetCheckEmoji(commandContextContainer.Client);
-            var crossEmoji = DiscordEmojiService.GetCrossEmoji(commandContextContainer.Client);
+            var checkEmote = DiscordEmoteService.GetCheckEmote(commandContextContainer.Client);
+            var crossEmote = DiscordEmoteService.GetCrossEmote(commandContextContainer.Client);
 
             var message = await commandContextContainer.Channel
                                                        .SendMessageAsync(LocalizationGroup.GetText("DeleteRolePrompt", "Are you sure you want to delete the role?"))
                                                        .ConfigureAwait(false);
 
-            var userReactionTask = commandContextContainer.Client
-                                                          .GetInteractivity()
+            var userReactionTask = commandContextContainer.Interaction
                                                           .WaitForReactionAsync(message, commandContextContainer.User);
 
-            await message.CreateReactionAsync(checkEmoji).ConfigureAwait(false);
-            await message.CreateReactionAsync(crossEmoji).ConfigureAwait(false);
+            await message.AddReactionAsync(checkEmote).ConfigureAwait(false);
+            await message.AddReactionAsync(crossEmote).ConfigureAwait(false);
 
             var userReaction = await userReactionTask.ConfigureAwait(false);
-            if (userReaction.TimedOut == false)
+            if (userReaction != null)
             {
                 using (var dbFactory = RepositoryFactory.CreateInstance())
                 {
@@ -641,7 +635,7 @@ public class RaidRolesService : LocatedServiceBase
     {
         long? roleId = null;
 
-        var builder = new DiscordEmbedBuilder();
+        var builder = new EmbedBuilder();
         builder.WithTitle(LocalizationGroup.GetText("ChooseRoleTitle", "Raid role selection"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseRoleDescription", "Please choose one of the following roles:"));
 
@@ -669,7 +663,7 @@ public class RaidRolesService : LocatedServiceBase
                 rolesFieldText.Append('`');
                 rolesFieldText.Append(i);
                 rolesFieldText.Append("` - ");
-                rolesFieldText.Append(DiscordEmoji.FromGuildEmote(commandContextContainer.Client, role.DiscordEmojiId));
+                rolesFieldText.Append(DiscordEmoteService.GetGuildEmote(commandContextContainer.Client, role.DiscordEmojiId));
                 rolesFieldText.Append(' ');
                 rolesFieldText.Append(role.Description);
                 rolesFieldText.Append('\n');
@@ -683,17 +677,16 @@ public class RaidRolesService : LocatedServiceBase
         }
 
         await commandContextContainer.Channel
-                                     .SendMessageAsync(builder)
+                                     .SendMessageAsync(embed: builder.Build())
                                      .ConfigureAwait(false);
 
-        var currentUserResponse = await commandContextContainer.Client
-                                                               .GetInteractivity()
-                                                               .WaitForMessageAsync(obj => obj.Author.Id == commandContextContainer.User.Id
-                                                                                        && obj.ChannelId == commandContextContainer.Channel.Id)
+        var currentUserResponse = await commandContextContainer.Interaction
+                                                               .WaitForMessage(obj => obj.Author.Id == commandContextContainer.User.Id
+                                                                                   && obj.Channel.Id == commandContextContainer.Channel.Id)
                                                                .ConfigureAwait(false);
 
-        if (currentUserResponse.TimedOut == false
-         && int.TryParse(currentUserResponse.Result.Content, out var index)
+        if (currentUserResponse != null
+         && int.TryParse(currentUserResponse.Content, out var index)
          && roles.TryGetValue(index, out var selectedRoleId))
         {
             roleId = selectedRoleId;

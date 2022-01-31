@@ -1,5 +1,4 @@
-﻿
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 using Scruffy.Data.Enumerations.CoreData;
 

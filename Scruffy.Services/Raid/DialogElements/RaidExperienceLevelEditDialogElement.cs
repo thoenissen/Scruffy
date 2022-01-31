@@ -1,10 +1,11 @@
-﻿
+﻿using Discord;
+
 using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Raid.DialogElements;
 
@@ -42,7 +43,7 @@ public class RaidExperienceLevelEditDialogElement : DialogEmbedReactionElementBa
     /// </summary>
     /// <param name="builder">Builder</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public override async Task EditMessage(DiscordEmbedBuilder builder)
+    public override async Task EditMessage(EmbedBuilder builder)
     {
         builder.WithTitle(LocalizationGroup.GetText("ChooseCommandTitle", "Raid experience level configuration"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseCommandDescription", "With this assistant you are able to configure the raid experience level."));
@@ -66,11 +67,11 @@ public class RaidExperienceLevelEditDialogElement : DialogEmbedReactionElementBa
 
             builder.AddField(LocalizationGroup.GetText("Description", "Description"), data.Description);
             builder.AddField(LocalizationGroup.GetText("AliasName", "Alias name"), data.AliasName);
-            builder.AddField(LocalizationGroup.GetText("Emoji", "Emoji"), DiscordEmoji.FromGuildEmote(CommandContext.Client, data.DiscordEmoji));
+            builder.AddField(LocalizationGroup.GetText("Emoji", "Emoji"), DiscordEmoteService.GetGuildEmote(CommandContext.Client, data.DiscordEmoji));
 
             if (data.DiscordRoleId != null)
             {
-                builder.AddField(LocalizationGroup.GetText("Role", "Role"), CommandContext.Guild.Roles[data.DiscordRoleId.Value].Mention);
+                builder.AddField(LocalizationGroup.GetText("Role", "Role"), CommandContext.Guild.Roles.FirstOrDefault(obj => obj.Id == data.DiscordRoleId)?.Mention);
             }
         }
     }
@@ -94,8 +95,8 @@ public class RaidExperienceLevelEditDialogElement : DialogEmbedReactionElementBa
                               {
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetEditEmoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("EditSuperiorRoleCommand", "{0} Edit superior role", DiscordEmojiService.GetEditEmoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetEditEmote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("EditSuperiorRoleCommand", "{0} Edit superior role", DiscordEmoteService.GetEditEmote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  var newSuperiorLevelId = await RunSubElement<RaidExperienceLevelSuperiorLevelDialogElement, long?>()
@@ -129,8 +130,8 @@ public class RaidExperienceLevelEditDialogElement : DialogEmbedReactionElementBa
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetEdit2Emoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("EditDescriptionCommand", "{0} Edit description", DiscordEmojiService.GetEdit2Emoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetEdit2Emote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("EditDescriptionCommand", "{0} Edit description", DiscordEmoteService.GetEdit2Emote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  var description = await RunSubElement<RaidExperienceLevelDescriptionDialogElement, string>()
@@ -149,8 +150,8 @@ public class RaidExperienceLevelEditDialogElement : DialogEmbedReactionElementBa
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetEdit3Emoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("EditAliasNameCommand", "{0} Edit alias name", DiscordEmojiService.GetEdit3Emoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetEdit3Emote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("EditAliasNameCommand", "{0} Edit alias name", DiscordEmoteService.GetEdit3Emote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  var aliasName = await RunSubElement<RaidExperienceLevelAliasNameDialogElement, string>()
@@ -169,8 +170,8 @@ public class RaidExperienceLevelEditDialogElement : DialogEmbedReactionElementBa
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetEdit4Emoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("EditRoleCommand", "{0} Edit role", DiscordEmojiService.GetEdit4Emoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetEdit4Emote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("EditRoleCommand", "{0} Edit role", DiscordEmoteService.GetEdit4Emote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  var role = await RunSubElement<RaidExperienceLevelRoleDialogElement, ulong?>()
@@ -189,8 +190,8 @@ public class RaidExperienceLevelEditDialogElement : DialogEmbedReactionElementBa
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetEmojiEmoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("EditEmojiCommand", "{0} Edit emoji", DiscordEmojiService.GetEmojiEmoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetEmojiEmote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("EditEmojiCommand", "{0} Edit emoji", DiscordEmoteService.GetEmojiEmote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  var emoji = await RunSubElement<RaidExperienceLevelEmojiDialogElement, ulong>()
@@ -209,8 +210,8 @@ public class RaidExperienceLevelEditDialogElement : DialogEmbedReactionElementBa
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetCrossEmoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmojiService.GetCrossEmoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmoteService.GetCrossEmote(CommandContext.Client)),
                                       Func = () => Task.FromResult(false)
                                   }
                               };

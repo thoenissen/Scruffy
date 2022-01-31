@@ -59,7 +59,7 @@ public class CalendarReminderPostJob : LocatedAsyncJob
                 var data = dbFactory.GetRepository<CalendarAppointmentRepository>()
                                     .GetQuery()
                                     .Where(obj => obj.Id == _id
-                                               && obj.IUserMessageId == null)
+                                               && obj.DiscordMessageId == null)
                                     .Select(obj => new
                                                    {
                                                        ChannelId = channels.Where(obj2 => obj2.Guild.DiscordServerId == obj.CalendarAppointmentTemplate.DiscordServerId
@@ -87,7 +87,7 @@ public class CalendarReminderPostJob : LocatedAsyncJob
                                           obj =>
                                           {
                                               obj.DiscordChannelId = data.ChannelId;
-                                              obj.IUserMessageId = message.Id;
+                                              obj.DiscordMessageId = message.Id;
                                           });
                     }
                 }

@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-using Discord;
+﻿using Discord;
 
 using Microsoft.EntityFrameworkCore;
 

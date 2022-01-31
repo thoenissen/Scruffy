@@ -1,5 +1,4 @@
-﻿
-using Discord;
+﻿using Discord;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Account;

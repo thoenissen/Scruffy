@@ -1,13 +1,15 @@
 ﻿using System.Net.Http;
 
+using Discord;
+
 using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Data.Services.Raid;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
+using Scruffy.Services.Discord;
 using Scruffy.Services.Raid.DialogElements;
 
 namespace Scruffy.Services.Raid;
@@ -127,7 +129,7 @@ public class RaidRegistrationService : LocatedServiceBase
             else
             {
                 await commandContext.Message
-                                    .RespondAsync(LocalizationGroup.GetText("RequiredExperienceLevelMissing", "You don't have the required experience level."))
+                                    .ReplyAsync(LocalizationGroup.GetText("RequiredExperienceLevelMissing", "You don't have the required experience level."))
                                     .ConfigureAwait(false);
             }
         }

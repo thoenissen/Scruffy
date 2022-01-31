@@ -1,10 +1,11 @@
-﻿
+﻿using Discord;
+
 using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Raid.DialogElements;
 
@@ -42,7 +43,7 @@ public class RaidTemplateEditDialogElement : DialogEmbedReactionElementBase<bool
     /// </summary>
     /// <param name="builder">Builder</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public override async Task EditMessage(DiscordEmbedBuilder builder)
+    public override async Task EditMessage(EmbedBuilder builder)
     {
         builder.WithTitle(LocalizationGroup.GetText("ChooseCommandTitle", "Raid template configuration"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseCommandDescription", "With this assistant you are able to configure the raid template."));
@@ -67,7 +68,7 @@ public class RaidTemplateEditDialogElement : DialogEmbedReactionElementBase<bool
             builder.AddField(LocalizationGroup.GetText("AliasName", "Alias name"), data.AliasName);
             builder.AddField(LocalizationGroup.GetText("Title", "Title"), data.Title);
             builder.AddField(LocalizationGroup.GetText("Description", "Description"), data.Description);
-            builder.WithThumbnail(data.Thumbnail);
+            builder.WithThumbnailUrl(data.Thumbnail);
         }
     }
 
@@ -90,8 +91,8 @@ public class RaidTemplateEditDialogElement : DialogEmbedReactionElementBase<bool
                               {
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetEditEmoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("EditAliasCommand", "{0} Edit alias name", DiscordEmojiService.GetEditEmoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetEditEmote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("EditAliasCommand", "{0} Edit alias name", DiscordEmoteService.GetEditEmote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  var aliasName = await RunSubElement<RaidTemplateAliasNameDialogElement, string>()
@@ -110,8 +111,8 @@ public class RaidTemplateEditDialogElement : DialogEmbedReactionElementBase<bool
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetEdit2Emoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("EditTitleCommand", "{0} Edit title", DiscordEmojiService.GetEdit2Emoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetEdit2Emote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("EditTitleCommand", "{0} Edit title", DiscordEmoteService.GetEdit2Emote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  var title = await RunSubElement<RaidTemplateTitleDialogElement, string>()
@@ -130,8 +131,8 @@ public class RaidTemplateEditDialogElement : DialogEmbedReactionElementBase<bool
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetEdit3Emoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("EditDescriptionCommand", "{0} Edit description", DiscordEmojiService.GetEdit3Emoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetEdit3Emote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("EditDescriptionCommand", "{0} Edit description", DiscordEmoteService.GetEdit3Emote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  var description = await RunSubElement<RaidTemplateDescriptionDialogElement, string>()
@@ -150,8 +151,8 @@ public class RaidTemplateEditDialogElement : DialogEmbedReactionElementBase<bool
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetImageEmoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("EditThumbnailCommand", "{0} Edit thumbnail", DiscordEmojiService.GetImageEmoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetImageEmote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("EditThumbnailCommand", "{0} Edit thumbnail", DiscordEmoteService.GetImageEmote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  var thumbnail = await RunSubElement<RaidTemplateThumbnailDialogElement, string>()
@@ -170,8 +171,8 @@ public class RaidTemplateEditDialogElement : DialogEmbedReactionElementBase<bool
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetCrossEmoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmojiService.GetCrossEmoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmoteService.GetCrossEmote(CommandContext.Client)),
                                       Func = () => Task.FromResult(false)
                                   }
                               };

@@ -1,11 +1,13 @@
-﻿
+﻿using Discord;
+
 using Newtonsoft.Json;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Data.Json.QuickChart;
-using Scruffy.Services.Core.Discord;
+using Scruffy.Services.Core.Extensions;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.Raid;
@@ -65,20 +67,19 @@ public class RaidOverviewService : LocatedServiceBase
 
             if (users.Count > 0)
             {
-                var embedBuilder = new DiscordEmbedBuilder();
-                var messageBuilder = new DiscordMessageBuilder();
+                var embedBuilder = new EmbedBuilder();
                 embedBuilder.WithTitle(LocalizationGroup.GetText("ParticipationOverview", "Participation points overview"));
-                embedBuilder.WithColor(DiscordColor.DarkBlue);
+                embedBuilder.WithColor(Color.DarkBlue);
                 embedBuilder.WithImageUrl("attachment://chart.png");
 
                 var userNames = new List<string>();
                 foreach (var user in users)
                 {
                     var member = await commandContext.Guild
-                                                     .GetMemberAsync(user.UserId)
+                                                     .GetUserAsync(user.UserId)
                                                      .ConfigureAwait(false);
 
-                    userNames.Add($"{(string.IsNullOrWhiteSpace(member.Nickname) ? string.IsNullOrWhiteSpace(member.DisplayName) ? member.Username : member.DisplayName : member.Nickname)} [{user.Points:0.00}]");
+                    userNames.Add($"{member.TryGetDisplayName()} [{user.Points:0.00}]");
                 }
 
                 var chartConfiguration = new ChartConfigurationData
@@ -150,10 +151,8 @@ public class RaidOverviewService : LocatedServiceBase
 
                 await using (chartStream.ConfigureAwait(false))
                 {
-                    messageBuilder.WithFile("chart.png", chartStream);
-                    messageBuilder.WithEmbed(embedBuilder);
-
-                    await commandContext.Channel.SendMessageAsync(messageBuilder)
+                    await commandContext.Channel
+                                        .SendFileAsync(new FileAttachment(chartStream, "chart.pnw"), embed: embedBuilder.Build())
                                         .ConfigureAwait(false);
                 }
             }

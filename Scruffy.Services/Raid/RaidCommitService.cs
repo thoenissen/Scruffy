@@ -1,11 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Discord;
+
+using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Data.Services.Raid;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
+using Scruffy.Services.Discord;
 using Scruffy.Services.Raid.DialogElements;
 
 namespace Scruffy.Services.Raid;
@@ -147,7 +149,7 @@ public class RaidCommitService : LocatedServiceBase
             else
             {
                 await commandContext.Message
-                                    .RespondAsync(LocalizationGroup.GetText("NoOpenAppointment", "There is no uncommitted appointment available."))
+                                    .ReplyAsync(LocalizationGroup.GetText("NoOpenAppointment", "There is no uncommitted appointment available."))
                                     .ConfigureAwait(false);
             }
         }
