@@ -1,11 +1,13 @@
-﻿
+﻿using Discord;
+
 using Newtonsoft.Json;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Guild;
 using Scruffy.Data.Json.QuickChart;
-using Scruffy.Services.Core.Discord;
+using Scruffy.Services.Core.Extensions;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.Guild;
@@ -74,12 +76,11 @@ public class GuildSpecialRankService : LocatedServiceBase
             {
                 if (configuration.Users.Count > 0)
                 {
-                    var embedBuilder = new DiscordEmbedBuilder();
-                    var messageBuilder = new DiscordMessageBuilder();
+                    var embedBuilder = new EmbedBuilder();
 
                     embedBuilder.WithTitle(LocalizationGroup.GetText("Overview", "Points overview"));
                     embedBuilder.WithDescription($"{configuration.Description} ({commandContext.Guild.GetRole(configuration.DiscordRoleId).Mention})");
-                    embedBuilder.WithColor(DiscordColor.DarkBlue);
+                    embedBuilder.WithColor(Color.DarkBlue);
                     embedBuilder.WithImageUrl("attachment://chart.png");
 
                     var users = new List<string>();
@@ -89,10 +90,10 @@ public class GuildSpecialRankService : LocatedServiceBase
                                                       .ThenBy(obj => obj.UserId))
                     {
                         var member = await commandContext.Guild
-                                                         .GetMemberAsync(user.UserId)
+                                                         .GetUserAsync(user.UserId)
                                                          .ConfigureAwait(false);
 
-                        users.Add($"{(string.IsNullOrWhiteSpace(member.Nickname) ? string.IsNullOrWhiteSpace(member.DisplayName) ? member.Username : member.DisplayName : member.Nickname)} ({user.Points:0.##})");
+                        users.Add($"{member.TryGetDisplayName()} ({user.Points:0.##})");
                     }
 
                     var chartConfiguration = new ChartConfigurationData
@@ -190,11 +191,8 @@ public class GuildSpecialRankService : LocatedServiceBase
 
                     await using (chartStream.ConfigureAwait(false))
                     {
-                        messageBuilder.WithFile("chart.png", chartStream);
-                        messageBuilder.WithEmbed(embedBuilder);
-
                         await commandContext.Channel
-                                            .SendMessageAsync(messageBuilder)
+                                            .SendFileAsync(new FileAttachment(chartStream, "chart.png"))
                                             .ConfigureAwait(false);
                     }
                 }

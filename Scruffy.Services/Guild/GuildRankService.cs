@@ -1,4 +1,5 @@
-﻿
+﻿using Discord.WebSocket;
+
 using Microsoft.Data.SqlClient;
 
 using Scruffy.Data.Entity;
@@ -21,7 +22,7 @@ public class GuildRankService : LocatedServiceBase
     /// <summary>
     /// Discord-Client
     /// </summary>
-    private readonly DiscordClient _discordClient;
+    private readonly DiscordSocketClient _discordClient;
 
     #endregion // Fields
 
@@ -32,7 +33,7 @@ public class GuildRankService : LocatedServiceBase
     /// </summary>
     /// <param name="localizationService">Localization service</param>
     /// <param name="discordClient">Discord-Client</param>
-    public GuildRankService(LocalizationService localizationService, DiscordClient discordClient)
+    public GuildRankService(LocalizationService localizationService, DiscordSocketClient discordClient)
         : base(localizationService)
     {
         _discordClient = discordClient;
@@ -136,8 +137,7 @@ public class GuildRankService : LocatedServiceBase
 
                 if (guild != null)
                 {
-                    var discordServer = await _discordClient.GetGuildAsync(guild.DiscordServerId)
-                                                            .ConfigureAwait(false);
+                    var discordServer = _discordClient.GetGuild(guild.DiscordServerId);
 
                     var users = guildWarsAccountQuery.Where(obj => obj.Name == accountName)
                                                      .Join(guildWarsAccountQuery,
@@ -186,22 +186,21 @@ public class GuildRankService : LocatedServiceBase
 
                     foreach (var user in users)
                     {
-                        var member = await discordServer.GetMemberAsync(user.DiscordUserId)
-                                                        .ConfigureAwait(false);
+                        var member = discordServer.GetUser(user.DiscordUserId);
 
                         foreach (var role in member.Roles.ToList())
                         {
                             if (user.DiscordRoleId != role.Id
                              && guild.Roles.Contains(role.Id))
                             {
-                                await member.RevokeRoleAsync(role)
+                                await member.RemoveRoleAsync(role)
                                             .ConfigureAwait(false);
                             }
                         }
 
                         if (member.Roles.Any(obj => obj.Id == user.DiscordRoleId) == false)
                         {
-                            await member.GrantRoleAsync(discordServer.GetRole(user.DiscordRoleId))
+                            await member.AddRoleAsync(discordServer.GetRole(user.DiscordRoleId))
                                         .ConfigureAwait(false);
                         }
                     }
@@ -287,34 +286,36 @@ public class GuildRankService : LocatedServiceBase
                                             .ToDictionary(obj => obj.DiscordUserId,
                                                           obj => obj.DiscordRoleId);
 
-                var discordServer = await _discordClient.GetGuildAsync(guild.DiscordServerId)
-                                                        .ConfigureAwait(false);
+                var discordServer = _discordClient.GetGuild(guild.DiscordServerId);
 
-                foreach (var member in await discordServer.GetAllMembersAsync()
+                await foreach (var members in discordServer.GetUsersAsync()
                                                           .ConfigureAwait(false))
                 {
-                    var assignedRoleId = default(ulong?);
-
-                    if (users.TryGetValue(member.Id, out var discordRoleId))
+                    foreach (var member in members)
                     {
-                        assignedRoleId = discordRoleId;
-                    }
+                        var assignedRoleId = default(ulong?);
 
-                    foreach (var role in member.Roles.ToList())
-                    {
-                        if (assignedRoleId != role.Id
-                         && guild.Roles.Contains(role.Id))
+                        if (users.TryGetValue(member.Id, out var discordRoleId))
                         {
-                            await member.RevokeRoleAsync(role)
+                            assignedRoleId = discordRoleId;
+                        }
+
+                        foreach (var roleId in member.RoleIds)
+                        {
+                            if (assignedRoleId != roleId
+                             && guild.Roles.Contains(roleId))
+                            {
+                                await member.RemoveRoleAsync(roleId)
+                                            .ConfigureAwait(false);
+                            }
+                        }
+
+                        if (assignedRoleId != null
+                         && member.RoleIds.Any(obj => obj == assignedRoleId) == false)
+                        {
+                            await member.AddRoleAsync(discordServer.GetRole(assignedRoleId.Value))
                                         .ConfigureAwait(false);
                         }
-                    }
-
-                    if (assignedRoleId != null
-                     && member.Roles.Any(obj => obj.Id == assignedRoleId) == false)
-                    {
-                        await member.GrantRoleAsync(discordServer.GetRole(assignedRoleId.Value))
-                                    .ConfigureAwait(false);
                     }
                 }
             }

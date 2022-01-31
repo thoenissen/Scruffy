@@ -1,10 +1,13 @@
-﻿
+﻿using System.Runtime.Serialization;
+
+using Discord;
+
 using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Guild;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 using Scruffy.Services.Guild.DialogElements.Forms;
 
 namespace Scruffy.Services.Guild.DialogElements;
@@ -43,7 +46,7 @@ public class GuildSpecialRankEditDialogElement : DialogEmbedReactionElementBase<
     /// </summary>
     /// <param name="builder">Builder</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public override async Task EditMessage(DiscordEmbedBuilder builder)
+    public override async Task EditMessage(EmbedBuilder builder)
     {
         builder.WithTitle(LocalizationGroup.GetText("ChooseCommandTitle", "Special rank configuration"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseCommandDescription", "With this assistant you are able to configure the special rank."));
@@ -75,11 +78,11 @@ public class GuildSpecialRankEditDialogElement : DialogEmbedReactionElementBase<
                                        .ConfigureAwait(false);
 
             var fieldBuilder = new StringBuilder();
-            fieldBuilder.AppendLine($"{Formatter.Bold(LocalizationGroup.GetText("Description", "Description"))}: {data.Description}");
-            fieldBuilder.AppendLine($"{Formatter.Bold(LocalizationGroup.GetText("DiscordRole", "Discord role"))}: {CommandContext.Guild.GetRole(data.DiscordRoleId).Mention}");
-            fieldBuilder.AppendLine($"{Formatter.Bold(LocalizationGroup.GetText("MaximumPoints", "Maximum points"))}: {data.MaximumPoints.ToString(LocalizationGroup.CultureInfo)}");
-            fieldBuilder.AppendLine($"{Formatter.Bold(LocalizationGroup.GetText("GrantThreshold", "Grant threshold"))}: {data.GrantThreshold.ToString(LocalizationGroup.CultureInfo)}");
-            fieldBuilder.AppendLine($"{Formatter.Bold(LocalizationGroup.GetText("RemoveThreshold", "Remove threshold"))}: {data.RemoveThreshold.ToString(LocalizationGroup.CultureInfo)}");
+            fieldBuilder.AppendLine($"{Format.Bold(LocalizationGroup.GetText("Description", "Description"))}: {data.Description}");
+            fieldBuilder.AppendLine($"{Format.Bold(LocalizationGroup.GetText("DiscordRole", "Discord role"))}: {CommandContext.Guild.GetRole(data.DiscordRoleId).Mention}");
+            fieldBuilder.AppendLine($"{Format.Bold(LocalizationGroup.GetText("MaximumPoints", "Maximum points"))}: {data.MaximumPoints.ToString(LocalizationGroup.CultureInfo)}");
+            fieldBuilder.AppendLine($"{Format.Bold(LocalizationGroup.GetText("GrantThreshold", "Grant threshold"))}: {data.GrantThreshold.ToString(LocalizationGroup.CultureInfo)}");
+            fieldBuilder.AppendLine($"{Format.Bold(LocalizationGroup.GetText("RemoveThreshold", "Remove threshold"))}: {data.RemoveThreshold.ToString(LocalizationGroup.CultureInfo)}");
             builder.AddField(LocalizationGroup.GetText("General", "General"), fieldBuilder.ToString());
 
             fieldBuilder.Clear();
@@ -123,8 +126,8 @@ public class GuildSpecialRankEditDialogElement : DialogEmbedReactionElementBase<
                               {
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetEditEmoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("EditDescriptionCommand", "{0} Edit description", DiscordEmojiService.GetEditEmoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetEditEmote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("EditDescriptionCommand", "{0} Edit description", DiscordEmoteService.GetEditEmote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  var description = await RunSubElement<GuildSpecialRankDescriptionDialogElement, string>().ConfigureAwait(false);
@@ -143,8 +146,8 @@ public class GuildSpecialRankEditDialogElement : DialogEmbedReactionElementBase<
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetEdit2Emoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("EditRoleCommand", "{0} Edit role", DiscordEmojiService.GetEdit2Emoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetEdit2Emote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("EditRoleCommand", "{0} Edit role", DiscordEmoteService.GetEdit2Emote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  var roleId = await RunSubElement<GuildSpecialRankDiscordRoleDialogElement, ulong>().ConfigureAwait(false);
@@ -163,8 +166,8 @@ public class GuildSpecialRankEditDialogElement : DialogEmbedReactionElementBase<
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetEdit3Emoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("EditMaximumPointsCommand", "{0} Edit maximum points", DiscordEmojiService.GetEdit3Emoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetEdit3Emote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("EditMaximumPointsCommand", "{0} Edit maximum points", DiscordEmoteService.GetEdit3Emote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  var maximumPoints = await RunSubElement<GuildSpecialRankMaximumPointsDialogElement, double>().ConfigureAwait(false);
@@ -183,8 +186,8 @@ public class GuildSpecialRankEditDialogElement : DialogEmbedReactionElementBase<
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetEdit4Emoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("EditGrantThresholdCommand", "{0} Edit grant threshold", DiscordEmojiService.GetEdit4Emoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetEdit4Emote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("EditGrantThresholdCommand", "{0} Edit grant threshold", DiscordEmoteService.GetEdit4Emote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  var grantThreshold = await RunSubElement<GuildSpecialRankGrantThresholdDialogElement, double>().ConfigureAwait(false);
@@ -203,8 +206,8 @@ public class GuildSpecialRankEditDialogElement : DialogEmbedReactionElementBase<
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetEdit5Emoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("EditRemoveThresholdCommand", "{0} Edit remove threshold", DiscordEmojiService.GetEdit5Emoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetEdit5Emote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("EditRemoveThresholdCommand", "{0} Edit remove threshold", DiscordEmoteService.GetEdit5Emote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  var removeThreshold = await RunSubElement<GuildSpecialRankRemoveThresholdDialogElement, double>().ConfigureAwait(false);
@@ -223,8 +226,8 @@ public class GuildSpecialRankEditDialogElement : DialogEmbedReactionElementBase<
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetAddEmoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("AddPointRoleCommand", "{0} Add point role", DiscordEmojiService.GetAddEmoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetAddEmote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("AddPointRoleCommand", "{0} Add point role", DiscordEmoteService.GetAddEmote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  var assignmentData = await RunSubForm<CreateGuildSpecialRankRoleAssignment>().ConfigureAwait(false);
@@ -249,8 +252,8 @@ public class GuildSpecialRankEditDialogElement : DialogEmbedReactionElementBase<
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("RemovePointRoleCommand", "{0} Remove point role", DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetTrashCanEmote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("RemovePointRoleCommand", "{0} Remove point role", DiscordEmoteService.GetTrashCanEmote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  var roleId = await RunSubElement<GuildSpecialRankRoleAssignmentSelectionDialog, ulong>().ConfigureAwait(false);
@@ -269,8 +272,8 @@ public class GuildSpecialRankEditDialogElement : DialogEmbedReactionElementBase<
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetAdd2Emoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("AddIgnoreRoleCommand", "{0} Add ignore role", DiscordEmojiService.GetAdd2Emoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetAdd2Emote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("AddIgnoreRoleCommand", "{0} Add ignore role", DiscordEmoteService.GetAdd2Emote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  var discordId = await RunSubElement<GuildSpecialRankRoleAssignmentDiscordRoleDialogElement, ulong>().ConfigureAwait(false);
@@ -294,8 +297,8 @@ public class GuildSpecialRankEditDialogElement : DialogEmbedReactionElementBase<
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetTrashCan2Emoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("RemoveIgnoreRoleCommand", "{0} Remove ignore role", DiscordEmojiService.GetTrashCan2Emoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetTrashCan2Emote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("RemoveIgnoreRoleCommand", "{0} Remove ignore role", DiscordEmoteService.GetTrashCan2Emote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  var discordId = await RunSubElement<GuildSpecialRankRoleAssignmentDiscordRoleDialogElement, ulong>().ConfigureAwait(false);
@@ -314,8 +317,8 @@ public class GuildSpecialRankEditDialogElement : DialogEmbedReactionElementBase<
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetCrossEmoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmojiService.GetCrossEmoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmoteService.GetCrossEmote(CommandContext.Client)),
                                       Func = () => Task.FromResult(false)
                                   }
                               };

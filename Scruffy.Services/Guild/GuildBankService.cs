@@ -1,9 +1,10 @@
-﻿
+﻿using Discord;
+
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Account;
 using Scruffy.Data.Entity.Repositories.Guild;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.Guild;
@@ -49,7 +50,7 @@ public class GuildBankService : LocatedServiceBase
 
             if (string.IsNullOrWhiteSpace(guild?.ApiKey) == false)
             {
-                var msg = new DiscordEmbedBuilder();
+                var msg = new EmbedBuilder();
                 msg.WithTitle(LocalizationGroup.GetText("BankValidation", "Guild bank validation"));
                 msg.WithDescription(LocalizationGroup.GetText("BankValidationResult", "In the following message you can see the results of the bank validation."));
                 msg.WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64");
@@ -90,17 +91,17 @@ public class GuildBankService : LocatedServiceBase
                             foreach (var (x, y) in group.OrderBy(obj => obj.X)
                                                         .ThenBy(obj => obj.Y))
                             {
-                                stringBuilder.AppendLine($" - " + Formatter.InlineCode($"({x}/{y})"));
+                                stringBuilder.AppendLine($" - " + Format.Code($"({x}/{y})"));
                             }
                         }
 
                         if (stringBuilder.Length > 0)
                         {
-                            stringBuilder.Insert(0, Formatter.Bold(LocalizationGroup.GetText("DuplicationCheck", "Duplication check")) + " \u200B " + DiscordEmojiService.GetCrossEmoji(commandContext.Client) + "\n");
+                            stringBuilder.Insert(0, Format.Bold(LocalizationGroup.GetText("DuplicationCheck", "Duplication check")) + " \u200B " + DiscordEmoteService.GetCrossEmote(commandContext.Client) + "\n");
                         }
                         else
                         {
-                            stringBuilder.AppendLine(Formatter.Bold(LocalizationGroup.GetText("DuplicationCheck", "Duplication check")) + " \u200B " + DiscordEmojiService.GetCheckEmoji(commandContext.Client));
+                            stringBuilder.AppendLine(Format.Bold(LocalizationGroup.GetText("DuplicationCheck", "Duplication check")) + " \u200B " + DiscordEmoteService.GetCheckEmote(commandContext.Client));
                         }
 
                         if (stash.Coins != 0 && stash.Coins % 10000 != 0)
@@ -109,12 +110,12 @@ public class GuildBankService : LocatedServiceBase
                             var silverCoins = (stash.Coins - (goldCoins * 10000)) / 100;
                             var copperCoins = stash.Coins % 100;
 
-                            stringBuilder.AppendLine(Formatter.Bold(LocalizationGroup.GetText("CoinCheck", "Coins check")) + " \u200B " + DiscordEmojiService.GetCrossEmoji(commandContext.Client));
-                            stringBuilder.AppendLine($"{goldCoins} {DiscordEmojiService.GetGuildWars2GoldEmoji(commandContext.Client)} {silverCoins} {DiscordEmojiService.GetGuildWars2SilverEmoji(commandContext.Client)} {copperCoins} {DiscordEmojiService.GetGuildWars2CopperEmoji(commandContext.Client)}");
+                            stringBuilder.AppendLine(Format.Bold(LocalizationGroup.GetText("CoinCheck", "Coins check")) + " \u200B " + DiscordEmoteService.GetCrossEmote(commandContext.Client));
+                            stringBuilder.AppendLine($"{goldCoins} {DiscordEmoteService.GetGuildWars2GoldEmote(commandContext.Client)} {silverCoins} {DiscordEmoteService.GetGuildWars2SilverEmote(commandContext.Client)} {copperCoins} {DiscordEmoteService.GetGuildWars2CopperEmote(commandContext.Client)}");
                         }
                         else
                         {
-                            stringBuilder.AppendLine(Formatter.Bold(LocalizationGroup.GetText("CoinCheck", "Coins check")) + " \u200B " + DiscordEmojiService.GetCheckEmoji(commandContext.Client));
+                            stringBuilder.AppendLine(Format.Bold(LocalizationGroup.GetText("CoinCheck", "Coins check")) + " \u200B " + DiscordEmoteService.GetCheckEmote(commandContext.Client));
                         }
 
                         stringBuilder.Append("\u200B");
@@ -124,7 +125,7 @@ public class GuildBankService : LocatedServiceBase
                 }
 
                 await commandContext.Channel
-                                    .SendMessageAsync(msg)
+                                    .SendMessageAsync(embed: msg.Build())
                                     .ConfigureAwait(false);
             }
             else
@@ -195,8 +196,8 @@ public class GuildBankService : LocatedServiceBase
                                 var dyes = await accountConnector.GetDyes()
                                                                  .ConfigureAwait(false);
 
-                                var builder = new DiscordEmbedBuilder().WithTitle(LocalizationGroup.GetFormattedText("DyeUnlocksTitle", "Dye unlocks {0}", apiKey.Name))
-                                                                       .WithColor(DiscordColor.Green)
+                                var builder = new EmbedBuilder().WithTitle(LocalizationGroup.GetFormattedText("DyeUnlocksTitle", "Dye unlocks {0}", apiKey.Name))
+                                                                       .WithColor(Color.Green)
                                                                        .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
                                                                        .WithTimestamp(DateTime.Now);
 
@@ -209,8 +210,8 @@ public class GuildBankService : LocatedServiceBase
                                                           .OrderBy(obj => obj.Name))
                                 {
                                     var currentLine = dyes.Contains(item.Details.ColorId ?? 0)
-                                                          ? $"{DiscordEmojiService.GetCheckEmoji(commandContext.Client)} {item.Name}"
-                                                          : $"{DiscordEmojiService.GetCrossEmoji(commandContext.Client)} {item.Name}";
+                                                          ? $"{DiscordEmoteService.GetCheckEmote(commandContext.Client)} {item.Name}"
+                                                          : $"{DiscordEmoteService.GetCrossEmote(commandContext.Client)} {item.Name}";
 
                                     if (fieldBuilder.Length + currentLine.Length > 1024)
                                     {
@@ -226,7 +227,7 @@ public class GuildBankService : LocatedServiceBase
                                 builder.AddField(LocalizationGroup.GetFormattedText("DyesFields", "Dyes #{0}", fieldCounter), fieldBuilder.ToString(), true);
 
                                 await commandContext.Message
-                                                    .RespondAsync(builder)
+                                                    .ReplyAsync(embed: builder.Build())
                                                     .ConfigureAwait(false);
                             }
                         }

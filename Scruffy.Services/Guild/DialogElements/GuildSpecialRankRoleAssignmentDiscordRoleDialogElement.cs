@@ -1,6 +1,7 @@
-﻿
-using Scruffy.Services.Core.Discord;
+﻿using Discord;
+
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Guild.DialogElements;
 
@@ -37,9 +38,9 @@ public class GuildSpecialRankRoleAssignmentDiscordRoleDialogElement : DialogEmbe
     /// Return the message of element
     /// </summary>
     /// <returns>Message</returns>
-    public override DiscordEmbedBuilder GetMessage()
+    public override EmbedBuilder GetMessage()
     {
-        var builder = new DiscordEmbedBuilder();
+        var builder = new EmbedBuilder();
         builder.WithTitle(LocalizationGroup.GetText("ChooseRoleTitle", "Role selection"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseRoleDescription", "Please choose one of the following roles:"));
 
@@ -49,9 +50,9 @@ public class GuildSpecialRankRoleAssignmentDiscordRoleDialogElement : DialogEmbe
         var rolesCounter = 1;
         var fieldsCounter = 1;
 
-        foreach (var (key, value) in CommandContext.Guild.Roles)
+        foreach (var role in CommandContext.Guild.Roles)
         {
-            var currentLine = $"`{rolesCounter}` -  {value.Mention}\n";
+            var currentLine = $"`{rolesCounter}` -  {role.Mention}\n";
             if (currentLine.Length + stringBuilder.Length > 1024)
             {
                 builder.AddField(LocalizationGroup.GetText("RolesField", "Roles") + " #" + fieldsCounter, stringBuilder.ToString());
@@ -61,7 +62,7 @@ public class GuildSpecialRankRoleAssignmentDiscordRoleDialogElement : DialogEmbe
 
             stringBuilder.Append(currentLine);
 
-            _roles[rolesCounter] = key;
+            _roles[rolesCounter] = role.Id;
 
             rolesCounter++;
         }
@@ -81,7 +82,7 @@ public class GuildSpecialRankRoleAssignmentDiscordRoleDialogElement : DialogEmbe
     /// </summary>
     /// <param name="message">Message</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public override Task<ulong> ConvertMessage(DiscordMessage message)
+    public override Task<ulong> ConvertMessage(IUserMessage message)
     {
         return Task.FromResult(int.TryParse(message.Content, out var index) && _roles.TryGetValue(index, out var selectedRoleId) ? selectedRoleId : throw new InvalidOperationException());
     }

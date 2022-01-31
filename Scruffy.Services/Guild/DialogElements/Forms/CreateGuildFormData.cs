@@ -1,4 +1,4 @@
-﻿using Scruffy.Services.Core.Discord.Attributes;
+﻿using Scruffy.Services.Discord.Attributes;
 
 namespace Scruffy.Services.Guild.DialogElements.Forms;
 
