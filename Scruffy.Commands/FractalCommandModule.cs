@@ -1,6 +1,7 @@
-﻿
-using Scruffy.Services.Core.Discord;
-using Scruffy.Services.Core.Discord.Attributes;
+﻿using Discord.Commands;
+
+using Scruffy.Services.Discord;
+using Scruffy.Services.Discord.Attributes;
 using Scruffy.Services.Fractals;
 
 namespace Scruffy.Commands;
@@ -9,8 +10,7 @@ namespace Scruffy.Commands;
 /// Fractal lfg setup commands
 /// </summary>
 [Group("fractal")]
-[Aliases("f")]
-[ModuleLifespan(ModuleLifespan.Transient)]
+[Alias("f")]
 [BlockedChannelCheck]
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
 public class FractalCommandModule : LocatedCommandModuleBase
@@ -39,84 +39,55 @@ public class FractalCommandModule : LocatedCommandModuleBase
     /// <summary>
     /// Creation of a new lfg entry
     /// </summary>
-    /// <param name="commandContext">Current command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("setup")]
-    [RequireGuild]
+    [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    public Task Setup(CommandContext commandContext)
-    {
-        return InvokeAsync(commandContext,
-                           commandContextContainer => LfgService.RunSetupAssistant(commandContextContainer));
-    }
+    public Task Setup() => LfgService.RunSetupAssistant(Context);
 
     /// <summary>
     /// Joining an appointment
     /// </summary>
-    /// <param name="commandContext">Context</param>
     /// <param name="alias">Lfg alias</param>
     /// <param name="timeSpan">Time</param>
     /// <param name="days">Days</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [Command("join")]
-    [RequireGuild]
+    [RequireContext(ContextType.Guild)]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-    public Task Join(CommandContext commandContext, string alias, string timeSpan, params string[] days)
-    {
-        return InvokeAsync(commandContext,
-                           commandContextContainer => LfgService.Join(commandContextContainer,
-                                                                      new List<string> { alias, timeSpan }.Concat(days)));
-    }
+    public Task Join(string alias, string timeSpan, params string[] days) => LfgService.Join(Context, new List<string> { alias, timeSpan }.Concat(days));
 
     /// <summary>
     /// Joining an appointment
     /// </summary>
-    /// <param name="commandContext">Context</param>
     /// <param name="timeSpan">Time</param>
     /// <param name="days">Days</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [Command("join")]
-    [RequireGuild]
-    public Task Join(CommandContext commandContext, string timeSpan, params string[] days)
-    {
-        return InvokeAsync(commandContext,
-                           commandContextContainer => LfgService.Join(commandContextContainer,
-                                                                      new List<string> { timeSpan }.Concat(days)));
-    }
+    [RequireContext(ContextType.Guild)]
+    public Task Join(string timeSpan, params string[] days) => LfgService.Join(Context, new List<string> { timeSpan }.Concat(days));
 
     /// <summary>
     /// Leaving an appointment
     /// </summary>
-    /// <param name="commandContext">Current command context</param>
     /// <param name="alias">Lfg alias</param>
     /// <param name="timeSpan">Time</param>
     /// <param name="days">Days</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("leave")]
-    [RequireGuild]
+    [RequireContext(ContextType.Guild)]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-    public Task Leave(CommandContext commandContext, string alias, string timeSpan, params string[] days)
-    {
-        return InvokeAsync(commandContext,
-                           commandContextContainer => LfgService.Leave(commandContextContainer,
-                                                                       new List<string> { alias, timeSpan }.Concat(days)));
-    }
+    public Task Leave(string alias, string timeSpan, params string[] days) => LfgService.Leave(Context, new List<string> { alias, timeSpan }.Concat(days));
 
     /// <summary>
     /// Leaving an appointment
     /// </summary>
-    /// <param name="commandContext">Current command context</param>
     /// <param name="timeSpan">Time</param>
     /// <param name="days">Days</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("leave")]
-    [RequireGuild]
-    public Task Leave(CommandContext commandContext, string timeSpan, params string[] days)
-    {
-        return InvokeAsync(commandContext,
-                           commandContextContainer => LfgService.Leave(commandContextContainer,
-                                                                       new List<string> { timeSpan }.Concat(days)));
-    }
+    [RequireContext(ContextType.Guild)]
+    public Task Leave(string timeSpan, params string[] days) => LfgService.Leave(Context, new List<string> { timeSpan }.Concat(days));
 
     #endregion // Command methods
 }

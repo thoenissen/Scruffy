@@ -1,6 +1,8 @@
-﻿using Scruffy.Services.Account;
-using Scruffy.Services.Core.Discord;
-using Scruffy.Services.Core.Discord.Attributes;
+﻿using Discord.Commands;
+
+using Scruffy.Services.Account;
+using Scruffy.Services.Discord;
+using Scruffy.Services.Discord.Attributes;
 
 namespace Scruffy.Commands;
 
@@ -8,10 +10,9 @@ namespace Scruffy.Commands;
 /// Calendar commands
 /// </summary>
 [Group("account")]
-[Aliases("ac")]
+[Alias("ac")]
 [BlockedChannelCheck]
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-[ModuleLifespan(ModuleLifespan.Transient)]
 public class AccountCommandModule : LocatedCommandModuleBase
 {
     #region Properties
@@ -28,61 +29,46 @@ public class AccountCommandModule : LocatedCommandModuleBase
     /// <summary>
     /// Adding an account
     /// </summary>
-    /// <param name="commandContext">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [Command("add")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-    public Task Add(CommandContext commandContext)
+    public async Task Add()
     {
-        return InvokeAsync(commandContext,
-                           async commandContextContainer =>
-                           {
-                               await UserManagementService.CheckDiscordAccountAsync(commandContextContainer.User.Id)
-                                                          .ConfigureAwait(false);
+       await UserManagementService.CheckDiscordAccountAsync(Context.User.Id)
+                                  .ConfigureAwait(false);
 
-                               await AdministrationService.Add(commandContextContainer)
-                                                          .ConfigureAwait(false);
-                           });
+       await AdministrationService.Add(Context)
+                                  .ConfigureAwait(false);
     }
 
     /// <summary>
     /// Editing an account
     /// </summary>
-    /// <param name="commandContext">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [Command("edit")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-    public Task Edit(CommandContext commandContext)
+    public async Task Edit()
     {
-        return InvokeAsync(commandContext,
-                           async commandContextContainer =>
-                           {
-                               await UserManagementService.CheckDiscordAccountAsync(commandContextContainer.User.Id)
-                                                          .ConfigureAwait(false);
+        await UserManagementService.CheckDiscordAccountAsync(Context.User.Id)
+                                   .ConfigureAwait(false);
 
-                               await AdministrationService.Edit(commandContextContainer)
-                                                          .ConfigureAwait(false);
-                           });
+        await AdministrationService.Edit(Context)
+                                   .ConfigureAwait(false);
     }
 
     /// <summary>
     /// Remove an account
     /// </summary>
-    /// <param name="commandContext">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [Command("remove")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-    public Task Remove(CommandContext commandContext)
+    public async Task Remove()
     {
-        return InvokeAsync(commandContext,
-                           async commandContextContainer =>
-                           {
-                               await UserManagementService.CheckDiscordAccountAsync(commandContextContainer.User.Id)
-                                                          .ConfigureAwait(false);
+        await UserManagementService.CheckDiscordAccountAsync(Context.User.Id)
+                                   .ConfigureAwait(false);
 
-                               await AdministrationService.Remove(commandContextContainer)
-                                                          .ConfigureAwait(false);
-                           });
+        await AdministrationService.Remove(Context)
+                                   .ConfigureAwait(false);
     }
 
     #endregion // Command methods

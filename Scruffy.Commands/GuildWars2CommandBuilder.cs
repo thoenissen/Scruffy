@@ -1,6 +1,7 @@
-﻿
-using Scruffy.Services.Core.Discord;
-using Scruffy.Services.Core.Discord.Attributes;
+﻿using Discord.Commands;
+
+using Scruffy.Services.Discord;
+using Scruffy.Services.Discord.Attributes;
 using Scruffy.Services.GuildWars2;
 
 namespace Scruffy.Commands;
@@ -9,7 +10,6 @@ namespace Scruffy.Commands;
 /// Calendar commands
 /// </summary>
 [Group("gw2")]
-[ModuleLifespan(ModuleLifespan.Transient)]
 [BlockedChannelCheck]
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
 public class GuildWars2CommandBuilder : LocatedCommandModuleBase
@@ -33,32 +33,18 @@ public class GuildWars2CommandBuilder : LocatedCommandModuleBase
     /// <summary>
     /// Creation of a one time reminder
     /// </summary>
-    /// <param name="commandContext">Current command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("quaggan")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-    public Task Quaggan(CommandContext commandContext)
-    {
-        return InvokeAsync(commandContext,
-                           async commandContextContainer =>
-                           {
-                               await QuagganService.PostRandomQuaggan(commandContextContainer)
-                                                   .ConfigureAwait(false);
-                           });
-    }
+    public Task Quaggan() => QuagganService.PostRandomQuaggan(Context);
 
     /// <summary>
     /// Next update
     /// </summary>
-    /// <param name="commandContext">Current command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("update")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-    public Task Update(CommandContext commandContext)
-    {
-        return InvokeAsync(commandContext,
-                           commandContextContainer => GuildWarsUpdateService.PostUpdateOverview(commandContextContainer));
-    }
+    public Task Update() => GuildWarsUpdateService.PostUpdateOverview(Context);
 
     #endregion // Command methods
 }

@@ -1,7 +1,8 @@
-﻿
+﻿using Discord.Commands;
+
 using Scruffy.Services.Calendar;
-using Scruffy.Services.Core.Discord;
-using Scruffy.Services.Core.Discord.Attributes;
+using Scruffy.Services.Discord;
+using Scruffy.Services.Discord.Attributes;
 
 namespace Scruffy.Commands;
 
@@ -9,12 +10,11 @@ namespace Scruffy.Commands;
 /// Calendar commands
 /// </summary>
 [Group("calendar")]
-[Aliases("ca")]
-[RequireGuild]
+[Alias("ca")]
+[RequireContext(ContextType.Guild)]
 [RequireAdministratorPermissions]
 [BlockedChannelCheck]
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-[ModuleLifespan(ModuleLifespan.Transient)]
 public class CalendarCommandModule : LocatedCommandModuleBase
 {
     #region Properties
@@ -36,40 +36,30 @@ public class CalendarCommandModule : LocatedCommandModuleBase
     /// <summary>
     /// Adding a one time event
     /// </summary>
-    /// <param name="commandContext">Current command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("add")]
-    [RequireGuild]
+    [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-    public Task AddOneTimeEvent(CommandContext commandContext)
+    public async Task AddOneTimeEvent()
     {
-        return InvokeAsync(commandContext,
-                           async commandContextContainer =>
-                           {
-                               await CalendarScheduleService.AddOneTimeEvent(commandContextContainer)
-                                                            .ConfigureAwait(false);
-                           });
+        await CalendarScheduleService.AddOneTimeEvent(Context)
+                                     .ConfigureAwait(false);
     }
 
     /// <summary>
     /// Editing participants
     /// </summary>
-    /// <param name="commandContext">Current command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("participants")]
-    [Aliases("p")]
-    [RequireGuild]
+    [Alias("p")]
+    [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-    public Task EditParticipants(CommandContext commandContext)
+    public async Task EditParticipants()
     {
-        return InvokeAsync(commandContext,
-                           async commandContextContainer =>
-                           {
-                               await CalendarParticipantsService.EditParticipants(commandContextContainer)
-                                                                .ConfigureAwait(false);
-                           });
+        await CalendarParticipantsService.EditParticipants(Context)
+                                         .ConfigureAwait(false);
     }
 
     #endregion // Methods
@@ -80,10 +70,9 @@ public class CalendarCommandModule : LocatedCommandModuleBase
     /// Calendar template commands
     /// </summary>
     [Group("templates")]
-    [Aliases("t")]
-    [RequireGuild]
+    [Alias("t")]
+    [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    [ModuleLifespan(ModuleLifespan.Transient)]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public class CalendarTemplateCommandModule : LocatedCommandModuleBase
     {
@@ -101,20 +90,15 @@ public class CalendarCommandModule : LocatedCommandModuleBase
         /// <summary>
         /// Starting the template assistant
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("setup")]
-        [RequireGuild]
+        [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-        public Task Setup(CommandContext commandContext)
+        public async Task Setup()
         {
-            return InvokeAsync(commandContext,
-                               async commandContextContainer =>
-                               {
-                                   await CalendarTemplateService.RunAssistantAsync(commandContextContainer)
-                                                                .ConfigureAwait(false);
-                               });
+            await CalendarTemplateService.RunAssistantAsync(Context)
+                                         .ConfigureAwait(false);
         }
 
         #endregion // Methods
@@ -129,10 +113,9 @@ public class CalendarCommandModule : LocatedCommandModuleBase
     /// Calendar template commands
     /// </summary>
     [Group("schedules")]
-    [Aliases("s")]
-    [RequireGuild]
+    [Alias("s")]
+    [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    [ModuleLifespan(ModuleLifespan.Transient)]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public class CalendarScheduleCommandModule : LocatedCommandModuleBase
     {
@@ -150,20 +133,15 @@ public class CalendarCommandModule : LocatedCommandModuleBase
         /// <summary>
         /// Starting the schedules assistant
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("setup")]
-        [RequireGuild]
+        [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-        public Task Setup(CommandContext commandContext)
+        public async Task Setup()
         {
-            return InvokeAsync(commandContext,
-                               async commandContextContainer =>
-                               {
-                                   await CalendarScheduleService.RunAssistantAsync(commandContextContainer)
-                                                                .ConfigureAwait(false);
-                               });
+            await CalendarScheduleService.RunAssistantAsync(Context)
+                                         .ConfigureAwait(false);
         }
 
         #endregion // Methods
