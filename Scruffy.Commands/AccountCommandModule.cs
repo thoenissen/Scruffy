@@ -71,6 +71,19 @@ public class AccountCommandModule : LocatedCommandModuleBase
                                    .ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Validation of all accounts
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [Command("validation")]
+    [RequireAdministratorPermissions]
+    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
+    public async Task Validation()
+    {
+        await AdministrationService.Validate(Context)
+                                   .ConfigureAwait(false);
+    }
+
     #endregion // Command methods
 
 }

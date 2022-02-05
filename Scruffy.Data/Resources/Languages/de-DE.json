@@ -96,7 +96,9 @@
       "NoAccounts": "Du hast aktuell keine konfigurierten Acccounts.",
       "ApiKeyAdded": "Dein API-Key wurde erfolgreich hinzugefügt.",
       "NoAccountExisting": "Du hast noch keine hinterlegten Accounts.",
-      "AccountDeleted": "Der Account wurde erfolgreich gelöscht."
+      "AccountDeleted": "Der Account wurde erfolgreich gelöscht.",
+      "ListOfInvalidAccounts": "Die folgenden Accounts sind ungültig:",
+      "NoInvalidAccounts": "Es konnten keine ungültigen Accounts gefunden werden"
     },
     "FractalLfgMessageBuilder": {
       "Today": "Heute",

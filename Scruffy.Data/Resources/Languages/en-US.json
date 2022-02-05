@@ -95,7 +95,9 @@
       "NoAccounts": "You don't have any accounts configured.",
       "ApiKeyAdded": "Your API token has been added successfully.",
       "NoAccountExisting": "You don't have any accounts configured.",
-      "AccountDeleted": "Your account has been successfully deleted."
+      "AccountDeleted": "Your account has been successfully deleted.",
+      "ListOfInvalidAccounts": "The following accounts are invalid:",
+      "NoInvalidAccounts": "There are no invalid accounts"
     },
     "AccountWantToAddDialogElement": {
       "Prompt": "You don't have any accounts configurated. Do you want to a one?"

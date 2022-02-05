@@ -18,7 +18,7 @@ public static class GuildWars2ApiPermissionConverter
     /// <returns>Permissions</returns>
     public static GuildWars2ApiPermission ToPermission(IEnumerable<string> permissions)
     {
-        return permissions.Aggregate(GuildWars2ApiPermission.None,
+        return permissions?.Aggregate(GuildWars2ApiPermission.None,
                                      (combinedPermissions, permissionString) =>
                                      {
                                          var permission = permissionString switch
@@ -44,6 +44,7 @@ public static class GuildWars2ApiPermissionConverter
                                          combinedPermissions |= permission;
 
                                          return combinedPermissions;
-                                     });
+                                     })
+            ?? GuildWars2ApiPermission.None;
     }
 }

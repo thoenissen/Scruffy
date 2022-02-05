@@ -4,89 +4,8 @@ using System.Threading;
 using Discord;
 using Discord.WebSocket;
 
-using Scruffy.Services.Core.Exceptions;
-
 namespace Scruffy.Services.Discord
 {
-    /// <summary>
-    /// Waiting for message data
-    /// </summary>
-    /// <typeparam name="T">Type of waiting for object</typeparam>
-    internal class InteractionWaitEntry<T>
-    {
-        #region Fields
-
-        /// <summary>
-        /// Completion task
-        /// </summary>
-        private readonly TaskCompletionSource<T> _taskCompletionSource;
-
-        /// <summary>
-        /// Check function
-        /// </summary>
-        private readonly Func<T, bool> _checkMessageFunction;
-
-        /// <summary>
-        /// Command cancellation
-        /// </summary>
-        private readonly CancellationTokenSource _cancellationTokenSource;
-
-        #endregion // Fields
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="taskCompletionSource">Task source</param>
-        /// <param name="checkMessageFunction">Check message function</param>
-        public InteractionWaitEntry(TaskCompletionSource<T> taskCompletionSource, Func<T, bool> checkMessageFunction)
-        {
-            _cancellationTokenSource = new CancellationTokenSource();
-
-            _taskCompletionSource = taskCompletionSource;
-            _checkMessageFunction = checkMessageFunction;
-        }
-
-        /// <summary>
-        /// Command cancellation
-        /// </summary>
-        public CancellationToken CancellationToken => _cancellationTokenSource.Token;
-
-        /// <summary>
-        /// Check message
-        /// </summary>
-        /// <param name="message">Message</param>
-        /// <returns>Is the check successfully?</returns>
-        public bool CheckMessage(T message)
-        {
-            var success = false;
-
-            if (_checkMessageFunction(message))
-            {
-                if (_taskCompletionSource.TrySetResult(message))
-                {
-                    _cancellationTokenSource.Cancel();
-                    _cancellationTokenSource.Dispose();
-
-                    success = true;
-                }
-            }
-
-            return success;
-        }
-
-        /// <summary>
-        /// Set command timeout
-        /// </summary>
-        public void SetTimeOut()
-        {
-            if (_taskCompletionSource.TrySetException(new ScruffyTimeoutException()))
-            {
-                _cancellationTokenSource.Cancel();
-                _cancellationTokenSource.Dispose();
-            }
-        }
-    }
-
     /// <summary>
     /// User interaction service
     /// </summary>

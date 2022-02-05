@@ -43,7 +43,6 @@ public class ReminderCreationCommandModule : LocatedCommandModuleBase
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
     public async Task RemindMeIn(string timeSpan, [Remainder] string message = null)
     {
-
         var checkUser = UserManagementService.CheckDiscordAccountAsync(Context.User.Id);
 
         var timeSpanValidation = new Regex(@"\d+(h|m|s)");
@@ -131,7 +130,6 @@ public class ReminderCreationCommandModule : LocatedCommandModuleBase
     [Command("at")]
     public async Task RemindMeAt(string date, string time, [Remainder] string message)
     {
-
         var checkUser = UserManagementService.CheckDiscordAccountAsync(Context.User.Id);
 
         DateTime? timeStamp = null;
@@ -223,7 +221,6 @@ public class ReminderCreationCommandModule : LocatedCommandModuleBase
     [RequireAdministratorPermissions]
     public async Task RemindWeekly()
     {
-
         var continueCreation = true;
 
         // Creation data
