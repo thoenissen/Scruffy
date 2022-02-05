@@ -1,9 +1,12 @@
 ﻿using System.Collections.Concurrent;
 
+using Discord;
+using Discord.WebSocket;
+
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.CoreData;
 
-namespace Scruffy.Services.Core.Discord;
+namespace Scruffy.Services.Discord;
 
 /// <summary>
 /// Resolving command prefixes
@@ -65,21 +68,15 @@ public class PrefixResolvingService
     /// </summary>
     /// <param name="msg">Message</param>
     /// <returns>Position</returns>
-    public Task<int> OnPrefixResolver(DiscordMessage msg)
+    public string GetPrefix(IUserMessage msg)
     {
-        int result;
-
-        if (msg?.Channel?.GuildId != null
-         && _prefixes.TryGetValue(msg.Channel.GuildId.Value, out var prefix))
+        if (msg?.Channel is not IGuildChannel channel
+         || _prefixes.TryGetValue(channel.Guild.Id, out var prefix) == false)
         {
-            result = msg.GetStringPrefixLength(prefix, StringComparison.OrdinalIgnoreCase);
-        }
-        else
-        {
-            result = msg.GetStringPrefixLength(".", StringComparison.OrdinalIgnoreCase);
+            prefix = ".";
         }
 
-        return Task.FromResult(result);
+        return prefix;
     }
 
     #endregion // Methods

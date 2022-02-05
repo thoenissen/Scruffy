@@ -1,4 +1,6 @@
-﻿namespace Scruffy.Services.Core.Discord;
+﻿using Discord;
+
+namespace Scruffy.Services.Discord;
 
 /// <summary>
 /// Data of a reaction
@@ -12,9 +14,9 @@ public class ReactionData<TData>
     public string CommandText { get; set; }
 
     /// <summary>
-    /// Emoji
+    /// Emote
     /// </summary>
-    public DiscordEmoji Emoji { get; set; }
+    public IEmote Emote { get; set; }
 
     /// <summary>
     /// Function corresponding to the reaction

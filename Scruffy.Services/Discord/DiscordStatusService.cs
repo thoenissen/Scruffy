@@ -1,6 +1,9 @@
 ﻿using System.Threading;
 
-namespace Scruffy.Services.Core.Discord;
+using Discord;
+using Discord.WebSocket;
+
+namespace Scruffy.Services.Discord;
 
 /// <summary>
 /// Managing the discord state of the bot
@@ -12,7 +15,7 @@ public sealed class DiscordStatusService : IDisposable
     /// <summary>
     /// Fields
     /// </summary>
-    private DiscordClient _discordClient;
+    private DiscordSocketClient _discordClient;
 
     /// <summary>
     /// Timer
@@ -32,7 +35,7 @@ public sealed class DiscordStatusService : IDisposable
     /// Constructor
     /// </summary>
     /// <param name="discordClient">Client</param>
-    public DiscordStatusService(DiscordClient discordClient)
+    public DiscordStatusService(DiscordSocketClient discordClient)
     {
         _discordClient = discordClient;
         _timer = new Timer(OnTimer, null, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(60));
@@ -81,7 +84,7 @@ public sealed class DiscordStatusService : IDisposable
             var title = _movies.Dequeue();
             _movies.Enqueue(title);
 
-            await _discordClient.UpdateStatusAsync(new DiscordActivity(title, ActivityType.Watching)).ConfigureAwait(false);
+            await _discordClient.SetActivityAsync(new Game(title, ActivityType.Watching)).ConfigureAwait(false);
         }
         catch
         {

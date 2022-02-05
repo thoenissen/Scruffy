@@ -1,4 +1,5 @@
 ﻿using Discord;
+using Discord.Rest;
 using Discord.WebSocket;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -77,7 +78,7 @@ public class OneTimeReminderJob : LocatedAsyncJob
                             var discordClient = serviceProvider.GetService<DiscordSocketClient>();
 
                             var channel = await discordClient.GetChannelAsync(jobEntity.ChannelId).ConfigureAwait(false);
-                            if (channel is ITextChannel textChannel)
+                            if (channel is IMessageChannel textChannel)
                             {
                                 var user = await discordClient.GetUserAsync(jobEntity.DiscordAccountId).ConfigureAwait(false);
 

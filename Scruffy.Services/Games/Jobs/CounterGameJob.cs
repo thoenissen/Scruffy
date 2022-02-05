@@ -43,11 +43,11 @@ public class CounterGameJob : LocatedAsyncJob
                     var channel = await client.GetChannelAsync(gameChannel.DiscordChannelId)
                                               .ConfigureAwait(false);
 
-                    if (channel is ITextChannel textChannel)
+                    if (channel is IMessageChannel messageChannel)
                     {
                         var messages = new List<IMessage>();
 
-                        await foreach (var collection in textChannel.GetMessagesAsync(15).ConfigureAwait(false))
+                        await foreach (var collection in messageChannel.GetMessagesAsync(15).ConfigureAwait(false))
                         {
                             messages.AddRange(collection);
                         }
@@ -61,8 +61,8 @@ public class CounterGameJob : LocatedAsyncJob
                          && int.TryParse(messages[1].Content, out var lastNumber)
                          && currentNumber == lastNumber + 1)
                         {
-                            await textChannel.SendMessageAsync((++currentNumber).ToString())
-                                             .ConfigureAwait(false);
+                            await messageChannel.SendMessageAsync((++currentNumber).ToString())
+                                                .ConfigureAwait(false);
                         }
                     }
                 }

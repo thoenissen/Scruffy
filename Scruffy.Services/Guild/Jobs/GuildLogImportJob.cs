@@ -60,7 +60,7 @@ public class GuildLogImportJob : LocatedAsyncJob
                 {
                     var discordChannel = guild.ChannelId != null
                                              ? await discordClient.GetChannelAsync(guild.ChannelId.Value)
-                                                                  .ConfigureAwait(false) as ITextChannel
+                                                                  .ConfigureAwait(false) as IMessageChannel
                                              : null;
 
                     var connector = new GuidWars2ApiConnector(guild.ApiKey);
@@ -135,7 +135,7 @@ public class GuildLogImportJob : LocatedAsyncJob
     /// <param name="discordChannel">Discord channel</param>
     /// <param name="entry">Entry</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private async Task OnJoined(ITextChannel discordChannel, GuildLogEntry entry)
+    private async Task OnJoined(IMessageChannel discordChannel, GuildLogEntry entry)
     {
         if (discordChannel != null)
         {
@@ -150,7 +150,7 @@ public class GuildLogImportJob : LocatedAsyncJob
     /// <param name="discordChannel">Discord channel</param>
     /// <param name="entry">Entry</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private async Task OnKick(ITextChannel discordChannel, GuildLogEntry entry)
+    private async Task OnKick(IMessageChannel discordChannel, GuildLogEntry entry)
     {
         if (discordChannel != null)
         {

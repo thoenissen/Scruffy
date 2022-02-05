@@ -65,9 +65,9 @@ public class WeeklyReminderPostJob : LocatedAsyncJob
                     var discordClient = serviceProvider.GetService<DiscordSocketClient>();
 
                     var channel = await discordClient.GetChannelAsync(data.ChannelId).ConfigureAwait(false);
-                    if (channel is ITextChannel textChannel)
+                    if (channel is IMessageChannel messageChannel)
                     {
-                        var message = await textChannel.SendMessageAsync(data.Message).ConfigureAwait(false);
+                        var message = await messageChannel.SendMessageAsync(data.Message).ConfigureAwait(false);
 
                         dbFactory.GetRepository<WeeklyReminderRepository>()
                                  .Refresh(obj => obj.Id == _id,

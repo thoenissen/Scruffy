@@ -117,15 +117,15 @@ public class CalendarMessageBuilderService : LocatedServiceBase
                 var channel = await _discordClient.GetChannelAsync(calendar.Channel.ChannelId)
                                                   .ConfigureAwait(false);
 
-                if (channel is ITextChannel textChannel)
+                if (channel is IMessageChannel messageChannel)
                 {
-                    await textChannel.SendMessageAsync(embed: new EmbedBuilder().WithTitle(LocalizationGroup.GetText("Motd", "Message of the day:"))
-                                                                                .WithDescription(Format.Code(messageBuilder.ToString()))
-                                                                                .WithColor(Color.Green)
-                                                                                .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
-                                                                                .WithTimestamp(DateTime.Now)
-                                                                                .Build())
-                                     .ConfigureAwait(false);
+                    await messageChannel.SendMessageAsync(embed: new EmbedBuilder().WithTitle(LocalizationGroup.GetText("Motd", "Message of the day:"))
+                                                                                   .WithDescription(Format.Code(messageBuilder.ToString()))
+                                                                                   .WithColor(Color.Green)
+                                                                                   .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
+                                                                                   .WithTimestamp(DateTime.Now)
+                                                                                   .Build())
+                                        .ConfigureAwait(false);
                 }
             }
         }
@@ -244,10 +244,10 @@ public class CalendarMessageBuilderService : LocatedServiceBase
                 var channel = await _discordClient.GetChannelAsync(calendar.Channel.ChannelId)
                                                   .ConfigureAwait(false);
 
-                if (channel is ITextChannel textChannel)
+                if (channel is IMessageChannel messageChannel)
                 {
-                    var message = await textChannel.GetMessageAsync(calendar.Channel.MessageId.Value)
-                                                   .ConfigureAwait(false);
+                    var message = await messageChannel.GetMessageAsync(calendar.Channel.MessageId.Value)
+                                                      .ConfigureAwait(false);
 
                     if (message is IUserMessage userMessage)
                     {

@@ -1,12 +1,12 @@
 ﻿using System.IO;
 
 using Discord;
-using Discord.Commands;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Account;
 using Scruffy.Data.Entity.Repositories.General;
 using Scruffy.Data.Enumerations.GuildWars2;
+using Scruffy.Services.Discord;
 using Scruffy.Services.GuildWars2;
 using Scruffy.Services.WebApi;
 
@@ -24,7 +24,7 @@ public class DebugService
     /// </summary>
     /// <param name="commandContext">Context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task DumpText(CommandContext commandContext)
+    public async Task DumpText(CommandContextContainer commandContext)
     {
         if (commandContext.Message.ReferencedMessage != null)
         {
@@ -43,7 +43,7 @@ public class DebugService
     /// </summary>
     /// <param name="commandContext">Context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task ListRoles(CommandContext commandContext)
+    public async Task ListRoles(CommandContextContainer commandContext)
     {
         await ListEntries(commandContext, "Roles", commandContext.Guild.Roles.Select(obj => obj.Mention).OrderBy(obj => obj)).ConfigureAwait(false);
     }
@@ -53,7 +53,7 @@ public class DebugService
     /// </summary>
     /// <param name="commandContext">Context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task ListChannels(CommandContext commandContext)
+    public async Task ListChannels(CommandContextContainer commandContext)
     {
         var channels = await commandContext.Guild
                                            .GetChannelsAsync()
@@ -67,7 +67,7 @@ public class DebugService
     /// </summary>
     /// <param name="commandContext">Context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task ListEmojis(CommandContext commandContext)
+    public async Task ListEmojis(CommandContextContainer commandContext)
     {
         await ListEntries(commandContext, "Emojis", commandContext.Guild.Emotes.Select(obj => obj.ToString()).OrderBy(obj => obj)).ConfigureAwait(false);
     }
@@ -77,7 +77,7 @@ public class DebugService
     /// </summary>
     /// <param name="commandContext">Context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task ListUsers(CommandContext commandContext)
+    public async Task ListUsers(CommandContextContainer commandContext)
     {
         var members = await commandContext.Guild
                                           .GetUsersAsync()
@@ -98,7 +98,7 @@ public class DebugService
     /// <param name="entries">Entries</param>
     /// <param name="isAddInline">Adding inline code</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    private async Task ListEntries(CommandContext commandContext, string description, IEnumerable<string> entries, bool isAddInline = true)
+    private async Task ListEntries(CommandContextContainer commandContext, string description, IEnumerable<string> entries, bool isAddInline = true)
     {
         var embedBuilder = new EmbedBuilder
                            {
@@ -156,7 +156,7 @@ public class DebugService
     /// <param name="commandContext">Command context</param>
     /// <param name="id">Id</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task PostLogEntry(CommandContext commandContext, int id)
+    public async Task PostLogEntry(CommandContextContainer commandContext, int id)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
@@ -262,7 +262,7 @@ public class DebugService
     /// <param name="date">Date</param>
     /// <param name="suppressEmpty">Suppress empty overview</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task PostLogOverview(ITextChannel channel, DateTime date, bool suppressEmpty)
+    public async Task PostLogOverview(IMessageChannel channel, DateTime date, bool suppressEmpty)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {

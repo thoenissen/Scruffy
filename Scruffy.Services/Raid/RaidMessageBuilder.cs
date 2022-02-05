@@ -110,10 +110,10 @@ public class RaidMessageBuilder : LocatedServiceBase
                 var channel = await _client.GetChannelAsync(appointment.ChannelId)
                                            .ConfigureAwait(false);
 
-                if (channel is ITextChannel textChannel)
+                if (channel is IMessageChannel messageChannel)
                 {
-                    var message = await textChannel.GetMessageAsync(appointment.MessageId)
-                                                   .ConfigureAwait(false);
+                    var message = await messageChannel.GetMessageAsync(appointment.MessageId)
+                                                      .ConfigureAwait(false);
 
                     if (message is IUserMessage userMessage)
                     {

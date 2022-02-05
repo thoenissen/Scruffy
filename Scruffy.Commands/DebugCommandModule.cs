@@ -45,6 +45,44 @@ public class DebugCommandModule : LocatedCommandModuleBase
                      .ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Wait for message
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [Command("message")]
+    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
+    public async Task Message()
+    {
+        await Context.Message
+                     .ReplyAsync("Please answer!")
+                     .ConfigureAwait(false);
+
+        var message = await Context.Interaction
+                                   .WaitForMessageAsync(obj => obj.Author.Id == Context.Message.Author.Id).ConfigureAwait(false);
+
+        await message.ReplyAsync(message.Content)
+                     .ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Wait for reaction
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [Command("reaction")]
+    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
+    public async Task Reaction()
+    {
+        var message = await Context.Message
+                                   .ReplyAsync("Please react!")
+                                   .ConfigureAwait(false);
+
+        var reaction = await Context.Interaction
+                                    .WaitForReactionAsync(message, Context.Message.Author).ConfigureAwait(false);
+
+        await message.ReplyAsync(reaction.Emote.ToString())
+                     .ConfigureAwait(false);
+    }
+
     #endregion // Methods
 
     #region Dump
@@ -652,9 +690,9 @@ public class DebugCommandModule : LocatedCommandModuleBase
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
         public async Task ShowLogOverview()
         {
-            if (Context.Channel is ITextChannel textChannel)
+            if (Context.Channel is IMessageChannel messageChannel)
             {
-                await DebugService.PostLogOverview(textChannel, DateTime.Today, false)
+                await DebugService.PostLogOverview(messageChannel, DateTime.Today, false)
                                   .ConfigureAwait(false);
             }
         }
@@ -668,14 +706,14 @@ public class DebugCommandModule : LocatedCommandModuleBase
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
         public async Task ShowLogOverview(string date)
         {
-            if (Context.Channel is ITextChannel textChannel)
+            if (Context.Channel is IMessageChannel messageChannel)
             {
                 if (DateTime.TryParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateParsed) == false)
                 {
                     dateParsed = DateTime.Today;
                 }
 
-                await DebugService.PostLogOverview(textChannel, dateParsed, false)
+                await DebugService.PostLogOverview(messageChannel, dateParsed, false)
                                   .ConfigureAwait(false);
             }
         }

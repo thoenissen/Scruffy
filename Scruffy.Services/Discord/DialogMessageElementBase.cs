@@ -1,7 +1,8 @@
-﻿
+﻿using Discord;
+
 using Scruffy.Services.Core.Localization;
 
-namespace Scruffy.Services.Core.Discord;
+namespace Scruffy.Services.Discord;
 
 /// <summary>
 /// Dialog element with message response
@@ -35,7 +36,7 @@ public abstract class DialogMessageElementBase<TData> : DialogElementBase<TData>
     /// </summary>
     /// <param name="message">Message</param>
     /// <returns>Result</returns>
-    public virtual TData ConvertMessage(DiscordMessage message) => (TData)Convert.ChangeType(message.Content, typeof(TData));
+    public virtual TData ConvertMessage(IUserMessage message) => (TData)Convert.ChangeType(message.Content, typeof(TData));
 
     /// <summary>
     /// Execute the dialog element
@@ -49,22 +50,14 @@ public abstract class DialogMessageElementBase<TData> : DialogElementBase<TData>
 
         DialogContext.Messages.Add(currentBotMessage);
 
-        var currentUserResponse = await CommandContext.Client
-                                                      .GetInteractivity()
+        var currentUserResponse = await CommandContext.Interaction
                                                       .WaitForMessageAsync(obj => obj.Author.Id == CommandContext.User.Id
-                                                                               && obj.ChannelId == CommandContext.Channel.Id)
+                                                                          && obj.Channel.Id == CommandContext.Channel.Id)
                                                       .ConfigureAwait(false);
 
-        if (currentUserResponse.TimedOut == false)
-        {
-            CommandContext.LastUserMessage = currentUserResponse.Result;
+        DialogContext.Messages.Add(currentUserResponse);
 
-            DialogContext.Messages.Add(currentUserResponse.Result);
-
-            return ConvertMessage(currentUserResponse.Result);
-        }
-
-        throw new TimeoutException();
+        return ConvertMessage(currentUserResponse);
     }
 
     #endregion // Methods

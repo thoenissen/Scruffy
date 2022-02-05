@@ -1,8 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Discord;
 
-using Scruffy.Services.Core.Discord.Attributes;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Scruffy.Services.Core.Discord;
+using Scruffy.Services.Core;
+using Scruffy.Services.Discord.Attributes;
+
+namespace Scruffy.Services.Discord;
 
 /// <summary>
 /// Handling dialog elements
@@ -110,9 +113,11 @@ public sealed class DialogHandler : IAsyncDisposable, IDisposable
             {
                 dialogContext.Messages.Add(commandContext.Message);
 
-                await commandContext.Channel
-                                    .DeleteMessagesAsync(dialogContext.Messages)
-                                    .ConfigureAwait(false);
+                if (commandContext.Channel is ITextChannel textChannel)
+                {
+                    await textChannel.DeleteMessagesAsync(dialogContext.Messages)
+                                     .ConfigureAwait(false);
+                }
             }
 
             return data;
@@ -191,9 +196,11 @@ public sealed class DialogHandler : IAsyncDisposable, IDisposable
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public async Task DeleteMessages()
     {
-        await _commandContext.Channel
-                             .DeleteMessagesAsync(DialogContext.Messages)
+        if (_commandContext.Channel is ITextChannel textChannel)
+        {
+            await textChannel.DeleteMessagesAsync(DialogContext.Messages)
                              .ConfigureAwait(false);
+        }
     }
 
     #endregion // Methods

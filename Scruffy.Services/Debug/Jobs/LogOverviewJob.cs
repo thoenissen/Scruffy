@@ -31,9 +31,9 @@ public class LogOverviewJob : LocatedAsyncJob
                 var debugService = serviceProvider.GetService<DebugService>();
 
                 if (await discordClient.GetChannelAsync(Convert.ToUInt64(debugChannel))
-                                       .ConfigureAwait(false) is ITextChannel textChannel)
+                                       .ConfigureAwait(false) is IMessageChannel messageChannel)
                 {
-                    await debugService.PostLogOverview(textChannel,
+                    await debugService.PostLogOverview(messageChannel,
                                                        DateTime.Today.AddDays(-1),
                                                        true)
                                       .ConfigureAwait(false);

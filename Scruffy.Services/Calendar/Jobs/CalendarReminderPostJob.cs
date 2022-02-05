@@ -77,10 +77,10 @@ public class CalendarReminderPostJob : LocatedAsyncJob
                     var channel = await discordClient.GetChannelAsync(data.ChannelId)
                                                      .ConfigureAwait(false);
 
-                    if (channel is ITextChannel textChannel)
+                    if (channel is IMessageChannel messageChannel)
                     {
-                        var message = await textChannel.SendMessageAsync(data.ReminderMessage)
-                                                       .ConfigureAwait(false);
+                        var message = await messageChannel.SendMessageAsync(data.ReminderMessage)
+                                                          .ConfigureAwait(false);
 
                         dbFactory.GetRepository<CalendarAppointmentRepository>()
                                  .Refresh(obj => obj.Id == _id,

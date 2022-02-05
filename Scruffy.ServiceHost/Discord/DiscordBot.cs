@@ -88,22 +88,25 @@ public sealed class DiscordBot : IAsyncDisposable
         _administrationPermissionsValidationService = new AdministrationPermissionsValidationService();
         _blockedChannelService = new BlockedChannelService(localizationService);
 
-        GlobalServiceProvider.Current.AddSingleton(_discordClient);
-        GlobalServiceProvider.Current.AddSingleton(_prefixResolver);
-        GlobalServiceProvider.Current.AddSingleton(_administrationPermissionsValidationService);
-        GlobalServiceProvider.Current.AddSingleton(_blockedChannelService);
-        GlobalServiceProvider.Current.AddSingleton(new DiscordStatusService(_discordClient));
-
         var commandConfiguration = new CommandServiceConfig
                                    {
                                        LogLevel = LogSeverity.Info,
                                        CaseSensitiveCommands = false,
-                                       DefaultRunMode = RunMode.Sync,
+                                       DefaultRunMode = RunMode.Async,
                                        IgnoreExtraArgs = false,
                                        ThrowOnError = true
                                    };
 
         _commands = new CommandService(commandConfiguration);
+        _commands.CommandExecuted += OnCommandExecuted;
+
+        GlobalServiceProvider.Current.AddSingleton(_discordClient);
+        GlobalServiceProvider.Current.AddSingleton(_prefixResolver);
+        GlobalServiceProvider.Current.AddSingleton(_administrationPermissionsValidationService);
+        GlobalServiceProvider.Current.AddSingleton(_blockedChannelService);
+        GlobalServiceProvider.Current.AddSingleton(new DiscordStatusService(_discordClient));
+        GlobalServiceProvider.Current.AddSingleton(new InteractionService(_discordClient));
+        GlobalServiceProvider.Current.AddSingleton(_commands);
 
         await _commands.AddModulesAsync(Assembly.Load("Scruffy.Commands"), GlobalServiceProvider.Current.GetServiceProvider())
                        .ConfigureAwait(false);
@@ -131,40 +134,71 @@ public sealed class DiscordBot : IAsyncDisposable
                 if (msg.HasStringPrefix(_prefixResolver.GetPrefix(msg), ref pos, StringComparison.InvariantCultureIgnoreCase)
                  || msg.HasMentionPrefix(_discordClient.CurrentUser, ref pos))
                 {
-                    using (var context = new CommandContextContainer(_discordClient, msg))
+                    var context = new CommandContextContainer(_discordClient, msg);
+
+                    try
                     {
-                        try
-                        {
-                            var result = await _commands.ExecuteAsync(context, pos, context.ServiceProvider)
-                                                        .ConfigureAwait(false);
+                        await _commands.ExecuteAsync(context, pos, context.ServiceProvider)
+                                       .ConfigureAwait(false);
+                    }
+                    catch (Exception ex)
+                    {
+                        await HandleCommandException(context, ex).ConfigureAwait(false);
+                    }
+                }
+            }
+        }
+    }
 
-                            if (result.IsSuccess == false)
+    /// <summary>
+    /// Command executed
+    /// </summary>
+    /// <param name="commandInfo">Command info</param>
+    /// <param name="context">Context</param>
+    /// <param name="result">Result</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    private async Task OnCommandExecuted(Optional<CommandInfo> commandInfo, ICommandContext context, IResult result)
+    {
+        if (context is CommandContextContainer container)
+        {
+            using (container)
+            {
+                if (result.IsSuccess == false)
+                {
+                    switch (result.Error)
+                    {
+                        case CommandError.UnknownCommand:
+                        case CommandError.ParseFailed:
+                        case CommandError.BadArgCount:
+                        case CommandError.ObjectNotFound:
+                        case CommandError.MultipleMatches:
                             {
-                                switch (result.Error)
-                                {
-                                    case CommandError.UnknownCommand:
-                                    case CommandError.ParseFailed:
-                                    case CommandError.BadArgCount:
-                                    case CommandError.ObjectNotFound:
-                                    case CommandError.MultipleMatches:
-                                        {
-                                            await context.Operations.ShowHelp(msg.Content[pos..])
-                                                         .ConfigureAwait(false);
-                                        }
-                                        break;
+                                var pos = 0;
 
-                                    case CommandError.UnmetPrecondition:
-                                    case CommandError.Exception:
-                                    case CommandError.Unsuccessful:
-                                    default:
-                                        break;
+                                if (container.Message.HasStringPrefix(_prefixResolver.GetPrefix(container.Message), ref pos, StringComparison.InvariantCultureIgnoreCase)
+                                 || container.Message.HasMentionPrefix(_discordClient.CurrentUser, ref pos))
+                                {
+                                    await container.Operations
+                                                   .ShowHelp(container.Message.Content[pos..])
+                                                   .ConfigureAwait(false);
                                 }
                             }
-                        }
-                        catch (Exception ex)
-                        {
-                            await HandleCommandException(context, ex).ConfigureAwait(false);
-                        }
+
+                            break;
+
+                        case CommandError.Exception:
+                            {
+                                if (result is ExecuteResult executeResult)
+                                {
+                                    await HandleCommandException(container, executeResult.Exception).ConfigureAwait(false);
+                                }
+                            }
+                            break;
+
+                        case CommandError.UnmetPrecondition:
+                        case CommandError.Unsuccessful:
+                        default:
+                            break;
                     }
                 }
             }
@@ -182,7 +216,7 @@ public sealed class DiscordBot : IAsyncDisposable
         if (ex is ScruffyException scruffyException)
         {
             await context.Channel
-                         .SendMessageAsync(scruffyException.GetLocalizedMessage())
+                         .SendMessageAsync($"{context.Message.Author.Mention} {scruffyException.GetLocalizedMessage()}")
                          .ConfigureAwait(false);
         }
         else

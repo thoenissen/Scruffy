@@ -634,6 +634,9 @@
       "TitleSearch": "Titelsuche",
       "TextSearch": "Textsuche"
     },
+    "ScruffyTimeoutException": {
+      "CommandTimeout": "Die Verarbeitung des Befehls wurde wegen einer Zeitüberschreitung abgebrochen."
+    },
     "MissingGuildWars2ApiPermissionException": {
       "General": "Allgemein",
       "Account": "account",
@@ -655,7 +658,7 @@
       "HelpCommandOverviewTitle": "Übersicht über die wichtigsten Befehle",
       "HelpCommandOverviewDescription": "In der folgenden Nachricht werden die wichtigsten Befehle der ausgewählten Kategorie ausgegeben."
     },
-    "HelpCommandFormatter": {
+    "CommandHelpService": {
       "Help": "Befehlshilfe",
       "GeneralHelp": "Es werden alle Befehlsgruppen ausgegeben. Spezifiziere den Befehl zur Ausgabe von weiteren Informationen.",
       "NoDescription": "Es steht keine Beschreibung zur Verfügung",
@@ -663,13 +666,24 @@
       "Commands": "Befehlsgruppen",
       "Subcommands": "Befehle",
 
-      "help": "Ausgabe der Hilfe",
+      "BuilderCommandListDescription": "Im folgenden wird die Hilfe zum Befehl `{0}` angezeigt.",
+      "BuilderTitleGeneral": "Scruffy - Befehlshilfe",
+      "BuilderTitleExplanation": "Erläuterung",
+      "BuilderTitleUsage": "Verwendung",
+      "BuilderTitleArguments": "Argumente",
+      "BuilderTitleLegend": "Legende",
+      "BuilderTitleLegendRequired": "`<Argument>`: Dieses Argument ist erforderlich.",
+      "BuilderTitleLegendOptional": "`[Argument]`: Dieses Argument ist optional.",
+      "BuilderTitleLegendRemainder": "`...`: Bei diesem Argument könnten Leerzeichen und Umbrüche verwendet werden.",
+      "BuilderDescriptionGeneral": "Mit dem Befehl `help <Befehl>` kannst du dir die Hilfe eines bestimmten Befehls ausgeben lassen.",
+
+      "help": "Befehlsilfe",
       "help overview": "Übersicht der wichtigsten Befehle",
       "help overview all": "Übersicht aller Befehle",
       "help overview developer": "Übersicht aller Entwicklerbefehle",
       "help overview admin": "Übersicht aller Administratorbefehle",
 
-      "account": "Guild Wars 2 Account Konfiguration",
+      "account": "Account-Konfiguration",
       "account add": "Hinzufügen eines neuen Accounts",
       "account edit": "Bearbeitung eines Accounts",
 
@@ -696,6 +710,8 @@
       "fractal leave days": "Tage",
       "fractal leave days description": "Tag oder Tage des Termins",
       "fractal leave days format": "Mo/Di/Mi/Do/Fr/Sa/So",
+
+      "information": "Informationen",
 
       "raid": "Schlachtzug-Gruppensuche",
 
@@ -745,6 +761,10 @@
       "raid overview": "Übersichten",
       "raid overview participation": "Teilnahmepunkteübersicht",
       "raid overview levels": "Erfahrungslevelübersicht",
+
+      "statistics": "Statistiken", 
+
+      "gif": "Bildersuche", 
 
       "guild": "Gildenverwaltung",
       "guild setup": "Einrichtung der Gildenadministration",
@@ -809,17 +829,17 @@
       "config adminrole": "Administratorenrolle setzen",
       "config adminrole role": "Administratorenrolle",
 
-      "reminder": "Erstellung von Erinnerungen",
+      "reminder": "Erinnerungen",
 
       "reminder in": "Erinnerung nach einem angegebenen Zeitraum",
       "reminder in timeSpan": "Zeitraum",
       "reminder in timeSpan format": "xh/m/s",
       "reminder in timeSpan description": "Zeitraum bis zur Erinnerung",
       "reminder in message": "Nachricht",
-      "reminder in message description": "Optional Nachricht",
+      "reminder in message description": "Nachricht",
       "reminder at": "Erinnerung zum angegebenen Zeitpunkt",
       "reminder at time": "Zeit",
-      "reminder at time format": "mm:dd",
+      "reminder at time format": "hh:mm",
       "reminder at time description": "Zeit der Erinnerung",
       "reminder at date": "Datum",
       "reminder at date format": "yyyy-MM-dd",

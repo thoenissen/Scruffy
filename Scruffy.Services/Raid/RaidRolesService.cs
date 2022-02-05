@@ -166,7 +166,7 @@ public class RaidRolesService : LocatedServiceBase
                                                              .ConfigureAwait(false);
 
             var currentUserResponse = await commandContextContainer.Interaction
-                                                                   .WaitForMessage(obj => obj.Author.Id == commandContextContainer.User.Id
+                                                                   .WaitForMessageAsync(obj => obj.Author.Id == commandContextContainer.User.Id
                                                                                        && obj.Channel.Id == commandContextContainer.Channel.Id)
                                                                    .ConfigureAwait(false);
 
@@ -221,7 +221,7 @@ public class RaidRolesService : LocatedServiceBase
                                                                                  .ConfigureAwait(false);
 
                                 currentUserResponse = await commandContextContainer.Interaction
-                                                                                   .WaitForMessage(obj => obj.Author.Id == commandContextContainer.User.Id
+                                                                                   .WaitForMessageAsync(obj => obj.Author.Id == commandContextContainer.User.Id
                                                                                                        && obj.Channel.Id == commandContextContainer.Channel.Id)
                                                                                    .ConfigureAwait(false);
 
@@ -413,7 +413,7 @@ public class RaidRolesService : LocatedServiceBase
                                      .ConfigureAwait(false);
 
         var response = await commandContextContainer.Interaction
-                                                    .WaitForMessage(obj => obj.Channel.Id == commandContextContainer.Channel.Id
+                                                    .WaitForMessageAsync(obj => obj.Channel.Id == commandContextContainer.Channel.Id
                                                                         && obj.Author.Id == commandContextContainer.Member.Id)
                                                     .ConfigureAwait(false);
 
@@ -484,7 +484,7 @@ public class RaidRolesService : LocatedServiceBase
                                                              .ConfigureAwait(false);
 
             var currentUserResponse = await commandContextContainer.Interaction
-                                                                   .WaitForMessage(obj => obj.Author.Id == commandContextContainer.User.Id
+                                                                   .WaitForMessageAsync(obj => obj.Author.Id == commandContextContainer.User.Id
                                                                                        && obj.Channel.Id == commandContextContainer.Channel.Id)
                                                          .ConfigureAwait(false);
 
@@ -681,7 +681,7 @@ public class RaidRolesService : LocatedServiceBase
                                      .ConfigureAwait(false);
 
         var currentUserResponse = await commandContextContainer.Interaction
-                                                               .WaitForMessage(obj => obj.Author.Id == commandContextContainer.User.Id
+                                                               .WaitForMessageAsync(obj => obj.Author.Id == commandContextContainer.User.Id
                                                                                    && obj.Channel.Id == commandContextContainer.Channel.Id)
                                                                .ConfigureAwait(false);
 

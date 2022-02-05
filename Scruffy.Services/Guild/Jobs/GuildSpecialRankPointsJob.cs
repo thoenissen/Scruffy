@@ -237,10 +237,10 @@ public class GuildSpecialRankPointsJob : LocatedAsyncJob
                             var channel = await client.GetChannelAsync(configuration.ChannelId.Value)
                                                       .ConfigureAwait(false);
 
-                            if (channel is ITextChannel textChannel)
+                            if (channel is IMessageChannel messageChannel)
                             {
-                                await textChannel.SendMessageAsync(embed: builder.Build())
-                                                 .ConfigureAwait(false);
+                                await messageChannel.SendMessageAsync(embed: builder.Build())
+                                                    .ConfigureAwait(false);
                             }
                         }
                         else

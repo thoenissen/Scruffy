@@ -187,11 +187,11 @@ public class WordChainJob : LocatedAsyncJob
                     var channel = await client.GetChannelAsync(gameChannel.DiscordChannelId)
                                               .ConfigureAwait(false);
 
-                    if (channel is ITextChannel textChannel)
+                    if (channel is IMessageChannel messageChannel)
                     {
                         var messages = new List<IMessage>();
 
-                        await foreach (var collection in textChannel.GetMessagesAsync(15).ConfigureAwait(false))
+                        await foreach (var collection in messageChannel.GetMessagesAsync(15).ConfigureAwait(false))
                         {
                             messages.AddRange(collection);
                         }
@@ -207,8 +207,8 @@ public class WordChainJob : LocatedAsyncJob
 
                             if (words.Count > 0)
                             {
-                                await textChannel.SendMessageAsync(words[new Random(DateTime.Now.Millisecond).Next(0, words.Count - 1)])
-                                                 .ConfigureAwait(false);
+                                await messageChannel.SendMessageAsync(words[new Random(DateTime.Now.Millisecond).Next(0, words.Count - 1)])
+                                                    .ConfigureAwait(false);
                             }
                         }
                     }

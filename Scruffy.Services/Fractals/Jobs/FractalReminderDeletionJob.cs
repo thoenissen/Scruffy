@@ -58,10 +58,10 @@ public class FractalReminderDeletionJob : LocatedAsyncJob
             {
                 var channel = await discordClient.GetChannelAsync(_channelId)
                                                  .ConfigureAwait(false);
-                if (channel is ITextChannel textChannel)
+                if (channel is IMessageChannel messageChannel)
                 {
-                    var message = await textChannel.GetMessageAsync(_messageId)
-                                                   .ConfigureAwait(false);
+                    var message = await messageChannel.GetMessageAsync(_messageId)
+                                                      .ConfigureAwait(false);
                     if (message != null)
                     {
                         await message.DeleteAsync()
