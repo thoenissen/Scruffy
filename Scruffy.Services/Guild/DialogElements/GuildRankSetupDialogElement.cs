@@ -1,12 +1,11 @@
-﻿using DSharpPlus;
-using DSharpPlus.Entities;
+﻿using Discord;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Guild;
 using Scruffy.Data.Entity.Tables.Guild;
 using Scruffy.Data.Services.Guild;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 using Scruffy.Services.Guild.DialogElements.Forms;
 
 namespace Scruffy.Services.Guild.DialogElements;
@@ -93,7 +92,7 @@ public class GuildRankSetupDialogElement : DialogEmbedReactionElementBase<bool>
     /// </summary>
     /// <param name="builder">Builder</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public override Task EditMessage(DiscordEmbedBuilder builder)
+    public override Task EditMessage(EmbedBuilder builder)
     {
         builder.WithTitle(LocalizationGroup.GetText("ChooseCommandTitle", "Guild special rank configuration"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseCommandDescription", "With this assistant you are able to configure the guild special ranks. The following special ranks are already created:"));
@@ -105,7 +104,7 @@ public class GuildRankSetupDialogElement : DialogEmbedReactionElementBase<bool>
         {
             foreach (var rank in ranks)
             {
-                levelsBuilder.AppendLine(Formatter.Bold($"{rank.InGameName} ({CommandContext.Guild.GetRole(rank.DiscordRoleId).Mention})"));
+                levelsBuilder.AppendLine(Format.Bold($"{rank.InGameName} ({CommandContext.Guild.GetRole(rank.DiscordRoleId).Mention})"));
             }
         }
         else
@@ -130,8 +129,8 @@ public class GuildRankSetupDialogElement : DialogEmbedReactionElementBase<bool>
                          {
                              new ()
                              {
-                                 Emoji = DiscordEmojiService.GetAddEmoji(CommandContext.Client),
-                                 CommandText = LocalizationGroup.GetFormattedText("AddCommand", "{0} Add rank", DiscordEmojiService.GetAddEmoji(CommandContext.Client)),
+                                 Emote = DiscordEmoteService.GetAddEmote(CommandContext.Client),
+                                 CommandText = LocalizationGroup.GetFormattedText("AddCommand", "{0} Add rank", DiscordEmoteService.GetAddEmote(CommandContext.Client)),
                                  Func = async () =>
                                         {
                                             var data = await DialogHandler.RunForm<CreateGuildRankFormData>(CommandContext, false)
@@ -196,8 +195,8 @@ public class GuildRankSetupDialogElement : DialogEmbedReactionElementBase<bool>
             {
                 _reactions.Add(new ReactionData<bool>
                                {
-                                   Emoji = DiscordEmojiService.GetEditEmoji(CommandContext.Client),
-                                   CommandText = LocalizationGroup.GetFormattedText("EditCommand", "{0} Edit rank", DiscordEmojiService.GetEditEmoji(CommandContext.Client)),
+                                   Emote = DiscordEmoteService.GetEditEmote(CommandContext.Client),
+                                   CommandText = LocalizationGroup.GetFormattedText("EditCommand", "{0} Edit rank", DiscordEmoteService.GetEditEmote(CommandContext.Client)),
                                    Func = async () =>
                                           {
                                               var levelId = await RunSubElement<GuildRankSelectionDialogElement, int>().ConfigureAwait(false);
@@ -218,8 +217,8 @@ public class GuildRankSetupDialogElement : DialogEmbedReactionElementBase<bool>
 
                 _reactions.Add(new ReactionData<bool>
                                {
-                                   Emoji = DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client),
-                                   CommandText = LocalizationGroup.GetFormattedText("DeleteCommand", "{0} Delete rank", DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client)),
+                                   Emote = DiscordEmoteService.GetTrashCanEmote(CommandContext.Client),
+                                   CommandText = LocalizationGroup.GetFormattedText("DeleteCommand", "{0} Delete rank", DiscordEmoteService.GetTrashCanEmote(CommandContext.Client)),
                                    Func = async () =>
                                           {
                                               var rankId = await RunSubElement<GuildRankSelectionDialogElement, int>().ConfigureAwait(false);
@@ -233,8 +232,8 @@ public class GuildRankSetupDialogElement : DialogEmbedReactionElementBase<bool>
 
             _reactions.Add(new ReactionData<bool>
                            {
-                               Emoji = DiscordEmojiService.GetCrossEmoji(CommandContext.Client),
-                               CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmojiService.GetCrossEmoji(CommandContext.Client)),
+                               Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
+                               CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmoteService.GetCrossEmote(CommandContext.Client)),
                                Func = () => Task.FromResult(false)
                            });
         }

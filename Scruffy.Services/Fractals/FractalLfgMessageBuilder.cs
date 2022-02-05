@@ -1,5 +1,5 @@
-﻿using DSharpPlus;
-using DSharpPlus.Entities;
+﻿using Discord;
+using Discord.WebSocket;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -20,7 +20,7 @@ public class FractalLfgMessageBuilder : LocatedServiceBase
     /// <summary>
     /// Discord client
     /// </summary>
-    private DiscordClient _client;
+    private DiscordSocketClient _client;
 
     #endregion // Fields
 
@@ -31,7 +31,7 @@ public class FractalLfgMessageBuilder : LocatedServiceBase
     /// </summary>
     /// <param name="client">Discord client</param>
     /// <param name="localizationService">Localization service</param>
-    public FractalLfgMessageBuilder(DiscordClient client, LocalizationService localizationService)
+    public FractalLfgMessageBuilder(DiscordSocketClient client, LocalizationService localizationService)
         : base(localizationService)
     {
         _client = client;
@@ -82,10 +82,10 @@ public class FractalLfgMessageBuilder : LocatedServiceBase
                                         .GroupBy(obj2 => obj2.Key.Date)
                                         .ToList();
 
-                var messageBuilder = new DiscordEmbedBuilder
+                var messageBuilder = new EmbedBuilder
                                      {
                                          Title = data.Title,
-                                         Color = DiscordColor.Green,
+                                         Color = Color.Green,
                                          Description = data.Description
                                      };
 
@@ -127,11 +127,13 @@ public class FractalLfgMessageBuilder : LocatedServiceBase
                 messageBuilder.WithTimestamp(DateTime.Now);
 
                 var channel = await _client.GetChannelAsync(data.ChannelId).ConfigureAwait(false);
-                if (channel != null)
+                if (channel is IMessageChannel messageChannel)
                 {
-                    var message = await channel.GetMessageAsync(data.MessageId).ConfigureAwait(false);
-
-                    await message.ModifyAsync(null, messageBuilder.Build()).ConfigureAwait(false);
+                    var message = await messageChannel.GetMessageAsync(data.MessageId).ConfigureAwait(false);
+                    if (message is IUserMessage userMessage)
+                    {
+                        await userMessage.ModifyAsync(obj => obj.Embed = messageBuilder.Build()).ConfigureAwait(false);
+                    }
                 }
             }
         }
@@ -149,16 +151,21 @@ public class FractalLfgMessageBuilder : LocatedServiceBase
         var channel = await _client.GetChannelAsync(channelId)
                                    .ConfigureAwait(false);
 
-        var builder = new StringBuilder();
-        builder.Append(LocalizationGroup.GetFormattedText("AppointmentReminder", "{0} - Appointment reminder", appointmentTimeStamp.ToString("g", LocalizationGroup.CultureInfo)));
-        builder.Append('\n');
-
-        foreach (var registration in registrations)
+        if (channel is IMessageChannel messageChannel)
         {
-            builder.Append($"> ● {(await _client.GetUserAsync(registration.DiscordAccountId).ConfigureAwait(false)).Mention}\n");
+            var builder = new StringBuilder();
+            builder.Append(LocalizationGroup.GetFormattedText("AppointmentReminder", "{0} - Appointment reminder", appointmentTimeStamp.ToString("g", LocalizationGroup.CultureInfo)));
+            builder.Append('\n');
+
+            foreach (var registration in registrations)
+            {
+                builder.Append($"> ● {(await _client.GetUserAsync(registration.DiscordAccountId).ConfigureAwait(false)).Mention}\n");
+            }
+
+            return (await messageChannel.SendMessageAsync(builder.ToString()).ConfigureAwait(false)).Id;
         }
 
-        return (await channel.SendMessageAsync(builder.ToString()).ConfigureAwait(false)).Id;
+        throw new InvalidOperationException();
     }
 
     #endregion // Methods

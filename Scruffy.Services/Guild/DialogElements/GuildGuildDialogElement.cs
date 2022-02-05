@@ -1,7 +1,7 @@
-﻿using DSharpPlus.Entities;
+﻿using Discord;
 
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.Guild.DialogElements;
@@ -39,9 +39,9 @@ public class GuildGuildDialogElement : DialogEmbedMessageElementBase<string>
     /// Return the message of element
     /// </summary>
     /// <returns>Message</returns>
-    public override DiscordEmbedBuilder GetMessage()
+    public override EmbedBuilder GetMessage()
     {
-        var builder = new DiscordEmbedBuilder();
+        var builder = new EmbedBuilder();
         builder.WithTitle(LocalizationGroup.GetText("ChooseGuildTitle", "Guild selection"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseGuildDescription", "Please choose one of the following guilds:"));
 
@@ -85,7 +85,7 @@ public class GuildGuildDialogElement : DialogEmbedMessageElementBase<string>
     /// </summary>
     /// <param name="message">Message</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public override Task<string> ConvertMessage(DiscordMessage message)
+    public override Task<string> ConvertMessage(IUserMessage message)
     {
         return Task.FromResult(int.TryParse(message.Content, out var index) && _guilds.TryGetValue(index, out var selectedGuild) ? selectedGuild : throw new InvalidOperationException());
     }

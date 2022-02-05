@@ -1,16 +1,15 @@
 ﻿using System.Net;
 using System.Net.Http;
 
-using DSharpPlus;
-using DSharpPlus.Entities;
+using Discord;
 
 using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Account;
 using Scruffy.Data.Json.GuildWars2.Core;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 using Scruffy.Services.GuildWars2;
 using Scruffy.Services.WebApi;
 
@@ -50,7 +49,7 @@ public class AccountEditDialogElement : DialogEmbedReactionElementBase<bool>
     /// </summary>
     /// <param name="builder">Builder</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public override async Task EditMessage(DiscordEmbedBuilder builder)
+    public override async Task EditMessage(EmbedBuilder builder)
     {
         builder.WithTitle(LocalizationGroup.GetText("ChooseCommandTitle", "Account configuration"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseCommandDescription", "With this assistant you are able to configure your Guild Wars 2 account configuration."));
@@ -74,9 +73,9 @@ public class AccountEditDialogElement : DialogEmbedReactionElementBase<bool>
 
             var stringBuilder = new StringBuilder();
 
-            stringBuilder.AppendLine($"{Formatter.InlineCode(LocalizationGroup.GetText("Name", "Name"))}: {data.Name}");
-            stringBuilder.AppendLine($"{Formatter.InlineCode(LocalizationGroup.GetText("IsApiKeyAvailable", "Api Key"))}: {(data.IsApiKeyAvailable ? DiscordEmojiService.GetCheckEmoji(CommandContext.Client) : DiscordEmojiService.GetCrossEmoji(CommandContext.Client))}");
-            stringBuilder.AppendLine($"{Formatter.InlineCode(LocalizationGroup.GetText("DpsReportUserToken", "dps.report user token"))}: {(string.IsNullOrWhiteSpace(data.DpsReportUserToken) ? DiscordEmojiService.GetCrossEmoji(CommandContext.Client) : data.DpsReportUserToken)}");
+            stringBuilder.AppendLine($"{Format.Code(LocalizationGroup.GetText("Name", "Name"))}: {data.Name}");
+            stringBuilder.AppendLine($"{Format.Code(LocalizationGroup.GetText("IsApiKeyAvailable", "Api Key"))}: {(data.IsApiKeyAvailable ? DiscordEmoteService.GetCheckEmote(CommandContext.Client) : DiscordEmoteService.GetCrossEmote(CommandContext.Client))}");
+            stringBuilder.AppendLine($"{Format.Code(LocalizationGroup.GetText("DpsReportUserToken", "dps.report user token"))}: {(string.IsNullOrWhiteSpace(data.DpsReportUserToken) ? DiscordEmoteService.GetCrossEmote(CommandContext.Client) : data.DpsReportUserToken)}");
 
             builder.AddField(LocalizationGroup.GetText("Data", "Data"), stringBuilder.ToString());
         }
@@ -101,8 +100,8 @@ public class AccountEditDialogElement : DialogEmbedReactionElementBase<bool>
                               {
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetEditEmoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("EditApiKeyCommand", "{0} Edit api key", DiscordEmojiService.GetEditEmoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetEditEmote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("EditApiKeyCommand", "{0} Edit api key", DiscordEmoteService.GetEditEmote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  var success = false;
@@ -177,8 +176,8 @@ public class AccountEditDialogElement : DialogEmbedReactionElementBase<bool>
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetEdit2Emoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("EditDpsReportUserTokenCommand", "{0} Edit dps report user token", DiscordEmojiService.GetEdit2Emoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetEdit2Emote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("EditDpsReportUserTokenCommand", "{0} Edit dps report user token", DiscordEmoteService.GetEdit2Emote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  var token = await RunSubElement<AccountDpsReportUserTokenDialogElement, string>()
@@ -202,8 +201,8 @@ public class AccountEditDialogElement : DialogEmbedReactionElementBase<bool>
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetCrossEmoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmojiService.GetCrossEmoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmoteService.GetCrossEmote(CommandContext.Client)),
                                       Func = () => Task.FromResult(false)
                                   }
                               };

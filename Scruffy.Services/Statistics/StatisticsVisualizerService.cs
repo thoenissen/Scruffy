@@ -1,13 +1,12 @@
-﻿using DSharpPlus;
-using DSharpPlus.Entities;
+﻿using Discord;
 
 using Newtonsoft.Json;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Statistics;
 using Scruffy.Data.Json.QuickChart;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.Statistics;
@@ -54,13 +53,11 @@ public class StatisticsVisualizerService : LocatedServiceBase
         {
             var now = DateTime.Now;
 
-            var messageBuilder = new DiscordMessageBuilder();
-            var embedBuilder = new DiscordEmbedBuilder()
-                               .WithThumbnail(commandContext.User.AvatarUrl)
-                               .WithTitle(LocalizationGroup.GetText("MeOverviewTitle", "Personal Statistics"))
-                               .WithColor(DiscordColor.Green)
-                               .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
-                               .WithTimestamp(now);
+            var embedBuilder = new EmbedBuilder().WithThumbnailUrl(commandContext.User.GetAvatarUrl())
+                                                 .WithTitle(LocalizationGroup.GetText("MeOverviewTitle", "Personal Statistics"))
+                                                 .WithColor(Color.Green)
+                                                 .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
+                                                 .WithTimestamp(now);
 
             var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine($"{commandContext.User.Mention} ({commandContext.User.Username}#{commandContext.User.Discriminator})");
@@ -73,17 +70,17 @@ public class StatisticsVisualizerService : LocatedServiceBase
             stringBuilder = new StringBuilder();
             stringBuilder.Append(LocalizationGroup.GetText("MeOverviewJoined", "Joined:"));
             stringBuilder.Append(' ');
-            stringBuilder.Append(Formatter.InlineCode(commandContext.Member.JoinedAt.LocalDateTime.ToString("g")));
+            stringBuilder.Append(Format.Code(commandContext.Member.JoinedAt?.LocalDateTime.ToString("g")));
             stringBuilder.Append(Environment.NewLine);
 
             stringBuilder.Append(LocalizationGroup.GetText("MeOverviewCreated", "Created:"));
             stringBuilder.Append(' ');
-            stringBuilder.Append(Formatter.InlineCode(commandContext.User.CreationTimestamp.LocalDateTime.ToString("g")));
+            stringBuilder.Append(Format.Code(commandContext.User.CreatedAt.LocalDateTime.ToString("g")));
             stringBuilder.Append(Environment.NewLine);
 
             stringBuilder.Append(LocalizationGroup.GetText("MeOverviewUserId", "User ID:"));
             stringBuilder.Append(' ');
-            stringBuilder.Append(Formatter.InlineCode(commandContext.User.Id.ToString()));
+            stringBuilder.Append(Format.Code(commandContext.User.Id.ToString()));
             stringBuilder.Append(Environment.NewLine);
 
             embedBuilder.AddField(LocalizationGroup.GetText("MeOverviewUserInfo", "User Info"), stringBuilder.ToString());
@@ -104,16 +101,18 @@ public class StatisticsVisualizerService : LocatedServiceBase
                                       .FirstOrDefault();
             if (mostActive != null)
             {
-                var channel = commandContext.Guild.GetChannel(mostActive.Channeld);
-                if (channel != null)
+                var channel = await commandContext.Guild
+                                                  .GetChannelAsync(mostActive.Channeld)
+                                                  .ConfigureAwait(false);
+                if (channel is ITextChannel textChannel)
                 {
                     stringBuilder.Append(LocalizationGroup.GetText("MeOverviewMessage", "Message:"));
                     stringBuilder.Append(' ');
-                    stringBuilder.Append(channel.Mention);
+                    stringBuilder.Append(textChannel.Mention);
                     stringBuilder.Append(' ');
-                    stringBuilder.Append(Formatter.InlineCode(mostActive.Count.ToString()
-                                                            + ' '
-                                                            + LocalizationGroup.GetText("MeOverviewMessages", "messages")));
+                    stringBuilder.Append(Format.Code(mostActive.Count.ToString()
+                                                   + ' '
+                                                   + LocalizationGroup.GetText("MeOverviewMessages", "messages")));
                 }
             }
 
@@ -126,38 +125,38 @@ public class StatisticsVisualizerService : LocatedServiceBase
             stringBuilder.Append(LocalizationGroup.GetText("MeOverview60Days", "60 Days:"));
             stringBuilder.Append(' ');
             var limit = now.AddDays(-60);
-            stringBuilder.Append(Formatter.InlineCode(dbFactory.GetRepository<DiscordMessageRepository>()
-                                                               .GetQuery()
-                                                               .Count(obj => obj.DiscordServerId == commandContext.Guild.Id
-                                                                          && obj.DiscordAccountId == commandContext.User.Id
-                                                                          && obj.TimeStamp > limit)
-                                                               .ToString()
+            stringBuilder.Append(Format.Code(dbFactory.GetRepository<DiscordMessageRepository>()
+                                                      .GetQuery()
+                                                      .Count(obj => obj.DiscordServerId == commandContext.Guild.Id
+                                                                 && obj.DiscordAccountId == commandContext.User.Id
+                                                                 && obj.TimeStamp > limit)
+                                                      .ToString()
                                                     + ' '
                                                     + LocalizationGroup.GetText("MeOverviewMessages", "messages")));
             stringBuilder.Append(Environment.NewLine);
             stringBuilder.Append(LocalizationGroup.GetText("MeOverview7Days", "7 Days:"));
             stringBuilder.Append(' ');
             limit = now.AddDays(-7);
-            stringBuilder.Append(Formatter.InlineCode(dbFactory.GetRepository<DiscordMessageRepository>()
-                                                               .GetQuery()
-                                                               .Count(obj => obj.DiscordServerId == commandContext.Guild.Id
-                                                                          && obj.DiscordAccountId == commandContext.User.Id
-                                                                          && obj.TimeStamp > limit)
-                                                               .ToString()
-                                                    + ' '
-                                                    + LocalizationGroup.GetText("MeOverviewMessages", "messages")));
+            stringBuilder.Append(Format.Code(dbFactory.GetRepository<DiscordMessageRepository>()
+                                                      .GetQuery()
+                                                      .Count(obj => obj.DiscordServerId == commandContext.Guild.Id
+                                                                 && obj.DiscordAccountId == commandContext.User.Id
+                                                                 && obj.TimeStamp > limit)
+                                                      .ToString()
+                                           + ' '
+                                           + LocalizationGroup.GetText("MeOverviewMessages", "messages")));
             stringBuilder.Append(Environment.NewLine);
             stringBuilder.Append(LocalizationGroup.GetText("MeOverview24Hours", "24 Hours:"));
             stringBuilder.Append(' ');
             limit = now.AddDays(-1);
-            stringBuilder.Append(Formatter.InlineCode(dbFactory.GetRepository<DiscordMessageRepository>()
-                                                               .GetQuery()
-                                                               .Count(obj => obj.DiscordServerId == commandContext.Guild.Id
-                                                                          && obj.DiscordAccountId == commandContext.User.Id
-                                                                          && obj.TimeStamp > limit)
-                                                               .ToString()
-                                                    + ' '
-                                                    + LocalizationGroup.GetText("MeOverviewMessages", "messages")));
+            stringBuilder.Append(Format.Code(dbFactory.GetRepository<DiscordMessageRepository>()
+                                                         .GetQuery()
+                                                         .Count(obj => obj.DiscordServerId == commandContext.Guild.Id
+                                                                    && obj.DiscordAccountId == commandContext.User.Id
+                                                                    && obj.TimeStamp > limit)
+                                                         .ToString()
+                                              + ' '
+                                              + LocalizationGroup.GetText("MeOverviewMessages", "messages")));
             stringBuilder.Append(Environment.NewLine);
 
             embedBuilder.AddField(LocalizationGroup.GetText("MeOverviewMessagesField", "Messages"), stringBuilder.ToString());
@@ -186,8 +185,11 @@ public class StatisticsVisualizerService : LocatedServiceBase
                 {
                     messagesData.Add(messageChannel.Count);
 
-                    messagesLabels.Add(commandContext.Guild.GetChannel(messageChannel.Channeld)
-                                                     .Name);
+                    var channel = await commandContext.Guild
+                                                      .GetChannelAsync(messageChannel.Channeld)
+                                                      .ConfigureAwait(false);
+
+                    messagesLabels.Add(channel?.Name);
                 }
                 else
                 {
@@ -283,11 +285,11 @@ public class StatisticsVisualizerService : LocatedServiceBase
             await using (chartStream.ConfigureAwait(false))
             {
                 embedBuilder.WithImageUrl("attachment://chart.png");
-                messageBuilder.WithFile("chart.png", chartStream);
-                messageBuilder.WithEmbed(embedBuilder);
 
-                await commandContext.Message
-                                    .RespondAsync(messageBuilder)
+                await commandContext.Channel
+                                    .SendFileAsync(new FileAttachment(chartStream, "chart.png"),
+                                                   embed: embedBuilder.Build(),
+                                                   messageReference: new MessageReference(commandContext.Message.Id, commandContext.Channel?.Id, commandContext.Guild?.Id))
                                     .ConfigureAwait(false);
             }
         }

@@ -1,9 +1,9 @@
-﻿using DSharpPlus.Entities;
+﻿using Discord;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Calendar;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Calendar.DialogElements;
 
@@ -40,9 +40,9 @@ public class CalendarScheduleSelectionDialogElement : DialogEmbedMessageElementB
     /// Return the message of element
     /// </summary>
     /// <returns>Message</returns>
-    public override DiscordEmbedBuilder GetMessage()
+    public override EmbedBuilder GetMessage()
     {
-        var builder = new DiscordEmbedBuilder();
+        var builder = new EmbedBuilder();
         builder.WithTitle(LocalizationGroup.GetText("ChooseScheduleTitle", "Calendar schedule selection"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseScheduleDescription", "Please choose one of the following calendar schedules:"));
 
@@ -87,7 +87,7 @@ public class CalendarScheduleSelectionDialogElement : DialogEmbedMessageElementB
     /// </summary>
     /// <param name="message">Message</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public override Task<long> ConvertMessage(DiscordMessage message)
+    public override Task<long> ConvertMessage(IUserMessage message)
     {
         return Task.FromResult(int.TryParse(message.Content, out var index) && _schedules.TryGetValue(index, out var selectedScheduleId) ? selectedScheduleId : throw new InvalidOperationException());
     }

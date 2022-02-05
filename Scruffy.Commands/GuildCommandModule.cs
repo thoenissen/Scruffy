@@ -1,11 +1,10 @@
 ﻿using System.Globalization;
 
-using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
+using Discord.Commands;
 
 using Scruffy.Data.Enumerations.Guild;
-using Scruffy.Services.Core.Discord;
-using Scruffy.Services.Core.Discord.Attributes;
+using Scruffy.Services.Discord;
+using Scruffy.Services.Discord.Attributes;
 using Scruffy.Services.Guild;
 using Scruffy.Services.Guild.DialogElements;
 using Scruffy.Services.GuildWars2;
@@ -16,8 +15,7 @@ namespace Scruffy.Commands;
 /// Administration of the Guild Wars 2 guild
 /// </summary>
 [Group("guild")]
-[Aliases("g")]
-[ModuleLifespan(ModuleLifespan.Transient)]
+[Alias("g")]
 [BlockedChannelCheck]
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
 public class GuildCommandModule : LocatedCommandModuleBase
@@ -41,109 +39,79 @@ public class GuildCommandModule : LocatedCommandModuleBase
     /// <summary>
     /// Setup guild administration
     /// </summary>
-    /// <param name="commandContext">Current command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("setup")]
-    [RequireGuild]
+    [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    public Task Setup(CommandContext commandContext)
+    public async Task Setup()
     {
-        return InvokeAsync(commandContext,
-                           async commandContextContainer =>
-                           {
-                               await ConfigurationService.CreateGuildConfiguration(commandContextContainer)
-                                                         .ConfigureAwait(false);
-                           });
+        await ConfigurationService.CreateGuildConfiguration(Context)
+                                  .ConfigureAwait(false);
     }
 
     /// <summary>
     /// Setting the special rank notification channel
     /// </summary>
-    /// <param name="commandContext">Current command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("setSpecialRankNotification")]
-    [RequireGuild]
+    [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    public Task SetSpecialRankNotification(CommandContext commandContext)
+    public async Task SetSpecialRankNotification()
     {
-        return InvokeAsync(commandContext,
-                           async commandContextContainer =>
-                           {
-                               await ConfigurationService.SetNotificationChannel(commandContextContainer, GuildChannelConfigurationType.SpecialRankRankChange)
-                                                         .ConfigureAwait(false);
-                           });
+        await ConfigurationService.SetNotificationChannel(Context, GuildChannelConfigurationType.SpecialRankRankChange)
+                                  .ConfigureAwait(false);
     }
 
     /// <summary>
     /// Setting the calendar notification channel
     /// </summary>
-    /// <param name="commandContext">Current command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("setCalendarReminderNotification")]
-    [RequireGuild]
+    [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    public Task SetCalendarReminderNotification(CommandContext commandContext)
+    public async Task SetCalendarReminderNotification()
     {
-        return InvokeAsync(commandContext,
-                           async commandContextContainer =>
-                           {
-                               await ConfigurationService.SetNotificationChannel(commandContextContainer, GuildChannelConfigurationType.CalendarReminder)
-                                                         .ConfigureAwait(false);
-                           });
+        await ConfigurationService.SetNotificationChannel(Context, GuildChannelConfigurationType.CalendarReminder)
+                                  .ConfigureAwait(false);
     }
 
     /// <summary>
     /// Setting the guild log notification
     /// </summary>
-    /// <param name="commandContext">Current command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("setGuildLogNotification")]
-    [RequireGuild]
+    [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    public Task SetGuildLogNotification(CommandContext commandContext)
+    public async Task SetGuildLogNotification()
     {
-        return InvokeAsync(commandContext,
-                           async commandContextContainer =>
-                           {
-                               await ConfigurationService.SetNotificationChannel(commandContextContainer, GuildChannelConfigurationType.GuildLogNotification)
-                                                         .ConfigureAwait(false);
-                           });
+        await ConfigurationService.SetNotificationChannel(Context, GuildChannelConfigurationType.GuildLogNotification)
+                                  .ConfigureAwait(false);
     }
 
     /// <summary>
     /// Setting up the motd builder
     /// </summary>
-    /// <param name="commandContext">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("motd")]
-    [RequireGuild]
+    [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    public Task SetupMotd(CommandContext commandContext)
+    public async Task SetupMotd()
     {
-        return InvokeAsync(commandContext,
-                           async commandContextContainer =>
-                           {
-                               await ConfigurationService.SetupMotd(commandContextContainer)
-                                                         .ConfigureAwait(false);
-                           });
+        await ConfigurationService.SetupMotd(Context)
+                                  .ConfigureAwait(false);
     }
 
     /// <summary>
     /// Setting up the calendar
     /// </summary>
-    /// <param name="commandContext">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("calendar")]
-    [RequireGuild]
+    [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    public Task SetupCalendar(CommandContext commandContext)
+    public async Task SetupCalendar()
     {
-        return InvokeAsync(commandContext,
-                           async commandContextContainer =>
-                           {
-                               await ConfigurationService.SetupCalendar(commandContextContainer)
-                                                         .ConfigureAwait(false);
-                           });
+        await ConfigurationService.SetupCalendar(Context)
+                                  .ConfigureAwait(false);
     }
 
     #endregion // Methods
@@ -154,8 +122,7 @@ public class GuildCommandModule : LocatedCommandModuleBase
     /// Guild emblem
     /// </summary>
     [Group("emblem")]
-    [Aliases("e")]
-    [ModuleLifespan(ModuleLifespan.Transient)]
+    [Alias("e")]
     public class GuildEmblemCommandModule : LocatedCommandModuleBase
     {
         #region Properties
@@ -172,19 +139,14 @@ public class GuildCommandModule : LocatedCommandModuleBase
         /// <summary>
         /// Post random guild emblems
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <param name="count">Count</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("random")]
-        [RequireGuild]
-        public Task SetNotificationChannel(CommandContext commandContext, int count)
+        [RequireContext(ContextType.Guild)]
+        public async Task SetNotificationChannel(int count)
         {
-            return InvokeAsync(commandContext,
-                               async commandContextContainer =>
-                               {
-                                   await GuildEmblemService.PostRandomGuildEmblems(commandContextContainer, count)
-                                                           .ConfigureAwait(false);
-                               });
+            await GuildEmblemService.PostRandomGuildEmblems(Context, count)
+                                    .ConfigureAwait(false);
         }
 
         #endregion // Methods
@@ -198,9 +160,8 @@ public class GuildCommandModule : LocatedCommandModuleBase
     /// Guild bank
     /// </summary>
     [Group("bank")]
-    [Aliases("b")]
-    [RequireGuild]
-    [ModuleLifespan(ModuleLifespan.Transient)]
+    [Alias("b")]
+    [RequireContext(ContextType.Guild)]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public class GuildBankCommandModule : LocatedCommandModuleBase
     {
@@ -218,19 +179,14 @@ public class GuildCommandModule : LocatedCommandModuleBase
         /// <summary>
         /// Check the guild bank
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("check")]
-        [RequireGuild]
+        [RequireContext(ContextType.Guild)]
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-        public Task SetNotificationChannel(CommandContext commandContext)
+        public async Task SetNotificationChannel()
         {
-            return InvokeAsync(commandContext,
-                               async commandContextContainer =>
-                               {
-                                   await BankService.Check(commandContextContainer)
-                                                    .ConfigureAwait(false);
-                               });
+            await BankService.Check(Context)
+                             .ConfigureAwait(false);
         }
 
         #endregion // Methods
@@ -241,9 +197,8 @@ public class GuildCommandModule : LocatedCommandModuleBase
         /// Guild bank
         /// </summary>
         [Group("unlocks")]
-        [Aliases("u")]
-        [RequireGuild]
-        [ModuleLifespan(ModuleLifespan.Transient)]
+        [Alias("u")]
+        [RequireContext(ContextType.Guild)]
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public class GuildBankUnlocksCommandModule : LocatedCommandModuleBase
         {
@@ -265,19 +220,14 @@ public class GuildCommandModule : LocatedCommandModuleBase
             /// <summary>
             /// Check the guild bank
             /// </summary>
-            /// <param name="commandContext">Current command context</param>
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("dyes")]
-            [RequireGuild]
+            [RequireContext(ContextType.Guild)]
             [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-            public Task SetNotificationChannel(CommandContext commandContext)
+            public async Task SetNotificationChannel()
             {
-                return InvokeAsync(commandContext,
-                                   async commandContextContainer =>
-                                   {
-                                       await BankService.CheckUnlocksDyes(commandContextContainer)
-                                                        .ConfigureAwait(false);
-                                   });
+                await BankService.CheckUnlocksDyes(Context)
+                                 .ConfigureAwait(false);
             }
 
             #endregion // Methods
@@ -294,10 +244,9 @@ public class GuildCommandModule : LocatedCommandModuleBase
     /// Special ranks
     /// </summary>
     [Group("rank")]
-    [Aliases("r")]
-    [RequireGuild]
+    [Alias("r")]
+    [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    [ModuleLifespan(ModuleLifespan.Transient)]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public class GuildRankCommandModule : LocatedCommandModuleBase
     {
@@ -306,24 +255,20 @@ public class GuildCommandModule : LocatedCommandModuleBase
         /// <summary>
         /// Special ranks configuration
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("setup")]
-        [RequireGuild]
+        [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        public Task Setup(CommandContext commandContext)
+        public async Task Setup()
         {
-            return InvokeAsync(commandContext,
-                               async commandContextContainer =>
-                               {
-                                   bool repeat;
+            bool repeat;
 
-                                   do
-                                   {
-                                       repeat = await DialogHandler.Run<GuildRankSetupDialogElement, bool>(commandContextContainer).ConfigureAwait(false);
-                                   }
-                                   while (repeat);
-                               });
+            do
+            {
+                repeat = await DialogHandler.Run<GuildRankSetupDialogElement, bool>(Context)
+                                            .ConfigureAwait(false);
+            }
+            while (repeat);
         }
 
         #endregion // Methods
@@ -337,10 +282,9 @@ public class GuildCommandModule : LocatedCommandModuleBase
     /// Special ranks
     /// </summary>
     [Group("specialrank")]
-    [Aliases("s")]
-    [RequireGuild]
+    [Alias("s")]
+    [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    [ModuleLifespan(ModuleLifespan.Transient)]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public class GuildSpecialRankCommandModule : LocatedCommandModuleBase
     {
@@ -358,43 +302,34 @@ public class GuildCommandModule : LocatedCommandModuleBase
         /// <summary>
         /// Special ranks configuration
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("setup")]
-        [RequireGuild]
+        [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        public Task Setup(CommandContext commandContext)
+        public async Task Setup()
         {
-            return InvokeAsync(commandContext,
-                               async commandContextContainer =>
-                               {
-                                   bool repeat;
+            bool repeat;
 
-                                   do
-                                   {
-                                       repeat = await DialogHandler.Run<GuildSpecialRankSetupDialogElement, bool>(commandContextContainer).ConfigureAwait(false);
-                                   }
-                                   while (repeat);
-                               });
+            do
+            {
+                repeat = await DialogHandler.Run<GuildSpecialRankSetupDialogElement, bool>(Context)
+                                            .ConfigureAwait(false);
+            }
+            while (repeat);
         }
 
         /// <summary>
         /// Special ranks configuration
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("overview")]
-        [RequireGuild]
+        [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-        public Task Overview(CommandContext commandContext)
+        public async Task Overview()
         {
-            return InvokeAsync(commandContext,
-                               async commandContextContainer =>
-                               {
-                                   await SpecialRankService.PostOverview(commandContextContainer)
-                                                           .ConfigureAwait(false);
-                               });
+            await SpecialRankService.PostOverview(Context)
+                                    .ConfigureAwait(false);
         }
 
         #endregion // Methods
@@ -408,10 +343,9 @@ public class GuildCommandModule : LocatedCommandModuleBase
     /// Guild bank
     /// </summary>
     [Group("charts")]
-    [Aliases("c")]
-    [RequireGuild]
+    [Alias("c")]
+    [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    [ModuleLifespan(ModuleLifespan.Transient)]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public class GuildChartCommandModule : LocatedCommandModuleBase
     {
@@ -429,20 +363,15 @@ public class GuildCommandModule : LocatedCommandModuleBase
         /// <summary>
         /// Worlds overview
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("worlds")]
-        [RequireGuild]
+        [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-        public Task SetNotificationChannel(CommandContext commandContext)
+        public async Task SetNotificationChannel()
         {
-            return InvokeAsync(commandContext,
-                               async commandContextContainer =>
-                               {
-                                   await WorldsService.PostWorldsOverview(commandContextContainer)
-                                                      .ConfigureAwait(false);
-                               });
+            await WorldsService.PostWorldsOverview(Context)
+                               .ConfigureAwait(false);
         }
 
         #endregion // Methods
@@ -456,10 +385,9 @@ public class GuildCommandModule : LocatedCommandModuleBase
     /// Exporting data
     /// </summary>
     [Group("export")]
-    [Aliases("e")]
-    [RequireGuild]
+    [Alias("e")]
+    [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    [ModuleLifespan(ModuleLifespan.Transient)]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public class GuildExportCommandModule : LocatedCommandModuleBase
     {
@@ -477,236 +405,211 @@ public class GuildCommandModule : LocatedCommandModuleBase
         /// <summary>
         /// Worlds overview
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <param name="mode">Mode</param>
         /// <param name="sinceDate">Since Date</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("stash")]
-        [RequireGuild]
+        [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-        public Task ExportStashLog(CommandContext commandContext, string mode, string sinceDate)
+        public async Task ExportStashLog(string mode, string sinceDate)
         {
-            return InvokeAsync(commandContext,
-                               async commandContextContainer =>
-                               {
-                                   if (DateTime.TryParseExact(sinceDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
-                                   {
-                                       if (mode == "sum")
-                                       {
-                                           await GuildExportService.ExportStashLogSummarized(commandContextContainer, date)
-                                                                   .ConfigureAwait(false);
-                                       }
-                                       else
-                                       {
-                                           await GuildExportService.ExportStashLog(commandContextContainer, date)
-                                                                   .ConfigureAwait(false);
-                                       }
-                                   }
-                               });
+            if (DateTime.TryParseExact(sinceDate,
+                                       "yyyy-MM-dd",
+                                       CultureInfo.InvariantCulture,
+                                       DateTimeStyles.None,
+                                       out var date))
+            {
+                if (mode == "sum")
+                {
+                    await GuildExportService.ExportStashLogSummarized(Context, date)
+                                            .ConfigureAwait(false);
+                }
+                else
+                {
+                    await GuildExportService.ExportStashLog(Context, date)
+                                            .ConfigureAwait(false);
+                }
+            }
         }
 
         /// <summary>
         /// Worlds overview
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <param name="mode">Mode</param>
         /// <param name="sinceDate">Since Date</param>
         /// <param name="sinceTime">Since Time</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("stash")]
-        [RequireGuild]
+        [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-        public Task ExportStashLog(CommandContext commandContext, string mode, string sinceDate, string sinceTime)
+        public async Task ExportStashLog(string mode, string sinceDate, string sinceTime)
         {
-            return InvokeAsync(commandContext,
-                               async commandContextContainer =>
-                               {
-                                   if (DateTime.TryParseExact(sinceDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date)
-                                    && TimeSpan.TryParseExact(sinceTime, "hh\\:mm", null, out var time))
-                                   {
-                                       date = date.Add(time);
+            if (DateTime.TryParseExact(sinceDate,
+                                       "yyyy-MM-dd",
+                                       CultureInfo.InvariantCulture,
+                                       DateTimeStyles.None,
+                                       out var date)
+             && TimeSpan.TryParseExact(sinceTime, "hh\\:mm", null, out var time))
+            {
+                date = date.Add(time);
 
-                                       if (mode == "sum")
-                                       {
-                                           await GuildExportService.ExportStashLogSummarized(commandContextContainer, date)
-                                                                   .ConfigureAwait(false);
-                                       }
-                                       else
-                                       {
-                                           await GuildExportService.ExportStashLog(commandContextContainer, date)
-                                                                   .ConfigureAwait(false);
-                                       }
-                                   }
-                               });
+                if (mode == "sum")
+                {
+                    await GuildExportService.ExportStashLogSummarized(Context, date)
+                                            .ConfigureAwait(false);
+                }
+                else
+                {
+                    await GuildExportService.ExportStashLog(Context, date)
+                                            .ConfigureAwait(false);
+                }
+            }
         }
 
         /// <summary>
         /// Worlds overview
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <param name="mode">Mode</param>
         /// <param name="sinceDate">Since Date</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("upgrades")]
-        [RequireGuild]
+        [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-        public Task ExportUpgradesLog(CommandContext commandContext, string mode, string sinceDate)
+        public async Task ExportUpgradesLog(string mode, string sinceDate)
         {
-            return InvokeAsync(commandContext,
-                               async commandContextContainer =>
-                               {
-                                   if (DateTime.TryParseExact(sinceDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
-                                   {
-                                       if (mode == "sum")
-                                       {
-                                           await GuildExportService.ExportUpgradesLogSummarized(commandContextContainer, date)
-                                                                   .ConfigureAwait(false);
-                                       }
-                                       else
-                                       {
-                                           await GuildExportService.ExportUpgradesLog(commandContextContainer, date)
-                                                                   .ConfigureAwait(false);
-                                       }
-                                   }
-                               });
+            if (DateTime.TryParseExact(sinceDate,
+                                       "yyyy-MM-dd",
+                                       CultureInfo.InvariantCulture,
+                                       DateTimeStyles.None,
+                                       out var date))
+            {
+                if (mode == "sum")
+                {
+                    await GuildExportService.ExportUpgradesLogSummarized(Context, date)
+                                            .ConfigureAwait(false);
+                }
+                else
+                {
+                    await GuildExportService.ExportUpgradesLog(Context, date)
+                                            .ConfigureAwait(false);
+                }
+            }
         }
 
         /// <summary>
         /// Worlds overview
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <param name="mode">Mode</param>
         /// <param name="sinceDate">Since Date</param>
         /// <param name="sinceTime">Since Time</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("upgrades")]
-        [RequireGuild]
+        [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-        public Task ExportUpgradesLog(CommandContext commandContext, string mode, string sinceDate, string sinceTime)
+        public async Task ExportUpgradesLog(string mode, string sinceDate, string sinceTime)
         {
-            return InvokeAsync(commandContext,
-                               async commandContextContainer =>
-                               {
-                                   if (DateTime.TryParseExact(sinceDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date)
-                                    && TimeSpan.TryParseExact(sinceTime, "hh\\:mm", null, out var time))
-                                   {
-                                       date = date.Add(time);
+            if (DateTime.TryParseExact(sinceDate,
+                                       "yyyy-MM-dd",
+                                       CultureInfo.InvariantCulture,
+                                       DateTimeStyles.None,
+                                       out var date)
+             && TimeSpan.TryParseExact(sinceTime, "hh\\:mm", null, out var time))
+            {
+                date = date.Add(time);
 
-                                       if (mode == "sum")
-                                       {
-                                           await GuildExportService.ExportUpgradesLogSummarized(commandContextContainer, date)
-                                                                   .ConfigureAwait(false);
-                                       }
-                                       else
-                                       {
-                                           await GuildExportService.ExportUpgradesLog(commandContextContainer, date)
-                                                                   .ConfigureAwait(false);
-                                       }
-                                   }
-                               });
+                if (mode == "sum")
+                {
+                    await GuildExportService.ExportUpgradesLogSummarized(Context, date)
+                                            .ConfigureAwait(false);
+                }
+                else
+                {
+                    await GuildExportService.ExportUpgradesLog(Context, date)
+                                            .ConfigureAwait(false);
+                }
+            }
         }
 
         /// <summary>
         /// Login Activity
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("activity")]
-        [RequireGuild]
+        [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-        public Task ExportUpgradesLog(CommandContext commandContext)
+        public async Task ExportUpgradesLog()
         {
-            return InvokeAsync(commandContext,
-                               async commandContextContainer =>
-                               {
-                                   await GuildExportService.ExportLoginActivityLog(commandContextContainer)
-                                                           .ConfigureAwait(false);
-                               });
+            await GuildExportService.ExportLoginActivityLog(Context)
+                                    .ConfigureAwait(false);
         }
 
         /// <summary>
         /// Representation state
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("representation")]
-        [RequireGuild]
+        [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-        public Task ExportRepresentation(CommandContext commandContext)
+        public async Task ExportRepresentation()
         {
-            return InvokeAsync(commandContext,
-                               async commandContextContainer =>
-                               {
-                                   await GuildExportService.ExportRepresentation(commandContextContainer)
-                                                           .ConfigureAwait(false);
-                               });
+            await GuildExportService.ExportRepresentation(Context)
+                                    .ConfigureAwait(false);
         }
 
         /// <summary>
         /// Members
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("members")]
-        [RequireGuild]
+        [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-        public Task ExportGuildMembers(CommandContext commandContext)
+        public async Task ExportGuildMembers()
         {
-            return InvokeAsync(commandContext,
-                               async commandContextContainer =>
-                               {
-                                   await GuildExportService.ExportGuildMembers(commandContextContainer)
-                                                           .ConfigureAwait(false);
-                               });
+            await GuildExportService.ExportGuildMembers(Context)
+                                    .ConfigureAwait(false);
         }
 
         /// <summary>
         /// Roles
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("roles")]
-        [RequireGuild]
+        [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-        public Task ExportGuildRoles(CommandContext commandContext)
+        public async Task ExportGuildRoles()
         {
-            return InvokeAsync(commandContext,
-                               async commandContextContainer =>
-                               {
-                                   await GuildExportService.ExportGuildRoles(commandContextContainer)
-                                                           .ConfigureAwait(false);
-                               });
+            await GuildExportService.ExportGuildRoles(Context)
+                                    .ConfigureAwait(false);
         }
 
         /// <summary>
         /// Current rank points
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <param name="sinceDate">Since date</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("points")]
-        [RequireGuild]
+        [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-        public Task ExportCurrentRankPoints(CommandContext commandContext, string sinceDate)
+        public async Task ExportCurrentRankPoints(string sinceDate)
         {
-            return InvokeAsync(commandContext,
-                               async commandContextContainer =>
-                               {
-                                   if (DateTime.TryParseExact(sinceDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
-                                   {
-                                       await GuildExportService.ExportGuildRankPoints(commandContextContainer, date)
-                                                               .ConfigureAwait(false);
-                                   }
-                               });
+            if (DateTime.TryParseExact(sinceDate,
+                                       "yyyy-MM-dd",
+                                       CultureInfo.InvariantCulture,
+                                       DateTimeStyles.None,
+                                       out var date))
+            {
+                await GuildExportService.ExportGuildRankPoints(Context, date)
+                                        .ConfigureAwait(false);
+            }
         }
 
         #endregion // Methods

@@ -1,4 +1,5 @@
-﻿using DSharpPlus;
+﻿using Discord;
+using Discord.WebSocket;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -61,17 +62,19 @@ public class WeeklyReminderDeletionJob : LocatedAsyncJob
 
                 if (data?.MessageId != null)
                 {
-                    var discordClient = serviceProvider.GetService<DiscordClient>();
+                    var discordClient = serviceProvider.GetService<DiscordSocketClient>();
 
                     var channel = await discordClient.GetChannelAsync(data.ChannelId).ConfigureAwait(false);
+                    if (channel is ITextChannel textChannel)
+                    {
+                        var message = await textChannel.GetMessageAsync(data.MessageId.Value).ConfigureAwait(false);
 
-                    var message = await channel.GetMessageAsync(data.MessageId.Value).ConfigureAwait(false);
+                        await textChannel.DeleteMessageAsync(message).ConfigureAwait(false);
 
-                    await channel.DeleteMessageAsync(message).ConfigureAwait(false);
-
-                    dbFactory.GetRepository<WeeklyReminderRepository>()
-                             .Refresh(obj => obj.Id == _id,
-                                      obj => obj.DiscordMessageId = null);
+                        dbFactory.GetRepository<WeeklyReminderRepository>()
+                                 .Refresh(obj => obj.Id == _id,
+                                          obj => obj.DiscordMessageId = null);
+                    }
                 }
             }
         }

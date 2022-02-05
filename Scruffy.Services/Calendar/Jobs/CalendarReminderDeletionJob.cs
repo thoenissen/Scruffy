@@ -1,4 +1,5 @@
-﻿using DSharpPlus;
+﻿using Discord;
+using Discord.WebSocket;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -62,24 +63,27 @@ public class CalendarReminderDeletionJob : LocatedAsyncJob
                 if (data?.ReminderChannelId != null
                  && data.ReminderMessageId != null)
                 {
-                    var discordClient = serviceProvider.GetService<DiscordClient>();
+                    var discordClient = serviceProvider.GetService<DiscordSocketClient>();
 
                     var channel = await discordClient.GetChannelAsync(data.ReminderChannelId.Value)
                                                      .ConfigureAwait(false);
 
-                    var message = await channel.GetMessageAsync(data.ReminderMessageId.Value)
-                                               .ConfigureAwait(false);
+                    if (channel is ITextChannel textChannel)
+                    {
+                        var message = await textChannel.GetMessageAsync(data.ReminderMessageId.Value)
+                                                       .ConfigureAwait(false);
 
-                    await channel.DeleteMessageAsync(message)
-                                 .ConfigureAwait(false);
+                        await textChannel.DeleteMessageAsync(message)
+                                         .ConfigureAwait(false);
 
-                    dbFactory.GetRepository<CalendarAppointmentRepository>()
-                             .Refresh(obj => obj.Id == _id,
-                                      obj =>
-                                      {
-                                          obj.DiscordChannelId = null;
-                                          obj.DiscordMessageId = null;
-                                      });
+                        dbFactory.GetRepository<CalendarAppointmentRepository>()
+                                 .Refresh(obj => obj.Id == _id,
+                                          obj =>
+                                          {
+                                              obj.DiscordChannelId = null;
+                                              obj.DiscordMessageId = null;
+                                          });
+                    }
                 }
             }
         }

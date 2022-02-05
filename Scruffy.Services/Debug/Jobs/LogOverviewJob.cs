@@ -1,4 +1,5 @@
-﻿using DSharpPlus;
+﻿using Discord;
+using Discord.WebSocket;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -26,14 +27,17 @@ public class LogOverviewJob : LocatedAsyncJob
             var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
             await using (serviceProvider.ConfigureAwait(false))
             {
-                var discordClient = serviceProvider.GetService<DiscordClient>();
+                var discordClient = serviceProvider.GetService<DiscordSocketClient>();
                 var debugService = serviceProvider.GetService<DebugService>();
 
-                await debugService.PostLogOverview(await discordClient.GetChannelAsync(Convert.ToUInt64(debugChannel))
-                                                                      .ConfigureAwait(false),
-                                                   DateTime.Today.AddDays(-1),
-                                                   true)
-                                  .ConfigureAwait(false);
+                if (await discordClient.GetChannelAsync(Convert.ToUInt64(debugChannel))
+                                       .ConfigureAwait(false) is IMessageChannel messageChannel)
+                {
+                    await debugService.PostLogOverview(messageChannel,
+                                                       DateTime.Today.AddDays(-1),
+                                                       true)
+                                      .ConfigureAwait(false);
+                }
             }
         }
     }

@@ -1,4 +1,4 @@
-﻿using DSharpPlus.Entities;
+﻿using Discord;
 
 namespace Scruffy.Data.Services.Calendar;
 
@@ -10,7 +10,7 @@ public class CalendarAppointmentParticipantData
     /// <summary>
     /// Member
     /// </summary>
-    public DiscordMember Member { get; set; }
+    public IGuildUser Member { get; set; }
 
     /// <summary>
     /// Leader

@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-using DSharpPlus.Entities;
+using Discord;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -10,9 +10,9 @@ using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Entity.Repositories.Guild;
 using Scruffy.Data.Enumerations.Guild;
 using Scruffy.Data.Enumerations.GuildWars2;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Extensions;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.Guild;
@@ -104,7 +104,7 @@ public class GuildExportService : LocatedServiceBase
                         memoryStream.Position = 0;
 
                         await commandContext.Channel
-                                            .SendMessageAsync(new DiscordMessageBuilder().WithFile("stash_log.csv", memoryStream))
+                                            .SendFileAsync(new FileAttachment(memoryStream, "stash_log.csv"))
                                             .ConfigureAwait(false);
                     }
                 }
@@ -185,7 +185,7 @@ public class GuildExportService : LocatedServiceBase
                         memoryStream.Position = 0;
 
                         await commandContext.Channel
-                                            .SendMessageAsync(new DiscordMessageBuilder().WithFile("stash_log.csv", memoryStream))
+                                            .SendFileAsync(new FileAttachment(memoryStream, "stash_log.csv"))
                                             .ConfigureAwait(false);
                     }
                 }
@@ -284,7 +284,7 @@ public class GuildExportService : LocatedServiceBase
                         memoryStream.Position = 0;
 
                         await commandContext.Channel
-                                            .SendMessageAsync(new DiscordMessageBuilder().WithFile("upgrades_log.csv", memoryStream))
+                                            .SendFileAsync(new FileAttachment(memoryStream, "upgrades_log.csv"))
                                             .ConfigureAwait(false);
                     }
                 }
@@ -389,7 +389,7 @@ public class GuildExportService : LocatedServiceBase
                         memoryStream.Position = 0;
 
                         await commandContext.Channel
-                                            .SendMessageAsync(new DiscordMessageBuilder().WithFile("upgrades_log.csv", memoryStream))
+                                            .SendFileAsync(new FileAttachment(memoryStream, "upgrades_log.csv"))
                                             .ConfigureAwait(false);
                     }
                 }
@@ -440,7 +440,7 @@ public class GuildExportService : LocatedServiceBase
                     memoryStream.Position = 0;
 
                     await commandContext.Channel
-                                        .SendMessageAsync(new DiscordMessageBuilder().WithFile("activity_log.csv", memoryStream))
+                                        .SendFileAsync(new FileAttachment(memoryStream, "activity_log.csv"))
                                         .ConfigureAwait(false);
                 }
             }
@@ -480,12 +480,12 @@ public class GuildExportService : LocatedServiceBase
 
             foreach (var entry in entries)
             {
-                DiscordMember user = null;
+                IGuildUser user = null;
 
                 try
                 {
                     user = await commandContext.Guild
-                                               .GetMemberAsync(entry.DiscordAccountId)
+                                               .GetUserAsync(entry.DiscordAccountId)
                                                .ConfigureAwait(false);
                 }
                 catch
@@ -527,7 +527,7 @@ public class GuildExportService : LocatedServiceBase
                     memoryStream.Position = 0;
 
                     await commandContext.Channel
-                                        .SendMessageAsync(new DiscordMessageBuilder().WithFile("representation.csv", memoryStream))
+                                        .SendFileAsync(new FileAttachment(memoryStream, "representation.csv"))
                                         .ConfigureAwait(false);
                 }
             }
@@ -601,7 +601,7 @@ public class GuildExportService : LocatedServiceBase
                     memoryStream.Position = 0;
 
                     await commandContext.Channel
-                                        .SendMessageAsync(new DiscordMessageBuilder().WithFile("members.csv", memoryStream))
+                                        .SendFileAsync(new FileAttachment(memoryStream, "members.csv"))
                                         .ConfigureAwait(false);
                 }
             }
@@ -618,12 +618,12 @@ public class GuildExportService : LocatedServiceBase
         var members = new List<(string Role, string User)>();
 
         foreach (var user in await commandContext.Guild
-                                                 .GetAllMembersAsync()
+                                                 .GetUsersAsync()
                                                  .ConfigureAwait(false))
         {
-            foreach (var role in user.Roles)
+            foreach (var role in user.RoleIds)
             {
-                members.Add((role.Name, user.TryGetDisplayName()));
+                members.Add((commandContext.Guild.Roles.FirstOrDefault(obj => obj.Id == role)?.Name, user.TryGetDisplayName()));
             }
         }
 
@@ -651,7 +651,7 @@ public class GuildExportService : LocatedServiceBase
                 memoryStream.Position = 0;
 
                 await commandContext.Channel
-                                    .SendMessageAsync(new DiscordMessageBuilder().WithFile("roles.csv", memoryStream))
+                                    .SendFileAsync(new FileAttachment(memoryStream, "roles.csv"))
                                     .ConfigureAwait(false);
             }
         }
@@ -668,7 +668,7 @@ public class GuildExportService : LocatedServiceBase
         var members = new Dictionary<ulong, string>();
 
         foreach (var user in await commandContext.Guild
-                                                 .GetAllMembersAsync()
+                                                 .GetUsersAsync()
                                                  .ConfigureAwait(false))
         {
             members[user.Id] = user.TryGetDisplayName();
@@ -717,7 +717,7 @@ public class GuildExportService : LocatedServiceBase
                 memoryStream.Position = 0;
 
                 await commandContext.Channel
-                                    .SendMessageAsync(new DiscordMessageBuilder().WithFile("roles.csv", memoryStream))
+                                    .SendFileAsync(new FileAttachment(memoryStream, "roles.csv"))
                                     .ConfigureAwait(false);
             }
         }

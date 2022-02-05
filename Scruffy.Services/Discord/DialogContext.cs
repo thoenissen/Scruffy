@@ -1,6 +1,6 @@
-﻿using DSharpPlus.Entities;
+﻿using Discord;
 
-namespace Scruffy.Services.Core.Discord;
+namespace Scruffy.Services.Discord;
 
 /// <summary>
 /// Dialog context
@@ -24,7 +24,7 @@ public class DialogContext
     public DialogContext()
     {
         _values = new Dictionary<string, object>();
-        Messages = new List<DiscordMessage>();
+        Messages = new List<IMessage>();
     }
 
     #endregion // Constructor
@@ -34,7 +34,7 @@ public class DialogContext
     /// <summary>
     /// Message
     /// </summary>
-    public List<DiscordMessage> Messages { get; }
+    public List<IMessage> Messages { get; }
 
     /// <summary>
     /// Set value

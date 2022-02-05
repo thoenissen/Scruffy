@@ -1,7 +1,7 @@
-﻿using DSharpPlus.Entities;
+﻿using Discord;
 
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Guild.DialogElements;
 
@@ -36,7 +36,7 @@ public class GuildApiKeyDialogElement : DialogMessageElementBase<string>
     /// </summary>
     /// <param name="message">Message</param>
     /// <returns>Result</returns>
-    public override string ConvertMessage(DiscordMessage message)
+    public override string ConvertMessage(IUserMessage message)
     {
         DialogContext.SetValue("ApiKey", message.Content);
 

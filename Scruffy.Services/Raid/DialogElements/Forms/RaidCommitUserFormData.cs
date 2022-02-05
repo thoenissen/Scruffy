@@ -1,6 +1,6 @@
-﻿using DSharpPlus.Entities;
+﻿using Discord;
 
-using Scruffy.Services.Core.Discord.Attributes;
+using Scruffy.Services.Discord.Attributes;
 
 namespace Scruffy.Services.Raid.DialogElements.Forms;
 
@@ -13,7 +13,7 @@ public class RaidCommitUserFormData
     /// User
     /// </summary>
     [DialogElementAssignment(typeof(RaidCommitUserDialogElement))]
-    public DiscordUser User { get; set; }
+    public IUser User { get; set; }
 
     /// <summary>
     /// Points

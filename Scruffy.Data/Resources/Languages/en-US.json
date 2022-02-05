@@ -632,6 +632,9 @@
       "TitleSearch": "Title search",
       "TextSearch": "Text search"
     },
+    "ScruffyTimeoutException": {
+      "CommandTimeout": "The processing of the command was aborted due to a timeout."
+    },
     "MissingGuildWars2ApiPermissionException": {
       "General": "General",
       "Account": "account",
@@ -646,10 +649,10 @@
       "Wallet": "wallet",
       "MissingPermissions": "The assigned API key does not have permissions ({0}) to execute this command."
     },
-    "LocatedCommandModuleBase": {
+    "DiscordBot": {
       "CommandFailedMessage": "The command could not be executed. But I have an error code ({0}) and funny cat picture."
     },
-    "HelpCommandFormatter": {
+    "CommandHelpService": {
       "Help": "Help",
       "GeneralHelp": "Listing all top-level commands and groups. Specify a command to see more information.",
       "NoDescription": "No description provided",
@@ -657,9 +660,20 @@
       "Commands": "Commands",
       "Subcommands": "Subcommands",
 
+      "BuilderCommandListDescription": "The command help of the command `{0}` is displayed below.",
+      "BuilderTitleGeneral": "Scruffy - Command help",
+      "BuilderTitleExplanation": "Explanation",
+      "BuilderTitleUsage": "Usage",
+      "BuilderTitleArguments": "Arguments",
+      "BuilderTitleLegend": "Legend",
+      "BuilderTitleLegendRequired": "`<Argument>`: This argument is required.",
+      "BuilderTitleLegendOptional": "`[Argument]`: This argument is optional.",
+      "BuilderTitleLegendRemainder": "`...`: Spaces and line breaks can be used with this argument.",
+      "BuilderDescriptionGeneral": "With the command `help <command>` you can get the help of a certain command.",
+
       "help": "Help",
 
-      "account": "Guild Wars 2 account configuration",
+      "account": "Account configuration",
       "account add": "Add a new account",
       "account edit": "Edit a existing account",
 
@@ -680,6 +694,8 @@
       "fractal leave timeSpan format": "hh:mm",
       "fractal leave days": "Day/s",
       "fractal leave days format": "Mo/Tu/We/Th/Fr/Sa/Su",
+
+      "information": "Information",
 
       "raid": "Raid lfg",
 
@@ -706,6 +722,10 @@
       "raid levels set aliasName": "Alias name",
       "raid levels set users": "Users",
       "raid levels overview": "Levels overview",
+
+      "statistics": "Statistics",
+
+      "gif": "Picture search",
 
       "guild": "Guild administration",
       "guild setup": "Setup the guild administration",

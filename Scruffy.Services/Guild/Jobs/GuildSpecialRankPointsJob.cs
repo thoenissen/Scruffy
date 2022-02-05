@@ -1,7 +1,7 @@
 ﻿using System.Data;
 
-using DSharpPlus;
-using DSharpPlus.Entities;
+using Discord;
+using Discord.WebSocket;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,9 +11,9 @@ using Scruffy.Data.Entity.Repositories.Guild;
 using Scruffy.Data.Enumerations.General;
 using Scruffy.Data.Enumerations.Guild;
 using Scruffy.Services.Core;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.JobScheduler;
 using Scruffy.Services.CoreData;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Guild.Jobs;
 
@@ -33,7 +33,7 @@ public class GuildSpecialRankPointsJob : LocatedAsyncJob
         var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
         await using (serviceProvider.ConfigureAwait(false))
         {
-            var client = serviceProvider.GetService<DiscordClient>();
+            var client = serviceProvider.GetService<DiscordSocketClient>();
             var userManagementService = serviceProvider.GetService<UserManagementService>();
 
             using (var dbFactory = RepositoryFactory.CreateInstance())
@@ -59,19 +59,20 @@ public class GuildSpecialRankPointsJob : LocatedAsyncJob
                 {
                     var points = new List<(ulong UserId, double Points)>();
 
-                    var guild = await client.GetGuildAsync(configuration.DiscordServerId)
-                                            .ConfigureAwait(false);
+                    var guild = client.GetGuild(configuration.DiscordServerId);
 
-                    foreach (var user in await guild.GetAllMembersAsync()
-                                                    .ConfigureAwait(false))
+                    await foreach (var users in guild.GetUsersAsync())
                     {
-                        if (configuration.IgnoreRoles.Any(obj => user.Roles.Any(obj2 => obj2.Id == obj)) == false)
+                        foreach (var user in users)
                         {
-                            foreach (var role in configuration.Roles)
+                            if (configuration.IgnoreRoles.Any(obj => user.RoleIds.Any(obj2 => obj2 == obj)) == false)
                             {
-                                if (user.Roles.Any(obj => obj.Id == role.DiscordRoleId))
+                                foreach (var role in configuration.Roles)
                                 {
-                                    points.Add((user.Id, role.Points));
+                                    if (user.RoleIds.Any(obj => obj == role.DiscordRoleId))
+                                    {
+                                        points.Add((user.Id, role.Points));
+                                    }
                                 }
                             }
                         }
@@ -80,7 +81,7 @@ public class GuildSpecialRankPointsJob : LocatedAsyncJob
                     var discordUserAccountIds = points.Select(obj => obj.UserId)
                                                       .ToList();
 
-                    var users = dbFactory.GetRepository<DiscordAccountRepository>()
+                    var accounts = dbFactory.GetRepository<DiscordAccountRepository>()
                                          .GetQuery()
                                          .Where(obj => discordUserAccountIds.Contains(obj.Id))
                                          .ToDictionary(obj => obj.Id, obj => obj.UserId);
@@ -93,7 +94,7 @@ public class GuildSpecialRankPointsJob : LocatedAsyncJob
                         var transaction = dbFactory.BeginTransaction(IsolationLevel.RepeatableRead);
                         await using (transaction.ConfigureAwait(false))
                         {
-                            if (users.TryGetValue(pointsPerUser.Key, out var userId))
+                            if (accounts.TryGetValue(pointsPerUser.Key, out var userId))
                             {
                                 if (await dbFactory.GetRepository<GuildSpecialRankPointsRepository>()
                                                    .AddPoints(configuration.Id, configuration.MaximumPoints, userId, pointsPerUser.Select(obj => obj.Points).ToList())
@@ -138,27 +139,29 @@ public class GuildSpecialRankPointsJob : LocatedAsyncJob
                                                                       })
                                                        .ToList())
                 {
-                    var actions = new List<(bool IsGrant, DiscordMember User, ulong RoleId)>();
+                    var actions = new List<(bool IsGrant, IGuildUser User, ulong RoleId)>();
 
-                    var guild = await client.GetGuildAsync(configuration.DiscordServerId)
-                                            .ConfigureAwait(false);
+                    var guild = client.GetGuild(configuration.DiscordServerId);
 
-                    foreach (var user in await guild.GetAllMembersAsync()
-                                                    .ConfigureAwait(false))
+                    await foreach (var users in guild.GetUsersAsync()
+                                                     .ConfigureAwait(false))
                     {
-                        if (configuration.IgnoreRoles.Any(obj => user.Roles.Any(obj2 => obj2.Id == obj)) == false)
+                        foreach (var user in users)
                         {
-                            var isRoleAssigned = user.Roles.Any(obj => obj.Id == configuration.DiscordRoleId);
-                            if (isRoleAssigned)
+                            if (configuration.IgnoreRoles.Any(obj => user.RoleIds.Any(obj2 => obj2 == obj)) == false)
                             {
-                                if (configuration.Users.Any(obj => obj.Id == user.Id) == false)
+                                var isRoleAssigned = user.RoleIds.Any(obj => obj == configuration.DiscordRoleId);
+                                if (isRoleAssigned)
                                 {
-                                    actions.Add((false, user, configuration.DiscordRoleId));
+                                    if (configuration.Users.Any(obj => obj.Id == user.Id) == false)
+                                    {
+                                        actions.Add((false, user, configuration.DiscordRoleId));
+                                    }
                                 }
-                            }
-                            else if (configuration.Users.FirstOrDefault(obj => obj.Id == user.Id)?.IsGrantRole == true)
-                            {
-                                actions.Add((true, user, configuration.DiscordRoleId));
+                                else if (configuration.Users.FirstOrDefault(obj => obj.Id == user.Id)?.IsGrantRole == true)
+                                {
+                                    actions.Add((true, user, configuration.DiscordRoleId));
+                                }
                             }
                         }
                     }
@@ -175,7 +178,7 @@ public class GuildSpecialRankPointsJob : LocatedAsyncJob
                                     if (action.IsGrant)
                                     {
                                         await action.User
-                                                    .GrantRoleAsync(role)
+                                                    .AddRoleAsync(role)
                                                     .ConfigureAwait(false);
 
                                         LoggingService.AddJobLogEntry(LogEntryLevel.Warning, nameof(GuildSpecialRankPointsJob), $"Role granted: configuration {configuration.Id}; user: {action.User.Id}; role: {role.Id}");
@@ -183,7 +186,7 @@ public class GuildSpecialRankPointsJob : LocatedAsyncJob
                                     else
                                     {
                                         await action.User
-                                                    .RevokeRoleAsync(role)
+                                                    .RemoveRoleAsync(role)
                                                     .ConfigureAwait(false);
 
                                         LoggingService.AddJobLogEntry(LogEntryLevel.Warning, nameof(GuildSpecialRankPointsJob), $"Role revoked: configuration {configuration.Id}; user: {action.User.Id}; role: {role.Id}");
@@ -202,10 +205,10 @@ public class GuildSpecialRankPointsJob : LocatedAsyncJob
 
                         if (configuration.ChannelId != null)
                         {
-                            var builder = new DiscordEmbedBuilder();
+                            var builder = new EmbedBuilder();
                             builder.WithTitle(LocalizationGroup.GetText("RoleAssignment", "Role assignment"));
                             builder.WithDescription($"{configuration.Description} ({guild.GetRole(configuration.DiscordRoleId).Mention})");
-                            builder.WithColor(DiscordColor.DarkBlue);
+                            builder.WithColor(Color.DarkBlue);
 
                             if (actions.Any(obj => obj.IsGrant == false))
                             {
@@ -213,7 +216,7 @@ public class GuildSpecialRankPointsJob : LocatedAsyncJob
 
                                 foreach (var action in actions.Where(obj => obj.IsGrant == false))
                                 {
-                                    stringBuilder.AppendLine(DiscordEmojiService.GetBulletEmoji(client) + " " + action.User.Mention);
+                                    stringBuilder.AppendLine(DiscordEmoteService.GetBulletEmote(client) + " " + action.User.Mention);
                                 }
 
                                 builder.AddField(LocalizationGroup.GetText("RemovedRoles", "Removed roles"), stringBuilder.ToString());
@@ -225,7 +228,7 @@ public class GuildSpecialRankPointsJob : LocatedAsyncJob
 
                                 foreach (var action in actions.Where(obj => obj.IsGrant))
                                 {
-                                    stringBuilder.AppendLine(DiscordEmojiService.GetBulletEmoji(client) + " " + action.User.Mention);
+                                    stringBuilder.AppendLine(DiscordEmoteService.GetBulletEmote(client) + " " + action.User.Mention);
                                 }
 
                                 builder.AddField(LocalizationGroup.GetText("GrantedRoles", "Granted roles"), stringBuilder.ToString());
@@ -234,8 +237,11 @@ public class GuildSpecialRankPointsJob : LocatedAsyncJob
                             var channel = await client.GetChannelAsync(configuration.ChannelId.Value)
                                                       .ConfigureAwait(false);
 
-                            await channel.SendMessageAsync(builder)
-                                         .ConfigureAwait(false);
+                            if (channel is IMessageChannel messageChannel)
+                            {
+                                await messageChannel.SendMessageAsync(embed: builder.Build())
+                                                    .ConfigureAwait(false);
+                            }
                         }
                         else
                         {

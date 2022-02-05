@@ -1,7 +1,7 @@
-﻿using DSharpPlus.EventArgs;
+﻿using Discord;
 
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Calendar.DialogElements;
 
@@ -50,12 +50,12 @@ public class CalendarTemplateUriDialogElement : DialogReactionElementBase<string
                               {
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetCheckEmoji(CommandContext.Client),
+                                      Emote = DiscordEmoteService.GetCheckEmote(CommandContext.Client),
                                       Func = RunSubElement<CalendarTemplateUriUriDialogElement, string>
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetCrossEmoji(CommandContext.Client),
+                                      Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
                                       Func = () => Task.FromResult<string>(null)
                                   }
                               };
@@ -66,7 +66,7 @@ public class CalendarTemplateUriDialogElement : DialogReactionElementBase<string
     /// </summary>
     /// <param name="reaction">Reaction</param>
     /// <returns>Result</returns>
-    protected override string DefaultFunc(MessageReactionAddEventArgs reaction) => null;
+    protected override string DefaultFunc(IReaction reaction) => null;
 
     #endregion // DialogReactionElementBase<bool>
 }

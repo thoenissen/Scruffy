@@ -1,10 +1,8 @@
 ﻿using System.Collections.Concurrent;
 
-using DSharpPlus;
-using DSharpPlus.CommandsNext;
-
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.CoreData;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Core;
 
@@ -71,11 +69,11 @@ public class AdministrationPermissionsValidationService
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <returns>Are permissions set?</returns>
-    public Task<bool> CheckPermissions(CommandContext commandContext)
+    public Task<bool> CheckPermissions(CommandContextContainer commandContext)
     {
         var result = commandContext.User.Id == commandContext.Guild?.OwnerId
-                  || (commandContext.Member != null && commandContext.Channel?.PermissionsFor(commandContext.Member).HasFlag(Permissions.Administrator) == true)
-                  || (commandContext.Member != null && commandContext.Guild != null && _roles.TryGetValue(commandContext.Guild.Id, out var roleId) && commandContext.Member.Roles.Any(obj => obj.Id == roleId));
+                  || commandContext.Member?.GuildPermissions.Administrator == true
+                  || (commandContext.Member != null && commandContext.Guild != null && _roles.TryGetValue(commandContext.Guild.Id, out var roleId) && commandContext.Member.RoleIds.Any(obj => obj == roleId));
 
         return Task.FromResult(result);
     }

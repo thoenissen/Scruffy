@@ -1,5 +1,5 @@
 ﻿using Scruffy.Data.Services.Calendar;
-using Scruffy.Services.Core.Discord.Attributes;
+using Scruffy.Services.Discord.Attributes;
 
 namespace Scruffy.Services.Calendar.DialogElements.Forms;
 

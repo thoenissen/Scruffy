@@ -1,12 +1,11 @@
-﻿using DSharpPlus;
-using DSharpPlus.Entities;
+﻿using Discord;
 
 using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Guild;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Guild.DialogElements;
 
@@ -44,7 +43,7 @@ public class GuildRankEditDialogElement : DialogEmbedReactionElementBase<bool>
     /// </summary>
     /// <param name="builder">Builder</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public override async Task EditMessage(DiscordEmbedBuilder builder)
+    public override async Task EditMessage(EmbedBuilder builder)
     {
         builder.WithTitle(LocalizationGroup.GetText("ChooseCommandTitle", "Rank configuration"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseCommandDescription", "With this assistant you are able to configure the rank."));
@@ -66,9 +65,9 @@ public class GuildRankEditDialogElement : DialogEmbedReactionElementBase<bool>
                                        .ConfigureAwait(false);
 
             var fieldBuilder = new StringBuilder();
-            fieldBuilder.AppendLine($"{Formatter.Bold(LocalizationGroup.GetText("InGameName", "In game name"))}: {data.InGameName}");
-            fieldBuilder.AppendLine($"{Formatter.Bold(LocalizationGroup.GetText("DiscordRoleId", "Discord role"))}: {CommandContext.Guild.GetRole(data.DiscordRoleId).Mention}");
-            fieldBuilder.AppendLine($"{Formatter.Bold(LocalizationGroup.GetText("Percentage", "Percentage quota"))}: {data.Percentage.ToString(LocalizationGroup.CultureInfo)}");
+            fieldBuilder.AppendLine($"{Format.Bold(LocalizationGroup.GetText("InGameName", "In game name"))}: {data.InGameName}");
+            fieldBuilder.AppendLine($"{Format.Bold(LocalizationGroup.GetText("DiscordRoleId", "Discord role"))}: {CommandContext.Guild.GetRole(data.DiscordRoleId).Mention}");
+            fieldBuilder.AppendLine($"{Format.Bold(LocalizationGroup.GetText("Percentage", "Percentage quota"))}: {data.Percentage.ToString(LocalizationGroup.CultureInfo)}");
             builder.AddField(LocalizationGroup.GetText("General", "General"), fieldBuilder.ToString());
         }
     }
@@ -92,8 +91,8 @@ public class GuildRankEditDialogElement : DialogEmbedReactionElementBase<bool>
                               {
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetEditEmoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("EditInGameNameCommand", "{0} Edit in game name", DiscordEmojiService.GetEditEmoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetEditEmote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("EditInGameNameCommand", "{0} Edit in game name", DiscordEmoteService.GetEditEmote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  var inGameName = await RunSubElement<GuildRankInGameNameDialogElement, string>().ConfigureAwait(false);
@@ -112,8 +111,8 @@ public class GuildRankEditDialogElement : DialogEmbedReactionElementBase<bool>
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetEdit2Emoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("EditDiscordCommand", "{0} Edit discord role", DiscordEmojiService.GetEdit2Emoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetEdit2Emote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("EditDiscordCommand", "{0} Edit discord role", DiscordEmoteService.GetEdit2Emote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  var roleId = await RunSubElement<GuildRankDiscordRoleDialogElement, ulong>().ConfigureAwait(false);
@@ -132,8 +131,8 @@ public class GuildRankEditDialogElement : DialogEmbedReactionElementBase<bool>
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetEdit3Emoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("EditPercentageCommand", "{0} Edit percentage", DiscordEmojiService.GetEdit3Emoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetEdit3Emote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("EditPercentageCommand", "{0} Edit percentage", DiscordEmoteService.GetEdit3Emote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  var percentage = await RunSubElement<GuildRankPercentageDialogElement, double>().ConfigureAwait(false);
@@ -152,8 +151,8 @@ public class GuildRankEditDialogElement : DialogEmbedReactionElementBase<bool>
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetCrossEmoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmojiService.GetCrossEmoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmoteService.GetCrossEmote(CommandContext.Client)),
                                       Func = () => Task.FromResult(false)
                                   }
                               };

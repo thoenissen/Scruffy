@@ -2,10 +2,10 @@
 
 using Microsoft.Extensions.DependencyInjection;
 
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
 using Scruffy.Services.Debug;
+using Scruffy.Services.Discord;
 using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.Core;

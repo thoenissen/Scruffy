@@ -1,9 +1,9 @@
-﻿using DSharpPlus.Entities;
-using DSharpPlus.Interactivity.Extensions;
+﻿using Discord;
 
+using Scruffy.Services.Core.Exceptions;
 using Scruffy.Services.Core.Localization;
 
-namespace Scruffy.Services.Core.Discord;
+namespace Scruffy.Services.Discord;
 
 /// <summary>
 /// Dialog element with message response
@@ -40,14 +40,14 @@ public abstract class DialogEmbedMessageElementBase<TData> : DialogElementBase<T
     /// Return the message of element
     /// </summary>
     /// <returns>Message</returns>
-    public abstract DiscordEmbedBuilder GetMessage();
+    public abstract EmbedBuilder GetMessage();
 
     /// <summary>
     /// Converting the response message
     /// </summary>
     /// <param name="message">Message</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public virtual Task<TData> ConvertMessage(DiscordMessage message) => Task.FromResult((TData)Convert.ChangeType(message.Content, typeof(TData)));
+    public virtual Task<TData> ConvertMessage(IUserMessage message) => Task.FromResult((TData)Convert.ChangeType(message.Content, typeof(TData)));
 
     /// <summary>
     /// Execute the dialog element
@@ -60,28 +60,25 @@ public abstract class DialogEmbedMessageElementBase<TData> : DialogElementBase<T
         do
         {
             var currentBotMessage = await CommandContext.Channel
-                                                        .SendMessageAsync(GetMessage())
+                                                        .SendMessageAsync(embed: GetMessage().Build())
                                                         .ConfigureAwait(false);
 
             DialogContext.Messages.Add(currentBotMessage);
 
-            var currentUserResponse = await CommandContext.Client
-                                                          .GetInteractivity()
+            var currentUserResponse = await CommandContext.Interaction
                                                           .WaitForMessageAsync(obj => obj.Author.Id == CommandContext.User.Id
-                                                                                   && obj.ChannelId == CommandContext.Channel.Id)
+                                                                              && obj.Channel.Id == CommandContext.Channel.Id)
                                                           .ConfigureAwait(false);
 
-            if (currentUserResponse.TimedOut == false)
+            if (currentUserResponse != null)
             {
-                CommandContext.LastUserMessage = currentUserResponse.Result;
-
-                DialogContext.Messages.Add(currentUserResponse.Result);
+                DialogContext.Messages.Add(currentUserResponse);
 
                 try
                 {
-                    return await ConvertMessage(currentUserResponse.Result).ConfigureAwait(false);
+                    return await ConvertMessage(currentUserResponse).ConfigureAwait(false);
                 }
-                catch (Exception ex) when (ex is InvalidOperationException || ex is KeyNotFoundException)
+                catch (Exception ex) when (ex is InvalidOperationException or KeyNotFoundException)
                 {
                     var repeatMessage = await CommandContext.Channel
                                                             .SendMessageAsync(_localizationService.GetGroup(nameof(DialogElementBase))
@@ -96,7 +93,7 @@ public abstract class DialogEmbedMessageElementBase<TData> : DialogElementBase<T
         }
         while (repeat);
 
-        throw new TimeoutException();
+        throw new ScruffyTimeoutException();
     }
 
     #endregion // Methods

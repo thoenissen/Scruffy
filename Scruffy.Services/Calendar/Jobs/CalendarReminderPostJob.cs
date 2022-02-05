@@ -1,4 +1,5 @@
-﻿using DSharpPlus;
+﻿using Discord;
+using Discord.WebSocket;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -71,21 +72,24 @@ public class CalendarReminderPostJob : LocatedAsyncJob
 
                 if (data?.ChannelId != null)
                 {
-                    var discordClient = serviceProvider.GetService<DiscordClient>();
+                    var discordClient = serviceProvider.GetService<DiscordSocketClient>();
 
                     var channel = await discordClient.GetChannelAsync(data.ChannelId)
                                                      .ConfigureAwait(false);
 
-                    var message = await channel.SendMessageAsync(data.ReminderMessage)
-                                               .ConfigureAwait(false);
+                    if (channel is IMessageChannel messageChannel)
+                    {
+                        var message = await messageChannel.SendMessageAsync(data.ReminderMessage)
+                                                          .ConfigureAwait(false);
 
-                    dbFactory.GetRepository<CalendarAppointmentRepository>()
-                             .Refresh(obj => obj.Id == _id,
-                                      obj =>
-                                      {
-                                          obj.DiscordChannelId = data.ChannelId;
-                                          obj.DiscordMessageId = message.Id;
-                                      });
+                        dbFactory.GetRepository<CalendarAppointmentRepository>()
+                                 .Refresh(obj => obj.Id == _id,
+                                          obj =>
+                                          {
+                                              obj.DiscordChannelId = data.ChannelId;
+                                              obj.DiscordMessageId = message.Id;
+                                          });
+                    }
                 }
             }
         }

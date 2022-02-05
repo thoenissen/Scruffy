@@ -1,12 +1,11 @@
-﻿using DSharpPlus;
-using DSharpPlus.Entities;
+﻿using Discord;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Data.Entity.Tables.Raid;
 using Scruffy.Data.Services.Raid;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 using Scruffy.Services.Raid.DialogElements.Forms;
 
 namespace Scruffy.Services.Raid.DialogElements;
@@ -81,7 +80,7 @@ public class RaidExperienceLevelSetupDialogElement : DialogEmbedReactionElementB
     /// </summary>
     /// <param name="builder">Builder</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public override Task EditMessage(DiscordEmbedBuilder builder)
+    public override Task EditMessage(EmbedBuilder builder)
     {
         builder.WithTitle(LocalizationGroup.GetText("ChooseCommandTitle", "Raid experience levels configuration"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseCommandDescription", "With this assistant you are able to configure the raid experience levels. The following experience levels are already created:"));
@@ -94,7 +93,7 @@ public class RaidExperienceLevelSetupDialogElement : DialogEmbedReactionElementB
             var currentLevel = levels.FirstOrDefault(obj => obj.SuperiorExperienceLevelId == null);
             while (currentLevel != null)
             {
-                levelsBuilder.AppendLine(Formatter.Bold($"{DiscordEmoji.FromGuildEmote(CommandContext.Client, currentLevel.DiscordEmoji)} {currentLevel.Description}"));
+                levelsBuilder.AppendLine(Format.Bold($"{CommandContext.Guild.GetEmoteAsync(currentLevel.DiscordEmoji).Result} {currentLevel.Description}"));
 
                 currentLevel = levels.FirstOrDefault(obj => obj.SuperiorExperienceLevelId == currentLevel.Id);
             }
@@ -121,8 +120,8 @@ public class RaidExperienceLevelSetupDialogElement : DialogEmbedReactionElementB
                          {
                              new ()
                              {
-                                 Emoji = DiscordEmojiService.GetAddEmoji(CommandContext.Client),
-                                 CommandText = LocalizationGroup.GetFormattedText("AddCommand", "{0} Add level", DiscordEmojiService.GetAddEmoji(CommandContext.Client)),
+                                 Emote = DiscordEmoteService.GetAddEmote(CommandContext.Client),
+                                 CommandText = LocalizationGroup.GetFormattedText("AddCommand", "{0} Add level", DiscordEmoteService.GetAddEmote(CommandContext.Client)),
                                  Func = async () =>
                                         {
                                             var data = await DialogHandler.RunForm<CreateRaidExperienceLevelData>(CommandContext, false)
@@ -161,8 +160,8 @@ public class RaidExperienceLevelSetupDialogElement : DialogEmbedReactionElementB
             {
                 _reactions.Add(new ReactionData<bool>
                                {
-                                   Emoji = DiscordEmojiService.GetEditEmoji(CommandContext.Client),
-                                   CommandText = LocalizationGroup.GetFormattedText("EditCommand", "{0} Edit level", DiscordEmojiService.GetEditEmoji(CommandContext.Client)),
+                                   Emote = DiscordEmoteService.GetEditEmote(CommandContext.Client),
+                                   CommandText = LocalizationGroup.GetFormattedText("EditCommand", "{0} Edit level", DiscordEmoteService.GetEditEmote(CommandContext.Client)),
                                    Func = async () =>
                                           {
                                               var levelId = await RunSubElement<RaidExperienceLevelSelectionDialogElement, long>().ConfigureAwait(false);
@@ -183,8 +182,8 @@ public class RaidExperienceLevelSetupDialogElement : DialogEmbedReactionElementB
 
                 _reactions.Add(new ReactionData<bool>
                                {
-                                   Emoji = DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client),
-                                   CommandText = LocalizationGroup.GetFormattedText("DeleteCommand", "{0} Delete level", DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client)),
+                                   Emote = DiscordEmoteService.GetTrashCanEmote(CommandContext.Client),
+                                   CommandText = LocalizationGroup.GetFormattedText("DeleteCommand", "{0} Delete level", DiscordEmoteService.GetTrashCanEmote(CommandContext.Client)),
                                    Func = async () =>
                                           {
                                               var levelId = await RunSubElement<RaidExperienceLevelSelectionDialogElement, long>().ConfigureAwait(false);
@@ -198,8 +197,8 @@ public class RaidExperienceLevelSetupDialogElement : DialogEmbedReactionElementB
 
             _reactions.Add(new ReactionData<bool>
                            {
-                               Emoji = DiscordEmojiService.GetCrossEmoji(CommandContext.Client),
-                               CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmojiService.GetCrossEmoji(CommandContext.Client)),
+                               Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
+                               CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmoteService.GetCrossEmote(CommandContext.Client)),
                                Func = () => Task.FromResult(false)
                            });
         }

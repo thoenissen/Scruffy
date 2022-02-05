@@ -1,7 +1,7 @@
-﻿using DSharpPlus.Entities;
+﻿using Discord;
 
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Raid.DialogElements;
 
@@ -38,9 +38,9 @@ public class RaidExperienceLevelRoleDialogElement : DialogEmbedMessageElementBas
     /// Return the message of element
     /// </summary>
     /// <returns>Message</returns>
-    public override DiscordEmbedBuilder GetMessage()
+    public override EmbedBuilder GetMessage()
     {
-        var builder = new DiscordEmbedBuilder();
+        var builder = new EmbedBuilder();
         builder.WithTitle(LocalizationGroup.GetText("ChooseLevelTitle", "Raid experience level role selection"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseLevelDescription", "Please choose one of the following roles:"));
 
@@ -55,16 +55,16 @@ public class RaidExperienceLevelRoleDialogElement : DialogEmbedMessageElementBas
         levelsFieldsText.Append('\n');
 
         var i = 1;
-        foreach (var (key, value) in CommandContext.Guild.Roles)
+        foreach (var role in CommandContext.Guild.Roles)
         {
             levelsFieldsText.Append('`');
             levelsFieldsText.Append(i);
             levelsFieldsText.Append("` - ");
             levelsFieldsText.Append(' ');
-            levelsFieldsText.Append(value.Mention);
+            levelsFieldsText.Append(role.Mention);
             levelsFieldsText.Append('\n');
 
-            _levels[i] = key;
+            _levels[i] = role.Id;
 
             i++;
         }
@@ -79,7 +79,7 @@ public class RaidExperienceLevelRoleDialogElement : DialogEmbedMessageElementBas
     /// </summary>
     /// <param name="message">Message</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public override Task<ulong?> ConvertMessage(DiscordMessage message)
+    public override Task<ulong?> ConvertMessage(IUserMessage message)
     {
         return Task.FromResult(int.TryParse(message.Content, out var index) && _levels.TryGetValue(index, out var selectedRoleId) ? selectedRoleId : null);
     }

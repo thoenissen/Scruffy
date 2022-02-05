@@ -1,5 +1,6 @@
-﻿using DSharpPlus;
-using DSharpPlus.Entities;
+﻿using Discord;
+using Discord.Rest;
+using Discord.WebSocket;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -74,23 +75,19 @@ public class OneTimeReminderJob : LocatedAsyncJob
                         var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
                         await using (serviceProvider.ConfigureAwait(false))
                         {
-                            var discordClient = serviceProvider.GetService<DiscordClient>();
+                            var discordClient = serviceProvider.GetService<DiscordSocketClient>();
 
                             var channel = await discordClient.GetChannelAsync(jobEntity.ChannelId).ConfigureAwait(false);
-
-                            if (channel != null)
+                            if (channel is IMessageChannel textChannel)
                             {
                                 var user = await discordClient.GetUserAsync(jobEntity.DiscordAccountId).ConfigureAwait(false);
 
-                                await discordClient.SendMessageAsync(channel,
-                                                                     new DiscordMessageBuilder
-                                                                     {
-                                                                         Content = string.IsNullOrWhiteSpace(jobEntity.Message)
-                                                                                       ? LocalizationGroup.GetFormattedText("EmptyReminder", "{0} Reminder", user.Mention)
-                                                                                       : jobEntity.Message.Contains("\n")
-                                                                                           ? LocalizationGroup.GetFormattedText("MultiLineReminder", "{0} Reminder:\n\n{1}", user.Mention, jobEntity.Message)
-                                                                                           : LocalizationGroup.GetFormattedText("SingleLineReminder", "{0} Reminder: {1}", user.Mention, jobEntity.Message)
-                                                                     }).ConfigureAwait(false);
+                                await textChannel.SendMessageAsync(string.IsNullOrWhiteSpace(jobEntity.Message)
+                                                                       ? LocalizationGroup.GetFormattedText("EmptyReminder", "{0} Reminder", user.Mention)
+                                                                       : jobEntity.Message.Contains("\n")
+                                                                           ? LocalizationGroup.GetFormattedText("MultiLineReminder", "{0} Reminder:\n\n{1}", user.Mention, jobEntity.Message)
+                                                                           : LocalizationGroup.GetFormattedText("SingleLineReminder", "{0} Reminder: {1}", user.Mention, jobEntity.Message))
+                                                 .ConfigureAwait(false);
 
                                 dbFactory.GetRepository<OneTimeReminderRepository>()
                                          .Refresh(obj => obj.Id == _id,

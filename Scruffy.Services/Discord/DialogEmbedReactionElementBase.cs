@@ -1,9 +1,9 @@
-﻿using DSharpPlus.Entities;
-using DSharpPlus.Interactivity.Extensions;
+﻿using Discord;
 
+using Scruffy.Services.Core.Exceptions;
 using Scruffy.Services.Core.Localization;
 
-namespace Scruffy.Services.Core.Discord;
+namespace Scruffy.Services.Discord;
 
 /// <summary>
 /// Dialog element with reactions
@@ -37,7 +37,7 @@ public abstract class DialogEmbedReactionElementBase<TData> : DialogElementBase<
     /// </summary>
     /// <param name="builder">Builder</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public virtual Task EditMessage(DiscordEmbedBuilder builder) => Task.CompletedTask;
+    public virtual Task EditMessage(EmbedBuilder builder) => Task.CompletedTask;
 
     /// <summary>
     /// Returns the title of the commands
@@ -57,7 +57,7 @@ public abstract class DialogEmbedReactionElementBase<TData> : DialogElementBase<
     /// <returns>Result</returns>
     public override async Task<TData> Run()
     {
-        var builder = new DiscordEmbedBuilder();
+        var builder = new EmbedBuilder();
 
         await EditMessage(builder).ConfigureAwait(false);
 
@@ -75,32 +75,30 @@ public abstract class DialogEmbedReactionElementBase<TData> : DialogElementBase<
         }
 
         var currentBotMessage = await CommandContext.Channel
-                                                    .SendMessageAsync(builder)
+                                                    .SendMessageAsync(embed: builder.Build())
                                                     .ConfigureAwait(false);
 
         DialogContext.Messages.Add(currentBotMessage);
 
-        var userReactionTask = CommandContext.Client
-                                             .GetInteractivity()
+        var userReactionTask = CommandContext.Interaction
                                              .WaitForReactionAsync(currentBotMessage, CommandContext.User);
 
         if (reactions?.Count > 0)
         {
             foreach (var reaction in reactions)
             {
-                await currentBotMessage.CreateReactionAsync(reaction.Emoji).ConfigureAwait(false);
+                await currentBotMessage.AddReactionAsync(reaction.Emote).ConfigureAwait(false);
             }
         }
 
         var userReaction = await userReactionTask.ConfigureAwait(false);
-
-        if (userReaction.TimedOut == false)
+        if (userReaction != null)
         {
             if (reactions?.Count > 0)
             {
                 foreach (var reaction in reactions)
                 {
-                    if (reaction.Emoji.ToString() == userReaction.Result.Emoji.ToString())
+                    if (reaction.Emote.Name == userReaction.Emote.Name)
                     {
                         return await reaction.Func().ConfigureAwait(false);
                     }
@@ -110,7 +108,7 @@ public abstract class DialogEmbedReactionElementBase<TData> : DialogElementBase<
             return DefaultFunc();
         }
 
-        throw new TimeoutException();
+        throw new ScruffyTimeoutException();
     }
 
     #endregion // Methods

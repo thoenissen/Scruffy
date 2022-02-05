@@ -1,7 +1,5 @@
 ﻿using System.Threading.Tasks;
 
-using Microsoft.Extensions.DependencyInjection;
-
 using Scruffy.ManualTesting;
 using Scruffy.Services.Core;
 

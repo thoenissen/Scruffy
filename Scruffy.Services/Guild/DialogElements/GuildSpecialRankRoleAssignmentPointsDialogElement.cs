@@ -1,9 +1,9 @@
 ﻿using System.Globalization;
 
-using DSharpPlus.Entities;
+using Discord;
 
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Guild.DialogElements;
 
@@ -38,7 +38,7 @@ public class GuildSpecialRankRoleAssignmentPointsDialogElement : DialogMessageEl
     /// </summary>
     /// <param name="message">Message</param>
     /// <returns>Result</returns>
-    public override double ConvertMessage(DiscordMessage message)
+    public override double ConvertMessage(IUserMessage message)
     {
         return double.Parse(message.Content, NumberStyles.Any, LocalizationGroup.CultureInfo);
     }

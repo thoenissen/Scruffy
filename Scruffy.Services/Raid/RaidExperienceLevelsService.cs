@@ -1,11 +1,11 @@
-﻿using DSharpPlus.Entities;
+﻿using Discord;
 
 using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Raid;
 
@@ -53,9 +53,9 @@ public class RaidExperienceLevelsService : LocatedServiceBase
                                         .ToListAsync()
                                         .ConfigureAwait(false);
 
-            var embedBuilder = new DiscordEmbedBuilder
+            var embedBuilder = new EmbedBuilder
                                {
-                                   Color = DiscordColor.Green,
+                                   Color = Color.Green,
                                    Description = LocalizationGroup.GetText("ExperienceLevels", "Experience levels")
                                };
 
@@ -67,7 +67,7 @@ public class RaidExperienceLevelsService : LocatedServiceBase
             {
                 var levelFieldCounter = 1;
 
-                currentFieldTitle = $"{DiscordEmojiService.GetGuildEmoji(commandContextContainer.Client, level.DiscordEmoji)} {level.Description} #{levelFieldCounter}";
+                currentFieldTitle = $"{DiscordEmoteService.GetGuildEmote(commandContextContainer.Client, level.DiscordEmoji)} {level.Description} #{levelFieldCounter}";
 
                 foreach (var entry in level.Users)
                 {
@@ -87,12 +87,12 @@ public class RaidExperienceLevelsService : LocatedServiceBase
                             fieldCounter = 1;
 
                             await commandContextContainer.Channel
-                                                         .SendMessageAsync(embedBuilder)
+                                                         .SendMessageAsync(embed: embedBuilder.Build())
                                                          .ConfigureAwait(false);
 
-                            embedBuilder = new DiscordEmbedBuilder
+                            embedBuilder = new EmbedBuilder
                                            {
-                                               Color = DiscordColor.Green
+                                               Color = Color.Green
                                            };
                         }
                         else
@@ -102,7 +102,7 @@ public class RaidExperienceLevelsService : LocatedServiceBase
 
                         levelFieldCounter++;
 
-                        currentFieldTitle = $"{DiscordEmojiService.GetGuildEmoji(commandContextContainer.Client, level.DiscordEmoji)} {level.Description} #{levelFieldCounter}";
+                        currentFieldTitle = $"{DiscordEmoteService.GetGuildEmote(commandContextContainer.Client, level.DiscordEmoji)} {level.Description} #{levelFieldCounter}";
 
                         stringBuilder = new StringBuilder();
                     }
@@ -118,7 +118,7 @@ public class RaidExperienceLevelsService : LocatedServiceBase
             }
 
             await commandContextContainer.Channel
-                                         .SendMessageAsync(embedBuilder)
+                                         .SendMessageAsync(embed: embedBuilder.Build())
                                          .ConfigureAwait(false);
         }
     }

@@ -1,7 +1,7 @@
-﻿using DSharpPlus.Entities;
+﻿using Discord;
 
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Calendar.DialogElements;
 
@@ -36,7 +36,7 @@ public class CalendarOneTimeDayDialogElement : DialogMessageElementBase<DateTime
     /// </summary>
     /// <param name="message">Message</param>
     /// <returns>Result</returns>
-    public override DateTime ConvertMessage(DiscordMessage message)
+    public override DateTime ConvertMessage(IUserMessage message)
     {
         return DateTime.TryParseExact(message.Content,
                                       "yyyy-MM-dd",

@@ -2,14 +2,13 @@
 using System.Globalization;
 using System.Net;
 
-using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
+using Discord;
+using Discord.Commands;
 
 using Scruffy.Services.Calendar;
-using Scruffy.Services.Core.Discord;
-using Scruffy.Services.Core.Discord.Attributes;
 using Scruffy.Services.Debug;
+using Scruffy.Services.Discord;
+using Scruffy.Services.Discord.Attributes;
 using Scruffy.Services.Guild;
 using Scruffy.Services.Guild.Jobs;
 using Scruffy.Services.GuildWars2;
@@ -22,9 +21,8 @@ namespace Scruffy.Commands;
 /// Debug commands
 /// </summary>
 [Group("debug")]
-[Aliases("d")]
+[Alias("d")]
 [RequireDeveloperPermissions]
-[ModuleLifespan(ModuleLifespan.Transient)]
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
 public class DebugCommandModule : LocatedCommandModuleBase
 {
@@ -33,19 +31,56 @@ public class DebugCommandModule : LocatedCommandModuleBase
     /// <summary>
     /// List roles
     /// </summary>
-    /// <param name="commandContext">Current command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("info")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-    public async Task Info(CommandContext commandContext)
+    public async Task Info()
     {
-        var embed = new DiscordEmbedBuilder();
+        var embed = new EmbedBuilder();
 
-        embed.AddField("Information", $"Start time: {Process.GetCurrentProcess()?.StartTime.ToString("g", LocalizationGroup.CultureInfo)}");
+        embed.AddField("Information", $"Start time: {Process.GetCurrentProcess().StartTime.ToString("g", LocalizationGroup.CultureInfo)}");
 
-        await commandContext.Channel
-                            .SendMessageAsync(embed)
-                            .ConfigureAwait(false);
+        await Context.Channel
+                     .SendMessageAsync(embed: embed.Build())
+                     .ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Wait for message
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [Command("message")]
+    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
+    public async Task Message()
+    {
+        await Context.Message
+                     .ReplyAsync("Please answer!")
+                     .ConfigureAwait(false);
+
+        var message = await Context.Interaction
+                                   .WaitForMessageAsync(obj => obj.Author.Id == Context.Message.Author.Id).ConfigureAwait(false);
+
+        await message.ReplyAsync(message.Content)
+                     .ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Wait for reaction
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [Command("reaction")]
+    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
+    public async Task Reaction()
+    {
+        var message = await Context.Message
+                                   .ReplyAsync("Please react!")
+                                   .ConfigureAwait(false);
+
+        var reaction = await Context.Interaction
+                                    .WaitForReactionAsync(message, Context.Message.Author).ConfigureAwait(false);
+
+        await message.ReplyAsync(reaction.Emote.ToString())
+                     .ConfigureAwait(false);
     }
 
     #endregion // Methods
@@ -56,8 +91,7 @@ public class DebugCommandModule : LocatedCommandModuleBase
     /// Listing
     /// </summary>
     [Group("dump")]
-    [Aliases("d")]
-    [ModuleLifespan(ModuleLifespan.Transient)]
+    [Alias("d")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugDumpModule : LocatedCommandModuleBase
     {
@@ -75,13 +109,12 @@ public class DebugCommandModule : LocatedCommandModuleBase
         /// <summary>
         /// List roles
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("text")]
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-        public async Task Roles(CommandContext commandContext)
+        public async Task Roles()
         {
-            await DebugService.DumpText(commandContext)
+            await DebugService.DumpText(Context)
                               .ConfigureAwait(false);
         }
 
@@ -96,8 +129,7 @@ public class DebugCommandModule : LocatedCommandModuleBase
     /// Listing
     /// </summary>
     [Group("raid")]
-    [Aliases("r")]
-    [ModuleLifespan(ModuleLifespan.Transient)]
+    [Alias("r")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugRaidModule : LocatedCommandModuleBase
     {
@@ -115,18 +147,17 @@ public class DebugCommandModule : LocatedCommandModuleBase
         /// <summary>
         /// List roles
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <param name="configurationId">Id of the configuration</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("refresh_message")]
-        public async Task Roles(CommandContext commandContext, long configurationId)
+        public async Task Roles(long configurationId)
         {
             await MessageBuilder.RefreshMessageAsync(configurationId)
                                 .ConfigureAwait(false);
 
-            await commandContext.Message
-                                .DeleteAsync()
-                                .ConfigureAwait(false);
+            await Context.Message
+                         .DeleteAsync()
+                         .ConfigureAwait(false);
         }
 
         #endregion // Methods
@@ -140,8 +171,7 @@ public class DebugCommandModule : LocatedCommandModuleBase
     /// Listing
     /// </summary>
     [Group("list")]
-    [Aliases("l")]
-    [ModuleLifespan(ModuleLifespan.Transient)]
+    [Alias("l")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugListModule : LocatedCommandModuleBase
     {
@@ -159,65 +189,48 @@ public class DebugCommandModule : LocatedCommandModuleBase
         /// <summary>
         /// List roles
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("roles")]
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-        public async Task Roles(CommandContext commandContext)
+        public async Task Roles()
         {
-            await DebugService.ListRoles(commandContext)
+            await DebugService.ListRoles(Context)
                               .ConfigureAwait(false);
         }
 
         /// <summary>
         /// List users
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("users")]
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-        public async Task Users(CommandContext commandContext)
+        public async Task Users()
         {
-            await DebugService.ListUsers(commandContext)
+            await DebugService.ListUsers(Context)
                               .ConfigureAwait(false);
         }
 
         /// <summary>
         /// List emojis
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("emojis")]
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-        public async Task Emojis(CommandContext commandContext)
+        public async Task Emojis()
         {
-            await DebugService.ListEmojis(commandContext)
+            await DebugService.ListEmojis(Context)
                               .ConfigureAwait(false);
         }
 
         /// <summary>
         /// List channels
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("channels")]
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-        public async Task Channels(CommandContext commandContext)
+        public async Task Channels()
         {
-            await DebugService.ListChannels(commandContext)
-                              .ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// List commands
-        /// </summary>
-        /// <param name="commandContext">Current command context</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-        [Command("commands")]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-        public async Task Commands(CommandContext commandContext)
-        {
-            await DebugService.ListCommands(commandContext)
+            await DebugService.ListChannels(Context)
                               .ConfigureAwait(false);
         }
 
@@ -232,8 +245,7 @@ public class DebugCommandModule : LocatedCommandModuleBase
     /// Guild
     /// </summary>
     [Group("account")]
-    [Aliases("a")]
-    [ModuleLifespan(ModuleLifespan.Transient)]
+    [Alias("a")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugAccountModule : LocatedCommandModuleBase
     {
@@ -251,10 +263,9 @@ public class DebugCommandModule : LocatedCommandModuleBase
         /// <summary>
         /// Refresh accounts
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("refresh")]
-        public Task ExecuteSpecialRankJob(CommandContext commandContext) => DebugService.RefreshAccount();
+        public Task ExecuteSpecialRankJob() => DebugService.RefreshAccount();
 
         #endregion // Methods
     }
@@ -267,8 +278,7 @@ public class DebugCommandModule : LocatedCommandModuleBase
     /// Guild
     /// </summary>
     [Group("gw")]
-    [Aliases("g")]
-    [ModuleLifespan(ModuleLifespan.Transient)]
+    [Alias("g")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugGuildWarsModule : LocatedCommandModuleBase
     {
@@ -286,28 +296,25 @@ public class DebugCommandModule : LocatedCommandModuleBase
         /// <summary>
         /// Import achievements
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("import_achievements")]
-        public Task ImportAchievements(CommandContext commandContext) => AchievementService.ImportAchievements();
+        public Task ImportAchievements() => AchievementService.ImportAchievements();
 
         /// <summary>
         /// Import achievements
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("import_account_achievements")]
-        public Task ImportAccountAchievements(CommandContext commandContext) => new AchievementImportJob().ExecuteAsync();
+        public Task ImportAccountAchievements() => new AchievementImportJob().ExecuteAsync();
 
         /// <summary>
         /// Import achievements
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <param name="accountName">Account name</param>
         /// <param name="apiKey">API-Key</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("import_account_achievements")]
-        public Task ImportAccountAchievements(CommandContext commandContext, string accountName, string apiKey) => AchievementService.ImportAccountAchievements(accountName, apiKey);
+        public Task ImportAccountAchievements(string accountName, string apiKey) => AchievementService.ImportAccountAchievements(accountName, apiKey);
 
         #endregion // Methods
     }
@@ -320,8 +327,7 @@ public class DebugCommandModule : LocatedCommandModuleBase
     /// Listing
     /// </summary>
     [Group("calendar")]
-    [Aliases("c")]
-    [ModuleLifespan(ModuleLifespan.Transient)]
+    [Alias("c")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugCalendarModule : LocatedCommandModuleBase
     {
@@ -344,49 +350,46 @@ public class DebugCommandModule : LocatedCommandModuleBase
         /// <summary>
         /// Refresh calendar message
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("refresh_appointments")]
-        public async Task RefreshAppointments(CommandContext commandContext)
+        public async Task RefreshAppointments()
         {
-            await ScheduleService.CreateAppointments(commandContext.Guild.Id)
+            await ScheduleService.CreateAppointments(Context.Guild.Id)
                                  .ConfigureAwait(false);
 
-            await commandContext.Message
-                                .DeleteAsync()
-                                .ConfigureAwait(false);
+            await Context.Message
+                         .DeleteAsync()
+                         .ConfigureAwait(false);
         }
 
         /// <summary>
         /// Refresh calendar message
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("refresh_message")]
-        public async Task RefreshMessage(CommandContext commandContext)
+        public async Task RefreshMessage()
         {
-            await MessageBuilder.RefreshMessages(commandContext.Guild.Id)
+            await MessageBuilder.RefreshMessages(Context.Guild.Id)
                                 .ConfigureAwait(false);
 
-            await commandContext.Message
-                                .DeleteAsync()
-                                .ConfigureAwait(false);
+            await Context.Message
+                         .DeleteAsync()
+                         .ConfigureAwait(false);
         }
 
         /// <summary>
         /// Refresh motd
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("refresh_motd")]
-        public async Task RefreshMotd(CommandContext commandContext)
+        public async Task RefreshMotd()
         {
-            await MessageBuilder.RefreshMotds(commandContext.Guild.Id)
+            await MessageBuilder.RefreshMotds(Context.Guild.Id)
                                 .ConfigureAwait(false);
 
-            await commandContext.Message
-                                .DeleteAsync()
-                                .ConfigureAwait(false);
+            await Context.Message
+                         .DeleteAsync()
+                         .ConfigureAwait(false);
         }
 
         #endregion // Methods
@@ -400,8 +403,7 @@ public class DebugCommandModule : LocatedCommandModuleBase
     /// Listing
     /// </summary>
     [Group("user")]
-    [Aliases("u")]
-    [ModuleLifespan(ModuleLifespan.Transient)]
+    [Alias("u")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugUserModule : LocatedCommandModuleBase
     {
@@ -410,18 +412,17 @@ public class DebugCommandModule : LocatedCommandModuleBase
         /// <summary>
         /// Refresh calendar message
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <param name="discordUser">User</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("add")]
-        public async Task RefreshAppointments(CommandContext commandContext, DiscordUser discordUser)
+        public async Task RefreshAppointments(IUser discordUser)
         {
             await UserManagementService.CheckDiscordAccountAsync(discordUser.Id)
                                        .ConfigureAwait(false);
 
-            await commandContext.Message
-                                .CreateReactionAsync(DiscordEmojiService.GetCheckEmoji(commandContext.Client))
-                                .ConfigureAwait(false);
+            await Context.Message
+                         .AddReactionAsync(DiscordEmoteService.GetCheckEmote(Context.Client))
+                         .ConfigureAwait(false);
         }
 
         #endregion // Methods
@@ -435,8 +436,7 @@ public class DebugCommandModule : LocatedCommandModuleBase
     /// Guild
     /// </summary>
     [Group("guild")]
-    [Aliases("g")]
-    [ModuleLifespan(ModuleLifespan.Transient)]
+    [Alias("g")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugGuildModule : LocatedCommandModuleBase
     {
@@ -454,10 +454,9 @@ public class DebugCommandModule : LocatedCommandModuleBase
         /// <summary>
         /// Refresh calendar message
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("specialrank_job")]
-        public async Task ExecuteSpecialRankJob(CommandContext commandContext)
+        public async Task ExecuteSpecialRankJob()
         {
             var job = new GuildSpecialRankPointsJob();
 
@@ -468,10 +467,9 @@ public class DebugCommandModule : LocatedCommandModuleBase
         /// <summary>
         /// Import members
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("import_members")]
-        public async Task ImportMembers(CommandContext commandContext)
+        public async Task ImportMembers()
         {
             await GuildRankService.ImportGuildRanks(null)
                                   .ConfigureAwait(false);
@@ -480,10 +478,9 @@ public class DebugCommandModule : LocatedCommandModuleBase
         /// <summary>
         /// Refresh discord roles
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("refresh_roles")]
-        public async Task RefreshDiscordRoles(CommandContext commandContext)
+        public async Task RefreshDiscordRoles()
         {
             await GuildRankService.RefreshDiscordRoles(null)
                                   .ConfigureAwait(false);
@@ -492,13 +489,12 @@ public class DebugCommandModule : LocatedCommandModuleBase
         /// <summary>
         /// Refresh guild member rank
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <param name="guidId">Id of the guild</param>
         /// <param name="accountName">Account name</param>
         /// <param name="rank">rank</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("refresh_rank")]
-        public async Task RefreshRank(CommandContext commandContext, long guidId, string accountName, string rank)
+        public async Task RefreshRank(long guidId, string accountName, string rank)
         {
             await GuildRankService.RefreshDiscordRank(guidId, accountName, rank)
                                   .ConfigureAwait(false);
@@ -507,10 +503,9 @@ public class DebugCommandModule : LocatedCommandModuleBase
         /// <summary>
         /// Refresh current rank points
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("refresh_rank_points")]
-        public async Task RefreshCurrentPoints(CommandContext commandContext)
+        public async Task RefreshCurrentPoints()
         {
             await GuildRankService.RefreshCurrentPoints(null)
                                   .ConfigureAwait(false);
@@ -527,8 +522,7 @@ public class DebugCommandModule : LocatedCommandModuleBase
     /// Import
     /// </summary>
     [Group("import")]
-    [Aliases("i")]
-    [ModuleLifespan(ModuleLifespan.Transient)]
+    [Alias("i")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugImportModule : LocatedCommandModuleBase
     {
@@ -551,46 +545,44 @@ public class DebugCommandModule : LocatedCommandModuleBase
         /// <summary>
         /// Import worlds
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("worlds")]
-        public async Task ImportWorlds(CommandContext commandContext)
+        public async Task ImportWorlds()
         {
             if (await WorldsService.ImportWorlds()
                                    .ConfigureAwait(false))
             {
-                await commandContext.Message
-                                    .CreateReactionAsync(DiscordEmojiService.GetCheckEmoji(commandContext.Client))
-                                    .ConfigureAwait(false);
+                await Context.Message
+                             .AddReactionAsync(DiscordEmoteService.GetCheckEmote(Context.Client))
+                             .ConfigureAwait(false);
             }
             else
             {
-                await commandContext.Message
-                                    .CreateReactionAsync(DiscordEmojiService.GetCrossEmoji(commandContext.Client))
-                                    .ConfigureAwait(false);
+                await Context.Message
+                             .AddReactionAsync(DiscordEmoteService.GetCrossEmote(Context.Client))
+                             .ConfigureAwait(false);
             }
         }
 
         /// <summary>
         /// Import worlds
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("items")]
-        public async Task ImportItems(CommandContext commandContext)
+        public async Task ImportItems()
         {
             if (await ItemsService.ImportItems()
                                   .ConfigureAwait(false))
             {
-                await commandContext.Message
-                                    .CreateReactionAsync(DiscordEmojiService.GetCheckEmoji(commandContext.Client))
-                                    .ConfigureAwait(false);
+                await Context.Message
+                             .AddReactionAsync(DiscordEmoteService.GetCheckEmote(Context.Client))
+                             .ConfigureAwait(false);
             }
             else
             {
-                await commandContext.Message
-                                    .CreateReactionAsync(DiscordEmojiService.GetCrossEmoji(commandContext.Client))
-                                    .ConfigureAwait(false);
+                await Context.Message
+                             .AddReactionAsync(DiscordEmoteService.GetCrossEmote(Context.Client))
+                             .ConfigureAwait(false);
             }
         }
 
@@ -605,8 +597,7 @@ public class DebugCommandModule : LocatedCommandModuleBase
     /// Import
     /// </summary>
     [Group("network")]
-    [Aliases("n")]
-    [ModuleLifespan(ModuleLifespan.Transient)]
+    [Alias("n")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugNetworkModule : LocatedCommandModuleBase
     {
@@ -624,14 +615,13 @@ public class DebugCommandModule : LocatedCommandModuleBase
         /// <summary>
         /// DNS-Information overview
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <param name="domain">Domain name</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("dnsinfo")]
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-        public async Task GetDnsInformation(CommandContext commandContext, string domain)
+        public async Task GetDnsInformation(string domain)
         {
-            var embed = new DiscordEmbedBuilder().WithTitle("DNS Information")
+            var embed = new EmbedBuilder().WithTitle("DNS Information")
                                                  .WithDescription(domain);
 
             var addresses = await Dns.GetHostAddressesAsync(domain)
@@ -648,8 +638,9 @@ public class DebugCommandModule : LocatedCommandModuleBase
 
             embed.AddField("IP-Addresses", stringBuilder.ToString());
 
-            await commandContext.RespondAsync(embed)
-                                .ConfigureAwait(false);
+            await Context.Message
+                         .ReplyAsync(embed: embed.Build())
+                         .ConfigureAwait(false);
         }
 
         #endregion // Methods
@@ -663,8 +654,7 @@ public class DebugCommandModule : LocatedCommandModuleBase
     /// Log
     /// </summary>
     [Group("log")]
-    [Aliases("d")]
-    [ModuleLifespan(ModuleLifespan.Transient)]
+    [Alias("d")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugLogModule : LocatedCommandModuleBase
     {
@@ -682,47 +672,50 @@ public class DebugCommandModule : LocatedCommandModuleBase
         /// <summary>
         /// Log entry information
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <param name="id">Id</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("entry")]
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-        public async Task ShowLogEntry(CommandContext commandContext, int id)
+        public async Task ShowLogEntry(int id)
         {
-            await DebugService.PostLogEntry(commandContext, id)
+            await DebugService.PostLogEntry(Context, id)
                               .ConfigureAwait(false);
         }
 
         /// <summary>
         /// Log entry information
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("overview")]
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-        public async Task ShowLogOverview(CommandContext commandContext)
+        public async Task ShowLogOverview()
         {
-            await DebugService.PostLogOverview(commandContext.Channel, DateTime.Today, false)
-                              .ConfigureAwait(false);
+            if (Context.Channel is IMessageChannel messageChannel)
+            {
+                await DebugService.PostLogOverview(messageChannel, DateTime.Today, false)
+                                  .ConfigureAwait(false);
+            }
         }
 
         /// <summary>
         /// Log entry information
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <param name="date">Date</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("overview")]
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-        public async Task ShowLogOverview(CommandContext commandContext, string date)
+        public async Task ShowLogOverview(string date)
         {
-            if (DateTime.TryParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateParsed) == false)
+            if (Context.Channel is IMessageChannel messageChannel)
             {
-                dateParsed = DateTime.Today;
-            }
+                if (DateTime.TryParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateParsed) == false)
+                {
+                    dateParsed = DateTime.Today;
+                }
 
-            await DebugService.PostLogOverview(commandContext.Channel, dateParsed, false)
-                              .ConfigureAwait(false);
+                await DebugService.PostLogOverview(messageChannel, dateParsed, false)
+                                  .ConfigureAwait(false);
+            }
         }
 
         #endregion // Methods

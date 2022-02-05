@@ -1,224 +1,41 @@
-﻿using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.CommandsNext.Exceptions;
-using DSharpPlus.Entities;
+﻿using Discord.Commands;
 
-using Scruffy.Services.Core.Discord;
-using Scruffy.Services.Core.Discord.Attributes;
+using Scruffy.Services.Discord;
+using Scruffy.Services.Discord.Attributes;
 
 namespace Scruffy.Commands;
 
 /// <summary>
-/// Help command
+/// Calendar commands
 /// </summary>
 [Group("help")]
-[ModuleLifespan(ModuleLifespan.Transient)]
+[Alias("h")]
 [BlockedChannelCheck]
-[HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
 public class HelpCommandModule : LocatedCommandModuleBase
 {
+    #region Properties
+
+    /// <summary>
+    /// Visualizer
+    /// </summary>
+    public CommandHelpService CommandHelpService { get; set; }
+
+    #endregion // Properties
+
     #region Methods
 
     /// <summary>
-    /// Standard help
+    /// Adding a one time event
     /// </summary>
-    /// <param name="commandContext">Command context</param>
     /// <param name="command">Command</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    [GroupCommand]
-    public Task DefaultHelpAsync(CommandContext commandContext, params string[] command)
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [Command]
+    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
+    public async Task Info([Remainder]string command = null)
     {
-        return InvokeAsync(commandContext,
-                           async commandContextContainer =>
-                           {
-                               try
-                               {
-                                   await new CommandsNextExtension.DefaultHelpModule().DefaultHelpAsync(commandContext, command)
-                                                                                      .ConfigureAwait(false);
-                               }
-                               catch (ChecksFailedException)
-                               {
-                                   await new CommandsNextExtension.DefaultHelpModule().DefaultHelpAsync(commandContext, null)
-                                                                                      .ConfigureAwait(false);
-                               }
-                               catch (CommandNotFoundException)
-                               {
-                                   await new CommandsNextExtension.DefaultHelpModule().DefaultHelpAsync(commandContext, null)
-                                                                                      .ConfigureAwait(false);
-                               }
-                           });
+        await CommandHelpService.ShowHelp(Context, command)
+                                .ConfigureAwait(false);
     }
 
     #endregion // Methods
-
-    #region Overview
-
-    /// <summary>
-    /// Overview of the most important commands
-    /// </summary>
-    [Group("overview")]
-    [ModuleLifespan(ModuleLifespan.Transient)]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-    public class HelpOverviewCommandModule : LocatedCommandModuleBase
-    {
-        #region Methods
-
-        /// <summary>
-        /// Overview
-        /// </summary>
-        /// <param name="commandContext">Current command context</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-        [GroupCommand]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-        public Task StandardOverview(CommandContext commandContext)
-        {
-            return PostOverview(commandContext, obj2 => obj2 is HelpOverviewCommandAttribute attribute && attribute.Type.HasFlag(HelpOverviewCommandAttribute.OverviewType.Standard));
-        }
-
-        /// <summary>
-        /// Overview
-        /// </summary>
-        /// <param name="commandContext">Current command context</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-        [Command("all")]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-        public Task AllOverview(CommandContext commandContext)
-        {
-            return PostOverview(commandContext, obj2 => true);
-        }
-
-        /// <summary>
-        /// Overview
-        /// </summary>
-        /// <param name="commandContext">Current command context</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-        [Command("admin")]
-        [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-        public Task AdminOverview(CommandContext commandContext)
-        {
-            return PostOverview(commandContext, obj2 => obj2 is HelpOverviewCommandAttribute attribute && attribute.Type.HasFlag(HelpOverviewCommandAttribute.OverviewType.Administration));
-        }
-
-        /// <summary>
-        /// Overview
-        /// </summary>
-        /// <param name="commandContext">Current command context</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-        [Command("developer")]
-        [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-        public Task DeveloperOverview(CommandContext commandContext)
-        {
-            return PostOverview(commandContext, obj2 => obj2 is HelpOverviewCommandAttribute attribute && attribute.Type.HasFlag(HelpOverviewCommandAttribute.OverviewType.Developer));
-        }
-
-        /// <summary>
-        /// Overview
-        /// </summary>
-        /// <param name="commandContext">Current command context</param>
-        /// <param name="filterExpression">Filtering the commands</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-        public Task PostOverview(CommandContext commandContext, Func<Attribute, bool> filterExpression)
-        {
-            return InvokeAsync(commandContext,
-                               async commandContextContainer =>
-                               {
-                                   var localizationGroup = LocalizationService.GetGroup(nameof(HelpCommandFormatter));
-
-                                   var builder = new DiscordEmbedBuilder()
-                                                 .WithTitle(LocalizationGroup.GetText("HelpCommandOverviewTitle", "Overview of the most important commands"))
-                                                 .WithDescription(LocalizationGroup.GetText("HelpCommandOverviewDescription", "The following message is an overview of the most important commands of the given category."))
-                                                 .WithColor(DiscordColor.Green)
-                                                 .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
-                                                 .WithTimestamp(DateTime.Now);
-
-                                   var formatter = new HelpCommandFormatter(commandContext, LocalizationService);
-
-                                   var fieldCounter = 0;
-                                   var builderCounter = 1;
-
-                                   foreach (var topLevelCommandGroup in commandContext.CommandsNext
-                                                                                      .RegisteredCommands
-                                                                                      .Where(obj => obj.Key == obj.Value.Name)
-                                                                                      .Select(obj => obj.Value)
-                                                                                      .OfType<CommandGroup>()
-                                                                                      .Where(obj => obj.CustomAttributes.Any(filterExpression)))
-                                   {
-                                       var stringBuilder = new StringBuilder();
-
-                                       async Task AddField()
-                                       {
-                                           if (fieldCounter == 6)
-                                           {
-                                               if (builderCounter == 1)
-                                               {
-                                                   builder.WithTitle(builder.Title + " #" + builderCounter);
-                                               }
-
-                                               builderCounter++;
-
-                                               await commandContextContainer.Message
-                                                                            .RespondAsync(builder)
-                                                                            .ConfigureAwait(false);
-                                               fieldCounter = 0;
-
-                                               builder = new DiscordEmbedBuilder();
-                                               builder.WithTitle(LocalizationGroup.GetText("HelpCommandOverviewTitle", "Overview of the most important commands") + " #" + builderCounter)
-                                                      .WithColor(DiscordColor.Green)
-                                                      .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
-                                                      .WithTimestamp(DateTime.Now);
-                                           }
-
-                                           if (stringBuilder.Length > 0)
-                                           {
-                                               builder.AddField(localizationGroup.GetText(topLevelCommandGroup.Name, topLevelCommandGroup.Name + " commands"), stringBuilder.ToString());
-
-                                               stringBuilder = new StringBuilder();
-                                           }
-
-                                           fieldCounter++;
-                                       }
-
-                                       async Task ProcessCommands(IEnumerable<Command> commands)
-                                       {
-                                           foreach (var command in commands.Where(obj => obj.CustomAttributes.Any(filterExpression)))
-                                           {
-                                               if (command is CommandGroup commandGroup)
-                                               {
-                                                   await ProcessCommands(commandGroup.Children).ConfigureAwait(false);
-                                               }
-                                               else if ((await command.RunChecksAsync(commandContext, true).ConfigureAwait(false)).Any() == false)
-                                               {
-                                                   await formatter.AddCommand(command,
-                                                                              async sb =>
-                                                                              {
-                                                                                  var currentLine = sb.ToString();
-                                                                                  if (currentLine.Length + stringBuilder.Length > 1024)
-                                                                                  {
-                                                                                      await AddField().ConfigureAwait(false);
-                                                                                  }
-
-                                                                                  stringBuilder.Append(sb);
-                                                                              })
-                                                                  .ConfigureAwait(false);
-                                               }
-                                           }
-                                       }
-
-                                       await ProcessCommands(topLevelCommandGroup.Children).ConfigureAwait(false);
-
-                                       await AddField().ConfigureAwait(false);
-                                   }
-
-                                   await commandContextContainer.Message
-                                                                .RespondAsync(builder)
-                                                                .ConfigureAwait(false);
-                               });
-        }
-
-        #endregion // Methods
-    }
-
-    #endregion // Overview
 }

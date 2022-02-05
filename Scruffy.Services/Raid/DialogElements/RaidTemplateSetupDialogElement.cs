@@ -1,11 +1,10 @@
-﻿using DSharpPlus;
-using DSharpPlus.Entities;
+﻿using Discord;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Data.Entity.Tables.Raid;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 using Scruffy.Services.Raid.DialogElements.Forms;
 
 namespace Scruffy.Services.Raid.DialogElements;
@@ -75,7 +74,7 @@ public class RaidTemplateSetupDialogElement : DialogEmbedReactionElementBase<boo
     /// </summary>
     /// <param name="builder">Builder</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public override Task EditMessage(DiscordEmbedBuilder builder)
+    public override Task EditMessage(EmbedBuilder builder)
     {
         builder.WithTitle(LocalizationGroup.GetText("ChooseCommandTitle", "Raid template configuration"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseCommandDescription", "With this assistant you are able to configure the raid templates. The following templates are already created:"));
@@ -87,7 +86,7 @@ public class RaidTemplateSetupDialogElement : DialogEmbedReactionElementBase<boo
         {
             foreach (var template in templates)
             {
-                templatesBuilder.AppendLine(Formatter.Bold($"{DiscordEmojiService.GetBulletEmoji(CommandContext.Client)} {template}"));
+                templatesBuilder.AppendLine(Format.Bold($"{DiscordEmoteService.GetBulletEmote(CommandContext.Client)} {template}"));
             }
         }
         else
@@ -112,8 +111,8 @@ public class RaidTemplateSetupDialogElement : DialogEmbedReactionElementBase<boo
                          {
                              new ()
                              {
-                                 Emoji = DiscordEmojiService.GetAddEmoji(CommandContext.Client),
-                                 CommandText = LocalizationGroup.GetFormattedText("AddCommand", "{0} Add template", DiscordEmojiService.GetAddEmoji(CommandContext.Client)),
+                                 Emote = DiscordEmoteService.GetAddEmote(CommandContext.Client),
+                                 CommandText = LocalizationGroup.GetFormattedText("AddCommand", "{0} Add template", DiscordEmoteService.GetAddEmote(CommandContext.Client)),
                                  Func = async () =>
                                         {
                                             var data = await DialogHandler.RunForm<CreateRaidTemplateFormData>(CommandContext, false)
@@ -140,8 +139,8 @@ public class RaidTemplateSetupDialogElement : DialogEmbedReactionElementBase<boo
             {
                 _reactions.Add(new ReactionData<bool>
                                {
-                                   Emoji = DiscordEmojiService.GetEditEmoji(CommandContext.Client),
-                                   CommandText = LocalizationGroup.GetFormattedText("EditCommand", "{0} Edit template", DiscordEmojiService.GetEditEmoji(CommandContext.Client)),
+                                   Emote = DiscordEmoteService.GetEditEmote(CommandContext.Client),
+                                   CommandText = LocalizationGroup.GetFormattedText("EditCommand", "{0} Edit template", DiscordEmoteService.GetEditEmote(CommandContext.Client)),
                                    Func = async () =>
                                           {
                                               var templateId = await RunSubElement<RaidTemplateSelectionDialogElement, long>().ConfigureAwait(false);
@@ -162,8 +161,8 @@ public class RaidTemplateSetupDialogElement : DialogEmbedReactionElementBase<boo
 
                 _reactions.Add(new ReactionData<bool>
                                {
-                                   Emoji = DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client),
-                                   CommandText = LocalizationGroup.GetFormattedText("DeleteCommand", "{0} Delete template", DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client)),
+                                   Emote = DiscordEmoteService.GetTrashCanEmote(CommandContext.Client),
+                                   CommandText = LocalizationGroup.GetFormattedText("DeleteCommand", "{0} Delete template", DiscordEmoteService.GetTrashCanEmote(CommandContext.Client)),
                                    Func = async () =>
                                           {
                                               var templateId = await RunSubElement<RaidTemplateSelectionDialogElement, long>().ConfigureAwait(false);
@@ -177,8 +176,8 @@ public class RaidTemplateSetupDialogElement : DialogEmbedReactionElementBase<boo
 
             _reactions.Add(new ReactionData<bool>
                            {
-                               Emoji = DiscordEmojiService.GetCrossEmoji(CommandContext.Client),
-                               CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmojiService.GetCrossEmoji(CommandContext.Client)),
+                               Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
+                               CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmoteService.GetCrossEmote(CommandContext.Client)),
                                Func = () => Task.FromResult(false)
                            });
         }

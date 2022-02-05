@@ -1,5 +1,5 @@
-﻿using DSharpPlus;
-using DSharpPlus.Entities;
+﻿using Discord;
+using Discord.WebSocket;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -33,7 +33,7 @@ public class GuildLogImportJob : LocatedAsyncJob
             var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
             await using (serviceProvider.ConfigureAwait(false))
             {
-                var discordClient = serviceProvider.GetService<DiscordClient>();
+                var discordClient = serviceProvider.GetService<DiscordSocketClient>();
                 var guildRankService = new Lazy<GuildRankService>(() => serviceProvider.GetService<GuildRankService>());
 
                 var channels = dbFactory.GetRepository<GuildChannelConfigurationRepository>()
@@ -60,7 +60,7 @@ public class GuildLogImportJob : LocatedAsyncJob
                 {
                     var discordChannel = guild.ChannelId != null
                                              ? await discordClient.GetChannelAsync(guild.ChannelId.Value)
-                                                                  .ConfigureAwait(false)
+                                                                  .ConfigureAwait(false) as IMessageChannel
                                              : null;
 
                     var connector = new GuidWars2ApiConnector(guild.ApiKey);
@@ -135,7 +135,7 @@ public class GuildLogImportJob : LocatedAsyncJob
     /// <param name="discordChannel">Discord channel</param>
     /// <param name="entry">Entry</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private async Task OnJoined(DiscordChannel discordChannel, GuildLogEntry entry)
+    private async Task OnJoined(IMessageChannel discordChannel, GuildLogEntry entry)
     {
         if (discordChannel != null)
         {
@@ -150,7 +150,7 @@ public class GuildLogImportJob : LocatedAsyncJob
     /// <param name="discordChannel">Discord channel</param>
     /// <param name="entry">Entry</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private async Task OnKick(DiscordChannel discordChannel, GuildLogEntry entry)
+    private async Task OnKick(IMessageChannel discordChannel, GuildLogEntry entry)
     {
         if (discordChannel != null)
         {

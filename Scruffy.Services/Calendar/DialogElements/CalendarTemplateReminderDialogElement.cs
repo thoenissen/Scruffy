@@ -1,8 +1,8 @@
-﻿using DSharpPlus.EventArgs;
+﻿using Discord;
 
 using Scruffy.Services.Calendar.DialogElements.Forms;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Calendar.DialogElements;
 
@@ -51,12 +51,12 @@ public class CalendarTemplateReminderDialogElement : DialogReactionElementBase<C
                               {
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetCheckEmoji(CommandContext.Client),
+                                      Emote = DiscordEmoteService.GetCheckEmote(CommandContext.Client),
                                       Func = RunSubForm<CalenderTemplateReminderData>,
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetCrossEmoji(CommandContext.Client),
+                                      Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
                                       Func = () => Task.FromResult<CalenderTemplateReminderData>(null)
                                   }
                               };
@@ -67,7 +67,7 @@ public class CalendarTemplateReminderDialogElement : DialogReactionElementBase<C
     /// </summary>
     /// <param name="reaction">Reaction</param>
     /// <returns>Result</returns>
-    protected override CalenderTemplateReminderData DefaultFunc(MessageReactionAddEventArgs reaction) => null;
+    protected override CalenderTemplateReminderData DefaultFunc(IReaction reaction) => null;
 
     #endregion // DialogReactionElementBase<bool>
 }

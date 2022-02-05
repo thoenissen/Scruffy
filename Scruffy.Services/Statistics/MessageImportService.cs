@@ -1,5 +1,5 @@
-﻿using DSharpPlus;
-using DSharpPlus.EventArgs;
+﻿using Discord;
+using Discord.WebSocket;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Statistics;
@@ -17,7 +17,7 @@ public class MessageImportService : IAsyncDisposable
     /// <summary>
     /// Discord client
     /// </summary>
-    private readonly DiscordClient _client;
+    private readonly DiscordSocketClient _client;
 
     /// <summary>
     /// Lock
@@ -37,12 +37,12 @@ public class MessageImportService : IAsyncDisposable
     /// Constructor
     /// </summary>
     /// <param name="client">Discord client</param>
-    public MessageImportService(DiscordClient client)
+    public MessageImportService(DiscordSocketClient client)
     {
         _messages = new List<DiscordMessageBulkInsertData>();
 
         _client = client;
-        _client.MessageCreated += OnMessageCreated;
+        _client.MessageReceived += OnMessageReceived;
     }
 
     #endregion // Constructor
@@ -50,35 +50,35 @@ public class MessageImportService : IAsyncDisposable
     #region Methods
 
     /// <summary>
-    /// Message created
+    /// Message received
     /// </summary>
-    /// <param name="sender">Sender</param>
-    /// <param name="e">Argument</param>
+    /// <param name="e">Message</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private async Task OnMessageCreated(DiscordClient sender, MessageCreateEventArgs e)
+    private async Task OnMessageReceived(SocketMessage e)
     {
         List<DiscordMessageBulkInsertData> importMessages = null;
 
-        lock (_lock)
+        if (e is IUserMessage)
         {
-            if (e.Guild != null
-             && e.Author?.IsBot == false
-             && e.Message.WebhookId == null)
+            lock (_lock)
             {
-                _messages.Add(new DiscordMessageBulkInsertData
-                              {
-                                  ServerId = e.Guild.Id,
-                                  ChannelId = e.Channel.Id,
-                                  MessageId = e.Message.Id,
-                                  TimeStamp = e.Message.CreationTimestamp.LocalDateTime,
-                                  UserId = e.Author.Id
-                              });
-
-                if (_messages.Count > 100)
+                if (e.Channel is IGuildChannel guildChannel)
                 {
-                    importMessages = _messages;
+                    _messages.Add(new DiscordMessageBulkInsertData
+                                  {
+                                      ServerId = guildChannel.GuildId,
+                                      ChannelId = e.Channel.Id,
+                                      MessageId = e.Id,
+                                      TimeStamp = e.CreatedAt.LocalDateTime,
+                                      UserId = e.Author.Id
+                                  });
 
-                    _messages = new List<DiscordMessageBulkInsertData>();
+                    if (_messages.Count > 100)
+                    {
+                        importMessages = _messages;
+
+                        _messages = new List<DiscordMessageBulkInsertData>();
+                    }
                 }
             }
         }
@@ -104,7 +104,7 @@ public class MessageImportService : IAsyncDisposable
     /// <returns>A task that represents the asynchronous dispose operation.</returns>
     public async ValueTask DisposeAsync()
     {
-        _client.MessageCreated -= OnMessageCreated;
+        _client.MessageReceived -= OnMessageReceived;
 
         List<DiscordMessageBulkInsertData> importMessages = null;
 

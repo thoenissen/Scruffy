@@ -26,16 +26,16 @@ public class FractalDailyRefreshJob : LocatedAsyncJob
             var configurations = await dbFactory.GetRepository<FractalLfgConfigurationRepository>()
                                                 .GetQuery()
                                                 .Select(obj => new
-                                                               {
-                                                                   obj.Id
-                                                               })
+                                                {
+                                                    obj.Id
+                                                })
                                                 .ToListAsync()
                                                 .ConfigureAwait(false);
 
             var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
             await using (serviceProvider.ConfigureAwait(false))
             {
-                var builder = serviceProvider.GetService<FractalLfgMessageBuilder>();
+                var builder = serviceProvider.GetService<FractalLfgMessageBuilder>() ?? throw new InvalidOperationException();
 
                 foreach (var configuration in configurations)
                 {

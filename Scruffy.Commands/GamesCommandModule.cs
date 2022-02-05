@@ -1,8 +1,7 @@
-﻿using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
+﻿using Discord.Commands;
 
-using Scruffy.Services.Core.Discord;
-using Scruffy.Services.Core.Discord.Attributes;
+using Scruffy.Services.Discord;
+using Scruffy.Services.Discord.Attributes;
 using Scruffy.Services.Games;
 
 namespace Scruffy.Commands;
@@ -11,10 +10,9 @@ namespace Scruffy.Commands;
 /// Games
 /// </summary>
 [Group("games")]
-[RequireGuild]
+[RequireContext(ContextType.Guild)]
 [RequireAdministratorPermissions]
 [BlockedChannelCheck]
-[ModuleLifespan(ModuleLifespan.Transient)]
 public class GamesCommandModule : LocatedCommandModuleBase
 {
     #region Counter
@@ -23,9 +21,8 @@ public class GamesCommandModule : LocatedCommandModuleBase
     /// Counter game
     /// </summary>
     [Group("counter")]
-    [RequireGuild]
+    [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    [ModuleLifespan(ModuleLifespan.Transient)]
     public class GamesCounterCommandModule : LocatedCommandModuleBase
     {
         #region Properties
@@ -42,45 +39,37 @@ public class GamesCommandModule : LocatedCommandModuleBase
         /// <summary>
         /// Adds the counter game to the channel
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("add")]
-        [RequireGuild]
+        [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        public Task Add(CommandContext commandContext)
+        public async Task Add()
         {
-            return InvokeAsync(commandContext, async commandContextContainer =>
-                                               {
-                                                   if (await CounterGameService.Add(commandContextContainer)
-                                                                               .ConfigureAwait(false))
-                                                   {
-                                                       await commandContextContainer.Message
-                                                                                    .DeleteAsync()
-                                                                                    .ConfigureAwait(false);
-                                                   }
-                                               });
+            if (await CounterGameService.Add(Context)
+                                        .ConfigureAwait(false))
+            {
+                await Context.Message
+                             .DeleteAsync()
+                             .ConfigureAwait(false);
+            }
         }
 
         /// <summary>
         /// Adds the counter game to the channel
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("remove")]
-        [RequireGuild]
+        [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        public Task Remove(CommandContext commandContext)
+        public async Task Remove()
         {
-            return InvokeAsync(commandContext, async commandContextContainer =>
-                                               {
-                                                   if (await CounterGameService.Remove(commandContextContainer)
-                                                                               .ConfigureAwait(false))
-                                                   {
-                                                       await commandContextContainer.Message
-                                                                                    .DeleteAsync()
-                                                                                    .ConfigureAwait(false);
-                                                   }
-                                               });
+           if (await CounterGameService.Remove(Context)
+                                       .ConfigureAwait(false))
+           {
+               await Context.Message
+                            .DeleteAsync()
+                            .ConfigureAwait(false);
+           }
         }
 
         #endregion // Methods
@@ -94,9 +83,8 @@ public class GamesCommandModule : LocatedCommandModuleBase
     /// Word chain game
     /// </summary>
     [Group("wordchain")]
-    [RequireGuild]
+    [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    [ModuleLifespan(ModuleLifespan.Transient)]
     public class GamesWordChainCommandModule : LocatedCommandModuleBase
     {
         #region Properties
@@ -113,45 +101,37 @@ public class GamesCommandModule : LocatedCommandModuleBase
         /// <summary>
         /// Adds the WordChain game to the channel
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("add")]
-        [RequireGuild]
+        [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        public Task Add(CommandContext commandContext)
+        public async Task Add()
         {
-            return InvokeAsync(commandContext, async commandContextContainer =>
-                                               {
-                                                   if (await WordChainGameService.Add(commandContextContainer)
-                                                                                 .ConfigureAwait(false))
-                                                   {
-                                                       await commandContextContainer.Message
-                                                                                    .DeleteAsync()
-                                                                                    .ConfigureAwait(false);
-                                                   }
-                                               });
+            if (await WordChainGameService.Add(Context)
+                                          .ConfigureAwait(false))
+            {
+                await Context.Message
+                             .DeleteAsync()
+                             .ConfigureAwait(false);
+            }
         }
 
         /// <summary>
         /// Adds the Word chain game to the channel
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("remove")]
-        [RequireGuild]
+        [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        public Task Remove(CommandContext commandContext)
+        public async Task Remove()
         {
-            return InvokeAsync(commandContext, async commandContextContainer =>
-                                               {
-                                                   if (await WordChainGameService.Remove(commandContextContainer)
-                                                                                 .ConfigureAwait(false))
-                                                   {
-                                                       await commandContextContainer.Message
-                                                                                    .DeleteAsync()
-                                                                                    .ConfigureAwait(false);
-                                                   }
-                                               });
+            if (await WordChainGameService.Remove(Context)
+                                          .ConfigureAwait(false))
+            {
+                await Context.Message
+                             .DeleteAsync()
+                             .ConfigureAwait(false);
+            }
         }
 
         #endregion // Methods

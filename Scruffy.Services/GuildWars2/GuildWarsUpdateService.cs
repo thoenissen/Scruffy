@@ -1,9 +1,8 @@
-﻿using DSharpPlus;
-using DSharpPlus.Entities;
+﻿using Discord;
 
 using Scruffy.Data.Json.ThatShaman;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.GuildWars2;
@@ -48,12 +47,11 @@ public class GuildWarsUpdateService : LocatedServiceBase
     {
         var now = DateTime.Now;
 
-        var builder = new DiscordEmbedBuilder()
-                      .WithThumbnail("https://cdn.discordapp.com/attachments/847555191842537552/861182143987712010/gw2.png")
-                      .WithTitle(LocalizationGroup.GetText("GuildWars2Updates", "Guild Wars 2 - Updates"))
-                      .WithColor(DiscordColor.Green)
-                      .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
-                      .WithTimestamp(now);
+        var builder = new EmbedBuilder().WithThumbnailUrl("https://cdn.discordapp.com/attachments/847555191842537552/861182143987712010/gw2.png")
+                                        .WithTitle(LocalizationGroup.GetText("GuildWars2Updates", "Guild Wars 2 - Updates"))
+                                        .WithColor(Color.Green)
+                                        .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
+                                        .WithTimestamp(now);
 
         void AddField(string fieldName, NextUpdateData data)
         {
@@ -62,9 +60,9 @@ public class GuildWarsUpdateService : LocatedServiceBase
             field.Append(LocalizationGroup.GetText("Release", "Release"));
             field.Append(": ");
 
-            field.Append(Formatter.MaskedUrl(data.When.ToLocalTime()
-                                                 .ToString("G", LocalizationGroup.CultureInfo),
-                                             new Uri("https://thatshaman.com/tools/countdown")));
+            field.Append(Format.Url(data.When.ToLocalTime()
+                                        .ToString("G", LocalizationGroup.CultureInfo),
+                                    "https://thatshaman.com/tools/countdown"));
             field.Append(Environment.NewLine);
 
             var timeSpan = data.When.ToLocalTime() - now;
@@ -121,8 +119,8 @@ public class GuildWarsUpdateService : LocatedServiceBase
             field.Append(": ");
 
             field.Append(data.Confirmed
-                             ? DiscordEmojiService.GetCheckEmoji(commandContext.Client)
-                             : DiscordEmojiService.GetCrossEmoji(commandContext.Client));
+                             ? DiscordEmoteService.GetCheckEmote(commandContext.Client)
+                             : DiscordEmoteService.GetCrossEmote(commandContext.Client));
 
             if (data.Urls?.Count > 0)
             {
@@ -132,13 +130,13 @@ public class GuildWarsUpdateService : LocatedServiceBase
 
                 if (data.Urls.Count == 1)
                 {
-                    field.Append(Formatter.MaskedUrl(LocalizationGroup.GetText("Source", "Source"), new Uri(data.Urls.First())));
+                    field.Append(Format.Url(LocalizationGroup.GetText("Source", "Source"), data.Urls.First()));
                 }
                 else
                 {
                     field.Append(LocalizationGroup.GetText("Sources", "Sources"));
                     field.Append(": ");
-                    field.Append(string.Join(',', data.Urls.Select(obj => Formatter.MaskedUrl((++counter).ToString(), new Uri(obj)))));
+                    field.Append(string.Join(',', data.Urls.Select(obj => Format.Url((++counter).ToString(), obj))));
                 }
 
                 field.Append(')');
@@ -160,7 +158,7 @@ public class GuildWarsUpdateService : LocatedServiceBase
                                            .ConfigureAwait(false));
 
         await commandContext.Message
-                            .RespondAsync(builder)
+                            .ReplyAsync(embed: builder.Build())
                             .ConfigureAwait(false);
     }
 

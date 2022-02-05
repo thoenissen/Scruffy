@@ -1,14 +1,14 @@
 ﻿using System.Collections.Concurrent;
 
-using DSharpPlus.CommandsNext;
-using DSharpPlus.Entities;
+using Discord;
+using Discord.Commands;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Entity.Tables.Discord;
 using Scruffy.Services.Core.Localization;
 
-namespace Scruffy.Services.Core.Discord;
+namespace Scruffy.Services.Discord;
 
 /// <summary>
 /// Blocked discord channel management
@@ -51,16 +51,15 @@ public class BlockedChannelService : LocatedServiceBase
     /// Check if the channel ist blocked
     /// </summary>
     /// <param name="commandContext">Context</param>
-    /// <param name="channel">Channel</param>
     /// <returns>Is channel blocked?</returns>
-    public bool IsChannelBlocked(CommandContext commandContext, DiscordChannel channel)
+    public bool IsChannelBlocked(ICommandContext commandContext)
     {
-        var isBlocked = channel?.GuildId != null
-                     && _blockedChannels.ContainsKey((channel.GuildId.Value, channel.Id));
+        var isBlocked = commandContext.Channel is IGuildChannel guildChannel
+                     && _blockedChannels.ContainsKey((guildChannel.GuildId, guildChannel.Id));
 
         if (isBlocked)
         {
-            commandContext.Message.RespondAsync(LocalizationGroup.GetText("ChannelIsBlocked", "You can't use this command here. Please use the designated channels."));
+            commandContext.Message.ReplyAsync(LocalizationGroup.GetText("ChannelIsBlocked", "You can't use this command here. Please use the designated channels."));
         }
 
         return isBlocked;
@@ -71,25 +70,22 @@ public class BlockedChannelService : LocatedServiceBase
     /// </summary>
     /// <param name="channel">Channel</param>
     /// <returns>Could the channel be added?</returns>
-    public bool AddChannel(DiscordChannel channel)
+    public bool AddChannel(IGuildChannel channel)
     {
         var success = false;
 
-        if (channel.GuildId != null)
+        using (var dbFactory = RepositoryFactory.CreateInstance())
         {
-            using (var dbFactory = RepositoryFactory.CreateInstance())
-            {
-                success = dbFactory.GetRepository<BlockedDiscordChannelRepository>()
-                                   .Add(new BlockedDiscordChannelEntity
-                                        {
-                                            ServerId = channel.GuildId.Value,
-                                            ChannelId = channel.Id
-                                        });
+            success = dbFactory.GetRepository<BlockedDiscordChannelRepository>()
+                               .Add(new BlockedDiscordChannelEntity
+                                    {
+                                        ServerId = channel.GuildId,
+                                        ChannelId = channel.Id
+                                    });
 
-                if (success)
-                {
-                    _blockedChannels.TryAdd((channel.GuildId.Value, channel.Id), 0);
-                }
+            if (success)
+            {
+                _blockedChannels.TryAdd((channel.GuildId, channel.Id), 0);
             }
         }
 
@@ -101,22 +97,19 @@ public class BlockedChannelService : LocatedServiceBase
     /// </summary>
     /// <param name="channel">Channel</param>
     /// <returns>Could the channel be removed?</returns>
-    public bool RemoveChannel(DiscordChannel channel)
+    public bool RemoveChannel(IGuildChannel channel)
     {
         var success = false;
 
-        if (channel.GuildId != null)
+        using (var dbFactory = RepositoryFactory.CreateInstance())
         {
-            using (var dbFactory = RepositoryFactory.CreateInstance())
-            {
-                success = dbFactory.GetRepository<BlockedDiscordChannelRepository>()
-                                   .Remove(obj => obj.ServerId == channel.GuildId.Value
-                                               && obj.ChannelId == channel.Id);
+            success = dbFactory.GetRepository<BlockedDiscordChannelRepository>()
+                               .Remove(obj => obj.ServerId == channel.GuildId
+                                           && obj.ChannelId == channel.Id);
 
-                if (success)
-                {
-                    _blockedChannels.TryRemove((channel.GuildId.Value, channel.Id), out var _);
-                }
+            if (success)
+            {
+                _blockedChannels.TryRemove((channel.GuildId, channel.Id), out var _);
             }
         }
 

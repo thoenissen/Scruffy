@@ -1,11 +1,9 @@
-﻿using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
-using DSharpPlus.Exceptions;
+﻿using Discord;
+using Discord.Commands;
 
 using Scruffy.Services.Administration;
-using Scruffy.Services.Core.Discord;
-using Scruffy.Services.Core.Discord.Attributes;
+using Scruffy.Services.Discord;
+using Scruffy.Services.Discord.Attributes;
 
 namespace Scruffy.Commands;
 
@@ -13,11 +11,10 @@ namespace Scruffy.Commands;
 /// Admin commands
 /// </summary>
 [Group("admin")]
-[Aliases("ad")]
-[RequireGuild]
+[Alias("ad")]
+[RequireContext(ContextType.Guild)]
 [RequireAdministratorPermissions]
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-[ModuleLifespan(ModuleLifespan.Transient)]
 public class AdministrationCommandModule : LocatedCommandModuleBase
 {
     #region Properties
@@ -34,57 +31,49 @@ public class AdministrationCommandModule : LocatedCommandModuleBase
     /// <summary>
     /// Rename user
     /// </summary>
-    /// <param name="commandContext">Current command context</param>
     /// <param name="member">Member</param>
     /// <param name="name">name</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("rename")]
     [RequireAdministratorPermissions]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-    public Task Rename(CommandContext commandContext, DiscordMember member, [RemainingText] string name)
+    public async Task Rename(IGuildUser member, [Remainder] string name)
     {
-        return InvokeAsync(commandContext,
-                           async commandContextContainer =>
-                           {
-                               try
-                               {
-                                   await AdministrationService.RenameMember(member, name)
-                                                              .ConfigureAwait(false);
-                               }
-                               catch (UnauthorizedException)
-                               {
-                                   await commandContext.RespondAsync(LocalizationGroup.GetText("NotAllowedToPerform", "I'm not allowed to perform this action."))
-                                                       .ConfigureAwait(false);
-                               }
-                           });
+        try
+        {
+            await AdministrationService.RenameMember(member, name)
+                                       .ConfigureAwait(false);
+        }
+        catch
+        {
+            await Context.Message
+                         .ReplyAsync(LocalizationGroup.GetText("NotAllowedToPerform", "I'm not allowed to perform this action."))
+                         .ConfigureAwait(false);
+        }
     }
 
     /// <summary>
     /// Rename user
     /// </summary>
-    /// <param name="commandContext">Current command context</param>
     /// <param name="role">Member</param>
     /// <param name="name">name</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("rename")]
     [RequireAdministratorPermissions]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-    public Task Rename(CommandContext commandContext, DiscordRole role, [RemainingText] string name)
+    public async Task Rename(IRole role, [Remainder] string name)
     {
-        return InvokeAsync(commandContext,
-                           async commandContextContainer =>
-                           {
-                               try
-                               {
-                                   await AdministrationService.RenameRole(role, name)
-                                                              .ConfigureAwait(false);
-                               }
-                               catch (UnauthorizedException)
-                               {
-                                   await commandContext.RespondAsync(LocalizationGroup.GetText("NotAllowedToPerform", "I'm not allowed to perform this action."))
-                                                       .ConfigureAwait(false);
-                               }
-                           });
+        try
+        {
+            await AdministrationService.RenameRole(role, name)
+                                       .ConfigureAwait(false);
+        }
+        catch
+        {
+            await Context.Message
+                         .ReplyAsync(LocalizationGroup.GetText("NotAllowedToPerform", "I'm not allowed to perform this action."))
+                         .ConfigureAwait(false);
+        }
     }
 
     #endregion // Methods
@@ -95,11 +84,10 @@ public class AdministrationCommandModule : LocatedCommandModuleBase
     /// Channel commands
     /// </summary>
     [Group("channel")]
-    [Aliases("c")]
-    [RequireGuild]
+    [Alias("c")]
+    [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-    [ModuleLifespan(ModuleLifespan.Transient)]
     public class AdministrationChannelCommandModule : LocatedCommandModuleBase
     {
         #region Properties
@@ -116,39 +104,35 @@ public class AdministrationCommandModule : LocatedCommandModuleBase
         /// <summary>
         /// Block channel
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("block")]
         [RequireAdministratorPermissions]
-        public Task BlockChannel(CommandContext commandContext)
+        public async Task BlockChannel()
         {
-            return InvokeAsync(commandContext,
-                               async commandContextContainer =>
-                               {
-                                   BlockedChannelService.AddChannel(commandContextContainer.Channel);
+            if (Context.Channel is IGuildChannel guildChannel)
+            {
+                BlockedChannelService.AddChannel(guildChannel);
 
-                                   await commandContext.Message.DeleteAsync()
-                                                       .ConfigureAwait(false);
-                               });
+                await Context.Message.DeleteAsync()
+                             .ConfigureAwait(false);
+            }
         }
 
         /// <summary>
         /// Block channel
         /// </summary>
-        /// <param name="commandContext">Current command context</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("unblock")]
         [RequireAdministratorPermissions]
-        public Task UnblockChannel(CommandContext commandContext)
+        public async Task UnblockChannel()
         {
-            return InvokeAsync(commandContext,
-                               async commandContextContainer =>
-                               {
-                                   BlockedChannelService.RemoveChannel(commandContextContainer.Channel);
+            if (Context.Channel is IGuildChannel guildChannel)
+            {
+                BlockedChannelService.RemoveChannel(guildChannel);
 
-                                   await commandContext.Message.DeleteAsync()
-                                                       .ConfigureAwait(false);
-                               });
+                await Context.Message.DeleteAsync()
+                             .ConfigureAwait(false);
+            }
         }
 
         #endregion // Methods

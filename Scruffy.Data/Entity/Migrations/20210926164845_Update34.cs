@@ -1,6 +1,4 @@
-﻿using System;
-
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations
 {

@@ -1,9 +1,9 @@
-﻿using DSharpPlus.EventArgs;
+﻿using Discord;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Raid.DialogElements;
 
@@ -52,7 +52,7 @@ public class RaidExperienceLevelDeletionDialogElement : DialogReactionElementBas
                               {
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetCheckEmoji(CommandContext.Client),
+                                      Emote = DiscordEmoteService.GetCheckEmote(CommandContext.Client),
                                       Func = () =>
                                              {
                                                  using (var dbFactory = RepositoryFactory.CreateInstance())
@@ -72,7 +72,7 @@ public class RaidExperienceLevelDeletionDialogElement : DialogReactionElementBas
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetCrossEmoji(CommandContext.Client),
+                                      Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
                                       Func = () => Task.FromResult(true)
                                   }
                               };
@@ -83,7 +83,7 @@ public class RaidExperienceLevelDeletionDialogElement : DialogReactionElementBas
     /// </summary>
     /// <param name="reaction">Reaction</param>
     /// <returns>Result</returns>
-    protected override bool DefaultFunc(MessageReactionAddEventArgs reaction) => false;
+    protected override bool DefaultFunc(IReaction reaction) => false;
 
     #endregion // DialogReactionElementBase<bool>
 }

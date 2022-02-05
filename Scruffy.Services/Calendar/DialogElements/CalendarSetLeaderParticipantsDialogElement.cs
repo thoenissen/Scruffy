@@ -1,16 +1,16 @@
 ﻿using System.Text.RegularExpressions;
 
-using DSharpPlus.Entities;
+using Discord;
 
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Calendar.DialogElements;
 
 /// <summary>
 /// Constructor
 /// </summary>
-public class CalendarSetLeaderParticipantsDialogElement : DialogMessageElementBase<List<DiscordMember>>
+public class CalendarSetLeaderParticipantsDialogElement : DialogMessageElementBase<List<IGuildUser>>
 {
     #region Constructor
 
@@ -38,13 +38,13 @@ public class CalendarSetLeaderParticipantsDialogElement : DialogMessageElementBa
     /// </summary>
     /// <param name="message">Message</param>
     /// <returns>Result</returns>
-    public override List<DiscordMember> ConvertMessage(DiscordMessage message)
+    public override List<IGuildUser> ConvertMessage(IUserMessage message)
     {
-        var members = new List<DiscordMember>();
+        var members = new List<IGuildUser>();
 
         foreach (Match match in new Regex("<@\\!?(\\d+?)>").Matches(message.Content))
         {
-            members.Add(CommandContext.Guild.GetMemberAsync(Convert.ToUInt64(match.Groups[1].Value)).Result);
+            members.Add(CommandContext.Guild.GetUserAsync(Convert.ToUInt64(match.Groups[1].Value)).Result);
         }
 
         return members;

@@ -1,4 +1,4 @@
-﻿namespace Scruffy.Services.Core.Discord.Attributes;
+﻿namespace Scruffy.Services.Discord.Attributes;
 
 /// <summary>
 /// Command of the help overview
@@ -17,7 +17,7 @@ public class HelpOverviewCommandAttribute : Attribute
         /// <summary>
         /// Standard
         /// </summary>
-        Standard  = 1,
+        Standard = 1,
 
         /// <summary>
         /// Administrator commands

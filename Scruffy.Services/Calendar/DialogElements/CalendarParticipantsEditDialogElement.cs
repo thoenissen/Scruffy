@@ -1,11 +1,12 @@
-﻿using DSharpPlus.Entities;
+﻿using Discord;
+
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Calendar;
 using Scruffy.Data.Services.Calendar;
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Extensions;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Calendar.DialogElements;
 
@@ -57,11 +58,11 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedReactionElementB
     /// </summary>
     /// <param name="builder">Builder</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public override async Task EditMessage(DiscordEmbedBuilder builder)
+    public override async Task EditMessage(EmbedBuilder builder)
     {
         builder.WithTitle(LocalizationGroup.GetText("CommitTitle", "Participants"));
         builder.WithDescription(LocalizationGroup.GetText("CommitText", "The following participants are recorded:"));
-        builder.WithColor(DiscordColor.Green);
+        builder.WithColor(Color.Green);
         builder.WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64");
         builder.WithTimestamp(DateTime.Now);
 
@@ -88,7 +89,7 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedReactionElementB
                     _data.Participants.Add(new CalendarAppointmentParticipantData
                                            {
                                                Member = await CommandContext.Guild
-                                                                            .GetMemberAsync(entry.UserId)
+                                                                            .GetUserAsync(entry.UserId)
                                                                             .ConfigureAwait(false),
                                                IsLeader = entry.IsLeader
                                            });
@@ -104,7 +105,7 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedReactionElementB
             if (entry.IsLeader)
             {
                 message.Append(' ');
-                message.Append(DiscordEmojiService.GetStarEmoji(CommandContext.Client));
+                message.Append(DiscordEmoteService.GetStarEmote(CommandContext.Client));
             }
 
             message.Append('\n');
@@ -137,11 +138,11 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedReactionElementB
                               {
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetAddEmoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("AddUserCommand", "{0} Add user", DiscordEmojiService.GetAddEmoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetAddEmote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("AddUserCommand", "{0} Add user", DiscordEmoteService.GetAddEmote(CommandContext.Client)),
                                       Func = async () =>
                                              {
-                                                 var members = await RunSubElement<CalendarAddParticipantsDialogElement, List<DiscordMember>>().ConfigureAwait(false);
+                                                 var members = await RunSubElement<CalendarAddParticipantsDialogElement, List<IGuildUser>>().ConfigureAwait(false);
                                                  if (members != null)
                                                  {
                                                      foreach (var member in members)
@@ -162,11 +163,11 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedReactionElementB
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetAdd2Emoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("AddVoiceChannelCommand", "{0} Add channel", DiscordEmojiService.GetAdd2Emoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetAdd2Emote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("AddVoiceChannelCommand", "{0} Add channel", DiscordEmoteService.GetAdd2Emote(CommandContext.Client)),
                                       Func = async () =>
                                              {
-                                                 var members = await RunSubElement<CalendarAddVoiceChannelDialogElement, List<DiscordMember>>().ConfigureAwait(false);
+                                                 var members = await RunSubElement<CalendarAddVoiceChannelDialogElement, List<IGuildUser>>().ConfigureAwait(false);
                                                  if (members != null)
                                                  {
                                                      foreach (var member in members)
@@ -187,11 +188,11 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedReactionElementB
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("RemoveUserCommand", "{0} Remove user", DiscordEmojiService.GetTrashCanEmoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetTrashCanEmote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("RemoveUserCommand", "{0} Remove user", DiscordEmoteService.GetTrashCanEmote(CommandContext.Client)),
                                       Func = async () =>
                                              {
-                                                 var members = await RunSubElement<CalendarRemoveParticipantsDialogElement, List<DiscordMember>>().ConfigureAwait(false);
+                                                 var members = await RunSubElement<CalendarRemoveParticipantsDialogElement, List<IGuildUser>>().ConfigureAwait(false);
                                                  if (members != null)
                                                  {
                                                      foreach (var member in members)
@@ -209,11 +210,11 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedReactionElementB
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetStarEmoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("SetLeaderCommand", "{0} Leader", DiscordEmojiService.GetStarEmoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetStarEmote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("SetLeaderCommand", "{0} Leader", DiscordEmoteService.GetStarEmote(CommandContext.Client)),
                                       Func = async () =>
                                              {
-                                                 var members = await RunSubElement<CalendarRemoveParticipantsDialogElement, List<DiscordMember>>().ConfigureAwait(false);
+                                                 var members = await RunSubElement<CalendarRemoveParticipantsDialogElement, List<IGuildUser>>().ConfigureAwait(false);
                                                  if (members != null)
                                                  {
                                                      foreach (var member in members)
@@ -239,8 +240,8 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedReactionElementB
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetCheckEmoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("CommitCommand", "{0} Commit", DiscordEmojiService.GetCheckEmoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetCheckEmote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("CommitCommand", "{0} Commit", DiscordEmoteService.GetCheckEmote(CommandContext.Client)),
                                       Func = async () =>
                                              {
                                                  using (var dbFactory = RepositoryFactory.CreateInstance())
@@ -278,8 +279,8 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedReactionElementB
                                   },
                                   new ()
                                   {
-                                      Emoji = DiscordEmojiService.GetCrossEmoji(CommandContext.Client),
-                                      CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmojiService.GetCrossEmoji(CommandContext.Client)),
+                                      Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
+                                      CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmoteService.GetCrossEmote(CommandContext.Client)),
                                       Func = () => Task.FromResult(false)
                                   },
                               };

@@ -1,9 +1,8 @@
-﻿using DSharpPlus.EventArgs;
-using DSharpPlus.Interactivity.Extensions;
+﻿using Discord;
 
 using Scruffy.Services.Core.Localization;
 
-namespace Scruffy.Services.Core.Discord;
+namespace Scruffy.Services.Discord;
 
 /// <summary>
 /// Dialog element with reactions
@@ -43,7 +42,7 @@ public abstract class DialogReactionElementBase<TData> : DialogElementBase<TData
     /// </summary>
     /// <param name="reaction">Reaction</param>
     /// <returns>Result</returns>
-    protected abstract TData DefaultFunc(MessageReactionAddEventArgs reaction);
+    protected abstract TData DefaultFunc(IReaction reaction);
 
     /// <summary>
     /// Execute the dialog element
@@ -57,8 +56,7 @@ public abstract class DialogReactionElementBase<TData> : DialogElementBase<TData
 
         DialogContext.Messages.Add(message);
 
-        var userReactionTask = CommandContext.Client
-                                             .GetInteractivity()
+        var userReactionTask = CommandContext.Interaction
                                              .WaitForReactionAsync(message, CommandContext.User);
 
         var reactions = GetReactions();
@@ -66,29 +64,25 @@ public abstract class DialogReactionElementBase<TData> : DialogElementBase<TData
         {
             foreach (var reaction in reactions)
             {
-                await message.CreateReactionAsync(reaction.Emoji).ConfigureAwait(false);
+                await message.AddReactionAsync(reaction.Emote).ConfigureAwait(false);
             }
         }
 
         var userReaction = await userReactionTask.ConfigureAwait(false);
 
-        if (userReaction.TimedOut == false)
+        if (reactions?.Count > 0)
         {
-            if (reactions?.Count > 0)
+            foreach (var reaction in reactions)
             {
-                foreach (var reaction in reactions)
+                if (reaction.Emote.Name == userReaction.Emote.Name)
                 {
-                    if (reaction.Emoji.Id == userReaction.Result.Emoji.Id)
-                    {
-                        return await reaction.Func().ConfigureAwait(false);
-                    }
+                    return await reaction.Func()
+                                         .ConfigureAwait(false);
                 }
             }
-
-            return DefaultFunc(userReaction.Result);
         }
 
-        throw new TimeoutException();
+        return DefaultFunc(userReaction);
     }
 
     #endregion // Methods

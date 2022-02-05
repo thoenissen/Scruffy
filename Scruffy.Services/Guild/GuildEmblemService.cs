@@ -1,10 +1,10 @@
 ﻿using System.IO;
 using System.Net.Http;
 
-using DSharpPlus.Entities;
+using Discord;
 
-using Scruffy.Services.Core.Discord;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 using Scruffy.Services.WebApi;
 
 using SixLabors.ImageSharp;
@@ -63,7 +63,7 @@ public class GuildEmblemService : LocatedServiceBase
             var backgrounds = await connector.GetGuildEmblemBackgrounds()
                                              .ConfigureAwait(false);
 
-            var colors = new List<Color>
+            var colors = new List<SixLabors.ImageSharp.Color>
                          {
                              new Rgba32(190, 186, 185),
                              new Rgba32(136, 0, 10),
@@ -113,7 +113,7 @@ public class GuildEmblemService : LocatedServiceBase
 
                 var client = _httpClientFactory.CreateClient();
 
-                Image target = null;
+                SixLabors.ImageSharp.Image target = null;
 
                 foreach (var layer in backgroundLayers.Layers)
                 {
@@ -130,14 +130,14 @@ public class GuildEmblemService : LocatedServiceBase
 
                         stream.Position = 0;
 
-                        var tempImage = await Image.LoadAsync<Rgba32>(stream)
-                                                   .ConfigureAwait(false);
+                        var tempImage = await SixLabors.ImageSharp.Image.LoadAsync<Rgba32>(stream)
+                                                       .ConfigureAwait(false);
 
                         var colorIndex = random.Next(0, colors.Count - 1);
                         fileName.Append('_');
                         fileName.Append(colorIndex);
 
-                        tempImage.Mutate(o => o.Fill(new RecolorBrush(new Color(new Rgba32(176, 35, 33)), colors[colorIndex], 0.3f)));
+                        tempImage.Mutate(o => o.Fill(new RecolorBrush(new SixLabors.ImageSharp.Color(new Rgba32(176, 35, 33)), colors[colorIndex], 0.3f)));
 
                         if (target == null)
                         {
@@ -180,8 +180,8 @@ public class GuildEmblemService : LocatedServiceBase
                     {
                         stream.Position = 0;
 
-                        var tempImage = await Image.LoadAsync<Rgba32>(stream)
-                                                   .ConfigureAwait(false);
+                        var tempImage = await SixLabors.ImageSharp.Image.LoadAsync<Rgba32>(stream)
+                                                       .ConfigureAwait(false);
 
                         if (layer != foregroundLayers.Layers.First())
                         {
@@ -193,7 +193,7 @@ public class GuildEmblemService : LocatedServiceBase
                                                          {
                                                              AlphaCompositionMode = PixelAlphaCompositionMode.SrcIn,
                                                          },
-                                                         new RecolorBrush(Color.White, colors[colorIndex], 0.26f)));
+                                                         new RecolorBrush(SixLabors.ImageSharp.Color.White, colors[colorIndex], 0.26f)));
                         }
 
                         if (isFlipHorizontal)
@@ -222,7 +222,7 @@ public class GuildEmblemService : LocatedServiceBase
                     fileName.Append(".png");
 
                     await commandContext.Channel
-                                        .SendMessageAsync(new DiscordMessageBuilder().WithFile(fileName.ToString(), memoryStream, true))
+                                        .SendFileAsync(new FileAttachment(memoryStream, fileName.ToString()))
                                         .ConfigureAwait(false);
                 }
             }
