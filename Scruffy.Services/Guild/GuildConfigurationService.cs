@@ -104,7 +104,8 @@ public class GuildConfigurationService : LocatedServiceBase
             }
         }
 
-        await commandContext.Message.DeleteAsync()
+        await commandContext.Message
+                            .DeleteAsync()
                             .ConfigureAwait(false);
     }
 

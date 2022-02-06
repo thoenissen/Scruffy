@@ -83,6 +83,89 @@ public class DebugCommandModule : LocatedCommandModuleBase
                      .ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Command buttons
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [Command("buttons")]
+    public async Task Buttons()
+    {
+        var components = Context.Interaction.CreateTemporaryComponentContainer<int>();
+        await using (components.ConfigureAwait(false))
+        {
+            var builder = new ComponentBuilder();
+
+            builder.WithButton("Test 1", components.AddComponent(1), ButtonStyle.Secondary, DiscordEmoteService.GetCheckEmote(Context.Client));
+            builder.WithButton("Test 2", components.AddComponent(2), ButtonStyle.Secondary, DiscordEmoteService.GetCrossEmote(Context.Client));
+
+            var message = await Context.Message
+                                       .ReplyAsync("Buttons:", components: builder.Build())
+                                       .ConfigureAwait(false);
+
+            try
+            {
+                var button = await components.Task
+                                             .ConfigureAwait(false);
+
+                await button.Component
+                            .RespondAsync("Button pressed: " + button)
+                            .ConfigureAwait(false);
+            }
+            finally
+            {
+                await message.ModifyAsync(obj =>
+                                          {
+                                              obj.Content = "Interaction closed";
+                                              obj.Components = new ComponentBuilder().Build();
+                                          })
+                             .ConfigureAwait(false);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Command select menu
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [Command("selectmenu")]
+    public async Task SelectMenu()
+    {
+        var components = Context.Interaction.CreateTemporaryComponentContainer<int>();
+        await using (components.ConfigureAwait(false))
+        {
+            var builder = new ComponentBuilder();
+
+            builder.WithSelectMenu(new SelectMenuBuilder()
+                                       .WithCustomId(components.AddComponent(1))
+                                       .WithPlaceholder("Please select a option...")
+                                       .AddOption("Option 0", "0", null, DiscordEmoteService.GetBulletEmote(Context.Client))
+                                       .AddOption("Option 1", "1", null, DiscordEmoteService.GetEdit2Emote(Context.Client)));
+
+            var message = await Context.Message
+                                       .ReplyAsync("SelectMenu:", components: builder.Build())
+                                       .ConfigureAwait(false);
+
+            try
+            {
+                var selectMenu = await components.Task
+                                                 .ConfigureAwait(false);
+
+                await selectMenu.Component
+                            .RespondAsync("SelectMenu selected: " + selectMenu.Component.Data)
+                            .ConfigureAwait(false);
+            }
+            finally
+            {
+                await message.ModifyAsync(obj =>
+                                          {
+                                              obj.Content = "Interaction closed";
+                                              obj.Components = new ComponentBuilder().Build();
+                                          })
+                             .ConfigureAwait(false);
+            }
+        }
+    }
+
     #endregion // Methods
 
     #region Dump
@@ -690,11 +773,8 @@ public class DebugCommandModule : LocatedCommandModuleBase
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
         public async Task ShowLogOverview()
         {
-            if (Context.Channel is IMessageChannel messageChannel)
-            {
-                await DebugService.PostLogOverview(messageChannel, DateTime.Today, false)
-                                  .ConfigureAwait(false);
-            }
+            await DebugService.PostLogOverview(Context.Channel, DateTime.Today, false)
+                              .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -706,16 +786,17 @@ public class DebugCommandModule : LocatedCommandModuleBase
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
         public async Task ShowLogOverview(string date)
         {
-            if (Context.Channel is IMessageChannel messageChannel)
+            if (DateTime.TryParseExact(date,
+                                       "yyyy-MM-dd",
+                                       CultureInfo.InvariantCulture,
+                                       DateTimeStyles.None,
+                                       out var dateParsed) == false)
             {
-                if (DateTime.TryParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateParsed) == false)
-                {
-                    dateParsed = DateTime.Today;
-                }
-
-                await DebugService.PostLogOverview(messageChannel, dateParsed, false)
-                                  .ConfigureAwait(false);
+                dateParsed = DateTime.Today;
             }
+
+            await DebugService.PostLogOverview(Context.Channel, dateParsed, false)
+                              .ConfigureAwait(false);
         }
 
         #endregion // Methods

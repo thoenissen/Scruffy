@@ -293,14 +293,18 @@
       "Message": "Welcher Benutzer soll angepasst werden?"
     },
     "RaidRoleSelectionDialogElement": {
-      "ChooseLevelTitle": "Raid role selection",
-      "ChooseLevelDescription": "Please choose one of the following roles:",
+      "ChooseMainRoleTitle": "Role selection",
+      "ChooseSubRoleTitle": "Class selection",
+      "ChooseMainRoleDescription": "Please choose one of the following roles...",
+      "ChooseSubRoleDescription": "Please choose one of the following classes...",
       "NoRole": "No additional role",
       "RolesField": "Roles"
     },
     "RaidRoleSelectionNextDialogElement": {
       "MessageFirst": "Do you want to add a role preference?",
-      "MessageNext": "Do you want to add another role preference?"
+      "MessageNext": "Do you want to add another role preference?",
+      "Yes": "Yes",
+      "No": "No"
     },
     "RaidOverviewService": {
       "ParticipationOverview": "Participation points overview"

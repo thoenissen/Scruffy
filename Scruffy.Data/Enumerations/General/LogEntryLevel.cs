@@ -6,6 +6,16 @@
 public enum LogEntryLevel
 {
     /// <summary>
+    /// Verbose
+    /// </summary>
+    Verbose = 0,
+
+    /// <summary>
+    /// Debug
+    /// </summary>
+    Debug = 500,
+
+    /// <summary>
     /// Information
     /// </summary>
     Information = 1000,

@@ -1,5 +1,6 @@
 ﻿using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
+using Scruffy.Services.Core.Exceptions;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord;
 
@@ -46,39 +47,51 @@ public class RaidRoleAssignmentService : LocatedServiceBase
         var dialogHandler = new DialogHandler(commandContext);
         await using (dialogHandler.ConfigureAwait(false))
         {
+            dialogHandler.DialogContext.Messages.Add(commandContext.Message);
+
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
-                dbFactory.GetRepository<RaidRegistrationRoleAssignmentRepository>()
-                         .RemoveRange(obj => obj.RegistrationId == registrationId);
-
-                do
+                try
                 {
-                    var mainRole = await dialogHandler.Run<RaidRoleSelectionDialogElement, long?>(new RaidRoleSelectionDialogElement(_localizationService, null))
-                                                      .ConfigureAwait(false);
+                    dbFactory.GetRepository<RaidRegistrationRoleAssignmentRepository>()
+                             .RemoveRange(obj => obj.RegistrationId == registrationId);
 
-                    if (mainRole != null)
+                    do
                     {
-                        var subRole = await dialogHandler.Run<RaidRoleSelectionDialogElement, long?>(new RaidRoleSelectionDialogElement(_localizationService, mainRole))
-                                                         .ConfigureAwait(false);
+                        var mainRole = await dialogHandler.Run<RaidRoleSelectionDialogElement, long?>(new RaidRoleSelectionDialogElement(_localizationService, null))
+                                                          .ConfigureAwait(false);
 
-                        dbFactory.GetRepository<RaidRegistrationRoleAssignmentRepository>()
-                                 .AddOrRefresh(obj => obj.RegistrationId == registrationId
-                                                   && obj.MainRoleId == mainRole.Value
-                                                   && obj.SubRoleId == subRole,
-                                               obj =>
-                                               {
-                                                   obj.RegistrationId = registrationId;
-                                                   obj.MainRoleId = mainRole.Value;
-                                                   obj.SubRoleId = subRole;
-                                               });
+                        if (mainRole != null)
+                        {
+                            var subRole = await dialogHandler.Run<RaidRoleSelectionDialogElement, long?>(new RaidRoleSelectionDialogElement(_localizationService, mainRole))
+                                                             .ConfigureAwait(false);
+
+                            dbFactory.GetRepository<RaidRegistrationRoleAssignmentRepository>()
+                                     .AddOrRefresh(obj => obj.RegistrationId == registrationId
+                                                       && obj.MainRoleId == mainRole.Value
+                                                       && obj.SubRoleId == subRole,
+                                                   obj =>
+                                                   {
+                                                       obj.RegistrationId = registrationId;
+                                                       obj.MainRoleId = mainRole.Value;
+                                                       obj.SubRoleId = subRole;
+                                                   });
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
-                    else
-                    {
-                        break;
-                    }
+                    while (await dialogHandler.Run<RaidRoleSelectionNextDialogElement, bool>(new RaidRoleSelectionNextDialogElement(_localizationService, false))
+                                              .ConfigureAwait(false));
                 }
-                while (await dialogHandler.Run<RaidRoleSelectionNextDialogElement, bool>(new RaidRoleSelectionNextDialogElement(_localizationService, false))
-                                          .ConfigureAwait(false));
+                catch (ScruffyTimeoutException)
+                {
+                    await dialogHandler.DeleteMessages()
+                                       .ConfigureAwait(false);
+
+                    throw;
+                }
 
                 await dialogHandler.DeleteMessages()
                                    .ConfigureAwait(false);

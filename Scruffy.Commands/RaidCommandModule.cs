@@ -143,10 +143,6 @@ public class RaidCommandModule : LocatedCommandModuleBase
 
                     await MessageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
                                         .ConfigureAwait(false);
-
-                    await Context.Message
-                                 .DeleteAsync()
-                                 .ConfigureAwait(false);
                 }
             }
             else
@@ -195,10 +191,6 @@ public class RaidCommandModule : LocatedCommandModuleBase
 
                     await MessageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
                                         .ConfigureAwait(false);
-
-                    await Context.Message
-                                 .DeleteAsync()
-                                 .ConfigureAwait(false);
                 }
             }
             else

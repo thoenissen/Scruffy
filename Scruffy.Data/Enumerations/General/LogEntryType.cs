@@ -19,4 +19,14 @@ public enum LogEntryType
     /// Service
     /// </summary>
     Service = 3000,
+
+    /// <summary>
+    /// Discord client
+    /// </summary>
+    DiscordClient = 4000,
+
+    /// <summary>
+    /// Commands service
+    /// </summary>
+    CommandsService = 5000,
 }

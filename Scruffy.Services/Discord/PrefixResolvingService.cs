@@ -1,7 +1,6 @@
 ﻿using System.Collections.Concurrent;
 
 using Discord;
-using Discord.WebSocket;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.CoreData;

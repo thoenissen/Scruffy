@@ -113,7 +113,8 @@ public class AdministrationCommandModule : LocatedCommandModuleBase
             {
                 BlockedChannelService.AddChannel(guildChannel);
 
-                await Context.Message.DeleteAsync()
+                await Context.Message
+                             .DeleteAsync()
                              .ConfigureAwait(false);
             }
         }
@@ -130,7 +131,8 @@ public class AdministrationCommandModule : LocatedCommandModuleBase
             {
                 BlockedChannelService.RemoveChannel(guildChannel);
 
-                await Context.Message.DeleteAsync()
+                await Context.Message
+                             .DeleteAsync()
                              .ConfigureAwait(false);
             }
         }

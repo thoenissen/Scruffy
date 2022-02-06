@@ -1,6 +1,4 @@
-﻿using Discord;
-
-using Scruffy.Services.Core.Localization;
+﻿using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Raid.DialogElements;
@@ -8,14 +6,14 @@ namespace Scruffy.Services.Raid.DialogElements;
 /// <summary>
 /// Add a role preference?
 /// </summary>
-public class RaidRoleSelectionNextDialogElement : DialogReactionElementBase<bool>
+public class RaidRoleSelectionNextDialogElement : DialogButtonElementBase<bool>
 {
     #region Fields
 
     /// <summary>
-    /// Reactions
+    /// Buttons
     /// </summary>
-    private List<ReactionData<bool>> _reactions;
+    private List<ButtonData<bool>> _buttons;
 
     /// <summary>
     /// First call?
@@ -49,32 +47,33 @@ public class RaidRoleSelectionNextDialogElement : DialogReactionElementBase<bool
                                                : LocalizationGroup.GetText("MessageNext", "Do you want to add another role preference?");
 
     /// <summary>
-    /// Returns the reactions which should be added to the message
+    /// Returns the buttons which should be added to the message
     /// </summary>
     /// <returns>Reactions</returns>
-    public override IReadOnlyList<ReactionData<bool>> GetReactions()
+    public override IReadOnlyList<ButtonData<bool>> GetButtons()
     {
-        return _reactions ??= new List<ReactionData<bool>>
-                              {
-                                  new ()
-                                  {
-                                      Emote = DiscordEmoteService.GetCheckEmote(CommandContext.Client),
-                                      Func = () => Task.FromResult(true)
-                                  },
-                                  new ()
-                                  {
-                                      Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
-                                      Func = () => Task.FromResult(false)
-                                  },
-                              };
+        return _buttons ??= new List<ButtonData<bool>>
+                            {
+                                new ()
+                                {
+                                    CommandText = LocalizationGroup.GetText("Yes", "Yes"),
+                                    Emote = DiscordEmoteService.GetCheckEmote(CommandContext.Client),
+                                    Func = () => Task.FromResult(true)
+                                },
+                                new ()
+                                {
+                                    CommandText = LocalizationGroup.GetText("No", "No"),
+                                    Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
+                                    Func = () => Task.FromResult(false)
+                                },
+                            };
     }
 
     /// <summary>
     /// Default case if none of the given reactions is used
     /// </summary>
-    /// <param name="reaction">Reaction</param>
     /// <returns>Result</returns>
-    protected override bool DefaultFunc(IReaction reaction) => false;
+    protected override bool DefaultFunc() => false;
 
     #endregion // DialogReactionElementBase
 }

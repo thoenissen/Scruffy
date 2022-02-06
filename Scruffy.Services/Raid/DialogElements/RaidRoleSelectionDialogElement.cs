@@ -1,6 +1,4 @@
-﻿using Discord;
-
-using Scruffy.Data.Entity;
+﻿using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord;
@@ -10,14 +8,14 @@ namespace Scruffy.Services.Raid.DialogElements;
 /// <summary>
 /// Selection of a role
 /// </summary>
-public class RaidRoleSelectionDialogElement : DialogEmbedMessageElementBase<long?>
+public class RaidRoleSelectionDialogElement : DialogSelectMenuElementBase<long?>
 {
     #region Fields
 
     /// <summary>
-    /// Templates
+    /// Roles
     /// </summary>
-    private Dictionary<int, long?> _roles;
+    private List<SelectMenuEntryData<long?>> _entries;
 
     /// <summary>
     /// Id of the main role
@@ -44,21 +42,34 @@ public class RaidRoleSelectionDialogElement : DialogEmbedMessageElementBase<long
     #region DialogEmbedMessageElementBase<long?>
 
     /// <summary>
-    /// Return the message of element
+    /// Returning the message
     /// </summary>
     /// <returns>Message</returns>
-    public override EmbedBuilder GetMessage()
+    public override string GetMessage() => _mainRoleId == null
+                                               ? LocalizationGroup.GetText("ChooseMainRoleTitle", "Role selection")
+                                               : LocalizationGroup.GetText("ChooseSubRoleTitle", "Class selection");
+
+    /// <summary>
+    /// Returning the placeholder
+    /// </summary>
+    /// <returns>Placeholder</returns>
+    public override string GetPlaceholder() => _mainRoleId == null
+                                                   ? LocalizationGroup.GetText("ChooseMainRoleDescription", "Please choose one of the following roles...")
+                                                   : LocalizationGroup.GetText("ChooseSubRoleDescription", "Please choose one of the following classes...");
+
+    /// <summary>
+    /// Returns the select menu entries which should be added to the message
+    /// </summary>
+    /// <returns>Reactions</returns>
+    public override IReadOnlyList<SelectMenuEntryData<long?>> GetEntries()
     {
-        var builder = new EmbedBuilder();
-        builder.WithTitle(LocalizationGroup.GetText("ChooseLevelTitle", "Raid role selection"));
-        builder.WithDescription(LocalizationGroup.GetText("ChooseLevelDescription", "Please choose one of the following roles:"));
-
-        _roles = new Dictionary<int, long?>();
-        var levelsFieldsText = new StringBuilder();
-
-        using (var dbFactory = RepositoryFactory.CreateInstance())
+        if (_entries == null)
         {
-            var mainRoles = dbFactory.GetRepository<RaidRoleRepository>()
+            _entries = new List<SelectMenuEntryData<long?>>();
+
+            using (var dbFactory = RepositoryFactory.CreateInstance())
+            {
+                var roles = dbFactory.GetRepository<RaidRoleRepository>()
                                      .GetQuery()
                                      .Where(obj => obj.MainRoleId == _mainRoleId
                                                 && obj.IsDeleted == false)
@@ -71,46 +82,33 @@ public class RaidRoleSelectionDialogElement : DialogEmbedMessageElementBase<long
                                      .OrderBy(obj => obj.Description)
                                      .ToList();
 
-            levelsFieldsText.Append("`0` - ");
-            levelsFieldsText.Append(LocalizationGroup.GetText("NoRole", "No additional role"));
-            levelsFieldsText.Append('\n');
-            _roles[0] = null;
+                _entries.Add(new SelectMenuEntryData<long?>
+                             {
+                                 CommandText = LocalizationGroup.GetText("NoRole", "No role specification"),
+                                 Emote = null,
+                                 Func = () => Task.FromResult<long?>(null)
+                             });
 
-            var i = 1;
-            var fieldCounter = 1;
-
-            foreach (var role in mainRoles)
-            {
-                var currentLine = $"`{i}` -  {DiscordEmoteService.GetGuildEmote(CommandContext.Client, role.DiscordEmojiId)} {role.Description}{'\n'}";
-
-                _roles[i] = role.Id;
-                i++;
-
-                if (currentLine.Length + levelsFieldsText.Length > 1024)
+                foreach (var role in roles)
                 {
-                    builder.AddField(LocalizationGroup.GetText("RolesField", "Roles") + " #" + fieldCounter, levelsFieldsText.ToString());
-                    levelsFieldsText.Clear();
-                    fieldCounter++;
+                    _entries.Add(new SelectMenuEntryData<long?>
+                                 {
+                                     CommandText = role.Description,
+                                     Emote = DiscordEmoteService.GetGuildEmote(CommandContext.Client, role.DiscordEmojiId),
+                                     Func = () => Task.FromResult<long?>(role.Id)
+                                 });
                 }
-
-                levelsFieldsText.Append(currentLine);
             }
-
-            builder.AddField(LocalizationGroup.GetText("RolesField", "Roles") + " #" + fieldCounter, levelsFieldsText.ToString());
         }
 
-        return builder;
+        return _entries;
     }
 
     /// <summary>
-    /// Converting the response message
+    /// Default case if none of the given buttons is used
     /// </summary>
-    /// <param name="message">Message</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public override Task<long?> ConvertMessage(IUserMessage message)
-    {
-        return Task.FromResult(int.TryParse(message.Content, out var index) && _roles.TryGetValue(index, out var selectedRoleId) ? selectedRoleId : throw new InvalidOperationException());
-    }
+    /// <returns>Result</returns>
+    protected override long? DefaultFunc() => throw new InvalidOperationException();
 
     #endregion // DialogEmbedMessageElementBase<long?>
 }

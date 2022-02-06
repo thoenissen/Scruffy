@@ -1,5 +1,8 @@
 ﻿using System.Diagnostics;
 
+using Discord;
+using Discord.Commands;
+
 using Elasticsearch.Net;
 
 using Scruffy.Data.Entity;
@@ -7,6 +10,7 @@ using Scruffy.Data.Entity.Repositories.General;
 using Scruffy.Data.Entity.Tables.General;
 using Scruffy.Data.Enumerations.General;
 using Scruffy.Services.Core.Extensions;
+using Scruffy.Services.Discord.Extensions;
 
 using Serilog;
 using Serilog.Sinks.Elasticsearch;
@@ -173,6 +177,24 @@ public class LoggingService
     public static long? AddServiceLogEntry(LogEntryLevel level, string className, string action, string message, string additionalInformation, Exception ex = null)
     {
         return _logger.WriteLine(LogEntryType.Service, level, className, action, message, additionalInformation, ex);
+    }
+
+    /// <summary>
+    /// Writing <see cref="CommandService"/> log messages
+    /// </summary>
+    /// <param name="logMessage">Log message</param>
+    public static void AddCommandServiceLog(LogMessage logMessage)
+    {
+        _logger.WriteLine(LogEntryType.CommandsService, logMessage.Severity.ToLogEntryLevel(), logMessage.Source, null, logMessage.Message, null, logMessage.Exception);
+    }
+
+    /// <summary>
+    /// Writing <see cref="IDiscordClient"/> log messages
+    /// </summary>
+    /// <param name="logMessage">Log message</param>
+    public static void AddDiscordClientLog(LogMessage logMessage)
+    {
+        _logger.WriteLine(LogEntryType.DiscordClient, logMessage.Severity.ToLogEntryLevel(), logMessage.Source, null, logMessage.Message, null, logMessage.Exception);
     }
 
     /// <summary>

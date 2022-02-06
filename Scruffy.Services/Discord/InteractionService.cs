@@ -54,6 +54,21 @@ namespace Scruffy.Services.Discord
         private List<InteractionWaitEntry<IReaction>> _waitForReaction;
 
         /// <summary>
+        /// Components
+        /// </summary>
+        private List<TemporaryComponentsContainer> _componentContainers;
+
+        /// <summary>
+        /// A new component execution was added
+        /// </summary>
+        private AutoResetEvent _componentsEvent;
+
+        /// <summary>
+        /// Created component events
+        /// </summary>
+        private ConcurrentQueue<SocketMessageComponent> _components;
+
+        /// <summary>
         /// IDisposable
         /// </summary>
         private bool _disposed;
@@ -78,12 +93,19 @@ namespace Scruffy.Services.Discord
             _reactionEvent = new AutoResetEvent(false);
             _reactions = new ConcurrentQueue<IReaction>();
 
+            _componentContainers = new List<TemporaryComponentsContainer>();
+            _componentsEvent = new AutoResetEvent(false);
+            _components = new ConcurrentQueue<SocketMessageComponent>();
+
             Task.Run(() => CheckMessages(_tokenSource.Token), _tokenSource.Token);
             Task.Run(() => CheckReactions(_tokenSource.Token), _tokenSource.Token);
+            Task.Run(() => CheckComponents(_tokenSource.Token), _tokenSource.Token);
 
             _client = client;
             _client.MessageReceived += OnMessageReceived;
             _client.ReactionAdded += OnReactionAdded;
+            _client.ButtonExecuted += OnComponentExecuted;
+            _client.SelectMenuExecuted += OnComponentExecuted;
         }
 
         #endregion // Constructor
@@ -106,7 +128,7 @@ namespace Scruffy.Services.Discord
                 _waitForMessage.Add(waitEntry);
             }
 
-            Task.Delay(15_000, waitEntry.CancellationToken)
+            Task.Delay(60_000, waitEntry.CancellationToken)
                 .ContinueWith(t =>
                               {
                                   waitEntry.SetTimeOut();
@@ -154,7 +176,45 @@ namespace Scruffy.Services.Discord
             return taskSource.Task;
         }
 
+        /// <summary>
+        /// Creating of a container to manage temporary components
+        /// </summary>
+        /// <typeparam name="TIdentification">Type of the identification</typeparam>
+        /// <returns>Container object</returns>
+        public TemporaryComponentsContainer<TIdentification> CreateTemporaryComponentContainer<TIdentification>()
+        {
+            return new TemporaryComponentsContainer<TIdentification>(this);
+        }
+
         #endregion // Public methods
+
+        #region Internal methods
+
+        /// <summary>
+        /// Adding temporary components
+        /// </summary>
+        /// <param name="container">Container</param>
+        internal void AddComponentsContainer(TemporaryComponentsContainer container)
+        {
+            lock (_componentContainers)
+            {
+                _componentContainers.Add(container);
+            }
+        }
+
+        /// <summary>
+        /// Removing temporary components
+        /// </summary>
+        /// <param name="container">Container</param>
+        internal void RemoveComponentsContainer(TemporaryComponentsContainer container)
+        {
+            lock (_componentContainers)
+            {
+                _componentContainers.Remove(container);
+            }
+        }
+
+        #endregion // Internal methods
 
         #region Private methods
 
@@ -249,6 +309,61 @@ namespace Scruffy.Services.Discord
             }
         }
 
+        /// <summary>
+        /// A component is executed
+        /// </summary>
+        /// <param name="e">Argument</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        private Task OnComponentExecuted(SocketMessageComponent e)
+        {
+            _components.Enqueue(e);
+            _componentsEvent.Set();
+
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Check incoming reactions
+        /// </summary>
+        /// <param name="tokenSourceToken">Token source</param>
+        private void CheckComponents(CancellationToken tokenSourceToken)
+        {
+            while (tokenSourceToken.IsCancellationRequested == false)
+            {
+                while (_components.TryDequeue(out var component))
+                {
+                    List<TemporaryComponentsContainer> currentContainers;
+
+                    lock (_components)
+                    {
+                        currentContainers = _componentContainers.ToList();
+                    }
+
+                    foreach (var container in currentContainers)
+                    {
+                        switch (component.Type)
+                        {
+                            case InteractionType.MessageComponent:
+                                {
+                                    switch (component.Data.Type)
+                                    {
+                                        case ComponentType.Button:
+                                        case ComponentType.SelectMenu:
+                                            {
+                                                container.CheckComponent(component);
+                                            }
+                                            break;
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                }
+
+                WaitHandle.WaitAny(new[] { _componentsEvent, tokenSourceToken.WaitHandle });
+            }
+        }
+
         #endregion // Private methods
 
         #region IDisposable
@@ -265,9 +380,12 @@ namespace Scruffy.Services.Discord
 
                 _messageEvent.Dispose();
                 _reactionEvent.Dispose();
+                _componentsEvent.Dispose();
 
-                _client.MessageReceived += OnMessageReceived;
-                _client.ReactionAdded += OnReactionAdded;
+                _client.MessageReceived -= OnMessageReceived;
+                _client.ReactionAdded -= OnReactionAdded;
+                _client.ButtonExecuted -= OnComponentExecuted;
+                _client.SelectMenuExecuted -= OnComponentExecuted;
                 _client = null;
 
                 _disposed = true;

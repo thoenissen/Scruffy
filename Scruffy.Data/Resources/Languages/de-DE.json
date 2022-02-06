@@ -294,14 +294,18 @@
       "Message": "Gib den Benutzer ein:"
     },
     "RaidRoleSelectionDialogElement": {
-      "ChooseLevelTitle": "Rollenauswahl",
-      "ChooseLevelDescription": "Wähle eine der folgenden Rollen:",
+      "ChooseMainRoleTitle": "Rollenauswahl",
+      "ChooseSubRoleTitle": "Klassenauswahl",
+      "ChooseMainRoleDescription": "Wähle eine der folgenden Rollen...",
+      "ChooseSubRoleDescription": "Wähle eine der folgenden Klassen...",
       "NoRole": "Keine Spezifizierung",
       "RolesField": "Rollen"
     },
     "RaidRoleSelectionNextDialogElement": {
       "MessageFirst": "Möchste du eine Rollenpräferenz auswählen?",
-      "MessageNext": "Möchtest du eine weitere Rollenpräferenz hinzufügen?"
+      "MessageNext": "Möchtest du eine weitere Rollenpräferenz hinzufügen?",
+      "Yes": "Ja",
+      "No": "Nein" 
     },
     "RaidOverviewService": {
       "ParticipationOverview": "Übersicht der Teilnahmepunkte"

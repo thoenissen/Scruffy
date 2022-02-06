@@ -83,6 +83,7 @@ public sealed class DiscordBot : IAsyncDisposable
 
         _discordClient = new DiscordSocketClient(config);
         _discordClient.MessageReceived += OnMessageReceived;
+        _discordClient.Log += OnDiscordClientLog;
 
         _prefixResolver = new PrefixResolvingService();
         _administrationPermissionsValidationService = new AdministrationPermissionsValidationService();
@@ -99,6 +100,7 @@ public sealed class DiscordBot : IAsyncDisposable
 
         _commands = new CommandService(commandConfiguration);
         _commands.CommandExecuted += OnCommandExecuted;
+        _commands.Log += OnCommandServiceLog;
 
         GlobalServiceProvider.Current.AddSingleton(_discordClient);
         GlobalServiceProvider.Current.AddSingleton(_prefixResolver);
@@ -116,6 +118,30 @@ public sealed class DiscordBot : IAsyncDisposable
 
         await _discordClient.StartAsync()
                             .ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Discord client logging logging
+    /// </summary>
+    /// <param name="e">Argument</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    private Task OnDiscordClientLog(LogMessage e)
+    {
+        LoggingService.AddDiscordClientLog(e);
+
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Commands service logging
+    /// </summary>
+    /// <param name="e">Argument</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    private Task OnCommandServiceLog(LogMessage e)
+    {
+        LoggingService.AddCommandServiceLog(e);
+
+        return Task.CompletedTask;
     }
 
     /// <summary>
