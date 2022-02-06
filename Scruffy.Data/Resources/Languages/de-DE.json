@@ -118,6 +118,9 @@
     "ServerConfigurationCommandModule": {
       "UsingNewPrefix": "Ich werde nun den folgenden Präfix verwenden: {0}"
     },
+    "InteractionService": {
+      "DialogNotAssigned": "Du kannst nur mit Dialogen interagieren, die dir zugeordnet sind."
+    },
     "RaidCommandModule": {
       "NoActiveAppointment": "Es besteht kein aktiver Termin.",
       "TemplateChanged": "Die Schablone wurde angepasst.",

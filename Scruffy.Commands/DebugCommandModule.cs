@@ -90,7 +90,7 @@ public class DebugCommandModule : LocatedCommandModuleBase
     [Command("buttons")]
     public async Task Buttons()
     {
-        var components = Context.Interaction.CreateTemporaryComponentContainer<int>();
+        var components = Context.Interaction.CreateTemporaryComponentContainer<int>(obj => true);
         await using (components.ConfigureAwait(false))
         {
             var builder = new ComponentBuilder();
@@ -130,7 +130,7 @@ public class DebugCommandModule : LocatedCommandModuleBase
     [Command("selectmenu")]
     public async Task SelectMenu()
     {
-        var components = Context.Interaction.CreateTemporaryComponentContainer<int>();
+        var components = Context.Interaction.CreateTemporaryComponentContainer<int>(obj => true);
         await using (components.ConfigureAwait(false))
         {
             var builder = new ComponentBuilder();

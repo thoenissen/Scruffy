@@ -55,7 +55,7 @@ public abstract class DialogSelectMenuElementBase<TData> : DialogElementBase<TDa
     /// <returns>Result</returns>
     public override async Task<TData> Run()
     {
-        var components = CommandContext.Interaction.CreateTemporaryComponentContainer<int>();
+        var components = CommandContext.Interaction.CreateTemporaryComponentContainer<int>(obj => obj.User.Id == CommandContext.User.Id);
         await using (components.ConfigureAwait(false))
         {
             var componentsBuilder = new ComponentBuilder();
@@ -86,7 +86,7 @@ public abstract class DialogSelectMenuElementBase<TData> : DialogElementBase<TDa
             components.StartTimeout();
 
             var (component, _) = await components.Task
-                                                              .ConfigureAwait(false);
+                                                 .ConfigureAwait(false);
 
             var selectedValue = component.Data.Values.FirstOrDefault();
 

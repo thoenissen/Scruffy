@@ -4,12 +4,14 @@ using System.Threading;
 using Discord;
 using Discord.WebSocket;
 
+using Scruffy.Services.Core.Localization;
+
 namespace Scruffy.Services.Discord
 {
     /// <summary>
     /// User interaction service
     /// </summary>
-    public sealed class InteractionService : IDisposable
+    public sealed class InteractionService : LocatedServiceBase, IDisposable
     {
         #region Fields
 
@@ -81,7 +83,9 @@ namespace Scruffy.Services.Discord
         /// Constructor
         /// </summary>
         /// <param name="client">Discord client</param>
-        public InteractionService(DiscordSocketClient client)
+        /// <param name="localizationService">Localization service</param>
+        public InteractionService(DiscordSocketClient client, LocalizationService localizationService)
+            : base(localizationService)
         {
             _tokenSource = new CancellationTokenSource();
 
@@ -179,11 +183,12 @@ namespace Scruffy.Services.Discord
         /// <summary>
         /// Creating of a container to manage temporary components
         /// </summary>
+        /// <param name="checkFunction">Check function</param>
         /// <typeparam name="TIdentification">Type of the identification</typeparam>
         /// <returns>Container object</returns>
-        public TemporaryComponentsContainer<TIdentification> CreateTemporaryComponentContainer<TIdentification>()
+        public TemporaryComponentsContainer<TIdentification> CreateTemporaryComponentContainer<TIdentification>(Func<SocketMessageComponent, bool> checkFunction)
         {
-            return new TemporaryComponentsContainer<TIdentification>(this);
+            return new TemporaryComponentsContainer<TIdentification>(this, checkFunction);
         }
 
         #endregion // Public methods

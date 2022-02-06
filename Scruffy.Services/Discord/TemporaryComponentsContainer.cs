@@ -11,15 +11,6 @@ namespace Scruffy.Services.Discord;
 /// </summary>
 public abstract class TemporaryComponentsContainer : IAsyncDisposable
 {
-    #region Fields
-
-    /// <summary>
-    /// Interaction service
-    /// </summary>
-    private readonly InteractionService _interactionService;
-
-    #endregion // Fields
-
     #region Constructor
 
     /// <summary>
@@ -28,11 +19,20 @@ public abstract class TemporaryComponentsContainer : IAsyncDisposable
     /// <param name="interactionService">Interaction service</param>
     internal TemporaryComponentsContainer(InteractionService interactionService)
     {
-        _interactionService = interactionService;
-        _interactionService.AddComponentsContainer(this);
+        InteractionService = interactionService;
+        InteractionService.AddComponentsContainer(this);
     }
 
     #endregion // Constructor
+
+    #region Properties
+
+    /// <summary>
+    /// Interaction service
+    /// </summary>
+    protected InteractionService InteractionService { get; }
+
+    #endregion // Properties
 
     #region Internal methods
 
@@ -56,7 +56,7 @@ public abstract class TemporaryComponentsContainer : IAsyncDisposable
 
         Dispose();
 
-        _interactionService.RemoveComponentsContainer(this);
+        InteractionService.RemoveComponentsContainer(this);
 
         return ValueTask.CompletedTask;
     }
@@ -76,6 +76,11 @@ public abstract class TemporaryComponentsContainer : IAsyncDisposable
 public class TemporaryComponentsContainer<TIdentification> : TemporaryComponentsContainer
 {
     #region Fields
+
+    /// <summary>
+    /// Check function
+    /// </summary>
+    private readonly Func<SocketMessageComponent, bool> _checkFunction;
 
     /// <summary>
     /// Cancellation token source
@@ -100,9 +105,11 @@ public class TemporaryComponentsContainer<TIdentification> : TemporaryComponents
     /// Constructor
     /// </summary>
     /// <param name="interactionService">Interaction service</param>
-    public TemporaryComponentsContainer(InteractionService interactionService)
+    /// <param name="checkFunction">Check interaction</param>
+    public TemporaryComponentsContainer(InteractionService interactionService, Func<SocketMessageComponent, bool> checkFunction)
         : base(interactionService)
     {
+        _checkFunction = checkFunction;
         _cancellationTokenSource = new CancellationTokenSource();
         _taskSource = new TaskCompletionSource<(SocketMessageComponent, TIdentification)>();
         _components = new Dictionary<string, TIdentification>();
@@ -156,7 +163,14 @@ public class TemporaryComponentsContainer<TIdentification> : TemporaryComponents
     {
         if (_components.TryGetValue(component.Data.CustomId, out var identification))
         {
-            _taskSource.TrySetResult((component, identification));
+            if (_checkFunction(component))
+            {
+                _taskSource.TrySetResult((component, identification));
+            }
+            else
+            {
+                component.RespondAsync(InteractionService.LocalizationGroup.GetText("DialogNotAssigned", "You can only interact with dialogs that are assigned to you."), ephemeral: true);
+            }
         }
     }
 

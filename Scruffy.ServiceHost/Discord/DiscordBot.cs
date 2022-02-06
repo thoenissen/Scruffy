@@ -107,7 +107,7 @@ public sealed class DiscordBot : IAsyncDisposable
         GlobalServiceProvider.Current.AddSingleton(_administrationPermissionsValidationService);
         GlobalServiceProvider.Current.AddSingleton(_blockedChannelService);
         GlobalServiceProvider.Current.AddSingleton(new DiscordStatusService(_discordClient));
-        GlobalServiceProvider.Current.AddSingleton(new InteractionService(_discordClient));
+        GlobalServiceProvider.Current.AddSingleton(new InteractionService(_discordClient, localizationService));
         GlobalServiceProvider.Current.AddSingleton(_commands);
 
         await _commands.AddModulesAsync(Assembly.Load("Scruffy.Commands"), GlobalServiceProvider.Current.GetServiceProvider())

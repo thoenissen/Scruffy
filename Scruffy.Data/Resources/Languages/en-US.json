@@ -117,6 +117,9 @@
     "ServerConfigurationCommandModule": {
       "UsingNewPrefix": "I will use the following prefix: {0}"
     },
+    "InteractionService": {
+      "DialogNotAssigned": "You can only interact with dialogs that are assigned to you."
+    },
     "RaidCommandModule": {
       "NoActiveAppointment": "Currently there is no active appointment.",
       "TemplateChanged": "The template has been changed.",

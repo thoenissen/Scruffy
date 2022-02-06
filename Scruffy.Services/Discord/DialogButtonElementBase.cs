@@ -49,7 +49,7 @@ public abstract class DialogButtonElementBase<TData> : DialogElementBase<TData>
     /// <returns>Result</returns>
     public override async Task<TData> Run()
     {
-        var components = CommandContext.Interaction.CreateTemporaryComponentContainer<int>();
+        var components = CommandContext.Interaction.CreateTemporaryComponentContainer<int>(obj => obj.User.Id == CommandContext.User.Id);
         await using (components.ConfigureAwait(false))
         {
             var componentsBuilder = new ComponentBuilder();
