@@ -152,7 +152,7 @@ public class RaidOverviewService : LocatedServiceBase
                 await using (chartStream.ConfigureAwait(false))
                 {
                     await commandContext.Channel
-                                        .SendFileAsync(new FileAttachment(chartStream, "chart.pnw"), embed: embedBuilder.Build())
+                                        .SendFileAsync(new FileAttachment(chartStream, "chart.png"), embed: embedBuilder.Build())
                                         .ConfigureAwait(false);
                 }
             }
