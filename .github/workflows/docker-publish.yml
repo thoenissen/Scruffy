@@ -3,8 +3,6 @@ name: Publish to docker hub
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
 jobs:
   build:
