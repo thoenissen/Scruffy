@@ -166,7 +166,7 @@ namespace Scruffy.Services.Discord
                 _waitForReaction.Add(waitEntry);
             }
 
-            Task.Delay(15_000, waitEntry.CancellationToken)
+            Task.Delay(60_000, waitEntry.CancellationToken)
                 .ContinueWith(t =>
                               {
                                   waitEntry.SetTimeOut();
