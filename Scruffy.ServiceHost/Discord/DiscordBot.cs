@@ -78,7 +78,8 @@ public sealed class DiscordBot : IAsyncDisposable
         var config = new DiscordSocketConfig
                      {
                          LogLevel = LogSeverity.Info,
-                         MessageCacheSize = 100
+                         MessageCacheSize = 100,
+                         GatewayIntents = GatewayIntents.All
                      };
 
         _discordClient = new DiscordSocketClient(config);

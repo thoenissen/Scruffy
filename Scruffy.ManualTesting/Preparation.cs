@@ -3,6 +3,9 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 
+using Discord;
+using Discord.WebSocket;
+
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
 
@@ -13,7 +16,10 @@ namespace Scruffy.ManualTesting;
 /// </summary>
 internal static class Preparation
 {
-    private static DiscordClient _discordClient;
+    /// <summary>
+    /// Discord client
+    /// </summary>
+    private static DiscordSocketClient _discordClient;
 
     /// <summary>
     /// Setting up environment variables
@@ -57,20 +63,21 @@ internal static class Preparation
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     internal static async Task SetUpDiscordClient()
     {
-        var config = new DiscordConfiguration
+        var config = new DiscordSocketConfig
                      {
-                         Token = Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_TOKEN"),
-                         TokenType = TokenType.Bot,
-                         AutoReconnect = true,
-                         Intents = DiscordIntents.All,
-                         LogTimestampFormat = "yyyy-MM-dd HH:mm:ss",
-                         ReconnectIndefinitely = true // TODO Connection handling
+                         LogLevel = LogSeverity.Info,
+                         MessageCacheSize = 100,
+                         GatewayIntents = GatewayIntents.All
                      };
 
-        _discordClient = new DiscordClient(config);
+        _discordClient = new DiscordSocketClient(config);
 
         GlobalServiceProvider.Current.AddSingleton(_discordClient);
 
-        await _discordClient.ConnectAsync().ConfigureAwait(false);
+        await _discordClient.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_TOKEN"))
+                            .ConfigureAwait(false);
+
+        await _discordClient.StartAsync()
+                            .ConfigureAwait(false);
     }
 }

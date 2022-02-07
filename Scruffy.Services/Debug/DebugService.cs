@@ -119,7 +119,7 @@ public class DebugService
             {
                 embedBuilder.AddField($"#{fieldCounter}", stringBuilder.ToString());
 
-                if (fieldCounter == 6)
+                if (fieldCounter == 5)
                 {
                     fieldCounter = 1;
 
