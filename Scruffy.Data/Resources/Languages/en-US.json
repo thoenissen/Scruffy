@@ -65,7 +65,8 @@
       "PleaseTryAgain": "Your input was invalid. Please try again."
     },
     "AccountApiKeyDialogElement": {
-      "Message": "Please enter the api key which should be used. An API-Key can be created on the official GW2 Website: https://account.arena.net/applications"
+      "ChooseTitle": "Account Setup",
+      "ChooseDescription": "Please enter the api key which should be used. An API-Key can be created on the official [Gw2 Website](https://account.arena.net/applications.)."
     },
     "AccountDpsReportUserTokenDialogElement": {
       "Message": "Please enter the dps.report user token which should be used."
