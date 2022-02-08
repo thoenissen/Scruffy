@@ -27,7 +27,7 @@ public class AccountApiKeyDialogElement : DialogMessageElementBase<string>
     /// Return the message of element
     /// </summary>
     /// <returns>Message</returns>
-    public override string GetMessage() => LocalizationGroup.GetText("Message", "Please enter the api key which should be used.");
+    public override string GetMessage() => LocalizationGroup.GetText("Message", "Please enter the api key which should be used. An API-Key can be created on the official GW2 Website: https://account.arena.net/applications.");
 
     #endregion // DialogMessageElementBase<string>
 }

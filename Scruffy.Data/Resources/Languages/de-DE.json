@@ -66,7 +66,7 @@
       "PleaseTryAgain": "Deine Eingabe war ungültig. Versuche es noch einmal."
     },
     "AccountApiKeyDialogElement": {
-      "Message": "Gib bitte den zu verwendenen Api Key ein."
+      "Message": "Gib bitte den zu verwendenen Api Key ein. Ein API-Key kann auf der offiziellen GW2 Website erstellt werden: https://account.arena.net/applications"
     },
     "AccountDpsReportUserTokenDialogElement": {
       "Message": "Gib bitte den zu verwendenen dps.report-Benutzertoken ein."
