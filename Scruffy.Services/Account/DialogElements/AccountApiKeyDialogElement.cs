@@ -32,7 +32,7 @@ public class AccountApiKeyDialogElement : DialogEmbedMessageElementBase<string>
     {
         var builder = new EmbedBuilder();
         builder.WithTitle(LocalizationGroup.GetText("ChooseTitle", "Account Setup"));
-        builder.WithDescription(LocalizationGroup.GetText("ChooseDescription", "Please enter the api key which should be used. An API-Key can be created on the official [Guild Wars 2 Website](https://account.arena.net/applications.)."));
+        builder.WithDescription(LocalizationGroup.GetText("AddDescription", "Please enter the api key which should be used. An api key can be created on the official [Guild Wars 2 Website](https://account.arena.net/applications.)."));
 
         return builder;
     }
