@@ -67,7 +67,7 @@
     },
     "AccountApiKeyDialogElement": {
       "ChooseTitle": "Account Setup",
-      "ChooseDescription": "Gib bitte den zu verwendenen Api Key ein. Ein API-Key kann auf der offiziellen [Gw2 Website](https://account.arena.net/applications) erstellt werden."
+      "ChooseDescription": "Gib bitte den zu verwendenen Api Key ein. Ein API-Key kann auf der offiziellen [Guild Wars 2 Website](https://account.arena.net/applications) erstellt werden."
     },
     "AccountDpsReportUserTokenDialogElement": {
       "Message": "Gib bitte den zu verwendenen dps.report-Benutzertoken ein."
