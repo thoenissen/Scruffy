@@ -65,7 +65,7 @@
       "PleaseTryAgain": "Your input was invalid. Please try again."
     },
     "AccountApiKeyDialogElement": {
-      "ChooseTitle": "Account Setup",
+      "AddTitle": "Account Setup",
       "AddDescription": "Please enter the api key which should be used. An api key can be created on the official [Guild Wars 2 Website](https://account.arena.net/applications.)."
     },
     "AccountDpsReportUserTokenDialogElement": {
