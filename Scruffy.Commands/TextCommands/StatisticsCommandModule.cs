@@ -2,23 +2,26 @@
 
 using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Attributes;
+using Scruffy.Services.Statistics;
 
-namespace Scruffy.Commands;
+namespace Scruffy.Commands.TextCommands;
 
 /// <summary>
 /// Calendar commands
 /// </summary>
-[Group("help")]
-[Alias("h")]
+[Group("statistics")]
+[Alias("stats", "st")]
+[RequireDeveloperPermissions]
 [BlockedChannelCheck]
-public class HelpCommandModule : LocatedCommandModuleBase
+[HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
+public class StatisticsCommandModule : TextCommandModuleBase
 {
     #region Properties
 
     /// <summary>
     /// Visualizer
     /// </summary>
-    public CommandHelpService CommandHelpService { get; set; }
+    public StatisticsVisualizerService VisualizerService { get; set; }
 
     #endregion // Properties
 
@@ -27,15 +30,11 @@ public class HelpCommandModule : LocatedCommandModuleBase
     /// <summary>
     /// Adding a one time event
     /// </summary>
-    /// <param name="command">Command</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    [Command]
+    [Command("me")]
+    [RequireContext(ContextType.Guild)]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-    public async Task Info([Remainder]string command = null)
-    {
-        await CommandHelpService.ShowHelp(Context, command)
-                                .ConfigureAwait(false);
-    }
+    public Task Me() => VisualizerService.PostMeOverview(Context);
 
     #endregion // Methods
 }

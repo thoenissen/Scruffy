@@ -5,7 +5,7 @@ using Scruffy.Services.Administration;
 using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Attributes;
 
-namespace Scruffy.Commands;
+namespace Scruffy.Commands.TextCommands;
 
 /// <summary>
 /// Admin commands
@@ -15,7 +15,7 @@ namespace Scruffy.Commands;
 [RequireContext(ContextType.Guild)]
 [RequireAdministratorPermissions]
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-public class AdministrationCommandModule : LocatedCommandModuleBase
+public class AdministrationCommandModule : TextCommandModuleBase
 {
     #region Properties
 
@@ -88,7 +88,7 @@ public class AdministrationCommandModule : LocatedCommandModuleBase
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-    public class AdministrationChannelCommandModule : LocatedCommandModuleBase
+    public class AdministrationChannelCommandModule : TextCommandModuleBase
     {
         #region Properties
 

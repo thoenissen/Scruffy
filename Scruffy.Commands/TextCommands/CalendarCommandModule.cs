@@ -4,7 +4,7 @@ using Scruffy.Services.Calendar;
 using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Attributes;
 
-namespace Scruffy.Commands;
+namespace Scruffy.Commands.TextCommands;
 
 /// <summary>
 /// Calendar commands
@@ -15,7 +15,7 @@ namespace Scruffy.Commands;
 [RequireAdministratorPermissions]
 [BlockedChannelCheck]
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-public class CalendarCommandModule : LocatedCommandModuleBase
+public class CalendarCommandModule : TextCommandModuleBase
 {
     #region Properties
 
@@ -74,7 +74,7 @@ public class CalendarCommandModule : LocatedCommandModuleBase
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-    public class CalendarTemplateCommandModule : LocatedCommandModuleBase
+    public class CalendarTemplateCommandModule : TextCommandModuleBase
     {
         #region Properties
 
@@ -117,7 +117,7 @@ public class CalendarCommandModule : LocatedCommandModuleBase
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-    public class CalendarScheduleCommandModule : LocatedCommandModuleBase
+    public class CalendarScheduleCommandModule : TextCommandModuleBase
     {
         #region Properties
 

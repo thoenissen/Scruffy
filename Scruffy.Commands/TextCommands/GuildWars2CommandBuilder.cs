@@ -4,7 +4,7 @@ using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Attributes;
 using Scruffy.Services.GuildWars2;
 
-namespace Scruffy.Commands;
+namespace Scruffy.Commands.TextCommands;
 
 /// <summary>
 /// Calendar commands
@@ -12,7 +12,7 @@ namespace Scruffy.Commands;
 [Group("gw2")]
 [BlockedChannelCheck]
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-public class GuildWars2CommandBuilder : LocatedCommandModuleBase
+public class GuildWars2CommandBuilder : TextCommandModuleBase
 {
     #region Properties
 

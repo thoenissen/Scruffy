@@ -5,6 +5,7 @@ using System.Net;
 using Discord;
 using Discord.Commands;
 
+using Scruffy.Commands.MessageComponents;
 using Scruffy.Services.Calendar;
 using Scruffy.Services.Debug;
 using Scruffy.Services.Discord;
@@ -15,7 +16,7 @@ using Scruffy.Services.GuildWars2;
 using Scruffy.Services.GuildWars2.Jobs;
 using Scruffy.Services.Raid;
 
-namespace Scruffy.Commands;
+namespace Scruffy.Commands.TextCommands;
 
 /// <summary>
 /// Debug commands
@@ -24,7 +25,7 @@ namespace Scruffy.Commands;
 [Alias("d")]
 [RequireDeveloperPermissions]
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-public class DebugCommandModule : LocatedCommandModuleBase
+public class DebugCommandModule : TextCommandModuleBase
 {
     #region Methods
 
@@ -124,6 +125,33 @@ public class DebugCommandModule : LocatedCommandModuleBase
     }
 
     /// <summary>
+    /// Permanent command buttons
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [Command("pbuttons")]
+    public async Task PermanentButton()
+    {
+        var builder = new ComponentBuilder();
+
+        builder.WithButton("Ping 1",
+                           Context.Interaction
+                                  .GetPermanentCustomerId(DebugMessageComponentCommandModule.Group,
+                                                          DebugMessageComponentCommandModule.CommandPing),
+                           ButtonStyle.Primary,
+                           DiscordEmoteService.GetBulletEmote(Context.Client));
+        builder.WithButton("Ping 2",
+                           Context.Interaction
+                                  .GetPermanentCustomerId(DebugMessageComponentCommandModule.Group,
+                                                          DebugMessageComponentCommandModule.CommandPing),
+                           ButtonStyle.Secondary,
+                           DiscordEmoteService.GetBulletEmote(Context.Client));
+
+        await Context.Message
+                     .ReplyAsync("Permanent Buttons:", components: builder.Build())
+                     .ConfigureAwait(false);
+    }
+
+    /// <summary>
     /// Command select menu
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
@@ -176,7 +204,7 @@ public class DebugCommandModule : LocatedCommandModuleBase
     [Group("dump")]
     [Alias("d")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-    public class DebugDumpModule : LocatedCommandModuleBase
+    public class DebugDumpModule : TextCommandModuleBase
     {
         #region Properties
 
@@ -214,7 +242,7 @@ public class DebugCommandModule : LocatedCommandModuleBase
     [Group("raid")]
     [Alias("r")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-    public class DebugRaidModule : LocatedCommandModuleBase
+    public class DebugRaidModule : TextCommandModuleBase
     {
         #region Properties
 
@@ -256,7 +284,7 @@ public class DebugCommandModule : LocatedCommandModuleBase
     [Group("list")]
     [Alias("l")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-    public class DebugListModule : LocatedCommandModuleBase
+    public class DebugListModule : TextCommandModuleBase
     {
         #region Properties
 
@@ -330,7 +358,7 @@ public class DebugCommandModule : LocatedCommandModuleBase
     [Group("account")]
     [Alias("a")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-    public class DebugAccountModule : LocatedCommandModuleBase
+    public class DebugAccountModule : TextCommandModuleBase
     {
         #region Properties
 
@@ -363,7 +391,7 @@ public class DebugCommandModule : LocatedCommandModuleBase
     [Group("gw")]
     [Alias("g")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-    public class DebugGuildWarsModule : LocatedCommandModuleBase
+    public class DebugGuildWarsModule : TextCommandModuleBase
     {
         #region Properties
 
@@ -412,7 +440,7 @@ public class DebugCommandModule : LocatedCommandModuleBase
     [Group("calendar")]
     [Alias("c")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-    public class DebugCalendarModule : LocatedCommandModuleBase
+    public class DebugCalendarModule : TextCommandModuleBase
     {
         #region Properties
 
@@ -488,7 +516,7 @@ public class DebugCommandModule : LocatedCommandModuleBase
     [Group("user")]
     [Alias("u")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-    public class DebugUserModule : LocatedCommandModuleBase
+    public class DebugUserModule : TextCommandModuleBase
     {
         #region Methods
 
@@ -521,7 +549,7 @@ public class DebugCommandModule : LocatedCommandModuleBase
     [Group("guild")]
     [Alias("g")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-    public class DebugGuildModule : LocatedCommandModuleBase
+    public class DebugGuildModule : TextCommandModuleBase
     {
         #region Properties
 
@@ -607,7 +635,7 @@ public class DebugCommandModule : LocatedCommandModuleBase
     [Group("import")]
     [Alias("i")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-    public class DebugImportModule : LocatedCommandModuleBase
+    public class DebugImportModule : TextCommandModuleBase
     {
         #region Properties
 
@@ -682,7 +710,7 @@ public class DebugCommandModule : LocatedCommandModuleBase
     [Group("network")]
     [Alias("n")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-    public class DebugNetworkModule : LocatedCommandModuleBase
+    public class DebugNetworkModule : TextCommandModuleBase
     {
         #region Properties
 
@@ -739,7 +767,7 @@ public class DebugCommandModule : LocatedCommandModuleBase
     [Group("log")]
     [Alias("d")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-    public class DebugLogModule : LocatedCommandModuleBase
+    public class DebugLogModule : TextCommandModuleBase
     {
         #region Properties
 

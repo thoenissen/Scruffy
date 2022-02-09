@@ -17,7 +17,7 @@ using Scruffy.Services.Raid;
 using Scruffy.Services.Raid.DialogElements;
 using Scruffy.Services.Raid.DialogElements.Forms;
 
-namespace Scruffy.Commands;
+namespace Scruffy.Commands.TextCommands;
 
 /// <summary>
 /// Raid commands
@@ -25,7 +25,7 @@ namespace Scruffy.Commands;
 [Group("raid")]
 [Alias("ra")]
 [BlockedChannelCheck]
-public class RaidCommandModule : LocatedCommandModuleBase
+public class RaidCommandModule : TextCommandModuleBase
 {
     #region Properties
 
@@ -494,7 +494,7 @@ public class RaidCommandModule : LocatedCommandModuleBase
     /// </summary>
     [Group("roles")]
     [Alias("r")]
-    public class RaidRolesCommandModule : LocatedCommandModuleBase
+    public class RaidRolesCommandModule : TextCommandModuleBase
     {
         #region Properties
 
@@ -537,7 +537,7 @@ public class RaidCommandModule : LocatedCommandModuleBase
     /// </summary>
     [Group("templates")]
     [Alias("t")]
-    public class RaidTemplatesCommandModule : LocatedCommandModuleBase
+    public class RaidTemplatesCommandModule : TextCommandModuleBase
     {
         #region Methods
 
@@ -572,7 +572,7 @@ public class RaidCommandModule : LocatedCommandModuleBase
     /// </summary>
     [Group("levels")]
     [Alias("l", "level")]
-    public class RaidExperienceLevelsCommandModule : LocatedCommandModuleBase
+    public class RaidExperienceLevelsCommandModule : TextCommandModuleBase
     {
         #region Properties
 
@@ -754,7 +754,7 @@ public class RaidCommandModule : LocatedCommandModuleBase
     /// </summary>
     [Group("overview")]
     [Alias("o")]
-    public class RaidOverviewCommandModule : LocatedCommandModuleBase
+    public class RaidOverviewCommandModule : TextCommandModuleBase
     {
         #region Properties
 

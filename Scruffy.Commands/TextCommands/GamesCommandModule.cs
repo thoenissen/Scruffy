@@ -4,7 +4,7 @@ using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Attributes;
 using Scruffy.Services.Games;
 
-namespace Scruffy.Commands;
+namespace Scruffy.Commands.TextCommands;
 
 /// <summary>
 /// Games
@@ -13,7 +13,7 @@ namespace Scruffy.Commands;
 [RequireContext(ContextType.Guild)]
 [RequireAdministratorPermissions]
 [BlockedChannelCheck]
-public class GamesCommandModule : LocatedCommandModuleBase
+public class GamesCommandModule : TextCommandModuleBase
 {
     #region Counter
 
@@ -23,7 +23,7 @@ public class GamesCommandModule : LocatedCommandModuleBase
     [Group("counter")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    public class GamesCounterCommandModule : LocatedCommandModuleBase
+    public class GamesCounterCommandModule : TextCommandModuleBase
     {
         #region Properties
 
@@ -85,7 +85,7 @@ public class GamesCommandModule : LocatedCommandModuleBase
     [Group("wordchain")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    public class GamesWordChainCommandModule : LocatedCommandModuleBase
+    public class GamesWordChainCommandModule : TextCommandModuleBase
     {
         #region Properties
 

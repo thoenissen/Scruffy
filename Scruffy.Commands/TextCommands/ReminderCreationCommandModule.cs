@@ -11,7 +11,7 @@ using Scruffy.Services.Core.JobScheduler;
 using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Attributes;
 
-namespace Scruffy.Commands;
+namespace Scruffy.Commands.TextCommands;
 
 /// <summary>
 /// Reminder module
@@ -20,7 +20,7 @@ namespace Scruffy.Commands;
 [Group("reminder")]
 [Alias("re")]
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-public class ReminderCreationCommandModule : LocatedCommandModuleBase
+public class ReminderCreationCommandModule : TextCommandModuleBase
 {
     #region Properties
 

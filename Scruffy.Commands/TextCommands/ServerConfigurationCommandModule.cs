@@ -5,7 +5,7 @@ using Scruffy.Services.Core;
 using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Attributes;
 
-namespace Scruffy.Commands;
+namespace Scruffy.Commands.TextCommands;
 
 /// <summary>
 /// Configuration the server
@@ -13,7 +13,7 @@ namespace Scruffy.Commands;
 [Group("config")]
 [Alias("co")]
 [RequireAdministratorPermissions]
-public class ServerConfigurationCommandModule : LocatedCommandModuleBase
+public class ServerConfigurationCommandModule : TextCommandModuleBase
 {
     #region Properties
 

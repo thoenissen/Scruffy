@@ -1,10 +1,14 @@
 ﻿using System.Collections.Concurrent;
+using System.Reflection;
 using System.Threading;
 
 using Discord;
 using Discord.WebSocket;
 
+using Scruffy.Data.Enumerations.General;
+using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord.Attributes;
 
 namespace Scruffy.Services.Discord
 {
@@ -71,6 +75,11 @@ namespace Scruffy.Services.Discord
         private ConcurrentQueue<SocketMessageComponent> _components;
 
         /// <summary>
+        /// Message component commands
+        /// </summary>
+        private Dictionary<string, MessageComponentCommandContainer> _messageComponentCommands;
+
+        /// <summary>
         /// IDisposable
         /// </summary>
         private bool _disposed;
@@ -101,6 +110,8 @@ namespace Scruffy.Services.Discord
             _componentsEvent = new AutoResetEvent(false);
             _components = new ConcurrentQueue<SocketMessageComponent>();
 
+            _messageComponentCommands = new Dictionary<string, MessageComponentCommandContainer>();
+
             Task.Run(() => CheckMessages(_tokenSource.Token), _tokenSource.Token);
             Task.Run(() => CheckReactions(_tokenSource.Token), _tokenSource.Token);
             Task.Run(() => CheckComponents(_tokenSource.Token), _tokenSource.Token);
@@ -115,6 +126,35 @@ namespace Scruffy.Services.Discord
         #endregion // Constructor
 
         #region Public methods
+
+        /// <summary>
+        /// Message component module registration
+        /// </summary>
+        /// <param name="assembly">Assembly</param>
+        /// <param name="serviceProvider">Service provider</param>
+        public void AddMessageComponentModules(Assembly assembly, IServiceProvider serviceProvider)
+        {
+            foreach (var type in  assembly.GetTypes()
+                    .Where(obj => typeof(MessageComponentCommandModule).IsAssignableFrom(obj)))
+            {
+                var attribute = type.GetCustomAttribute<MessageComponentCommandGroupAttribute>();
+                if (string.IsNullOrEmpty(attribute?.Group) == false)
+                {
+                    _messageComponentCommands[attribute.Group] = new MessageComponentCommandContainer(serviceProvider, type, attribute.Group);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Create permanent custom id
+        /// </summary>
+        /// <param name="group">Command group</param>
+        /// <param name="command">Command</param>
+        /// <returns>Custom id</returns>
+        public string GetPermanentCustomerId(string group, string command)
+        {
+            return $"P_{group}_{command}_{Guid.NewGuid():N}";
+        }
 
         /// <summary>
         /// Wait for a specific message
@@ -337,27 +377,57 @@ namespace Scruffy.Services.Discord
             {
                 while (_components.TryDequeue(out var component))
                 {
-                    List<TemporaryComponentsContainer> currentContainers;
-
-                    lock (_components)
+                    if (component.Data?.CustomId?.Length > 0)
                     {
-                        currentContainers = _componentContainers.ToList();
-                    }
-
-                    foreach (var container in currentContainers)
-                    {
-                        switch (component.Type)
+                        var customerIdParts = component.Data.CustomId.Split('_');
+                        switch (component.Data.CustomId[0])
                         {
-                            case InteractionType.MessageComponent:
+                            case 'P':
                                 {
-                                    switch (component.Data.Type)
+                                    if (customerIdParts.Length == 4)
                                     {
-                                        case ComponentType.Button:
-                                        case ComponentType.SelectMenu:
-                                            {
-                                                container.CheckComponent(component);
-                                            }
-                                            break;
+                                        if (_messageComponentCommands.TryGetValue(customerIdParts[1], out var container))
+                                        {
+                                            container.ExecuteCommandAsync(customerIdParts[2], customerIdParts[3], component);
+                                        }
+                                        else
+                                        {
+                                            LoggingService.AddServiceLogEntry(LogEntryLevel.Warning, nameof(InteractionService), "Unknown permanent command group", component.Data.CustomId);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        LoggingService.AddServiceLogEntry(LogEntryLevel.Warning, nameof(InteractionService), "Invalid permanent custom id", component.Data.CustomId);
+                                    }
+                                }
+                                break;
+                            case 'T':
+                                {
+                                    List<TemporaryComponentsContainer> currentContainers;
+
+                                    lock (_components)
+                                    {
+                                        currentContainers = _componentContainers.ToList();
+                                    }
+
+                                    foreach (var container in currentContainers)
+                                    {
+                                        switch (component.Type)
+                                        {
+                                            case InteractionType.MessageComponent:
+                                                {
+                                                    switch (component.Data.Type)
+                                                    {
+                                                        case ComponentType.Button:
+                                                        case ComponentType.SelectMenu:
+                                                            {
+                                                                container.CheckComponent(component);
+                                                            }
+                                                            break;
+                                                    }
+                                                }
+                                                break;
+                                        }
                                     }
                                 }
                                 break;

@@ -32,4 +32,9 @@
     <ProjectReference Include="..\Scruffy.Services\Scruffy.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ContextCommands\" />
+    <Folder Include="SlashCommands\" />
+  </ItemGroup>
+
 </Project>

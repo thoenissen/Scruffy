@@ -13,7 +13,7 @@ using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Attributes;
 using Scruffy.Services.Discord.Extensions;
 
-namespace Scruffy.Commands;
+namespace Scruffy.Commands.TextCommands;
 
 /// <summary>
 /// GIF commands
@@ -21,7 +21,7 @@ namespace Scruffy.Commands;
 [Group("gif")]
 [Alias("gi")]
 [BlockedChannelCheck]
-public class GifCommandModule : LocatedCommandModuleBase
+public class GifCommandModule : TextCommandModuleBase
 {
     #region Methods
 
@@ -66,7 +66,7 @@ public class GifCommandModule : LocatedCommandModuleBase
                                  .SendMessageAsync(searchResult.Results[rnd.Next(searchResult.Results.Count - 1)].ItemUrl)
                                  .ConfigureAwait(false);
 
-                    LoggingService.AddCommandLogEntry(LogEntryLevel.Information, Context.Command.GetFullName(), searchTerm, Context.User.ToString());
+                    LoggingService.AddTextCommandLogEntry(LogEntryLevel.Information, Context.Command.GetFullName(), searchTerm, Context.User.ToString());
                 }
             }
         }

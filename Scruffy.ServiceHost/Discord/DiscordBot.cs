@@ -103,15 +103,21 @@ public sealed class DiscordBot : IAsyncDisposable
         _commands.CommandExecuted += OnCommandExecuted;
         _commands.Log += OnCommandServiceLog;
 
+        var interactionService = new InteractionService(_discordClient, localizationService);
+
         GlobalServiceProvider.Current.AddSingleton(_discordClient);
         GlobalServiceProvider.Current.AddSingleton(_prefixResolver);
         GlobalServiceProvider.Current.AddSingleton(_administrationPermissionsValidationService);
         GlobalServiceProvider.Current.AddSingleton(_blockedChannelService);
         GlobalServiceProvider.Current.AddSingleton(new DiscordStatusService(_discordClient));
-        GlobalServiceProvider.Current.AddSingleton(new InteractionService(_discordClient, localizationService));
+        GlobalServiceProvider.Current.AddSingleton(interactionService);
         GlobalServiceProvider.Current.AddSingleton(_commands);
 
-        await _commands.AddModulesAsync(Assembly.Load("Scruffy.Commands"), GlobalServiceProvider.Current.GetServiceProvider())
+        var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+
+        interactionService.AddMessageComponentModules(Assembly.Load("Scruffy.Commands"), serviceProvider);
+
+        await _commands.AddModulesAsync(Assembly.Load("Scruffy.Commands"), serviceProvider)
                        .ConfigureAwait(false);
 
         await _discordClient.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_TOKEN"))
@@ -248,7 +254,7 @@ public sealed class DiscordBot : IAsyncDisposable
         }
         else
         {
-            var logEntryId = LoggingService.AddCommandLogEntry(LogEntryLevel.CriticalError, context.Command?.GetFullName(), null, ex.Message, ex.ToString());
+            var logEntryId = LoggingService.AddTextCommandLogEntry(LogEntryLevel.CriticalError, context.Command?.GetFullName(), null, ex.Message, ex.ToString());
 
             var client = context.ServiceProvider.GetService<IHttpClientFactory>().CreateClient();
 

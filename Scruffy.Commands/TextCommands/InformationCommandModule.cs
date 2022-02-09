@@ -5,7 +5,7 @@ using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Attributes;
 using Scruffy.Services.Statistics;
 
-namespace Scruffy.Commands;
+namespace Scruffy.Commands.TextCommands;
 
 /// <summary>
 /// Calendar commands
@@ -13,7 +13,7 @@ namespace Scruffy.Commands;
 [Group("information")]
 [Alias("info", "i")]
 [BlockedChannelCheck]
-public class InformationCommandModule : LocatedCommandModuleBase
+public class InformationCommandModule : TextCommandModuleBase
 {
     #region Properties
 

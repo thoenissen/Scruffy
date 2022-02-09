@@ -116,9 +116,24 @@ public class LoggingService
     /// <param name="additionalInformation">Additional information</param>
     /// <param name="ex">Exception</param>
     /// <returns>Log entry id</returns>
-    public static long? AddCommandLogEntry(LogEntryLevel level, string qualifiedCommandName, string lastUserCommand, string message, string additionalInformation = null, Exception ex = null)
+    public static long? AddTextCommandLogEntry(LogEntryLevel level, string qualifiedCommandName, string lastUserCommand, string message, string additionalInformation = null, Exception ex = null)
     {
         return _logger.WriteLine(LogEntryType.Command, level, qualifiedCommandName, lastUserCommand, message, additionalInformation, ex);
+    }
+
+    /// <summary>
+    /// Adding a log entry
+    /// </summary>
+    /// <param name="level">Level</param>
+    /// <param name="group">Command group</param>
+    /// <param name="command">Command name</param>
+    /// <param name="message">Message</param>
+    /// <param name="additionalInformation">Additional information</param>
+    /// <param name="ex">Exception</param>
+    /// <returns>Log entry id</returns>
+    public static long? AddMessageComponentCommandLogEntry(LogEntryLevel level, string group, string command, string message, string additionalInformation = null, Exception ex = null)
+    {
+        return _logger.WriteLine(LogEntryType.Command, level, group, command, message, additionalInformation, ex);
     }
 
     /// <summary>

@@ -4,7 +4,7 @@ using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Attributes;
 using Scruffy.Services.Fractals;
 
-namespace Scruffy.Commands;
+namespace Scruffy.Commands.TextCommands;
 
 /// <summary>
 /// Fractal lfg setup commands
@@ -13,7 +13,7 @@ namespace Scruffy.Commands;
 [Alias("f")]
 [BlockedChannelCheck]
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-public class FractalCommandModule : LocatedCommandModuleBase
+public class FractalCommandModule : TextCommandModuleBase
 {
     #region Properties
 

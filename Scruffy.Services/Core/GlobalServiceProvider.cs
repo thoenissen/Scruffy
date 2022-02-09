@@ -48,6 +48,14 @@ public class GlobalServiceProvider
             _serviceCollection.AddTransient(type);
         }
 
+        foreach (var type in Assembly.Load("Scruffy.Commands")
+                                     .GetTypes()
+                                     .Where(obj => typeof(MessageComponentCommandModule).IsAssignableFrom(obj)
+                                                && obj.IsAbstract == false))
+        {
+            _serviceCollection.AddTransient(type);
+        }
+
         _serviceCollection.AddHttpClient();
     }
 

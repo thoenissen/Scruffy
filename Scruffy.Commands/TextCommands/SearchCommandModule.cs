@@ -14,7 +14,7 @@ using Scruffy.Data.Json.MediaWiki;
 using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Attributes;
 
-namespace Scruffy.Commands;
+namespace Scruffy.Commands.TextCommands;
 
 /// <summary>
 /// Searching the web
@@ -23,7 +23,7 @@ namespace Scruffy.Commands;
 [Group("search")]
 [Alias("se")]
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-public class SearchCommandModule : LocatedCommandModuleBase
+public class SearchCommandModule : TextCommandModuleBase
 {
     #region Command methods
 
