@@ -11,6 +11,11 @@ public enum LogEntryType
     Command = 1000,
 
     /// <summary>
+    /// Component interaction error
+    /// </summary>
+    ComponentInteraction = 1100,
+
+    /// <summary>
     /// Returning job
     /// </summary>
     Job = 2000,
@@ -29,4 +34,9 @@ public enum LogEntryType
     /// Commands service
     /// </summary>
     CommandsService = 5000,
+
+    /// <summary>
+    /// Interaction service
+    /// </summary>
+    InteractionService = 6000,
 }

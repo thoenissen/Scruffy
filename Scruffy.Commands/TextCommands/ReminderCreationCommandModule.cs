@@ -20,7 +20,7 @@ namespace Scruffy.Commands.TextCommands;
 [Group("reminder")]
 [Alias("re")]
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-public class ReminderCreationCommandModule : TextCommandModuleBase
+public class ReminderCreationCommandModule : LocatedTextCommandModuleBase
 {
     #region Properties
 
@@ -264,7 +264,7 @@ public class ReminderCreationCommandModule : TextCommandModuleBase
 
         messagesToBeDeleted.Add(currentBotMessage);
 
-        var userResponse = await Context.Interaction
+        var userResponse = await Context.Interactivity
                                         .WaitForMessageAsync(obj => obj.Author.Id == Context.Message.Author.Id)
                                         .ConfigureAwait(false);
 
@@ -321,7 +321,7 @@ public class ReminderCreationCommandModule : TextCommandModuleBase
 
             messagesToBeDeleted.Add(currentBotMessage);
 
-            var dayOfWeekReactionTask = Context.Interaction
+            var dayOfWeekReactionTask = Context.Interactivity
                                                .WaitForReactionAsync(currentBotMessage, Context.User);
 
             foreach (var (emoji, _) in reactions)
@@ -346,7 +346,7 @@ public class ReminderCreationCommandModule : TextCommandModuleBase
 
             messagesToBeDeleted.Add(currentBotMessage);
 
-            userResponse = await Context.Interaction
+            userResponse = await Context.Interactivity
                                         .WaitForMessageAsync(obj => obj.Author.Id == Context.Message.Author.Id)
                                         .ConfigureAwait(false);
 
@@ -373,7 +373,7 @@ public class ReminderCreationCommandModule : TextCommandModuleBase
 
             messagesToBeDeleted.Add(currentBotMessage);
 
-            userResponse = await Context.Interaction
+            userResponse = await Context.Interactivity
                                         .WaitForMessageAsync(obj => obj.Author.Id == Context.Message.Author.Id)
                                         .ConfigureAwait(false);
 
@@ -398,7 +398,7 @@ public class ReminderCreationCommandModule : TextCommandModuleBase
 
             messagesToBeDeleted.Add(currentBotMessage);
 
-            userResponse = await Context.Interaction
+            userResponse = await Context.Interactivity
                                         .WaitForMessageAsync(obj => obj.Author.Id == Context.Message.Author.Id)
                                         .ConfigureAwait(false);
 

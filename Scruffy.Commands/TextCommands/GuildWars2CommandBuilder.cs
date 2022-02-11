@@ -12,7 +12,7 @@ namespace Scruffy.Commands.TextCommands;
 [Group("gw2")]
 [BlockedChannelCheck]
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-public class GuildWars2CommandBuilder : TextCommandModuleBase
+public class GuildWars2CommandBuilder : LocatedTextCommandModuleBase
 {
     #region Properties
 

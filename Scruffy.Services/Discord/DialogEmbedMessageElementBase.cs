@@ -65,7 +65,7 @@ public abstract class DialogEmbedMessageElementBase<TData> : DialogElementBase<T
 
             DialogContext.Messages.Add(currentBotMessage);
 
-            var currentUserResponse = await CommandContext.Interaction
+            var currentUserResponse = await CommandContext.Interactivity
                                                           .WaitForMessageAsync(obj => obj.Author.Id == CommandContext.User.Id
                                                                               && obj.Channel.Id == CommandContext.Channel.Id)
                                                           .ConfigureAwait(false);

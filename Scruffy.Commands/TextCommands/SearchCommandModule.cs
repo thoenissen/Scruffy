@@ -23,7 +23,7 @@ namespace Scruffy.Commands.TextCommands;
 [Group("search")]
 [Alias("se")]
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-public class SearchCommandModule : TextCommandModuleBase
+public class SearchCommandModule : LocatedTextCommandModuleBase
 {
     #region Command methods
 

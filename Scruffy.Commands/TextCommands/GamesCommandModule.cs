@@ -13,7 +13,7 @@ namespace Scruffy.Commands.TextCommands;
 [RequireContext(ContextType.Guild)]
 [RequireAdministratorPermissions]
 [BlockedChannelCheck]
-public class GamesCommandModule : TextCommandModuleBase
+public class GamesCommandModule : LocatedTextCommandModuleBase
 {
     #region Counter
 
@@ -23,7 +23,7 @@ public class GamesCommandModule : TextCommandModuleBase
     [Group("counter")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    public class GamesCounterCommandModule : TextCommandModuleBase
+    public class GamesCounterCommandModule : LocatedTextCommandModuleBase
     {
         #region Properties
 
@@ -85,7 +85,7 @@ public class GamesCommandModule : TextCommandModuleBase
     [Group("wordchain")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    public class GamesWordChainCommandModule : TextCommandModuleBase
+    public class GamesWordChainCommandModule : LocatedTextCommandModuleBase
     {
         #region Properties
 

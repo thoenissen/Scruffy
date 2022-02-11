@@ -10,7 +10,7 @@ namespace Scruffy.Services.Discord;
 /// <summary>
 /// Command module base class with localization services
 /// </summary>
-public class TextCommandModuleBase : ModuleBase<CommandContextContainer>
+public class LocatedTextCommandModuleBase : ModuleBase<CommandContextContainer>
 {
     #region Fields
 

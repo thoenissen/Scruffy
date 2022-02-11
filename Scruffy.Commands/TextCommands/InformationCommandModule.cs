@@ -13,7 +13,7 @@ namespace Scruffy.Commands.TextCommands;
 [Group("information")]
 [Alias("info", "i")]
 [BlockedChannelCheck]
-public class InformationCommandModule : TextCommandModuleBase
+public class InformationCommandModule : LocatedTextCommandModuleBase
 {
     #region Properties
 

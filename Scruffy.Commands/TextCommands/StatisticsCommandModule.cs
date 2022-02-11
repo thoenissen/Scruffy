@@ -14,7 +14,7 @@ namespace Scruffy.Commands.TextCommands;
 [RequireDeveloperPermissions]
 [BlockedChannelCheck]
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-public class StatisticsCommandModule : TextCommandModuleBase
+public class StatisticsCommandModule : LocatedTextCommandModuleBase
 {
     #region Properties
 

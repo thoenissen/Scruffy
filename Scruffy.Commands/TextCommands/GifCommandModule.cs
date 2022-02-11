@@ -21,7 +21,7 @@ namespace Scruffy.Commands.TextCommands;
 [Group("gif")]
 [Alias("gi")]
 [BlockedChannelCheck]
-public class GifCommandModule : TextCommandModuleBase
+public class GifCommandModule : LocatedTextCommandModuleBase
 {
     #region Methods
 

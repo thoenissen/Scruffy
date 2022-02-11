@@ -34,7 +34,6 @@
 
   <ItemGroup>
     <Folder Include="ContextCommands\" />
-    <Folder Include="SlashCommands\" />
   </ItemGroup>
 
 </Project>

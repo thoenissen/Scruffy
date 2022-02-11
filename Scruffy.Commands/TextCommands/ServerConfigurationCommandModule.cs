@@ -13,7 +13,7 @@ namespace Scruffy.Commands.TextCommands;
 [Group("config")]
 [Alias("co")]
 [RequireAdministratorPermissions]
-public class ServerConfigurationCommandModule : TextCommandModuleBase
+public class ServerConfigurationCommandModule : LocatedTextCommandModuleBase
 {
     #region Properties
 

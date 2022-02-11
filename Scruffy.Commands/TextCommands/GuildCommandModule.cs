@@ -18,7 +18,7 @@ namespace Scruffy.Commands.TextCommands;
 [Alias("g")]
 [BlockedChannelCheck]
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-public class GuildCommandModule : TextCommandModuleBase
+public class GuildCommandModule : LocatedTextCommandModuleBase
 {
     #region Properties
 
@@ -123,7 +123,7 @@ public class GuildCommandModule : TextCommandModuleBase
     /// </summary>
     [Group("emblem")]
     [Alias("e")]
-    public class GuildEmblemCommandModule : TextCommandModuleBase
+    public class GuildEmblemCommandModule : LocatedTextCommandModuleBase
     {
         #region Properties
 
@@ -163,7 +163,7 @@ public class GuildCommandModule : TextCommandModuleBase
     [Alias("b")]
     [RequireContext(ContextType.Guild)]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-    public class GuildBankCommandModule : TextCommandModuleBase
+    public class GuildBankCommandModule : LocatedTextCommandModuleBase
     {
         #region Properties
 
@@ -200,7 +200,7 @@ public class GuildCommandModule : TextCommandModuleBase
         [Alias("u")]
         [RequireContext(ContextType.Guild)]
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-        public class GuildBankUnlocksCommandModule : TextCommandModuleBase
+        public class GuildBankUnlocksCommandModule : LocatedTextCommandModuleBase
         {
             #region Constructor
 
@@ -248,7 +248,7 @@ public class GuildCommandModule : TextCommandModuleBase
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-    public class GuildRankCommandModule : TextCommandModuleBase
+    public class GuildRankCommandModule : LocatedTextCommandModuleBase
     {
         #region Methods
 
@@ -286,7 +286,7 @@ public class GuildCommandModule : TextCommandModuleBase
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-    public class GuildSpecialRankCommandModule : TextCommandModuleBase
+    public class GuildSpecialRankCommandModule : LocatedTextCommandModuleBase
     {
         #region Properties
 
@@ -347,7 +347,7 @@ public class GuildCommandModule : TextCommandModuleBase
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-    public class GuildChartCommandModule : TextCommandModuleBase
+    public class GuildChartCommandModule : LocatedTextCommandModuleBase
     {
         #region Properties
 
@@ -389,7 +389,7 @@ public class GuildCommandModule : TextCommandModuleBase
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-    public class GuildExportCommandModule : TextCommandModuleBase
+    public class GuildExportCommandModule : LocatedTextCommandModuleBase
     {
         #region Properties
 

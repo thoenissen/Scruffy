@@ -15,7 +15,7 @@ namespace Scruffy.Commands.TextCommands;
 [RequireAdministratorPermissions]
 [BlockedChannelCheck]
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-public class CalendarCommandModule : TextCommandModuleBase
+public class CalendarCommandModule : LocatedTextCommandModuleBase
 {
     #region Properties
 
@@ -74,7 +74,7 @@ public class CalendarCommandModule : TextCommandModuleBase
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-    public class CalendarTemplateCommandModule : TextCommandModuleBase
+    public class CalendarTemplateCommandModule : LocatedTextCommandModuleBase
     {
         #region Properties
 
@@ -117,7 +117,7 @@ public class CalendarCommandModule : TextCommandModuleBase
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-    public class CalendarScheduleCommandModule : TextCommandModuleBase
+    public class CalendarScheduleCommandModule : LocatedTextCommandModuleBase
     {
         #region Properties
 

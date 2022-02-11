@@ -108,7 +108,7 @@ public class RaidRolesService : LocatedServiceBase
                                                    .SendMessageAsync(embed: builder.Build())
                                                    .ConfigureAwait(false);
 
-        var userReactionTask = commandContextContainer.Interaction
+        var userReactionTask = commandContextContainer.Interactivity
                                                       .WaitForReactionAsync(message, commandContextContainer.User);
 
         await message.AddReactionAsync(addEmote).ConfigureAwait(false);
@@ -150,7 +150,7 @@ public class RaidRolesService : LocatedServiceBase
                                                              .SendMessageAsync(LocalizationGroup.GetText("ReactWithEmojiPrompt", "Please react with emoji which should be assigned to the role."))
                                                              .ConfigureAwait(false);
 
-        var reaction = await commandContextContainer.Interaction
+        var reaction = await commandContextContainer.Interactivity
                                                     .WaitForReactionAsync(currentBotMessage, commandContextContainer.User)
                                                     .ConfigureAwait(false);
 
@@ -165,7 +165,7 @@ public class RaidRolesService : LocatedServiceBase
                                                              .SendMessageAsync(LocalizationGroup.GetText("DescriptionPrompt", "Please enter the description of the role."))
                                                              .ConfigureAwait(false);
 
-            var currentUserResponse = await commandContextContainer.Interaction
+            var currentUserResponse = await commandContextContainer.Interactivity
                                                                    .WaitForMessageAsync(obj => obj.Author.Id == commandContextContainer.User.Id
                                                                                        && obj.Channel.Id == commandContextContainer.Channel.Id)
                                                                    .ConfigureAwait(false);
@@ -190,7 +190,7 @@ public class RaidRolesService : LocatedServiceBase
                                                                      .SendMessageAsync(promptText)
                                                                      .ConfigureAwait(false);
 
-                    var userReactionTask = commandContextContainer.Interaction
+                    var userReactionTask = commandContextContainer.Interactivity
                                                                   .WaitForReactionAsync(currentBotMessage, commandContextContainer.User);
 
                     await currentBotMessage.AddReactionAsync(checkEmote).ConfigureAwait(false);
@@ -205,7 +205,7 @@ public class RaidRolesService : LocatedServiceBase
                                                                              .SendMessageAsync(LocalizationGroup.GetText("ReactWithEmojiPrompt", "Please react with emoji which should be assigned to the role."))
                                                                              .ConfigureAwait(false);
 
-                            reaction = await commandContextContainer.Interaction
+                            reaction = await commandContextContainer.Interactivity
                                                                     .WaitForReactionAsync(currentBotMessage, commandContextContainer.User)
                                                                     .ConfigureAwait(false);
 
@@ -220,7 +220,7 @@ public class RaidRolesService : LocatedServiceBase
                                                                                  .SendMessageAsync(LocalizationGroup.GetText("DescriptionPrompt", "Please enter the description of the role."))
                                                                                  .ConfigureAwait(false);
 
-                                currentUserResponse = await commandContextContainer.Interaction
+                                currentUserResponse = await commandContextContainer.Interactivity
                                                                                    .WaitForMessageAsync(obj => obj.Author.Id == commandContextContainer.User.Id
                                                                                                        && obj.Channel.Id == commandContextContainer.Channel.Id)
                                                                                    .ConfigureAwait(false);
@@ -358,7 +358,7 @@ public class RaidRolesService : LocatedServiceBase
                                                        .SendMessageAsync(embed: builder.Build())
                                                        .ConfigureAwait(false);
 
-            var userReactionTask = commandContextContainer.Interaction
+            var userReactionTask = commandContextContainer.Interactivity
                                                           .WaitForReactionAsync(message, commandContextContainer.User);
 
             await message.AddReactionAsync(descriptionEmote).ConfigureAwait(false);
@@ -412,7 +412,7 @@ public class RaidRolesService : LocatedServiceBase
                                      .SendMessageAsync(LocalizationGroup.GetText("DescriptionPrompt", "Please enter the description of the role."))
                                      .ConfigureAwait(false);
 
-        var response = await commandContextContainer.Interaction
+        var response = await commandContextContainer.Interactivity
                                                     .WaitForMessageAsync(obj => obj.Channel.Id == commandContextContainer.Channel.Id
                                                                         && obj.Author.Id == commandContextContainer.Member.Id)
                                                     .ConfigureAwait(false);
@@ -440,7 +440,7 @@ public class RaidRolesService : LocatedServiceBase
                                                    .SendMessageAsync(LocalizationGroup.GetText("ReactWithEmojiPrompt", "Please react with emoji which should be assigned to the role."))
                                                    .ConfigureAwait(false);
 
-        var response = await commandContextContainer.Interaction
+        var response = await commandContextContainer.Interactivity
                                                     .WaitForReactionAsync(message, commandContextContainer.Member)
                                                     .ConfigureAwait(false);
 
@@ -467,7 +467,7 @@ public class RaidRolesService : LocatedServiceBase
                                                              .SendMessageAsync(LocalizationGroup.GetText("ReactWithEmojiPrompt", "Please react with emoji which should be assigned to the role."))
                                                              .ConfigureAwait(false);
 
-        var reaction = await commandContextContainer.Interaction
+        var reaction = await commandContextContainer.Interactivity
                                                     .WaitForReactionAsync(currentBotMessage, commandContextContainer.User)
                                                     .ConfigureAwait(false);
 
@@ -483,7 +483,7 @@ public class RaidRolesService : LocatedServiceBase
                                                              .SendMessageAsync(LocalizationGroup.GetText("DescriptionPrompt", "Please enter the description of the role."))
                                                              .ConfigureAwait(false);
 
-            var currentUserResponse = await commandContextContainer.Interaction
+            var currentUserResponse = await commandContextContainer.Interactivity
                                                                    .WaitForMessageAsync(obj => obj.Author.Id == commandContextContainer.User.Id
                                                                                        && obj.Channel.Id == commandContextContainer.Channel.Id)
                                                          .ConfigureAwait(false);
@@ -530,7 +530,7 @@ public class RaidRolesService : LocatedServiceBase
                                                        .SendMessageAsync(embed: builder.Build())
                                                        .ConfigureAwait(false);
 
-            var userReactionTask = commandContextContainer.Interaction
+            var userReactionTask = commandContextContainer.Interactivity
                                                           .WaitForReactionAsync(message, commandContextContainer.User);
 
             await message.AddReactionAsync(descriptionEmote).ConfigureAwait(false);
@@ -570,7 +570,7 @@ public class RaidRolesService : LocatedServiceBase
                                                        .SendMessageAsync(LocalizationGroup.GetText("DeleteRolePrompt", "Are you sure you want to delete the role?"))
                                                        .ConfigureAwait(false);
 
-            var userReactionTask = commandContextContainer.Interaction
+            var userReactionTask = commandContextContainer.Interactivity
                                                           .WaitForReactionAsync(message, commandContextContainer.User);
 
             await message.AddReactionAsync(checkEmote).ConfigureAwait(false);
@@ -606,7 +606,7 @@ public class RaidRolesService : LocatedServiceBase
                                                        .SendMessageAsync(LocalizationGroup.GetText("DeleteRolePrompt", "Are you sure you want to delete the role?"))
                                                        .ConfigureAwait(false);
 
-            var userReactionTask = commandContextContainer.Interaction
+            var userReactionTask = commandContextContainer.Interactivity
                                                           .WaitForReactionAsync(message, commandContextContainer.User);
 
             await message.AddReactionAsync(checkEmote).ConfigureAwait(false);
@@ -680,7 +680,7 @@ public class RaidRolesService : LocatedServiceBase
                                      .SendMessageAsync(embed: builder.Build())
                                      .ConfigureAwait(false);
 
-        var currentUserResponse = await commandContextContainer.Interaction
+        var currentUserResponse = await commandContextContainer.Interactivity
                                                                .WaitForMessageAsync(obj => obj.Author.Id == commandContextContainer.User.Id
                                                                                    && obj.Channel.Id == commandContextContainer.Channel.Id)
                                                                .ConfigureAwait(false);

@@ -1,21 +1,20 @@
 ﻿using System.Collections.Concurrent;
-using System.Reflection;
 using System.Threading;
 
 using Discord;
+using Discord.Interactions;
 using Discord.WebSocket;
 
-using Scruffy.Data.Enumerations.General;
-using Scruffy.Services.Core;
+using Microsoft.Extensions.DependencyInjection;
+
 using Scruffy.Services.Core.Localization;
-using Scruffy.Services.Discord.Attributes;
 
 namespace Scruffy.Services.Discord
 {
     /// <summary>
     /// User interaction service
     /// </summary>
-    public sealed class InteractionService : LocatedServiceBase, IDisposable
+    public sealed class InteractivityService : LocatedServiceBase, IDisposable
     {
         #region Fields
 
@@ -65,21 +64,6 @@ namespace Scruffy.Services.Discord
         private List<TemporaryComponentsContainer> _componentContainers;
 
         /// <summary>
-        /// A new component execution was added
-        /// </summary>
-        private AutoResetEvent _componentsEvent;
-
-        /// <summary>
-        /// Created component events
-        /// </summary>
-        private ConcurrentQueue<SocketMessageComponent> _components;
-
-        /// <summary>
-        /// Message component commands
-        /// </summary>
-        private Dictionary<string, MessageComponentCommandContainer> _messageComponentCommands;
-
-        /// <summary>
         /// IDisposable
         /// </summary>
         private bool _disposed;
@@ -92,9 +76,10 @@ namespace Scruffy.Services.Discord
         /// Constructor
         /// </summary>
         /// <param name="client">Discord client</param>
-        /// <param name="localizationService">Localization service</param>
-        public InteractionService(DiscordSocketClient client, LocalizationService localizationService)
-            : base(localizationService)
+        /// <param name="interaction">Interaction service</param>
+        /// <param name="serviceProvider">Service provider</param>
+        public InteractivityService(DiscordSocketClient client, InteractionService interaction, IServiceProvider serviceProvider)
+            : base(serviceProvider.GetRequiredService<LocalizationService>())
         {
             _tokenSource = new CancellationTokenSource();
 
@@ -107,20 +92,15 @@ namespace Scruffy.Services.Discord
             _reactions = new ConcurrentQueue<IReaction>();
 
             _componentContainers = new List<TemporaryComponentsContainer>();
-            _componentsEvent = new AutoResetEvent(false);
-            _components = new ConcurrentQueue<SocketMessageComponent>();
-
-            _messageComponentCommands = new Dictionary<string, MessageComponentCommandContainer>();
 
             Task.Run(() => CheckMessages(_tokenSource.Token), _tokenSource.Token);
             Task.Run(() => CheckReactions(_tokenSource.Token), _tokenSource.Token);
-            Task.Run(() => CheckComponents(_tokenSource.Token), _tokenSource.Token);
+
+            interaction.AddModuleAsync(typeof(TemporaryMessageComponentCommandModule), serviceProvider);
 
             _client = client;
             _client.MessageReceived += OnMessageReceived;
             _client.ReactionAdded += OnReactionAdded;
-            _client.ButtonExecuted += OnComponentExecuted;
-            _client.SelectMenuExecuted += OnComponentExecuted;
         }
 
         #endregion // Constructor
@@ -128,32 +108,15 @@ namespace Scruffy.Services.Discord
         #region Public methods
 
         /// <summary>
-        /// Message component module registration
-        /// </summary>
-        /// <param name="assembly">Assembly</param>
-        /// <param name="serviceProvider">Service provider</param>
-        public void AddMessageComponentModules(Assembly assembly, IServiceProvider serviceProvider)
-        {
-            foreach (var type in  assembly.GetTypes()
-                    .Where(obj => typeof(MessageComponentCommandModule).IsAssignableFrom(obj)))
-            {
-                var attribute = type.GetCustomAttribute<MessageComponentCommandGroupAttribute>();
-                if (string.IsNullOrEmpty(attribute?.Group) == false)
-                {
-                    _messageComponentCommands[attribute.Group] = new MessageComponentCommandContainer(serviceProvider, type, attribute.Group);
-                }
-            }
-        }
-
-        /// <summary>
         /// Create permanent custom id
         /// </summary>
         /// <param name="group">Command group</param>
         /// <param name="command">Command</param>
+        /// <param name="additionalData">Additional data</param>
         /// <returns>Custom id</returns>
-        public string GetPermanentCustomerId(string group, string command)
+        public string GetPermanentCustomerId(string group, string command, params string[] additionalData)
         {
-            return $"P_{group}_{command}_{Guid.NewGuid():N}";
+            return $"{group};{command};{string.Join(';', additionalData)}";
         }
 
         /// <summary>
@@ -244,6 +207,44 @@ namespace Scruffy.Services.Discord
             lock (_componentContainers)
             {
                 _componentContainers.Add(container);
+            }
+        }
+
+        /// <summary>
+        /// Check created button interaction component
+        /// </summary>
+        /// <param name="identification">Identification</param>
+        /// <param name="component">Component</param>
+        internal void CheckButtonComponent(string identification, SocketMessageComponent component)
+        {
+            lock (_componentContainers)
+            {
+                foreach (var container in _componentContainers)
+                {
+                    if (container.CheckButtonComponent(identification, component))
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Check created select menu interaction component
+        /// </summary>
+        /// <param name="identification">Identification</param>
+        /// <param name="component">Component</param>
+        internal void CheckSelectMenuComponent(string identification, SocketMessageComponent component)
+        {
+            lock (_componentContainers)
+            {
+                foreach (var container in _componentContainers)
+                {
+                    if (container.CheckSelectMenuComponent(identification, component))
+                    {
+                        break;
+                    }
+                }
             }
         }
 
@@ -354,91 +355,6 @@ namespace Scruffy.Services.Discord
             }
         }
 
-        /// <summary>
-        /// A component is executed
-        /// </summary>
-        /// <param name="e">Argument</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        private Task OnComponentExecuted(SocketMessageComponent e)
-        {
-            _components.Enqueue(e);
-            _componentsEvent.Set();
-
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// Check incoming reactions
-        /// </summary>
-        /// <param name="tokenSourceToken">Token source</param>
-        private void CheckComponents(CancellationToken tokenSourceToken)
-        {
-            while (tokenSourceToken.IsCancellationRequested == false)
-            {
-                while (_components.TryDequeue(out var component))
-                {
-                    if (component.Data?.CustomId?.Length > 0)
-                    {
-                        var customerIdParts = component.Data.CustomId.Split('_');
-                        switch (component.Data.CustomId[0])
-                        {
-                            case 'P':
-                                {
-                                    if (customerIdParts.Length == 4)
-                                    {
-                                        if (_messageComponentCommands.TryGetValue(customerIdParts[1], out var container))
-                                        {
-                                            container.ExecuteCommandAsync(customerIdParts[2], customerIdParts[3], component);
-                                        }
-                                        else
-                                        {
-                                            LoggingService.AddServiceLogEntry(LogEntryLevel.Warning, nameof(InteractionService), "Unknown permanent command group", component.Data.CustomId);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        LoggingService.AddServiceLogEntry(LogEntryLevel.Warning, nameof(InteractionService), "Invalid permanent custom id", component.Data.CustomId);
-                                    }
-                                }
-                                break;
-                            case 'T':
-                                {
-                                    List<TemporaryComponentsContainer> currentContainers;
-
-                                    lock (_components)
-                                    {
-                                        currentContainers = _componentContainers.ToList();
-                                    }
-
-                                    foreach (var container in currentContainers)
-                                    {
-                                        switch (component.Type)
-                                        {
-                                            case InteractionType.MessageComponent:
-                                                {
-                                                    switch (component.Data.Type)
-                                                    {
-                                                        case ComponentType.Button:
-                                                        case ComponentType.SelectMenu:
-                                                            {
-                                                                container.CheckComponent(component);
-                                                            }
-                                                            break;
-                                                    }
-                                                }
-                                                break;
-                                        }
-                                    }
-                                }
-                                break;
-                        }
-                    }
-                }
-
-                WaitHandle.WaitAny(new[] { _componentsEvent, tokenSourceToken.WaitHandle });
-            }
-        }
-
         #endregion // Private methods
 
         #region IDisposable
@@ -455,12 +371,9 @@ namespace Scruffy.Services.Discord
 
                 _messageEvent.Dispose();
                 _reactionEvent.Dispose();
-                _componentsEvent.Dispose();
 
                 _client.MessageReceived -= OnMessageReceived;
                 _client.ReactionAdded -= OnReactionAdded;
-                _client.ButtonExecuted -= OnComponentExecuted;
-                _client.SelectMenuExecuted -= OnComponentExecuted;
                 _client = null;
 
                 _disposed = true;

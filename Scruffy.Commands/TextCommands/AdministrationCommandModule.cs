@@ -15,7 +15,7 @@ namespace Scruffy.Commands.TextCommands;
 [RequireContext(ContextType.Guild)]
 [RequireAdministratorPermissions]
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-public class AdministrationCommandModule : TextCommandModuleBase
+public class AdministrationCommandModule : LocatedTextCommandModuleBase
 {
     #region Properties
 
@@ -88,7 +88,7 @@ public class AdministrationCommandModule : TextCommandModuleBase
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-    public class AdministrationChannelCommandModule : TextCommandModuleBase
+    public class AdministrationChannelCommandModule : LocatedTextCommandModuleBase
     {
         #region Properties
 

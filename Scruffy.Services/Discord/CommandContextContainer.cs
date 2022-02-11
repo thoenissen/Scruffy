@@ -47,7 +47,7 @@ public sealed class CommandContextContainer : ICommandContext, ICommandContextOp
         ServiceProvider = GlobalServiceProvider.Current.GetServiceProvider();
 
         _userManagementService = ServiceProvider.GetService<UserManagementService>();
-        Interaction = ServiceProvider.GetService<InteractionService>();
+        Interactivity = ServiceProvider.GetService<InteractivityService>();
 
         _commandContext = new SocketCommandContext(discordClient, message);
 
@@ -91,9 +91,9 @@ public sealed class CommandContextContainer : ICommandContext, ICommandContextOp
     public IServiceProvider ServiceProvider { get; private set; }
 
     /// <summary>
-    /// Interaction
+    /// Interactivity
     /// </summary>
-    public InteractionService Interaction { get; }
+    public InteractivityService Interactivity { get; }
 
     /// <summary>
     /// Current command

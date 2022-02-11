@@ -49,7 +49,7 @@ public abstract class DialogButtonElementBase<TData> : DialogElementBase<TData>
     /// <returns>Result</returns>
     public override async Task<TData> Run()
     {
-        var components = CommandContext.Interaction.CreateTemporaryComponentContainer<int>(obj => obj.User.Id == CommandContext.User.Id);
+        var components = CommandContext.Interactivity.CreateTemporaryComponentContainer<int>(obj => obj.User.Id == CommandContext.User.Id);
         await using (components.ConfigureAwait(false))
         {
             var componentsBuilder = new ComponentBuilder();
@@ -61,7 +61,7 @@ public abstract class DialogButtonElementBase<TData> : DialogElementBase<TData>
 
                 foreach (var button in buttons)
                 {
-                    componentsBuilder.WithButton(button.CommandText, components.AddComponent(i), ButtonStyle.Secondary, button.Emote);
+                    componentsBuilder.WithButton(button.CommandText, components.AddButton(i), ButtonStyle.Secondary, button.Emote);
 
                     i++;
                 }

@@ -11,7 +11,7 @@ namespace Scruffy.Commands.TextCommands;
 [Group("help")]
 [Alias("h")]
 [BlockedChannelCheck]
-public class HelpCommandModule : TextCommandModuleBase
+public class HelpCommandModule : LocatedTextCommandModuleBase
 {
     #region Properties
 

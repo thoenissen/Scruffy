@@ -13,7 +13,7 @@ namespace Scruffy.Commands.TextCommands;
 [Alias("ac")]
 [BlockedChannelCheck]
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-public class AccountCommandModule : TextCommandModuleBase
+public class AccountCommandModule : LocatedTextCommandModuleBase
 {
     #region Properties
 

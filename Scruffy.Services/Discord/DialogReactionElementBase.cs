@@ -56,7 +56,7 @@ public abstract class DialogReactionElementBase<TData> : DialogElementBase<TData
 
         DialogContext.Messages.Add(message);
 
-        var userReactionTask = CommandContext.Interaction
+        var userReactionTask = CommandContext.Interactivity
                                              .WaitForReactionAsync(message, CommandContext.User);
 
         var reactions = GetReactions();

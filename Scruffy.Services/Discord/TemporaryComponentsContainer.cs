@@ -16,11 +16,11 @@ public abstract class TemporaryComponentsContainer : IAsyncDisposable
     /// <summary>
     /// Constructor
     /// </summary>
-    /// <param name="interactionService">Interaction service</param>
-    internal TemporaryComponentsContainer(InteractionService interactionService)
+    /// <param name="interactivityService">Interactivity service</param>
+    internal TemporaryComponentsContainer(InteractivityService interactivityService)
     {
-        InteractionService = interactionService;
-        InteractionService.AddComponentsContainer(this);
+        InteractivityService = interactivityService;
+        InteractivityService.AddComponentsContainer(this);
     }
 
     #endregion // Constructor
@@ -28,9 +28,9 @@ public abstract class TemporaryComponentsContainer : IAsyncDisposable
     #region Properties
 
     /// <summary>
-    /// Interaction service
+    /// Interactivity service
     /// </summary>
-    protected InteractionService InteractionService { get; }
+    protected InteractivityService InteractivityService { get; }
 
     #endregion // Properties
 
@@ -39,8 +39,18 @@ public abstract class TemporaryComponentsContainer : IAsyncDisposable
     /// <summary>
     /// Check active buttons
     /// </summary>
+    /// <param name="identification">Identification</param>
     /// <param name="component">Component</param>
-    internal abstract void CheckComponent(SocketMessageComponent component);
+    /// <returns>Is the component processed?</returns>
+    internal abstract bool CheckButtonComponent(string identification, SocketMessageComponent component);
+
+    /// <summary>
+    /// Check active select menus
+    /// </summary>
+    /// <param name="identification">Identification</param>
+    /// <param name="component">Component</param>
+    /// <returns>Is the component processed?</returns>
+    internal abstract bool CheckSelectMenuComponent(string identification, SocketMessageComponent component);
 
     #endregion // Internal methods
 
@@ -56,7 +66,7 @@ public abstract class TemporaryComponentsContainer : IAsyncDisposable
 
         Dispose();
 
-        InteractionService.RemoveComponentsContainer(this);
+        InteractivityService.RemoveComponentsContainer(this);
 
         return ValueTask.CompletedTask;
     }
@@ -93,9 +103,14 @@ public class TemporaryComponentsContainer<TIdentification> : TemporaryComponents
     private TaskCompletionSource<(SocketMessageComponent Component, TIdentification Identification)> _taskSource;
 
     /// <summary>
-    /// Components
+    /// Buttons
     /// </summary>
-    private Dictionary<string, TIdentification> _components;
+    private Dictionary<string, TIdentification> _buttons;
+
+    /// <summary>
+    /// Select menus
+    /// </summary>
+    private Dictionary<string, TIdentification> _selectMenus;
 
     #endregion // Fields
 
@@ -104,15 +119,16 @@ public class TemporaryComponentsContainer<TIdentification> : TemporaryComponents
     /// <summary>
     /// Constructor
     /// </summary>
-    /// <param name="interactionService">Interaction service</param>
+    /// <param name="interactivityService">Interactivity service</param>
     /// <param name="checkFunction">Check interaction</param>
-    public TemporaryComponentsContainer(InteractionService interactionService, Func<SocketMessageComponent, bool> checkFunction)
-        : base(interactionService)
+    public TemporaryComponentsContainer(InteractivityService interactivityService, Func<SocketMessageComponent, bool> checkFunction)
+        : base(interactivityService)
     {
         _checkFunction = checkFunction;
         _cancellationTokenSource = new CancellationTokenSource();
         _taskSource = new TaskCompletionSource<(SocketMessageComponent, TIdentification)>();
-        _components = new Dictionary<string, TIdentification>();
+        _buttons = new Dictionary<string, TIdentification>();
+        _selectMenus = new Dictionary<string, TIdentification>();
     }
 
     #endregion // Constructor
@@ -133,13 +149,27 @@ public class TemporaryComponentsContainer<TIdentification> : TemporaryComponents
     /// </summary>
     /// <param name="identification">Identification</param>
     /// <returns>Custom-Id</returns>
-    public string AddComponent(TIdentification identification)
+    public string AddButton(TIdentification identification)
     {
-        var customId = "T_" + Guid.NewGuid().ToString("N");
+        var customId = Guid.NewGuid().ToString("N");
 
-        _components[customId] = identification;
+        _buttons[customId] = identification;
 
-        return customId;
+        return "temporary;button;" + customId;
+    }
+
+    /// <summary>
+    /// Adding a new select menu
+    /// </summary>
+    /// <param name="identification">Identification</param>
+    /// <returns>Custom-Id</returns>
+    public string AddSelectMenu(TIdentification identification)
+    {
+        var customId = Guid.NewGuid().ToString("N");
+
+        _selectMenus[customId] = identification;
+
+        return "temporary;selectMenu;" + customId;
     }
 
     /// <summary>
@@ -158,20 +188,51 @@ public class TemporaryComponentsContainer<TIdentification> : TemporaryComponents
     /// <summary>
     /// Check active buttons
     /// </summary>
+    /// <param name="identification">Identification</param>
     /// <param name="component">Component</param>
-    internal override void CheckComponent(SocketMessageComponent component)
+    /// <returns>Is the component processed?</returns>
+    internal override bool CheckButtonComponent(string identification, SocketMessageComponent component)
     {
-        if (_components.TryGetValue(component.Data.CustomId, out var identification))
+        if (_buttons.TryGetValue(identification, out var customerIdentification))
         {
             if (_checkFunction(component))
             {
-                _taskSource.TrySetResult((component, identification));
+                _taskSource.TrySetResult((component, customerIdentification));
             }
             else
             {
-                component.RespondAsync(InteractionService.LocalizationGroup.GetText("DialogNotAssigned", "You can only interact with dialogs that are assigned to you."), ephemeral: true);
+                component.RespondAsync(InteractivityService.LocalizationGroup.GetText("DialogNotAssigned", "You can only interact with dialogs that are assigned to you."), ephemeral: true);
             }
+
+            return true;
         }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Check active select menus
+    /// </summary>
+    /// <param name="identification">Identification</param>
+    /// <param name="component">Component</param>
+    /// <returns>Is the component processed?</returns>
+    internal override bool CheckSelectMenuComponent(string identification, SocketMessageComponent component)
+    {
+        if (_selectMenus.TryGetValue(identification, out var customerIdentification))
+        {
+            if (_checkFunction(component))
+            {
+                _taskSource.TrySetResult((component, customerIdentification));
+            }
+            else
+            {
+                component.RespondAsync(InteractivityService.LocalizationGroup.GetText("DialogNotAssigned", "You can only interact with dialogs that are assigned to you."), ephemeral: true);
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     #endregion // TemporaryComponentsContainer

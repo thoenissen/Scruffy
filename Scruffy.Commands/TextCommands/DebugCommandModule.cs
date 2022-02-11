@@ -25,7 +25,7 @@ namespace Scruffy.Commands.TextCommands;
 [Alias("d")]
 [RequireDeveloperPermissions]
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-public class DebugCommandModule : TextCommandModuleBase
+public class DebugCommandModule : LocatedTextCommandModuleBase
 {
     #region Methods
 
@@ -58,7 +58,7 @@ public class DebugCommandModule : TextCommandModuleBase
                      .ReplyAsync("Please answer!")
                      .ConfigureAwait(false);
 
-        var message = await Context.Interaction
+        var message = await Context.Interactivity
                                    .WaitForMessageAsync(obj => obj.Author.Id == Context.Message.Author.Id).ConfigureAwait(false);
 
         await message.ReplyAsync(message.Content)
@@ -77,7 +77,7 @@ public class DebugCommandModule : TextCommandModuleBase
                                    .ReplyAsync("Please react!")
                                    .ConfigureAwait(false);
 
-        var reaction = await Context.Interaction
+        var reaction = await Context.Interactivity
                                     .WaitForReactionAsync(message, Context.Message.Author).ConfigureAwait(false);
 
         await message.ReplyAsync(reaction.Emote.ToString())
@@ -91,13 +91,13 @@ public class DebugCommandModule : TextCommandModuleBase
     [Command("buttons")]
     public async Task Buttons()
     {
-        var components = Context.Interaction.CreateTemporaryComponentContainer<int>(obj => true);
+        var components = Context.Interactivity.CreateTemporaryComponentContainer<int>(obj => true);
         await using (components.ConfigureAwait(false))
         {
             var builder = new ComponentBuilder();
 
-            builder.WithButton("Test 1", components.AddComponent(1), ButtonStyle.Secondary, DiscordEmoteService.GetCheckEmote(Context.Client));
-            builder.WithButton("Test 2", components.AddComponent(2), ButtonStyle.Secondary, DiscordEmoteService.GetCrossEmote(Context.Client));
+            builder.WithButton("Test 1", components.AddButton(1), ButtonStyle.Secondary, DiscordEmoteService.GetCheckEmote(Context.Client));
+            builder.WithButton("Test 2", components.AddButton(2), ButtonStyle.Secondary, DiscordEmoteService.GetCrossEmote(Context.Client));
 
             var message = await Context.Message
                                        .ReplyAsync("Buttons:", components: builder.Build())
@@ -134,15 +134,17 @@ public class DebugCommandModule : TextCommandModuleBase
         var builder = new ComponentBuilder();
 
         builder.WithButton("Ping 1",
-                           Context.Interaction
+                           Context.Interactivity
                                   .GetPermanentCustomerId(DebugMessageComponentCommandModule.Group,
-                                                          DebugMessageComponentCommandModule.CommandPing),
+                                                          DebugMessageComponentCommandModule.CommandPing,
+                                                          "1"),
                            ButtonStyle.Primary,
                            DiscordEmoteService.GetBulletEmote(Context.Client));
         builder.WithButton("Ping 2",
-                           Context.Interaction
+                           Context.Interactivity
                                   .GetPermanentCustomerId(DebugMessageComponentCommandModule.Group,
-                                                          DebugMessageComponentCommandModule.CommandPing),
+                                                          DebugMessageComponentCommandModule.CommandPing,
+                                                          "2"),
                            ButtonStyle.Secondary,
                            DiscordEmoteService.GetBulletEmote(Context.Client));
 
@@ -158,13 +160,13 @@ public class DebugCommandModule : TextCommandModuleBase
     [Command("selectmenu")]
     public async Task SelectMenu()
     {
-        var components = Context.Interaction.CreateTemporaryComponentContainer<int>(obj => true);
+        var components = Context.Interactivity.CreateTemporaryComponentContainer<int>(obj => true);
         await using (components.ConfigureAwait(false))
         {
             var builder = new ComponentBuilder();
 
             builder.WithSelectMenu(new SelectMenuBuilder()
-                                       .WithCustomId(components.AddComponent(1))
+                                       .WithCustomId(components.AddSelectMenu(0))
                                        .WithPlaceholder("Please select a option...")
                                        .AddOption("Option 0", "0", null, DiscordEmoteService.GetBulletEmote(Context.Client))
                                        .AddOption("Option 1", "1", null, DiscordEmoteService.GetEdit2Emote(Context.Client)));
@@ -204,7 +206,7 @@ public class DebugCommandModule : TextCommandModuleBase
     [Group("dump")]
     [Alias("d")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-    public class DebugDumpModule : TextCommandModuleBase
+    public class DebugDumpModule : LocatedTextCommandModuleBase
     {
         #region Properties
 
@@ -242,7 +244,7 @@ public class DebugCommandModule : TextCommandModuleBase
     [Group("raid")]
     [Alias("r")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-    public class DebugRaidModule : TextCommandModuleBase
+    public class DebugRaidModule : LocatedTextCommandModuleBase
     {
         #region Properties
 
@@ -284,7 +286,7 @@ public class DebugCommandModule : TextCommandModuleBase
     [Group("list")]
     [Alias("l")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-    public class DebugListModule : TextCommandModuleBase
+    public class DebugListModule : LocatedTextCommandModuleBase
     {
         #region Properties
 
@@ -358,7 +360,7 @@ public class DebugCommandModule : TextCommandModuleBase
     [Group("account")]
     [Alias("a")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-    public class DebugAccountModule : TextCommandModuleBase
+    public class DebugAccountModule : LocatedTextCommandModuleBase
     {
         #region Properties
 
@@ -391,7 +393,7 @@ public class DebugCommandModule : TextCommandModuleBase
     [Group("gw")]
     [Alias("g")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-    public class DebugGuildWarsModule : TextCommandModuleBase
+    public class DebugGuildWarsModule : LocatedTextCommandModuleBase
     {
         #region Properties
 
@@ -440,7 +442,7 @@ public class DebugCommandModule : TextCommandModuleBase
     [Group("calendar")]
     [Alias("c")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-    public class DebugCalendarModule : TextCommandModuleBase
+    public class DebugCalendarModule : LocatedTextCommandModuleBase
     {
         #region Properties
 
@@ -516,7 +518,7 @@ public class DebugCommandModule : TextCommandModuleBase
     [Group("user")]
     [Alias("u")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-    public class DebugUserModule : TextCommandModuleBase
+    public class DebugUserModule : LocatedTextCommandModuleBase
     {
         #region Methods
 
@@ -549,7 +551,7 @@ public class DebugCommandModule : TextCommandModuleBase
     [Group("guild")]
     [Alias("g")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-    public class DebugGuildModule : TextCommandModuleBase
+    public class DebugGuildModule : LocatedTextCommandModuleBase
     {
         #region Properties
 
@@ -635,7 +637,7 @@ public class DebugCommandModule : TextCommandModuleBase
     [Group("import")]
     [Alias("i")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-    public class DebugImportModule : TextCommandModuleBase
+    public class DebugImportModule : LocatedTextCommandModuleBase
     {
         #region Properties
 
@@ -710,7 +712,7 @@ public class DebugCommandModule : TextCommandModuleBase
     [Group("network")]
     [Alias("n")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-    public class DebugNetworkModule : TextCommandModuleBase
+    public class DebugNetworkModule : LocatedTextCommandModuleBase
     {
         #region Properties
 
@@ -767,7 +769,7 @@ public class DebugCommandModule : TextCommandModuleBase
     [Group("log")]
     [Alias("d")]
     [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
-    public class DebugLogModule : TextCommandModuleBase
+    public class DebugLogModule : LocatedTextCommandModuleBase
     {
         #region Properties
 

@@ -1,13 +1,15 @@
-﻿using Scruffy.Services.Discord;
-using Scruffy.Services.Discord.Attributes;
+﻿using System.ComponentModel;
+
+using Discord.Interactions;
+
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Commands.MessageComponents
 {
     /// <summary>
     /// Debug message component commands
     /// </summary>
-    [MessageComponentCommandGroup(Group)]
-    public class DebugMessageComponentCommandModule : MessageComponentCommandModule
+    public class DebugMessageComponentCommandModule : LocatedInteractionModuleBase
     {
         #region Constants
 
@@ -28,16 +30,18 @@ namespace Scruffy.Commands.MessageComponents
         /// <summary>
         /// Ping
         /// </summary>
+        /// <param name="id">Id</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        [MessageComponentCommand(CommandPing)]
-        public async Task Ping()
+        [ComponentInteraction($"{Group};{CommandPing};*")]
+        public async Task Ping(string id)
         {
-            await Component.DeferAsync()
-                           .ConfigureAwait(false);
+            await Context.Interaction
+                         .DeferAsync()
+                         .ConfigureAwait(false);
 
-            await Component.Channel
-                           .SendMessageAsync("Pong!")
-                           .ConfigureAwait(false);
+            await Context.Channel
+                         .SendMessageAsync($"Pong {id}!")
+                         .ConfigureAwait(false);
         }
 
         #endregion // Commands

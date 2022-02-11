@@ -2,6 +2,7 @@
 
 using Discord;
 using Discord.Commands;
+using Discord.Interactions;
 
 using Elasticsearch.Net;
 
@@ -125,6 +126,18 @@ public class LoggingService
     /// Adding a log entry
     /// </summary>
     /// <param name="level">Level</param>
+    /// <param name="customId">Custom id</param>
+    /// <param name="ex">Exception</param>
+    /// <returns>Log entry id</returns>
+    public static long? AddComponentInteractionLogEntry(LogEntryLevel level, string customId, Exception ex = null)
+    {
+        return _logger.WriteLine(LogEntryType.ComponentInteraction, level, customId, null, null, null, ex);
+    }
+
+    /// <summary>
+    /// Adding a log entry
+    /// </summary>
+    /// <param name="level">Level</param>
     /// <param name="group">Command group</param>
     /// <param name="command">Command name</param>
     /// <param name="message">Message</param>
@@ -201,6 +214,15 @@ public class LoggingService
     public static void AddCommandServiceLog(LogMessage logMessage)
     {
         _logger.WriteLine(LogEntryType.CommandsService, logMessage.Severity.ToLogEntryLevel(), logMessage.Source, null, logMessage.Message, null, logMessage.Exception);
+    }
+
+    /// <summary>
+    /// Writing <see cref="InteractionService"/> log messages
+    /// </summary>
+    /// <param name="logMessage">Log message</param>
+    public static void AddInteractionServiceLog(LogMessage logMessage)
+    {
+        _logger.WriteLine(LogEntryType.InteractionService, logMessage.Severity.ToLogEntryLevel(), logMessage.Source, null, logMessage.Message, null, logMessage.Exception);
     }
 
     /// <summary>

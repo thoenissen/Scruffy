@@ -80,7 +80,7 @@ public abstract class DialogEmbedReactionElementBase<TData> : DialogElementBase<
 
         DialogContext.Messages.Add(currentBotMessage);
 
-        var userReactionTask = CommandContext.Interaction
+        var userReactionTask = CommandContext.Interactivity
                                              .WaitForReactionAsync(currentBotMessage, CommandContext.User);
 
         if (reactions?.Count > 0)

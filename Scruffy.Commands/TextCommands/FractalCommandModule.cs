@@ -13,7 +13,7 @@ namespace Scruffy.Commands.TextCommands;
 [Alias("f")]
 [BlockedChannelCheck]
 [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-public class FractalCommandModule : TextCommandModuleBase
+public class FractalCommandModule : LocatedTextCommandModuleBase
 {
     #region Properties
 

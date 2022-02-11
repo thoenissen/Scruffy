@@ -25,7 +25,7 @@ namespace Scruffy.Commands.TextCommands;
 [Group("raid")]
 [Alias("ra")]
 [BlockedChannelCheck]
-public class RaidCommandModule : TextCommandModuleBase
+public class RaidCommandModule : LocatedTextCommandModuleBase
 {
     #region Properties
 
@@ -494,7 +494,7 @@ public class RaidCommandModule : TextCommandModuleBase
     /// </summary>
     [Group("roles")]
     [Alias("r")]
-    public class RaidRolesCommandModule : TextCommandModuleBase
+    public class RaidRolesCommandModule : LocatedTextCommandModuleBase
     {
         #region Properties
 
@@ -537,7 +537,7 @@ public class RaidCommandModule : TextCommandModuleBase
     /// </summary>
     [Group("templates")]
     [Alias("t")]
-    public class RaidTemplatesCommandModule : TextCommandModuleBase
+    public class RaidTemplatesCommandModule : LocatedTextCommandModuleBase
     {
         #region Methods
 
@@ -572,7 +572,7 @@ public class RaidCommandModule : TextCommandModuleBase
     /// </summary>
     [Group("levels")]
     [Alias("l", "level")]
-    public class RaidExperienceLevelsCommandModule : TextCommandModuleBase
+    public class RaidExperienceLevelsCommandModule : LocatedTextCommandModuleBase
     {
         #region Properties
 
@@ -754,7 +754,7 @@ public class RaidCommandModule : TextCommandModuleBase
     /// </summary>
     [Group("overview")]
     [Alias("o")]
-    public class RaidOverviewCommandModule : TextCommandModuleBase
+    public class RaidOverviewCommandModule : LocatedTextCommandModuleBase
     {
         #region Properties
 
