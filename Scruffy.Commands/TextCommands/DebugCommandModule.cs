@@ -263,7 +263,7 @@ public class DebugCommandModule : LocatedTextCommandModuleBase
         /// <param name="configurationId">Id of the configuration</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("refresh_message")]
-        public async Task Roles(long configurationId)
+        public async Task RefreshMessage(long configurationId)
         {
             await MessageBuilder.RefreshMessageAsync(configurationId)
                                 .ConfigureAwait(false);

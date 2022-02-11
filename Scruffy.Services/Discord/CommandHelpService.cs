@@ -3,6 +3,7 @@ using Discord.Commands;
 
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord.Extensions;
+using Scruffy.Services.Discord.Interfaces;
 
 namespace Scruffy.Services.Discord
 {
@@ -40,11 +41,16 @@ namespace Scruffy.Services.Discord
         /// <summary>
         /// Show command help
         /// </summary>
-        /// <param name="commandContext">Command context</param>
+        /// <param name="context">Context</param>
         /// <param name="commandName">Command name</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task ShowHelp(CommandContextContainer commandContext, string commandName)
+        public async Task ShowHelp(IContextContainer context, string commandName)
         {
+            if (context is not ICommandContext commandContext)
+            {
+                commandContext = context.GetMergedContextContainer();
+            }
+
             var embedBuilder = new EmbedBuilder().WithColor(Color.DarkBlue)
                                                  .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
                                                  .WithTimestamp(DateTime.Now)
@@ -57,7 +63,7 @@ namespace Scruffy.Services.Discord
                 var sb = new StringBuilder();
 
                 sb.AppendLine(Format.Bold(LocalizationGroup.GetText("BuilderTitleExplanation", "Explanation")));
-                sb.AppendLine(LocalizationGroup.GetText(commandName.ToLowerInvariant(), string.Empty));
+                sb.AppendLine(LocalizationGroup.GetText(commandName?.ToLowerInvariant(), string.Empty));
                 sb.AppendLine();
                 sb.AppendLine(Format.Bold(LocalizationGroup.GetText("BuilderTitleUsage", "Usage")));
                 sb.Append("```");
@@ -129,7 +135,9 @@ namespace Scruffy.Services.Discord
                 embedBuilder.AddField("\u200b", sb.ToString());
             }
 
-            var search = _commandService.Search(commandContext, commandName);
+            var search = commandName != null
+                             ? _commandService.Search(commandContext, commandName)
+                             : default;
             if (search.Commands?.All(obj => obj.Command.GetFullName().Equals(commandName, StringComparison.InvariantCultureIgnoreCase)) == true)
             {
                 SingleCommandHelp(search);
@@ -152,7 +160,7 @@ namespace Scruffy.Services.Discord
                         {
                             try
                             {
-                                if ((await precondition.CheckPermissionsAsync(commandContext, null, commandContext.ServiceProvider).ConfigureAwait(false)).IsSuccess == false)
+                                if ((await precondition.CheckPermissionsAsync(commandContext, null, context.ServiceProvider).ConfigureAwait(false)).IsSuccess == false)
                                 {
                                     arePreconditionsSatisfied = false;
                                     break;
@@ -266,9 +274,8 @@ namespace Scruffy.Services.Discord
                 }
             }
 
-            await commandContext.Channel
-                                .SendMessageAsync(embed: embedBuilder.Build())
-                                .ConfigureAwait(false);
+            await context.ReplyAsync(embed: embedBuilder.Build())
+                         .ConfigureAwait(false);
         }
 
         #endregion // Methods

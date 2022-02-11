@@ -3,6 +3,7 @@
 using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Services.Core;
+using Scruffy.Services.Discord.Interfaces;
 
 namespace Scruffy.Services.Discord.Attributes;
 
@@ -43,7 +44,7 @@ public class RequireAdministratorPermissionsAttribute : PreconditionAttribute
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
     {
-        return await _service.CheckPermissions(context as CommandContextContainer)
+        return await _service.CheckPermissions(context as IContextContainer)
                              .ConfigureAwait(false)
                    ? PreconditionResult.FromSuccess()
                    : PreconditionResult.FromError("Invalid permission.");

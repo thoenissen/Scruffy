@@ -141,4 +141,69 @@ public class AdministrationCommandModule : LocatedTextCommandModuleBase
     }
 
     #endregion // Channel
+
+    #region SlashCommands
+
+    /// <summary>
+    /// SlashCommands commands
+    /// </summary>
+    [Group("slashCommands")]
+    [Alias("s")]
+    [RequireContext(ContextType.Guild)]
+    [RequireAdministratorPermissions]
+    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
+    public class AdministrationSlashCommandsCommandModule : LocatedTextCommandModuleBase
+    {
+        #region Properties
+
+        /// <summary>
+        /// Interaction service
+        /// </summary>
+        public Discord.Interactions.InteractionService InteractionService { get; set; }
+
+        #endregion // Properties
+
+        #region Methods
+
+        /// <summary>
+        /// Install SlashCommands
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("install")]
+        [RequireAdministratorPermissions]
+        public async Task InstallSlashCommands()
+        {
+            await InteractionService.AddCommandsToGuildAsync(Context.Guild,
+                                                             true,
+                                                             InteractionService.SlashCommands.Cast<Discord.Interactions.ICommandInfo>().ToArray())
+                                    .ConfigureAwait(false);
+
+            await Context.Message
+                         .AddReactionAsync(DiscordEmoteService.GetCheckEmote(Context.Client))
+                         .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Uninstall SlashCommands
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("uninstall")]
+        [RequireAdministratorPermissions]
+        public async Task UninstallSlashCommands()
+        {
+            await InteractionService.AddCommandsToGuildAsync(Context.Guild,
+                                                 true,
+                                                 Array.Empty<Discord.Interactions.ICommandInfo>())
+                                    .ConfigureAwait(false);
+
+            await Context.Message
+                         .AddReactionAsync(DiscordEmoteService.GetCheckEmote(Context.Client))
+                         .ConfigureAwait(false);
+        }
+
+        #endregion // Methods
+    }
+
+    #endregion // SlashCommands
+
 }

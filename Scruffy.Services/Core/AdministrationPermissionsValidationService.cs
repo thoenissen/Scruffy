@@ -2,7 +2,7 @@
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.CoreData;
-using Scruffy.Services.Discord;
+using Scruffy.Services.Discord.Interfaces;
 
 namespace Scruffy.Services.Core;
 
@@ -69,7 +69,7 @@ public class AdministrationPermissionsValidationService
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <returns>Are permissions set?</returns>
-    public Task<bool> CheckPermissions(CommandContextContainer commandContext)
+    public Task<bool> CheckPermissions(IContextContainer commandContext)
     {
         var result = commandContext.User.Id == commandContext.Guild?.OwnerId
                   || commandContext.Member?.GuildPermissions.Administrator == true

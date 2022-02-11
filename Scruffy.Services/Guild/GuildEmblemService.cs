@@ -166,7 +166,8 @@ public class GuildEmblemService : LocatedServiceBase
                 isFlipHorizontal = random.Next(0, 10) <= 2;
                 isFlipVertical = random.Next(0, 10) <= 2;
 
-                foreach (var layer in foregroundLayers.Layers.AsEnumerable()
+                foreach (var layer in foregroundLayers.Layers
+                                                      .AsEnumerable()
                                                       .Skip(1))
                 {
                     var response = await client.GetAsync(layer)

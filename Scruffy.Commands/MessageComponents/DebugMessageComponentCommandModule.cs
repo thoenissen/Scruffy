@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-using Discord.Interactions;
+﻿using Discord.Interactions;
 
 using Scruffy.Services.Discord;
 
