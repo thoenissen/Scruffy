@@ -16,12 +16,12 @@ public class GuildRankCurrentPointsJob : LocatedAsyncJob
     /// Executes the job
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public override async Task ExecuteAsync()
+    public override async Task ExecuteOverrideAsync()
     {
         var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
         await using (serviceProvider.ConfigureAwait(false))
         {
-            await serviceProvider.GetService<GuildRankService>()
+            await serviceProvider.GetRequiredService<GuildRankService>()
                                  .RefreshCurrentPoints(null)
                                  .ConfigureAwait(false);
         }

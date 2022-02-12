@@ -418,7 +418,7 @@ public class DebugCommandModule : LocatedTextCommandModuleBase
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("import_account_achievements")]
-        public Task ImportAccountAchievements() => new AchievementImportJob().ExecuteAsync();
+        public Task ImportAccountAchievements() => new AchievementImportJob().ExecuteOverrideAsync();
 
         /// <summary>
         /// Import achievements
@@ -573,7 +573,7 @@ public class DebugCommandModule : LocatedTextCommandModuleBase
         {
             var job = new GuildSpecialRankPointsJob();
 
-            await job.ExecuteAsync()
+            await job.ExecuteOverrideAsync()
                      .ConfigureAwait(false);
         }
 

@@ -22,7 +22,7 @@ public class CounterGameJob : LocatedAsyncJob
     /// Executes the job
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public override async Task ExecuteAsync()
+    public override async Task ExecuteOverrideAsync()
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {

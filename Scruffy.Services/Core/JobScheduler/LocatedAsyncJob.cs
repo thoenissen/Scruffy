@@ -10,7 +10,7 @@ namespace Scruffy.Services.Core.JobScheduler;
 /// <summary>
 /// Asynchronous executing of a job
 /// </summary>
-public abstract class LocatedAsyncJob : IJob
+public abstract class LocatedAsyncJob : IAsyncJob
 {
     #region Fields
 
@@ -27,7 +27,7 @@ public abstract class LocatedAsyncJob : IJob
     /// Executes the job
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public abstract Task ExecuteAsync();
+    public abstract Task ExecuteOverrideAsync();
 
     #endregion // Methods
 
@@ -36,11 +36,29 @@ public abstract class LocatedAsyncJob : IJob
     /// <summary>
     /// Localized group
     /// </summary>
-    public LocalizationGroup LocalizationGroup => _localizationGroup ??= GlobalServiceProvider.Current.GetServiceProvider().GetService<LocalizationService>().GetGroup(GetType().Name);
+    public LocalizationGroup LocalizationGroup => _localizationGroup ??= GlobalServiceProvider.Current.GetServiceProvider().GetRequiredService<LocalizationService>().GetGroup(GetType().Name);
 
     #endregion // Properties
 
     #region IJob
+
+    /// <summary>
+    /// Executes the job.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public async Task ExecuteAsync()
+    {
+        try
+        {
+            LoggingService.AddJobLogEntry(LogEntryLevel.Information, GetType().Name, "Job started");
+
+            await ExecuteOverrideAsync().ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            LoggingService.AddJobLogEntry(LogEntryLevel.CriticalError, GetType().Name, ex.Message, null, ex);
+        }
+    }
 
     /// <summary>
     /// Executes the job
@@ -51,7 +69,7 @@ public abstract class LocatedAsyncJob : IJob
         {
             LoggingService.AddJobLogEntry(LogEntryLevel.Information, GetType().Name, "Job started");
 
-            Task.Run(ExecuteAsync).Wait();
+            Task.Run(ExecuteOverrideAsync).Wait();
         }
         catch (Exception ex)
         {

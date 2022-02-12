@@ -2,6 +2,7 @@
 
 using Microsoft.Extensions.DependencyInjection;
 
+using Scruffy.Services.Core.JobScheduler;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
 using Scruffy.Services.Debug;
@@ -43,6 +44,14 @@ public class GlobalServiceProvider
                                      .GetTypes()
                                      .Where(obj => (typeof(DialogElementBase).IsAssignableFrom(obj)
                                                  || typeof(LocatedServiceBase).IsAssignableFrom(obj))
+                                                && obj.IsAbstract == false))
+        {
+            _serviceCollection.AddTransient(type);
+        }
+
+        foreach (var type in Assembly.Load("Scruffy.Services")
+                                     .GetTypes()
+                                     .Where(obj => typeof(LocatedAsyncJob).IsAssignableFrom(obj)
                                                 && obj.IsAbstract == false))
         {
             _serviceCollection.AddTransient(type);

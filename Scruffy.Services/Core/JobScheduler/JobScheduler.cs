@@ -6,16 +6,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Calendar;
 using Scruffy.Data.Entity.Repositories.Reminder;
-using Scruffy.Services.Account.Jobs;
 using Scruffy.Services.Calendar.Jobs;
 using Scruffy.Services.Debug.Jobs;
 using Scruffy.Services.Fractals;
 using Scruffy.Services.Fractals.Jobs;
 using Scruffy.Services.Games.Jobs;
 using Scruffy.Services.Guild.Jobs;
-using Scruffy.Services.GuildWars2.Jobs;
 using Scruffy.Services.Reminder.Jobs;
-using Scruffy.Services.Statistics.Jobs;
 
 namespace Scruffy.Services.Core.JobScheduler;
 
@@ -47,40 +44,25 @@ public class JobScheduler : IAsyncDisposable
         await Task.Run(JobManager.Start).ConfigureAwait(false);
 
 #if RELEASE
-        // Debug
-        JobManager.AddJob<LogOverviewJob>(obj => obj.ToRunEvery(1).Days().At(0, 5));
-
-        // Fractals
-        JobManager.AddJob<FractalDailyRefreshJob>(obj => obj.ToRunEvery(1).Days().At(0, 0));
-
-        // Calendar
+        // Daily
         JobManager.AddJob<CalendarRefreshJob>(obj => obj.ToRunEvery(1).Days().At(0, 0));
-
-        // Backup
+        JobManager.AddJob<FractalDailyRefreshJob>(obj => obj.ToRunEvery(1).Days().At(0, 0));
+        JobManager.AddJob<LogOverviewJob>(obj => obj.ToRunEvery(1).Days().At(0, 5));
+        JobManager.AddJob<GuildRankingBatchJob>(obj => obj.ToRunEvery(1).Days().At(0, 10));
         JobManager.AddJob<BackupJob>(obj => obj.ToRunEvery(1).Days().At(2, 0));
-
-        // Account
-        JobManager.AddJob<AccountLoginCheckJob>(obj => obj.ToRunEvery(1).Days().At(0, 5));
-        JobManager.AddJob<AchievementImportJob>(obj => obj.ToRunEvery(1).Days().At(0, 15));
 
         // Guild
         JobManager.AddJob<GuildLogImportJob>(obj => obj.NonReentrant().ToRunEvery(20).Seconds());
-        JobManager.AddJob<GuildRankImportJob>(obj => obj.ToRunEvery(1).Days().At(0, 20));
-        JobManager.AddJob<GuildSpecialRankPointsJob>(obj => obj.ToRunEvery(1).Days().At(0, 30));
-        JobManager.AddJob<GuildRankCurrentPointsJob>(obj => obj.ToRunEvery(1).Days().At(0, 40));
 
         // Games
         JobManager.AddJob<CounterGameJob>(obj => obj.ToRunEvery(10).Minutes());
         JobManager.AddJob<WordChainJob>(obj => obj.ToRunEvery(10).Minutes());
 
-        // Statistics
-        JobManager.AddJob<MessageImportJob>(obj => obj.ToRunEvery(1).Days().At(3, 0));
-
         // fractal reminders
         var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
         await using (serviceProvider.ConfigureAwait(false))
         {
-            var fractalReminderService = serviceProvider.GetService<FractalLfgReminderService>();
+            var fractalReminderService = serviceProvider.GetRequiredService<FractalLfgReminderService>();
 
             await fractalReminderService.CreateNextReminderJobAsync()
                                         .ConfigureAwait(false);
@@ -143,7 +125,8 @@ public class JobScheduler : IAsyncDisposable
                                            .ToList())
             {
                 if (entry.DiscordMessageId == null
-                 && entry.TimeStamp > DateTime.Now)
+                 && entry.TimeStamp > DateTime.Now
+                 && entry.ReminderTime != null)
                 {
                     JobManager.AddJob(new CalendarReminderPostJob(entry.Id), obj => obj.ToRunOnceAt(DateTime.Today.Add(entry.ReminderTime.Value)));
                 }
