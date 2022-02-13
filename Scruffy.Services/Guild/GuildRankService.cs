@@ -342,6 +342,7 @@ public class GuildRankService : LocatedServiceBase
                                                           })
                                            .ToList())
             {
+                // Daily login
                 await dbFactory.ExecuteSqlRawAsync(@"WITH [CurrentPoints]
                                                          AS
                                                          (
@@ -390,6 +391,60 @@ public class GuildRankService : LocatedServiceBase
                                                    new SqlParameter("@from", DateTime.Today.AddDays(-61)),
                                                    new SqlParameter("@to", DateTime.Today.AddDays(-1)),
                                                    new SqlParameter("@guildId", guild.Id))
+                               .ConfigureAwait(false);
+
+                // Achievement points
+                await dbFactory.ExecuteSqlRawAsync(@"WITH [CurrentAchievementPoints]
+                                                     AS
+                                                     (
+                                                         SELECT [Dates].[Date],
+                                                                [Dates].[UserId], 
+                                                                CASE 
+                                                                    WHEN EXISTS ( SELECT 1 
+                                                                                    FROM [GuildRankCurrentPoints] AS [Exists]
+                                                                                   WHERE [Exists].[Date] = [Dates].[Date]
+                                                                                     AND [Exists].[UserId] = [Dates].[UserId]
+                                                                                     AND [Exists].[GuildId] = @guildId
+                                                                                     AND [Exists].[Type] = 0
+                                                                                     AND [Exists].[Points] > 0)
+                                                                        THEN COALESCE ( 0.14 
+                                                                                        / NULLIF ( ( SELECT COUNT (*) 
+                                                                                                       FROM [GuildWarsAccountRankingData] AS [All]
+                                                                                                      WHERE [All].[Date] = [Dates].[Date] 
+                                                                                                        AND EXISTS ( SELECT 1 
+                                                                                                                      FROM [GuildWarsGuildMembers] AS [AllMembers]
+                                                                                                                     WHERE [AllMembers].[GuildId] = @guildId
+                                                                                                                       AND [AllMembers].[Name] = [All].[AccountName] ) ), 0)
+                                                                                        * ( SELECT COUNT (*) 
+                                                                                              FROM [GuildWarsAccountRankingData] AS [Less]
+                                                                                             WHERE [Less].[Date] = [Dates].[Date]
+                                                                                               AND [Less].[AchievementPoints] < [Dates].[AchievementPoints] 
+                                                                                               AND EXISTS ( SELECT 1 
+                                                                                                             FROM [GuildWarsGuildMembers] AS [LessMembers]
+                                                                                                            WHERE [LessMembers].[GuildId] = @guildId
+                                                                                                              AND [LessMembers].[Name] = [Less].[AccountName] ) ),
+                                                                                      0)
+                                                                    ELSE 0
+                                                                END AS [Points]
+                                                           FROM ( SELECT [CurrentPoints].[UserId], 
+                                                                         [CurrentPoints].[Date],
+                                                                         MAX ( COALESCE ( [RankingData].[AchievementPoints], 0 ) ) AS [AchievementPoints]
+                                                                    FROM [GuildRankCurrentPoints] AS [CurrentPoints]
+                                                              INNER JOIN [GuildWarsAccounts] AS [Account]
+                                                                      ON [Account].[UserId] = [CurrentPoints].[UserId]
+                                                               LEFT JOIN [GuildWarsAccountRankingData] AS [RankingData]
+                                                                      ON [RankingData].[AccountName] = [Account].[Name]
+                                                                     AND [RankingData].[Date] = [CurrentPoints].[Date]
+                                                                   WHERE [CurrentPoints].[Type] = 0       
+                                                                     AND [CurrentPoints].[Date] >= @from
+                                                                     AND [CurrentPoints].[Date] <= @to
+                                                                     AND [CurrentPoints].[GuildId] = @guildId
+                                                                GROUP BY [CurrentPoints].[UserId],
+                                                                         [CurrentPoints].[Date] ) AS [Dates]
+                                                     )",
+                                   new SqlParameter("@from", DateTime.Today.AddDays(-61)),
+                                   new SqlParameter("@to", DateTime.Today.AddDays(-1)),
+                                   new SqlParameter("@guildId", guild.Id))
                                .ConfigureAwait(false);
             }
         }
