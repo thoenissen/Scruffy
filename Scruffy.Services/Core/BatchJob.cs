@@ -43,7 +43,7 @@ internal abstract class BatchJob : LocatedAsyncJob
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public override async Task ExecuteOverrideAsync()
     {
-        var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+        var serviceProvider = ServiceProviderContainer.Current.GetServiceProvider();
         await using (serviceProvider.ConfigureAwait(false))
         {
             var scopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();

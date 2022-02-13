@@ -1,10 +1,6 @@
-﻿using System.Reflection;
-
+﻿using Scruffy.Data.Enumerations.General;
 using Scruffy.ServiceHost.Discord;
 using Scruffy.Services.Core;
-using Scruffy.Services.Core.JobScheduler;
-using Scruffy.Services.Core.Localization;
-using Scruffy.Services.Fractals;
 
 namespace Scruffy.ServiceHost;
 
@@ -35,40 +31,16 @@ public class Program
 
         try
         {
-            LoggingService.AddServiceLogEntry(Data.Enumerations.General.LogEntryLevel.Information, nameof(Program), "Start", null);
+            LoggingService.AddServiceLogEntry(LogEntryLevel.Information, nameof(Program), "Start", null);
 
-            var jobScheduler = new JobScheduler();
-            await using (jobScheduler.ConfigureAwait(false))
+            var discordBot = new DiscordBot();
+
+            await using (discordBot.ConfigureAwait(false))
             {
-                var localizationService = new LocalizationService();
+                await discordBot.StartAsync()
+                                .ConfigureAwait(false);
 
-                // TODO configuration
-                var stream = Assembly.Load("Scruffy.Data").GetManifestResourceStream("Scruffy.Data.Resources.Languages.de-DE.json");
-                if (stream != null)
-                {
-                    await using (stream.ConfigureAwait(false))
-                    {
-                        localizationService.Load(stream);
-                    }
-                }
-
-                GlobalServiceProvider.Current.AddSingleton(localizationService);
-                GlobalServiceProvider.Current.AddSingleton(jobScheduler);
-
-                using (var fractalReminderService = new FractalLfgReminderService(jobScheduler))
-                {
-                    GlobalServiceProvider.Current.AddSingleton(fractalReminderService);
-
-                    var discordBot = new DiscordBot();
-                    await using (discordBot.ConfigureAwait(false))
-                    {
-                        await discordBot.StartAsync(localizationService).ConfigureAwait(false);
-
-                        await jobScheduler.StartAsync().ConfigureAwait(false);
-
-                        await _waitForExitTaskSource.Task.ConfigureAwait(false);
-                    }
-                }
+                await _waitForExitTaskSource.Task.ConfigureAwait(false);
             }
         }
         catch (Exception ex)

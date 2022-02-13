@@ -3,12 +3,16 @@
 using Discord;
 using Discord.WebSocket;
 
+using Microsoft.Extensions.DependencyInjection;
+
+using Scruffy.Services.Core;
+
 namespace Scruffy.Services.Discord;
 
 /// <summary>
 /// Managing the discord state of the bot
 /// </summary>
-public sealed class DiscordStatusService : IDisposable
+public sealed class DiscordStatusService : SingletonLocatedServiceBase, IDisposable
 {
     #region Fields
 
@@ -29,16 +33,43 @@ public sealed class DiscordStatusService : IDisposable
 
     #endregion // Fields
 
-    #region Constructor
+    #region Properties
 
     /// <summary>
-    /// Constructor
+    /// Status timer
     /// </summary>
-    /// <param name="discordClient">Client</param>
-    public DiscordStatusService(DiscordSocketClient discordClient)
+    /// <param name="state">State</param>
+    private async void OnTimer(object state)
     {
-        _discordClient = discordClient;
-        _timer = new Timer(OnTimer, null, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(60));
+        try
+        {
+            var title = _movies.Dequeue();
+            _movies.Enqueue(title);
+
+            await _discordClient.SetActivityAsync(new Game(title, ActivityType.Watching)).ConfigureAwait(false);
+        }
+        catch
+        {
+        }
+    }
+
+    #endregion // Properties
+
+    #region SingletonLocatedServiceBase
+
+    /// <summary>
+    /// Initialize
+    /// </summary>
+    /// <param name="serviceProvider">Service provider</param>
+    /// <remarks>When this method is called all services are registered and can be resolved.  But not all singleton services may be initialized. </remarks>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public override async Task Initialize(IServiceProvider serviceProvider)
+    {
+        await base.Initialize(serviceProvider)
+                  .ConfigureAwait(false);
+
+        _discordClient = serviceProvider.GetRequiredService<DiscordSocketClient>();
+        _timer = new Timer(OnTimer, null, TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(60));
 
         _movies = new Queue<string>(new[]
                                     {
@@ -69,29 +100,7 @@ public sealed class DiscordStatusService : IDisposable
                                     });
     }
 
-    #endregion // Constructor
-
-    #region Properties
-
-    /// <summary>
-    /// Status timer
-    /// </summary>
-    /// <param name="state">State</param>
-    private async void OnTimer(object state)
-    {
-        try
-        {
-            var title = _movies.Dequeue();
-            _movies.Enqueue(title);
-
-            await _discordClient.SetActivityAsync(new Game(title, ActivityType.Watching)).ConfigureAwait(false);
-        }
-        catch
-        {
-        }
-    }
-
-    #endregion // Properties
+    #endregion // SingletonLocatedServiceBase
 
     #region IDisposable
 

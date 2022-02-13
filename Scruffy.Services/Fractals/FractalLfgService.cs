@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Fractals;
 using Scruffy.Data.Entity.Tables.Fractals;
+using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
 using Scruffy.Services.Discord;

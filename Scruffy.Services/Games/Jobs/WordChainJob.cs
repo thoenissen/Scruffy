@@ -170,7 +170,7 @@ public class WordChainJob : LocatedAsyncJob
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
-            var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+            var serviceProvider = Core.ServiceProviderContainer.Current.GetServiceProvider();
             await using (serviceProvider.ConfigureAwait(false))
             {
                 var client = serviceProvider.GetService<DiscordSocketClient>();

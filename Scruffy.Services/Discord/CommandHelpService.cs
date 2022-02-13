@@ -1,283 +1,283 @@
 ﻿using Discord;
 using Discord.Commands;
 
+using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord.Extensions;
 using Scruffy.Services.Discord.Interfaces;
 
-namespace Scruffy.Services.Discord
+namespace Scruffy.Services.Discord;
+
+/// <summary>
+/// Proving the discord command help
+/// </summary>
+public class CommandHelpService : LocatedServiceBase
 {
+    #region Fields
+
     /// <summary>
-    /// Proving the discord command help
+    /// Command service
     /// </summary>
-    public class CommandHelpService : LocatedServiceBase
+    private readonly CommandService _commandService;
+
+    #endregion // Fields
+
+    #region Constructor
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="localizationService">Localization service</param>
+    /// <param name="commandService">Commands service</param>
+    public CommandHelpService(LocalizationService localizationService, CommandService commandService)
+        : base(localizationService)
     {
-        #region Fields
+        _commandService = commandService;
+    }
 
-        /// <summary>
-        /// Command service
-        /// </summary>
-        private readonly CommandService _commandService;
+    #endregion // Constructor
 
-        #endregion // Fields
+    #region Methods
 
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="commandService">Commands service</param>
-        public CommandHelpService(LocalizationService localizationService, CommandService commandService)
-            : base(localizationService)
+    /// <summary>
+    /// Show command help
+    /// </summary>
+    /// <param name="context">Context</param>
+    /// <param name="commandName">Command name</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public async Task ShowHelp(IContextContainer context, string commandName)
+    {
+        if (context is not ICommandContext commandContext)
         {
-            _commandService = commandService;
+            commandContext = context.GetMergedContextContainer();
         }
 
-        #endregion // Constructor
+        var embedBuilder = new EmbedBuilder().WithColor(Color.DarkBlue)
+                                             .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
+                                             .WithTimestamp(DateTime.Now)
+                                             .WithTitle(LocalizationGroup.GetText("BuilderTitleGeneral", "Scruffy - Command help"));
 
-        #region Methods
-
-        /// <summary>
-        /// Show command help
-        /// </summary>
-        /// <param name="context">Context</param>
-        /// <param name="commandName">Command name</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task ShowHelp(IContextContainer context, string commandName)
+        void SingleCommandHelp(SearchResult search)
         {
-            if (context is not ICommandContext commandContext)
+            embedBuilder.WithDescription(LocalizationGroup.GetFormattedText("BuilderCommandListDescription", "The command help of the command `{0}` is displayed below.", commandName));
+
+            var sb = new StringBuilder();
+
+            sb.AppendLine(Format.Bold(LocalizationGroup.GetText("BuilderTitleExplanation", "Explanation")));
+            sb.AppendLine(LocalizationGroup.GetText(commandName?.ToLowerInvariant(), string.Empty));
+            sb.AppendLine();
+            sb.AppendLine(Format.Bold(LocalizationGroup.GetText("BuilderTitleUsage", "Usage")));
+            sb.Append("```");
+
+            foreach (var command in search.Commands)
             {
-                commandContext = context.GetMergedContextContainer();
-            }
+                sb.Append(command.Command.GetFullName());
 
-            var embedBuilder = new EmbedBuilder().WithColor(Color.DarkBlue)
-                                                 .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
-                                                 .WithTimestamp(DateTime.Now)
-                                                 .WithTitle(LocalizationGroup.GetText("BuilderTitleGeneral", "Scruffy - Command help"));
-
-            void SingleCommandHelp(SearchResult search)
-            {
-                embedBuilder.WithDescription(LocalizationGroup.GetFormattedText("BuilderCommandListDescription", "The command help of the command `{0}` is displayed below.", commandName));
-
-                var sb = new StringBuilder();
-
-                sb.AppendLine(Format.Bold(LocalizationGroup.GetText("BuilderTitleExplanation", "Explanation")));
-                sb.AppendLine(LocalizationGroup.GetText(commandName?.ToLowerInvariant(), string.Empty));
-                sb.AppendLine();
-                sb.AppendLine(Format.Bold(LocalizationGroup.GetText("BuilderTitleUsage", "Usage")));
-                sb.Append("```");
-
-                foreach (var command in search.Commands)
+                foreach (var parameter in command.Command.Parameters)
                 {
-                    sb.Append(command.Command.GetFullName());
+                    sb.Append(' ');
 
-                    foreach (var parameter in command.Command.Parameters)
+                    sb.Append(parameter.IsOptional
+                                  ? '['
+                                  : '<');
+                    sb.Append(LocalizationGroup.GetText(commandName.ToLowerInvariant() + " " + parameter.Name.ToLowerInvariant(), parameter.Name));
+
+                    if (parameter.IsRemainder)
                     {
-                        sb.Append(' ');
-
-                        sb.Append(parameter.IsOptional
-                                      ? '['
-                                      : '<');
-                        sb.Append(LocalizationGroup.GetText(commandName.ToLowerInvariant() + " " + parameter.Name.ToLowerInvariant(), parameter.Name));
-
-                        if (parameter.IsRemainder)
-                        {
-                            sb.Append("...");
-                        }
-
-                        sb.Append(parameter.IsOptional
-                                      ? ']'
-                                      : '>');
+                        sb.Append("...");
                     }
 
+                    sb.Append(parameter.IsOptional
+                                  ? ']'
+                                  : '>');
+                }
+
+                sb.AppendLine();
+            }
+
+            sb.Append("```");
+            sb.AppendLine();
+
+            sb.AppendLine(Format.Bold(LocalizationGroup.GetText("BuilderTitleArguments", "Arguments")));
+
+            foreach (var parameter in search.Commands.SelectMany(obj => obj.Command.Parameters.Select(obj2 => obj2.Name))
+                                            .Distinct())
+            {
+                sb.Append("`");
+                sb.Append(LocalizationGroup.GetText(commandName.ToLowerInvariant() + " " + parameter.ToLowerInvariant(), parameter));
+
+                if (LocalizationGroup.TryGetText(commandName.ToLowerInvariant() + " " + parameter.ToLowerInvariant() + " format", out var format))
+                {
+                    sb.Append(' ');
+                    sb.Append('(');
+                    sb.Append(format);
+                    sb.Append(')');
+                }
+
+                sb.Append("`");
+
+                if (LocalizationGroup.TryGetText(commandName.ToLowerInvariant() + " " + parameter.ToLowerInvariant() + " description", out var text))
+                {
+                    sb.Append(": ");
+                    sb.AppendLine(text);
+                }
+                else
+                {
                     sb.AppendLine();
                 }
-
-                sb.Append("```");
-                sb.AppendLine();
-
-                sb.AppendLine(Format.Bold(LocalizationGroup.GetText("BuilderTitleArguments", "Arguments")));
-
-                foreach (var parameter in search.Commands.SelectMany(obj => obj.Command.Parameters.Select(obj2 => obj2.Name))
-                                                .Distinct())
-                {
-                    sb.Append("`");
-                    sb.Append(LocalizationGroup.GetText(commandName.ToLowerInvariant() + " " + parameter.ToLowerInvariant(), parameter));
-
-                    if (LocalizationGroup.TryGetText(commandName.ToLowerInvariant() + " " + parameter.ToLowerInvariant() + " format", out var format))
-                    {
-                        sb.Append(' ');
-                        sb.Append('(');
-                        sb.Append(format);
-                        sb.Append(')');
-                    }
-
-                    sb.Append("`");
-
-                    if (LocalizationGroup.TryGetText(commandName.ToLowerInvariant() + " " + parameter.ToLowerInvariant() + " description", out var text))
-                    {
-                        sb.Append(": ");
-                        sb.AppendLine(text);
-                    }
-                    else
-                    {
-                        sb.AppendLine();
-                    }
-                }
-
-                sb.AppendLine();
-                sb.AppendLine(Format.Bold(LocalizationGroup.GetText("BuilderTitleLegend", "Legend")));
-                sb.AppendLine(LocalizationGroup.GetText("BuilderTitleLegendRequired", "`<Argument>`: This argument is required."));
-                sb.AppendLine(LocalizationGroup.GetText("BuilderTitleLegendOptional", "`[Argument]`: This argument is optional."));
-                sb.AppendLine(LocalizationGroup.GetText("BuilderTitleLegendRemainder", "`...`: Spaces and line breaks can be used with this argument."));
-
-                embedBuilder.AddField("\u200b", sb.ToString());
             }
 
-            var search = commandName != null
-                             ? _commandService.Search(commandContext, commandName)
-                             : default;
-            if (search.Commands?.All(obj => obj.Command.GetFullName().Equals(commandName, StringComparison.InvariantCultureIgnoreCase)) == true)
-            {
-                SingleCommandHelp(search);
-            }
-            else
-            {
-                var commands = new List<(string Name, string Command)>();
+            sb.AppendLine();
+            sb.AppendLine(Format.Bold(LocalizationGroup.GetText("BuilderTitleLegend", "Legend")));
+            sb.AppendLine(LocalizationGroup.GetText("BuilderTitleLegendRequired", "`<Argument>`: This argument is required."));
+            sb.AppendLine(LocalizationGroup.GetText("BuilderTitleLegendOptional", "`[Argument]`: This argument is optional."));
+            sb.AppendLine(LocalizationGroup.GetText("BuilderTitleLegendRemainder", "`...`: Spaces and line breaks can be used with this argument."));
 
-                foreach (var mainModule in _commandService.Modules
-                                                          .Where(obj => obj.Name != "debug"
-                                                                     && obj.Name != "help"
-                                                                     && obj.Parent == null))
+            embedBuilder.AddField("\u200b", sb.ToString());
+        }
+
+        var search = commandName != null
+                         ? _commandService.Search(commandContext, commandName)
+                         : default;
+        if (search.Commands?.All(obj => obj.Command.GetFullName().Equals(commandName, StringComparison.InvariantCultureIgnoreCase)) == true)
+        {
+            SingleCommandHelp(search);
+        }
+        else
+        {
+            var commands = new List<(string Name, string Command)>();
+
+            foreach (var mainModule in _commandService.Modules
+                                                      .Where(obj => obj.Name != "debug"
+                                                                 && obj.Name != "help"
+                                                                 && obj.Parent == null))
+            {
+                // Checking preconditions
+                async Task<bool> ArePreconditionsSatisfied(IEnumerable<PreconditionAttribute> preconditions)
                 {
-                    // Checking preconditions
-                    async Task<bool> ArePreconditionsSatisfied(IEnumerable<PreconditionAttribute> preconditions)
-                    {
-                        var arePreconditionsSatisfied = true;
+                    var arePreconditionsSatisfied = true;
 
-                        foreach (var precondition in preconditions)
+                    foreach (var precondition in preconditions)
+                    {
+                        try
                         {
-                            try
-                            {
-                                if ((await precondition.CheckPermissionsAsync(commandContext, null, context.ServiceProvider).ConfigureAwait(false)).IsSuccess == false)
-                                {
-                                    arePreconditionsSatisfied = false;
-                                    break;
-                                }
-                            }
-                            catch
+                            if ((await precondition.CheckPermissionsAsync(commandContext, null, context.ServiceProvider).ConfigureAwait(false)).IsSuccess == false)
                             {
                                 arePreconditionsSatisfied = false;
                                 break;
                             }
                         }
-
-                        return arePreconditionsSatisfied;
-                    }
-
-                    // Adding commands of module
-                    async Task AddCommands(ModuleInfo module)
-                    {
-                        if (await ArePreconditionsSatisfied(module.Preconditions).ConfigureAwait(false))
+                        catch
                         {
-                            if (module.Commands.Count > 0)
-                            {
-                                foreach (var command in module.Commands)
-                                {
-                                    if (await ArePreconditionsSatisfied(command.Preconditions).ConfigureAwait(false))
-                                    {
-                                        commands.Add((command.GetMainGroup(), command.GetFullName()));
-                                    }
-                                }
-                            }
-
-                            if (module.Submodules != null)
-                            {
-                                foreach (var submodule in module.Submodules)
-                                {
-                                    await AddCommands(submodule).ConfigureAwait(false);
-                                }
-                            }
+                            arePreconditionsSatisfied = false;
+                            break;
                         }
                     }
 
-                    await AddCommands(mainModule).ConfigureAwait(false);
+                    return arePreconditionsSatisfied;
                 }
 
-                // Filtered command list
-                List<(string Name, string Command)> filteredCommands = null;
-
-                if (string.IsNullOrWhiteSpace(commandName))
+                // Adding commands of module
+                async Task AddCommands(ModuleInfo module)
                 {
-                    filteredCommands = commands;
-                }
-                else
-                {
-                    while (filteredCommands == null)
+                    if (await ArePreconditionsSatisfied(module.Preconditions).ConfigureAwait(false))
                     {
-                        if (commands.Any(obj => obj.Command.StartsWith(commandName, StringComparison.InvariantCultureIgnoreCase)))
+                        if (module.Commands.Count > 0)
                         {
-                            filteredCommands = commands.Where(obj => obj.Command.StartsWith(commandName, StringComparison.InvariantCultureIgnoreCase)).ToList();
+                            foreach (var command in module.Commands)
+                            {
+                                if (await ArePreconditionsSatisfied(command.Preconditions).ConfigureAwait(false))
+                                {
+                                    commands.Add((command.GetMainGroup(), command.GetFullName()));
+                                }
+                            }
+                        }
+
+                        if (module.Submodules != null)
+                        {
+                            foreach (var submodule in module.Submodules)
+                            {
+                                await AddCommands(submodule).ConfigureAwait(false);
+                            }
+                        }
+                    }
+                }
+
+                await AddCommands(mainModule).ConfigureAwait(false);
+            }
+
+            // Filtered command list
+            List<(string Name, string Command)> filteredCommands = null;
+
+            if (string.IsNullOrWhiteSpace(commandName))
+            {
+                filteredCommands = commands;
+            }
+            else
+            {
+                while (filteredCommands == null)
+                {
+                    if (commands.Any(obj => obj.Command.StartsWith(commandName, StringComparison.InvariantCultureIgnoreCase)))
+                    {
+                        filteredCommands = commands.Where(obj => obj.Command.StartsWith(commandName, StringComparison.InvariantCultureIgnoreCase)).ToList();
+                    }
+                    else
+                    {
+                        var i = commandName.LastIndexOf(' ');
+                        if (i == -1)
+                        {
+                            filteredCommands = commands;
+                            commandName = string.Empty;
                         }
                         else
                         {
-                            var i = commandName.LastIndexOf(' ');
-                            if (i == -1)
-                            {
-                                filteredCommands = commands;
-                                commandName = string.Empty;
-                            }
-                            else
-                            {
-                                commandName = commandName[..i];
-                            }
+                            commandName = commandName[..i];
                         }
-                    }
-                }
-
-                // Grouping by main module
-                var modules = new Dictionary<string, (List<string> Commands, bool IsOversized)>();
-                foreach (var module in filteredCommands.GroupBy(obj => obj.Name))
-                {
-                    modules.Add(module.Key, (module.Select(obj => obj.Command).Distinct().ToList(), module.Any(obj => obj.Command.Length > 18)));
-                }
-
-                // Do we need to display a command help?
-                if (modules.Count == 1
-                 && modules.First().Value.Commands.Count == 1)
-                {
-                    commandName = modules.First().Value.Commands.First();
-
-                    search = _commandService.Search(commandContext, commandName);
-                    if (search.Commands != null)
-                    {
-                        SingleCommandHelp(search);
-                    }
-                }
-
-                if (embedBuilder.Fields.Count == 0)
-                {
-                    if (string.IsNullOrEmpty(commandName) == false)
-                    {
-                        embedBuilder.Description += $" [{commandName}]";
-                    }
-
-                    embedBuilder.WithDescription(LocalizationGroup.GetText("BuilderDescriptionGeneral", "With the command `help <command>` you can get the help of a certain command."));
-
-                    foreach (var (module, (moduleCommands, isOversized)) in modules.OrderByDescending(obj => obj.Value.IsOversized).ThenByDescending(obj => obj.Value.Commands.Count))
-                    {
-                        embedBuilder.AddField(Format.Bold(LocalizationGroup.GetText(module, module)),
-                                              "```" + string.Join(Environment.NewLine, moduleCommands.OrderBy(obj => obj)) + "```",
-                                              isOversized == false);
                     }
                 }
             }
 
-            await context.ReplyAsync(embed: embedBuilder.Build())
-                         .ConfigureAwait(false);
+            // Grouping by main module
+            var modules = new Dictionary<string, (List<string> Commands, bool IsOversized)>();
+            foreach (var module in filteredCommands.GroupBy(obj => obj.Name))
+            {
+                modules.Add(module.Key, (module.Select(obj => obj.Command).Distinct().ToList(), module.Any(obj => obj.Command.Length > 18)));
+            }
+
+            // Do we need to display a command help?
+            if (modules.Count == 1
+             && modules.First().Value.Commands.Count == 1)
+            {
+                commandName = modules.First().Value.Commands.First();
+
+                search = _commandService.Search(commandContext, commandName);
+                if (search.Commands != null)
+                {
+                    SingleCommandHelp(search);
+                }
+            }
+
+            if (embedBuilder.Fields.Count == 0)
+            {
+                if (string.IsNullOrEmpty(commandName) == false)
+                {
+                    embedBuilder.Description += $" [{commandName}]";
+                }
+
+                embedBuilder.WithDescription(LocalizationGroup.GetText("BuilderDescriptionGeneral", "With the command `help <command>` you can get the help of a certain command."));
+
+                foreach (var (module, (moduleCommands, isOversized)) in modules.OrderByDescending(obj => obj.Value.IsOversized).ThenByDescending(obj => obj.Value.Commands.Count))
+                {
+                    embedBuilder.AddField(Format.Bold(LocalizationGroup.GetText(module, module)),
+                                          "```" + string.Join(Environment.NewLine, moduleCommands.OrderBy(obj => obj)) + "```",
+                                          isOversized == false);
+                }
+            }
         }
 
-        #endregion // Methods
+        await context.ReplyAsync(embed: embedBuilder.Build())
+                     .ConfigureAwait(false);
     }
+
+    #endregion // Methods
 }

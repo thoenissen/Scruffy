@@ -6,44 +6,23 @@ using Discord.Commands;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Entity.Tables.Discord;
-using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Core;
 
 namespace Scruffy.Services.Discord;
 
 /// <summary>
 /// Blocked discord channel management
 /// </summary>
-public class BlockedChannelService : LocatedServiceBase
+public class BlockedChannelService : SingletonLocatedServiceBase
 {
     #region Fields
 
     /// <summary>
     /// Blocked channels
     /// </summary>
-    private readonly ConcurrentDictionary<(ulong Server, ulong ChannelId), byte> _blockedChannels;
+    private ConcurrentDictionary<(ulong Server, ulong ChannelId), byte> _blockedChannels;
 
     #endregion // Fields
-
-    #region Constructor
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="localizationService">Localization service</param>
-    public BlockedChannelService(LocalizationService localizationService)
-        : base(localizationService)
-    {
-        using (var dbFactory = RepositoryFactory.CreateInstance())
-        {
-            var channels = dbFactory.GetRepository<BlockedDiscordChannelRepository>()
-                                    .GetQuery()
-                                    .ToList();
-
-            _blockedChannels = new ConcurrentDictionary<(ulong Server, ulong ChannelId), byte>(channels.ToDictionary(obj => (obj.ServerId, obj.ChannelId), obj => (byte)0));
-        }
-    }
-
-    #endregion // Constructor
 
     #region Methods
 
@@ -117,4 +96,29 @@ public class BlockedChannelService : LocatedServiceBase
     }
 
     #endregion // Methods
+
+    #region SingletonLocatedServiceBase
+
+    /// <summary>
+    /// Initialize
+    /// </summary>
+    /// <param name="serviceProvider">Service provider</param>
+    /// <remarks>When this method is called all services are registered and can be resolved.  But not all singleton services may be initialized. </remarks>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public override async Task Initialize(IServiceProvider serviceProvider)
+    {
+        await base.Initialize(serviceProvider)
+                  .ConfigureAwait(false);
+
+        using (var dbFactory = RepositoryFactory.CreateInstance())
+        {
+            var channels = dbFactory.GetRepository<BlockedDiscordChannelRepository>()
+                                    .GetQuery()
+                                    .ToList();
+
+            _blockedChannels = new ConcurrentDictionary<(ulong Server, ulong ChannelId), byte>(channels.ToDictionary(obj => (obj.ServerId, obj.ChannelId), obj => (byte)0));
+        }
+    }
+
+    #endregion // SingletonLocatedServiceBase
 }

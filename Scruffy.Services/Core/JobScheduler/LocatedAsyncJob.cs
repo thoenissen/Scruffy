@@ -36,7 +36,7 @@ public abstract class LocatedAsyncJob : IAsyncJob
     /// <summary>
     /// Localized group
     /// </summary>
-    public LocalizationGroup LocalizationGroup => _localizationGroup ??= GlobalServiceProvider.Current.GetServiceProvider().GetRequiredService<LocalizationService>().GetGroup(GetType().Name);
+    public LocalizationGroup LocalizationGroup => _localizationGroup ??= ServiceProviderContainer.Current.GetServiceProvider().GetRequiredService<LocalizationService>().GetGroup(GetType().Name);
 
     #endregion // Properties
 

@@ -27,7 +27,7 @@ public class BlockedChannelCheckAttribute : PreconditionAttribute
     /// </summary>
     static BlockedChannelCheckAttribute()
     {
-        _service = GlobalServiceProvider.Current.GetServiceProvider().GetService<BlockedChannelService>();
+        _service = Core.ServiceProviderContainer.Current.GetServiceProvider().GetService<BlockedChannelService>();
     }
 
     #endregion // Constructor

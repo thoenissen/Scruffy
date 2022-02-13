@@ -1,6 +1,7 @@
 ﻿using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.GuildWars2.Account;
 using Scruffy.Data.Entity.Repositories.GuildWars2.GameData;
+using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.WebApi;
 

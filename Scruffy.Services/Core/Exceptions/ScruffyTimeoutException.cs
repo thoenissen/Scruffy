@@ -17,7 +17,7 @@ public class ScruffyTimeoutException : ScruffyException
     /// <returns>Message</returns>
     public override string GetLocalizedMessage()
     {
-        using (var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider())
+        using (var serviceProvider = ServiceProviderContainer.Current.GetServiceProvider())
         {
             return serviceProvider.GetService<LocalizationService>()
                                   ?.GetGroup(nameof(ScruffyTimeoutException))

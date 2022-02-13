@@ -1,13 +1,9 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
 using System.Threading.Tasks;
 
 using Discord;
 using Discord.WebSocket;
-
-using Scruffy.Services.Core;
-using Scruffy.Services.Core.Localization;
 
 namespace Scruffy.ManualTesting;
 
@@ -19,7 +15,7 @@ internal static class Preparation
     /// <summary>
     /// Discord client
     /// </summary>
-    private static DiscordSocketClient _discordClient;
+    public static DiscordSocketClient DiscordClient { get; private set; }
 
     /// <summary>
     /// Setting up environment variables
@@ -40,24 +36,6 @@ internal static class Preparation
     }
 
     /// <summary>
-    /// Setting up the localization service
-    /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    internal static async Task SetUpLocalizationService()
-    {
-        var stream = Assembly.Load("Scruffy.Data").GetManifestResourceStream("Scruffy.Data.Resources.Languages.de-DE.json");
-        if (stream != null)
-        {
-            await using (stream.ConfigureAwait(false))
-            {
-                var localizationService = new LocalizationService();
-                localizationService.Load(stream);
-                GlobalServiceProvider.Current.AddSingleton(localizationService);
-            }
-        }
-    }
-
-    /// <summary>
     /// Setting up discord client
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
@@ -70,14 +48,12 @@ internal static class Preparation
                          GatewayIntents = GatewayIntents.All
                      };
 
-        _discordClient = new DiscordSocketClient(config);
+        DiscordClient = new DiscordSocketClient(config);
 
-        GlobalServiceProvider.Current.AddSingleton(_discordClient);
-
-        await _discordClient.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_TOKEN"))
+        await DiscordClient.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_TOKEN"))
                             .ConfigureAwait(false);
 
-        await _discordClient.StartAsync()
+        await DiscordClient.StartAsync()
                             .ConfigureAwait(false);
     }
 }

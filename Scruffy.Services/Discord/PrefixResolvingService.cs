@@ -4,13 +4,14 @@ using Discord;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.CoreData;
+using Scruffy.Services.Core;
 
 namespace Scruffy.Services.Discord;
 
 /// <summary>
 /// Resolving command prefixes
 /// </summary>
-public class PrefixResolvingService
+public class PrefixResolvingService : SingletonLocatedServiceBase
 {
     #region Fields
 
@@ -20,23 +21,6 @@ public class PrefixResolvingService
     private ConcurrentDictionary<ulong, string> _prefixes;
 
     #endregion // Fields
-
-    #region Constructor
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    public PrefixResolvingService()
-    {
-        using (var dbFactory = RepositoryFactory.CreateInstance())
-        {
-            _prefixes = new ConcurrentDictionary<ulong, string>(dbFactory.GetRepository<ServerConfigurationRepository>()
-                                                                         .GetQuery()
-                                                                         .ToDictionary(obj => obj.DiscordServerId, obj => obj.Prefix));
-        }
-    }
-
-    #endregion // Constructor
 
     #region Methods
 
@@ -79,4 +63,27 @@ public class PrefixResolvingService
     }
 
     #endregion // Methods
+
+    #region SingletonLocatedServiceBase
+
+    /// <summary>
+    /// Initialize
+    /// </summary>
+    /// <param name="serviceProvider">Service provider</param>
+    /// <remarks>When this method is called all services are registered and can be resolved.  But not all singleton services may be initialized. </remarks>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public override async Task Initialize(IServiceProvider serviceProvider)
+    {
+        await base.Initialize(serviceProvider)
+                  .ConfigureAwait(false);
+
+        using (var dbFactory = RepositoryFactory.CreateInstance())
+        {
+            _prefixes = new ConcurrentDictionary<ulong, string>(dbFactory.GetRepository<ServerConfigurationRepository>()
+                                                                         .GetQuery()
+                                                                         .ToDictionary(obj => obj.DiscordServerId, obj => obj.Prefix));
+        }
+    }
+
+    #endregion // SingletonLocatedServiceBase
 }

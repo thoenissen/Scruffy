@@ -10,6 +10,7 @@ using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Entity.Repositories.Guild;
 using Scruffy.Data.Enumerations.Guild;
 using Scruffy.Data.Enumerations.GuildWars2;
+using Scruffy.Services.Core;
 using Scruffy.Services.Core.Extensions;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord;

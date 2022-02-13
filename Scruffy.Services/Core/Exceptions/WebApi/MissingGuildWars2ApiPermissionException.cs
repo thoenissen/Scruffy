@@ -39,7 +39,7 @@ public class MissingGuildWars2ApiPermissionException : ScruffyException
     /// <returns>Message</returns>
     public override string GetLocalizedMessage()
     {
-        using (var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider())
+        using (var serviceProvider = ServiceProviderContainer.Current.GetServiceProvider())
         {
             var localizationGroup = serviceProvider.GetService<LocalizationService>()
                                                    .GetGroup(nameof(MissingGuildWars2ApiPermissionException));

@@ -44,7 +44,7 @@ public sealed class CommandContextContainer : ICommandContext, ICommandContextOp
     /// <param name="message">Message</param>
     public CommandContextContainer(DiscordSocketClient discordClient, SocketUserMessage message)
     {
-        ServiceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+        ServiceProvider = Core.ServiceProviderContainer.Current.GetServiceProvider();
 
         _userManagementService = ServiceProvider.GetService<UserManagementService>();
         Interactivity = ServiceProvider.GetService<InteractivityService>();
@@ -202,7 +202,7 @@ public sealed class CommandContextContainer : ICommandContext, ICommandContextOp
     /// </summary>
     public void Dispose()
     {
-        (ServiceProvider as ServiceProvider)?.Dispose();
+        (ServiceProvider as Microsoft.Extensions.DependencyInjection.ServiceProvider)?.Dispose();
         ServiceProvider = null;
     }
 

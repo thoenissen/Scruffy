@@ -23,7 +23,7 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
     /// <param name="interaction">Interaction</param>
     public InteractionContextContainer(DiscordSocketClient discordClient, SocketInteraction interaction)
     {
-        ServiceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+        ServiceProvider = Core.ServiceProviderContainer.Current.GetServiceProvider();
         Interactivity = ServiceProvider.GetService<InteractivityService>();
 
         Client = discordClient;
@@ -137,7 +137,7 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
     /// </summary>
     public void Dispose()
     {
-        (ServiceProvider as ServiceProvider)?.Dispose();
+        (ServiceProvider as Microsoft.Extensions.DependencyInjection.ServiceProvider)?.Dispose();
         ServiceProvider = null;
     }
 

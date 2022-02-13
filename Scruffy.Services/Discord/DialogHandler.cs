@@ -22,7 +22,7 @@ public sealed class DialogHandler : IAsyncDisposable, IDisposable
     /// <summary>
     /// Service provider
     /// </summary>
-    private ServiceProvider _serviceProvider;
+    private Microsoft.Extensions.DependencyInjection.ServiceProvider _serviceProvider;
 
     #endregion // Fields
 
@@ -35,7 +35,7 @@ public sealed class DialogHandler : IAsyncDisposable, IDisposable
     public DialogHandler(CommandContextContainer commandContext)
     {
         _commandContext = commandContext;
-        _serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+        _serviceProvider = Core.ServiceProviderContainer.Current.GetServiceProvider();
 
         DialogContext = new DialogContext();
     }
@@ -63,7 +63,7 @@ public sealed class DialogHandler : IAsyncDisposable, IDisposable
     /// <returns>Result</returns>
     public static async Task<TData> Run<T, TData>(CommandContextContainer commandContext, Action<DialogContext> onInitialize = null) where T : DialogElementBase<TData>
     {
-        var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+        var serviceProvider = Core.ServiceProviderContainer.Current.GetServiceProvider();
         await using (serviceProvider.ConfigureAwait(false))
         {
             var service = serviceProvider.GetService<T>();
@@ -88,7 +88,7 @@ public sealed class DialogHandler : IAsyncDisposable, IDisposable
     /// <returns>Result</returns>
     public static async Task<TData> RunForm<TData>(CommandContextContainer commandContext, bool deleteMessages) where TData : new()
     {
-        var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+        var serviceProvider = Core.ServiceProviderContainer.Current.GetServiceProvider();
         await using (serviceProvider.ConfigureAwait(false))
         {
             var data = new TData();

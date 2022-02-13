@@ -28,9 +28,14 @@ public sealed class DiscordBot : IAsyncDisposable
     #region Fields
 
     /// <summary>
-    /// Localization service
+    /// Service provider
     /// </summary>
-    private LocalizationService _localizationService;
+    private ServiceProviderContainer _serviceProviderContainer;
+
+    /// <summary>
+    /// Service scope
+    /// </summary>
+    private IServiceScope _serviceScope;
 
     /// <summary>
     /// Localization group
@@ -57,30 +62,24 @@ public sealed class DiscordBot : IAsyncDisposable
     /// </summary>
     private PrefixResolvingService _prefixResolver;
 
-    /// <summary>
-    /// Administration permissions validation
-    /// </summary>
-    private AdministrationPermissionsValidationService _administrationPermissionsValidationService;
-
-    /// <summary>
-    /// Blocked channel service
-    /// </summary>
-    private BlockedChannelService _blockedChannelService;
-
     #endregion // Fields
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public DiscordBot()
+    {
+        _serviceProviderContainer = new ServiceProviderContainer();
+    }
 
     #region Methods
 
     /// <summary>
     /// Start the discord bot
     /// </summary>
-    /// <param name="localizationService">Localization service</param>
     /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-    public async Task StartAsync(LocalizationService localizationService)
+    public async Task StartAsync()
     {
-        _localizationService = localizationService;
-        _localizationGroup = _localizationService.GetGroup(nameof(DiscordBot));
-
         var config = new DiscordSocketConfig
                      {
                          LogLevel = LogSeverity.Info,
@@ -92,10 +91,6 @@ public sealed class DiscordBot : IAsyncDisposable
         _discordClient.MessageReceived += OnMessageReceived;
         _discordClient.InteractionCreated += OnInteractionCreated;
         _discordClient.Log += OnDiscordClientLog;
-
-        _prefixResolver = new PrefixResolvingService();
-        _administrationPermissionsValidationService = new AdministrationPermissionsValidationService();
-        _blockedChannelService = new BlockedChannelService(localizationService);
 
         var commandConfiguration = new CommandServiceConfig
                                    {
@@ -121,23 +116,26 @@ public sealed class DiscordBot : IAsyncDisposable
         _interaction.Log += OnInteractionServiceLog;
         _interaction.ComponentCommandExecuted += OnComponentCommandExecuted;
 
-        GlobalServiceProvider.Current.AddSingleton(_discordClient);
-        GlobalServiceProvider.Current.AddSingleton(_prefixResolver);
-        GlobalServiceProvider.Current.AddSingleton(_administrationPermissionsValidationService);
-        GlobalServiceProvider.Current.AddSingleton(_blockedChannelService);
-        GlobalServiceProvider.Current.AddSingleton(new DiscordStatusService(_discordClient));
-        GlobalServiceProvider.Current.AddSingleton(_commands);
-        GlobalServiceProvider.Current.AddSingleton(_interaction);
+        _serviceProviderContainer.Initialize(obj =>
+                                             {
+                                                 obj.AddSingleton(_discordClient);
+                                                 obj.AddSingleton(_commands);
+                                                 obj.AddSingleton(_interaction);
+                                             });
 
-        var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+        _serviceScope = _serviceProviderContainer.CreateScope();
 
-        await _interaction.AddModulesAsync(Assembly.Load("Scruffy.Commands"), serviceProvider)
+        _localizationGroup = _serviceScope.ServiceProvider
+                                          .GetRequiredService<LocalizationService>()
+                                          .GetGroup(nameof(DiscordBot));
+
+        _prefixResolver = _serviceScope.ServiceProvider
+                                       .GetRequiredService<PrefixResolvingService>();
+
+        await _interaction.AddModulesAsync(Assembly.Load("Scruffy.Commands"), _serviceScope.ServiceProvider)
                           .ConfigureAwait(false);
 
-        var interactionService = new InteractivityService(_discordClient, _interaction, serviceProvider);
-        GlobalServiceProvider.Current.AddSingleton(interactionService);
-
-        await _commands.AddModulesAsync(Assembly.Load("Scruffy.Commands"), serviceProvider)
+        await _commands.AddModulesAsync(Assembly.Load("Scruffy.Commands"), _serviceScope.ServiceProvider)
                        .ConfigureAwait(false);
 
         await _discordClient.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_TOKEN"))
@@ -478,6 +476,19 @@ public sealed class DiscordBot : IAsyncDisposable
 
             _discordClient.Dispose();
             _discordClient = null;
+        }
+
+        if (_serviceScope != null)
+        {
+            _serviceScope.Dispose();
+            _serviceScope = null;
+        }
+
+        if (_serviceProviderContainer != null)
+        {
+            await _serviceProviderContainer.DisposeAsync()
+                                           .ConfigureAwait(false);
+            _serviceProviderContainer = null;
         }
     }
 

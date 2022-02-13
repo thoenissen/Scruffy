@@ -28,7 +28,7 @@ public class RequireAdministratorPermissionsAttribute : PreconditionAttribute
     /// </summary>
     static RequireAdministratorPermissionsAttribute()
     {
-        _service = GlobalServiceProvider.Current.GetServiceProvider().GetService<AdministrationPermissionsValidationService>();
+        _service = Core.ServiceProviderContainer.Current.GetServiceProvider().GetService<AdministrationPermissionsValidationService>();
     }
 
     #endregion // Constructor

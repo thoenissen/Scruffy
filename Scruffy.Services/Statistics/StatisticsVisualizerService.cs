@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Statistics;
 using Scruffy.Data.Json.QuickChart;
+using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord;
 using Scruffy.Services.WebApi;

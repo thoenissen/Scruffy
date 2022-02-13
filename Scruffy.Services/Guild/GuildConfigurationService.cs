@@ -5,6 +5,7 @@ using Scruffy.Data.Entity.Repositories.Guild;
 using Scruffy.Data.Enumerations.Guild;
 using Scruffy.Data.Json.Calendar;
 using Scruffy.Services.Calendar;
+using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord;
 using Scruffy.Services.Guild.DialogElements.Forms;

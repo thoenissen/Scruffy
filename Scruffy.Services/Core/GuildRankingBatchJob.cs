@@ -3,31 +3,30 @@ using Scruffy.Services.Guild.Jobs;
 using Scruffy.Services.GuildWars2.Jobs;
 using Scruffy.Services.Statistics.Jobs;
 
-namespace Scruffy.Services.Core
+namespace Scruffy.Services.Core;
+
+/// <summary>
+/// Executing guild ranking relevant jobs
+/// </summary>
+internal class GuildRankingBatchJob : BatchJob
 {
+    #region Constructor
+
     /// <summary>
-    /// Executing guild ranking relevant jobs
+    /// Constructor
     /// </summary>
-    internal class GuildRankingBatchJob : BatchJob
+    public GuildRankingBatchJob()
+        : base(new List<Type>
+               {
+                   typeof(AccountLoginCheckJob),
+                   typeof(AchievementImportJob),
+                   typeof(MessageImportJob),
+                   typeof(GuildRankImportJob),
+                   typeof(GuildRankCurrentPointsJob),
+                   typeof(GuildSpecialRankPointsJob),
+               })
     {
-        #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public GuildRankingBatchJob()
-            : base(new List<Type>
-                   {
-                       typeof(AccountLoginCheckJob),
-                       typeof(AchievementImportJob),
-                       typeof(MessageImportJob),
-                       typeof(GuildRankImportJob),
-                       typeof(GuildRankCurrentPointsJob),
-                       typeof(GuildSpecialRankPointsJob),
-                   })
-        {
-        }
-
-        #endregion // Constructor
     }
+
+    #endregion // Constructor
 }

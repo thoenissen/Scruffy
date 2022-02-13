@@ -9,7 +9,7 @@ namespace Scruffy.Services.Core;
 /// <summary>
 /// Validation of administration permissions
 /// </summary>
-public class AdministrationPermissionsValidationService
+public class AdministrationPermissionsValidationService : SingletonLocatedServiceBase
 {
     #region Fields
 
@@ -19,26 +19,6 @@ public class AdministrationPermissionsValidationService
     private ConcurrentDictionary<ulong, ulong> _roles;
 
     #endregion // Fields
-
-    #region Constructor
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    public AdministrationPermissionsValidationService()
-    {
-        using (var dbFactory = RepositoryFactory.CreateInstance())
-        {
-            _roles = new ConcurrentDictionary<ulong, ulong>(dbFactory.GetRepository<ServerConfigurationRepository>()
-                                                                     .GetQuery()
-                                                                     .Where(obj => obj.DiscordAdministratorRoleId != null)
-
-                                                                     // ReSharper disable once PossibleInvalidOperationException
-                                                                     .ToDictionary(obj => obj.DiscordServerId, obj => obj.DiscordAdministratorRoleId.Value));
-        }
-    }
-
-    #endregion // Constructor
 
     #region Methods
 
@@ -79,4 +59,30 @@ public class AdministrationPermissionsValidationService
     }
 
     #endregion // Methods
+
+    #region SingletonLocatedServiceBase
+
+    /// <summary>
+    /// Initialize
+    /// </summary>
+    /// <param name="serviceProvider">Service provider</param>
+    /// <remarks>When this method is called all services are registered and can be resolved.  But not all singleton services may be initialized. </remarks>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public override async Task Initialize(IServiceProvider serviceProvider)
+    {
+        await base.Initialize(serviceProvider)
+                  .ConfigureAwait(false);
+
+        using (var dbFactory = RepositoryFactory.CreateInstance())
+        {
+            _roles = new ConcurrentDictionary<ulong, ulong>(dbFactory.GetRepository<ServerConfigurationRepository>()
+                                                                     .GetQuery()
+                                                                     .Where(obj => obj.DiscordAdministratorRoleId != null)
+
+                                                                     // ReSharper disable once PossibleInvalidOperationException
+                                                                     .ToDictionary(obj => obj.DiscordServerId, obj => obj.DiscordAdministratorRoleId.Value));
+        }
+    }
+
+    #endregion // SingletonLocatedServiceBase
 }

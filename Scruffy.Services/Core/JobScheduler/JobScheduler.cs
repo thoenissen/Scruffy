@@ -19,20 +19,8 @@ namespace Scruffy.Services.Core.JobScheduler;
 /// <summary>
 /// Scheduling jobs
 /// </summary>
-public class JobScheduler : IAsyncDisposable
+public sealed class JobScheduler : SingletonLocatedServiceBase, IAsyncDisposable
 {
-    #region Constructor
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    public JobScheduler()
-    {
-        JobManager.Initialize();
-    }
-
-    #endregion // Constructor
-
     #region Methods
 
     /// <summary>
@@ -59,7 +47,7 @@ public class JobScheduler : IAsyncDisposable
         JobManager.AddJob<WordChainJob>(obj => obj.ToRunEvery(10).Minutes());
 
         // fractal reminders
-        var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+        var serviceProvider = ServiceProviderContainer.Current.GetServiceProvider();
         await using (serviceProvider.ConfigureAwait(false))
         {
             var fractalReminderService = serviceProvider.GetRequiredService<FractalLfgReminderService>();
@@ -205,13 +193,31 @@ public class JobScheduler : IAsyncDisposable
 
     #endregion // Methods
 
+    #region SingletonLocatedServiceBase
+
+    /// <summary>
+    /// Initialize
+    /// </summary>
+    /// <param name="serviceProvider">Service provider</param>
+    /// <remarks>When this method is called all services are registered and can be resolved.  But not all singleton services may be initialized. </remarks>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public override async Task Initialize(IServiceProvider serviceProvider)
+    {
+        await base.Initialize(serviceProvider)
+                  .ConfigureAwait(false);
+
+        JobManager.Initialize();
+    }
+
+    #endregion // SingletonLocatedServiceBase
+
     #region IAsyncDisposable
 
     /// <summary>
     /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously.
     /// </summary>
     /// <returns> A task that represents the asynchronous dispose operation.</returns>
-    public async ValueTask DisposeAsync()
+    async ValueTask IAsyncDisposable.DisposeAsync()
     {
         await Task.Run(JobManager.StopAndBlock).ConfigureAwait(false);
     }

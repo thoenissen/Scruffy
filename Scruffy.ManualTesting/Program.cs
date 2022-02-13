@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
 
+using Microsoft.Extensions.DependencyInjection;
+
 using Scruffy.ManualTesting;
 using Scruffy.Services.Core;
 
@@ -9,13 +11,15 @@ EnvironmentSettings.UseProductiveConfiguration = true;
 // Preparations
 await Preparation.SetEnvironmentVariables()
                  .ConfigureAwait(false);
-await Preparation.SetUpLocalizationService()
-                 .ConfigureAwait(false);
 await Preparation.SetUpDiscordClient()
                  .ConfigureAwait(false);
 
-var serviceProvider = GlobalServiceProvider.Current.GetServiceProvider();
+var serviceProvider = new ServiceProviderContainer();
 await using var unused = serviceProvider.ConfigureAwait(false);
 
+serviceProvider.Initialize(obj => obj.AddSingleton(Preparation.DiscordClient));
+
+using var scope = serviceProvider.CreateScope();
+
 // Testing
-//var service = serviceProvider.GetService<TODO>();
+//var service = scope.GetService<TODO>();

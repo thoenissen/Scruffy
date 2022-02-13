@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Fractals;
@@ -11,7 +12,7 @@ namespace Scruffy.Services.Fractals;
 /// <summary>
 /// Management of the fractal reminders
 /// </summary>
-public sealed class FractalLfgReminderService : IDisposable
+public sealed class FractalLfgReminderService : SingletonLocatedServiceBase, IDisposable
 {
     #region Fields
 
@@ -42,10 +43,8 @@ public sealed class FractalLfgReminderService : IDisposable
     /// <summary>
     /// Constructor
     /// </summary>
-    /// <param name="jobScheduler">Job scheduler</param>
-    public FractalLfgReminderService(JobScheduler jobScheduler)
+    public FractalLfgReminderService()
     {
-        _jobScheduler = jobScheduler;
         _lockFactory = new LockFactory();
     }
 
@@ -155,6 +154,24 @@ public sealed class FractalLfgReminderService : IDisposable
     }
 
     #endregion // Methods
+
+    #region SingleLocatedServiceBase
+
+    /// <summary>
+    /// Initialize
+    /// </summary>
+    /// <param name="serviceProvider">Service provider</param>
+    /// <remarks>When this method is called all services are registered and can be resolved.  But not all singleton services may be initialized. </remarks>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public override async Task Initialize(IServiceProvider serviceProvider)
+    {
+        await base.Initialize(serviceProvider)
+                  .ConfigureAwait(false);
+
+        _jobScheduler = serviceProvider.GetRequiredService<JobScheduler>();
+    }
+
+    #endregion // SingleLocatedServiceBase
 
     #region IDisposable
 

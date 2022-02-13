@@ -1,4 +1,6 @@
-﻿namespace Scruffy.Services.Core.Localization;
+﻿using Scruffy.Services.Core.Localization;
+
+namespace Scruffy.Services.Core;
 
 /// <summary>
 /// Command module base class with localization services
