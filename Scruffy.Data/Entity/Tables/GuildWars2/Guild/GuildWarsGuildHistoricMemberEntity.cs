@@ -8,10 +8,15 @@ namespace Scruffy.Data.Entity.Tables.GuildWars2.Guild;
 /// <summary>
 /// Members of a Guild Wars 2 guild
 /// </summary>
-[Table("GuildWarsGuildMembers")]
-public class GuildWarsGuildMemberEntity
+[Table("GuildWarsGuildHistoricMembers")]
+public class GuildWarsGuildHistoricMemberEntity
 {
     #region Properties
+
+    /// <summary>
+    /// Date
+    /// </summary>
+    public DateTime Date { get; set; }
 
     /// <summary>
     /// Id of the guild
@@ -28,6 +33,11 @@ public class GuildWarsGuildMemberEntity
     /// Current rank
     /// </summary>
     public string Rank { get; set; }
+
+    /// <summary>
+    /// Join date
+    /// </summary>
+    public DateTime? JoinedAt { get; set; }
 
     #region Navigation properties
 

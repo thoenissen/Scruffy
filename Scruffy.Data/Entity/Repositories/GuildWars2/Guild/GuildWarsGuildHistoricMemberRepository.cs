@@ -10,9 +10,9 @@ using Scruffy.Data.Entity.Tables.GuildWars2.Guild;
 namespace Scruffy.Data.Entity.Repositories.GuildWars2.Guild;
 
 /// <summary>
-/// Repository for accessing <see cref="GuildWarsGuildMemberEntity"/>
+/// Repository for accessing <see cref="GuildWarsGuildHistoricMemberEntity"/>
 /// </summary>
-public class GuildWarsGuildMemberRepository : RepositoryBase<GuildWarsGuildMemberQueryable, GuildWarsGuildMemberEntity>
+public class GuildWarsGuildHistoricMemberRepository : RepositoryBase<GuildWarsGuildHistoricMemberQueryable, GuildWarsGuildHistoricMemberEntity>
 {
     #region Constructor
 
@@ -20,7 +20,7 @@ public class GuildWarsGuildMemberRepository : RepositoryBase<GuildWarsGuildMembe
     /// Constructor
     /// </summary>
     /// <param name="dbContext"><see cref="DbContext"/>-object</param>
-    public GuildWarsGuildMemberRepository(ScruffyDbContext dbContext)
+    public GuildWarsGuildHistoricMemberRepository(ScruffyDbContext dbContext)
         : base(dbContext)
     {
     }
@@ -49,7 +49,8 @@ public class GuildWarsGuildMemberRepository : RepositoryBase<GuildWarsGuildMembe
                 await connection.OpenAsync()
                                 .ConfigureAwait(false);
 
-                var sqlCommand = new SqlCommand(@"CREATE TABLE #GuildWarsGuildMembers (
+                var sqlCommand = new SqlCommand(@"CREATE TABLE #GuildWarsGuildHistoricMembers (
+                                                                       [Date] datetime2(7) NOT NULL,
                                                                        [GuildId] bigint NOT NULL,
                                                                        [Name] nvarchar(42) NOT NULL,
                                                                        [Rank] nvarchar(MAX) NULL
@@ -62,38 +63,46 @@ public class GuildWarsGuildMemberRepository : RepositoryBase<GuildWarsGuildMembe
                 }
 
                 var dataTable = new DataTable();
-                dataTable.Columns.Add(nameof(GuildWarsGuildMemberEntity.GuildId), typeof(long));
-                dataTable.Columns.Add(nameof(GuildWarsGuildMemberEntity.Name), typeof(string));
-                dataTable.Columns.Add(nameof(GuildWarsGuildMemberEntity.Rank), typeof(string));
+                dataTable.Columns.Add(nameof(GuildWarsGuildHistoricMemberEntity.Date), typeof(DateTime));
+                dataTable.Columns.Add(nameof(GuildWarsGuildHistoricMemberEntity.GuildId), typeof(long));
+                dataTable.Columns.Add(nameof(GuildWarsGuildHistoricMemberEntity.Name), typeof(string));
+                dataTable.Columns.Add(nameof(GuildWarsGuildHistoricMemberEntity.Rank), typeof(string));
+
+                var today = DateTime.Today;
 
                 foreach (var (name, rank) in members)
                 {
                     // Achievement
-                    dataTable.Rows.Add(guildId,
+                    dataTable.Rows.Add(today,
+                                       guildId,
                                        name,
                                        rank);
                 }
 
                 using (var bulk = new SqlBulkCopy(connection))
                 {
-                    bulk.DestinationTableName = "#GuildWarsGuildMembers";
+                    bulk.DestinationTableName = "#GuildWarsGuildHistoricMembers";
                     await bulk.WriteToServerAsync(dataTable)
                               .ConfigureAwait(false);
                 }
 
-                sqlCommand = new SqlCommand(@"MERGE INTO [GuildWarsGuildMembers] AS [TARGET]
-                                                       USING #GuildWarsGuildMembers AS [Source]
-                                                          ON [Target].[GuildId] = [Source].[GuildId]
-                                                         AND [Target].[Name] = [Source].[Name]
-                                                           WHEN MATCHED THEN
-                                                                UPDATE SET [Target].[Rank] = [Source].[Rank]
-                                                           WHEN NOT MATCHED THEN 
-                                                                INSERT ( [GuildId], [Name], [Rank] )
-                                                                VALUES ( [Source].[GuildId], [Source].[Name], [Source].[Rank] )
-                                                           WHEN NOT MATCHED BY SOURCE AND [Target].[GuildId] = @guildId THEN
-                                                                DELETE;",
+                sqlCommand = new SqlCommand(@"MERGE INTO [GuildWarsGuildHistoricMembers] AS [TARGET]
+                                                   USING #GuildWarsGuildHistoricMembers AS [Source]
+                                                      ON [Target].[Date] = [Source].[Date]
+                                                     AND [Target].[GuildId] = [Source].[GuildId]
+                                                     AND [Target].[Name] = [Source].[Name]
+                                                       WHEN MATCHED THEN
+                                                            UPDATE SET [Target].[Rank] = [Source].[Rank]
+                                                       WHEN NOT MATCHED THEN 
+                                                            INSERT ( [GuildId], [Name], [Rank] )
+                                                            VALUES ( [Source].[GuildId], [Source].[Name], [Source].[Rank] )
+                                                       WHEN NOT MATCHED BY SOURCE 
+                                                        AND [Target].[GuildId] = @guildId
+                                                        AND [Target].[Date] = @date THEN
+                                                            DELETE;",
                                             connection);
                 sqlCommand.Parameters.AddWithValue("@guildId", guildId);
+                sqlCommand.Parameters.AddWithValue("@date", today);
 
                 await using (sqlCommand.ConfigureAwait(false))
                 {

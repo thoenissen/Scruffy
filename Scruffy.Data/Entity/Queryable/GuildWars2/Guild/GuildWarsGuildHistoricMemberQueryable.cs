@@ -4,9 +4,9 @@ using Scruffy.Data.Entity.Tables.GuildWars2.Guild;
 namespace Scruffy.Data.Entity.Queryable.GuildWars2.Guild;
 
 /// <summary>
-/// Queryable for accessing the <see cref="GuildWarsGuildMemberEntity"/>
+/// Queryable for accessing the <see cref="GuildWarsGuildHistoricMemberEntity"/>
 /// </summary>
-public class GuildWarsGuildMemberQueryable : QueryableBase<GuildWarsGuildMemberEntity>
+public class GuildWarsGuildHistoricMemberQueryable : QueryableBase<GuildWarsGuildHistoricMemberEntity>
 {
     #region Constructor
 
@@ -14,7 +14,7 @@ public class GuildWarsGuildMemberQueryable : QueryableBase<GuildWarsGuildMemberE
     /// Constructor
     /// </summary>
     /// <param name="queryable"><see cref="IQueryable"/>-object</param>
-    public GuildWarsGuildMemberQueryable(IQueryable<GuildWarsGuildMemberEntity> queryable)
+    public GuildWarsGuildHistoricMemberQueryable(IQueryable<GuildWarsGuildHistoricMemberEntity> queryable)
         : base(queryable)
     {
     }

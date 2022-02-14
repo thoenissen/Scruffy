@@ -71,7 +71,7 @@ public class GuildRankService : LocatedServiceBase
                     var members = await connector.GetGuildMembers(guild.GuildId)
                                                  .ConfigureAwait(false);
 
-                    await dbFactory.GetRepository<GuildWarsGuildMemberRepository>()
+                    await dbFactory.GetRepository<GuildWarsGuildHistoricMemberRepository>()
                                    .BulkInsert(guild.Id, members.Select(obj => (obj.Name, obj.Rank)))
                                    .ConfigureAwait(false);
                 }
@@ -92,7 +92,7 @@ public class GuildRankService : LocatedServiceBase
         {
             var isChanged = false;
 
-            dbFactory.GetRepository<GuildWarsGuildMemberRepository>()
+            dbFactory.GetRepository<GuildWarsGuildHistoricMemberRepository>()
                      .AddOrRefresh(obj => obj.GuildId == guildId
                                        && obj.Name == accountName,
                                    obj =>
@@ -107,7 +107,7 @@ public class GuildRankService : LocatedServiceBase
 
             if (isChanged)
             {
-                var guildMemberQuery = dbFactory.GetRepository<GuildWarsGuildMemberRepository>()
+                var guildMemberQuery = dbFactory.GetRepository<GuildWarsGuildHistoricMemberRepository>()
                                                 .GetQuery()
                                                 .Select(obj => obj);
 
@@ -219,7 +219,7 @@ public class GuildRankService : LocatedServiceBase
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
-            var guildMemberQuery = dbFactory.GetRepository<GuildWarsGuildMemberRepository>()
+            var guildMemberQuery = dbFactory.GetRepository<GuildWarsGuildHistoricMemberRepository>()
                                             .GetQuery()
                                             .Select(obj => obj);
 
@@ -360,8 +360,8 @@ public class GuildRankService : LocatedServiceBase
                                                          
                                                                FROM ( SELECT [Value] FROM [GetDateRange](@from, @to)) AS [DateRange]
                                                          
-                                                          LEFT JOIN [GuildWarsGuildMembers] AS [Member]
-                                                                 ON 1 = 1
+                                                          LEFT JOIN [GuildWarsGuildHistoricMembers] AS [Member]
+                                                                 ON [Member].[Date] = [DateRange].[Value]
                                                          INNER JOIN [GuildWarsAccounts] AS [GuildWarsAccount]
                                                                  ON [Member].[Name] = [GuildWarsAccount].[Name]
                                                           LEFT JOIN [GuildWarsAccountDailyLoginChecks] AS [DailyLogin]
@@ -412,16 +412,18 @@ public class GuildRankService : LocatedServiceBase
                                                                                                        FROM [GuildWarsAccountRankingData] AS [All]
                                                                                                       WHERE [All].[Date] = [Dates].[Date] 
                                                                                                         AND EXISTS ( SELECT 1 
-                                                                                                                      FROM [GuildWarsGuildMembers] AS [AllMembers]
+                                                                                                                      FROM [GuildWarsGuildHistoricMembers] AS [AllMembers]
                                                                                                                      WHERE [AllMembers].[GuildId] = @guildId
+                                                                                                                       AND [AllMembers].[Date] = [All].[Date] 
                                                                                                                        AND [AllMembers].[Name] = [All].[AccountName] ) ), 0)
                                                                                         * ( SELECT COUNT (*) 
                                                                                               FROM [GuildWarsAccountRankingData] AS [Less]
                                                                                              WHERE [Less].[Date] = [Dates].[Date]
                                                                                                AND [Less].[AchievementPoints] < [Dates].[AchievementPoints] 
                                                                                                AND EXISTS ( SELECT 1 
-                                                                                                             FROM [GuildWarsGuildMembers] AS [LessMembers]
+                                                                                                             FROM [GuildWarsGuildHistoricMembers] AS [LessMembers]
                                                                                                             WHERE [LessMembers].[GuildId] = @guildId
+                                                                                                              AND [LessMembers].[Date] = [Less].[Date] 
                                                                                                               AND [LessMembers].[Name] = [Less].[AccountName] ) ),
                                                                                       0)
                                                                     ELSE 0

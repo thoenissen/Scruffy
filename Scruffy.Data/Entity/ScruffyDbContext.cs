@@ -134,6 +134,7 @@ public class ScruffyDbContext : DbContext
         modelBuilder.Entity<DiscordAccountEntity>();
         modelBuilder.Entity<BlockedDiscordChannelEntity>();
         modelBuilder.Entity<DiscordAccountRoleAssignmentHistoryEntity>();
+        modelBuilder.Entity<DiscordHistoryRoleAssignmentEntity>();
 
         modelBuilder.Entity<DiscordAccountEntity>()
                     .HasMany(obj => obj.OneTimeReminders)
@@ -154,6 +155,15 @@ public class ScruffyDbContext : DbContext
                                        obj.ServerId,
                                        obj.RoleId,
                                        obj.AccountId
+                                   });
+
+        modelBuilder.Entity<DiscordHistoryRoleAssignmentEntity>()
+                    .HasKey(obj => new
+                                   {
+                                       obj.Date,
+                                       obj.ServerId,
+                                       obj.UserId,
+                                       obj.RoleId
                                    });
 
         // General
@@ -431,9 +441,10 @@ public class ScruffyDbContext : DbContext
         modelBuilder.Entity<GuildWarsAchievementBitEntity>();
         modelBuilder.Entity<GuildWarsAchievementRewardEntity>();
         modelBuilder.Entity<GuildWarsAchievementTierEntity>();
-        modelBuilder.Entity<GuildWarsGuildMemberEntity>();
+        modelBuilder.Entity<GuildWarsGuildHistoricMemberEntity>();
         modelBuilder.Entity<GuildWarsAccountRankingDataEntity>();
         modelBuilder.Entity<GuildWarsAccountRankingGuildDataEntity>();
+        modelBuilder.Entity<GuildWarsAccountHistoricCharacterEntity>();
 
         modelBuilder.Entity<GuildWarsAccountDailyLoginCheckEntity>()
                     .HasKey(obj => new
@@ -509,9 +520,10 @@ public class ScruffyDbContext : DbContext
                                        obj.Counter
                                    });
 
-        modelBuilder.Entity<GuildWarsGuildMemberEntity>()
+        modelBuilder.Entity<GuildWarsGuildHistoricMemberEntity>()
                     .HasKey(obj => new
                                    {
+                                       obj.Date,
                                        obj.GuildId,
                                        obj.Name
                                    });
@@ -529,6 +541,14 @@ public class ScruffyDbContext : DbContext
                                        obj.AccountName,
                                        obj.GuildId,
                                        obj.Date
+                                   });
+
+        modelBuilder.Entity<GuildWarsAccountHistoricCharacterEntity>()
+                    .HasKey(obj => new
+                                   {
+                                       obj.Date,
+                                       obj.AccountName,
+                                       obj.CharacterName,
                                    });
 
         // Statistics

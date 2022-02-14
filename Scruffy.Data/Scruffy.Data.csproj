@@ -52,7 +52,6 @@
     <Folder Include="Entity\Queryable\General\" />
     <Folder Include="Entity\Queryable\Account\" />
     <Folder Include="Entity\Queryable\Games\" />
-    <Folder Include="Entity\Queryable\GuildWars2\" />
     <Folder Include="Entity\Queryable\Reminder\" />
     <Folder Include="Entity\Repositories\Fractals\" />
     <Folder Include="Entity\Repositories\General\" />
