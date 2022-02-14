@@ -2,8 +2,8 @@
 
 using Microsoft.Extensions.DependencyInjection;
 
+using Scruffy.Data.Entity;
 using Scruffy.Services.Core.JobScheduler;
-using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
 using Scruffy.Services.Debug;
 using Scruffy.Services.Discord;
@@ -93,6 +93,8 @@ public sealed class ServiceProviderContainer : IAsyncDisposable
         _serviceCollection.AddTransient<ThatShamanConnector>();
         _serviceCollection.AddTransient<QuickChartConnector>();
 
+        _serviceCollection.AddScoped<RepositoryFactory>();
+
         foreach (var type in Assembly.Load("Scruffy.Services")
                                      .GetTypes()
                                      .Where(obj => (typeof(DialogElementBase).IsAssignableFrom(obj)
@@ -131,7 +133,7 @@ public sealed class ServiceProviderContainer : IAsyncDisposable
     /// Building a new service provider
     /// </summary>
     /// <returns>The newly created service provider</returns>
-    public Microsoft.Extensions.DependencyInjection.ServiceProvider GetServiceProvider()
+    public ServiceProvider GetServiceProvider()
     {
         return _serviceCollection.BuildServiceProvider();
     }

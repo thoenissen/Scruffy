@@ -44,7 +44,7 @@ public sealed class RepositoryFactory : IDisposable
     #region Properties
 
     /// <summary>
-    /// Last occured error
+    /// Last occurred error
     /// </summary>
     public Exception LastError => _dbContext.LastError;
 

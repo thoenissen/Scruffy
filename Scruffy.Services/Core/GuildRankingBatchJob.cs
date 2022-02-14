@@ -22,6 +22,7 @@ internal class GuildRankingBatchJob : BatchJob
                    typeof(AchievementImportJob),
                    typeof(MessageImportJob),
                    typeof(GuildRankImportJob),
+                   typeof(CharactersImportJob),
                    typeof(GuildRankCurrentPointsJob),
                    typeof(GuildSpecialRankPointsJob),
                })
