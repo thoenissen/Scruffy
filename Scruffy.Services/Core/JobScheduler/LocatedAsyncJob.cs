@@ -10,7 +10,7 @@ namespace Scruffy.Services.Core.JobScheduler;
 /// <summary>
 /// Asynchronous executing of a job
 /// </summary>
-public abstract class LocatedAsyncJob : IAsyncJob
+public abstract class LocatedAsyncJob : IServiceScopeSupport, IAsyncJob, IDisposable
 {
     #region Fields
 
@@ -19,7 +19,24 @@ public abstract class LocatedAsyncJob : IAsyncJob
     /// </summary>
     private LocalizationGroup _localizationGroup;
 
+    /// <summary>
+    /// Scope
+    /// </summary>
+    private IServiceScope _scope;
+
     #endregion // Fields
+
+    #region Finalizer
+
+    /// <summary>
+    /// Allows an object to try to free resources and perform other cleanup operations before it is reclaimed by garbage collection.
+    /// </summary>
+    ~LocatedAsyncJob()
+    {
+        Dispose(false);
+    }
+
+    #endregion // Finalizer
 
     #region Methods
 
@@ -78,4 +95,43 @@ public abstract class LocatedAsyncJob : IAsyncJob
     }
 
     #endregion // IJob
+
+    #region IServiceScopeSupport
+
+    /// <summary>
+    /// Set the current scope
+    /// </summary>
+    /// <param name="scope">scope</param>
+    public void SetScope(IServiceScope scope)
+    {
+        _scope = scope;
+    }
+
+    #endregion // IServiceScopeSupport
+
+    #region IDisposable
+
+    /// <summary>
+    /// Internal IDisposable implementation
+    /// </summary>
+    /// <param name="disposing">Called from <see cref="Dispose()"/></param>?
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _scope?.Dispose();
+        }
+    }
+
+    /// <summary>
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// </summary>
+    public void Dispose()
+    {
+        Dispose(true);
+
+        GC.SuppressFinalize(this);
+    }
+
+    #endregion // IDisposable
 }

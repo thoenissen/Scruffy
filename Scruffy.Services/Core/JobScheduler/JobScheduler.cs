@@ -19,8 +19,19 @@ namespace Scruffy.Services.Core.JobScheduler;
 /// <summary>
 /// Scheduling jobs
 /// </summary>
-public sealed class JobScheduler : SingletonLocatedServiceBase, IAsyncDisposable
+public sealed class JobScheduler : SingletonLocatedServiceBase,
+                                   IAsyncDisposable,
+                                   IJobFactory
 {
+    #region Fields
+
+    /// <summary>
+    /// Scope factory
+    /// </summary>
+    private IServiceScopeFactory _scopeFactory;
+
+    #endregion // Fields
+
     #region Methods
 
     /// <summary>
@@ -203,13 +214,39 @@ public sealed class JobScheduler : SingletonLocatedServiceBase, IAsyncDisposable
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public override async Task Initialize(IServiceProvider serviceProvider)
     {
+        _scopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
+
         await base.Initialize(serviceProvider)
                   .ConfigureAwait(false);
 
+        JobManager.JobFactory = this;
         JobManager.Initialize();
     }
 
     #endregion // SingletonLocatedServiceBase
+
+    #region IJobFactory
+
+    /// <summary>
+    /// Instantiate a job of the given type.
+    /// </summary>
+    /// <typeparam name="T">Type of the job to instantiate</typeparam>
+    /// <returns>The instantiated job</returns>
+    public IJob GetJobInstance<T>()
+        where T : IJob
+    {
+        var scope = _scopeFactory.CreateScope();
+
+        var job = scope.ServiceProvider.GetRequiredService<T>();
+        if (job is IServiceScopeSupport scopeSupport)
+        {
+            scopeSupport.SetScope(scope);
+        }
+
+        return job;
+    }
+
+    #endregion //IJobFactory
 
     #region IAsyncDisposable
 
