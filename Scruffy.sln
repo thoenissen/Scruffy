@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04_Misc", "04_Misc", "{8BFF
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
+		.github\workflows\build.yml = .github\workflows\build.yml
+		.github\workflows\docker-publish.yml = .github\workflows\docker-publish.yml
 		StyleCop.Debug.ruleset = StyleCop.Debug.ruleset
 		stylecop.json = stylecop.json
 		StyleCop.Release.ruleset = StyleCop.Release.ruleset
@@ -26,7 +28,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04_Misc", "04_Misc", "{8BFF
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scruffy.Services", "Scruffy.Services\Scruffy.Services.csproj", "{6CF70C6D-BBD6-4781-87B6-4793A78C6990}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scruffy.ManualTesting", "Scruffy.ManualTesting\Scruffy.ManualTesting.csproj", "{4D69B0A9-6300-4E4D-9FE5-EDAB430C97AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scruffy.ManualTesting", "Scruffy.ManualTesting\Scruffy.ManualTesting.csproj", "{4D69B0A9-6300-4E4D-9FE5-EDAB430C97AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -3,7 +3,9 @@
 using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;
+using Scruffy.Data.Entity.Repositories.Calendar;
 using Scruffy.Data.Entity.Repositories.Raid;
+using Scruffy.Data.Entity.Tables.Calendar;
 using Scruffy.Data.Services.Raid;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
@@ -145,6 +147,28 @@ public class RaidCommitService : LocatedServiceBase
 
                     await _messageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
                                          .ConfigureAwait(false);
+
+                    var calendarAppointmentId = dbFactory.GetRepository<CalendarAppointmentRepository>()
+                                                 .GetQuery()
+                                                 .Where(obj => obj.TimeStamp == appointment.TimeStamp)
+                                                 .Select(obj => obj.Id)
+                                                 .FirstOrDefault();
+
+                    if (calendarAppointmentId > 0)
+                    {
+                        foreach (var userId in dbFactory.GetRepository<RaidRegistrationRepository>()
+                                                        .GetQuery()
+                                                        .Where(obj => obj.Id == appointment.Id)
+                                                        .Select(obj => obj.UserId))
+                        {
+                            dbFactory.GetRepository<CalendarAppointmentParticipantRepository>()
+                                     .Add(new CalendarAppointmentParticipantEntity
+                                          {
+                                              AppointmentId = calendarAppointmentId,
+                                              UserId = userId
+                                          });
+                        }
+                    }
                 }
             }
             else
