@@ -133,7 +133,7 @@ public class ScruffyDbContext : DbContext
         // Discord
         modelBuilder.Entity<DiscordAccountEntity>();
         modelBuilder.Entity<BlockedDiscordChannelEntity>();
-        modelBuilder.Entity<DiscordAccountRoleAssignmentHistoryEntity>();
+        modelBuilder.Entity<DiscordHistoricAccountRoleAssignmentEntity>();
         modelBuilder.Entity<DiscordHistoryRoleAssignmentEntity>();
 
         modelBuilder.Entity<DiscordAccountEntity>()
@@ -149,9 +149,10 @@ public class ScruffyDbContext : DbContext
                                        obj.ChannelId
                                    });
 
-        modelBuilder.Entity<DiscordAccountRoleAssignmentHistoryEntity>()
+        modelBuilder.Entity<DiscordHistoricAccountRoleAssignmentEntity>()
                     .HasKey(obj => new
                                    {
+                                       obj.Date,
                                        obj.ServerId,
                                        obj.RoleId,
                                        obj.AccountId

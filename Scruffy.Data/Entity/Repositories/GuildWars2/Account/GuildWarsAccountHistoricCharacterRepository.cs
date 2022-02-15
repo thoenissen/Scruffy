@@ -92,7 +92,7 @@ namespace Scruffy.Data.Entity.Repositories.GuildWars2.Account
                                                                       AND [Target].[CharacterName] = [Source].[CharacterName]
                                                            WHEN NOT MATCHED THEN
                                                                 INSERT ( [Date], [GuildId], [AccountName], [CharacterName] )
-                                                                VALUES ( [Source].[Date], [Source].[GuildId], [Source].[CharacterName] )
+                                                                VALUES ( [Source].[Date], [Source].[GuildId], [Source].[AccountName], [Source].[CharacterName] )
                                                            WHEN NOT MATCHED BY SOURCE
                                                             AND [Target].[Date] = @date THEN
                                                                 DELETE;",

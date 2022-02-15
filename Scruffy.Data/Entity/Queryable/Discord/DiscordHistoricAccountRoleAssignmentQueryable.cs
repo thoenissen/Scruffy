@@ -4,9 +4,9 @@ using Scruffy.Data.Entity.Tables.Discord;
 namespace Scruffy.Data.Entity.Queryable.Discord;
 
 /// <summary>
-/// Queryable for accessing the <see cref="DiscordAccountRoleAssignmentHistoryEntity"/>
+/// Queryable for accessing the <see cref="DiscordHistoricAccountRoleAssignmentEntity"/>
 /// </summary>
-public class DiscordAccountRoleAssignmentHistoryQueryable : QueryableBase<DiscordAccountRoleAssignmentHistoryEntity>
+public class DiscordHistoricAccountRoleAssignmentQueryable : QueryableBase<DiscordHistoricAccountRoleAssignmentEntity>
 {
     #region Constructor
 
@@ -14,7 +14,7 @@ public class DiscordAccountRoleAssignmentHistoryQueryable : QueryableBase<Discor
     /// Constructor
     /// </summary>
     /// <param name="queryable"><see cref="IQueryable"/>-object</param>
-    public DiscordAccountRoleAssignmentHistoryQueryable(IQueryable<DiscordAccountRoleAssignmentHistoryEntity> queryable)
+    public DiscordHistoricAccountRoleAssignmentQueryable(IQueryable<DiscordHistoricAccountRoleAssignmentEntity> queryable)
         : base(queryable)
     {
     }

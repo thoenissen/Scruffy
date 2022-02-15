@@ -5,10 +5,15 @@ namespace Scruffy.Data.Entity.Tables.Discord;
 /// <summary>
 /// Discord role assignment history
 /// </summary>
-[Table("DiscordAccountRoleAssignmentHistory")]
-public class DiscordAccountRoleAssignmentHistoryEntity
+[Table("DiscordHistoricAccountRoleAssignments")]
+public class DiscordHistoricAccountRoleAssignmentEntity
 {
     #region Properties
+
+    /// <summary>
+    /// Date
+    /// </summary>
+    public DateTime Date { get; set; }
 
     /// <summary>
     /// Id of the server
