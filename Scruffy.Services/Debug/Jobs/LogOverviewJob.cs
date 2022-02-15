@@ -24,7 +24,7 @@ public class LogOverviewJob : LocatedAsyncJob
         var debugChannel = Environment.GetEnvironmentVariable("SCRUFFY_DEBUG_CHANNEL");
         if (string.IsNullOrWhiteSpace(debugChannel) == false)
         {
-            var serviceProvider = Core.ServiceProviderContainer.Current.GetServiceProvider();
+            var serviceProvider = ServiceProviderContainer.Current.GetServiceProvider();
             await using (serviceProvider.ConfigureAwait(false))
             {
                 var discordClient = serviceProvider.GetService<DiscordSocketClient>();

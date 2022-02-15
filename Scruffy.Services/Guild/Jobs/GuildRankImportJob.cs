@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
-using Scruffy.Services.Core;
-using Scruffy.Services.Core.JobScheduler;
+﻿using Scruffy.Services.Core.JobScheduler;
 
 namespace Scruffy.Services.Guild.Jobs;
 
@@ -10,6 +7,28 @@ namespace Scruffy.Services.Guild.Jobs;
 /// </summary>
 public class GuildRankImportJob : LocatedAsyncJob
 {
+    #region Fields
+
+    /// <summary>
+    /// Guild rank service
+    /// </summary>
+    private readonly GuildRankService _guildRankService;
+
+    #endregion // Fields
+
+    #region Constructor
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="guildRankService">Guild rank service</param>
+    public GuildRankImportJob(GuildRankService guildRankService)
+    {
+        _guildRankService = guildRankService;
+    }
+
+    #endregion // Constructor
+
     #region LocatedAsyncJob
 
     /// <summary>
@@ -18,18 +37,11 @@ public class GuildRankImportJob : LocatedAsyncJob
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public override async Task ExecuteOverrideAsync()
     {
-        var serviceProvider = Core.ServiceProviderContainer.Current.GetServiceProvider();
+        await _guildRankService.ImportGuildRanks(null)
+                               .ConfigureAwait(false);
 
-        await using (serviceProvider.ConfigureAwait(false))
-        {
-            var guildRankService = serviceProvider.GetService<GuildRankService>();
-
-            await guildRankService.ImportGuildRanks(null)
-                                  .ConfigureAwait(false);
-
-            await guildRankService.RefreshDiscordRoles(null)
-                                  .ConfigureAwait(false);
-        }
+        await _guildRankService.RefreshDiscordRoles(null)
+                               .ConfigureAwait(false);
     }
 
     #endregion // LocatedAsyncJob

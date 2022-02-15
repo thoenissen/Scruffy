@@ -49,7 +49,7 @@ public sealed class GuidWars2ApiConnector : IAsyncDisposable,
     /// <summary>
     /// Service provider
     /// </summary>
-    private Microsoft.Extensions.DependencyInjection.ServiceProvider _serviceProvider;
+    private ServiceProvider _serviceProvider;
 
     /// <summary>
     /// Http client
@@ -72,7 +72,7 @@ public sealed class GuidWars2ApiConnector : IAsyncDisposable,
     public GuidWars2ApiConnector(string apiKey)
     {
         _apiKey = apiKey;
-        _serviceProvider = Core.ServiceProviderContainer.Current.GetServiceProvider();
+        _serviceProvider = ServiceProviderContainer.Current.GetServiceProvider();
     }
 
     #endregion // Constructor

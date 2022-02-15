@@ -1,9 +1,10 @@
 ﻿using Scruffy.Services.Account.Jobs;
-using Scruffy.Services.Guild.Jobs;
+using Scruffy.Services.Core;
+using Scruffy.Services.Discord.Jobs;
 using Scruffy.Services.GuildWars2.Jobs;
 using Scruffy.Services.Statistics.Jobs;
 
-namespace Scruffy.Services.Core;
+namespace Scruffy.Services.Guild.Jobs;
 
 /// <summary>
 /// Executing guild ranking relevant jobs
@@ -23,6 +24,7 @@ internal class GuildRankingBatchJob : BatchJob
                    typeof(MessageImportJob),
                    typeof(GuildRankImportJob),
                    typeof(CharactersImportJob),
+                   typeof(DiscordRoleImportJob),
                    typeof(GuildRankCurrentPointsJob),
                    typeof(GuildSpecialRankPointsJob),
                })

@@ -71,7 +71,7 @@ public class OneTimeReminderJob : LocatedAsyncJob
                         await transaction.CommitAsync()
                                          .ConfigureAwait(false);
 
-                        var serviceProvider = Core.ServiceProviderContainer.Current.GetServiceProvider();
+                        var serviceProvider = ServiceProviderContainer.Current.GetServiceProvider();
                         await using (serviceProvider.ConfigureAwait(false))
                         {
                             var discordClient = serviceProvider.GetService<DiscordSocketClient>();

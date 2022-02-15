@@ -30,7 +30,7 @@ public class GuildLogImportJob : LocatedAsyncJob
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
-            var serviceProvider = Core.ServiceProviderContainer.Current.GetServiceProvider();
+            var serviceProvider = ServiceProviderContainer.Current.GetServiceProvider();
             await using (serviceProvider.ConfigureAwait(false))
             {
                 var discordClient = serviceProvider.GetService<DiscordSocketClient>();

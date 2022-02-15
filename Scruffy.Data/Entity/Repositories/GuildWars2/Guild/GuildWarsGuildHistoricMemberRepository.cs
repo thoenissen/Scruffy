@@ -35,7 +35,7 @@ public class GuildWarsGuildHistoricMemberRepository : RepositoryBase<GuildWarsGu
     /// <param name="guildId">Id of the guild</param>
     /// <param name="members">Members</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task<bool> BulkInsert(long guildId, IEnumerable<(string Name, string Rank)> members)
+    public async Task<bool> BulkInsert(long guildId, IEnumerable<(string Name, string Rank, DateTime? Joined)> members)
     {
         var success = false;
 
@@ -53,7 +53,8 @@ public class GuildWarsGuildHistoricMemberRepository : RepositoryBase<GuildWarsGu
                                                                        [Date] datetime2(7) NOT NULL,
                                                                        [GuildId] bigint NOT NULL,
                                                                        [Name] nvarchar(42) NOT NULL,
-                                                                       [Rank] nvarchar(MAX) NULL
+                                                                       [Rank] nvarchar(MAX) NULL,
+                                                                       [JoinedAt] datetime2(7) NULL
                                                                    );",
                                                 connection);
 
@@ -67,16 +68,20 @@ public class GuildWarsGuildHistoricMemberRepository : RepositoryBase<GuildWarsGu
                 dataTable.Columns.Add(nameof(GuildWarsGuildHistoricMemberEntity.GuildId), typeof(long));
                 dataTable.Columns.Add(nameof(GuildWarsGuildHistoricMemberEntity.Name), typeof(string));
                 dataTable.Columns.Add(nameof(GuildWarsGuildHistoricMemberEntity.Rank), typeof(string));
+                dataTable.Columns.Add(nameof(GuildWarsGuildHistoricMemberEntity.JoinedAt), typeof(DateTime));
 
                 var today = DateTime.Today;
 
-                foreach (var (name, rank) in members)
+                foreach (var (name, rank, joined) in members)
                 {
                     // Achievement
                     dataTable.Rows.Add(today,
                                        guildId,
                                        name,
-                                       rank);
+                                       rank,
+                                       joined != null
+                                           ? joined.Value
+                                           : DBNull.Value);
                 }
 
                 using (var bulk = new SqlBulkCopy(connection))
@@ -92,10 +97,11 @@ public class GuildWarsGuildHistoricMemberRepository : RepositoryBase<GuildWarsGu
                                                      AND [Target].[GuildId] = [Source].[GuildId]
                                                      AND [Target].[Name] = [Source].[Name]
                                                        WHEN MATCHED THEN
-                                                            UPDATE SET [Target].[Rank] = [Source].[Rank]
+                                                            UPDATE SET [Target].[Rank] = [Source].[Rank],
+                                                                       [Target].[JoinedAt] = [Source].[JoinedAt],
                                                        WHEN NOT MATCHED THEN 
-                                                            INSERT ( [GuildId], [Name], [Rank] )
-                                                            VALUES ( [Source].[GuildId], [Source].[Name], [Source].[Rank] )
+                                                            INSERT ( [GuildId], [Name], [Rank], [JoinedAt] )
+                                                            VALUES ( [Source].[GuildId], [Source].[Name], [Source].[Rank], [Source].[JoinedAt] )
                                                        WHEN NOT MATCHED BY SOURCE 
                                                         AND [Target].[GuildId] = @guildId
                                                         AND [Target].[Date] = @date THEN

@@ -26,7 +26,7 @@ public class CounterGameJob : LocatedAsyncJob
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
-            var serviceProvider = Core.ServiceProviderContainer.Current.GetServiceProvider();
+            var serviceProvider = ServiceProviderContainer.Current.GetServiceProvider();
             await using (serviceProvider.ConfigureAwait(false))
             {
                 var client = serviceProvider.GetService<DiscordSocketClient>();

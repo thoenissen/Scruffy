@@ -72,7 +72,7 @@ public class GuildRankService : LocatedServiceBase
                                                  .ConfigureAwait(false);
 
                     await dbFactory.GetRepository<GuildWarsGuildHistoricMemberRepository>()
-                                   .BulkInsert(guild.Id, members.Select(obj => (obj.Name, obj.Rank)))
+                                   .BulkInsert(guild.Id, members.Select(obj => (obj.Name, obj.Rank, obj.Joined)))
                                    .ConfigureAwait(false);
                 }
             }

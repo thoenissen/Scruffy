@@ -32,7 +32,7 @@ public class FractalDailyRefreshJob : LocatedAsyncJob
                                                 .ToListAsync()
                                                 .ConfigureAwait(false);
 
-            var serviceProvider = Core.ServiceProviderContainer.Current.GetServiceProvider();
+            var serviceProvider = ServiceProviderContainer.Current.GetServiceProvider();
             await using (serviceProvider.ConfigureAwait(false))
             {
                 var builder = serviceProvider.GetService<FractalLfgMessageBuilder>() ?? throw new InvalidOperationException();

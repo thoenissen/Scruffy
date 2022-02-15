@@ -18,7 +18,7 @@ public class GuildRankCurrentPointsJob : LocatedAsyncJob
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public override async Task ExecuteOverrideAsync()
     {
-        var serviceProvider = Core.ServiceProviderContainer.Current.GetServiceProvider();
+        var serviceProvider = ServiceProviderContainer.Current.GetServiceProvider();
         await using (serviceProvider.ConfigureAwait(false))
         {
             await serviceProvider.GetRequiredService<GuildRankService>()

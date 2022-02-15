@@ -72,7 +72,7 @@ public class FractalReminderJob : LocatedAsyncJob
                                                 .ToListAsync()
                                                 .ConfigureAwait(false);
 
-            var serviceProvider = Core.ServiceProviderContainer.Current.GetServiceProvider();
+            var serviceProvider = ServiceProviderContainer.Current.GetServiceProvider();
             await using (serviceProvider.ConfigureAwait(false))
             {
                 var reminderService = serviceProvider.GetService<FractalLfgReminderService>() ?? throw new InvalidOperationException();

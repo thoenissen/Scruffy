@@ -45,11 +45,11 @@ public class Program
         }
         catch (Exception ex)
         {
-            LoggingService.AddServiceLogEntry(Data.Enumerations.General.LogEntryLevel.CriticalError, nameof(Program), null, null, ex);
+            LoggingService.AddServiceLogEntry(LogEntryLevel.CriticalError, nameof(Program), null, null, ex);
         }
         finally
         {
-            LoggingService.AddServiceLogEntry(Data.Enumerations.General.LogEntryLevel.Information, nameof(Program), "End", null);
+            LoggingService.AddServiceLogEntry(LogEntryLevel.Information, nameof(Program), "End", null);
 
             LoggingService.CloseAndFlush();
         }
