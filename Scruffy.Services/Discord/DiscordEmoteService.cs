@@ -210,14 +210,15 @@ public static class DiscordEmoteService
 
         try
         {
-            emote = client.Guilds.SelectMany(obj => obj.Emotes)
+            emote = client.Guilds
+                          .SelectMany(obj => obj.Emotes)
                           .FirstOrDefault(obj => obj.Id == id);
         }
         catch
         {
         }
 
-        return emote ?? Emote.Parse(":grey_question:");
+        return emote ?? Emoji.Parse(":grey_question:");
     }
 
     /// <summary>
@@ -241,7 +242,7 @@ public static class DiscordEmoteService
         {
         }
 
-        return emote ?? Emote.Parse(":grey_question:");
+        return emote ?? Emoji.Parse(":grey_question:");
     }
 
     #endregion // Methods
