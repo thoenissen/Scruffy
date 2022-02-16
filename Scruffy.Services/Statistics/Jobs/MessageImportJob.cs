@@ -93,11 +93,13 @@ public class MessageImportJob : LocatedAsyncJob
                                 }
                             }
 
-                            if (messages != null)
+                            if (messages?.Count > 0)
                             {
+                                var lastMessage = messages[^1];
+
                                 messages = new List<IMessage>();
 
-                                await foreach (var collection in channel.GetMessagesAsync(messages[^1], Direction.Before).ConfigureAwait(false))
+                                await foreach (var collection in channel.GetMessagesAsync(lastMessage, Direction.Before).ConfigureAwait(false))
                                 {
                                     messages.AddRange(collection);
                                 }

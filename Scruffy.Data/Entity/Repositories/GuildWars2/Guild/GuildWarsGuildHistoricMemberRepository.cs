@@ -98,10 +98,10 @@ public class GuildWarsGuildHistoricMemberRepository : RepositoryBase<GuildWarsGu
                                                      AND [Target].[Name] = [Source].[Name]
                                                        WHEN MATCHED THEN
                                                             UPDATE SET [Target].[Rank] = [Source].[Rank],
-                                                                       [Target].[JoinedAt] = [Source].[JoinedAt],
+                                                                       [Target].[JoinedAt] = [Source].[JoinedAt]
                                                        WHEN NOT MATCHED THEN 
-                                                            INSERT ( [GuildId], [Name], [Rank], [JoinedAt] )
-                                                            VALUES ( [Source].[GuildId], [Source].[Name], [Source].[Rank], [Source].[JoinedAt] )
+                                                            INSERT ( [Date], [GuildId], [Name], [Rank], [JoinedAt] )
+                                                            VALUES ( [Source].[Date], [Source].[GuildId], [Source].[Name], [Source].[Rank], [Source].[JoinedAt] )
                                                        WHEN NOT MATCHED BY SOURCE 
                                                         AND [Target].[GuildId] = @guildId
                                                         AND [Target].[Date] = @date THEN

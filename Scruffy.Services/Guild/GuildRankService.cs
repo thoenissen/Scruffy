@@ -443,7 +443,23 @@ public class GuildRankService : LocatedServiceBase
                                                                      AND [CurrentPoints].[GuildId] = @guildId
                                                                 GROUP BY [CurrentPoints].[UserId],
                                                                          [CurrentPoints].[Date] ) AS [Dates]
-                                                     )",
+                                                     )
+
+                                                     MERGE INTO [GuildRankCurrentPoints] AS [Target]
+                                                          USING [CurrentAchievementPoints] AS [SOURCE]
+                                                     
+                                                             ON [Target].[GuildId] = @guildId
+                                                            AND [Target].[UserId] = [Source].[UserId]
+                                                            AND [Target].[Date] = [Source].[Date]
+                                                            AND [Target].[Type] = 2
+                                                     
+                                                     WHEN MATCHED 
+                                                       THEN UPDATE
+                                                            SET [Target].[Points] = [Source].[Points]
+                                                     
+                                                     WHEN NOT MATCHED
+                                                        THEN INSERT ( [GuildId], [UserId], [Date], [Type], [Points] )
+                                                             VALUES ( @guildId, [Source].[UserId], [Source].[Date], 2, [Source].[Points] );",
                                    new SqlParameter("@from", DateTime.Today.AddDays(-61)),
                                    new SqlParameter("@to", DateTime.Today.AddDays(-1)),
                                    new SqlParameter("@guildId", guild.Id))

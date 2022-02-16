@@ -14,6 +14,7 @@ using Scruffy.Data.Enumerations.General;
 using Scruffy.Data.Json.Tenor;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Exceptions;
+using Scruffy.Services.Core.JobScheduler;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Extensions;
@@ -132,6 +133,8 @@ public sealed class DiscordBot : IAsyncDisposable
         _prefixResolver = _serviceScope.ServiceProvider
                                        .GetRequiredService<PrefixResolvingService>();
 
+        _discordClient.Connected += OnConnected;
+
         await _interaction.AddModulesAsync(Assembly.Load("Scruffy.Commands"), _serviceScope.ServiceProvider)
                           .ConfigureAwait(false);
 
@@ -143,6 +146,20 @@ public sealed class DiscordBot : IAsyncDisposable
 
         await _discordClient.StartAsync()
                             .ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// The discord client connected
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+    private async Task OnConnected()
+    {
+        _discordClient.Connected -= OnConnected;
+
+        await _serviceScope.ServiceProvider
+                           .GetRequiredService<JobScheduler>()
+                           .StartAsync()
+                           .ConfigureAwait(false);
     }
 
     /// <summary>
@@ -471,6 +488,8 @@ public sealed class DiscordBot : IAsyncDisposable
 
         if (_discordClient != null)
         {
+            _discordClient.Connected -= OnConnected;
+
             await _discordClient.LogoutAsync()
                                 .ConfigureAwait(false);
 

@@ -133,6 +133,8 @@ public sealed class JobScheduler : SingletonLocatedServiceBase,
                 JobManager.AddJob(new CalendarReminderDeletionJob(entry.Id), obj => obj.ToRunOnceAt(entry.TimeStamp));
             }
         }
+#else
+        JobManager.AddJob<GuildRankingBatchJob>(obj => obj.ToRunOnceAt(DateTime.Now));
 #endif
     }
 

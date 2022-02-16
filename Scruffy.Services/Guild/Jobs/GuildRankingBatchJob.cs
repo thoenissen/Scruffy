@@ -21,7 +21,6 @@ internal class GuildRankingBatchJob : BatchJob
                {
                    typeof(AccountLoginCheckJob),
                    typeof(AchievementImportJob),
-                   typeof(MessageImportJob),
                    typeof(GuildRankImportJob),
                    typeof(CharactersImportJob),
                    typeof(DiscordRoleImportJob),

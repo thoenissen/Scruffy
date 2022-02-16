@@ -25,6 +25,7 @@ public class GuildWarsAccountHistoricCharacterEntity
     /// <summary>
     /// Character name
     /// </summary>
+    [StringLength(20)]
     public string CharacterName { get; set; }
 
     /// <summary>
