@@ -522,7 +522,7 @@
       "RanksField": "Ranks"
     },
     "GuildRankPercentageDialogElement": {
-      "Message": "Please enter the quota in percent. (#.###)"
+      "Message": "Please enter the quota in percent. (0.###)"
     },
     "GuildRankSelectionDialogElement": {
       "ChooseTitle": "Rank selection",

@@ -693,7 +693,9 @@ public sealed class GuidWars2ApiConnector : IAsyncDisposable,
         {
             return await func().ConfigureAwait(false);
         }
-        catch (HttpRequestException ex) when (ex.StatusCode is HttpStatusCode.Unauthorized or HttpStatusCode.Forbidden)
+        catch (HttpRequestException ex) when (ex.StatusCode is HttpStatusCode.Unauthorized
+                                                            or HttpStatusCode.Forbidden
+                                                            or HttpStatusCode.BadRequest)
         {
             throw new MissingGuildWars2ApiPermissionException(permission);
         }

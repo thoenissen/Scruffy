@@ -27,7 +27,7 @@ public class GuildRankPercentageDialogElement : DialogMessageElementBase<double>
     /// Return the message of element
     /// </summary>
     /// <returns>Message</returns>
-    public override string GetMessage() => LocalizationGroup.GetText("Message", "Please enter the quota in percent. (#.###)");
+    public override string GetMessage() => LocalizationGroup.GetText("Message", "Please enter the quota in percent. (0.###)");
 
     #endregion DialogMessageElementBase<double>
 }

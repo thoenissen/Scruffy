@@ -109,7 +109,7 @@ public class GuildActivityDiscordVoiceSetupDialogElement : DialogEmbedReactionEl
         {
             foreach (var (mention, points) in roles)
             {
-                levelsBuilder.AppendLine(Format.Bold($"{mention} ({points.ToString("#.##", LocalizationGroup.CultureInfo)})"));
+                levelsBuilder.AppendLine(Format.Bold($"{mention} ({points.ToString("0.##", LocalizationGroup.CultureInfo)})"));
             }
         }
         else

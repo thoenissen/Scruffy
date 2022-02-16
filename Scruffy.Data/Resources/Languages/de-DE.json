@@ -570,7 +570,7 @@
       "RanksField": "Ränge"
     },
     "GuildRankPercentageDialogElement": {
-      "Message": "Gib bitte den prozentualen Anteil ein. (#.###)"
+      "Message": "Gib bitte den prozentualen Anteil ein. (0.###)"
     },
     "GuildRankSelectionDialogElement": {
       "ChooseTitle": "Rangauswahl",
