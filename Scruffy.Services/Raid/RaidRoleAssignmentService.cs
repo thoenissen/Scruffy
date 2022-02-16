@@ -4,8 +4,9 @@ using Scruffy.Services.Core;
 using Scruffy.Services.Core.Exceptions;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord;
+using Scruffy.Services.Raid.DialogElements;
 
-namespace Scruffy.Services.Raid.DialogElements;
+namespace Scruffy.Services.Raid;
 
 /// <summary>
 /// Assigning roles to a registration

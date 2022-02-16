@@ -251,10 +251,7 @@ public class GuildRankSetupDialogElement : DialogEmbedReactionElementBase<bool>
     /// Default case if none of the given reactions is used
     /// </summary>
     /// <returns>Result</returns>
-    protected override bool DefaultFunc()
-    {
-        return false;
-    }
+    protected override bool DefaultFunc() => false;
 
     #endregion // DialogReactionElementBase<bool>
 }

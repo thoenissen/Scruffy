@@ -3,78 +3,28 @@
   "CultureInfo": "de-DE",
   "Description": "Deutsch",
   "TranslationGroups": {
-    "InformationCommandModule": {
-      "GeneralInformationTitle": "Allgemeine Informationen",
-      "GeneralInformationDescription": "Alle Daten, die durch {0} gesammelt werden, dienen nur zur Verwaltung der Gilde. Im folgenden wird auf die einzelnen Bereiche, in denen Daten ermittelt werden, eingegangen.",
-      "GuildWars2ApiTitle": "Guild Wars 2 - API-Key",
-      "GuildWars2ApiDescription": "Über den angegeben API-Key werden die folgenden Daten ermittelt:\n\n - Mit wie vielen Charakteren wird die Gilde repräsentiert?\n - Wann wurde sich das letzte Mal angemeldet?\n - Welchem Server ist der Account zugeordnet?\n - Wie viele Erfolgspunkte hat der Account?\n\nAlle anderen Daten, werden nur temporär ermittelt, wenn man {0} zur Ausführung eines Befehls auffordert. Dabei hat man auch immer nur Zugriff auf seinen eigenen API-Key.",
-      "DiscordTitle": "Discord",
-      "DiscordDescription": "Ein Teil des Gildenrangsystems ist die Aktivität im Discord. Hierfür wird gespeichert, wie viele Nachrichten verfasst werden und wie viele Minuten man im Sprachchat ist. Der Inhalt der Beiträge ist hierbei irrelevant und wird nicht gespeichert.",
-      "RefreshTitle": "Aktualisierung",
-      "RefreshDescription": "Stand: {0}"
-    },
-    "AdministrationCommandModule": {
-      "NotAllowedToPerform": "Diese Aktion darf ich nicht ausführen."
-    },
-    "BlockedChannelService": {
-      "ChannelIsBlocked": "Dieser Befehl kann in diesem Kanal nicht verwendet werden. Bitte verwende einen dafür vorgesehenen Kanal."
-    },
-    "ReminderCreationCommandModule": {
-      "CommandProgressed": "Der Befehl wurde verarbeitet.",
-      "ChooseChannelPrompt": "Wähle bitte einen der folgenden Kanäle aus:",
-      "ChannelSelectionTitle": "Kanalauswahl",
-      "SelectDayPrompt": "Wähle bitte einen der folgenden Tage aus.",
-      "WeekdaySelectionTitle": "Auswahl Wochentag",
-      "ReminderTimePrompt": "Wähle bitte den Zeitpunkt der Erinnerung. (Format: hh:mm)",
-      "DeletionTimePrompt": "Wähle bitte den Zeitpunkt der Löschung. (Format: hh:mm)",
-      "ReminderMessagePrompt": "Gib bitte die Nachricht der Erinnerung ein.",
-      "CreationCompletedMessage": "Erstellung abgeschlossen! Alle Nachrichten der Erstellung werden in 30 Sekunden gelöscht.",
-      "ReminderCreated": "Die Erinnerung wurde für den {0} um {1} Uhr eingerichtet."
-    },
-    "FractalLfgService": {
-      "BuildingProgress": "Erstellung...",
-      "CreationCompletedMessage": "Erstellung abgechlossen! Alle Nachrichten der Erstellung werden in 30 Sekunden gelöscht."
-    },
-    "FractalLfgCreationAliasNameDialogElement": {
-      "Message": "Gib bitte den zu verwendende Aliasnamen ein."
-    },
-    "FractalLfgCreationDescriptionDialogElement": {
-      "Message": "Gib bitte die zu verwendende Beschreibung ein."
-    },
-    "FractalLfgCreationTitleDialogElement": {
-      "Message": "Gib bitte den zu verwendenden Titel ein."
-    },
-    "GuildWarsUpdateService": {
-      "GuildWars2Updates": "Guild Wars 2 - Updates",
-      "Release": "Release",
-      "Timespan": "Zeitspanne",
-      "Day": "Tag",
-      "Days": "Tage",
-      "Hour": "Stunde",
-      "Hours": "Stunden",
-      "Minute": "Minute",
-      "Minutes": "Minuten",
-      "Second": "Sekunde",
-      "Seconds": "Sekunden",
-      "Confirmed": "Bestätigt",
-      "Source": "Quelle",
-      "Sources": "Quellen",
-      "UpdateField": "Allgemein",
-      "EodField": "End of Dragons"
-    },
-    "DialogElementBase": {
-      "PleaseTryAgain": "Deine Eingabe war ungültig. Versuche es noch einmal."
+    "AccountAdministrationService": {
+      "InvalidToken": "Der angegebene API-Key ist ungültig oder hat nicht alle benötigten Berechtigungen.",
+      "SwitchToPrivate": "Ich habe deinen Befehl als private Nachricht beantwortet.",
+      "NoAccounts": "Du hast aktuell keine konfigurierten Acccounts.",
+      "ApiKeyAdded": "Dein API-Key wurde erfolgreich hinzugefügt.",
+      "NoAccountExisting": "Du hast noch keine hinterlegten Accounts.",
+      "AccountDeleted": "Der Account wurde erfolgreich gelöscht.",
+      "ListOfInvalidAccounts": "Die folgenden Accounts sind ungültig:",
+      "NoInvalidAccounts": "Es konnten keine ungültigen Accounts gefunden werden"
     },
     "AccountApiKeyDialogElement": {
       "AddTitle": "Account Konfiguration",
-      "AddDescription": "Gib bitte den zu verwendenen API-Key ein. Ein API-Key kann auf der offiziellen [Guild Wars 2 Website](https://account.arena.net/applications) erstellt werden."
+      "AddDescription":
+        "Gib bitte den zu verwendenen API-Key ein. Ein API-Key kann auf der offiziellen [Guild Wars 2 Website](https://account.arena.net/applications) erstellt werden."
     },
     "AccountDpsReportUserTokenDialogElement": {
       "Message": "Gib bitte den zu verwendenen dps.report-Benutzertoken ein."
     },
     "AccountEditDialogElement": {
       "ChooseCommandTitle": "Account Konfiguration",
-      "ChooseCommandDescription": "Mit diesem Assistenten kannst du deine Guild Wars 2 Account-Informationen konfigurieren.",
+      "ChooseCommandDescription":
+        "Mit diesem Assistenten kannst du deine Guild Wars 2 Account-Informationen konfigurieren.",
       "Name": "Name",
       "IsApiKeyAvailable": "Api Key",
       "DpsReportUserToken": "dps.report-Benutzertoken",
@@ -91,397 +41,167 @@
       "ChooseDescription": "Wähle bitte einen der folgenden Accounts aus:",
       "AccountsField": "Accounts"
     },
-    "AccountAdministrationService": {
-      "InvalidToken": "Der angegebene API-Key ist ungültig oder hat nicht alle benötigten Berechtigungen.",
-      "SwitchToPrivate": "Ich habe deinen Befehl als private Nachricht beantwortet.",
-      "NoAccounts": "Du hast aktuell keine konfigurierten Acccounts.",
-      "ApiKeyAdded": "Dein API-Key wurde erfolgreich hinzugefügt.",
-      "NoAccountExisting": "Du hast noch keine hinterlegten Accounts.",
-      "AccountDeleted": "Der Account wurde erfolgreich gelöscht.",
-      "ListOfInvalidAccounts": "Die folgenden Accounts sind ungültig:",
-      "NoInvalidAccounts": "Es konnten keine ungültigen Accounts gefunden werden"
-    },
-    "FractalLfgMessageBuilder": {
-      "Today": "Heute",
-      "AppointmentReminder": "{0} - Terminerinnerung"
-    },
     "AccountWantToAddDialogElement": {
       "Prompt": "Du hast noch keinen Account hinterlegt. Möchtest du einen hinzufügen?"
     },
     "AccountWantToDeleteDialogElement": {
       "Prompt": "Bist du sicher, dass der Account '{0}' gelöscht werden soll?"
     },
-    "OneTimeReminderJob": {
-      "EmptyReminder": "{0} Erinnerung",
-      "SingleLineReminder": "{0} Erinnerung: {1}",
-      "MultiLineReminder": "{0} Erinnerung:\n\n{1}"
+    "AdministrationCommandModule": {
+      "NotAllowedToPerform": "Diese Aktion darf ich nicht ausführen."
     },
-    "ServerConfigurationCommandModule": {
-      "UsingNewPrefix": "Ich werde nun den folgenden Präfix verwenden: {0}"
+    "BlockedChannelService": {
+      "ChannelIsBlocked":
+        "Dieser Befehl kann in diesem Kanal nicht verwendet werden. Bitte verwende einen dafür vorgesehenen Kanal."
     },
-    "InteractionService": {
-      "DialogNotAssigned": "Du kannst nur mit Dialogen interagieren, die dir zugeordnet sind."
+    "CalendarAddParticipantsDialogElement": {
+      "Message": "Gib bitte die Benutzer ein:"
     },
-    "RaidCommandModule": {
-      "NoActiveAppointment": "Es besteht kein aktiver Termin.",
-      "TemplateChanged": "Die Schablone wurde angepasst.",
-      "GroupCountChanged": "Die Anzahl der Gruppen wurde angepasst."
+    "CalendarAddVoiceChannelDialogElement": {
+      "ChooseTitle": "Sprachkanalauswahl",
+      "ChooseDescription": "Wähle einen der folgenden Sprachkanäle aus:",
+      "Field": "Kanäle"
     },
-    "RaidExperienceLevelsCommandModule": {
-      "UnknownExperienceLevel": "Das angegebene Erfahrungslevel existiert nicht.",
-      "NewRankFormat": "Neue Wertung für {0}: {1} {2} {3}"
+    "CalendarAppointmentSelectionDialogElement": {
+      "ChooseTitle": "Terminauswahl",
+      "ChooseDescription": "Wähle einen der folgenden Termine aus:",
+      "Field": "Teilnehmer"
     },
-    "RaidRolesService": {
-      "AssistantTitle": "Konfiguration Raid-Rollen",
-      "AssistantDescription": "Mit diesem Assistenten kannst du die Raid-Rollen bearbeiten. Nachfolgend sind alle bereits eingerichteten Rollen aufgelistet:",
-      "AssistantRolesField": "Rollen",
-      "AssistantCommandsField": "Befehle",
-      "AssistantAddCommand": "{0} Rolle hinzufügen",
-      "AssistantEditCommand": "{0} Rolle bearbeiten",
-      "AssistantDeleteCommand": "{0} Rolle löschen",
-      "AssistantCancelCommand": "{0} Abbrechen",
-
-      "ReactWithEmojiPrompt": "Reagiere mit dem Emoji, das der Rolle zugewiesen werden soll.",
-      "DescriptionPrompt": "Gib bitte die Bezeichnung der Rolle ein.",
-      "AddSubRolesPrompt": "Sollen der Rolle untergeordnete Rollen hinzugefügt werden?",
-      "AddAdditionalSubRolesPrompt": "Sollen der Rolle weitere untergeordnete Rollen zugewiesen werden?",
-      "CreationCompletedMessage": "Die Erstellung wurde abgeschlossen.",
-
-      "ChooseRoleTitle": "Rollenauswahl",
-      "ChooseRoleDescription": "Wähle eine der folgenden Rollen aus:",
-
-      "RoleEditTitle": "Rollenbearbeitung",
-      "RoleEditEditDescriptionCommand": "{0} Bezeichnung bearbeiten",
-      "RoleEditEditEmojiCommand": "{0} Emoji bearbeiten",
-      "RoleEditAddSubRoleCommand": "{0} Untergeordnete Rolle hinzufügen",
-      "RoleEditEditSubRoleCommand": "{0} Untergeordnete Rolle bearbeiten",
-      "RoleEditDeleteSubRoleCommand": "{0} Untergeordnete Rolle löschen",
-
-      "DeleteRolePrompt": "Soll die Rolle wirklich gelöscht werden?"
+    "CalendarMessageBuilderService": {
+      "WeekNumber": "KW",
+      "Motd": "Nachricht des Tages:",
+      "MotdFormat": "{0} - {1}, {2:dd.MM.} um {2:HH:mm} Uhr"
     },
-    "RaidTemplateAliasNameDialogElement": {
-      "Message": "Gib bitte den zu verwendenden Aliasnamen ein."
+    "CalendarOneTimeDayDialogElement": {
+      "Message": "Gbt bitte den Tag ein. (yyyy-MM-dd)"
     },
-    "RaidTemplateDeletionElementBase": {
-      "DeleteRolePrompt": "Soll die Schablone wirklich gelöscht werden?"
-    },
-    "RaidTemplateDescriptionDialogElement": {
-      "Message": "Gib bitte die zu verwendende Bezeichnung ein."
-    },
-    "RaidTemplateEditDialogElement": {
-      "ChooseCommandTitle": "Schablonenkonfiguration",
-      "ChooseCommandDescription": "Mit diesem Assistenten können bestehende Schablonen bearbeitet werden.",
-      "AliasName": "Aliasname",
-      "Title": "Titel",
-      "Description": "Beschreibung",
-      "CommandTitle": "Befehle",
-      "EditAliasCommand": "{0} Aliasname bearbeiten",
-      "EditTitleCommand": "{0} Titel bearbeiten",
-      "EditDescriptionCommand": "{0} Beschreibung bearbeiten",
-      "EditThumbnailCommand": "{0} Miniaturansicht bearbeiten",
+    "CalendarParticipantsEditDialogElement": {
+      "CommitTitle": "Teilnehmer",
+      "CommitText": "Die folgenden Teilnehmer wurden erfasst:",
+      "Participants": "Teilnehmer",
+      "Commands": "Befehle",
+      "AddUserCommand": "{0} Teilnehmer hinzufügen",
+      "AddVoiceChannelCommand": "{0} Sprachkanal hinzufügen",
+      "RemoveUserCommand": "{0} Teilnehmer entfernen",
+      "SetLeaderCommand": "{0} Terminleitung",
+      "CommitCommand": "{0} Bestätigen",
+      "CommitSuccess": "Die Teilnehmerliste wurde aktualisiert.",
       "CancelCommand": "{0} Abbrechen"
     },
-    "RaidTemplateSelectionDialogElement": {
-      "ChooseTemplateTitle": "Schablonenauswahl",
-      "ChooseTemplateDescription": "Wähle eine der folgenden Schablonen aus:",
-      "TemplatesField": "Schablonen"
+    "CalendarRemoveParticipantsDialogElement": {
+      "Message": "Gib bitte die Benutzer ein:"
     },
-    "RaidTemplateSetupDialogElement": {
-      "ChooseCommandTitle": "Schablonenkonfiguration",
-      "ChooseCommandDescription": "Mit diesem Assistenten können die Schablonen zur Definition des Raid-Tages bearbeitet werden. Die folgenden Schablonen wurden bereits eingerichtet:",
-      "TemplatesField": "Schablonen",
+    "CalendarScheduleDayOfWeekDialogElement": {
+      "Title": "Zeitplanselektion",
+      "Description": "Wähle bitte den Wochentag aus:",
+      "Reactions": "Wochentage"
+    },
+    "CalendarScheduleDeletionDialogElement": {
+      "DeletePrompt": "Soll der Zeitplan wirklich gelöscht werden?"
+    },
+    "CalendarScheduleDescriptionDialogElement": {
+      "Message": "Gib die Bezeichnung des Zeitplans ein."
+    },
+    "GuildActivityDiscordMessageAddDialogElement": {
+      "ChooseRoleTitle": "Wähle die Rolle aus, die hinzugefügt werden soll:",
+      "ChooseRoleDescription": "Wähle einer der folgenden Rollen aus..."
+    },
+    "GuildActivityDiscordMessageEditDialogElement": {
+      "ChooseRoleTitle": "Wähle die Rolle aus, die bearbeitet werden soll:",
+      "ChooseRoleDescription": "Wähle eine der folgenden Rollen aus..."
+    },
+    "GuildActivityDiscordMessagePointsDialogElement": {
+      "Message": "Gib bitte die Anzahl der Punkte ein:"
+    },
+    "GuildActivityDiscordMessageRemoveDialogElement": {
+      "ChooseRoleTitle": "Wähle die Rolle aus, die gelöscht werden soll:",
+      "ChooseRoleDescription": "Wähle eine der folgenden Rollen aus..."
+    },
+    "GuildActivityDiscordMessageSetupDialogElement": {
+      "AddCommand": "{0} Rolle hinzufügen",
+      "CancelCommand": "{0} Abbrechen",
+      "ChooseCommandDescription":
+        "Mit dem folgenden Assistenten kannst du die Rollenzuweisung für die Discordnachrichtenaktivität durchführen. Die folgenden Rollen sind bereits eingerichtet:",
+      "ChooseCommandTitle": "Konfiguration der Discordnachrichtenaktivität",
       "CommandTitle": "Befehle",
-      "AddCommand": "{0} Schablone hinzufügen",
-      "EditCommand": "{0} Schablone bearbeiten",
-      "DeleteCommand": "{0} Schablone löschen",
+      "DeleteCommand": "{0} Rolle löschen",
+      "EditCommand": "{0} Rolle bearbeiten",
+      "RolesFields": "Rollen"
+    },
+    "GuildActivityDiscordVoiceAddDialogElement": {
+      "ChooseRoleTitle": "Wähle die Rolle aus, die hinzugefügt werden soll:",
+      "ChooseRoleDescription": "Wähle eine der folgenden Rollen aus..."
+    },
+    "GuildActivityDiscordVoiceEditDialogElement": {
+      "ChooseRoleTitle": "Wähle die Rolle aus, die bearbeitet werden soll:",
+      "ChooseRoleDescription": "Wähle eine der folgenden Rollen aus..."
+    },
+    "GuildActivityDiscordVoicePointsDialogElement": {
+      "Message": "Gib bitte die Anzahl der Punkte ein:"
+    },
+    "GuildActivityDiscordVoiceRemoveDialogElement": {
+      "ChooseRoleTitle": "Wähle die Rolle aus, die gelöscht werden soll:",
+      "ChooseRoleDescription": "Wähle eine der folgenden Rollen aus..."
+    },
+    "GuildActivityDiscordVoiceSetupDialogElement": {
+      "CommandTitle": "Befehle",
+      "ChooseCommandTitle": "Konfiguration der Discordsprachaktivität",
+      "ChooseCommandDescription":
+        "Mit dem folgenden Assistenten kannst du die Rollenzuweisung für die Discordsprachaktivität durchführen. Die folgenden Rollen sind bereits eingerichtet:",
+      "RolesFields": "Rollen",
+      "AddCommand": "{0} Rolle hinzufügen",
+      "EditCommand": "{0} Rolle bearbeiten",
+      "DeleteCommand": "{0} Rolle löschen",
       "CancelCommand": "{0} Abbrechen"
     },
-    "RaidTemplateThumbnailDialogElement": {
-      "Message": "Gib bitte den Link zur zu verwendenden Miniaturansicht an:"
-    },
-    "RaidTemplateTitleDialogElement": {
-      "Message": "Gib bitte den zu verwendenden Titel ein:"
-    },
-    "RaidDayDayOfWeekDialogElement": {
-      "Title": "Auswahl des Tages",
-      "Description": "Wähle die gewünschten Wochentage aus:",
-      "Reactions": "Tage"
-    },
-    "RaidDayRegistrationDeadlineDialogElement": {
-      "Message": "Gib bitte den zu verwendenen Anmeldeschluss ein (hh:mm):"
-    },
-    "RaidDayStartTimeDialogElement": {
-      "Message": "Gib bitte den zu verwendenen Startzeitpunkt ein (hh:mm):"
-    },
-    "RaidExperienceLevelDeletionDialogElement": {
-      "DeleteLevelPrompt": "Soll das Erfahrungslevel wirklich gelöscht werden?"
-    },
-    "RaidExperienceLevelDescriptionDialogElement": {
-      "Message": "Gib bitte die zu verwendende Bezeichnung ein."
-    },
-    "RaidExperienceLevelEditDialogElement": {
-      "ChooseCommandTitle": "Erfahrungslevelkonfiguration",
-      "ChooseCommandDescription": "Mit diesem Assistenten können bestehende Erfahrungslevel bearbeitet werden.",
-      "AliasName": "Aliasname",
+    "CalendarScheduleEditDialogElement": {
+      "ChooseCommandTitle": "Zeitplankonfiguration",
+      "ChooseCommandDescription": "Mit diesem Assistenten können die Zeitpläne bearbeitet werden.",
       "Description": "Bezeichnung",
-      "Emoji": "Emoji",
-      "Role": "Rolle",
       "CommandTitle": "Befehle",
-      "EditSuperiorRoleCommand": "{0} Übergeordnetes Erfahrungslevel bearbeiten",
-      "EditAliasNameCommand": "{0} Aliasname bearbeiten",
-      "EditDescriptionCommand": "{0} Bezeichnung bearbeiten",
-      "EditRoleCommand": "{0} Rolle bearbeiten",
-      "EditEmojiCommand": "{0} Emoji bearbeiten",
+      "EditDescriptionCommand": "{0} Bezeichung bearbeiten",
+      "EditScheduleCommand": "{0} Zeitplan bearbeiten",
+      "EditTemplateCommand": "{0} Schablone bearbeiten",
       "CancelCommand": "{0} Abbrechen"
     },
-    "RaidExperienceLevelEmojiDialogElement": {
-      "EmojiPrompt": "Reagiere mit dem Emoji, das verwendet werden soll."
+    "CalendarScheduleOccurenceCountDialogElement": {
+      "Message":
+        "Bitte gib an, am wievielten {0} im Monat der Termin angelegt werden soll oder null, wenn der Termin jede Woche stattfinden soll."
     },
-    "RaidExperienceLevelRoleDialogElement": {
-      "ChooseLevelTitle": "Rollenauswahl",
-      "ChooseLevelDescription": "Wähle eine der folgenden Rollen aus",
-      "NoDiscordRole": "Keine Rolle",
-      "RolesField": "Rollen"
+    "CalendarScheduleOptionsDialogElement": {
+      "Title": "Auswahl der Zeitplanoptionen",
+      "Description": "Wähle bitte eine der folgenden Optionen:",
+      "Reactions": "Optionen",
+      "None": "Keine Optionen",
+      "EvenMonth": "Grade Monate",
+      "UnevenMonth": "Ungrade Monate"
     },
-    "RaidExperienceLevelSelectionDialogElement": {
-      "ChooseLevelTitle": "Erfahrungslevelauswahl",
-      "ChooseLevelDescription": "Wähle eines der folgenden Erfahrungslevel aus:",
-      "LevelsField": "Erfahrungslevel"
+    "CalendarScheduleScheduleDialogElement": {
+      "ChooseTypeTitle": "Auswahl des Typs",
+      "ChooseTypeDescription": "Wähle bitte eine der folgenden Typen:",
+      "TypesField": "Typen",
+      "WeekDayOfMonth": "Wochentage"
     },
-    "RaidExperienceLevelSetupDialogElement": {
-      "ChooseCommandTitle": "Erfahrungslevelkonfiguration",
-      "ChooseCommandDescription": "Mit dem folgenden Assistenten können die Erfahrungslevel konfiguriert werden. Die folgenden Erfahrungslevel wurden bereits erfasst:",
-      "LevelsFields": "Erfahrungslevel",
-      "AddCommand": "{0} Erfahrungslevel hinzufügen",
-      "EditCommand": "{0} Erfahrungslevel bearbeiten",
-      "DeleteCommand": "{0} Erfahrungslevel löschen",
-      "CancelCommand": "{0} Abbrechen",
-      "CommandTitle": "Befehle"
+    "CalendarScheduleSelectionDialogElement": {
+      "ChooseScheduleTitle": "Zeitplanauswahl",
+      "ChooseScheduleDescription": "Wähle bitte einen der folgenden Zeitpläne:",
+      "ScheduleField": "Zeitpläne"
     },
-    "RaidExperienceLevelSuperiorLevelDialogElement": {
-      "ChooseLevelTitle": "Erfahrungslevelauswahl",
-      "ChooseLevelDescription": "Wähle eine der folgenden Erfahrungslevel aus:",
-      "NoExperienceLevel": "Keine übergeordnete Rolle",
-      "LevelsField": "Erfahrungslevel"
-    },
-    "RaidExperienceLevelAliasNameDialogElement": {
-      "Message": "Gib bitte den zu verwendenden Aliasnamen ein."
-    },
-    "RaidCommitService": {
-      "CommitCompleted": "Die Fortschreibung wurde durchgeführt.",
-      "NoOpenAppointment": "Es besteht kein Termin, der noch nicht fortgeschrieben worden ist."
-    },
-    "RaidExperienceLevelsService": {
-      "ExperienceLevels": "Erfahrungslevel"
-    },
-    "RaidMessageBuilder": {
-      "SubstitutesBench": "Ersatzbank"
-    },
-    "RaidCommitDialogElement": {
-      "CommitTitle": "Fortschreibung Teilnahmepunkte",
-      "CommitText": "Die folgenden Punkte werden fortgeschrieben:",
-      "Users": "Benutzer",
-      "AddCommand": "{0} Teilnehmer hinzufügen",
-      "SetPointsCommand": "{0} Bearbeitung der Punkte",
-      "RemoveCommand": "{0} Teilnehmer entfernen",
-      "CommitCommand": "{0} Bestätigung",
-      "CancelCommand": "{0} Abbrechen",
-      "CommandTitle": "Befehle"
-    },
-    "RaidCommitPointDialogElement": {
-      "Message": "Wie viele Punkte sollen zugewiesen werden?"
-    },
-    "RaidCommitRemoveUserDialogElement": {
-      "Message": "Welcher Benutzer soll entfernt werden?"
-    },
-    "RaidCommitUserDialogElement": {
-      "Message": "Gib den Benutzer ein:"
-    },
-    "RaidRoleSelectionDialogElement": {
-      "ChooseMainRoleTitle": "Rollenauswahl",
-      "ChooseSubRoleTitle": "Klassenauswahl",
-      "ChooseMainRoleDescription": "Wähle eine der folgenden Rollen...",
-      "ChooseSubRoleDescription": "Wähle eine der folgenden Klassen...",
-      "NoRole": "Keine Spezifizierung",
-      "RolesField": "Rollen"
-    },
-    "RaidRoleSelectionNextDialogElement": {
-      "MessageFirst": "Möchste du eine Rollenpräferenz auswählen?",
-      "MessageNext": "Möchtest du eine weitere Rollenpräferenz hinzufügen?",
-      "Yes": "Ja",
-      "No": "Nein" 
-    },
-    "RaidOverviewService": {
-      "ParticipationOverview": "Übersicht der Teilnahmepunkte"
-    },
-    "RaidRegistrationService": {
-      "RequiredExperienceLevelMissing": "Du hast noch nicht das erforderlichen Erfahrungslevel für diesen Termin."
-    },
-    "GuildApiKeyDialogElement": {
-      "Message": "Gib den zu verwendenden API-Key ein:"
-    },
-    "GuildGuildDialogElement": {
-      "ChooseGuildTitle": "Gildenauswahl",
-      "ChooseGuildDescription": "Bitte wähle eine der folgenden Gilden aus:",
-      "GuildsField": "Gilden"
-    },
-    "GuildLogImportJob": {
-      "MemberJoined": "**{0}** ist der Gilde beigetreten.",
-      "MemberLeft": "**{0}** hat die Gilde verlassen.",
-      "MemberKicked": "**{0}** wurde von **{1}** aus der Gilde geworfen."
-    },
-    "GuildCalendarTitleDialogElement": {
-      "Message": "Gib bitte den Titel der Kalenders ein."
-    },
-    "GuildCalendarDescriptionDialogElement": {
-      "Message": "Gib bitte die Beschreibung des Kalenders ein."
-    },
-    "GuildConfigurationService": {
-      "MotdBuilding": "Die Nachricht des Tages wird mit der nächste Aktualisierung angepasst.",
-      "CalendarBuilding": "Der Kalender wird mit der nächsten Aktualisierung aufgebaut."
-    },
-    "GuildBankService": {
-      "BankValidation": "Banküberprüfung",
-      "BankValidationResult": "Folgend sind die Ergebnis der Überprüfung der Gildenbank aufgelistet.",
-      "DuplicationCheck": "Duplikatprüfung",
-      "CoinCheck": "Goldbestandsprüfung",
-      "NoApiKey": "Die Gilde wurde noch nicht konfiguriert.",
-      "DyeUnlocksTitle": "Freigeschaltete Farben {0}",
-      "DyesFields": "Farben #{0}",
-      "NoAccountApiKey": "Du hast noch keinen API-Key hinterlegt."
-    },
-
-    "GuildSpecialRankDeletionDialogElement": {
-      "DeletePrompt": "Soll der Spezial-Rang wirklich gelöscht werden?"
-    },
-    "GuildSpecialRankDescriptionDialogElement": {
-      "Message": "Gib bitte die zu verwendende Bezeichnung ein."
-    },
-    "GuildSpecialRankDiscordRoleDialogElement": {
-      "ChooseRoleTitle": "Rollenauswahl",
-      "ChooseRoleDescription": "Wähle bitte eine der folgenden Rollen aus:",
-      "RolesField": "Rollen"
-    },
-    "GuildSpecialRankEditDialogElement": {
-      "ChooseCommandTitle": "Spezial-Rang Konfiguration",
-      "ChooseCommandDescription": "Mit diesem Assistenten kannst du die Spezial-Ränge konfigurieren.",
-      "Description": "Bezeichnung",
-      "DiscordRole": "Discord-Rolle",
-      "MaximumPoints": "Maximale Anzahl Punkte",
-      "GrantThreshold": "'Hinzufügen'-Schwellenwert",
-      "RemoveThreshold": "'Entfernen'-Schwellenwert",
-      "General": "Allgemein",
-      "Roles": "Rollen",
-      "IgnoreRoles": "Zu ignorierende Rollen",
-      "CommandTitle": "Befehle",
-      "EditDescriptionCommand": "{0} Bezeichnung bearbeiten",
-      "EditRoleCommand": "{0} Discord-Rolle bearbeiten",
-      "EditMaximumPointsCommand": "{0} Maximale Anzahl Punkte bearbeiten",
-      "EditGrantThresholdCommand": "{0} 'Hinzufügen'-Schwellenwert",
-      "EditRemoveThresholdCommand": "{0} 'Entfernen'-Schwellenwert bearbeiten",
-      "AddPointRoleCommand": "{0} Punkte-Rolle zuweisen",
-      "RemovePointRoleCommand": "{0} Punkte-Rolle entfernen",
-      "AddIgnoreRoleCommand": "{0} Zu ignorierende Rolle zuweisen",
-      "RemoveIgnoreRoleCommand": "{0} Zu ignorierende Rolle entfernen",
+    "CalendarScheduleSetupDialogElement": {
+      "ChooseCommandTitle": "Zeitplankonfiguration",
+      "ChooseCommandDescription":
+        "Mit diesem Assistenten können die Zeitpläne verwaltet werden. Die folgenden Zeitpläne wurden bereits erstellt:",
+      "SchedulesField": "Zeitpläne",
+      "AddCommand": "{0} Zeitplan hinzufügen",
+      "EditCommand": "{0} Zeitplan bearbeiten",
+      "DeleteCommand": "{0} Zeitplan löschen",
       "CancelCommand": "{0} Abbrechen"
     },
-    "GuildSpecialRankGrantThresholdDialogElement": {
-      "Message": "Gib bitte den zu verwendenden 'Hinzufügen'-Schwellenwert ein."
+    "CalendarSetLeaderParticipantsDialogElement": {
+      "Message": "Gib bitte die Benutzer ein:"
     },
-    "GuildSpecialRankMaximumPointsDialogElement": {
-      "Message": "Gib bitte die maximal zu erreichenden Punkte ein."
-    },
-    "GuildSpecialRankRemoveThresholdDialogElement": {
-      "Message": "Gib bitte den zu verwendenden 'Entfernen'-Schwellenwert ein."
-    },
-    "GuildSpecialRankRoleAssignmentDiscordRoleDialogElement": {
-      "ChooseRoleTitle": "Rollenauswahl",
-      "ChooseRoleDescription": "Wähle bitte eine der folgenden Rollen aus:",
-      "RolesField": "Rollen"
-    },
-    "GuildSpecialRankRoleAssignmentPointsDialogElement": {
-      "Message": "Gibt die zuverwendende Anzahl Punkte ein."
-    },
-    "GuildSpecialRankRoleAssignmentSelectionDialogElement": {
-      "ChooseAssignmentTitle": "Zuweisungsauswahl",
-      "ChooseAssignmentDescription": "Wähle bitte eine der folgenden Zuweisungen aus:",
-      "AssignmentsField": "Zuweisungen"
-    },
-    "GuildSpecialRankSelectionDialogElement": {
-      "ChooseSpecialRankTitle": "Spezial-Rang-Auswahl",
-      "ChooseSpecialRankDescription": "Wähle bitte einen der folgenden Spezial-Ränge:",
-      "RanksField": "Ränge"
-    },
-    "GuildSpecialRankSetupDialogElement": {
-      "ChooseCommandTitle": "Spezial-Rang-Konfiguration",
-      "ChooseCommandDescription": "Mit diesem Assistenten können die Spezial-Ränge konfiguriert werden. Die folgenden Spezial-Ränge wurden bereits erstellt:",
-      "RanksFields": "Ränge",
-      "AddCommand": "{0} Rang hinzufügen",
-      "EditCommand": "{0} Rang bearbeiten",
-      "DeleteCommand": "{0} Rang löschen",
-      "CancelCommand": "{0} Abbrechen",
-      "CommandTitle": "Befehle"
-    },
-    "GuildSpecialRankService": {
-      "Overview": "Punkteübersicht"
-    },
-    "GuildSpecialRankPointsJob": {
-      "RoleAssignment": "Rollenzuweisung",
-      "RemovedRoles": "Entfernung",
-      "GrantedRoles": "Zuweisung"
-    },
-    "GuildRankSuperiorRankDialogElement": {
-      "ChooseTitle": "Auswahl des übergeordneten Rangs",
-      "ChooseDescription": "Wähle bitte einen der folgenden Ränge aus:",
-      "NoSuperior": "Kein übergeordneter Rang",
-      "RanksField": "Ränge"
-    },
-    "GuildRankDeletionDialogElement": {
-      "DeletePrompt": "Bist du sicher, dass der Rang gelöscht werden soll?"
-    },
-    "GuildRankDiscordRoleDialogElement": {
-      "ChooseTitle": "Rollenauswahl",
-      "ChooseDescription": "Wähle bitte eine der folgenden Rollen:",
-      "RolesField": "Rollen"
-    },
-    "GuildRankEditDialogElement": {
-      "ChooseCommandTitle": "Rangkonfiguration",
-      "ChooseCommandDescription": "Mit diesem Assistenten kannst du den Rang konfigurieren.",
-      "InGameName": "In-Game-Name",
-      "DiscordRoleId": "Discord-Rolle",
-      "Percentage": "Prozentualer Anteil",
-      "General": "Allgemein",
-      "CommandTitle": "Befehle",
-      "EditInGameNameCommand": "{0} In-Ganme-Name bearbeiten",
-      "EditDiscordCommand": "{0} Discord-Rolle bearbeiten",
-      "EditPercentageCommand": "{0} Prozentualen Anteil bearbeiten",
-      "CancelCommand": "{0} Abbrechen"
-    },
-    "GuildRankInGameNameDialogElement": {
-      "ChooseTitle": "Auswahl des In-Game-Namens",
-      "ChooseDescription": "Wähle bitte einen der folgenden Ränge aus:",
-      "RanksField": "Ränge"
-    },
-    "GuildRankPercentageDialogElement": {
-      "Message": "Gib bitte den prozentualen Anteil ein. (#.###)"
-    },
-    "GuildRankSelectionDialogElement": {
-      "ChooseTitle": "Rangauswahl",
-      "ChooseDescription": "Wähle bitte einen der folgenden Ränge aus:",
-      "RanksField": "Ränge"
-    },
-    "GuildRankSetupDialogElement": {
-      "ChooseCommandTitle": "Gildenrangkonfiguration",
-      "ChooseCommandDescription": "Mit diesem Assistenten kannst du die Gildenränge bearbeiten. Die folgenden Ränge wurden bereits erstellt:",
-      "RanksFields": "Ränge",
-      "AddCommand": "{0} Rang hinzufügen",
-      "EditCommand": "{0} Rang bearbeiten",
-      "DeleteCommand": "{0} Rang löschen",
-      "CancelCommand": "{0} Abbrechen",
-      "CommandTitle": "Befehle"
-    },
-    "WorldsService": {
-      "Overview": "Weltenübersicht"
+    "CalendarTemplateAppointmentTimeDialogElement": {
+      "Message": "Gibt bitte den Zeitpunkt des Termins ein (hh:mm):"
     },
     "CalendarTemplateDeletionDialogElement": {
       "DeletePrompt": "Soll die Schablone wirklich gelöscht werden?"
@@ -529,7 +249,8 @@
     },
     "CalendarTemplateSetupDialogElement": {
       "ChooseCommandTitle": "Kalenderschablonenkonfiguration",
-      "ChooseCommandDescription": "Mit diesem Assistenten können die Kalenderschablonen bearbeitet werden. Die folgenden Schablonen wurden bereits angelegt:",
+      "ChooseCommandDescription":
+        "Mit diesem Assistenten können die Kalenderschablonen bearbeitet werden. Die folgenden Schablonen wurden bereits angelegt:",
       "TemplatesField": "Schablonen",
       "AddCommand": "{0} Schablone hinzufügen",
       "EditCommand": "{0} Schablone bearbeiten",
@@ -543,134 +264,10 @@
     "CalendarTemplateUriUriDialogElement": {
       "Message": "Gib bitte den zu verwendenen Link ein."
     },
-    "CalendarScheduleDayOfWeekDialogElement": {
-      "Title": "Zeitplanselektion",
-      "Description": "Wähle bitte den Wochentag aus:",
-      "Reactions": "Wochentage"
-    },
-    "CalendarScheduleDeletionDialogElement": {
-      "DeletePrompt": "Soll der Zeitplan wirklich gelöscht werden?"
-    },
-    "CalendarScheduleDescriptionDialogElement": {
-      "Message": "Gib die Bezeichnung des Zeitplans ein."
-    },
-    "CalendarScheduleEditDialogElement": {
-      "ChooseCommandTitle": "Zeitplankonfiguration",
-      "ChooseCommandDescription": "Mit diesem Assistenten können die Zeitpläne bearbeitet werden.",
-      "Description": "Bezeichnung",
-      "CommandTitle": "Befehle",
-      "EditDescriptionCommand": "{0} Bezeichung bearbeiten",
-      "EditScheduleCommand": "{0} Zeitplan bearbeiten",
-      "EditTemplateCommand": "{0} Schablone bearbeiten",
-      "CancelCommand": "{0} Abbrechen"
-    },
-    "CalendarScheduleOccurenceCountDialogElement": {
-      "Message": "Bitte gib an, am wievielten {0} im Monat der Termin angelegt werden soll oder null, wenn der Termin jede Woche stattfinden soll."
-    },
-    "CalendarScheduleOptionsDialogElement": {
-      "Title": "Auswahl der Zeitplanoptionen",
-      "Description": "Wähle bitte eine der folgenden Optionen:",
-      "Reactions": "Optionen",
-      "None": "Keine Optionen",
-      "EvenMonth": "Grade Monate",
-      "UnevenMonth": "Ungrade Monate"
-    },
-    "CalendarScheduleScheduleDialogElement": {
-      "ChooseTypeTitle": "Auswahl des Typs",
-      "ChooseTypeDescription": "Wähle bitte eine der folgenden Typen:",
-      "TypesField": "Typen",
-      "WeekDayOfMonth": "Wochentage"
-    },
-    "CalendarScheduleSelectionDialogElement": {
-      "ChooseScheduleTitle": "Zeitplanauswahl",
-      "ChooseScheduleDescription": "Wähle bitte einen der folgenden Zeitpläne:",
-      "ScheduleField": "Zeitpläne"
-    },
-    "CalendarScheduleSetupDialogElement": {
-      "ChooseCommandTitle": "Zeitplankonfiguration",
-      "ChooseCommandDescription": "Mit diesem Assistenten können die Zeitpläne verwaltet werden. Die folgenden Zeitpläne wurden bereits erstellt:",
-      "SchedulesField": "Zeitpläne",
-      "AddCommand": "{0} Zeitplan hinzufügen",
-      "EditCommand": "{0} Zeitplan bearbeiten",
-      "DeleteCommand": "{0} Zeitplan löschen",
-      "CancelCommand": "{0} Abbrechen"
-    },
-    "CalendarTemplateAppointmentTimeDialogElement": {
-      "Message": "Gibt bitte den Zeitpunkt des Termins ein (hh:mm):"
-    },
-    "CalendarMessageBuilderService": {
-      "WeekNumber": "KW",
-      "Motd": "Nachricht des Tages:",
-      "MotdFormat": "{0} - {1}, {2:dd.MM.} um {2:HH:mm} Uhr"
-    },
-    "CalendarOneTimeDayDialogElement": {
-      "Message": "Gbt bitte den Tag ein. (yyyy-MM-dd)"
-    },
-    "CalendarAddParticipantsDialogElement": {
-      "Message": "Gib bitte die Benutzer ein:"
-    },
-    "CalendarAddVoiceChannelDialogElement": {
-      "ChooseTitle": "Sprachkanalauswahl",
-      "ChooseDescription": "Wähle einen der folgenden Sprachkanäle aus:",
-      "Field": "Kanäle"
-    },
-    "CalendarAppointmentSelectionDialogElement": {
-      "ChooseTitle": "Terminauswahl",
-      "ChooseDescription": "Wähle einen der folgenden Termine aus:",
-      "Field": "Teilnehmer"
-    },
-    "CalendarParticipantsEditDialogElement": {
-      "CommitTitle": "Teilnehmer",
-      "CommitText": "Die folgenden Teilnehmer wurden erfasst:",
-      "Participants": "Teilnehmer",
-      "Commands": "Befehle",
-      "AddUserCommand": "{0} Teilnehmer hinzufügen",
-      "AddVoiceChannelCommand": "{0} Sprachkanal hinzufügen",
-      "RemoveUserCommand": "{0} Teilnehmer entfernen",
-      "SetLeaderCommand": "{0} Terminleitung",
-      "CommitCommand": "{0} Bestätigen",
-      "CommitSuccess": "Die Teilnehmerliste wurde aktualisiert.",
-      "CancelCommand": "{0} Abbrechen"
-    },
-    "CalendarRemoveParticipantsDialogElement": {
-      "Message": "Gib bitte die Benutzer ein:"
-    },
-    "CalendarSetLeaderParticipantsDialogElement": {
-      "Message": "Gib bitte die Benutzer ein:"
-    },
-    "SearchCommandModule": {
-      "SearchResults": "Suchergebnis",
-      "NoResults": "Ich konnte leider keine Ergebnisse finden.",
-      "TitleSearch": "Titelsuche",
-      "TextSearch": "Textsuche"
-    },
-    "ScruffyTimeoutException": {
-      "CommandTimeout": "Die Verarbeitung des Befehls wurde wegen einer Zeitüberschreitung abgebrochen."
-    },
-    "MissingGuildWars2ApiPermissionException": {
-      "General": "Allgemein",
-      "Account": "account",
-      "Builds": "builds",
-      "Characters": "characters",
-      "Guilds": "guilds",
-      "Inventories": "inventories",
-      "Progression": "progression",
-      "PvP": "pvp",
-      "TradingPost": "tradingpost",
-      "Unlocks": "unlocks",
-      "Wallet": "wallet",
-      "MissingPermissions": "Der hinterlegte API-Schlüssel hat nicht die benötigten Berechtigungen ({0}) um den Befehl auszuführen."
-    },
-    "DiscordBot": {
-      "CommandFailedMessage": "Der Befehl konnte nicht ausgeführt werden. Aber dafür habe ich einen Fehlercode ({0}) und ein lustiges Katzenbild für dich."
-    },
-    "HelpOverviewCommandModule": {
-      "HelpCommandOverviewTitle": "Übersicht über die wichtigsten Befehle",
-      "HelpCommandOverviewDescription": "In der folgenden Nachricht werden die wichtigsten Befehle der ausgewählten Kategorie ausgegeben."
-    },
     "CommandHelpService": {
       "Help": "Befehlshilfe",
-      "GeneralHelp": "Es werden alle Befehlsgruppen ausgegeben. Spezifiziere den Befehl zur Ausgabe von weiteren Informationen.",
+      "GeneralHelp":
+        "Es werden alle Befehlsgruppen ausgegeben. Spezifiziere den Befehl zur Ausgabe von weiteren Informationen.",
       "NoDescription": "Es steht keine Beschreibung zur Verfügung",
       "Arguments": "Argumente",
       "Commands": "Befehlsgruppen",
@@ -685,7 +282,8 @@
       "BuilderTitleLegendRequired": "`<Argument>`: Dieses Argument ist erforderlich.",
       "BuilderTitleLegendOptional": "`[Argument]`: Dieses Argument ist optional.",
       "BuilderTitleLegendRemainder": "`...`: Bei diesem Argument könnten Leerzeichen und Umbrüche verwendet werden.",
-      "BuilderDescriptionGeneral": "Mit dem Befehl `help <Befehl>` kannst du dir die Hilfe eines bestimmten Befehls ausgeben lassen.",
+      "BuilderDescriptionGeneral":
+        "Mit dem Befehl `help <Befehl>` kannst du dir die Hilfe eines bestimmten Befehls ausgeben lassen.",
 
       "help": "Befehlsilfe",
       "help overview": "Übersicht der wichtigsten Befehle",
@@ -772,9 +370,9 @@
       "raid overview participation": "Teilnahmepunkteübersicht",
       "raid overview levels": "Erfahrungslevelübersicht",
 
-      "statistics": "Statistiken", 
+      "statistics": "Statistiken",
 
-      "gif": "Bildersuche", 
+      "gif": "Bildersuche",
 
       "guild": "Gildenverwaltung",
       "guild setup": "Einrichtung der Gildenadministration",
@@ -886,6 +484,480 @@
       "debug import worlds": "Import aller Welten bzw. Server von Guild Wars 2",
       "debug network dnsinfo": "Ausgaben von Informationen zur einer Domäne",
       "debug network dnsinfo domain": "Domäne"
+    },
+    "DialogElementBase": {
+      "PleaseTryAgain": "Deine Eingabe war ungültig. Versuche es noch einmal."
+    },
+    "DiscordBot": {
+      "CommandFailedMessage":
+        "Der Befehl konnte nicht ausgeführt werden. Aber dafür habe ich einen Fehlercode ({0}) und ein lustiges Katzenbild für dich."
+    },
+    "FractalLfgCreationAliasNameDialogElement": {
+      "Message": "Gib bitte den zu verwendende Aliasnamen ein."
+    },
+    "FractalLfgCreationDescriptionDialogElement": {
+      "Message": "Gib bitte die zu verwendende Beschreibung ein."
+    },
+    "FractalLfgCreationTitleDialogElement": {
+      "Message": "Gib bitte den zu verwendenden Titel ein."
+    },
+    "FractalLfgMessageBuilder": {
+      "Today": "Heute",
+      "AppointmentReminder": "{0} - Terminerinnerung"
+    },
+    "FractalLfgService": {
+      "BuildingProgress": "Erstellung...",
+      "CreationCompletedMessage":
+        "Erstellung abgechlossen! Alle Nachrichten der Erstellung werden in 30 Sekunden gelöscht."
+    },
+    "GuildApiKeyDialogElement": {
+      "Message": "Gib den zu verwendenden API-Key ein:"
+    },
+    "GuildBankService": {
+      "BankValidation": "Banküberprüfung",
+      "BankValidationResult": "Folgend sind die Ergebnis der Überprüfung der Gildenbank aufgelistet.",
+      "DuplicationCheck": "Duplikatprüfung",
+      "CoinCheck": "Goldbestandsprüfung",
+      "NoApiKey": "Die Gilde wurde noch nicht konfiguriert.",
+      "DyeUnlocksTitle": "Freigeschaltete Farben {0}",
+      "DyesFields": "Farben #{0}",
+      "NoAccountApiKey": "Du hast noch keinen API-Key hinterlegt."
+    },
+    "GuildCalendarDescriptionDialogElement": {
+      "Message": "Gib bitte die Beschreibung des Kalenders ein."
+    },
+    "GuildCalendarTitleDialogElement": {
+      "Message": "Gib bitte den Titel der Kalenders ein."
+    },
+    "GuildConfigurationService": {
+      "MotdBuilding": "Die Nachricht des Tages wird mit der nächste Aktualisierung angepasst.",
+      "CalendarBuilding": "Der Kalender wird mit der nächsten Aktualisierung aufgebaut."
+    },
+    "GuildGuildDialogElement": {
+      "ChooseGuildTitle": "Gildenauswahl",
+      "ChooseGuildDescription": "Bitte wähle eine der folgenden Gilden aus:",
+      "GuildsField": "Gilden"
+    },
+    "GuildLogImportJob": {
+      "MemberJoined": "**{0}** ist der Gilde beigetreten.",
+      "MemberLeft": "**{0}** hat die Gilde verlassen.",
+      "MemberKicked": "**{0}** wurde von **{1}** aus der Gilde geworfen."
+    },
+    "GuildRankDeletionDialogElement": {
+      "DeletePrompt": "Bist du sicher, dass der Rang gelöscht werden soll?"
+    },
+    "GuildRankDiscordRoleDialogElement": {
+      "ChooseTitle": "Rollenauswahl",
+      "ChooseDescription": "Wähle bitte eine der folgenden Rollen:",
+      "RolesField": "Rollen"
+    },
+    "GuildRankEditDialogElement": {
+      "ChooseCommandTitle": "Rangkonfiguration",
+      "ChooseCommandDescription": "Mit diesem Assistenten kannst du den Rang konfigurieren.",
+      "InGameName": "In-Game-Name",
+      "DiscordRoleId": "Discord-Rolle",
+      "Percentage": "Prozentualer Anteil",
+      "General": "Allgemein",
+      "CommandTitle": "Befehle",
+      "EditInGameNameCommand": "{0} In-Ganme-Name bearbeiten",
+      "EditDiscordCommand": "{0} Discord-Rolle bearbeiten",
+      "EditPercentageCommand": "{0} Prozentualen Anteil bearbeiten",
+      "CancelCommand": "{0} Abbrechen"
+    },
+    "GuildRankInGameNameDialogElement": {
+      "ChooseTitle": "Auswahl des In-Game-Namens",
+      "ChooseDescription": "Wähle bitte einen der folgenden Ränge aus:",
+      "RanksField": "Ränge"
+    },
+    "GuildRankPercentageDialogElement": {
+      "Message": "Gib bitte den prozentualen Anteil ein. (#.###)"
+    },
+    "GuildRankSelectionDialogElement": {
+      "ChooseTitle": "Rangauswahl",
+      "ChooseDescription": "Wähle bitte einen der folgenden Ränge aus:",
+      "RanksField": "Ränge"
+    },
+    "GuildRankSetupDialogElement": {
+      "ChooseCommandTitle": "Gildenrangkonfiguration",
+      "ChooseCommandDescription":
+        "Mit diesem Assistenten kannst du die Gildenränge bearbeiten. Die folgenden Ränge wurden bereits erstellt:",
+      "RanksFields": "Ränge",
+      "AddCommand": "{0} Rang hinzufügen",
+      "EditCommand": "{0} Rang bearbeiten",
+      "DeleteCommand": "{0} Rang löschen",
+      "CancelCommand": "{0} Abbrechen",
+      "CommandTitle": "Befehle"
+    },
+    "GuildRankSuperiorRankDialogElement": {
+      "ChooseTitle": "Auswahl des übergeordneten Rangs",
+      "ChooseDescription": "Wähle bitte einen der folgenden Ränge aus:",
+      "NoSuperior": "Kein übergeordneter Rang",
+      "RanksField": "Ränge"
+    },
+    "GuildSpecialRankDeletionDialogElement": {
+      "DeletePrompt": "Soll der Spezial-Rang wirklich gelöscht werden?"
+    },
+    "GuildSpecialRankDescriptionDialogElement": {
+      "Message": "Gib bitte die zu verwendende Bezeichnung ein."
+    },
+    "GuildSpecialRankDiscordRoleDialogElement": {
+      "ChooseRoleTitle": "Rollenauswahl",
+      "ChooseRoleDescription": "Wähle bitte eine der folgenden Rollen aus:",
+      "RolesField": "Rollen"
+    },
+    "GuildSpecialRankEditDialogElement": {
+      "ChooseCommandTitle": "Spezial-Rang Konfiguration",
+      "ChooseCommandDescription": "Mit diesem Assistenten kannst du die Spezial-Ränge konfigurieren.",
+      "Description": "Bezeichnung",
+      "DiscordRole": "Discord-Rolle",
+      "MaximumPoints": "Maximale Anzahl Punkte",
+      "GrantThreshold": "'Hinzufügen'-Schwellenwert",
+      "RemoveThreshold": "'Entfernen'-Schwellenwert",
+      "General": "Allgemein",
+      "Roles": "Rollen",
+      "IgnoreRoles": "Zu ignorierende Rollen",
+      "CommandTitle": "Befehle",
+      "EditDescriptionCommand": "{0} Bezeichnung bearbeiten",
+      "EditRoleCommand": "{0} Discord-Rolle bearbeiten",
+      "EditMaximumPointsCommand": "{0} Maximale Anzahl Punkte bearbeiten",
+      "EditGrantThresholdCommand": "{0} 'Hinzufügen'-Schwellenwert",
+      "EditRemoveThresholdCommand": "{0} 'Entfernen'-Schwellenwert bearbeiten",
+      "AddPointRoleCommand": "{0} Punkte-Rolle zuweisen",
+      "RemovePointRoleCommand": "{0} Punkte-Rolle entfernen",
+      "AddIgnoreRoleCommand": "{0} Zu ignorierende Rolle zuweisen",
+      "RemoveIgnoreRoleCommand": "{0} Zu ignorierende Rolle entfernen",
+      "CancelCommand": "{0} Abbrechen"
+    },
+    "GuildSpecialRankGrantThresholdDialogElement": {
+      "Message": "Gib bitte den zu verwendenden 'Hinzufügen'-Schwellenwert ein."
+    },
+    "GuildSpecialRankMaximumPointsDialogElement": {
+      "Message": "Gib bitte die maximal zu erreichenden Punkte ein."
+    },
+    "GuildSpecialRankPointsJob": {
+      "RoleAssignment": "Rollenzuweisung",
+      "RemovedRoles": "Entfernung",
+      "GrantedRoles": "Zuweisung"
+    },
+    "GuildSpecialRankRemoveThresholdDialogElement": {
+      "Message": "Gib bitte den zu verwendenden 'Entfernen'-Schwellenwert ein."
+    },
+    "GuildSpecialRankRoleAssignmentDiscordRoleDialogElement": {
+      "ChooseRoleTitle": "Rollenauswahl",
+      "ChooseRoleDescription": "Wähle bitte eine der folgenden Rollen aus:",
+      "RolesField": "Rollen"
+    },
+    "GuildSpecialRankRoleAssignmentPointsDialogElement": {
+      "Message": "Gibt die zuverwendende Anzahl Punkte ein."
+    },
+    "GuildSpecialRankRoleAssignmentSelectionDialogElement": {
+      "ChooseAssignmentTitle": "Zuweisungsauswahl",
+      "ChooseAssignmentDescription": "Wähle bitte eine der folgenden Zuweisungen aus:",
+      "AssignmentsField": "Zuweisungen"
+    },
+    "GuildSpecialRankSelectionDialogElement": {
+      "ChooseSpecialRankTitle": "Spezial-Rang-Auswahl",
+      "ChooseSpecialRankDescription": "Wähle bitte einen der folgenden Spezial-Ränge:",
+      "RanksField": "Ränge"
+    },
+    "GuildSpecialRankService": {
+      "Overview": "Punkteübersicht"
+    },
+    "GuildSpecialRankSetupDialogElement": {
+      "ChooseCommandTitle": "Spezial-Rang-Konfiguration",
+      "ChooseCommandDescription":
+        "Mit diesem Assistenten können die Spezial-Ränge konfiguriert werden. Die folgenden Spezial-Ränge wurden bereits erstellt:",
+      "RanksFields": "Ränge",
+      "AddCommand": "{0} Rang hinzufügen",
+      "EditCommand": "{0} Rang bearbeiten",
+      "DeleteCommand": "{0} Rang löschen",
+      "CancelCommand": "{0} Abbrechen",
+      "CommandTitle": "Befehle"
+    },
+    "GuildWarsUpdateService": {
+      "GuildWars2Updates": "Guild Wars 2 - Updates",
+      "Release": "Release",
+      "Timespan": "Zeitspanne",
+      "Day": "Tag",
+      "Days": "Tage",
+      "Hour": "Stunde",
+      "Hours": "Stunden",
+      "Minute": "Minute",
+      "Minutes": "Minuten",
+      "Second": "Sekunde",
+      "Seconds": "Sekunden",
+      "Confirmed": "Bestätigt",
+      "Source": "Quelle",
+      "Sources": "Quellen",
+      "UpdateField": "Allgemein",
+      "EodField": "End of Dragons"
+    },
+    "HelpOverviewCommandModule": {
+      "HelpCommandOverviewTitle": "Übersicht über die wichtigsten Befehle",
+      "HelpCommandOverviewDescription":
+        "In der folgenden Nachricht werden die wichtigsten Befehle der ausgewählten Kategorie ausgegeben."
+    },
+    "InformationCommandModule": {
+      "GeneralInformationTitle": "Allgemeine Informationen",
+      "GeneralInformationDescription":
+        "Alle Daten, die durch {0} gesammelt werden, dienen nur zur Verwaltung der Gilde. Im folgenden wird auf die einzelnen Bereiche, in denen Daten ermittelt werden, eingegangen.",
+      "GuildWars2ApiTitle": "Guild Wars 2 - API-Key",
+      "GuildWars2ApiDescription":
+        "Über den angegeben API-Key werden die folgenden Daten ermittelt:\n\n - Mit wie vielen Charakteren wird die Gilde repräsentiert?\n - Wann wurde sich das letzte Mal angemeldet?\n - Welchem Server ist der Account zugeordnet?\n - Wie viele Erfolgspunkte hat der Account?\n\nAlle anderen Daten, werden nur temporär ermittelt, wenn man {0} zur Ausführung eines Befehls auffordert. Dabei hat man auch immer nur Zugriff auf seinen eigenen API-Key.",
+      "DiscordTitle": "Discord",
+      "DiscordDescription":
+        "Ein Teil des Gildenrangsystems ist die Aktivität im Discord. Hierfür wird gespeichert, wie viele Nachrichten verfasst werden und wie viele Minuten man im Sprachchat ist. Der Inhalt der Beiträge ist hierbei irrelevant und wird nicht gespeichert.",
+      "RefreshTitle": "Aktualisierung",
+      "RefreshDescription": "Stand: {0}"
+    },
+    "InteractionService": {
+      "DialogNotAssigned": "Du kannst nur mit Dialogen interagieren, die dir zugeordnet sind."
+    },
+    "MissingGuildWars2ApiPermissionException": {
+      "General": "Allgemein",
+      "Account": "account",
+      "Builds": "builds",
+      "Characters": "characters",
+      "Guilds": "guilds",
+      "Inventories": "inventories",
+      "Progression": "progression",
+      "PvP": "pvp",
+      "TradingPost": "tradingpost",
+      "Unlocks": "unlocks",
+      "Wallet": "wallet",
+      "MissingPermissions":
+        "Der hinterlegte API-Schlüssel hat nicht die benötigten Berechtigungen ({0}) um den Befehl auszuführen."
+    },
+    "OneTimeReminderJob": {
+      "EmptyReminder": "{0} Erinnerung",
+      "SingleLineReminder": "{0} Erinnerung: {1}",
+      "MultiLineReminder": "{0} Erinnerung:\n\n{1}"
+    },
+    "RaidCommandModule": {
+      "NoActiveAppointment": "Es besteht kein aktiver Termin.",
+      "TemplateChanged": "Die Schablone wurde angepasst.",
+      "GroupCountChanged": "Die Anzahl der Gruppen wurde angepasst."
+    },
+    "RaidCommitDialogElement": {
+      "CommitTitle": "Fortschreibung Teilnahmepunkte",
+      "CommitText": "Die folgenden Punkte werden fortgeschrieben:",
+      "Users": "Benutzer",
+      "AddCommand": "{0} Teilnehmer hinzufügen",
+      "SetPointsCommand": "{0} Bearbeitung der Punkte",
+      "RemoveCommand": "{0} Teilnehmer entfernen",
+      "CommitCommand": "{0} Bestätigung",
+      "CancelCommand": "{0} Abbrechen",
+      "CommandTitle": "Befehle"
+    },
+    "RaidCommitPointDialogElement": {
+      "Message": "Wie viele Punkte sollen zugewiesen werden?"
+    },
+    "RaidCommitRemoveUserDialogElement": {
+      "Message": "Welcher Benutzer soll entfernt werden?"
+    },
+    "RaidCommitService": {
+      "CommitCompleted": "Die Fortschreibung wurde durchgeführt.",
+      "NoOpenAppointment": "Es besteht kein Termin, der noch nicht fortgeschrieben worden ist."
+    },
+    "RaidCommitUserDialogElement": {
+      "Message": "Gib den Benutzer ein:"
+    },
+    "RaidDayDayOfWeekDialogElement": {
+      "Title": "Auswahl des Tages",
+      "Description": "Wähle die gewünschten Wochentage aus:",
+      "Reactions": "Tage"
+    },
+    "RaidDayRegistrationDeadlineDialogElement": {
+      "Message": "Gib bitte den zu verwendenen Anmeldeschluss ein (hh:mm):"
+    },
+    "RaidDayStartTimeDialogElement": {
+      "Message": "Gib bitte den zu verwendenen Startzeitpunkt ein (hh:mm):"
+    },
+    "RaidExperienceLevelAliasNameDialogElement": {
+      "Message": "Gib bitte den zu verwendenden Aliasnamen ein."
+    },
+    "RaidExperienceLevelDeletionDialogElement": {
+      "DeleteLevelPrompt": "Soll das Erfahrungslevel wirklich gelöscht werden?"
+    },
+    "RaidExperienceLevelDescriptionDialogElement": {
+      "Message": "Gib bitte die zu verwendende Bezeichnung ein."
+    },
+    "RaidExperienceLevelEditDialogElement": {
+      "ChooseCommandTitle": "Erfahrungslevelkonfiguration",
+      "ChooseCommandDescription": "Mit diesem Assistenten können bestehende Erfahrungslevel bearbeitet werden.",
+      "AliasName": "Aliasname",
+      "Description": "Bezeichnung",
+      "Emoji": "Emoji",
+      "Role": "Rolle",
+      "CommandTitle": "Befehle",
+      "EditSuperiorRoleCommand": "{0} Übergeordnetes Erfahrungslevel bearbeiten",
+      "EditAliasNameCommand": "{0} Aliasname bearbeiten",
+      "EditDescriptionCommand": "{0} Bezeichnung bearbeiten",
+      "EditRoleCommand": "{0} Rolle bearbeiten",
+      "EditEmojiCommand": "{0} Emoji bearbeiten",
+      "CancelCommand": "{0} Abbrechen"
+    },
+    "RaidExperienceLevelEmojiDialogElement": {
+      "EmojiPrompt": "Reagiere mit dem Emoji, das verwendet werden soll."
+    },
+    "RaidExperienceLevelRoleDialogElement": {
+      "ChooseLevelTitle": "Rollenauswahl",
+      "ChooseLevelDescription": "Wähle eine der folgenden Rollen aus",
+      "NoDiscordRole": "Keine Rolle",
+      "RolesField": "Rollen"
+    },
+    "RaidExperienceLevelsCommandModule": {
+      "UnknownExperienceLevel": "Das angegebene Erfahrungslevel existiert nicht.",
+      "NewRankFormat": "Neue Wertung für {0}: {1} {2} {3}"
+    },
+    "RaidExperienceLevelSelectionDialogElement": {
+      "ChooseLevelTitle": "Erfahrungslevelauswahl",
+      "ChooseLevelDescription": "Wähle eines der folgenden Erfahrungslevel aus:",
+      "LevelsField": "Erfahrungslevel"
+    },
+    "RaidExperienceLevelSetupDialogElement": {
+      "ChooseCommandTitle": "Erfahrungslevelkonfiguration",
+      "ChooseCommandDescription":
+        "Mit dem folgenden Assistenten können die Erfahrungslevel konfiguriert werden. Die folgenden Erfahrungslevel wurden bereits erfasst:",
+      "LevelsFields": "Erfahrungslevel",
+      "AddCommand": "{0} Erfahrungslevel hinzufügen",
+      "EditCommand": "{0} Erfahrungslevel bearbeiten",
+      "DeleteCommand": "{0} Erfahrungslevel löschen",
+      "CancelCommand": "{0} Abbrechen",
+      "CommandTitle": "Befehle"
+    },
+    "RaidExperienceLevelsService": {
+      "ExperienceLevels": "Erfahrungslevel"
+    },
+    "RaidExperienceLevelSuperiorLevelDialogElement": {
+      "ChooseLevelTitle": "Erfahrungslevelauswahl",
+      "ChooseLevelDescription": "Wähle eine der folgenden Erfahrungslevel aus:",
+      "NoExperienceLevel": "Keine übergeordnete Rolle",
+      "LevelsField": "Erfahrungslevel"
+    },
+    "RaidMessageBuilder": {
+      "SubstitutesBench": "Ersatzbank"
+    },
+    "RaidOverviewService": {
+      "ParticipationOverview": "Übersicht der Teilnahmepunkte"
+    },
+    "RaidRegistrationService": {
+      "RequiredExperienceLevelMissing": "Du hast noch nicht das erforderlichen Erfahrungslevel für diesen Termin."
+    },
+    "RaidRoleSelectionDialogElement": {
+      "ChooseMainRoleTitle": "Rollenauswahl",
+      "ChooseSubRoleTitle": "Klassenauswahl",
+      "ChooseMainRoleDescription": "Wähle eine der folgenden Rollen...",
+      "ChooseSubRoleDescription": "Wähle eine der folgenden Klassen...",
+      "NoRole": "Keine Spezifizierung",
+      "RolesField": "Rollen"
+    },
+    "RaidRoleSelectionNextDialogElement": {
+      "MessageFirst": "Möchste du eine Rollenpräferenz auswählen?",
+      "MessageNext": "Möchtest du eine weitere Rollenpräferenz hinzufügen?",
+      "Yes": "Ja",
+      "No": "Nein"
+    },
+    "RaidRolesService": {
+      "AssistantTitle": "Konfiguration Raid-Rollen",
+      "AssistantDescription":
+        "Mit diesem Assistenten kannst du die Raid-Rollen bearbeiten. Nachfolgend sind alle bereits eingerichteten Rollen aufgelistet:",
+      "AssistantRolesField": "Rollen",
+      "AssistantCommandsField": "Befehle",
+      "AssistantAddCommand": "{0} Rolle hinzufügen",
+      "AssistantEditCommand": "{0} Rolle bearbeiten",
+      "AssistantDeleteCommand": "{0} Rolle löschen",
+      "AssistantCancelCommand": "{0} Abbrechen",
+
+      "ReactWithEmojiPrompt": "Reagiere mit dem Emoji, das der Rolle zugewiesen werden soll.",
+      "DescriptionPrompt": "Gib bitte die Bezeichnung der Rolle ein.",
+      "AddSubRolesPrompt": "Sollen der Rolle untergeordnete Rollen hinzugefügt werden?",
+      "AddAdditionalSubRolesPrompt": "Sollen der Rolle weitere untergeordnete Rollen zugewiesen werden?",
+      "CreationCompletedMessage": "Die Erstellung wurde abgeschlossen.",
+
+      "ChooseRoleTitle": "Rollenauswahl",
+      "ChooseRoleDescription": "Wähle eine der folgenden Rollen aus:",
+
+      "RoleEditTitle": "Rollenbearbeitung",
+      "RoleEditEditDescriptionCommand": "{0} Bezeichnung bearbeiten",
+      "RoleEditEditEmojiCommand": "{0} Emoji bearbeiten",
+      "RoleEditAddSubRoleCommand": "{0} Untergeordnete Rolle hinzufügen",
+      "RoleEditEditSubRoleCommand": "{0} Untergeordnete Rolle bearbeiten",
+      "RoleEditDeleteSubRoleCommand": "{0} Untergeordnete Rolle löschen",
+
+      "DeleteRolePrompt": "Soll die Rolle wirklich gelöscht werden?"
+    },
+    "RaidTemplateAliasNameDialogElement": {
+      "Message": "Gib bitte den zu verwendenden Aliasnamen ein."
+    },
+    "RaidTemplateDeletionElementBase": {
+      "DeleteRolePrompt": "Soll die Schablone wirklich gelöscht werden?"
+    },
+    "RaidTemplateDescriptionDialogElement": {
+      "Message": "Gib bitte die zu verwendende Bezeichnung ein."
+    },
+    "RaidTemplateEditDialogElement": {
+      "ChooseCommandTitle": "Schablonenkonfiguration",
+      "ChooseCommandDescription": "Mit diesem Assistenten können bestehende Schablonen bearbeitet werden.",
+      "AliasName": "Aliasname",
+      "Title": "Titel",
+      "Description": "Beschreibung",
+      "CommandTitle": "Befehle",
+      "EditAliasCommand": "{0} Aliasname bearbeiten",
+      "EditTitleCommand": "{0} Titel bearbeiten",
+      "EditDescriptionCommand": "{0} Beschreibung bearbeiten",
+      "EditThumbnailCommand": "{0} Miniaturansicht bearbeiten",
+      "CancelCommand": "{0} Abbrechen"
+    },
+    "RaidTemplateSelectionDialogElement": {
+      "ChooseTemplateTitle": "Schablonenauswahl",
+      "ChooseTemplateDescription": "Wähle eine der folgenden Schablonen aus:",
+      "TemplatesField": "Schablonen"
+    },
+    "RaidTemplateSetupDialogElement": {
+      "ChooseCommandTitle": "Schablonenkonfiguration",
+      "ChooseCommandDescription":
+        "Mit diesem Assistenten können die Schablonen zur Definition des Raid-Tages bearbeitet werden. Die folgenden Schablonen wurden bereits eingerichtet:",
+      "TemplatesField": "Schablonen",
+      "CommandTitle": "Befehle",
+      "AddCommand": "{0} Schablone hinzufügen",
+      "EditCommand": "{0} Schablone bearbeiten",
+      "DeleteCommand": "{0} Schablone löschen",
+      "CancelCommand": "{0} Abbrechen"
+    },
+    "RaidTemplateThumbnailDialogElement": {
+      "Message": "Gib bitte den Link zur zu verwendenden Miniaturansicht an:"
+    },
+    "RaidTemplateTitleDialogElement": {
+      "Message": "Gib bitte den zu verwendenden Titel ein:"
+    },
+    "ReminderCreationCommandModule": {
+      "CommandProgressed": "Der Befehl wurde verarbeitet.",
+      "ChooseChannelPrompt": "Wähle bitte einen der folgenden Kanäle aus:",
+      "ChannelSelectionTitle": "Kanalauswahl",
+      "SelectDayPrompt": "Wähle bitte einen der folgenden Tage aus.",
+      "WeekdaySelectionTitle": "Auswahl Wochentag",
+      "ReminderTimePrompt": "Wähle bitte den Zeitpunkt der Erinnerung. (Format: hh:mm)",
+      "DeletionTimePrompt": "Wähle bitte den Zeitpunkt der Löschung. (Format: hh:mm)",
+      "ReminderMessagePrompt": "Gib bitte die Nachricht der Erinnerung ein.",
+      "CreationCompletedMessage":
+        "Erstellung abgeschlossen! Alle Nachrichten der Erstellung werden in 30 Sekunden gelöscht.",
+      "ReminderCreated": "Die Erinnerung wurde für den {0} um {1} Uhr eingerichtet."
+    },
+    "ScruffyTimeoutException": {
+      "CommandTimeout": "Die Verarbeitung des Befehls wurde wegen einer Zeitüberschreitung abgebrochen."
+    },
+    "SearchCommandModule": {
+      "SearchResults": "Suchergebnis",
+      "NoResults": "Ich konnte leider keine Ergebnisse finden.",
+      "TitleSearch": "Titelsuche",
+      "TextSearch": "Textsuche"
+    },
+    "ServerConfigurationCommandModule": {
+      "UsingNewPrefix": "Ich werde nun den folgenden Präfix verwenden: {0}"
+    },
+    "WorldsService": {
+      "Overview": "Weltenübersicht"
     }
   }
 }

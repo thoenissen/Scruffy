@@ -379,6 +379,63 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
 
     #endregion Charts
 
+    #region Charts
+
+    /// <summary>
+    /// Guild bank
+    /// </summary>
+    [Group("activity")]
+    [Alias("a")]
+    [RequireContext(ContextType.Guild)]
+    [RequireAdministratorPermissions]
+    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
+    public class GuildActivityCommandModule : LocatedTextCommandModuleBase
+    {
+        #region Methods
+
+        /// <summary>
+        /// Voice roles configuration
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("voice")]
+        [RequireContext(ContextType.Guild)]
+        [RequireAdministratorPermissions]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
+        public async Task VoiceConfiguration()
+        {
+            var dialogHandler = new DialogHandler(Context);
+            await using (dialogHandler.ConfigureAwait(false))
+            {
+                while (await dialogHandler.Run<GuildActivityDiscordVoiceSetupDialogElement, bool>().ConfigureAwait(false))
+                {
+                }
+            }
+        }
+
+        /// <summary>
+        /// Message roles configuration
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("message")]
+        [RequireContext(ContextType.Guild)]
+        [RequireAdministratorPermissions]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
+        public async Task MessageConfiguration()
+        {
+            var dialogHandler = new DialogHandler(Context);
+            await using (dialogHandler.ConfigureAwait(false))
+            {
+                while (await dialogHandler.Run<GuildActivityDiscordMessageSetupDialogElement, bool>().ConfigureAwait(false))
+                {
+                }
+            }
+        }
+
+        #endregion // Methods
+    }
+
+    #endregion Charts
+
     #region Exports
 
     /// <summary>
