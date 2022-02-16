@@ -149,24 +149,27 @@ public class RaidCommitService : LocatedServiceBase
                                          .ConfigureAwait(false);
 
                     var calendarAppointmentId = dbFactory.GetRepository<CalendarAppointmentRepository>()
-                                                 .GetQuery()
-                                                 .Where(obj => obj.TimeStamp == appointment.TimeStamp)
-                                                 .Select(obj => obj.Id)
-                                                 .FirstOrDefault();
+                                                         .GetQuery()
+                                                         .Where(obj => obj.TimeStamp == appointment.TimeStamp)
+                                                         .Select(obj => obj.Id)
+                                                         .FirstOrDefault();
 
                     if (calendarAppointmentId > 0)
                     {
                         foreach (var userId in dbFactory.GetRepository<RaidRegistrationRepository>()
                                                         .GetQuery()
-                                                        .Where(obj => obj.Id == appointment.Id)
-                                                        .Select(obj => obj.UserId))
+                                                        .Where(obj => obj.AppointmentId == appointment.Id)
+                                                        .Select(obj => obj.UserId)
+                                                        .ToList())
                         {
                             dbFactory.GetRepository<CalendarAppointmentParticipantRepository>()
-                                     .Add(new CalendarAppointmentParticipantEntity
-                                          {
-                                              AppointmentId = calendarAppointmentId,
-                                              UserId = userId
-                                          });
+                                     .AddOrRefresh(obj => obj.AppointmentId == calendarAppointmentId
+                                                       && obj.UserId == userId,
+                                                   obj =>
+                                                   {
+                                                       obj.AppointmentId = calendarAppointmentId;
+                                                       obj.UserId = userId;
+                                                   });
                         }
                     }
                 }
