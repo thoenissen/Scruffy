@@ -52,7 +52,7 @@ public class GuildWarsAccountHistoricCharacterRepository : RepositoryBase<GuildW
 
                 var sqlCommand = new SqlCommand(@"CREATE TABLE #GuildWarsAccountHistoricCharacters (
                                                                        [Date] datetime2(7) NOT NULL,
-                                                                       [GuildId] nvarchar(MAX) NOT NULL,
+                                                                       [GuildId] nvarchar(MAX) NULL,
                                                                        [AccountName] nvarchar(42) NOT NULL,
                                                                        [CharacterName] nvarchar(MAX) NOT NULL
                                                                    );",
@@ -74,7 +74,12 @@ public class GuildWarsAccountHistoricCharacterRepository : RepositoryBase<GuildW
                 foreach (var entry in entries)
                 {
                     // Achievement
-                    table.Rows.Add(today, entry.Guild, accountName, entry.Name);
+                    table.Rows.Add(today,
+                                   entry.Guild == null
+                                       ? DBNull.Value
+                                       : entry.Guild,
+                                   accountName,
+                                   entry.Name);
                 }
 
                 using (var bulk = new SqlBulkCopy(connection))
