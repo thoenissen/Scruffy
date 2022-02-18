@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Services.Core;
 using Scruffy.Services.Discord.Attributes;
+using Scruffy.Services.Discord.Interfaces;
 
 namespace Scruffy.Services.Discord;
 
@@ -17,7 +18,7 @@ public sealed class DialogHandler : IAsyncDisposable, IDisposable
     /// <summary>
     /// Command context
     /// </summary>
-    private CommandContextContainer _commandContext;
+    private IContextContainer _commandContext;
 
     /// <summary>
     /// Service provider
@@ -32,7 +33,7 @@ public sealed class DialogHandler : IAsyncDisposable, IDisposable
     /// Constructor
     /// </summary>
     /// <param name="commandContext">Command context</param>
-    public DialogHandler(CommandContextContainer commandContext)
+    public DialogHandler(IContextContainer commandContext)
     {
         _commandContext = commandContext;
         _serviceProvider = ServiceProviderContainer.Current.GetServiceProvider();
@@ -83,10 +84,10 @@ public sealed class DialogHandler : IAsyncDisposable, IDisposable
     /// Execution one dialog element
     /// </summary>
     /// <typeparam name="TData">Type of the element result</typeparam>
-    /// <param name="commandContext">Current command context</param>
+    /// <param name="context">Current command context</param>
     /// <param name="deleteMessages">Should the creation message be deleted?</param>
     /// <returns>Result</returns>
-    public static async Task<TData> RunForm<TData>(CommandContextContainer commandContext, bool deleteMessages) where TData : new()
+    public static async Task<TData> RunForm<TData>(IContextContainer context, bool deleteMessages) where TData : new()
     {
         var serviceProvider = ServiceProviderContainer.Current.GetServiceProvider();
         await using (serviceProvider.ConfigureAwait(false))
@@ -103,7 +104,7 @@ public sealed class DialogHandler : IAsyncDisposable, IDisposable
                 {
                     var service = (DialogElementBase)serviceProvider.GetService(attribute.DialogElementType);
 
-                    service.Initialize(commandContext, serviceProvider, dialogContext);
+                    service.Initialize(context, serviceProvider, dialogContext);
 
                     property.SetValue(data, await service.InternalRun().ConfigureAwait(false));
                 }
@@ -111,9 +112,12 @@ public sealed class DialogHandler : IAsyncDisposable, IDisposable
 
             if (deleteMessages)
             {
-                dialogContext.Messages.Add(commandContext.Message);
+                if (context is CommandContextContainer contextContainer)
+                {
+                    dialogContext.Messages.Add(contextContainer.Message);
+                }
 
-                if (commandContext.Channel is ITextChannel textChannel)
+                if (context.Channel is ITextChannel textChannel)
                 {
                     await textChannel.DeleteMessagesAsync(dialogContext.Messages)
                                      .ConfigureAwait(false);

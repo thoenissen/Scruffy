@@ -9,6 +9,7 @@ using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Account;
 using Scruffy.Data.Json.GuildWars2.Core;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.CoreData;
 using Scruffy.Services.Discord;
 using Scruffy.Services.GuildWars2;
 using Scruffy.Services.WebApi;
@@ -27,6 +28,11 @@ public class AccountEditDialogElement : DialogEmbedReactionElementBase<bool>
     /// </summary>
     private List<ReactionData<bool>> _reactions;
 
+    /// <summary>
+    /// User management service
+    /// </summary>
+    private UserManagementService _userManagementService;
+
     #endregion // Fields
 
     #region Constructor
@@ -35,9 +41,11 @@ public class AccountEditDialogElement : DialogEmbedReactionElementBase<bool>
     /// Constructor
     /// </summary>
     /// <param name="localizationService">Localization service</param>
-    public AccountEditDialogElement(LocalizationService localizationService)
+    /// <param name="userManagementService">User management service</param>
+    public AccountEditDialogElement(LocalizationService localizationService, UserManagementService userManagementService)
         : base(localizationService)
     {
+        _userManagementService = userManagementService;
     }
 
     #endregion // Constructor
@@ -132,8 +140,8 @@ public class AccountEditDialogElement : DialogEmbedReactionElementBase<bool>
                                                                  {
                                                                      using (var dbFactory = RepositoryFactory.CreateInstance())
                                                                      {
-                                                                         var user = await CommandContext.GetCurrentUser()
-                                                                                                        .ConfigureAwait(false);
+                                                                         var user = await _userManagementService.GetUserByDiscordAccountId(CommandContext.User.Id)
+                                                                                                                .ConfigureAwait(false);
 
                                                                          if (dbFactory.GetRepository<AccountRepository>()
                                                                                       .Refresh(obj => obj.UserId == user.Id
@@ -187,8 +195,8 @@ public class AccountEditDialogElement : DialogEmbedReactionElementBase<bool>
                                                  {
                                                      var accountName = DialogContext.GetValue<string>("AccountName");
 
-                                                     var user = await CommandContext.GetCurrentUser()
-                                                                                    .ConfigureAwait(false);
+                                                     var user = await _userManagementService.GetUserByDiscordAccountId(CommandContext.User.Id)
+                                                                                            .ConfigureAwait(false);
 
                                                      dbFactory.GetRepository<AccountRepository>()
                                                               .Refresh(obj => obj.UserId == user.Id

@@ -44,8 +44,7 @@ public abstract class DialogMessageElementBase<TData> : DialogElementBase<TData>
     /// <returns>Result</returns>
     public override async Task<TData> Run()
     {
-        var currentBotMessage = await CommandContext.Channel
-                                                    .SendMessageAsync(GetMessage())
+        var currentBotMessage = await CommandContext.SendMessageAsync(GetMessage())
                                                     .ConfigureAwait(false);
 
         DialogContext.Messages.Add(currentBotMessage);

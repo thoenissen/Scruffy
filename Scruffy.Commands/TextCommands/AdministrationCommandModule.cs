@@ -173,9 +173,12 @@ public class AdministrationCommandModule : LocatedTextCommandModuleBase
         [RequireAdministratorPermissions]
         public async Task InstallSlashCommands()
         {
-            await InteractionService.AddCommandsToGuildAsync(Context.Guild,
+            await InteractionService.AddModulesToGuildAsync(Context.Guild,
                                                              true,
-                                                             InteractionService.SlashCommands.Cast<Discord.Interactions.ICommandInfo>().ToArray())
+                                                             InteractionService.Modules
+                                                                               .Where(obj => obj.IsSlashGroup
+                                                                                          || obj.SlashCommands.Any())
+                                                                               .ToArray())
                                     .ConfigureAwait(false);
 
             await Context.Message
@@ -199,6 +202,66 @@ public class AdministrationCommandModule : LocatedTextCommandModuleBase
             await Context.Message
                          .AddReactionAsync(DiscordEmoteService.GetCheckEmote(Context.Client))
                          .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Set SlashCommand permissions
+        /// </summary>
+        /// <param name="groupName">Group name</param>
+        /// <param name="role">Role</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("set-permissions")]
+        [RequireAdministratorPermissions]
+        public async Task SetSlashCommandsPermissions(string groupName, IRole role)
+        {
+            var module = InteractionService.Modules
+                                           .FirstOrDefault(obj => obj.SlashGroupName == groupName);
+
+            if (module != null)
+            {
+                await InteractionService.ModifySlashCommandPermissionsAsync(module, Context.Guild, new ApplicationCommandPermission(role, true))
+                                        .ConfigureAwait(false);
+
+                await Context.Message
+                             .AddReactionAsync(DiscordEmoteService.GetCheckEmote(Context.Client))
+                             .ConfigureAwait(false);
+            }
+            else
+            {
+                await Context.Message
+                             .AddReactionAsync(DiscordEmoteService.GetCrossEmote(Context.Client))
+                             .ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Remove SlashCommands permissions
+        /// </summary>
+        /// <param name="groupName">Group name</param>
+        /// <param name="role">Role</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("remove-permissions")]
+        [RequireAdministratorPermissions]
+        public async Task RemoveSlashCommandsPermissions(string groupName, IRole role)
+        {
+            var module = InteractionService.Modules
+                                           .FirstOrDefault(obj => obj.SlashGroupName == groupName);
+
+            if (module != null)
+            {
+                await InteractionService.ModifySlashCommandPermissionsAsync(module, Context.Guild, new ApplicationCommandPermission(role, true))
+                                        .ConfigureAwait(false);
+
+                await Context.Message
+                             .AddReactionAsync(DiscordEmoteService.GetCheckEmote(Context.Client))
+                             .ConfigureAwait(false);
+            }
+            else
+            {
+                await Context.Message
+                             .AddReactionAsync(DiscordEmoteService.GetCrossEmote(Context.Client))
+                             .ConfigureAwait(false);
+            }
         }
 
         #endregion // Methods

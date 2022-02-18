@@ -1,10 +1,12 @@
 ﻿using Discord;
 using Discord.Interactions;
+using Discord.Rest;
 using Discord.WebSocket;
 
 using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Services.Core;
+using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord.Interfaces;
 
 namespace Scruffy.Services.Discord;
@@ -54,6 +56,27 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
 
     #endregion Propeties
 
+    #region Methods
+
+    /// <summary>
+    /// Response general processing message
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public async Task<IUserMessage> DeferProcessing()
+    {
+        await Interaction.RespondAsync(ServiceProvider.GetRequiredService<LocalizationService>()
+                                                      .GetGroup(nameof(InteractionContextContainer))
+                                                      .GetFormattedText("Processing",
+                                                                        "{0} The action is being processed.",
+                                                                        DiscordEmoteService.GetLoadingEmote(Client)))
+                         .ConfigureAwait(false);
+
+        return await Interaction.GetOriginalResponseAsync()
+                                .ConfigureAwait(false);
+    }
+
+    #endregion // Methods
+
     #region IContextContainer
 
     /// <summary>
@@ -86,11 +109,78 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
             throw new NotSupportedException();
         }
 
-        await Interaction.RespondAsync(text, embeds, isTTS, false, allowedMentions, components, embed, options)
-                         .ConfigureAwait(false);
+        if (Interaction is SocketInteraction { HasResponded: false }
+                        or RestInteraction { HasResponded: false })
+        {
+            await Interaction.RespondAsync(text, embeds, isTTS, false, allowedMentions, components, embed, options)
+                             .ConfigureAwait(false);
 
-        return await Interaction.GetOriginalResponseAsync()
+            return await Interaction.GetOriginalResponseAsync()
+                                    .ConfigureAwait(false);
+        }
+
+        return await Interaction.ModifyOriginalResponseAsync(obj =>
+                                                             {
+                                                                 if (text != null)
+                                                                 {
+                                                                     obj.Content = text;
+                                                                 }
+
+                                                                 if (embed != null)
+                                                                 {
+                                                                     obj.Embed = embed;
+                                                                 }
+
+                                                                 if (allowedMentions != null)
+                                                                 {
+                                                                     obj.AllowedMentions = allowedMentions;
+                                                                 }
+
+                                                                 if (components != null)
+                                                                 {
+                                                                     obj.Components = components;
+                                                                 }
+
+                                                                 if (embeds != null)
+                                                                 {
+                                                                     obj.Embeds = embeds;
+                                                                 }
+                                                             })
                                 .ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Reply to the user message or command
+    /// </summary>
+    /// <param name="text">The message to be sent.</param>
+    /// <param name="isTTS">Determines whether the message should be read aloud by Discord or not.</param>
+    /// <param name="embed">The <see cref="EmbedType.Rich"/> <see cref="Embed"/> to be sent.</param>
+    /// <param name="options">The options to be used when sending the request.</param>
+    /// <param name="allowedMentions">Specifies if notifications are sent for mentioned users and roles in the message <paramref name="text"/>. If <c>null</c>, all mentioned roles and users will be notified./// </param>
+    /// <param name="messageReference">The message references to be included. Used to reply to specific messages.</param>
+    /// <param name="components">The message components to be included with this message. Used for interactions.</param>
+    /// <param name="stickers">A collection of stickers to send with the message.</param>
+    /// <param name="embeds">A array of <see cref="Embed"/>s to send with this response. Max 10.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public async Task<IUserMessage> SendMessageAsync(string text = null, bool isTTS = false, Embed embed = null, RequestOptions options = null, AllowedMentions allowedMentions = null, MessageReference messageReference = null, MessageComponent components = null, ISticker[] stickers = null, Embed[] embeds = null)
+    {
+        if (Interaction is SocketInteraction { HasResponded: false }
+                        or RestInteraction { HasResponded: false })
+        {
+            if (stickers != null)
+            {
+                throw new NotSupportedException();
+            }
+
+            await Interaction.RespondAsync(text, embeds, isTTS, false, allowedMentions, components, embed, options)
+                             .ConfigureAwait(false);
+
+            return await Interaction.GetOriginalResponseAsync()
+                                    .ConfigureAwait(false);
+        }
+
+        return await Channel.SendMessageAsync(text, isTTS, embed, options, allowedMentions, messageReference, components, stickers, embeds)
+                            .ConfigureAwait(false);
     }
 
     #endregion // IContextContainer

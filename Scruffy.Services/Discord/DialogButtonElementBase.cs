@@ -67,8 +67,7 @@ public abstract class DialogButtonElementBase<TData> : DialogElementBase<TData>
                 }
             }
 
-            var message = await CommandContext.Channel
-                                              .SendMessageAsync(GetMessage(), components: componentsBuilder.Build())
+            var message = await CommandContext.SendMessageAsync(GetMessage(), components: componentsBuilder.Build())
                                               .ConfigureAwait(false);
 
             DialogContext.Messages.Add(message);

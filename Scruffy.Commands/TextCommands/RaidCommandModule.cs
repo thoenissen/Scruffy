@@ -373,7 +373,7 @@ public class RaidCommandModule : LocatedTextCommandModuleBase
 
             if (appointment != null)
             {
-                if (await RegistrationService.SetGroupCount(Context, appointment.Id, count)
+                if (await RegistrationService.SetGroupCount(appointment.Id, count)
                                              .ConfigureAwait(false))
                 {
                     await MessageBuilder.RefreshMessageAsync(appointment.ConfigurationId)

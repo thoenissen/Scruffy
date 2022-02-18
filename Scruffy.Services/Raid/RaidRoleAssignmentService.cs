@@ -4,6 +4,7 @@ using Scruffy.Services.Core;
 using Scruffy.Services.Core.Exceptions;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord;
+using Scruffy.Services.Discord.Interfaces;
 using Scruffy.Services.Raid.DialogElements;
 
 namespace Scruffy.Services.Raid;
@@ -44,12 +45,15 @@ public class RaidRoleAssignmentService : LocatedServiceBase
     /// <param name="commandContext">Command context</param>
     /// <param name="registrationId">Id of the registration</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task AssignRoles(CommandContextContainer commandContext, long registrationId)
+    public async Task AssignRoles(IContextContainer commandContext, long registrationId)
     {
         var dialogHandler = new DialogHandler(commandContext);
         await using (dialogHandler.ConfigureAwait(false))
         {
-            dialogHandler.DialogContext.Messages.Add(commandContext.Message);
+            if (commandContext is CommandContextContainer commandContextContainer)
+            {
+                dialogHandler.DialogContext.Messages.Add(commandContextContainer.Message);
+            }
 
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {

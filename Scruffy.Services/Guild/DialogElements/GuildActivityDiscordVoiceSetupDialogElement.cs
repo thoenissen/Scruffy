@@ -164,12 +164,15 @@ public class GuildActivityDiscordVoiceSetupDialogElement : DialogEmbedReactionEl
                                                                            })
                                                  == false)
                                                 {
-                                                    LoggingService.AddTextCommandLogEntry(LogEntryLevel.Error,
-                                                                                          CommandContext.Command.GetFullName(),
-                                                                                          nameof(GuildActivityDiscordVoiceAddFormData),
-                                                                                          null,
-                                                                                          null,
-                                                                                          dbFactory.LastError);
+                                                    if (CommandContext is CommandContextContainer commandContextContainer)
+                                                    {
+                                                        LoggingService.AddTextCommandLogEntry(LogEntryLevel.Error,
+                                                                                              commandContextContainer.Command.GetFullName(),
+                                                                                              nameof(GuildActivityDiscordVoiceAddFormData),
+                                                                                              null,
+                                                                                              null,
+                                                                                              dbFactory.LastError);
+                                                    }
                                                 }
                                             }
 
@@ -212,12 +215,15 @@ public class GuildActivityDiscordVoiceSetupDialogElement : DialogEmbedReactionEl
                                                                              })
                                                    == false)
                                                   {
-                                                      LoggingService.AddTextCommandLogEntry(LogEntryLevel.Error,
-                                                                                            CommandContext.Command.GetFullName(),
-                                                                                            nameof(GuildActivityDiscordVoiceEditFormData),
-                                                                                            null,
-                                                                                            null,
-                                                                                            dbFactory.LastError);
+                                                      if (CommandContext is CommandContextContainer commandContextContainer)
+                                                      {
+                                                          LoggingService.AddTextCommandLogEntry(LogEntryLevel.Error,
+                                                                                                commandContextContainer.Command.GetFullName(),
+                                                                                                nameof(GuildActivityDiscordVoiceEditFormData),
+                                                                                                null,
+                                                                                                null,
+                                                                                                dbFactory.LastError);
+                                                      }
                                                   }
                                               }
 
@@ -240,12 +246,15 @@ public class GuildActivityDiscordVoiceSetupDialogElement : DialogEmbedReactionEl
                                                                .Remove(obj => obj.Guild.DiscordServerId == CommandContext.Guild.Id && obj.Type == DiscordActivityPointsType.Voice && obj.RoleId == roleId)
                                                    == false)
                                                   {
-                                                      LoggingService.AddTextCommandLogEntry(LogEntryLevel.Error,
-                                                                                            CommandContext.Command.GetFullName(),
-                                                                                            nameof(GuildActivityDiscordVoicePointsDialogElement),
-                                                                                            null,
-                                                                                            null,
-                                                                                            dbFactory.LastError);
+                                                      if (CommandContext is CommandContextContainer commandContextContainer)
+                                                      {
+                                                          LoggingService.AddTextCommandLogEntry(LogEntryLevel.Error,
+                                                                                                commandContextContainer.Command.GetFullName(),
+                                                                                                nameof(GuildActivityDiscordVoicePointsDialogElement),
+                                                                                                null,
+                                                                                                null,
+                                                                                                dbFactory.LastError);
+                                                      }
                                                   }
                                               }
 

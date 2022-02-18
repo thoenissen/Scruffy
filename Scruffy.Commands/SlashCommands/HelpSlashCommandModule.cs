@@ -7,7 +7,6 @@ namespace Scruffy.Commands.SlashCommands;
 /// <summary>
 /// Help slash commands
 /// </summary>
-[Group("help", "Command to display the command help.")]
 public class HelpSlashCommandModule : LocatedInteractionModuleBase
 {
     #region Properties
@@ -26,8 +25,8 @@ public class HelpSlashCommandModule : LocatedInteractionModuleBase
     /// </summary>
     /// <param name="command">Command</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    [SlashCommand("help", "Display the command help.", true)]
-    public async Task Show([Summary("command", "Name of the command.")]string command = null)
+    [SlashCommand("help", "Shows the Scruffy help message", true)]
+    public async Task Show([Summary("command", "Name of the command")]string command = null)
     {
         await CommandHelpService.ShowHelp(Context, command)
                                 .ConfigureAwait(false);

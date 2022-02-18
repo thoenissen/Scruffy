@@ -50,8 +50,7 @@ public abstract class DialogReactionElementBase<TData> : DialogElementBase<TData
     /// <returns>Result</returns>
     public override async Task<TData> Run()
     {
-        var message = await CommandContext.Channel
-                                          .SendMessageAsync(GetMessage())
+        var message = await CommandContext.SendMessageAsync(GetMessage())
                                           .ConfigureAwait(false);
 
         DialogContext.Messages.Add(message);

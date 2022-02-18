@@ -119,6 +119,7 @@ public class LoggingService
     /// <returns>Log entry id</returns>
     public static long? AddTextCommandLogEntry(LogEntryLevel level, string qualifiedCommandName, string lastUserCommand, string message, string additionalInformation = null, Exception ex = null)
     {
+        // TODO No direct logging to this method. Implementation of logging in IContextContainer.
         return _logger.WriteLine(LogEntryType.Command, level, qualifiedCommandName, lastUserCommand, message, additionalInformation, ex);
     }
 

@@ -2,6 +2,7 @@
 
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord.Attributes;
+using Scruffy.Services.Discord.Interfaces;
 
 namespace Scruffy.Services.Discord;
 
@@ -33,7 +34,7 @@ public abstract class DialogElementBase
     /// <summary>
     /// Command context
     /// </summary>
-    public CommandContextContainer CommandContext { get; private set; }
+    public IContextContainer CommandContext { get; private set; }
 
     /// <summary>
     /// Service provider
@@ -55,7 +56,7 @@ public abstract class DialogElementBase
     /// <param name="commandContext">Command context</param>
     /// <param name="serviceProvider">Service provider</param>
     /// <param name="dialogContext">Dialog context</param>
-    internal void Initialize(CommandContextContainer commandContext, IServiceProvider serviceProvider, DialogContext dialogContext)
+    internal void Initialize(IContextContainer commandContext, IServiceProvider serviceProvider, DialogContext dialogContext)
     {
         CommandContext = commandContext;
         ServiceProvider = serviceProvider;

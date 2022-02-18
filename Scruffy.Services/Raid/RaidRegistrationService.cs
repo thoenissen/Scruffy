@@ -11,6 +11,7 @@ using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
 using Scruffy.Services.Discord;
+using Scruffy.Services.Discord.Interfaces;
 using Scruffy.Services.Raid.DialogElements;
 
 namespace Scruffy.Services.Raid;
@@ -54,7 +55,7 @@ public class RaidRegistrationService : LocatedServiceBase
     /// <param name="appointmentId">Id of the appointment</param>
     /// <param name="discordUserId">User id</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task<long?> Join(CommandContextContainer commandContext, long appointmentId, ulong discordUserId)
+    public async Task<long?> Join(IContextContainer commandContext, long appointmentId, ulong discordUserId)
     {
         long? registrationId = null;
 
@@ -129,8 +130,7 @@ public class RaidRegistrationService : LocatedServiceBase
             }
             else
             {
-                await commandContext.Message
-                                    .ReplyAsync(LocalizationGroup.GetText("RequiredExperienceLevelMissing", "You don't have the required experience level."))
+                await commandContext.ReplyAsync(LocalizationGroup.GetText("RequiredExperienceLevelMissing", "You don't have the required experience level."))
                                     .ConfigureAwait(false);
             }
         }
@@ -207,7 +207,7 @@ public class RaidRegistrationService : LocatedServiceBase
     /// <param name="commandContext">Command context</param>
     /// <param name="appointmentId">Id of the appointment</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task<bool> SetTemplate(CommandContextContainer commandContext, long appointmentId)
+    public async Task<bool> SetTemplate(IContextContainer commandContext, long appointmentId)
     {
         var success = false;
 
@@ -238,11 +238,10 @@ public class RaidRegistrationService : LocatedServiceBase
     /// <summary>
     /// Set group count
     /// </summary>
-    /// <param name="commandContext">Command context</param>
     /// <param name="appointmentId">Id of the appointment</param>
     /// <param name="groupCount">Group count</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task<bool> SetGroupCount(CommandContextContainer commandContext, long appointmentId, int groupCount)
+    public async Task<bool> SetGroupCount(long appointmentId, int groupCount)
     {
         var success = false;
 

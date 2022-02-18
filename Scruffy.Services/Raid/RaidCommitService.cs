@@ -11,6 +11,7 @@ using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
 using Scruffy.Services.Discord;
+using Scruffy.Services.Discord.Interfaces;
 using Scruffy.Services.Raid.DialogElements;
 
 namespace Scruffy.Services.Raid;
@@ -65,7 +66,7 @@ public class RaidCommitService : LocatedServiceBase
     /// <param name="commandContext">Command context</param>
     /// <param name="aliasName">Alias name</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task CommitRaidAppointment(CommandContextContainer commandContext, string aliasName)
+    public async Task CommitRaidAppointment(IContextContainer commandContext, string aliasName)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
@@ -176,8 +177,7 @@ public class RaidCommitService : LocatedServiceBase
             }
             else
             {
-                await commandContext.Message
-                                    .ReplyAsync(LocalizationGroup.GetText("NoOpenAppointment", "There is no uncommitted appointment available."))
+                await commandContext.ReplyAsync(LocalizationGroup.GetText("NoOpenAppointment", "There is no uncommitted appointment available."))
                                     .ConfigureAwait(false);
             }
         }

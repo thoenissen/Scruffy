@@ -74,8 +74,7 @@ public abstract class DialogEmbedReactionElementBase<TData> : DialogElementBase<
             builder.AddField(GetCommandTitle(), commands.ToString());
         }
 
-        var currentBotMessage = await CommandContext.Channel
-                                                    .SendMessageAsync(embed: builder.Build())
+        var currentBotMessage = await CommandContext.SendMessageAsync(embed: builder.Build())
                                                     .ConfigureAwait(false);
 
         DialogContext.Messages.Add(currentBotMessage);

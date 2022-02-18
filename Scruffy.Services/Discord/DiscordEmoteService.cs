@@ -171,7 +171,7 @@ public static class DiscordEmoteService
     public static IEmote GetGuildWars2SilverEmote(BaseSocketClient client) => GetEmote(client, "GuildWars2Silver");
 
     /// <summary>
-    /// Get 'GuildWars2Gold'-Emote
+    /// Get 'GuildWars2Copper'-Emote
     /// </summary>
     /// <param name="client">Discord client</param>
     /// <returns>Emote</returns>
@@ -197,6 +197,13 @@ public static class DiscordEmoteService
     /// <param name="client">Discord client</param>
     /// <returns>Emote</returns>
     public static IEmote GetStarEmote(BaseSocketClient client) => GetEmote(client, "Star");
+
+    /// <summary>
+    /// Get 'Loading'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetLoadingEmote(BaseSocketClient client) => GetEmote(client, "Loading");
 
     /// <summary>
     /// Get guild emoji
