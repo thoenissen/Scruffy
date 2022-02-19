@@ -134,7 +134,6 @@ public class ScruffyDbContext : DbContext
         modelBuilder.Entity<DiscordAccountEntity>();
         modelBuilder.Entity<BlockedDiscordChannelEntity>();
         modelBuilder.Entity<DiscordHistoricAccountRoleAssignmentEntity>();
-        modelBuilder.Entity<DiscordHistoryRoleAssignmentEntity>();
 
         modelBuilder.Entity<DiscordAccountEntity>()
                     .HasMany(obj => obj.OneTimeReminders)
@@ -156,15 +155,6 @@ public class ScruffyDbContext : DbContext
                                        obj.ServerId,
                                        obj.RoleId,
                                        obj.AccountId
-                                   });
-
-        modelBuilder.Entity<DiscordHistoryRoleAssignmentEntity>()
-                    .HasKey(obj => new
-                                   {
-                                       obj.Date,
-                                       obj.ServerId,
-                                       obj.UserId,
-                                       obj.RoleId
                                    });
 
         // General

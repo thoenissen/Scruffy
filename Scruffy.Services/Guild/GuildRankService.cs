@@ -393,6 +393,72 @@ public class GuildRankService : LocatedServiceBase
                                                    new SqlParameter("@guildId", guild.Id))
                                .ConfigureAwait(false);
 
+                // Representation points
+                await dbFactory.ExecuteSqlRawAsync(@"WITH [CurrentRepresentationPoints]
+                                                     AS
+                                                     (
+                                                         SELECT [SummedDates].[Date],
+                                                                [SummedDates].[UserId], 
+                                                                CASE 
+                                                                    WHEN EXISTS ( SELECT 1 
+                                                                                    FROM [GuildRankCurrentPoints] AS [Exists]
+                                                                                   WHERE [Exists].[Date] = [SummedDates].[Date]
+                                                                                     AND [Exists].[UserId] = [SummedDates].[UserId]
+                                                                                     AND [Exists].[GuildId] = @guildId
+                                                                                     AND [Exists].[Type] = 0
+                                                                                     AND [Exists].[Points] > 0)
+                                                                        THEN COALESCE ( (0.14 * [RepresentationPercentage] ), 0)
+                                                                    ELSE 0
+                                                                END AS [Points]
+                                                           FROM ( SELECT [RawDates].[UserId], 
+                                                                         [RawDates].[Date],
+                                                                         ( CAST ( NULLIF ( SUM( [RepresentationCount] ), 0) AS FLOAT ) 
+                                                                                  / CAST ( SUM( [CharactersCount] ) AS FLOAT ) ) AS [RepresentationPercentage]
+                                                                    FROM ( SELECT [CurrentPoints].[UserId], 
+                                                                                  [CurrentPoints].[Date],
+                                                                                  ( SELECT COUNT (*)
+                                                                                     FROM [GuildWarsAccountHistoricCharacters] AS [CharactersCount] 
+                                                                                LEFT JOIN [Guilds] AS [CharacterGuild]
+                                                                                       ON [CharacterGuild].[GuildId] = [CharactersCount].[GuildId]
+                                                                                    WHERE [CharactersCount].[Date] = [CurrentPoints].[Date]
+                                                                                      AND [CharactersCount].[AccountName] = [Account].[Name] 
+                                                                                      AND [CharacterGuild].[Id] = @guildId )  AS [RepresentationCount],
+                                                                                  ( SELECT COUNT (*)
+                                                                                      FROM [GuildWarsAccountHistoricCharacters] AS [CharactersCount] 
+                                                                                     WHERE [CharactersCount].[Date] = [CurrentPoints].[Date]
+                                                                                       AND [CharactersCount].[AccountName] = [Account].[Name] ) AS [CharactersCount]
+                                                                             FROM [GuildRankCurrentPoints] AS [CurrentPoints]
+                                                                       INNER JOIN [GuildWarsAccounts] AS [Account]
+                                                                               ON [Account].[UserId] = [CurrentPoints].[UserId]
+                                                                            WHERE [CurrentPoints].[Type] = 0       
+                                                                              AND [CurrentPoints].[Date] >= @from
+                                                                              AND [CurrentPoints].[Date] <= @to
+                                                                              AND [CurrentPoints].[GuildId] = @guildId
+                                                                         ) AS [RawDates]
+                                                               GROUP BY [RawDates].[UserId],
+                                                                        [RawDates].[Date] ) as [SummedDates] 
+                                                     )
+
+                                                     MERGE INTO [GuildRankCurrentPoints] AS [Target]
+                                                          USING [CurrentRepresentationPoints] AS [SOURCE]
+                                                     
+                                                             ON [Target].[GuildId] = @guildId
+                                                            AND [Target].[UserId] = [Source].[UserId]
+                                                            AND [Target].[Date] = [Source].[Date]
+                                                            AND [Target].[Type] = 1
+                                                     
+                                                     WHEN MATCHED 
+                                                       THEN UPDATE
+                                                            SET [Target].[Points] = [Source].[Points]
+                                                     
+                                                     WHEN NOT MATCHED
+                                                        THEN INSERT ( [GuildId], [UserId], [Date], [Type], [Points] )
+                                                             VALUES ( @guildId, [Source].[UserId], [Source].[Date], 1, [Source].[Points] );",
+                                   new SqlParameter("@from", DateTime.Today.AddDays(-61)),
+                                   new SqlParameter("@to", DateTime.Today.AddDays(-1)),
+                                   new SqlParameter("@guildId", guild.Id))
+                               .ConfigureAwait(false);
+
                 // Achievement points
                 await dbFactory.ExecuteSqlRawAsync(@"WITH [CurrentAchievementPoints]
                                                      AS

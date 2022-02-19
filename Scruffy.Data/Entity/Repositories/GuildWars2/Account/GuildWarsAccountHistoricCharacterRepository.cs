@@ -99,11 +99,13 @@ public class GuildWarsAccountHistoricCharacterRepository : RepositoryBase<GuildW
                                                                 INSERT ( [Date], [GuildId], [AccountName], [CharacterName] )
                                                                 VALUES ( [Source].[Date], [Source].[GuildId], [Source].[AccountName], [Source].[CharacterName] )
                                                            WHEN NOT MATCHED BY SOURCE
-                                                            AND [Target].[Date] = @date THEN
+                                                            AND [Target].[Date] = @date
+                                                            AND [Target].[AccountName] = @accountName THEN
                                                                 DELETE;",
                                             connection);
 
                 sqlCommand.Parameters.AddWithValue("@date", today);
+                sqlCommand.Parameters.AddWithValue("@accountName", accountName);
 
                 await using (sqlCommand.ConfigureAwait(false))
                 {
