@@ -182,7 +182,8 @@
     "RaidCommandHandler": {
       "NoActiveAppointment": "Currently there is no active appointment.",
       "TemplateChanged": "The template has been changed.",
-      "GroupCountChanged": "The group count has been changed."
+      "GroupCountChanged": "The group count has been changed.",
+      "NoDpsReportToken": "The are no DPS-Report user tokens assigned to your account."
     },
     "RaidExperienceLevelsCommandModule": {
       "UnknownExperienceLevel": "The experience role by the given name does not exist.",

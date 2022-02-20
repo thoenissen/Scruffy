@@ -1,16 +1,21 @@
-﻿using Discord;
+﻿using System.Globalization;
+
+using Discord;
 
 using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;
+using Scruffy.Data.Entity.Repositories.GuildWars2.Account;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Data.Entity.Tables.Raid;
+using Scruffy.Data.Json.DpsReport;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
 using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Interfaces;
 using Scruffy.Services.Raid.DialogElements.Forms;
+using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.Raid;
 
@@ -24,27 +29,37 @@ public class RaidCommandHandler : LocatedServiceBase
     /// <summary>
     /// Message builder
     /// </summary>
-    private RaidMessageBuilder _messageBuilder;
+    private readonly RaidMessageBuilder _messageBuilder;
 
     /// <summary>
     /// Committing a appointment
     /// </summary>
-    private RaidCommitService _commitService;
+    private readonly RaidCommitService _commitService;
 
     /// <summary>
     /// Registration service
     /// </summary>
-    private RaidRegistrationService _registrationService;
+    private readonly RaidRegistrationService _registrationService;
 
     /// <summary>
     /// Role assignment
     /// </summary>
-    private RaidRoleAssignmentService _roleAssignmentService;
+    private readonly RaidRoleAssignmentService _roleAssignmentService;
 
     /// <summary>
     /// User management service
     /// </summary>
-    private UserManagementService _userManagementService;
+    private readonly UserManagementService _userManagementService;
+
+    /// <summary>
+    /// Repository factory
+    /// </summary>
+    private readonly RepositoryFactory _repositoryFactory;
+
+    /// <summary>
+    /// DPS-Report connector
+    /// </summary>
+    private readonly DpsReportConnector _dpsReportConnector;
 
     #endregion // Fields
 
@@ -59,12 +74,16 @@ public class RaidCommandHandler : LocatedServiceBase
     /// <param name="registrationService">Registration service</param>
     /// <param name="roleAssignmentService">Role assignment service</param>
     /// <param name="userManagementService">User management service</param>
+    /// <param name="repositoryFactory">Repository factory</param>
+    /// <param name="dpsReportConnector">DPS-Report connector</param>
     public RaidCommandHandler(LocalizationService localizationService,
                               RaidMessageBuilder messageBuilder,
                               RaidCommitService commitService,
                               RaidRegistrationService registrationService,
                               RaidRoleAssignmentService roleAssignmentService,
-                              UserManagementService userManagementService)
+                              UserManagementService userManagementService,
+                              RepositoryFactory repositoryFactory,
+                              DpsReportConnector dpsReportConnector)
         : base(localizationService)
     {
         _messageBuilder = messageBuilder;
@@ -72,6 +91,8 @@ public class RaidCommandHandler : LocatedServiceBase
         _registrationService = registrationService;
         _roleAssignmentService = roleAssignmentService;
         _userManagementService = userManagementService;
+        _repositoryFactory = repositoryFactory;
+        _dpsReportConnector = dpsReportConnector;
     }
 
     #endregion // Constructor
@@ -414,6 +435,120 @@ public class RaidCommandHandler : LocatedServiceBase
     {
         await _commitService.CommitRaidAppointment(container, aliasName)
                             .ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Logs of the given day
+    /// </summary>
+    /// <param name="context">Context</param>
+    /// <param name="dayString">Day</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task Logs(IContextContainer context, string dayString)
+    {
+        var user = await _userManagementService.GetUserByDiscordAccountId(context.User.Id)
+                                               .ConfigureAwait(false);
+
+        var tokens = _repositoryFactory.GetRepository<GuildWarsAccountRepository>()
+                                       .GetQuery()
+                                       .Where(obj => obj.UserId == user.Id
+                                                  && obj.DpsReportUserToken != null)
+                                       .Select(obj => obj.DpsReportUserToken)
+                                       .Distinct()
+                                       .ToList();
+
+        if (string.IsNullOrWhiteSpace(dayString)
+            || DateTime.TryParseExact(dayString, "yyyy-MM-dd", null, DateTimeStyles.None, out var day) == false)
+        {
+            day = DateTime.Today;
+        }
+
+        if (tokens.Count > 0)
+        {
+            var isFirstMessage = true;
+
+            foreach (var token in tokens)
+            {
+                var continueLoop = true;
+                var currentPageId = 0;
+
+                var uploads = new List<Upload>();
+
+                do
+                {
+                    currentPageId++;
+
+                    var page = await _dpsReportConnector.GetUploads(token, currentPageId)
+                                                        .ConfigureAwait(false);
+                    if (page != null)
+                    {
+                        foreach (var upload in page.Uploads)
+                        {
+                            var uploadTime = DateTimeOffset.FromUnixTimeSeconds(upload.UploadTime).ToLocalTime();
+                            if (uploadTime.Date < day)
+                            {
+                                continueLoop = false;
+                                break;
+                            }
+
+                            if (uploadTime.Date == day)
+                            {
+                                uploads.Add(upload);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        continueLoop = false;
+                    }
+                }
+                while (continueLoop);
+
+                var embedBuilder = new EmbedBuilder()
+                                   .WithTitle($"DPS-Reports {day:d}")
+                                   .WithColor(Color.Green)
+                                   .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
+                                   .WithTimestamp(DateTime.Now);
+
+                foreach (var wing in uploads.OrderBy(obj => _dpsReportConnector.GetRaidSortNumber(obj.Encounter.BossId))
+                                            .GroupBy(obj => _dpsReportConnector.GetRaidWingDescription(obj.Encounter.BossId)))
+                {
+                    var reports = new StringBuilder();
+
+                    foreach (var upload in wing)
+                    {
+                        var line = $"{DiscordEmoteService.GetGuildEmote(context.Client, _dpsReportConnector.GetRaidBossIconId(upload.Encounter.BossId))} {upload.Permalink}";
+                        if (line.Length + reports.Length > 1000)
+                        {
+                            embedBuilder.AddField(wing.Key, reports.ToString());
+
+                            reports = new StringBuilder();
+                        }
+
+                        reports.AppendLine(line);
+                    }
+
+                    embedBuilder.AddField(wing.Key, reports.ToString());
+                }
+
+                if (isFirstMessage)
+                {
+                    await context.ReplyAsync(embed: embedBuilder.Build())
+                                 .ConfigureAwait(false);
+
+                    isFirstMessage = false;
+                }
+                else
+                {
+                    await context.SendMessageAsync(embed: embedBuilder.Build())
+                                 .ConfigureAwait(false);
+                }
+            }
+        }
+        else
+        {
+            await context.ReplyAsync(LocalizationGroup.GetText("NoDpsReportToken", "The are no DPS-Report user tokens assigned to your account."))
+                         .ConfigureAwait(false);
+        }
     }
 
     /// <summary>

@@ -725,7 +725,8 @@
     "RaidCommandHandler": {
       "NoActiveAppointment": "Es besteht kein aktiver Termin.",
       "TemplateChanged": "Die Schablone wurde angepasst.",
-      "GroupCountChanged": "Die Anzahl der Gruppen wurde angepasst."
+      "GroupCountChanged": "Die Anzahl der Gruppen wurde angepasst.",
+      "NoDpsReportToken": "Deinem Account sind keine DPS-Report-User-Tokens zugeordnet." 
     },
     "RaidCommitDialogElement": {
       "CommitTitle": "Fortschreibung Teilnahmepunkte",

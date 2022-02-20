@@ -49,6 +49,11 @@ public class RaidCommandModule : LocatedTextCommandModuleBase
     /// </summary>
     public RaidRoleAssignmentService RoleAssignmentService { get; set; }
 
+    /// <summary>
+    /// Command handler
+    /// </summary>
+    public RaidCommandHandler CommandHandler { get; set; }
+
     #endregion // Properties
 
     #region Methods
@@ -406,6 +411,14 @@ public class RaidCommandModule : LocatedTextCommandModuleBase
         await CommitService.CommitRaidAppointment(Context, aliasName)
                            .ConfigureAwait(false);
     }
+
+    /// <summary>
+    /// Daily logs
+    /// </summary>
+    /// <param name="day">Day</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [Command("logs")]
+    public Task Logs(string day = null) => CommandHandler.Logs(Context, day);
 
     /// <summary>
     /// Post guides overview

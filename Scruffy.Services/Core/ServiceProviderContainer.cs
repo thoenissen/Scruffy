@@ -92,6 +92,7 @@ public sealed class ServiceProviderContainer : IAsyncDisposable
         _serviceCollection.AddTransient<CommandContextContainer>();
         _serviceCollection.AddTransient<ThatShamanConnector>();
         _serviceCollection.AddTransient<QuickChartConnector>();
+        _serviceCollection.AddTransient<DpsReportConnector>();
 
         _serviceCollection.AddScoped<RepositoryFactory>();
 
