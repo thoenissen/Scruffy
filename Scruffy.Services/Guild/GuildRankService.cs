@@ -595,6 +595,122 @@ public class GuildRankService : LocatedServiceBase
                                    new SqlParameter("@to", DateTime.Today.AddDays(-1)),
                                    new SqlParameter("@guildId", guild.Id))
                                .ConfigureAwait(false);
+
+                // Discord voice activity
+                await dbFactory.ExecuteSqlRawAsync(@"WITH [CurrentVoiceActivityPoints]
+                                                     AS
+                                                     (
+                                                         SELECT [Dates].[Date],
+                                                                [Dates].[UserId], 
+                                                                CASE 
+                                                                    WHEN EXISTS ( SELECT 1 
+                                                                                    FROM [GuildRankCurrentPoints] AS [Exists]
+                                                                                   WHERE [Exists].[Date] = [Dates].[Date]
+                                                                                     AND [Exists].[UserId] = [Dates].[UserId]
+                                                                                     AND [Exists].[GuildId] = @guildId
+                                                                                     AND [Exists].[Type] = 0
+                                                                                     AND [Exists].[Points] > -0.29 )
+                                                                        THEN COALESCE ( ( [Points] ), 0)
+                                                                    ELSE 0
+                                                                END AS [Points]
+                                                         FROM ( SELECT [CurrentPoints].[UserId], 
+                                                                       [CurrentPoints].[Date],
+                                                                       MAX ( COALESCE ( [Points].[Points], 0 ) ) AS [Points]
+                                                                  FROM [GuildRankCurrentPoints] AS [CurrentPoints]
+                                                            INNER JOIN [DiscordAccounts] AS [Account]
+                                                                    ON [Account].[UserId] = [CurrentPoints].[UserId]
+                                                            INNER JOIN [DiscordHistoricAccountRoleAssignments] AS [Role]
+                                                                    ON [Role].[AccountId] = [Account].[Id]
+                                                             LEFT JOIN [GuildDiscordActivityPointsAssignments] AS [Points]
+                                                                    ON [Points].[RoleId] = [Role].[RoleId]
+                                                                   AND [Points].[Type] = 0
+                                                             LEFT JOIN [Guilds] AS [Guild]
+                                                                    ON [Guild].[DiscordServerId] = [Role].[ServerId]
+                                                                 WHERE [CurrentPoints].[Type] = 0       
+                                                                   AND [CurrentPoints].[Date] >= @from
+                                                                   AND [CurrentPoints].[Date] <= @to
+                                                                   AND [CurrentPoints].[GuildId] = @guildId
+                                                             GROUP BY [CurrentPoints].[UserId],
+                                                                      [CurrentPoints].[Date] ) AS [Dates]
+                                                     )
+
+                                                     MERGE INTO [GuildRankCurrentPoints] AS [Target]
+                                                          USING [CurrentVoiceActivityPoints] AS [SOURCE]
+                                                     
+                                                             ON [Target].[GuildId] = @guildId
+                                                            AND [Target].[UserId] = [Source].[UserId]
+                                                            AND [Target].[Date] = [Source].[Date]
+                                                            AND [Target].[Type] = 5
+                                                     
+                                                     WHEN MATCHED 
+                                                       THEN UPDATE
+                                                            SET [Target].[Points] = [Source].[Points]
+                                                     
+                                                     WHEN NOT MATCHED
+                                                        THEN INSERT ( [GuildId], [UserId], [Date], [Type], [Points] )
+                                                             VALUES ( @guildId, [Source].[UserId], [Source].[Date], 5, [Source].[Points] );",
+                                   new SqlParameter("@from", DateTime.Today.AddDays(-61)),
+                                   new SqlParameter("@to", DateTime.Today.AddDays(-1)),
+                                   new SqlParameter("@guildId", guild.Id))
+                               .ConfigureAwait(false);
+
+                // Discord message activity
+                await dbFactory.ExecuteSqlRawAsync(@"WITH [CurrentVoiceActivityPoints]
+                                                     AS
+                                                     (
+                                                         SELECT [Dates].[Date],
+                                                                [Dates].[UserId], 
+                                                                CASE 
+                                                                    WHEN EXISTS ( SELECT 1 
+                                                                                    FROM [GuildRankCurrentPoints] AS [Exists]
+                                                                                   WHERE [Exists].[Date] = [Dates].[Date]
+                                                                                     AND [Exists].[UserId] = [Dates].[UserId]
+                                                                                     AND [Exists].[GuildId] = @guildId
+                                                                                     AND [Exists].[Type] = 0
+                                                                                     AND [Exists].[Points] > -0.29 )
+                                                                        THEN COALESCE ( ( [Points] ), 0)
+                                                                    ELSE 0
+                                                                END AS [Points]
+                                                         FROM ( SELECT [CurrentPoints].[UserId], 
+                                                                       [CurrentPoints].[Date],
+                                                                       MAX ( COALESCE ( [Points].[Points], 0 ) ) AS [Points]
+                                                                  FROM [GuildRankCurrentPoints] AS [CurrentPoints]
+                                                            INNER JOIN [DiscordAccounts] AS [Account]
+                                                                    ON [Account].[UserId] = [CurrentPoints].[UserId]
+                                                            INNER JOIN [DiscordHistoricAccountRoleAssignments] AS [Role]
+                                                                    ON [Role].[AccountId] = [Account].[Id]
+                                                             LEFT JOIN [GuildDiscordActivityPointsAssignments] AS [Points]
+                                                                    ON [Points].[RoleId] = [Role].[RoleId]
+                                                                   AND [Points].[Type] = 1
+                                                             LEFT JOIN [Guilds] AS [Guild]
+                                                                    ON [Guild].[DiscordServerId] = [Role].[ServerId]
+                                                                 WHERE [CurrentPoints].[Type] = 0       
+                                                                   AND [CurrentPoints].[Date] >= @from
+                                                                   AND [CurrentPoints].[Date] <= @to
+                                                                   AND [CurrentPoints].[GuildId] = @guildId
+                                                             GROUP BY [CurrentPoints].[UserId],
+                                                                      [CurrentPoints].[Date] ) AS [Dates]
+                                                     )
+
+                                                     MERGE INTO [GuildRankCurrentPoints] AS [Target]
+                                                          USING [CurrentVoiceActivityPoints] AS [SOURCE]
+                                                     
+                                                             ON [Target].[GuildId] = @guildId
+                                                            AND [Target].[UserId] = [Source].[UserId]
+                                                            AND [Target].[Date] = [Source].[Date]
+                                                            AND [Target].[Type] = 6
+                                                     
+                                                     WHEN MATCHED 
+                                                       THEN UPDATE
+                                                            SET [Target].[Points] = [Source].[Points]
+                                                     
+                                                     WHEN NOT MATCHED
+                                                        THEN INSERT ( [GuildId], [UserId], [Date], [Type], [Points] )
+                                                             VALUES ( @guildId, [Source].[UserId], [Source].[Date], 6, [Source].[Points] );",
+                                                   new SqlParameter("@from", DateTime.Today.AddDays(-61)),
+                                                   new SqlParameter("@to", DateTime.Today.AddDays(-1)),
+                                                   new SqlParameter("@guildId", guild.Id))
+                               .ConfigureAwait(false);
             }
         }
     }
