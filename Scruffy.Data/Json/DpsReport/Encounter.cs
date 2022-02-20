@@ -23,7 +23,7 @@ public class Encounter
     /// Duration
     /// </summary>
     [JsonProperty("duration")]
-    public int Duration { get; set; }
+    public double Duration { get; set; }
 
     /// <summary>
     /// Comp DPS
