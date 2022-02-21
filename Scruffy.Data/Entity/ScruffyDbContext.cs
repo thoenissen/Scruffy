@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Scruffy.Data.Entity.Keyless;
 using Scruffy.Data.Entity.Tables.Calendar;
 using Scruffy.Data.Entity.Tables.CoreData;
+using Scruffy.Data.Entity.Tables.Developer;
 using Scruffy.Data.Entity.Tables.Discord;
 using Scruffy.Data.Entity.Tables.Fractals;
 using Scruffy.Data.Entity.Tables.Games;
@@ -579,6 +580,12 @@ public class ScruffyDbContext : DbContext
                                        ServerId = obj.DiscordServerId,
                                        ChannelId = obj.DiscordChannelId
                                    });
+
+        // Developer
+        modelBuilder.Entity<GitHubCommitEntity>();
+
+        modelBuilder.Entity<GitHubCommitEntity>()
+                    .HasKey(obj => obj.Sha);
 
         // Keyless
         modelBuilder.Entity<DateValue>(eb =>

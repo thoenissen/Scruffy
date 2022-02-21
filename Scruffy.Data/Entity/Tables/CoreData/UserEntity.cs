@@ -35,6 +35,11 @@ public class UserEntity
     /// </summary>
     public long? RaidExperienceLevelId { get; set; }
 
+    /// <summary>
+    /// GitHub-Account
+    /// </summary>
+    public string GitHubAccount { get; set; }
+
     #region Navigation properties
 
     /// <summary>

@@ -124,6 +124,9 @@
       "UpdateField": "General",
       "EodField": "End of Dragons"
     },
+    "DeveloperService": {
+      "AccountRefresh": "The account has been updated."
+    },
     "DialogElementBase": {
       "PleaseTryAgain": "Your input was invalid. Please try again."
     },

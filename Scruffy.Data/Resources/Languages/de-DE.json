@@ -425,6 +425,9 @@
       "debug network dnsinfo": "Ausgaben von Informationen zur einer Domäne",
       "debug network dnsinfo domain": "Domäne"
     },
+    "DeveloperService": {
+      "AccountRefresh": "Der Account wurde aktualisiert" 
+    },
     "DialogElementBase": {
       "PleaseTryAgain": "Deine Eingabe war ungültig. Versuche es noch einmal."
     },
