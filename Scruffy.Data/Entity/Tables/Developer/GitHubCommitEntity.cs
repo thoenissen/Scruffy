@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Scruffy.Data.Entity.Tables.Developer;
 
 /// <summary>
 /// GitHub commit
 /// </summary>
+// TODO [Table("GitHubCommits")]
 public class GitHubCommitEntity
 {
     /// <summary>

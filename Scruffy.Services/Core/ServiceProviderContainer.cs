@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System.Net;
+using System.Net.Http;
+using System.Reflection;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -93,6 +95,7 @@ public sealed class ServiceProviderContainer : IAsyncDisposable
         _serviceCollection.AddTransient<ThatShamanConnector>();
         _serviceCollection.AddTransient<QuickChartConnector>();
         _serviceCollection.AddTransient<DpsReportConnector>();
+        _serviceCollection.AddTransient<GitHubConnector>();
 
         _serviceCollection.AddScoped<RepositoryFactory>();
 
@@ -114,6 +117,18 @@ public sealed class ServiceProviderContainer : IAsyncDisposable
         }
 
         _serviceCollection.AddHttpClient();
+        _serviceCollection.AddHttpClient("GitHub",
+                                         obj =>
+                                         {
+                                             obj.DefaultRequestHeaders.Add("Accept", "application/json");
+                                             obj.DefaultRequestHeaders.Add("User-Agent", "Scruffy");
+                                         })
+                          .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+                                                                    {
+                                                                        UseDefaultCredentials = true,
+                                                                        Credentials = new NetworkCredential(Environment.GetEnvironmentVariable("SCRUFFY_GITHUB_USER"),
+                                                                                                            Environment.GetEnvironmentVariable("SCRUFFY_GITHUB_TOKEN")),
+                                                                    });
 
         onInitialize?.Invoke(_serviceCollection);
 

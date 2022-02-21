@@ -11,11 +11,11 @@ public class GitCommit
     /// Author
     /// </summary>
     [JsonProperty("author")]
-    public GitHubAccountAuthor Author { get; set; }
+    public GitAuthor Author { get; set; }
 
     /// <summary>
     /// Committer
     /// </summary>
     [JsonProperty("committer")]
-    public GitHubAccountCommitter Committer { get; set; }
+    public GitCommitter Committer { get; set; }
 }

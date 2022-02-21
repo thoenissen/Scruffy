@@ -43,7 +43,7 @@ public class GitHubConnector
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public async Task<List<GitHubBranch>> GetBranches(string user, string repository)
     {
-        using (var response = await _clientFactory.CreateClient()
+        using (var response = await _clientFactory.CreateClient("GitHub")
                                                   .GetAsync($"https://api.github.com/repos/{user}/{repository}/branches")
                                                   .ConfigureAwait(false))
         {
@@ -58,12 +58,14 @@ public class GitHubConnector
     /// <summary>
     /// Get commits
     /// </summary>
+    /// <param name="user">User</param>
+    /// <param name="repository">Repository</param>
     /// <param name="startCommitSha">SHA of first commit</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task<List<GitHubCommit>> GetCommits(string startCommitSha)
+    public async Task<List<GitHubCommit>> GetCommits(string user, string repository, string startCommitSha)
     {
-        using (var response = await _clientFactory.CreateClient()
-                                                  .GetAsync($"https://api.github.com/repos/thoenissen/scruffy/commits?per_page=100&sha={startCommitSha}")
+        using (var response = await _clientFactory.CreateClient("GitHub")
+                                                  .GetAsync($"https://api.github.com/repos/{user}/{repository}/commits?per_page=100&sha={startCommitSha}")
                                                   .ConfigureAwait(false))
         {
             var jsonResult = await response.Content
