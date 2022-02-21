@@ -388,7 +388,6 @@ public class GuildExportService : LocatedServiceBase
                                             .ToListAsync()
                                             .ConfigureAwait(false);
 
-
             var now = DateTime.Now;
             var customValues = await dbFactory.GetRepository<GuildWarsItemRepository>()
                                               .GetQuery()
