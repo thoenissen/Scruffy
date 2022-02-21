@@ -249,7 +249,10 @@ public class GuildRankService : LocatedServiceBase
                                                           })
                                            .ToList())
             {
-                var users = guildMemberQuery.Where(obj => obj.GuildId == guild.Id)
+                var users = guildMemberQuery.Where(obj => obj.GuildId == guild.Id
+                                                       && guildMemberQuery.Any(obj2 => obj2.GuildId == obj.GuildId
+                                                                                    && obj2.Name == obj.Name
+                                                                                    && obj2.Date > obj.Date) == false)
                                             .Join(guildWarsAccountQuery,
                                                   obj => obj.Name,
                                                   obj => obj.Name,
@@ -290,7 +293,7 @@ public class GuildRankService : LocatedServiceBase
                 var discordServer = _discordClient.GetGuild(guild.DiscordServerId);
 
                 await foreach (var members in discordServer.GetUsersAsync()
-                                                          .ConfigureAwait(false))
+                                                           .ConfigureAwait(false))
                 {
                     foreach (var member in members)
                     {
