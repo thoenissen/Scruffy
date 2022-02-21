@@ -1,15 +1,12 @@
-﻿using Scruffy.Data.Enumerations.General;
-using Scruffy.Data.Enumerations.GuildWars2;
+﻿using Scruffy.Data.Enumerations.GuildWars2;
 using Scruffy.Data.Json.GuildWars2.Core;
-using Scruffy.Services.Account;
-using Scruffy.Services.Core;
 
-namespace Scruffy.Services.GuildWars2;
+namespace Scruffy.Data.Converter;
 
 /// <summary>
-/// Converting from or to <see cref="GuildWars2ApiPermission"/>
+/// Converting data from the Guild Wars 2 API
 /// </summary>
-public static class GuildWars2ApiPermissionConverter
+public static class GuildWars2ApiDataConverter
 {
     /// <summary>
     /// Get the permissions of the api key
@@ -36,15 +33,41 @@ public static class GuildWars2ApiPermissionConverter
                                              _ => GuildWars2ApiPermission.None
                                          };
 
-                                         if (permission == GuildWars2ApiPermission.None)
-                                         {
-                                             LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(AccountAdministrationService), "Unknown permission value", permissionString, null);
-                                         }
-
                                          combinedPermissions |= permission;
 
                                          return combinedPermissions;
                                      })
             ?? GuildWars2ApiPermission.None;
+    }
+
+    /// <summary>
+    /// Get the item type
+    /// </summary>
+    /// <param name="typeString">Type string</param>
+    /// <returns>Type</returns>
+    public static GuildWars2ItemType ToItemType(string typeString)
+    {
+        var type = typeString switch
+                   {
+                       "Armor" => GuildWars2ItemType.Armor,
+                       "Back" => GuildWars2ItemType.Back,
+                       "Bag" => GuildWars2ItemType.Bag,
+                       "Consumable" => GuildWars2ItemType.Consumable,
+                       "Container" => GuildWars2ItemType.Container,
+                       "CraftingMaterial" => GuildWars2ItemType.CraftingMaterial,
+                       "Gathering" => GuildWars2ItemType.Gathering,
+                       "Gizmo" => GuildWars2ItemType.Gizmo,
+                       "Key" => GuildWars2ItemType.Key,
+                       "MiniPet" => GuildWars2ItemType.MiniPet,
+                       "Tool" => GuildWars2ItemType.Tool,
+                       "Trait" => GuildWars2ItemType.Trait,
+                       "Trinket" => GuildWars2ItemType.Trinket,
+                       "Trophy" => GuildWars2ItemType.Trophy,
+                       "UpgradeComponent" => GuildWars2ItemType.UpgradeComponent,
+                       "Weapon" => GuildWars2ItemType.Weapon,
+                       _ => GuildWars2ItemType.Unknown
+                   };
+
+        return type;
     }
 }

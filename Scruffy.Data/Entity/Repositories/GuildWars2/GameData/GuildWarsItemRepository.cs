@@ -3,6 +3,7 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
+using Scruffy.Data.Converter;
 using Scruffy.Data.Entity.Queryable.GuildWars2;
 using Scruffy.Data.Entity.Repositories.Base;
 using Scruffy.Data.Entity.Tables.GuildWars2.GameData;
@@ -71,113 +72,11 @@ public class GuildWarsItemRepository : RepositoryBase<GuildWarsItemQueryable, Gu
 
                 foreach (var entry in items)
                 {
-                    GuildWars2ItemType type;
-
-                    switch (entry.Type)
+                    var type = GuildWars2ApiDataConverter.ToItemType(entry.Type);
+                    if (type != GuildWars2ItemType.Unknown)
                     {
-                        case "Armor":
-                            {
-                                type = GuildWars2ItemType.Armor;
-                            }
-                            break;
-
-                        case "Back":
-                            {
-                                type = GuildWars2ItemType.Back;
-                            }
-                            break;
-
-                        case "Bag":
-                            {
-                                type = GuildWars2ItemType.Bag;
-                            }
-                            break;
-
-                        case "Consumable":
-                            {
-                                type = GuildWars2ItemType.Consumable;
-                            }
-                            break;
-
-                        case "Container":
-                            {
-                                type = GuildWars2ItemType.Container;
-                            }
-                            break;
-
-                        case "CraftingMaterial":
-                            {
-                                type = GuildWars2ItemType.CraftingMaterial;
-                            }
-                            break;
-
-                        case "Gathering":
-                            {
-                                type = GuildWars2ItemType.Gathering;
-                            }
-                            break;
-
-                        case "Gizmo":
-                            {
-                                type = GuildWars2ItemType.Gizmo;
-                            }
-                            break;
-
-                        case "Key":
-                            {
-                                type = GuildWars2ItemType.Key;
-                            }
-                            break;
-
-                        case "MiniPet":
-                            {
-                                type = GuildWars2ItemType.MiniPet;
-                            }
-                            break;
-
-                        case "Tool":
-                            {
-                                type = GuildWars2ItemType.Tool;
-                            }
-                            break;
-
-                        case "Trait":
-                            {
-                                type = GuildWars2ItemType.Trait;
-                            }
-                            break;
-
-                        case "Trinket":
-                            {
-                                type = GuildWars2ItemType.Trinket;
-                            }
-                            break;
-
-                        case "Trophy":
-                            {
-                                type = GuildWars2ItemType.Trophy;
-                            }
-                            break;
-
-                        case "UpgradeComponent":
-                            {
-                                type = GuildWars2ItemType.UpgradeComponent;
-                            }
-                            break;
-
-                        case "Weapon":
-                            {
-                                type = GuildWars2ItemType.Weapon;
-                            }
-                            break;
-
-                        default:
-                            {
-                                continue;
-                            }
+                        dataTable.Rows.Add(entry.Id, entry.Name, type, entry.VendorValue ?? (object)DBNull.Value);
                     }
-
-                    dataTable.Rows.Add(entry.Id, entry.Name, type, entry.VendorValue ?? (object)DBNull.Value);
                 }
 
                 using (var bulk = new SqlBulkCopy(connection))

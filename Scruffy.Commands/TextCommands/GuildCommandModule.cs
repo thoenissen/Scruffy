@@ -32,6 +32,11 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
     /// </summary>
     public GuildEmblemService GuildEmblemService { get; set; }
 
+    /// <summary>
+    /// Items service
+    /// </summary>
+    public ItemsService ItemsService { get; set; }
+
     #endregion // Properties
 
     #region Methods
@@ -379,7 +384,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
 
     #endregion Charts
 
-    #region Charts
+    #region Activity
 
     /// <summary>
     /// Guild bank
@@ -434,7 +439,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         #endregion // Methods
     }
 
-    #endregion Charts
+    #endregion Activity
 
     #region Exports
 
@@ -454,6 +459,11 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         /// Export service
         /// </summary>
         public GuildExportService GuildExportService { get; set; }
+
+        /// <summary>
+        /// Item service
+        /// </summary>
+        public ItemsService ItemsService { get; set; }
 
         #endregion // Properties
 
@@ -669,8 +679,57 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
             }
         }
 
+        /// <summary>
+        /// Custom values
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("items")]
+        [RequireContext(ContextType.Guild)]
+        [RequireAdministratorPermissions]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
+        public Task ExportCustomValues() => ItemsService.ExportCustomValues(Context);
+
         #endregion // Methods
     }
 
     #endregion Exports
+
+    #region Configuration
+
+    /// <summary>
+    /// Guild bank
+    /// </summary>
+    [Group("configuration")]
+    [Alias("c", "config")]
+    [RequireContext(ContextType.Guild)]
+    [RequireAdministratorPermissions]
+    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
+    public class GuildConfigurationCommandModule : LocatedTextCommandModuleBase
+    {
+        #region Properties
+
+        /// <summary>
+        /// Item service
+        /// </summary>
+        public ItemsService ItemsService { get; set; }
+
+        #endregion // Properties
+
+        #region Methods
+
+        /// <summary>
+        /// Item configuration
+        /// </summary>
+        /// <param name="id">Item id</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("item")]
+        [RequireContext(ContextType.Guild)]
+        [RequireAdministratorPermissions]
+        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
+        public Task StartItemsConfiguration(int id) => ItemsService.ConfigureItem(Context, id);
+
+        #endregion // Methods
+    }
+
+    #endregion Activity
 }

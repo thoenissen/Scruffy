@@ -83,5 +83,10 @@ public enum GuildWars2ItemType
     /// <summary>
     /// Weapons
     /// </summary>
-    Weapon
+    Weapon,
+
+    /// <summary>
+    /// Unknown type
+    /// </summary>
+    Unknown = int.MaxValue,
 }

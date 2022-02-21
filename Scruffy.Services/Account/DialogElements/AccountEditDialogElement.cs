@@ -5,6 +5,7 @@ using Discord;
 
 using Microsoft.EntityFrameworkCore;
 
+using Scruffy.Data.Converter;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Account;
 using Scruffy.Data.Json.GuildWars2.Core;
@@ -149,7 +150,7 @@ public class AccountEditDialogElement : DialogEmbedReactionElementBase<bool>
                                                                                                obj =>
                                                                                                {
                                                                                                    obj.ApiKey = apiKey;
-                                                                                                   obj.Permissions = GuildWars2ApiPermissionConverter.ToPermission(tokenInformation.Permissions);
+                                                                                                   obj.Permissions = GuildWars2ApiDataConverter.ToPermission(tokenInformation.Permissions);
                                                                                                }))
                                                                          {
                                                                              success = true;

@@ -71,6 +71,16 @@
       "DeleteCommand": "{0} remove role",
       "CancelCommand": "{0} Cancel"
     },
+    "GuildConfigurationItemCustomerValueDialogElement": {
+      "Message": "Please enter the custom value which can be assigned."
+    },
+    "GuildConfigurationItemCustomValueThresholdDialogElement": {
+      "Message": "Please enter the custom value threshold which can be assigned or null if you don't want to assign a threshold."
+    },
+    "ItemsService": {
+      "ValueAssigned": "The value has been assigned.",
+      "InvalidItem": "There is no item with the specified ID."
+    },
     "ReminderCreationCommandModule": {
       "CommandProgressed": "Command progressed.",
       "ChooseChannelPrompt": "Please choose one of the following channels.",

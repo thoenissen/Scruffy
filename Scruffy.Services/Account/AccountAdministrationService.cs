@@ -3,6 +3,7 @@ using System.Net.Http;
 
 using Discord;
 
+using Scruffy.Data.Converter;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Account;
 using Scruffy.Data.Entity.Repositories.Discord;
@@ -105,7 +106,7 @@ public class AccountAdministrationService : LocatedServiceBase
                                                            obj.UserId = userId;
                                                            obj.Name = accountInformation.Name;
                                                            obj.ApiKey = apiKey;
-                                                           obj.Permissions = GuildWars2ApiPermissionConverter.ToPermission(tokenInformation.Permissions);
+                                                           obj.Permissions = GuildWars2ApiDataConverter.ToPermission(tokenInformation.Permissions);
                                                        }))
                             {
                                 await commandContextContainer.Channel
@@ -307,7 +308,7 @@ public class AccountAdministrationService : LocatedServiceBase
                          || tokenInformation.Permissions.Contains(TokenInformation.Permission.Characters) == false
                          || tokenInformation.Permissions.Contains(TokenInformation.Permission.Progression) == false)
                         {
-                            invalidAccounts.Add((account.Name, GuildWars2ApiPermissionConverter.ToPermission(tokenInformation?.Permissions)));
+                            invalidAccounts.Add((account.Name, GuildWars2ApiDataConverter.ToPermission(tokenInformation?.Permissions)));
                         }
                     }
                     catch (MissingGuildWars2ApiPermissionException)

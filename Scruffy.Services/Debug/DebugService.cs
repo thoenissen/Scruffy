@@ -2,6 +2,7 @@
 
 using Discord;
 
+using Scruffy.Data.Converter;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Account;
 using Scruffy.Data.Entity.Repositories.General;
@@ -354,7 +355,7 @@ public class DebugService
                                                       var tokenInfo = await connector.GetTokenInformationAsync()
                                                                                      .ConfigureAwait(false);
 
-                                                      obj.Permissions = GuildWars2ApiPermissionConverter.ToPermission(tokenInfo.Permissions);
+                                                      obj.Permissions = GuildWars2ApiDataConverter.ToPermission(tokenInfo.Permissions);
                                                   }
                                               })
                            .ConfigureAwait(false);

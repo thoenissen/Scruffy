@@ -678,6 +678,16 @@
       "UpdateField": "Allgemein",
       "EodField": "End of Dragons"
     },
+    "GuildConfigurationItemCustomerValueDialogElement": {
+      "Message": "Gib den benutzerdefinierten Wert in Kupfer ein, der dem Gegenstand zugewiesen werden soll."
+    },
+    "GuildConfigurationItemCustomValueThresholdDialogElement": {
+      "Message": "Gib den Schwellenwert ein, nachdem der Wert reduziert werden soll oder null, wenn kein Schwellenwert festgelegt werden soll."
+    },
+    "ItemsService": {
+      "ValueAssigned": "Der Wert wurde zugewiesen.",
+      "InvalidItem": "Es konnte kein Gegenstand mit der angegebenen ID gefunden werden."
+    },
     "HelpOverviewCommandModule": {
       "HelpCommandOverviewTitle": "Übersicht über die wichtigsten Befehle",
       "HelpCommandOverviewDescription": "In der folgenden Nachricht werden die wichtigsten Befehle der ausgewählten Kategorie ausgegeben."
@@ -726,7 +736,7 @@
       "NoActiveAppointment": "Es besteht kein aktiver Termin.",
       "TemplateChanged": "Die Schablone wurde angepasst.",
       "GroupCountChanged": "Die Anzahl der Gruppen wurde angepasst.",
-      "NoDpsReportToken": "Deinem Account sind keine DPS-Report-User-Tokens zugeordnet." 
+      "NoDpsReportToken": "Deinem Account sind keine DPS-Report-User-Tokens zugeordnet."
     },
     "RaidCommitDialogElement": {
       "CommitTitle": "Fortschreibung Teilnahmepunkte",
