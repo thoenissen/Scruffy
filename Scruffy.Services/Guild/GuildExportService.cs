@@ -8,6 +8,7 @@ using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Account;
 using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Entity.Repositories.Guild;
+using Scruffy.Data.Entity.Repositories.GuildWars2.GameData;
 using Scruffy.Data.Enumerations.Guild;
 using Scruffy.Data.Enumerations.GuildWars2;
 using Scruffy.Services.Core;
@@ -67,6 +68,16 @@ public class GuildExportService : LocatedServiceBase
                                             .ToListAsync()
                                             .ConfigureAwait(false);
 
+            var now = DateTime.Now;
+            var customValues = await dbFactory.GetRepository<GuildWarsItemRepository>()
+                                              .GetQuery()
+                                              .Where(obj => (obj.CustomValueValidDate == null
+                                                          || obj.CustomValueValidDate > now)
+                                                         && obj.CustomValue != null)
+                                              .ToDictionaryAsync(obj => obj.ItemId,
+                                                                 obj => obj.CustomValue)
+                                              .ConfigureAwait(false);
+
             var itemIds = logEntries.Where(obj => obj.ItemId != null)
                                     .Select(obj => obj.ItemId)
                                     .Distinct()
@@ -87,7 +98,7 @@ public class GuildExportService : LocatedServiceBase
                     var writer = new StreamWriter(memoryStream);
                     await using (writer.ConfigureAwait(false))
                     {
-                        await writer.WriteLineAsync("TimeStamp;User;Operation;ItemId;ItemName;Count;TradingPostValue;VendorValue")
+                        await writer.WriteLineAsync("TimeStamp;User;Operation;ItemId;ItemName;Count;TradingPostValue;VendorValue;CustomValue")
                                     .ConfigureAwait(false);
 
                         foreach (var entry in logEntries)
@@ -95,7 +106,13 @@ public class GuildExportService : LocatedServiceBase
                             var item = items.FirstOrDefault(obj => obj.Id == entry.ItemId);
                             var tradingPostPrice = tradingsPostValues.FirstOrDefault(obj => obj.Id == entry.ItemId);
 
-                            await writer.WriteLineAsync($"{entry.Time.ToString("g", LocalizationGroup.CultureInfo)};{entry.User};{entry.Operation};{entry.ItemId};{(entry.ItemId == null || entry.ItemId == 0 ? "Coins" : item?.Name)};{entry.Count};{tradingPostPrice?.TradingPostSellValue?.UnitPrice};{(entry.ItemId == null || entry.ItemId == 0 ? entry.Coins : item?.VendorValue)}")
+                            if (entry.ItemId == null
+                             || customValues.TryGetValue(entry.ItemId.Value, out var customValue) == false)
+                            {
+                                customValue = null;
+                            }
+
+                            await writer.WriteLineAsync($"{entry.Time.ToString("g", LocalizationGroup.CultureInfo)};{entry.User};{entry.Operation};{entry.ItemId};{(entry.ItemId == null || entry.ItemId == 0 ? "Coins" : item?.Name)};{entry.Count};{tradingPostPrice?.TradingPostSellValue?.UnitPrice};{(entry.ItemId == null || entry.ItemId == 0 ? entry.Coins : item?.VendorValue)};{customValue}")
                                         .ConfigureAwait(false);
                         }
 
@@ -148,6 +165,16 @@ public class GuildExportService : LocatedServiceBase
                                             .ToListAsync()
                                             .ConfigureAwait(false);
 
+            var now = DateTime.Now;
+            var customValues = await dbFactory.GetRepository<GuildWarsItemRepository>()
+                                              .GetQuery()
+                                              .Where(obj => (obj.CustomValueValidDate == null
+                                                          || obj.CustomValueValidDate > now)
+                                                         && obj.CustomValue != null)
+                                              .ToDictionaryAsync(obj => obj.ItemId,
+                                                                 obj => obj.CustomValue)
+                                              .ConfigureAwait(false);
+
             var itemIds = logEntries.Where(obj => obj.ItemId != null)
                                     .Select(obj => obj.ItemId)
                                     .Distinct()
@@ -168,7 +195,7 @@ public class GuildExportService : LocatedServiceBase
                     var writer = new StreamWriter(memoryStream);
                     await using (writer.ConfigureAwait(false))
                     {
-                        await writer.WriteLineAsync("User;Operation;ItemId;ItemName;Count;TradingPostValue;VendorValue")
+                        await writer.WriteLineAsync("User;Operation;ItemId;ItemName;Count;TradingPostValue;VendorValue;CustomValue")
                                     .ConfigureAwait(false);
 
                         foreach (var entry in logEntries)
@@ -176,7 +203,13 @@ public class GuildExportService : LocatedServiceBase
                             var item = items.FirstOrDefault(obj => obj.Id == entry.ItemId);
                             var tradingPostPrice = tradingsPostValues.FirstOrDefault(obj => obj.Id == entry.ItemId);
 
-                            await writer.WriteLineAsync($"{entry.User};{entry.Operation};{entry.ItemId};{(entry.ItemId == null || entry.ItemId == 0 ? "Coins" : item?.Name)};{entry.Count};{tradingPostPrice?.TradingPostSellValue?.UnitPrice};{(entry.ItemId == null || entry.ItemId == 0 ? entry.Coins : item?.VendorValue)}")
+                            if (entry.ItemId == null
+                             || customValues.TryGetValue(entry.ItemId.Value, out var customValue) == false)
+                            {
+                                customValue = null;
+                            }
+
+                            await writer.WriteLineAsync($"{entry.User};{entry.Operation};{entry.ItemId};{(entry.ItemId == null || entry.ItemId == 0 ? "Coins" : item?.Name)};{entry.Count};{tradingPostPrice?.TradingPostSellValue?.UnitPrice};{(entry.ItemId == null || entry.ItemId == 0 ? entry.Coins : item?.VendorValue)};{customValue}")
                                         .ConfigureAwait(false);
                         }
 
@@ -234,6 +267,16 @@ public class GuildExportService : LocatedServiceBase
                                             .ToListAsync()
                                             .ConfigureAwait(false);
 
+            var now = DateTime.Now;
+            var customValues = await dbFactory.GetRepository<GuildWarsItemRepository>()
+                                              .GetQuery()
+                                              .Where(obj => (obj.CustomValueValidDate == null
+                                                          || obj.CustomValueValidDate > now)
+                                                         && obj.CustomValue != null)
+                                              .ToDictionaryAsync(obj => obj.ItemId,
+                                                                 obj => obj.CustomValue)
+                                              .ConfigureAwait(false);
+
             var itemIds = logEntries.Where(obj => obj.ItemId != null)
                                     .Select(obj => obj.ItemId)
                                     .Distinct()
@@ -263,7 +306,7 @@ public class GuildExportService : LocatedServiceBase
                     var writer = new StreamWriter(memoryStream);
                     await using (writer.ConfigureAwait(false))
                     {
-                        await writer.WriteLineAsync("TimeStamp;User;ItemId;ItemName;Count;TradingPostValue;VendorValue")
+                        await writer.WriteLineAsync("TimeStamp;User;ItemId;ItemName;Count;TradingPostValue;VendorValue;CustomValue")
                                     .ConfigureAwait(false);
 
                         foreach (var entry in logEntries)
@@ -275,7 +318,13 @@ public class GuildExportService : LocatedServiceBase
                                                upgrades.FirstOrDefault(obj => obj.Id == entry.UpgradeId)?.Name
                                                : item?.Name;
 
-                            await writer.WriteLineAsync($"{entry.Time.ToString("g", LocalizationGroup.CultureInfo)};{entry.User};{entry.ItemId};{itemName};{entry.Count};{tradingPostPrice?.TradingPostSellValue?.UnitPrice};{item?.VendorValue}")
+                            if (entry.ItemId == null
+                             || customValues.TryGetValue(entry.ItemId.Value, out var customValue) == false)
+                            {
+                                customValue = null;
+                            }
+
+                            await writer.WriteLineAsync($"{entry.Time.ToString("g", LocalizationGroup.CultureInfo)};{entry.User};{entry.ItemId};{itemName};{entry.Count};{tradingPostPrice?.TradingPostSellValue?.UnitPrice};{item?.VendorValue};{customValue}")
                                         .ConfigureAwait(false);
                         }
 
@@ -339,6 +388,17 @@ public class GuildExportService : LocatedServiceBase
                                             .ToListAsync()
                                             .ConfigureAwait(false);
 
+
+            var now = DateTime.Now;
+            var customValues = await dbFactory.GetRepository<GuildWarsItemRepository>()
+                                              .GetQuery()
+                                              .Where(obj => (obj.CustomValueValidDate == null
+                                                          || obj.CustomValueValidDate > now)
+                                                         && obj.CustomValue != null)
+                                              .ToDictionaryAsync(obj => obj.ItemId,
+                                                                 obj => obj.CustomValue)
+                                              .ConfigureAwait(false);
+
             var itemIds = logEntries.Where(obj => obj.ItemId != null)
                                     .Select(obj => obj.ItemId)
                                     .Distinct()
@@ -368,7 +428,7 @@ public class GuildExportService : LocatedServiceBase
                     var writer = new StreamWriter(memoryStream);
                     await using (writer.ConfigureAwait(false))
                     {
-                        await writer.WriteLineAsync("User;ItemId;ItemName;Count;TradingPostValue;VendorValue")
+                        await writer.WriteLineAsync("User;ItemId;ItemName;Count;TradingPostValue;VendorValue;CustomValue")
                                     .ConfigureAwait(false);
 
                         foreach (var entry in logEntries)
@@ -380,7 +440,13 @@ public class GuildExportService : LocatedServiceBase
                                                upgrades.FirstOrDefault(obj => obj.Id == entry.UpgradeId)?.Name
                                                : item?.Name;
 
-                            await writer.WriteLineAsync($"{entry.User};{entry.ItemId};{itemName};{entry.Count};{tradingPostPrice?.TradingPostSellValue?.UnitPrice};{item?.VendorValue}")
+                            if (entry.ItemId == null
+                             || customValues.TryGetValue(entry.ItemId.Value, out var customValue) == false)
+                            {
+                                customValue = null;
+                            }
+
+                            await writer.WriteLineAsync($"{entry.User};{entry.ItemId};{itemName};{entry.Count};{tradingPostPrice?.TradingPostSellValue?.UnitPrice};{item?.VendorValue};{customValue}")
                                         .ConfigureAwait(false);
                         }
 
@@ -552,7 +618,7 @@ public class GuildExportService : LocatedServiceBase
                                                     obj.GuildId,
                                                     obj.ApiKey
                                                 })
-                                 .FirstOrDefault();
+                                 .First();
 
             var accounts = await dbFactory.GetRepository<AccountRepository>()
                                           .GetQuery()
