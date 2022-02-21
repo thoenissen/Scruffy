@@ -149,7 +149,9 @@ public class GuildRankService : LocatedServiceBase
                                                                                obj2.UserId,
                                                                                obj2.Name,
                                                                            })
-                                                     .Join(guildMemberQuery,
+                                                     .Join(guildMemberQuery.Where(obj => guildMemberQuery.Any(obj2 => obj2.GuildId == obj.GuildId
+                                                                                                                   && obj2.Name == obj.Name
+                                                                                                                   && obj2.Date > obj.Date) == false),
                                                            obj => obj.Name,
                                                            obj => obj.Name,
                                                            (obj1, obj2) => new
