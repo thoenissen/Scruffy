@@ -761,6 +761,14 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [RequireContext(ContextType.Guild)]
         public Task PostOverview() => GuildRankVisualizationService.PostOverview(Context);
 
+        /// <summary>
+        /// General overview
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("me")]
+        [RequireContext(ContextType.Guild)]
+        public Task PostPersonalOverview() => GuildRankVisualizationService.PostPersonalOverview(Context);
+
         #endregion // Methods
     }
 

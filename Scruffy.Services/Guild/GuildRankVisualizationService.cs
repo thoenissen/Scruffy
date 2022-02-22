@@ -11,6 +11,7 @@ using Scruffy.Data.Json.QuickChart;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Extensions;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.CoreData;
 using Scruffy.Services.Discord.Interfaces;
 using Scruffy.Services.WebApi;
 
@@ -33,6 +34,11 @@ namespace Scruffy.Services.Guild
         /// </summary>
         private readonly QuickChartConnector _quickChartConnector;
 
+        /// <summary>
+        /// User management service
+        /// </summary>
+        private readonly UserManagementService _userManagementService;
+
         #endregion // Fields
 
         #region Constructor
@@ -43,11 +49,16 @@ namespace Scruffy.Services.Guild
         /// <param name="localizationService">Localization service</param>
         /// <param name="dbFactory">Repository factory</param>
         /// <param name="quickChartConnector">QuickChart.io connector</param>
-        public GuildRankVisualizationService(LocalizationService localizationService, RepositoryFactory dbFactory, QuickChartConnector quickChartConnector)
+        /// <param name="userManagementService">User management service</param>
+        public GuildRankVisualizationService(LocalizationService localizationService,
+                                             RepositoryFactory dbFactory,
+                                             QuickChartConnector quickChartConnector,
+                                             UserManagementService userManagementService)
             : base(localizationService)
         {
             _dbFactory = dbFactory;
             _quickChartConnector = quickChartConnector;
+            _userManagementService = userManagementService;
         }
 
         #endregion // Constructor
@@ -187,6 +198,143 @@ namespace Scruffy.Services.Guild
             {
                 await context.Channel
                              .SendFileAsync(new FileAttachment(chartStream, "chart.png"), embed: embedBuilder.Build())
+                             .ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Post personal overview
+        /// </summary>
+        /// <param name="context">Context</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task PostPersonalOverview(IContextContainer context)
+        {
+            var user = await _userManagementService.GetUserByDiscordAccountId(context.User.Id)
+                                                   .ConfigureAwait(false);
+
+            var limit = DateTime.Today.AddDays(-60);
+
+            var guildMemberSubQuery = _dbFactory.GetRepository<GuildWarsGuildHistoricMemberRepository>()
+                                                .GetQuery()
+                                                .Select(obj => obj);
+
+            var guildMemberQuery = _dbFactory.GetRepository<GuildWarsGuildHistoricMemberRepository>()
+                                             .GetQuery()
+                                             .Where(obj => guildMemberSubQuery.Any(obj2 => obj2.GuildId == obj.GuildId
+                                                                                        && obj2.Date > obj.Date) == false);
+            var accountsQuery = _dbFactory.GetRepository<GuildWarsAccountRepository>()
+                                          .GetQuery()
+                                          .Select(obj => obj);
+
+            var userPoints = _dbFactory.GetRepository<GuildRankCurrentPointsRepository>()
+                                       .GetQuery()
+                                       .Where(obj => obj.Date >= limit
+                                                  && obj.Guild.DiscordServerId == context.Guild.Id
+                                                  && obj.UserId == user.Id
+                                                  && accountsQuery.Any(obj2 => obj2.UserId == obj.UserId
+                                                                            && guildMemberQuery.Any(obj3 => obj3.Name == obj2.Name
+                                                                                                         && obj3.GuildId == obj.GuildId)))
+                                       .GroupBy(obj => obj.Type)
+                                       .Select(obj => new
+                                                      {
+                                                          Type = obj.Key,
+                                                          Points = obj.Sum(obj2 => obj2.Points)
+                                                      })
+                                       .ToList();
+
+            var embedBuilder = new EmbedBuilder();
+            embedBuilder.WithTitle(LocalizationGroup.GetText("RankingPersonalOverview", "Guild ranking personal points overview"));
+            embedBuilder.WithColor(Color.DarkBlue);
+            embedBuilder.WithImageUrl("attachment://chart.png");
+
+            var chartConfiguration = new ChartConfigurationData
+                                     {
+                                         Type = "outlabeledDoughnut",
+                                         Data = new Data.Json.QuickChart.Data
+                                         {
+                                             DataSets = new List<DataSet>
+                                                        {
+                                                            new DataSet<double>
+                                                            {
+                                                                BorderColor = "#333333",
+                                                                BackgroundColor = new List<string>
+                                                                                  {
+                                                                                      "#0d1c26",
+                                                                                      "#142b39",
+                                                                                      "#1d3e53",
+                                                                                      "#21475e",
+                                                                                      "#2e6384",
+                                                                                      "#357197",
+                                                                                      "#3c80aa",
+                                                                                      "#428ebd",
+                                                                                      "#5599c3",
+                                                                                      "#68a4ca"
+                                                                                  },
+                                                                Data = userPoints.Select(obj => obj.Points)
+                                                                                 .ToList()
+                                                            }
+                                                        },
+                                             Labels = userPoints.Select(obj => LocalizationGroup.GetText(obj.Type.ToString(), obj.Type.ToString()))
+                                                                .ToList()
+                                         },
+                                         Options = new OptionsCollection
+                                         {
+                                             Plugins = new PluginsCollection
+                                             {
+                                                 Legend = false,
+                                                 OutLabels = new OutLabelsCollection
+                                                 {
+                                                     Text = "%l (%v)",
+                                                     Stretch = 40
+                                                 },
+                                                 DoughnutLabel = new DoughnutLabelCollection
+                                                 {
+                                                     Labels = new List<Label>
+                                                              {
+                                                                  new ()
+                                                                  {
+                                                                      Color = "white",
+                                                                      Text = userPoints.Sum(obj => obj.Points).ToString("0.##", LocalizationGroup.CultureInfo)
+                                                                  },
+                                                                  new ()
+                                                                  {
+                                                                      Color = "white",
+                                                                      Text = LocalizationGroup.GetText("MeOverviewPoints", "points")
+                                                                  },
+                                                              }
+                                                 },
+                                             },
+                                             Title = new TitleConfiguration
+                                             {
+                                                 Display = true,
+                                                 FontColor = "white",
+                                                 FontSize = 30,
+                                                 Text = LocalizationGroup.GetText("MeOverviewChartTitle", "Point distribution")
+                                             }
+                                         }
+                                     };
+
+            var chartStream = await _quickChartConnector.GetChartAsStream(new ChartData
+                                                                          {
+                                                                              Width = 400,
+                                                                              Height = 400,
+                                                                              BackgroundColor = "#2f3136",
+                                                                              Format = "png",
+                                                                              Config = JsonConvert.SerializeObject(chartConfiguration,
+                                                                                                                   new JsonSerializerSettings
+                                                                                                                   {
+                                                                                                                       NullValueHandling = NullValueHandling.Ignore
+                                                                                                                   })
+                                                                          })
+                                                        .ConfigureAwait(false);
+
+            await using (chartStream.ConfigureAwait(false))
+            {
+                embedBuilder.WithImageUrl("attachment://chart.png");
+
+                await context.Channel
+                             .SendFileAsync(new FileAttachment(chartStream, "chart.png"),
+                                            embed: embedBuilder.Build())
                              .ConfigureAwait(false);
             }
         }

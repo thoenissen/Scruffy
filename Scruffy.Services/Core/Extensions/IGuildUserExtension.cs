@@ -12,7 +12,7 @@ public static class IGuildUserExtension
     /// </summary>
     /// <param name="member">Member</param>
     /// <returns>Display name</returns>
-    public static string TryGetDisplayName(this IGuildUser member) => string.IsNullOrWhiteSpace(member.Nickname)
-                                                                             ? member.Username
+    public static string TryGetDisplayName(this IGuildUser member) => string.IsNullOrWhiteSpace(member?.Nickname)
+                                                                             ? member?.Username
                                                                              : member.Nickname;
 }

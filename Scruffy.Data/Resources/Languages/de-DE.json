@@ -452,7 +452,19 @@
       "CreationCompletedMessage": "Erstellung abgechlossen! Alle Nachrichten der Erstellung werden in 30 Sekunden gelöscht."
     },
     "GuildRankVisualizationService": {
-      "RankingOverview": "Gildenrangliste: Punkteübersicht" 
+      "RankingOverview": "Punkteübersicht",
+      "RankingPersonalOverview": "Persönliche Punkteübersicht",
+      "MeOverviewPoints": "Punkte",
+      "MeOverviewChartTitle": "Punkteverteilung",
+      "Login": "Spielanmeldungen",
+      "Representation": "Repräsentieren",
+      "AchievementPoints": "Erfolgspunkte",
+      "Membership": "Zugehörigkeit",
+      "Donation": "Spenden",
+      "DiscordVoiceActivity": "Sprachaktivität",
+      "DiscordMessageActivity": "Nachrichtenaktivität",
+      "Events": "Eventteilnahme",
+      "Development": "Bot-Entwicklung"
     },
     "GuildActivityDiscordMessageAddDialogElement": {
       "ChooseRoleTitle": "Wähle die Rolle aus, die hinzugefügt werden soll:",

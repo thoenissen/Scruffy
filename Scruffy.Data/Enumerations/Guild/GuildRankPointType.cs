@@ -44,4 +44,9 @@ public enum GuildRankPointType
     /// Events
     /// </summary>
     Events,
+
+    /// <summary>
+    /// Development
+    /// </summary>
+    Development,
 }
