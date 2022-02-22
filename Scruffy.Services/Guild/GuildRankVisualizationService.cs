@@ -123,8 +123,10 @@ namespace Scruffy.Services.Guild
                     var member = await context.Guild
                                               .GetUserAsync(user.DiscordUserId.Value)
                                               .ConfigureAwait(false);
-
-                    userNames.Add($"{member.TryGetDisplayName()} [{user.Points:0.00}]");
+                    if (member != null)
+                    {
+                        userNames.Add($"{member.TryGetDisplayName()} [{user.Points:0.00}]");
+                    }
                 }
             }
 
@@ -276,7 +278,7 @@ namespace Scruffy.Services.Guild
                                                                                  .ToList()
                                                             }
                                                         },
-                                             Labels = userPoints.Select(obj => LocalizationGroup.GetText(obj.Type.ToString(), obj.Type.ToString()))
+                                             Labels = userPoints.Select(obj => $"{LocalizationGroup.GetText(obj.Type.ToString(), obj.Type.ToString())} ({obj.Points.ToString("0.##", LocalizationGroup.CultureInfo)})")
                                                                 .ToList()
                                          },
                                          Options = new OptionsCollection
@@ -286,7 +288,7 @@ namespace Scruffy.Services.Guild
                                                  Legend = false,
                                                  OutLabels = new OutLabelsCollection
                                                  {
-                                                     Text = "%l (%v)",
+                                                     Text = "%l",
                                                      Stretch = 40
                                                  },
                                                  DoughnutLabel = new DoughnutLabelCollection
