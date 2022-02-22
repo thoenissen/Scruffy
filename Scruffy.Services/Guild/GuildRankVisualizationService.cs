@@ -106,6 +106,7 @@ namespace Scruffy.Services.Guild
                                                                                            .Select(obj2 => (ulong?)obj2.Id)
                                                                                            .FirstOrDefault()
                                                       })
+                                       .OrderByDescending(obj => obj.Points)
                                        .ToList();
 
             var embedBuilder = new EmbedBuilder();
@@ -240,6 +241,7 @@ namespace Scruffy.Services.Guild
                                                           Type = obj.Key,
                                                           Points = obj.Sum(obj2 => obj2.Points)
                                                       })
+                                       .OrderByDescending(obj => obj.Type)
                                        .ToList();
 
             var embedBuilder = new EmbedBuilder();
@@ -316,8 +318,8 @@ namespace Scruffy.Services.Guild
 
             var chartStream = await _quickChartConnector.GetChartAsStream(new ChartData
                                                                           {
-                                                                              Width = 400,
-                                                                              Height = 400,
+                                                                              Width = 600,
+                                                                              Height = 500,
                                                                               BackgroundColor = "#2f3136",
                                                                               Format = "png",
                                                                               Config = JsonConvert.SerializeObject(chartConfiguration,
