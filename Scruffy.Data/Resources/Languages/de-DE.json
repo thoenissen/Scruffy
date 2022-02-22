@@ -426,7 +426,7 @@
       "debug network dnsinfo domain": "Domäne"
     },
     "DeveloperService": {
-      "AccountRefresh": "Der Account wurde aktualisiert" 
+      "AccountRefresh": "Der Account wurde aktualisiert"
     },
     "DialogElementBase": {
       "PleaseTryAgain": "Deine Eingabe war ungültig. Versuche es noch einmal."
@@ -450,6 +450,9 @@
     "FractalLfgService": {
       "BuildingProgress": "Erstellung...",
       "CreationCompletedMessage": "Erstellung abgechlossen! Alle Nachrichten der Erstellung werden in 30 Sekunden gelöscht."
+    },
+    "GuildRankVisualizationService": {
+      "RankingOverview": "Gildenrangliste: Punkteübersicht" 
     },
     "GuildActivityDiscordMessageAddDialogElement": {
       "ChooseRoleTitle": "Wähle die Rolle aus, die hinzugefügt werden soll:",

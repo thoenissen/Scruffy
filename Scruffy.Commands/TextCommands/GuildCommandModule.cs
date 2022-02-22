@@ -732,4 +732,37 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
     }
 
     #endregion Activity
+
+    #region Configuration
+
+    /// <summary>
+    /// Guild bank
+    /// </summary>
+    [Group("ranking")]
+    [RequireContext(ContextType.Guild)]
+    public class GuildRankingCommandModule : LocatedTextCommandModuleBase
+    {
+        #region Properties
+
+        /// <summary>
+        ///  Guild rank visualization service
+        /// </summary>
+        public GuildRankVisualizationService GuildRankVisualizationService { get; set; }
+
+        #endregion // Properties
+
+        #region Methods
+
+        /// <summary>
+        /// General overview
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("overview")]
+        [RequireContext(ContextType.Guild)]
+        public Task PostOverview() => GuildRankVisualizationService.PostOverview(Context);
+
+        #endregion // Methods
+    }
+
+    #endregion Activity
 }
