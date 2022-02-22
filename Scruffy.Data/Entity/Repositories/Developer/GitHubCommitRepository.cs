@@ -79,8 +79,7 @@ public class GitHubCommitRepository : RepositoryBase<GitHubCommitQueryable, GitH
                               .ConfigureAwait(false);
                 }
 
-                // TODO GitHubCommitEntity -> GitHubCommits
-                sqlCommand = new SqlCommand(@"MERGE INTO [GitHubCommitEntity] AS [TARGET]
+                sqlCommand = new SqlCommand(@"MERGE INTO [GitHubCommits] AS [TARGET]
                                                    USING #GitHubCommits AS [Source]
                                                       ON [Target].[Sha] = [Source].[Sha]
                                           WHEN NOT MATCHED THEN

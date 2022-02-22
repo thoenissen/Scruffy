@@ -685,7 +685,9 @@
       "Message": "Gib den benutzerdefinierten Wert in Kupfer ein, der dem Gegenstand zugewiesen werden soll."
     },
     "GuildConfigurationItemCustomValueThresholdDialogElement": {
-      "Message": "Gib den Schwellenwert ein, nachdem der Wert reduziert werden soll oder null, wenn kein Schwellenwert festgelegt werden soll."
+      "Message": "Soll bei diesem Gegenstand der Schwellenwert berücksichtig werden?",
+      "Yes": "Ja",
+      "No": "Nein"
     },
     "ItemsService": {
       "ValueAssigned": "Der Wert wurde zugewiesen.",

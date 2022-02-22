@@ -75,7 +75,9 @@
       "Message": "Please enter the custom value which can be assigned."
     },
     "GuildConfigurationItemCustomValueThresholdDialogElement": {
-      "Message": "Please enter the custom value threshold which can be assigned or null if you don't want to assign a threshold."
+      "Message": "Should the threshold be considered for this item?",
+      "Yes": "Yes",
+      "No": "No"
     },
     "ItemsService": {
       "ValueAssigned": "The value has been assigned.",

@@ -103,7 +103,7 @@ public class ItemsService : LocatedServiceBase
 
                                                             obj.CustomValue = data.CustomValue;
                                                             obj.CustomValueValidDate = null;
-                                                            obj.CustomValueThreshold = data.CustomValueThreshold;
+                                                            obj.IsCustomValueThresholdActivated = data.IsThresholdItem;
                                                         }))
                             {
                                 await context.SendMessageAsync(LocalizationGroup.GetText("ValueAssigned", "The value has been assigned."))
@@ -143,7 +143,7 @@ public class ItemsService : LocatedServiceBase
                                                 obj.Name,
                                                 obj.CustomValue,
                                                 obj.CustomValueValidDate,
-                                                obj.CustomValueThreshold
+                                                obj.IsCustomValueThresholdActivated
                                             })
                                             .OrderBy(obj => obj.ItemId)
                                             .ToListAsync()
@@ -162,7 +162,7 @@ public class ItemsService : LocatedServiceBase
 
                     foreach (var entry in items)
                     {
-                        await writer.WriteLineAsync($"{entry.ItemId};{entry.Name};{entry.CustomValue};{entry.CustomValueValidDate};{entry.CustomValueThreshold}")
+                        await writer.WriteLineAsync($"{entry.ItemId};{entry.Name};{entry.CustomValue};{entry.CustomValueValidDate};{(entry.IsCustomValueThresholdActivated ? "✔️" : "❌")}")
                                     .ConfigureAwait(false);
                     }
 

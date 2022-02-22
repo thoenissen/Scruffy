@@ -150,7 +150,6 @@ public class GuildRankService : LocatedServiceBase
                                                                                obj2.Name,
                                                                            })
                                                      .Join(guildMemberQuery.Where(obj => guildMemberQuery.Any(obj2 => obj2.GuildId == obj.GuildId
-                                                                                                                   && obj2.Name == obj.Name
                                                                                                                    && obj2.Date > obj.Date) == false),
                                                            obj => obj.Name,
                                                            obj => obj.Name,
@@ -253,7 +252,6 @@ public class GuildRankService : LocatedServiceBase
             {
                 var users = guildMemberQuery.Where(obj => obj.GuildId == guild.Id
                                                        && guildMemberQuery.Any(obj2 => obj2.GuildId == obj.GuildId
-                                                                                    && obj2.Name == obj.Name
                                                                                     && obj2.Date > obj.Date) == false)
                                             .Join(guildWarsAccountQuery,
                                                   obj => obj.Name,

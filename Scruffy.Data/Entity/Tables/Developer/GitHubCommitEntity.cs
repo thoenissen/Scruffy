@@ -6,7 +6,7 @@ namespace Scruffy.Data.Entity.Tables.Developer;
 /// <summary>
 /// GitHub commit
 /// </summary>
-// TODO [Table("GitHubCommits")]
+[Table("GitHubCommits")]
 public class GitHubCommitEntity
 {
     /// <summary>

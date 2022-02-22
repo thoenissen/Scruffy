@@ -1,8 +1,4 @@
-﻿using System.Globalization;
-
-using Discord;
-
-using Scruffy.Services.Core.Localization;
+﻿using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Guild.DialogElements;
@@ -10,8 +6,17 @@ namespace Scruffy.Services.Guild.DialogElements;
 /// <summary>
 /// Acquisition of the custom value threshold
 /// </summary>
-public class GuildConfigurationItemCustomValueThresholdDialogElement : DialogMessageElementBase<int?>
+public class GuildConfigurationItemCustomValueThresholdDialogElement : DialogButtonElementBase<bool>
 {
+    #region Fields
+
+    /// <summary>
+    /// Buttons
+    /// </summary>
+    private List<ButtonData<bool>> _buttons;
+
+    #endregion // Fields
+
     #region Constructor
 
     /// <summary>
@@ -25,27 +30,42 @@ public class GuildConfigurationItemCustomValueThresholdDialogElement : DialogMes
 
     #endregion // Constructor
 
-    #region DialogMessageElementBase<string>
+    #region DialogReactionElementBase<bool>
 
     /// <summary>
-    /// Return the message of element
+    /// Editing the embedded message
     /// </summary>
     /// <returns>Message</returns>
-    public override string GetMessage() => LocalizationGroup.GetText("Message", "Please enter the custom value threshold which can be assigned or null if you don't want to assign a threshold.");
+    public override string GetMessage() => LocalizationGroup.GetText("Message", "Should the threshold be considered for this item?");
 
     /// <summary>
-    /// Converting the response message
+    /// Returns the buttons which should be added to the message
     /// </summary>
-    /// <param name="message">Message</param>
-    /// <returns>Result</returns>
-    public override int? ConvertMessage(IUserMessage message)
+    /// <returns>Reactions</returns>
+    public override IReadOnlyList<ButtonData<bool>> GetButtons()
     {
-        var value = int.Parse(message.Content, NumberStyles.Any, LocalizationGroup.CultureInfo);
-
-        return value == 0
-                   ? null
-                   : value;
+        return _buttons ??= new List<ButtonData<bool>>
+                            {
+                                new ()
+                                {
+                                    CommandText = LocalizationGroup.GetText("Yes", "Yes"),
+                                    Emote = DiscordEmoteService.GetCheckEmote(CommandContext.Client),
+                                    Func = () => Task.FromResult(true)
+                                },
+                                new ()
+                                {
+                                    CommandText = LocalizationGroup.GetText("No", "No"),
+                                    Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
+                                    Func = () => Task.FromResult(false)
+                                },
+                            };
     }
 
-    #endregion // DialogMessageElementBase<string>
+    /// <summary>
+    /// Default case if none of the given reactions is used
+    /// </summary>
+    /// <returns>Result</returns>
+    protected override bool DefaultFunc() => false;
+
+    #endregion // DialogReactionElementBase
 }

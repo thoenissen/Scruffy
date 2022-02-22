@@ -45,5 +45,5 @@ public class GuildWarsItemEntity
     /// <summary>
     /// Should the value be reduced after n inserts.
     /// </summary>
-    public int? CustomValueThreshold { get; set; }
+    public bool IsCustomValueThresholdActivated { get; set; }
 }
