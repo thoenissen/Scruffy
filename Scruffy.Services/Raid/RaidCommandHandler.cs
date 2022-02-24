@@ -504,7 +504,7 @@ public class RaidCommandHandler : LocatedServiceBase
                 while (continueLoop);
 
                 var embedBuilder = new EmbedBuilder()
-                                   .WithTitle($"DPS-Reports {day:d}")
+                                   .WithTitle($"DPS-Reports {day.ToString("d", LocalizationGroup.CultureInfo)}")
                                    .WithColor(Color.Green)
                                    .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
                                    .WithTimestamp(DateTime.Now);

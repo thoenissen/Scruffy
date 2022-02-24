@@ -714,6 +714,87 @@ public class GuildRankService : LocatedServiceBase
                                                    new SqlParameter("@to", DateTime.Today.AddDays(-1)),
                                                    new SqlParameter("@guildId", guild.Id))
                                .ConfigureAwait(false);
+
+                // Events
+                await dbFactory.ExecuteSqlRawAsync(@"WITH [CurrentEventActivityPoints]
+                                                     AS
+                                                     (
+                                                          SELECT [Dates].[UserId], 
+                                                                 [Dates].[Date],
+                                                                 CASE 
+                                                                     WHEN EXISTS ( SELECT 1 
+                                                                                     FROM [GuildRankCurrentPoints] AS [Exists]
+                                                                                    WHERE [Exists].[Date] = [Dates].[Date]
+                                                                                      AND [Exists].[UserId] = [Dates].[UserId]
+                                                                                      AND [Exists].[GuildId] = @guildId
+                                                                                      AND [Exists].[Type] = 0
+                                                                                      AND [Exists].[Points] > -0.29 )
+                                                                         THEN COALESCE ( ( SUM ( [WeightedUserPoints]  ) / SUM ( [WeightedMaximumPoints] ) * AVG ( [MaximumPoints] ) ), 0 )
+                                                                     ELSE 0
+                                                                 END AS [Points]
+                                                            FROM ( SELECT [Summed].[UserId],
+                                                                          [Summed].[Date],
+                                                                          [Summed].[Week],
+                                                                          ( CASE 
+                                                                                WHEN ( [Summed].[GuildPoints] > [WeeklyMaximum].[Points] )
+                                                                                    THEN [WeeklyMaximum].[Points] * [WeeklyMaximum].[Weight]
+                                                                                ELSE [Summed].[GuildPoints] * [WeeklyMaximum].[Weight]
+                                                                            END
+                                                                          + [Summed].[LeaderPoints] * [WeeklyMaximum].[Weight] ) AS [WeightedUserPoints],
+                                                                          [WeeklyMaximum].[Weight] * [WeeklyMaximum].[Points] AS [WeightedMaximumPoints],
+                                                                          [WeeklyMaximum].[Points] AS [MaximumPoints]
+                                                                     FROM ( SELECT [Raw].[UserId],
+                                                                                   [Raw].[Date],
+                                                                                   [Raw].[Week],
+                                                                                   SUM ( [Raw].[GuildPoints] ) AS [GuildPoints],
+                                                                                   SUM ( [Raw].[LeaderPoints] ) AS [LeaderPoints]
+                                                                              FROM ( SELECT [CurrentPoints].[UserId],
+                                                                                            [CurrentPoints].[Date],
+                                                                                            ( DATEDIFF ( DAY, [Appointment].[TimeStamp], [CurrentPoints].[Date] ) / 7) + 1  AS [Week],
+                                                                                            [Template].[GuildPoints],
+                                                                                            CAST ( [Participant].[IsLeader] AS FLOAT ) AS [LeaderPoints]
+                                                                                      FROM [GuildRankCurrentPoints] AS [CurrentPoints]
+                                                                                INNER JOIN [CalendarAppointmentParticipants] AS [Participant]
+                                                                                        ON [Participant].[UserId] = [CurrentPoints].[UserId]
+                                                                                INNER JOIN [CalendarAppointments] AS [Appointment]
+                                                                                        ON [Appointment].[Id] = [Participant].[AppointmentId]
+                                                                                       AND [Appointment].[TimeStamp] > DATEADD ( DAY, -63, [CurrentPoints].[Date] )   
+                                                                                       AND [Appointment].[TimeStamp] < DATEADD ( DAY,   1, [CurrentPoints].[Date] )   
+                                                                                INNER JOIN [CalendarAppointmentTemplates] AS [Template]
+                                                                                        ON [Template].[Id]  = [Appointment].[CalendarAppointmentTemplateId]
+                                                                                     WHERE [CurrentPoints].[Type] = 0       
+                                                                                       AND [CurrentPoints].[Date] >= @from
+                                                                                       AND [CurrentPoints].[Date] <= @to
+                                                                                       AND [CurrentPoints].[GuildId] = @guildId ) AS [Raw]
+                                                                           GROUP BY [Raw].[UserId], 
+                                                                                    [Raw].[Date], 
+                                                                                    [Raw].[Week] ) AS [Summed]
+                                                              CROSS APPLY ScruffyGetWeeklyEventPoints ( DATEADD ( DAY, -63, [Summed].[Date] ),
+                                                                                                        DATEADD ( DAY,   1, [Summed].[Date] ) ) AS [WeeklyMaximum]
+                                                                    WHERE [WeeklyMaximum].[Week] = [Summed].[Week] ) AS [Dates]
+                                                        GROUP BY [Dates].[UserId],
+                                                                 [Dates].[Date]
+                                                     )
+
+                                                     MERGE INTO [GuildRankCurrentPoints] AS [Target]
+                                                          USING [CurrentEventActivityPoints] AS [SOURCE]
+                                                     
+                                                             ON [Target].[GuildId] = @guildId
+                                                            AND [Target].[UserId] = [Source].[UserId]
+                                                            AND [Target].[Date] = [Source].[Date]
+                                                            AND [Target].[Type] = 7
+                                                     
+                                                     WHEN MATCHED 
+                                                       THEN UPDATE
+                                                            SET [Target].[Points] = [Source].[Points]
+                                                     
+                                                     WHEN NOT MATCHED
+                                                        THEN INSERT ( [GuildId], [UserId], [Date], [Type], [Points] )
+                                                             VALUES ( @guildId, [Source].[UserId], [Source].[Date], 7, [Source].[Points] );",
+                                                   new SqlParameter("@from", DateTime.Today.AddDays(-61)),
+                                                   new SqlParameter("@to", DateTime.Today.AddDays(-1)),
+                                                   new SqlParameter("@guildId", guild.Id))
+                               .ConfigureAwait(false);
             }
         }
     }
