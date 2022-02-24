@@ -72,7 +72,7 @@ namespace Scruffy.Services.Guild
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task PostOverview(IContextContainer context)
         {
-            var limit = DateTime.Today.AddDays(-60);
+            var limit = DateTime.Today.AddDays(-64);
 
             var guildMemberSubQuery = _dbFactory.GetRepository<GuildWarsGuildHistoricMemberRepository>()
                                                 .GetQuery()
@@ -215,7 +215,7 @@ namespace Scruffy.Services.Guild
             var user = await _userManagementService.GetUserByDiscordAccountId(context.User.Id)
                                                    .ConfigureAwait(false);
 
-            var limit = DateTime.Today.AddDays(-60);
+            var limit = DateTime.Today.AddDays(-64);
 
             var guildMemberSubQuery = _dbFactory.GetRepository<GuildWarsGuildHistoricMemberRepository>()
                                                 .GetQuery()
@@ -253,7 +253,7 @@ namespace Scruffy.Services.Guild
 
             var chartConfiguration = new ChartConfigurationData
                                      {
-                                         Type = "outlabeledDoughnut",
+                                         Type = "bar",
                                          Data = new Data.Json.QuickChart.Data
                                          {
                                              DataSets = new List<DataSet>
