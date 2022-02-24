@@ -130,6 +130,14 @@ namespace Scruffy.Services.Guild
                 }
             }
 
+            var minValue = userPoints.Min(obj => obj.Points);
+
+            minValue = minValue > 0
+                           ? 0
+                           : -10 * (((int)Math.Ceiling(minValue * -1) / 10) + 1);
+
+            var maxValue = (((int)Math.Ceiling(userPoints.Max(obj => obj.Points)) / 10) + 1) * 10;
+
             var chartConfiguration = new ChartConfigurationData
                                      {
                                          Type = "horizontalBar",
@@ -158,8 +166,8 @@ namespace Scruffy.Services.Guild
                                                                                 {
                                                                                     Ticks = new AxisTicks<double>
                                                                                             {
-                                                                                                MinValue = 0,
-                                                                                                MaxValue = Math.Ceiling(((userPoints.Max(obj => obj.Points) / 10) + 1) * 10),
+                                                                                                MinValue = minValue,
+                                                                                                MaxValue = maxValue,
                                                                                                 FontColor = "#b3b3b3"
                                                                                             }
                                                                                 }
