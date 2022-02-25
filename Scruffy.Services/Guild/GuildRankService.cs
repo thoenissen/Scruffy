@@ -335,6 +335,9 @@ public class GuildRankService : LocatedServiceBase
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
+            var from = DateTime.Today.AddDays(-64);
+            var to = DateTime.Today.AddDays(-1);
+
             foreach (var guild in dbFactory.GetRepository<GuildRepository>()
                                            .GetQuery()
                                            .Where(obj => guildId == null
@@ -391,8 +394,8 @@ public class GuildRankService : LocatedServiceBase
                                                          WHEN NOT MATCHED
                                                             THEN INSERT ( [GuildId], [UserId], [Date], [Type], [Points] )
                                                                  VALUES ( @guildId, [Source].[UserId], [Source].[Date], 0, [Source].[Points] );",
-                                                   new SqlParameter("@from", DateTime.Today.AddDays(-61)),
-                                                   new SqlParameter("@to", DateTime.Today.AddDays(-1)),
+                                                   new SqlParameter("@from", from),
+                                                   new SqlParameter("@to", to),
                                                    new SqlParameter("@guildId", guild.Id))
                                .ConfigureAwait(false);
 
@@ -457,8 +460,8 @@ public class GuildRankService : LocatedServiceBase
                                                      WHEN NOT MATCHED
                                                         THEN INSERT ( [GuildId], [UserId], [Date], [Type], [Points] )
                                                              VALUES ( @guildId, [Source].[UserId], [Source].[Date], 1, [Source].[Points] );",
-                                   new SqlParameter("@from", DateTime.Today.AddDays(-61)),
-                                   new SqlParameter("@to", DateTime.Today.AddDays(-1)),
+                                   new SqlParameter("@from", from),
+                                   new SqlParameter("@to", to),
                                    new SqlParameter("@guildId", guild.Id))
                                .ConfigureAwait(false);
 
@@ -529,8 +532,8 @@ public class GuildRankService : LocatedServiceBase
                                                      WHEN NOT MATCHED
                                                         THEN INSERT ( [GuildId], [UserId], [Date], [Type], [Points] )
                                                              VALUES ( @guildId, [Source].[UserId], [Source].[Date], 2, [Source].[Points] );",
-                                   new SqlParameter("@from", DateTime.Today.AddDays(-61)),
-                                   new SqlParameter("@to", DateTime.Today.AddDays(-1)),
+                                   new SqlParameter("@from", from),
+                                   new SqlParameter("@to", to),
                                    new SqlParameter("@guildId", guild.Id))
                                .ConfigureAwait(false);
 
@@ -594,8 +597,8 @@ public class GuildRankService : LocatedServiceBase
                                                      WHEN NOT MATCHED
                                                         THEN INSERT ( [GuildId], [UserId], [Date], [Type], [Points] )
                                                              VALUES ( @guildId, [Source].[UserId], [Source].[Date], 3, [Source].[Points] );",
-                                   new SqlParameter("@from", DateTime.Today.AddDays(-61)),
-                                   new SqlParameter("@to", DateTime.Today.AddDays(-1)),
+                                   new SqlParameter("@from", from),
+                                   new SqlParameter("@to", to),
                                    new SqlParameter("@guildId", guild.Id))
                                .ConfigureAwait(false);
 
@@ -652,8 +655,8 @@ public class GuildRankService : LocatedServiceBase
                                                      WHEN NOT MATCHED
                                                         THEN INSERT ( [GuildId], [UserId], [Date], [Type], [Points] )
                                                              VALUES ( @guildId, [Source].[UserId], [Source].[Date], 5, [Source].[Points] );",
-                                   new SqlParameter("@from", DateTime.Today.AddDays(-61)),
-                                   new SqlParameter("@to", DateTime.Today.AddDays(-1)),
+                                   new SqlParameter("@from", from),
+                                   new SqlParameter("@to", to),
                                    new SqlParameter("@guildId", guild.Id))
                                .ConfigureAwait(false);
 
@@ -710,8 +713,8 @@ public class GuildRankService : LocatedServiceBase
                                                      WHEN NOT MATCHED
                                                         THEN INSERT ( [GuildId], [UserId], [Date], [Type], [Points] )
                                                              VALUES ( @guildId, [Source].[UserId], [Source].[Date], 6, [Source].[Points] );",
-                                                   new SqlParameter("@from", DateTime.Today.AddDays(-61)),
-                                                   new SqlParameter("@to", DateTime.Today.AddDays(-1)),
+                                                   new SqlParameter("@from", from),
+                                                   new SqlParameter("@to", to),
                                                    new SqlParameter("@guildId", guild.Id))
                                .ConfigureAwait(false);
 
@@ -721,17 +724,17 @@ public class GuildRankService : LocatedServiceBase
                                                      (
                                                           SELECT [Dates].[UserId], 
                                                                  [Dates].[Date],
-                                                                 CASE 
-                                                                     WHEN EXISTS ( SELECT 1 
-                                                                                     FROM [GuildRankCurrentPoints] AS [Exists]
-                                                                                    WHERE [Exists].[Date] = [Dates].[Date]
-                                                                                      AND [Exists].[UserId] = [Dates].[UserId]
-                                                                                      AND [Exists].[GuildId] = @guildId
-                                                                                      AND [Exists].[Type] = 0
-                                                                                      AND [Exists].[Points] > -0.29 )
-                                                                         THEN COALESCE ( ( SUM ( [WeightedUserPoints]  ) / SUM ( [WeightedMaximumPoints] ) * AVG ( [MaximumPoints] ) ), 0 )
-                                                                     ELSE 0
-                                                                 END AS [Points]
+                                                                 ( CASE 
+                                                                       WHEN EXISTS ( SELECT 1 
+                                                                                       FROM [GuildRankCurrentPoints] AS [Exists]
+                                                                                      WHERE [Exists].[Date] = [Dates].[Date]
+                                                                                        AND [Exists].[UserId] = [Dates].[UserId]
+                                                                                        AND [Exists].[GuildId] = @guildId
+                                                                                        AND [Exists].[Type] = 0
+                                                                                        AND [Exists].[Points] > -0.29 )
+                                                                           THEN COALESCE ( ( SUM ( [WeightedUserPoints]  ) / SUM ( [WeightedMaximumPoints] ) * AVG ( [MaximumPoints] ) ), 0 )
+                                                                       ELSE 0
+                                                                   END ) / 7 AS [Points]
                                                             FROM ( SELECT [Summed].[UserId],
                                                                           [Summed].[Date],
                                                                           [Summed].[Week],
@@ -791,8 +794,8 @@ public class GuildRankService : LocatedServiceBase
                                                      WHEN NOT MATCHED
                                                         THEN INSERT ( [GuildId], [UserId], [Date], [Type], [Points] )
                                                              VALUES ( @guildId, [Source].[UserId], [Source].[Date], 7, [Source].[Points] );",
-                                                   new SqlParameter("@from", DateTime.Today.AddDays(-61)),
-                                                   new SqlParameter("@to", DateTime.Today.AddDays(-1)),
+                                                   new SqlParameter("@from", from),
+                                                   new SqlParameter("@to", to),
                                                    new SqlParameter("@guildId", guild.Id))
                                .ConfigureAwait(false);
             }

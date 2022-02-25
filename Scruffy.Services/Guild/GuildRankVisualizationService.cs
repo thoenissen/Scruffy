@@ -251,7 +251,7 @@ namespace Scruffy.Services.Guild
                                                           Type = obj.Key,
                                                           Points = obj.Sum(obj2 => obj2.Points)
                                                       })
-                                       .OrderByDescending(obj => obj.Type)
+                                       .OrderByDescending(obj => obj.Points)
                                        .ToList();
 
             var embedBuilder = new EmbedBuilder();
