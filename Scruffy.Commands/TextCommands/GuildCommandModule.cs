@@ -758,6 +758,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("overview")]
+        [RequireAdministratorPermissions]
         [RequireContext(ContextType.Guild)]
         public Task PostOverview() => GuildRankVisualizationService.PostOverview(Context);
 
@@ -766,6 +767,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("me")]
+        [RequireAdministratorPermissions]
         [RequireContext(ContextType.Guild)]
         public Task PostPersonalOverview() => GuildRankVisualizationService.PostPersonalOverview(Context);
 
