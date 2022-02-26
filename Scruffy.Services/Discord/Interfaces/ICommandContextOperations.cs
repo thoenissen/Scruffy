@@ -11,4 +11,10 @@ public interface ICommandContextOperations
     /// <param name="commandName">Command</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     Task ShowHelp(string commandName);
+
+    /// <summary>
+    /// Show unmet precondition hint
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task ShowUnmetPrecondition();
 }

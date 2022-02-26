@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Data.Services.CoreData;
 using Scruffy.Services.Core;
+using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
 using Scruffy.Services.Discord.Interfaces;
 
@@ -174,6 +175,21 @@ public sealed class CommandContextContainer : ICommandContext, ICommandContextOp
         {
             await helpService.ShowHelp(this, commandName)
                              .ConfigureAwait(false);
+        }
+    }
+
+    /// <summary>
+    /// Show unmet precondition hint
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public async Task ShowUnmetPrecondition()
+    {
+        var localizationGroup = ServiceProvider.GetService<LocalizationService>()
+                                               ?.GetGroup(nameof(CommandContextContainer));
+        if (localizationGroup != null)
+        {
+            await Message.ReplyAsync(localizationGroup.GetText("UnmetPrecondition", "You can't execute this command here or you don't have the required permissions."))
+                         .ConfigureAwait(false);
         }
     }
 

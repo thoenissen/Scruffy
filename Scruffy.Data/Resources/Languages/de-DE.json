@@ -206,6 +206,9 @@
     "CalendarTemplateUriUriDialogElement": {
       "Message": "Gib bitte den zu verwendenen Link ein."
     },
+    "CommandContextContainer": {
+      "UnmetPrecondition": "Der Befehl kann hier nicht ausgeführt werden oder dir fehlen die entsprechenden Berechtigungen." 
+    },
     "CommandHelpService": {
       "Help": "Befehlshilfe",
       "GeneralHelp": "Es werden alle Befehlsgruppen ausgegeben. Spezifiziere den Befehl zur Ausgabe von weiteren Informationen.",

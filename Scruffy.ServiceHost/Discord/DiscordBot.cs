@@ -276,6 +276,12 @@ public sealed class DiscordBot : IAsyncDisposable
                             break;
 
                         case CommandError.UnmetPrecondition:
+                            {
+                                await container.Operations
+                                               .ShowUnmetPrecondition()
+                                               .ConfigureAwait(false);
+                            }
+                            break;
                         case CommandError.Unsuccessful:
                         default:
                             break;
