@@ -96,8 +96,8 @@ public class GuildWarsItemRepository : RepositoryBase<GuildWarsItemQueryable, Gu
                                                                                 [Target].[Type] = [Source].[Type],
                                                                                 [Target].[VendorValue] = [Source].[VendorValue]
                                                                WHEN NOT MATCHED THEN
-                                                                          INSERT ( [ItemId], [Name], [Type], [VendorValue], IsValueReducingActivated )
-                                                                          VALUES ( [Source].[ItemId], [Source].[Name], [Source].[Type], [Source].[VendorValue], 0); ",
+                                                                          INSERT ( [ItemId], [Name], [Type], [VendorValue] )
+                                                                          VALUES ( [Source].[ItemId], [Source].[Name], [Source].[Type], [Source].[VendorValue] ); ",
                                             connection);
                 await using (sqlCommand.ConfigureAwait(false))
                 {
