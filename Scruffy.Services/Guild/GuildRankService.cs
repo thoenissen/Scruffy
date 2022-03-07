@@ -625,8 +625,9 @@ public class GuildRankService : LocatedServiceBase
                                                                   FROM [GuildRankCurrentPoints] AS [CurrentPoints]
                                                             INNER JOIN [DiscordAccounts] AS [Account]
                                                                     ON [Account].[UserId] = [CurrentPoints].[UserId]
-                                                            INNER JOIN [DiscordHistoricAccountRoleAssignments] AS [Role]
+                                                             LEFT JOIN [DiscordHistoricAccountRoleAssignments] AS [Role]
                                                                     ON [Role].[AccountId] = [Account].[Id]
+                                                                   AND [Role].[Date] = [CurrentPoints].[Date]
                                                              LEFT JOIN [GuildDiscordActivityPointsAssignments] AS [Points]
                                                                     ON [Points].[RoleId] = [Role].[RoleId]
                                                                    AND [Points].[Type] = 0
@@ -683,8 +684,9 @@ public class GuildRankService : LocatedServiceBase
                                                                   FROM [GuildRankCurrentPoints] AS [CurrentPoints]
                                                             INNER JOIN [DiscordAccounts] AS [Account]
                                                                     ON [Account].[UserId] = [CurrentPoints].[UserId]
-                                                            INNER JOIN [DiscordHistoricAccountRoleAssignments] AS [Role]
+                                                             LEFT JOIN [DiscordHistoricAccountRoleAssignments] AS [Role]
                                                                     ON [Role].[AccountId] = [Account].[Id]
+                                                                   AND [Role].[Date] = [CurrentPoints].[Date]
                                                              LEFT JOIN [GuildDiscordActivityPointsAssignments] AS [Points]
                                                                     ON [Points].[RoleId] = [Role].[RoleId]
                                                                    AND [Points].[Type] = 1
