@@ -217,10 +217,11 @@ namespace Scruffy.Services.Guild
         /// Post personal overview
         /// </summary>
         /// <param name="context">Context</param>
+        /// <param name="guildUser">User</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task PostPersonalOverview(IContextContainer context)
+        public async Task PostPersonalOverview(IContextContainer context, IGuildUser guildUser)
         {
-            var user = await _userManagementService.GetUserByDiscordAccountId(context.User.Id)
+            var user = await _userManagementService.GetUserByDiscordAccountId(guildUser.Id)
                                                    .ConfigureAwait(false);
 
             var limit = DateTime.Today.AddDays(-64);
@@ -255,7 +256,7 @@ namespace Scruffy.Services.Guild
                                        .ToList();
 
             var embedBuilder = new EmbedBuilder();
-            embedBuilder.WithTitle(LocalizationGroup.GetText("RankingPersonalOverview", "Guild ranking personal points overview"));
+            embedBuilder.WithTitle($"{LocalizationGroup.GetText("RankingPersonalOverview", "Guild ranking personal points overview")} ({guildUser.TryGetDisplayName()})");
             embedBuilder.WithColor(Color.DarkBlue);
             embedBuilder.WithImageUrl("attachment://chart.png");
 

@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 
+using Discord;
 using Discord.Commands;
 
 using Scruffy.Data.Enumerations.Guild;
@@ -763,13 +764,23 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         public Task PostOverview() => GuildRankVisualizationService.PostOverview(Context);
 
         /// <summary>
-        /// General overview
+        /// Personal overview
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("me")]
         [RequireAdministratorPermissions]
         [RequireContext(ContextType.Guild)]
-        public Task PostPersonalOverview() => GuildRankVisualizationService.PostPersonalOverview(Context);
+        public Task PostPersonalOverview() => GuildRankVisualizationService.PostPersonalOverview(Context, Context.Member);
+
+        /// <summary>
+        /// Personal overview
+        /// </summary>
+        /// <param name="user">User</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command]
+        [RequireAdministratorPermissions]
+        [RequireContext(ContextType.Guild)]
+        public Task PostPersonalOverview(IGuildUser user) => GuildRankVisualizationService.PostPersonalOverview(Context, user);
 
         #endregion // Methods
     }
