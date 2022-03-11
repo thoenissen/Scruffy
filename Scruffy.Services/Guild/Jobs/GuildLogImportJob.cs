@@ -96,25 +96,42 @@ public class GuildLogImportJob : LocatedAsyncJob
                                                  MessageOfTheDay = entry.MessageOfTheDay
                                              }))
                                 {
-                                    switch (entry.Type)
+                                    var isProcessed = false;
+
+                                    try
                                     {
-                                        case GuildLogEntryEntity.Types.Joined:
-                                            {
-                                                await OnJoined(discordChannel, entry).ConfigureAwait(false);
-                                            }
-                                            break;
+                                        switch (entry.Type)
+                                        {
+                                            case GuildLogEntryEntity.Types.Joined:
+                                                {
+                                                    isProcessed = await OnJoined(discordChannel, entry).ConfigureAwait(false);
+                                                }
+                                                break;
 
-                                        case GuildLogEntryEntity.Types.Kick:
-                                            {
-                                                await OnKick(discordChannel, entry).ConfigureAwait(false);
-                                            }
-                                            break;
+                                            case GuildLogEntryEntity.Types.Kick:
+                                                {
+                                                    isProcessed = await OnKick(discordChannel, entry).ConfigureAwait(false);
+                                                }
+                                                break;
 
-                                        case GuildLogEntryEntity.Types.RankChange:
-                                            {
-                                                await OnRankChanged(guildRankService.Value, guild.Id, entry).ConfigureAwait(false);
-                                            }
-                                            break;
+                                            case GuildLogEntryEntity.Types.RankChange:
+                                                {
+                                                    isProcessed = await OnRankChanged(guildRankService.Value, guild.Id, entry).ConfigureAwait(false);
+                                                }
+                                                break;
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        LoggingService.AddJobLogEntry(LogEntryLevel.Error, nameof(GuildLogImportJob), ex.Message, null, ex);
+                                    }
+
+                                    if (isProcessed)
+                                    {
+                                        dbFactory.GetRepository<GuildLogEntryRepository>()
+                                                 .Refresh(obj => obj.GuildId == guild.Id
+                                                                 && obj.Id == entry.Id,
+                                                          obj => obj.IsProcessed = true);
                                     }
                                 }
                             }
@@ -135,13 +152,15 @@ public class GuildLogImportJob : LocatedAsyncJob
     /// <param name="discordChannel">Discord channel</param>
     /// <param name="entry">Entry</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private async Task OnJoined(IMessageChannel discordChannel, GuildLogEntry entry)
+    private async Task<bool> OnJoined(IMessageChannel discordChannel, GuildLogEntry entry)
     {
         if (discordChannel != null)
         {
             await discordChannel.SendMessageAsync(LocalizationGroup.GetFormattedText("MemberJoined", "**{0}** joined the guild.", entry.User))
                                 .ConfigureAwait(false);
         }
+
+        return true;
     }
 
     /// <summary>
@@ -150,7 +169,7 @@ public class GuildLogImportJob : LocatedAsyncJob
     /// <param name="discordChannel">Discord channel</param>
     /// <param name="entry">Entry</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private async Task OnKick(IMessageChannel discordChannel, GuildLogEntry entry)
+    private async Task<bool> OnKick(IMessageChannel discordChannel, GuildLogEntry entry)
     {
         if (discordChannel != null)
         {
@@ -165,6 +184,8 @@ public class GuildLogImportJob : LocatedAsyncJob
                                     .ConfigureAwait(false);
             }
         }
+
+        return true;
     }
 
     /// <summary>
@@ -174,7 +195,7 @@ public class GuildLogImportJob : LocatedAsyncJob
     /// <param name="guildId">Id of the guild</param>
     /// <param name="entry">Entry</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private Task OnRankChanged(GuildRankService guildRankService, long guildId, GuildLogEntry entry)
+    private Task<bool> OnRankChanged(GuildRankService guildRankService, long guildId, GuildLogEntry entry)
     {
         return guildRankService.RefreshDiscordRank(guildId, entry.User, entry.NewRank);
     }

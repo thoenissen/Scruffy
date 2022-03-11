@@ -86,7 +86,7 @@ public class GuildRankService : LocatedServiceBase
     /// <param name="accountName">Account name</param>
     /// <param name="rankName">rank</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task RefreshDiscordRank(long guildId, string accountName, string rankName)
+    public async Task<bool> RefreshDiscordRank(long guildId, string accountName, string rankName)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
@@ -209,6 +209,8 @@ public class GuildRankService : LocatedServiceBase
                 }
             }
         }
+
+        return true;
     }
 
     /// <summary>
