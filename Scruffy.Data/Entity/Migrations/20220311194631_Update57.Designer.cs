@@ -12,7 +12,7 @@ using Scruffy.Data.Entity;
 namespace Scruffy.Data.Entity.Migrations
 {
     [DbContext(typeof(ScruffyDbContext))]
-    [Migration("20220311180752_Update57")]
+    [Migration("20220311194631_Update57")]
     partial class Update57
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -447,6 +447,9 @@ namespace Scruffy.Data.Entity.Migrations
 
                     b.Property<int>("LogEntryId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsThresholdRelevant")
+                        .HasColumnType("bit");
 
                     b.Property<long>("UserId")
                         .HasColumnType("bigint");

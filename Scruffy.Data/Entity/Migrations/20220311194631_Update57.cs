@@ -19,7 +19,8 @@ namespace Scruffy.Data.Entity.Migrations
                                                                GuildId = table.Column<long>(type: "bigint", nullable: false),
                                                                LogEntryId = table.Column<int>(type: "int", nullable: false),
                                                                UserId = table.Column<long>(type: "bigint", nullable: false),
-                                                               Value = table.Column<long>(type: "bigint", nullable: false)
+                                                               Value = table.Column<long>(type: "bigint", nullable: false),
+                                                               IsThresholdRelevant = table.Column<bool>(type: "bit", nullable: false)
                                                            },
                                          constraints: table =>
                                                       {

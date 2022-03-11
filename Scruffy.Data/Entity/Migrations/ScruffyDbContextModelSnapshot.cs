@@ -446,6 +446,9 @@ namespace Scruffy.Data.Entity.Migrations
                     b.Property<int>("LogEntryId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsThresholdRelevant")
+                        .HasColumnType("bit");
+
                     b.Property<long>("UserId")
                         .HasColumnType("bigint");
 

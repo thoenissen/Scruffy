@@ -30,6 +30,11 @@ namespace Scruffy.Data.Entity.Tables.Guild
         /// </summary>
         public long Value { get; set; }
 
+        /// <summary>
+        /// Is this relevant for the donation threshold?
+        /// </summary>
+        public bool IsThresholdRelevant { get; set; }
+
         #endregion // Properties
     }
 }

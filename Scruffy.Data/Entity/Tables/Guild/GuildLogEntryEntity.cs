@@ -34,6 +34,17 @@ public class GuildLogEntryEntity
         public const string Stash = "stash";
     }
 
+    /// <summary>
+    /// Operations
+    /// </summary>
+    public static class Operations
+    {
+        /// <summary>
+        /// Withdraw
+        /// </summary>
+        public const string Withdraw = "withdraw";
+    }
+
     #region Properties
 
     #region Data
