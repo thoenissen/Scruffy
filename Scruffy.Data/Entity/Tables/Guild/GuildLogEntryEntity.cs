@@ -27,6 +27,11 @@ public class GuildLogEntryEntity
         /// Rank change
         /// </summary>
         public const string RankChange = "rank_change";
+
+        /// <summary>
+        /// Stash
+        /// </summary>
+        public const string Stash = "stash";
     }
 
     #region Properties
