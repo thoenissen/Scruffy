@@ -32,6 +32,11 @@ public class GuildLogEntryEntity
         /// Stash
         /// </summary>
         public const string Stash = "stash";
+
+        /// <summary>
+        /// Upgrade
+        /// </summary>
+        public const string Upgrade = "upgrade";
     }
 
     /// <summary>
@@ -43,6 +48,22 @@ public class GuildLogEntryEntity
         /// Withdraw
         /// </summary>
         public const string Withdraw = "withdraw";
+    }
+
+    /// <summary>
+    /// Actions
+    /// </summary>
+    public static class Actions
+    {
+        /// <summary>
+        /// Withdraw
+        /// </summary>
+        public const string Completed = "completed";
+
+        /// <summary>
+        /// Queued
+        /// </summary>
+        public const string Queued = "queued";
     }
 
     #region Properties

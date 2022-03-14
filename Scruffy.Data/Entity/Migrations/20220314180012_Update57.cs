@@ -18,7 +18,6 @@ namespace Scruffy.Data.Entity.Migrations
                                                            {
                                                                GuildId = table.Column<long>(type: "bigint", nullable: false),
                                                                LogEntryId = table.Column<int>(type: "int", nullable: false),
-                                                               UserId = table.Column<long>(type: "bigint", nullable: false),
                                                                Value = table.Column<long>(type: "bigint", nullable: false),
                                                                IsThresholdRelevant = table.Column<bool>(type: "bit", nullable: false)
                                                            },
@@ -31,6 +30,23 @@ namespace Scruffy.Data.Entity.Migrations
                                                                                     x.LogEntryId
                                                                                 });
                                                       });
+
+            migrationBuilder.CreateTable(name: "GuildWarsCustomRecipeEntries",
+                                         columns: table => new
+                                                           {
+                                                               ItemId = table.Column<int>(type: "int", nullable: false),
+                                                               IngredientItemId = table.Column<int>(type: "int", nullable: false),
+                                                               IngredientCount = table.Column<int>(type: "int", nullable: false)
+                                                           },
+                                         constraints: table =>
+                                                      {
+                                                          table.PrimaryKey("PK_GuildWarsCustomRecipeEntries",
+                                                                           x => new
+                                                                                {
+                                                                                    x.ItemId,
+                                                                                    x.IngredientItemId
+                                                                                });
+                                                      });
         }
 
         /// <summary>
@@ -40,6 +56,7 @@ namespace Scruffy.Data.Entity.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(name: "GuildDonations");
+            migrationBuilder.DropTable(name: "GuildWarsCustomRecipeEntries");
         }
     }
 }

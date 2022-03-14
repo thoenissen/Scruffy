@@ -476,6 +476,42 @@ public sealed class GuidWars2ApiConnector : IAsyncDisposable,
     }
 
     /// <summary>
+    /// Returns the first recipe
+    /// </summary>
+    /// <param name="itemId">Item id</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public Task<ItemRecipe> GetRecipe(int itemId)
+    {
+        return Invoke(GuildWars2ApiPermission.None,
+                      async () =>
+                      {
+                          ItemRecipe recipe = null;
+
+                          using (var searchResponse = await CreateRequest("https://api.guildwars2.com/v2/recipes/search?output=" + itemId).ConfigureAwait(false))
+                          {
+                              var jsonResult = await searchResponse.Content
+                                                                   .ReadAsStringAsync()
+                                                                   .ConfigureAwait(false);
+
+                              var recipeIds = JsonConvert.DeserializeObject<List<int>>(jsonResult);
+                              if (recipeIds?.Count > 0)
+                              {
+                                  using (var recipeResponse = await CreateRequest("https://api.guildwars2.com/v2/recipes/" + recipeIds[0]).ConfigureAwait(false))
+                                  {
+                                      jsonResult = await recipeResponse.Content
+                                                                       .ReadAsStringAsync()
+                                                                       .ConfigureAwait(false);
+
+                                      recipe = JsonConvert.DeserializeObject<ItemRecipe>(jsonResult);
+                                  }
+                              }
+                          }
+
+                          return recipe;
+                      });
+    }
+
+    /// <summary>
     /// Get upgrades
     /// </summary>
     /// <param name="upgradeIds">Upgrade ids</param>

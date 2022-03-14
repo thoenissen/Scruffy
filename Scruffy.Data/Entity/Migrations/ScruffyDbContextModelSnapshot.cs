@@ -449,9 +449,6 @@ namespace Scruffy.Data.Entity.Migrations
                     b.Property<bool>("IsThresholdRelevant")
                         .HasColumnType("bit");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
                     b.Property<long>("Value")
                         .HasColumnType("bigint");
 
@@ -1006,6 +1003,22 @@ namespace Scruffy.Data.Entity.Migrations
                     b.HasKey("AchievementId", "Counter");
 
                     b.ToTable("GuildWarsAchievementTiers");
+                });
+
+            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsCustomRecipeEntryEntity", b =>
+                {
+                    b.Property<int>("ItemId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IngredientItemId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IngredientCount")
+                        .HasColumnType("int");
+
+                    b.HasKey("ItemId", "IngredientItemId");
+
+                    b.ToTable("GuildWarsCustomRecipeEntries");
                 });
 
             modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsItemEntity", b =>

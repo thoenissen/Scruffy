@@ -454,6 +454,7 @@ public class ScruffyDbContext : DbContext
         modelBuilder.Entity<GuildWarsAccountRankingDataEntity>();
         modelBuilder.Entity<GuildWarsAccountRankingGuildDataEntity>();
         modelBuilder.Entity<GuildWarsAccountHistoricCharacterEntity>();
+        modelBuilder.Entity<GuildWarsCustomRecipeEntryEntity>();
 
         modelBuilder.Entity<GuildWarsAccountDailyLoginCheckEntity>()
                     .HasKey(obj => new
@@ -558,6 +559,13 @@ public class ScruffyDbContext : DbContext
                                        obj.Date,
                                        obj.AccountName,
                                        obj.CharacterName,
+                                   });
+
+        modelBuilder.Entity<GuildWarsCustomRecipeEntryEntity>()
+                    .HasKey(obj => new
+                                   {
+                                       obj.ItemId,
+                                       obj.IngredientItemId
                                    });
 
         // Statistics

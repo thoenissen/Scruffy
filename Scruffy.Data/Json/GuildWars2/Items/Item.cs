@@ -26,6 +26,12 @@ public class Item
     public string Type { get; set; }
 
     /// <summary>
+    /// Flags
+    /// </summary>
+    [JsonProperty("Flags")]
+    public List<string> Flags { get; set; }
+
+    /// <summary>
     /// Vendor value
     /// </summary>
     [JsonProperty("vendor_value")]
