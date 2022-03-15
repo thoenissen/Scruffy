@@ -56,9 +56,14 @@ public class GuildLogEntryEntity
     public static class Actions
     {
         /// <summary>
-        /// Withdraw
+        /// Completed
         /// </summary>
         public const string Completed = "completed";
+
+        /// <summary>
+        /// Complete
+        /// </summary>
+        public const string Complete = "complete";
 
         /// <summary>
         /// Queued

@@ -15,10 +15,58 @@ namespace Scruffy.Services.Guild.Jobs;
 /// </summary>
 public class GuildDonationCalculationJob : LocatedAsyncJob
 {
+    #region Fields
+
+    /// <summary>
+    /// Upgrades which don't generate a 'completed' entry
+    /// </summary>
+    private static readonly List<int> _upgradesWithoutCompleted = new ()
+                                                                  {
+                                                                      73,
+                                                                      100,
+                                                                      144,
+                                                                      190,
+                                                                      219,
+                                                                      239,
+                                                                      277,
+                                                                      332,
+                                                                      333,
+                                                                      372,
+                                                                      400,
+                                                                      409,
+                                                                      414,
+                                                                      457,
+                                                                      463,
+                                                                      471,
+                                                                      475,
+                                                                      503,
+                                                                      508,
+                                                                      537,
+                                                                      549,
+                                                                      560,
+                                                                      599,
+                                                                      676,
+                                                                      699,
+                                                                      703,
+                                                                      730,
+                                                                      837,
+                                                                      846,
+                                                                      862,
+                                                                      864,
+                                                                      935,
+                                                                      963,
+                                                                      1067,
+                                                                      1121,
+                                                                      1143,
+                                                                      1202
+                                                                  };
+
     /// <summary>
     /// Repository factory
     /// </summary>
     private readonly RepositoryFactory _dbFactory;
+
+    #endregion // Fields
 
     #region Constructor
 
@@ -192,7 +240,8 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
                                                                {
                                                                    obj.GuildId,
                                                                    obj.Id,
-                                                                   ItemId = conversionsQuery.Where(obj2 => obj2.UpgradeId == obj.UpgradeId)
+                                                                   ItemId = obj.ItemId
+                                                                         ?? conversionsQuery.Where(obj2 => obj2.UpgradeId == obj.UpgradeId)
                                                                                             .Select(obj2 => (int?)obj2.ItemId)
                                                                                             .FirstOrDefault(),
                                                                    Count = obj.Count.Value
@@ -243,7 +292,6 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
 
         var conversions = new Dictionary<int, int?>();
         var calculatedValues = new Dictionary<int, (long Value, bool IsDonationThresholdRelevant)?>();
-        var unknownItems = new Dictionary<int, string>();
 
         async Task<(long Value, bool IsDonationThresholdRelevant)?> GetValue(int itemId)
         {
@@ -281,10 +329,6 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
                             else if (item.VendorValue > 0)
                             {
                                 calculatedValue = (item.VendorValue.Value, false);
-                            }
-                            else
-                            {
-                                unknownItems[itemId] = item.Name;
                             }
                         }
                         else
@@ -343,10 +387,6 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
                                     calculatedValue = (value.Value / recipe.OutputItemCount, false);
                                 }
                             }
-                            else
-                            {
-                                unknownItems[itemId] = item.Name;
-                            }
                         }
                     }
                 }
@@ -355,7 +395,88 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
             return calculatedValue;
         }
 
+        // Completed entries
         foreach (var upgradeLogEntry in upgradeLogEntries.Where(obj => obj.ItemId != null))
+        {
+            var calculatedValue = await GetValue(upgradeLogEntry.ItemId ?? 0).ConfigureAwait(false);
+            if (calculatedValue != null)
+            {
+                if (_dbFactory.GetRepository<GuildDonationRepository>()
+                              .Add(new GuildDonationEntity
+                                   {
+                                       GuildId = upgradeLogEntry.GuildId,
+                                       LogEntryId = upgradeLogEntry.Id,
+                                       Value = calculatedValue.Value.Value,
+                                       IsThresholdRelevant = calculatedValue.Value.IsDonationThresholdRelevant
+                                   }))
+                {
+                    _dbFactory.GetRepository<GuildLogEntryRepository>()
+                              .Refresh(obj => obj.GuildId == upgradeLogEntry.GuildId
+                                           && obj.Id == upgradeLogEntry.Id,
+                                       obj => obj.IsProcessed = true);
+                }
+            }
+        }
+
+        var logEntries = _dbFactory.GetRepository<GuildLogEntryRepository>()
+                                   .GetQuery()
+                                   .Select(obj => obj);
+
+        // Queued entries
+        foreach (var entry in await _dbFactory.GetRepository<GuildLogEntryRepository>()
+                                              .GetQuery()
+                                              .Where(obj => obj.IsProcessed == false
+                                                         && obj.Type == GuildLogEntryEntity.Types.Upgrade
+                                                         && obj.Action == GuildLogEntryEntity.Actions.Queued
+                                                         && (obj.User == null
+                                                          || logEntries.Any(obj2 => obj2.Id > obj.Id
+                                                                                 && obj2.UpgradeId == obj.UpgradeId
+                                                                                 && obj2.Type == GuildLogEntryEntity.Types.Upgrade
+                                                                                 && obj2.Action == GuildLogEntryEntity.Actions.Completed
+                                                                                 && obj2.IsProcessed)))
+                                              .ToListAsync()
+                                              .ConfigureAwait(false))
+        {
+            _dbFactory.GetRepository<GuildLogEntryRepository>()
+                      .Refresh(obj => obj.GuildId == entry.GuildId
+                                   && obj.Id == entry.Id,
+                               obj => obj.IsProcessed = true);
+        }
+
+        // Complete entries
+        foreach (var entry in await _dbFactory.GetRepository<GuildLogEntryRepository>()
+                                              .GetQuery()
+                                              .Where(obj => obj.IsProcessed == false
+                                                         && obj.Type == GuildLogEntryEntity.Types.Upgrade
+                                                         && obj.Action == GuildLogEntryEntity.Actions.Complete)
+                                              .ToListAsync()
+                                              .ConfigureAwait(false))
+        {
+            _dbFactory.GetRepository<GuildLogEntryRepository>()
+                      .Refresh(obj => obj.GuildId == entry.GuildId
+                                   && obj.Id == entry.Id,
+                               obj => obj.IsProcessed = true);
+        }
+
+        // Queued entries which don't generate a completed entry
+        foreach (var upgradeLogEntry in await _dbFactory.GetRepository<GuildLogEntryRepository>()
+                                                        .GetQuery()
+                                                        .Where(obj => obj.IsProcessed == false
+                                                                   && obj.Type == GuildLogEntryEntity.Types.Upgrade
+                                                                   && obj.Action == GuildLogEntryEntity.Actions.Queued
+                                                                   && _upgradesWithoutCompleted.Contains(obj.UpgradeId ?? 0))
+                                                        .Select(obj => new
+                                                                       {
+                                                                           obj.GuildId,
+                                                                           obj.Id,
+                                                                           ItemId = conversionsQuery.Where(obj2 => obj2.UpgradeId == obj.UpgradeId)
+                                                                                                    .Select(obj2 => (int?)obj2.ItemId)
+                                                                                                    .FirstOrDefault(),
+                                                                           Count = obj.Count ?? 1
+                                                                       })
+                                                        .Where(obj => obj.ItemId > 0)
+                                                        .ToListAsync()
+                                                        .ConfigureAwait(false))
         {
             var calculatedValue = await GetValue(upgradeLogEntry.ItemId ?? 0).ConfigureAwait(false);
             if (calculatedValue != null)
