@@ -47,6 +47,55 @@ namespace Scruffy.Data.Entity.Migrations
                                                                                     x.IngredientItemId
                                                                                 });
                                                       });
+
+            migrationBuilder.Sql(@"CREATE FUNCTION [dbo].[ScruffyGetWeeklyEventPoints] (
+                                       @from DATETIME2(7),
+                                       @to   DATETIME2(7)
+                                   )
+                                   RETURNS TABLE
+                                   
+                                   AS
+                                       RETURN SELECT [Week],
+                                                     POWER ( (CAST ( 10.0 AS FLOAT ) ), - ( ( [Week] - 1 ) * 2  - 15.0 ) / 14.6) AS [Weight],
+                                                     SUM ( [Raw].[GuildPoints] ) AS [Points]
+                                                FROM ( SELECT ( DATEDIFF ( DAY, [Appointment].[TimeStamp], @to ) / 7) + 1  AS [Week],
+                                                              [Template].[GuildPoints]
+                                                         FROM [CalendarAppointments] AS [Appointment]
+                                                   INNER JOIN [CalendarAppointmentTemplates] AS [Template]
+                                                           ON [Template].[Id]  = [Appointment].[CalendarAppointmentTemplateId]
+                                                        WHERE [Appointment].[TimeStamp] > @from
+                                                          AND [Appointment].[TimeStamp] < @to
+                                                          AND [Template].[IsRaisingGuildPointCap] = 1 ) AS [Raw]
+                                            GROUP BY [Week]");
+
+            migrationBuilder.Sql(@"CREATE FUNCTION [dbo].[ScruffyGetWeeklyDonationReferences] (
+                                       @guildId INT,
+                                       @from    DATETIME2(7),
+                                       @to      DATETIME2(7)
+                                   )
+                                   RETURNS TABLE
+                                   
+                                   AS
+                                       RETURN SELECT [Week],
+                                                     POWER ( (CAST ( 10.0 AS FLOAT ) ), - ( ( [Week] - 1 ) * 2  - 15.0 ) / 14.6) AS [Weight],
+                                                     SUM ( [Raw].[Value] ) 
+                                                       / ( SELECT COUNT(DISTINCT [Account].[UserId]) 
+                                                             FROM [GuildDonations] AS [UserDonation]
+                                                       INNER JOIN [GuildLogEntries] AS [UserLogEntry]
+                                                               ON [UserLogEntry].[Id]  = [UserDonation].[LogEntryId]
+                                                       INNER JOIN [GuildWarsAccounts] AS [Account]
+                                                               ON [Account].[Name] = [UserLogEntry].[User]
+                                                            WHERE [UserLogEntry].[Time] > @from
+                                                              AND [UserLogEntry].[Time] < @to )
+                                                       / 5 AS [Value]
+                                                FROM ( SELECT ( DATEDIFF ( DAY, [LogEntry].[Time], @to ) / 7) + 1  AS [Week],
+                                                              [Donation].[Value]
+                                                         FROM [GuildDonations] AS [Donation]
+                                                   INNER JOIN [GuildLogEntries] AS [LogEntry]
+                                                           ON [LogEntry].[Id]  = [Donation].[LogEntryId]
+                                                        WHERE [LogEntry].[Time] > @from
+                                                          AND [LogEntry].[Time] < @to ) AS [Raw]
+                                            GROUP BY [Week]");
         }
 
         /// <summary>
