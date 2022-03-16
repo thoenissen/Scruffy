@@ -6,6 +6,8 @@ using Scruffy.Data.Converter;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Account;
 using Scruffy.Data.Entity.Repositories.General;
+using Scruffy.Data.Entity.Repositories.Guild;
+using Scruffy.Data.Entity.Tables.Guild;
 using Scruffy.Data.Enumerations.GuildWars2;
 using Scruffy.Services.Discord;
 using Scruffy.Services.GuildWars2;
@@ -279,56 +281,59 @@ public class DebugService
             if (suppressEmpty == false
              || logEntries.Count > 0)
             {
-                var builder = new EmbedBuilder().WithTitle($"Log entries {date:yyyy-MM-dd}")
+                var builder = new EmbedBuilder().WithTitle($"Bot state report")
                                                 .WithColor(Color.Green)
                                                 .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
                                                 .WithTimestamp(DateTime.Now);
 
-                var types = logEntries.GroupBy(obj => obj.Type)
+                var types = logEntries.GroupBy(obj => new
+                                                      {
+                                                          obj.Type,
+                                                          obj.Level
+                                                      })
                                       .Select(obj => new
                                                      {
-                                                         Type = obj.Key,
+                                                         GroupKey = obj.Key,
                                                          Count = obj.Count()
                                                      });
 
                 var stringBuilder = new StringBuilder();
 
-                foreach (var type in types.OrderBy(obj => obj.Type))
+                foreach (var type in types.GroupBy(obj => obj.GroupKey.Type))
+                {
+                    stringBuilder.AppendLine(type.Key.ToString());
+
+                    foreach (var level in type)
+                    {
+                        stringBuilder.AppendLine($" - {level.GroupKey.Level}: {level.Count}");
+                    }
+                }
+
+                if (stringBuilder.Length > 0)
+                {
+                    builder.AddField($"Log entries  {date:yyyy-MM-dd}", $"```{Environment.NewLine}{stringBuilder}```");
+                }
+
+                stringBuilder = new StringBuilder();
+
+                foreach (var type in dbFactory.GetRepository<GuildLogEntryRepository>()
+                                              .GetQuery()
+                                              .Where(obj => obj.IsProcessed == false
+                                                         && (obj.Type == GuildLogEntryEntity.Types.Stash
+                                                          || obj.Type == GuildLogEntryEntity.Types.Upgrade))
+                                              .GroupBy(obj => obj.Type)
+                                              .Select(obj => new
+                                                             {
+                                                                 Type = obj.Key,
+                                                                 Count = obj.Count()
+                                                             }))
                 {
                     stringBuilder.AppendLine($"{type.Type}: {type.Count}");
                 }
 
-                if (stringBuilder.Length == 0)
+                if (stringBuilder.Length > 0)
                 {
-                    stringBuilder.Append("\u200b");
-                }
-
-                builder.AddField("Types", stringBuilder.ToString());
-
-                var levels = logEntries.GroupBy(obj => obj.Level)
-                                       .Select(obj => new
-                                                      {
-                                                          Level = obj.Key,
-                                                          Count = obj.Count()
-                                                      });
-
-                stringBuilder = new StringBuilder();
-
-                foreach (var level in levels.OrderBy(obj => obj.Level))
-                {
-                    stringBuilder.AppendLine($"{level.Level}: {level.Count}");
-                }
-
-                if (stringBuilder.Length == 0)
-                {
-                    stringBuilder.Append("\u200b");
-                }
-
-                builder.AddField("Levels", stringBuilder.ToString());
-
-                if (logEntries.Count > 0)
-                {
-                    builder.AddField("IDs", $"{logEntries.Min(obj => obj.Id)} -> {logEntries.Max(obj => obj.Id)}");
+                    builder.AddField("Unprocessed guild log entries", $"```{Environment.NewLine}{stringBuilder}```");
                 }
 
                 await channel.SendMessageAsync(embed: builder.Build())
