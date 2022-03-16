@@ -859,12 +859,12 @@ public class GuildRankService : LocatedServiceBase
                                                                                             [Template].[GuildPoints],
                                                                                             CAST ( [Participant].[IsLeader] AS FLOAT ) AS [LeaderPoints]
                                                                                       FROM [GuildRankCurrentPoints] AS [CurrentPoints]
-                                                                                INNER JOIN [CalendarAppointmentParticipants] AS [Participant]
-                                                                                        ON [Participant].[UserId] = [CurrentPoints].[UserId]
                                                                                 INNER JOIN [CalendarAppointments] AS [Appointment]
-                                                                                        ON [Appointment].[Id] = [Participant].[AppointmentId]
-                                                                                       AND [Appointment].[TimeStamp] > DATEADD ( DAY, -63, [CurrentPoints].[Date] )   
+                                                                                        ON [Appointment].[TimeStamp] > DATEADD ( DAY, -63, [CurrentPoints].[Date] )   
                                                                                        AND [Appointment].[TimeStamp] < DATEADD ( DAY,   1, [CurrentPoints].[Date] )   
+                                                                                 LEFT JOIN [CalendarAppointmentParticipants] AS [Participant]
+                                                                                        ON [Participant].[UserId] = [CurrentPoints].[UserId]
+                                                                                       AND [Participant].[AppointmentId] = [Appointment].[Id]
                                                                                 INNER JOIN [CalendarAppointmentTemplates] AS [Template]
                                                                                         ON [Template].[Id]  = [Appointment].[CalendarAppointmentTemplateId]
                                                                                      WHERE [CurrentPoints].[Type] = 0       
