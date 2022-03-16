@@ -96,6 +96,28 @@ namespace Scruffy.Data.Entity.Migrations
                                                         WHERE [LogEntry].[Time] > @from
                                                           AND [LogEntry].[Time] < @to ) AS [Raw]
                                             GROUP BY [Week]");
+
+            migrationBuilder.Sql(@"CREATE  FUNCTION [dbo].[ScruffyGetWeeklyCommits] (
+                                       @guildId INT,
+                                       @from    DATETIME2(7),
+                                       @to      DATETIME2(7)
+                                   )
+                                   RETURNS TABLE
+                                   
+                                   AS
+                                       RETURN SELECT [Week],
+                                                     POWER ( (CAST ( 10.0 AS FLOAT ) ), - ( ( [Week] - 1 ) * 2  - 15.0 ) / 14.6) AS [Weight],
+                                                     COUNT(*) 
+                                                     / CAST ( ( SELECT COUNT ( DISTINCT [Author] ) 
+                                                                  FROM [GitHubCommits] AS [UserCommit]
+                                                                 WHERE [UserCommit].[TimeStamp] > @from
+                                                                   AND [UserCommit].[TimeStamp] < @to ) AS FLOAT )
+                                                     / 5 AS [Count]
+                                                FROM ( SELECT ( DATEDIFF ( DAY, [Commit].[TimeStamp], @to ) / 7) + 1  AS [Week]
+                                                         FROM [GitHubCommits] AS [Commit]
+                                                        WHERE [Commit].[TimeStamp] > @from
+                                                          AND [Commit].[TimeStamp] < @to ) AS [Raw]
+                                            GROUP BY [Week]");
         }
 
         /// <summary>

@@ -900,6 +900,87 @@ public class GuildRankService : LocatedServiceBase
                                                    new SqlParameter("@to", to),
                                                    new SqlParameter("@guildId", guild.Id))
                                .ConfigureAwait(false);
+
+                // Development
+                await dbFactory.ExecuteSqlRawAsync(@"WITH [CurrentCommitPoints]
+                                                     AS
+                                                     (
+                                                         SELECT [Dates].[UserId], 
+                                                                [Dates].[Date],
+                                                                ( CASE 
+                                                                        WHEN EXISTS ( SELECT 1 
+                                                                                        FROM [GuildRankCurrentPoints] AS [Exists]
+                                                                                    WHERE [Exists].[Date] = [Dates].[Date]
+                                                                                        AND [Exists].[UserId] = [Dates].[UserId]
+                                                                                        AND [Exists].[GuildId] = @guildId
+                                                                                        AND [Exists].[Type] = 0
+                                                                                        AND [Exists].[Points] > -0.29 )
+                                                                            THEN COALESCE ( ( SUM ( [WeightedUserPoints]  ) / CAST ( 10.7502502884829 AS FLOAT ) * CAST ( 0.29 AS FLOAT ) ), 0 )
+                                                                        ELSE 0
+                                                                    END ) AS [Points]
+                                                           FROM ( SELECT [Summed].[UserId],
+                                                                         [Summed].[Date],
+                                                                         [Summed].[Week],
+                                                                         ( CASE 
+                                                                             WHEN [Summed].[Count] <= 0
+                                                                                 THEN CAST ( 0.0000000000000000 AS FLOAT )
+                                                                             WHEN [Summed].[Count]  > 0 AND [Summed].[Count] < [WeeklyReference].[Count]
+                                                                                 THEN CAST ( 0.0414285714285714 AS FLOAT )
+                                                                             WHEN [Summed].[Count] / [WeeklyReference].[Count] >= 6
+                                                                                 THEN CAST ( 0.2900000000000000 AS FLOAT )
+                                                                             ELSE ( [Summed].[Count] / [WeeklyReference].[Count] * CAST ( 0.0414285714285714 AS FLOAT ) ) + CAST ( 0.0414285714285714 AS FLOAT )
+                                                                         END ) * [WeeklyReference].[Weight] AS [WeightedUserPoints]
+                                                                    FROM (  SELECT [Raw].[UserId],
+                                                                                   [Raw].[Date],
+                                                                                   [Raw].[Week],
+                                                                                   COUNT (*) AS [Count]
+                                                                              FROM ( SELECT [CurrentPoints].[UserId],
+                                                                                            [CurrentPoints].[Date],
+                                                                                            ( DATEDIFF ( DAY, [Commit].[TimeStamp], [CurrentPoints].[Date] ) / 7) + 1  AS [Week],
+                                                                                            DATEADD(dd, 0, DATEDIFF(dd, 0, [Commit].[TimeStamp])) AS [DonationDate]
+                                                                                        FROM [GuildRankCurrentPoints] AS [CurrentPoints]
+                                                                                  INNER JOIN [Users] AS [User]
+                                                                                          ON [User].[Id] = [CurrentPoints].[UserId]
+                                                                                  INNER JOIN [GitHubCommits] AS [Commit]
+                                                                                          ON [Commit].[Author] = [User].[GitHubAccount]
+                                                                                         AND [Commit].[TimeStamp] > DATEADD ( DAY, -63, [CurrentPoints].[Date] )   
+                                                                                         AND [Commit].[TimeStamp] < DATEADD ( DAY,   1, [CurrentPoints].[Date] )
+                                                                                       WHERE [CurrentPoints].[Type] = 0       
+                                                                                         AND [CurrentPoints].[Date] >= @from
+                                                                                         AND [CurrentPoints].[Date] <= @to
+                                                                                         AND [CurrentPoints].[GuildId] = @guildId ) AS [Raw] 
+                                                                            GROUP BY [Raw].[UserId],
+                                                                                     [Raw].[Date],
+                                                                                     [Raw].[Week] ) AS [Summed]
+                                                                                                         
+                                                             CROSS APPLY ScruffyGetWeeklyCommits ( @guildId,
+                                                                                                   DATEADD ( DAY, -63, [Summed].[Date] ),
+                                                                                                   DATEADD ( DAY,   1, [Summed].[Date] ) ) AS [WeeklyReference]
+                                                                   WHERE [WeeklyReference].[Week] = [Summed].[Week] ) AS [Dates]
+                                                       GROUP BY [Dates].[UserId],
+                                                                [Dates].[Date] 
+                                                     )
+
+
+                                                     MERGE INTO [GuildRankCurrentPoints] AS [Target]
+                                                          USING [CurrentCommitPoints] AS [SOURCE]
+                                                     
+                                                             ON [Target].[GuildId] = @guildId
+                                                            AND [Target].[UserId] = [Source].[UserId]
+                                                            AND [Target].[Date] = [Source].[Date]
+                                                            AND [Target].[Type] = 8
+                                                     
+                                                     WHEN MATCHED 
+                                                       THEN UPDATE
+                                                            SET [Target].[Points] = [Source].[Points]
+                                                     
+                                                     WHEN NOT MATCHED
+                                                        THEN INSERT ( [GuildId], [UserId], [Date], [Type], [Points] )
+                                                             VALUES ( @guildId, [Source].[UserId], [Source].[Date], 8, [Source].[Points] );",
+                                                   new SqlParameter("@from", from),
+                                                   new SqlParameter("@to", to),
+                                                   new SqlParameter("@guildId", guild.Id))
+                               .ConfigureAwait(false);
             }
         }
     }
