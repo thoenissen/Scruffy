@@ -46,7 +46,7 @@ public sealed class JobScheduler : SingletonLocatedServiceBase,
         // Daily
         JobManager.AddJob<CalendarRefreshJob>(obj => obj.ToRunEvery(1).Days().At(0, 0));
         JobManager.AddJob<FractalDailyRefreshJob>(obj => obj.ToRunEvery(1).Days().At(0, 0));
-        JobManager.AddJob<LogOverviewJob>(obj => obj.ToRunEvery(1).Days().At(0, 5));
+        JobManager.AddJob<LogOverviewJob>(obj => obj.ToRunEvery(1).Days().At(1, 0));
         JobManager.AddJob<GuildRankingBatchJob>(obj => obj.ToRunEvery(1).Days().At(0, 10));
         JobManager.AddJob<BackupJob>(obj => obj.ToRunEvery(1).Days().At(2, 0));
 
