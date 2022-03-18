@@ -350,6 +350,7 @@ MigrationBackup/
 .ionide/
 
 # Ignoring private configuration
-/Scruffy.ServiceHost/Docker.env
-/Scruffy.ServiceHost/Docker_Test.env
-/Scruffy.ServiceHost/Docker_Productive.env
+Docker.env
+Docker_Test.env
+Docker_Productive.env
+/Scruffy.ServiceHosts.IdentityServer/keys
