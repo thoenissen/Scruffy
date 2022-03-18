@@ -25,7 +25,7 @@ public class Index : PageModel
 
     #endregion // Fields
 
-    #region Fields
+    #region Constructor
 
     /// <summary>
     /// Constructor
@@ -38,7 +38,7 @@ public class Index : PageModel
         _environment = environment;
     }
 
-    #endregion // Fields
+    #endregion // Constructor
 
     #region Properties
 
