@@ -3,14 +3,14 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-     <DockerfileTag>scruffy</DockerfileTag>
+     <DockerfileTag>scruffy.servicehost.discord</DockerfileTag>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\Scruffy.ServiceHost.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\Scruffy.ServiceHosts.Discord.xml</DocumentationFile>
     <CodeAnalysisRuleSet>..\StyleCop.Debug.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\Scruffy.ServiceHost.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\Scruffy.ServiceHosts.Discord.xml</DocumentationFile>
     <CodeAnalysisRuleSet>..\StyleCop.Release.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>

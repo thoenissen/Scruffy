@@ -1,8 +1,8 @@
 ﻿using Scruffy.Data.Enumerations.General;
-using Scruffy.ServiceHost.Discord;
+using Scruffy.ServiceHosts.Discord.Discord;
 using Scruffy.Services.Core;
 
-namespace Scruffy.ServiceHost;
+namespace Scruffy.ServiceHosts.Discord;
 
 /// <summary>
 /// Main class

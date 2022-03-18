@@ -5,19 +5,19 @@ WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["Scruffy.ServiceHost/Scruffy.ServiceHost.csproj", "Scruffy.ServiceHost/"]
+COPY ["Scruffy.ServiceHosts.Discord/Scruffy.ServiceHosts.Discord.csproj", "Scruffy.ServiceHosts.Discord/"]
 COPY ["Scruffy.Data/Scruffy.Data.csproj", "Scruffy.Data/"]
 COPY ["Scruffy.Services/Scruffy.Services.csproj", "Scruffy.Services/"]
 COPY ["Scruffy.Commands/Scruffy.Commands.csproj", "Scruffy.Commands/"]
-RUN dotnet restore "Scruffy.ServiceHost/Scruffy.ServiceHost.csproj"
+RUN dotnet restore "Scruffy.ServiceHosts.Discord/Scruffy.ServiceHosts.Discord.csproj"
 COPY . .
-WORKDIR "/src/Scruffy.ServiceHost"
-RUN dotnet build "Scruffy.ServiceHost.csproj" -c Release -o /app/build
+WORKDIR "/src/Scruffy.ServiceHosts.Discord"
+RUN dotnet build "Scruffy.ServiceHosts.Discord.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Scruffy.ServiceHost.csproj" -c Release -o /app/publish
+RUN dotnet publish "Scruffy.ServiceHosts.Discord.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Scruffy.ServiceHost.dll"]
+ENTRYPOINT ["dotnet", "Scruffy.ServiceHosts.Discord.dll"]

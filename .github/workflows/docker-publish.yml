@@ -19,7 +19,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
         
     - name: Build the Docker image
-      run: docker build . --file ./Scruffy.ServiceHost/Dockerfile --tag thoenissen/scruffy:latest
+      run: docker build . --file ./Scruffy.ServiceHosts.Docker/Dockerfile --tag thoenissen/scruffy.servicehosts.discord:latest
       
     - name: Docker Push
       run: docker push thoenissen/scruffy

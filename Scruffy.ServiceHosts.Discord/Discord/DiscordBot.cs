@@ -19,7 +19,7 @@ using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Extensions;
 
-namespace Scruffy.ServiceHost.Discord;
+namespace Scruffy.ServiceHosts.Discord.Discord;
 
 /// <summary>
 /// Management of the discord bot
@@ -82,11 +82,11 @@ public sealed class DiscordBot : IAsyncDisposable
     public async Task StartAsync()
     {
         var config = new DiscordSocketConfig
-                     {
-                         LogLevel = LogSeverity.Info,
-                         MessageCacheSize = 100,
-                         GatewayIntents = GatewayIntents.All
-                     };
+        {
+            LogLevel = LogSeverity.Info,
+            MessageCacheSize = 100,
+            GatewayIntents = GatewayIntents.All
+        };
 
         _discordClient = new DiscordSocketClient(config);
         _discordClient.MessageReceived += OnMessageReceived;
@@ -94,24 +94,24 @@ public sealed class DiscordBot : IAsyncDisposable
         _discordClient.Log += OnDiscordClientLog;
 
         var commandConfiguration = new CommandServiceConfig
-                                   {
-                                       LogLevel = LogSeverity.Info,
-                                       CaseSensitiveCommands = false,
-                                       DefaultRunMode = global::Discord.Commands.RunMode.Async,
-                                       IgnoreExtraArgs = false,
-                                       ThrowOnError = true
-                                   };
+        {
+            LogLevel = LogSeverity.Info,
+            CaseSensitiveCommands = false,
+            DefaultRunMode = global::Discord.Commands.RunMode.Async,
+            IgnoreExtraArgs = false,
+            ThrowOnError = true
+        };
 
         _commands = new CommandService(commandConfiguration);
         _commands.CommandExecuted += OnCommandExecuted;
         _commands.Log += OnCommandServiceLog;
 
         var interactionConfiguration = new InteractionServiceConfig
-                                       {
-                                           LogLevel = LogSeverity.Info,
-                                           DefaultRunMode = global::Discord.Interactions.RunMode.Async,
-                                           ThrowOnError = true
-                                       };
+        {
+            LogLevel = LogSeverity.Info,
+            DefaultRunMode = global::Discord.Interactions.RunMode.Async,
+            ThrowOnError = true
+        };
 
         _interaction = new InteractionService(_discordClient, interactionConfiguration);
         _interaction.Log += OnInteractionServiceLog;
