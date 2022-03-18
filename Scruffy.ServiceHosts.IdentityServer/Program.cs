@@ -1,6 +1,8 @@
 ﻿using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
 
+using Microsoft.AspNetCore.HttpOverrides;
+
 using Scruffy.Data.Entity;
 
 using Serilog;
@@ -31,8 +33,8 @@ public class Program
                                                    .Enrich.FromLogContext()
                                                    .ReadFrom.Configuration(ctx.Configuration));
 
+            builder.Services.Configure<ForwardedHeadersOptions>(options => options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedHost);
             builder.Services.AddRazorPages();
-
             builder.Services
                    .AddIdentityServer(options =>
                                       {
@@ -68,16 +70,13 @@ public class Program
                                                AllowedScopes = { "openid", "profile", "api_v1" }
                                            },
                                        });
-
-            builder.Services
-                   .AddAuthentication()
-                   .AddDiscord(options =>
-                               {
-                                   options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-                                   options.ClientId = Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_OAUTH_CLIENT_ID");
-                                   options.ClientSecret = Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_OAUTH_CLIENT_SECRET");
-                               });
-
+            builder.Services.AddAuthentication()
+                            .AddDiscord(options =>
+                                        {
+                                            options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                                            options.ClientId = Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_OAUTH_CLIENT_ID");
+                                            options.ClientSecret = Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_OAUTH_CLIENT_SECRET");
+                                        });
             builder.Services.AddScoped<RepositoryFactory>();
 
             var app = builder.Build();
@@ -91,12 +90,21 @@ public class Program
 
             app.UseStaticFiles();
             app.UseRouting();
+
+            var forwardOptions = new ForwardedHeadersOptions
+                                 {
+                                     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
+                                     RequireHeaderSymmetry = false,
+                                 };
+
+            forwardOptions.KnownNetworks.Clear();
+            forwardOptions.KnownProxies.Clear();
+
+            app.UseForwardedHeaders(forwardOptions);
             app.UseIdentityServer();
             app.UseAuthorization();
-
             app.MapRazorPages()
                .RequireAuthorization();
-
             app.Run();
         }
         catch (Exception ex)

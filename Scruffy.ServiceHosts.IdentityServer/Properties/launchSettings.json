@@ -3,7 +3,7 @@
     "Docker": {
       "commandName": "Docker",
       "DockerfileRunArguments": "--env-file Docker.env",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "{Scheme}://{ServiceHost}:5001",
       "publishAllPorts": true,
       "useSSL": false,

@@ -9,7 +9,7 @@ namespace Scruffy.ServiceHosts.IdentityServer.Pages.Token
     /// <summary>
     /// Token creation
     /// </summary>
-    [Authorize]
+    [Authorize(Roles = "Developer")]
     public class IndexModel : PageModel
     {
         #region Fields
@@ -49,17 +49,16 @@ namespace Scruffy.ServiceHosts.IdentityServer.Pages.Token
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         public async Task<IActionResult> OnGet()
         {
-            if (_environment.IsDevelopment())
-            {
-                var issuer = "http://" + Request.Host.Value;
+            var issuer = "https://" + Request.Host.Value;
 
-                var token = await _identityServerTools.IssueJwtAsync(30000, issuer, User.Claims)
-                                                      .ConfigureAwait(false);
+            var token = await _identityServerTools.IssueClientJwtAsync(Environment.GetEnvironmentVariable("SCRUFFY_WEBAPI_CLIENT_ID"),
+                                                                       30000,
+                                                                       new[] { "api_v1" },
+                                                                       new[] { issuer },
+                                                                       User.Claims)
+                                                  .ConfigureAwait(false);
 
-                return new JsonResult(new { Token = token });
-            }
-
-            return RedirectToPage("/Account/AccessDenied");
+            return new JsonResult(new { Token = token });
         }
 
         #endregion // Methods

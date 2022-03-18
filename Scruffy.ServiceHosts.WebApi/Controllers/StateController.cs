@@ -1,5 +1,6 @@
 using System.Diagnostics;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Scruffy.ServiceHosts.WebApi.Controllers;
@@ -9,6 +10,7 @@ namespace Scruffy.ServiceHosts.WebApi.Controllers;
 /// </summary>
 [ApiController]
 [Route("[controller]")]
+[Authorize]
 public class StateController : ControllerBase
 {
     /// <summary>

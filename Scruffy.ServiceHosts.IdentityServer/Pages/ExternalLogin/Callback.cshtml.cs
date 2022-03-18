@@ -1,8 +1,11 @@
+using System.Collections.Concurrent;
 using System.Security.Claims;
 
 using Duende.IdentityServer;
 using Duende.IdentityServer.Events;
 using Duende.IdentityServer.Services;
+
+using IdentityModel;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -23,6 +26,11 @@ public class Callback : PageModel
     #region Fields
 
     /// <summary>
+    /// Developers
+    /// </summary>
+    private static readonly ConcurrentDictionary<string, byte> _developers;
+
+    /// <summary>
     /// Events
     /// </summary>
     private readonly IEventService _events;
@@ -35,6 +43,20 @@ public class Callback : PageModel
     #endregion // Fields
 
     #region Constructor
+
+    #region Constructor
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    static Callback()
+    {
+        var developers = Environment.GetEnvironmentVariable("SCRUFFY_DEVELOPER_USER_IDS") ?? string.Empty;
+
+        _developers = new ConcurrentDictionary<string, byte>(developers.Split(";").ToDictionary(obj => obj, obj => (byte)0));
+    }
+
+    #endregion // Constructor
 
     /// <summary>
     /// Constructor
@@ -87,11 +109,19 @@ public class Callback : PageModel
             return RedirectToPage("/Account/AccessDenied");
         }
 
-        var identityServerUser = new IdentityServerUser(discordAccountId.ToString())
+        var additionalClaims = new List<Claim>();
+
+        if (_developers.ContainsKey(nameIdentifier))
         {
-            DisplayName = result.Principal.FindFirst(ClaimTypes.Name)?.Value,
-            IdentityProvider = "Discord"
-        };
+            additionalClaims.Add(new Claim(JwtClaimTypes.Role, "Developer"));
+        }
+
+        var identityServerUser = new IdentityServerUser(discordAccountId.ToString())
+                                 {
+                                     DisplayName = result.Principal.FindFirst(ClaimTypes.Name)?.Value,
+                                     IdentityProvider = "Discord",
+                                     AdditionalClaims = additionalClaims
+                                 };
 
         await HttpContext.SignInAsync(identityServerUser)
                          .ConfigureAwait(false);
