@@ -18,8 +18,20 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         
-    - name: Build the Docker image
-      run: docker build . --file ./Scruffy.ServiceHosts.Docker/Dockerfile --tag thoenissen/scruffy.servicehosts.discord:latest
+    - name: Build ServiceHosts Discord
+      run: docker build . --file ./Scruffy.ServiceHosts.Discord/Dockerfile --tag thoenissen/scruffy.servicehosts.discord:latest
       
-    - name: Docker Push
-      run: docker push thoenissen/scruffy
+    - name: Build ServiceHosts IdentityServer
+      run: docker build . --file ./Scruffy.ServiceHosts.IdentityServer/Dockerfile --tag thoenissen/scruffy.servicehosts.identityserver:latest
+
+    - name: Build ServiceHosts WebAPI
+      run: docker build . --file ./Scruffy.ServiceHosts.WebApi/Dockerfile --tag thoenissen/scruffy.servicehosts.webapi:latest
+
+    - name: Push ServiceHosts Discord
+      run: docker push thoenissen/scruffy.servicehosts.discord
+      
+    - name: Push ServiceHosts IdentityServer
+      run: docker push thoenissen/scruffy.servicehosts.identityserver
+
+    - name: Push ServiceHosts WebAPI
+      run: docker push thoenissen/scruffy.servicehosts.webapi
