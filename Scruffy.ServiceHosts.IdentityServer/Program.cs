@@ -54,14 +54,22 @@ public class Program
                                                 {
                                                     new ()
                                                     {
-                                                        ClientId = Environment.GetEnvironmentVariable("SCRUFFY_WEBAPI_CLIENT_ID"),
-                                                        ClientSecrets = { new Secret(Environment.GetEnvironmentVariable("SCRUFFY_WEBAPI_CLIENT_SECRET").Sha256()) },
+                                                        ClientId = Environment.GetEnvironmentVariable("SCRUFFY_WEBAPP_CLIENT_ID"),
+                                                        ClientSecrets = { new Secret(Environment.GetEnvironmentVariable("SCRUFFY_WEBAPP_CLIENT_SECRET").Sha256()) },
                                                         AllowedGrantTypes = GrantTypes.Code,
-                                                        RedirectUris = { Environment.GetEnvironmentVariable("SCRUFFY_WEBAPI_REDIRECT_URI") },
-                                                        FrontChannelLogoutUri = Environment.GetEnvironmentVariable("SCRUFFY_WEBAPI_FRONT_CHANNEL_LOGOUT_URI"),
-                                                        PostLogoutRedirectUris = { Environment.GetEnvironmentVariable("SCRUFFY_WEBAPI_POST_LOGOUT_REDIRECT_URI") },
+                                                        RedirectUris = { Environment.GetEnvironmentVariable("SCRUFFY_WEBAPP_REDIRECT_URI") },
                                                         AllowOfflineAccess = true,
                                                         AllowedScopes = { "openid", "profile", "api_v1" }
+                                                    },
+                                                    new ()
+                                                    {
+                                                        ClientId = Environment.GetEnvironmentVariable("SCRUFFY_OPENSEARCH_CLIENT_ID"),
+                                                        ClientSecrets = { new Secret(Environment.GetEnvironmentVariable("SCRUFFY_OPENSEARCH_CLIENT_SECRET").Sha256()) },
+                                                        AllowedGrantTypes = GrantTypes.Code,
+                                                        RedirectUris = { Environment.GetEnvironmentVariable("SCRUFFY_OPENSEARCH_REDIRECT_URI") },
+                                                        AllowOfflineAccess = true,
+                                                        AllowedScopes = { "openid", "profile", "api_v1" },
+                                                        RequirePkce = false
                                                     },
                                                 });
             builder.Services.AddAuthentication()
