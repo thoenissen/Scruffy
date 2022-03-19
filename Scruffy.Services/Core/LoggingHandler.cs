@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Reflection;
 
 using Discord;
 using Discord.Commands;
@@ -62,10 +63,30 @@ public class LoggingService
     /// </summary>
     private LoggingService()
     {
+    }
+
+    #endregion // Constructor
+
+    #region Methods
+
+    /// <summary>
+    /// Initialize
+    /// </summary>
+    /// <param name="configurationAction">Additional configurations</param>
+    public static void Initialize(Func<LoggerConfiguration, ILogger> configurationAction = null)
+    {
         var environment = Environment.GetEnvironmentVariable("SCRUFFY_ENVIRONMENT");
         var openSearch = Environment.GetEnvironmentVariable("SCRUFFY_OPENSEARCH");
 
-        var configuration =  new LoggerConfiguration().Enrich.WithProperty("Environment", environment);
+        var configuration = new LoggerConfiguration();
+
+        configuration.Enrich.WithProperty("Environment", environment);
+
+        configuration.Enrich.WithProperty("Application",
+                                          Assembly.GetEntryAssembly()
+                                                  ?.GetName()
+                                                  .Name
+                                       ?? "Unknown Application");
 
         if (string.IsNullOrWhiteSpace(environment) == false
          || string.IsNullOrWhiteSpace(openSearch) == false)
@@ -73,6 +94,7 @@ public class LoggingService
             Func<ConnectionConfiguration, ConnectionConfiguration> modifyConnectionSettings = null;
 
             var user = Environment.GetEnvironmentVariable("SCRUFFY_OPENSEARCH_USER");
+
             if (string.IsNullOrWhiteSpace(user) == false)
             {
                 modifyConnectionSettings = obj =>
@@ -100,12 +122,15 @@ public class LoggingService
         configuration.WriteTo
                      .Console(outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}");
 
-        Log.Logger = configuration.CreateLogger();
+        if (configurationAction != null)
+        {
+            Log.Logger = configurationAction.Invoke(configuration);
+        }
+        else
+        {
+            Log.Logger = configuration.CreateLogger();
+        }
     }
-
-    #endregion // Constructor
-
-    #region Methods
 
     /// <summary>
     /// Adding a log entry

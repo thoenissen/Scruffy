@@ -4,7 +4,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>cb003099-2492-4ad3-91f2-cb4820381e4f</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-	<DockerfileTag>scruffy.servicehost.identityserver</DockerfileTag>
+	<DockerfileTag>scruffy.servicehosts.identityserver</DockerfileTag>
   </PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<DocumentationFile>bin\Debug\Scruffy.ServiceHosts.IdentityServer.xml</DocumentationFile>
@@ -20,7 +20,7 @@
   <ItemGroup>
     <PackageReference Include="AspNet.Security.OAuth.Discord" Version="6.0.4" />
     <PackageReference Include="Duende.IdentityServer" Version="6.0.4" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.15.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
 	    <PrivateAssets>all</PrivateAssets>
@@ -29,5 +29,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Scruffy.Data\Scruffy.Data.csproj" />
+    <ProjectReference Include="..\Scruffy.Services\Scruffy.Services.csproj" />
   </ItemGroup>
 </Project>

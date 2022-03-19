@@ -31,6 +31,7 @@ public class Program
 
         try
         {
+            LoggingService.Initialize();
             LoggingService.AddServiceLogEntry(LogEntryLevel.Information, nameof(Program), "Start", null);
 
             var discordBot = new DiscordBot();
