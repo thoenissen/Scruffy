@@ -347,6 +347,7 @@ public class ScruffyDbContext : DbContext
         modelBuilder.Entity<GuildRankCurrentPointsEntity>();
         modelBuilder.Entity<GuildDiscordActivityPointsAssignmentEntity>();
         modelBuilder.Entity<GuildDonationEntity>();
+        modelBuilder.Entity<GuildUserConfigurationEntity>();
 
         modelBuilder.Entity<GuildLogEntryEntity>()
                     .HasKey(obj => new
@@ -431,6 +432,13 @@ public class ScruffyDbContext : DbContext
                                    {
                                        obj.GuildId,
                                        obj.LogEntryId
+                                   });
+
+        modelBuilder.Entity<GuildUserConfigurationEntity>()
+                    .HasKey(obj => new
+                                   {
+                                       obj.GuildId,
+                                       obj.UserId
                                    });
 
         // Games

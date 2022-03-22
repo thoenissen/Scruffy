@@ -714,6 +714,11 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         /// </summary>
         public ItemsService ItemsService { get; set; }
 
+        /// <summary>
+        /// User configuration
+        /// </summary>
+        public GuildUserConfigurationService GuildUserConfigurationService { get; set; }
+
         #endregion // Properties
 
         #region Methods
@@ -728,6 +733,16 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [RequireAdministratorPermissions]
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public Task StartItemsConfiguration(int id) => ItemsService.ConfigureItem(Context, id);
+
+        /// <summary>
+        /// User configuration
+        /// </summary>
+        /// <param name="user">User</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("user")]
+        [RequireContext(ContextType.Guild)]
+        [RequireAdministratorPermissions]
+        public Task StartUserConfiguration(IGuildUser user) => GuildUserConfigurationService.ConfigureUser(Context, user);
 
         #endregion // Methods
     }

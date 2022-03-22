@@ -54,6 +54,14 @@ public class Program
                                                 {
                                                     new ()
                                                     {
+                                                        ClientId = Environment.GetEnvironmentVariable("SCRUFFY_WEBAPI_CLIENT_ID"),
+                                                        ClientSecrets = { new Secret(Environment.GetEnvironmentVariable("SCRUFFY_WEBAPI_CLIENT_SECRET").Sha256()) },
+                                                        AllowedGrantTypes = GrantTypes.ClientCredentials,
+                                                        AllowOfflineAccess = true,
+                                                        AllowedScopes = { "openid", "profile", "api_v1" }
+                                                    },
+                                                    new ()
+                                                    {
                                                         ClientId = Environment.GetEnvironmentVariable("SCRUFFY_WEBAPP_CLIENT_ID"),
                                                         ClientSecrets = { new Secret(Environment.GetEnvironmentVariable("SCRUFFY_WEBAPP_CLIENT_SECRET").Sha256()) },
                                                         AllowedGrantTypes = GrantTypes.Code,

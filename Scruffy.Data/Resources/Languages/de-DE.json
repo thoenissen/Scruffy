@@ -207,7 +207,7 @@
       "Message": "Gib bitte den zu verwendenen Link ein."
     },
     "CommandContextContainer": {
-      "UnmetPrecondition": "Der Befehl kann hier nicht ausgeführt werden oder dir fehlen die entsprechenden Berechtigungen." 
+      "UnmetPrecondition": "Der Befehl kann hier nicht ausgeführt werden oder dir fehlen die entsprechenden Berechtigungen."
     },
     "CommandHelpService": {
       "Help": "Befehlshilfe",
@@ -453,6 +453,15 @@
     "FractalLfgService": {
       "BuildingProgress": "Erstellung...",
       "CreationCompletedMessage": "Erstellung abgechlossen! Alle Nachrichten der Erstellung werden in 30 Sekunden gelöscht."
+    },
+    "GuildUserConfigurationService": {
+      "UserConfiguration": "Benutzerkonfiguration",
+      "Description": "Mit den folgenden Assistenten kannst du die Benutzereinstellungen ändern. Wähle dafür eine der folgenden Optionen aus.",
+      "User": "Benutzer",
+      "IsFixedRank": "Ausgeschlossen von Rankänderungen",
+      "IsInactive": "Inaktiv",
+      "Configuration": "Konfiguration",
+      "PlaceHolder": "Wähle eine der folgenden Optionen aus..."
     },
     "GuildRankVisualizationService": {
       "RankingOverview": "Punkteübersicht",
