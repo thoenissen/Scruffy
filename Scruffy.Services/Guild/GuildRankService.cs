@@ -297,7 +297,7 @@ public class GuildRankService : LocatedServiceBase
                 await foreach (var members in discordServer.GetUsersAsync()
                                                            .ConfigureAwait(false))
                 {
-                    foreach (var member in members)
+                    foreach (var member in members.Where(obj => obj.IsBot == false))
                     {
                         var assignedRoleId = default(ulong?);
 
