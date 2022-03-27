@@ -789,5 +789,69 @@ public class GuildExportService : LocatedServiceBase
         }
     }
 
+    /// <summary>
+    /// Exporting current guild rank assignments
+    /// </summary>
+    /// <param name="commandContext">Command context</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public async Task ExportGuildRankAssignments(CommandContextContainer commandContext)
+    {
+        var members = new Dictionary<ulong, string>();
+
+        foreach (var user in await commandContext.Guild
+                                                 .GetUsersAsync()
+                                                 .ConfigureAwait(false))
+        {
+            members[user.Id] = user.TryGetDisplayName();
+        }
+
+        var memoryStream = new MemoryStream();
+
+        await using (memoryStream.ConfigureAwait(false))
+        {
+            var writer = new StreamWriter(memoryStream);
+
+            await using (writer.ConfigureAwait(false))
+            {
+                await writer.WriteLineAsync("User;Role;RoleOrder;Assignment")
+                            .ConfigureAwait(false);
+
+                using (var dbFactory = RepositoryFactory.CreateInstance())
+                {
+                    var discordAccounts = dbFactory.GetRepository<DiscordAccountRepository>()
+                                                   .GetQuery()
+                                                   .Select(obj => obj);
+
+                    foreach (var entry in dbFactory.GetRepository<GuildRankAssignmentRepository>()
+                                                   .GetQuery()
+                                                   .Where(obj => obj.Guid.DiscordServerId == commandContext.Guild.Id)
+                                                   .Select(obj => new
+                                                                  {
+                                                                      DiscordUserId = discordAccounts.Where(obj2 => obj2.UserId == obj.UserId)
+                                                                                                     .Select(obj2 => (ulong?)obj2.Id)
+                                                                                                     .FirstOrDefault(),
+                                                                      obj.Rank.InGameName,
+                                                                      obj.Rank.Order,
+                                                                      obj.TimeStamp
+                                                                  })
+                                                   .ToList())
+                    {
+                        await writer.WriteLineAsync($"{(members.TryGetValue(entry.DiscordUserId ?? 0, out var userDisplayName) ? userDisplayName : "Unknown")};{entry.InGameName};{entry.Order};{entry.TimeStamp.ToString("g", LocalizationGroup.CultureInfo)}")
+                                    .ConfigureAwait(false);
+                    }
+                }
+
+                await writer.FlushAsync()
+                            .ConfigureAwait(false);
+
+                memoryStream.Position = 0;
+
+                await commandContext.Channel
+                                    .SendFileAsync(new FileAttachment(memoryStream, "assignments.csv"))
+                                    .ConfigureAwait(false);
+            }
+        }
+    }
+
     #endregion // Methods
 }

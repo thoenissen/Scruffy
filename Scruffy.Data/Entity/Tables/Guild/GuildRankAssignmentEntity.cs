@@ -46,6 +46,12 @@ namespace Scruffy.Data.Entity.Tables.Guild
         [ForeignKey(nameof(UserId))]
         public virtual UserEntity User { get; set; }
 
+        /// <summary>
+        /// Rank
+        /// </summary>
+        [ForeignKey(nameof(RankId))]
+        public virtual GuildRankEntity Rank { get; set; }
+
         #endregion // Navigation properties
 
         #endregion // Properties

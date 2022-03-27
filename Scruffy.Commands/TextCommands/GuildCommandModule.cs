@@ -690,6 +690,19 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public Task ExportCustomValues() => ItemsService.ExportCustomValues(Context);
 
+        /// <summary>
+        /// Current rank assignments
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("assignments")]
+        [RequireContext(ContextType.Guild)]
+        [RequireAdministratorPermissions]
+        public async Task ExportCurrentRankAssignments()
+        {
+            await GuildExportService.ExportGuildRankAssignments(Context)
+                                    .ConfigureAwait(false);
+        }
+
         #endregion // Methods
     }
 
