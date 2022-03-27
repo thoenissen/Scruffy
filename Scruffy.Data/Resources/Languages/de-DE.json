@@ -559,7 +559,8 @@
     "GuildLogImportJob": {
       "MemberJoined": "**{0}** ist der Gilde beigetreten.",
       "MemberLeft": "**{0}** hat die Gilde verlassen.",
-      "MemberKicked": "**{0}** wurde von **{1}** aus der Gilde geworfen."
+      "MemberKicked": "**{0}** wurde von **{1}** aus der Gilde geworfen.",
+      "MemberRankChanged": "Der Rang von **{1}** wurde durch **{0}** von **{2}** auf **{3}** geändert."
     },
     "GuildRankDeletionDialogElement": {
       "DeletePrompt": "Bist du sicher, dass der Rang gelöscht werden soll?"

@@ -116,7 +116,7 @@ public class GuildLogImportJob : LocatedAsyncJob
 
                                             case GuildLogEntryEntity.Types.RankChange:
                                                 {
-                                                    isProcessed = await OnRankChanged(guildRankService.Value, guild.Id, entry).ConfigureAwait(false);
+                                                    isProcessed = await OnRankChanged(discordChannel, guildRankService.Value, guild.Id, entry).ConfigureAwait(false);
                                                 }
                                                 break;
                                         }
@@ -191,13 +191,24 @@ public class GuildLogImportJob : LocatedAsyncJob
     /// <summary>
     /// Rank changed
     /// </summary>
+    /// <param name="discordChannel">Discord channel</param>
     /// <param name="guildRankService">Guild rank service</param>
     /// <param name="guildId">Id of the guild</param>
     /// <param name="entry">Entry</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private Task<bool> OnRankChanged(GuildRankService guildRankService, long guildId, GuildLogEntry entry)
+    private async Task<bool> OnRankChanged(IMessageChannel discordChannel, GuildRankService guildRankService, long guildId, GuildLogEntry entry)
     {
-        return guildRankService.RefreshDiscordRank(guildId, entry.User, entry.NewRank);
+        var refreshTask = guildRankService.RefreshDiscordRank(guildId, entry.User, entry.NewRank);
+
+        if (discordChannel != null)
+        {
+            await discordChannel.SendMessageAsync(LocalizationGroup.GetFormattedText("MemberRankChanged", "**{0}** changed the rank of **{1}** from **{2}** to **{3}**.", entry.ChangedBy, entry.User, entry.OldRank, entry.NewRank))
+                                .ConfigureAwait(false);
+        }
+
+        await refreshTask.ConfigureAwait(false);
+
+        return true;
     }
 
     #endregion // LocatedAsyncJob
