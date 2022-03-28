@@ -778,6 +778,11 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         /// </summary>
         public GuildRankVisualizationService GuildRankVisualizationService { get; set; }
 
+        /// <summary>
+        ///  Guild rank service
+        /// </summary>
+        public GuildRankService GuildRankService { get; set; }
+
         #endregion // Properties
 
         #region Methods
@@ -809,6 +814,15 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [RequireAdministratorPermissions]
         [RequireContext(ContextType.Guild)]
         public Task PostPersonalOverview(IGuildUser user) => GuildRankVisualizationService.PostPersonalOverview(Context, user);
+
+        /// <summary>
+        /// Check assignments
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        [Command("check")]
+        [RequireAdministratorPermissions]
+        [RequireContext(ContextType.Guild)]
+        public Task PostAssignmentOverview() => GuildRankService.CheckCurrentAssignments(Context, true);
 
         #endregion // Methods
     }

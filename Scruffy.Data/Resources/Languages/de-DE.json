@@ -596,6 +596,10 @@
       "ChooseDescription": "Wähle bitte einen der folgenden Ränge aus:",
       "RanksField": "Ränge"
     },
+    "GuildRankService": {
+      "RequiredRankChangesTitle": "Erforderliche Rangänderungen",
+      "RequiredRankChangesDescription": "Die folgenden Ränge müssen im Spiel angepasst werden:" 
+    },
     "GuildRankSetupDialogElement": {
       "ChooseCommandTitle": "Gildenrangkonfiguration",
       "ChooseCommandDescription": "Mit diesem Assistenten kannst du die Gildenränge bearbeiten. Die folgenden Ränge wurden bereits erstellt:",

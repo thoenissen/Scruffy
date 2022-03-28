@@ -1,4 +1,8 @@
-﻿using Discord.WebSocket;
+﻿using System.Linq;
+
+using Discord;
+using Discord.Commands;
+using Discord.WebSocket;
 
 using Microsoft.Data.SqlClient;
 
@@ -9,6 +13,7 @@ using Scruffy.Data.Entity.Repositories.GuildWars2.Account;
 using Scruffy.Data.Entity.Repositories.GuildWars2.Guild;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord.Interfaces;
 using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.Guild;
@@ -25,6 +30,11 @@ public class GuildRankService : LocatedServiceBase
     /// </summary>
     private readonly DiscordSocketClient _discordClient;
 
+    /// <summary>
+    /// Repository factory
+    /// </summary>
+    private readonly RepositoryFactory _repositoryFactory;
+
     #endregion // Fields
 
     #region Constructor
@@ -34,10 +44,12 @@ public class GuildRankService : LocatedServiceBase
     /// </summary>
     /// <param name="localizationService">Localization service</param>
     /// <param name="discordClient">Discord-Client</param>
-    public GuildRankService(LocalizationService localizationService, DiscordSocketClient discordClient)
+    /// <param name="repositoryFactory">Repository factory</param>
+    public GuildRankService(LocalizationService localizationService, DiscordSocketClient discordClient, RepositoryFactory repositoryFactory)
         : base(localizationService)
     {
         _discordClient = discordClient;
+        _repositoryFactory = repositoryFactory;
     }
 
     #endregion // Constructor
@@ -983,6 +995,118 @@ public class GuildRankService : LocatedServiceBase
                                .ConfigureAwait(false);
             }
         }
+    }
+
+    /// <summary>
+    /// Post assignment overview
+    /// </summary>
+    /// <param name="commandContext">Command context</param>
+    /// <param name="isLiveDetermination">Is live rank determination?</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public async  Task CheckCurrentAssignments(IContextContainer commandContext, bool isLiveDetermination)
+    {
+        Dictionary<string, string> currentRanks;
+
+        if (isLiveDetermination)
+        {
+            var guild = _repositoryFactory.GetRepository<GuildRepository>()
+                                          .GetQuery()
+                                          .Where(obj => obj.DiscordServerId == commandContext.Guild.Id)
+                                          .Select(obj => new
+                                                         {
+                                                             obj.GuildId,
+                                                             obj.ApiKey
+                                                         })
+                                          .First();
+
+            var connector = new GuidWars2ApiConnector(guild.ApiKey);
+            await using (connector.ConfigureAwait(false))
+            {
+                var members = await connector.GetGuildMembers(guild.GuildId)
+                                             .ConfigureAwait(false);
+
+                currentRanks = members.ToDictionary(obj => obj.Name, obj => obj.Rank);
+            }
+        }
+        else
+        {
+            var today = DateTime.Today;
+
+            currentRanks = _repositoryFactory.GetRepository<GuildWarsGuildHistoricMemberRepository>()
+                                              .GetQuery()
+                                              .Where(obj => obj.Date == today
+                                                         && obj.Guild.DiscordServerId == commandContext.Guild.Id)
+                                              .ToDictionary(obj => obj.Name, obj => obj.Rank);
+        }
+
+        var guildWarsAccounts = _repositoryFactory.GetRepository<GuildWarsAccountRepository>()
+                                                  .GetQuery()
+                                                  .Select(obj => obj);
+
+        var assignedRanks = _repositoryFactory.GetRepository<GuildRankAssignmentRepository>()
+                                              .GetQuery()
+                                              .Where(obj => obj.Guid.DiscordServerId == commandContext.Guild.Id)
+                                              .Join(guildWarsAccounts,
+                                                    obj => obj.UserId,
+                                                    obj => obj.UserId,
+                                                    (obj1, obj2) => new
+                                                                    {
+                                                                        obj2.Name,
+                                                                        obj1.Rank
+                                                                    })
+                                              .ToDictionary(obj => obj.Name, obj => obj.Rank);
+
+        var ranks = _repositoryFactory.GetRepository<GuildRankRepository>()
+                                      .GetQuery()
+                                      .Where(obj => obj.Guild.DiscordServerId == commandContext.Guild.Id)
+                                      .Select(obj => new
+                                                     {
+                                                         obj.InGameName,
+                                                         obj.Order
+                                                     });
+
+        var invalidRanks = new List<(string Rank, string Name, int Order)>();
+
+        foreach (var currentRank in currentRanks)
+        {
+            if (assignedRanks.TryGetValue(currentRank.Key, out var assignedRank))
+            {
+                if (currentRank.Value != assignedRank.InGameName)
+                {
+                    var rank = ranks.First(obj => obj.InGameName == assignedRank.InGameName);
+
+                    invalidRanks.Add((rank.InGameName, currentRank.Key, rank.Order));
+                }
+            }
+            else
+            {
+                var rank = ranks.OrderByDescending(obj => obj.Order)
+                                .First();
+
+                if (currentRank.Value != rank.InGameName)
+                {
+                    invalidRanks.Add((rank.InGameName, currentRank.Key, rank.Order));
+                }
+            }
+        }
+
+        var embed = new EmbedBuilder().WithTitle(LocalizationGroup.GetText("RequiredRankChangesTitle", "Required rank changes"))
+                                      .WithDescription(LocalizationGroup.GetText("RequiredRankChangesDescription", "The following ranks have to be changed in game:"));
+
+        foreach (var rank in invalidRanks.OrderBy(obj => obj.Order).GroupBy(obj => obj.Rank))
+        {
+            var stringBuilder = new StringBuilder();
+
+            foreach (var user in rank.OrderBy(obj => obj.Name))
+            {
+                stringBuilder.AppendLine(user.Name);
+            }
+
+            embed.AddField(rank.Key, stringBuilder.ToString());
+        }
+
+        await commandContext.ReplyAsync(embed: embed.Build())
+                            .ConfigureAwait(false);
     }
 
     #endregion // Methods
