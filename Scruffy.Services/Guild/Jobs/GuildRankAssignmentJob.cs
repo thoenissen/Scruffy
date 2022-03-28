@@ -164,6 +164,12 @@ namespace Scruffy.Services.Guild.Jobs
 
                     --currentAssignment.Slots;
                 }
+
+                _repositoryFactory.GetRepository<GuildRankAssignmentRepository>()
+                                  .RemoveRange(obj => accountsQuery.Any(obj2 => obj2.UserId == obj.UserId
+                                                                             && guildMemberQuery.Any(obj3 => obj3.Name == obj2.Name
+                                                                                                          && obj3.GuildId == obj.GuildId
+                                                                                                          && obj3.Date == today)) == false);
             }
 
             return Task.CompletedTask;
