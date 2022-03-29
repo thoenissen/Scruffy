@@ -28,6 +28,7 @@ internal class GuildRankingBatchJob : BatchJob
                    typeof(GuildDonationCalculationJob),
                    typeof(GuildRankCurrentPointsJob),
                    typeof(GuildRankAssignmentJob),
+                   typeof(GuildRankChangeNotificationJob),
                    typeof(GuildSpecialRankPointsJob)
                })
     {

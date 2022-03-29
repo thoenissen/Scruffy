@@ -99,6 +99,7 @@ public class GuildConfigurationService : LocatedServiceBase
                                            && obj.Type == type,
                                        obj =>
                                        {
+                                           obj.GuildId = guildId;
                                            obj.Type = type;
                                            obj.DiscordChannelId = commandContext.Channel.Id;
                                        });

@@ -518,6 +518,9 @@
       "ChooseRoleTitle": "Wähle die Rolle aus, die gelöscht werden soll:",
       "ChooseRoleDescription": "Wähle eine der folgenden Rollen aus..."
     },
+    "GuildRankingCommandModule": {
+      "NoChangedRequired": "Es sind keine Rangänderungen erforderlich." 
+    },
     "GuildActivityDiscordVoiceSetupDialogElement": {
       "CommandTitle": "Befehle",
       "ChooseCommandTitle": "Konfiguration der Discordsprachaktivität",
@@ -598,7 +601,7 @@
     },
     "GuildRankService": {
       "RequiredRankChangesTitle": "Erforderliche Rangänderungen",
-      "RequiredRankChangesDescription": "Die folgenden Ränge müssen im Spiel angepasst werden:" 
+      "RequiredRankChangesDescription": "Die folgenden Ränge müssen im Spiel angepasst werden:"
     },
     "GuildRankSetupDialogElement": {
       "ChooseCommandTitle": "Gildenrangkonfiguration",

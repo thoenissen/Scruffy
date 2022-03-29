@@ -3,6 +3,8 @@
 using Discord;
 using Discord.Commands;
 
+using Scruffy.Data.Entity;
+using Scruffy.Data.Entity.Repositories.Guild;
 using Scruffy.Data.Enumerations.Guild;
 using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Attributes;
@@ -91,6 +93,19 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
     public async Task SetGuildLogNotification()
     {
         await ConfigurationService.SetNotificationChannel(Context, GuildChannelConfigurationType.GuildLogNotification)
+                                  .ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Setting the guild log notification
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [Command("setRankNotification")]
+    [RequireContext(ContextType.Guild)]
+    [RequireAdministratorPermissions]
+    public async Task SetRankNotification()
+    {
+        await ConfigurationService.SetNotificationChannel(Context, GuildChannelConfigurationType.GuildRankChanges)
                                   .ConfigureAwait(false);
     }
 
@@ -822,7 +837,29 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("check")]
         [RequireAdministratorPermissions]
         [RequireContext(ContextType.Guild)]
-        public Task PostAssignmentOverview() => GuildRankService.CheckCurrentAssignments(Context, true);
+        public async Task PostAssignmentOverview()
+        {
+            using (var repositoryFactory = RepositoryFactory.CreateInstance())
+            {
+                var embed = await GuildRankService.CheckCurrentAssignments(repositoryFactory.GetRepository<GuildRepository>()
+                                                                                            .GetQuery()
+                                                                                            .Where(obj => obj.DiscordServerId == Context.Guild.Id)
+                                                                                            .Select(obj => obj.Id)
+                                                                                            .First(),
+                                                                           true)
+                                                  .ConfigureAwait(false);
+                if (embed != null)
+                {
+                    await Context.ReplyAsync(embed: embed)
+                                 .ConfigureAwait(false);
+                }
+                else
+                {
+                    await Context.ReplyAsync(LocalizationGroup.GetText("NoChangedRequired", "No rank changed are required."))
+                                 .ConfigureAwait(false);
+                }
+            }
+        }
 
         #endregion // Methods
     }

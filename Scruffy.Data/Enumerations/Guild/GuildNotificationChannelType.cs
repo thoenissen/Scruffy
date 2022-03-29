@@ -28,5 +28,10 @@ public enum GuildChannelConfigurationType
     /// <summary>
     /// Guild log import notifications
     /// </summary>
-    GuildLogNotification = 3000
+    GuildLogNotification = 3000,
+
+    /// <summary>
+    /// Guild rank changes
+    /// </summary>
+    GuildRankChanges = 4000,
 }

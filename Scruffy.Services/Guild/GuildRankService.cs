@@ -1,7 +1,4 @@
-﻿using System.Linq;
-
-using Discord;
-using Discord.Commands;
+﻿using Discord;
 using Discord.WebSocket;
 
 using Microsoft.Data.SqlClient;
@@ -13,7 +10,6 @@ using Scruffy.Data.Entity.Repositories.GuildWars2.Account;
 using Scruffy.Data.Entity.Repositories.GuildWars2.Guild;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
-using Scruffy.Services.Discord.Interfaces;
 using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.Guild;
@@ -104,13 +100,17 @@ public class GuildRankService : LocatedServiceBase
         {
             var isChanged = false;
 
+            var today = DateTime.Today;
+
             dbFactory.GetRepository<GuildWarsGuildHistoricMemberRepository>()
                      .AddOrRefresh(obj => obj.GuildId == guildId
-                                       && obj.Name == accountName,
+                                       && obj.Name == accountName
+                                       && obj.Date == today,
                                    obj =>
                                    {
                                        obj.GuildId = guildId;
                                        obj.Name = accountName;
+                                       obj.Date = today;
 
                                        isChanged = obj.Rank != rankName;
 
@@ -1000,10 +1000,10 @@ public class GuildRankService : LocatedServiceBase
     /// <summary>
     /// Post assignment overview
     /// </summary>
-    /// <param name="commandContext">Command context</param>
+    /// <param name="guildId">Guild id</param>
     /// <param name="isLiveDetermination">Is live rank determination?</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async  Task CheckCurrentAssignments(IContextContainer commandContext, bool isLiveDetermination)
+    public async Task<Embed> CheckCurrentAssignments(long guildId, bool isLiveDetermination)
     {
         Dictionary<string, string> currentRanks;
 
@@ -1011,7 +1011,7 @@ public class GuildRankService : LocatedServiceBase
         {
             var guild = _repositoryFactory.GetRepository<GuildRepository>()
                                           .GetQuery()
-                                          .Where(obj => obj.DiscordServerId == commandContext.Guild.Id)
+                                          .Where(obj => obj.Id == guildId)
                                           .Select(obj => new
                                                          {
                                                              obj.GuildId,
@@ -1035,7 +1035,7 @@ public class GuildRankService : LocatedServiceBase
             currentRanks = _repositoryFactory.GetRepository<GuildWarsGuildHistoricMemberRepository>()
                                               .GetQuery()
                                               .Where(obj => obj.Date == today
-                                                         && obj.Guild.DiscordServerId == commandContext.Guild.Id)
+                                                         && obj.GuildId == guildId)
                                               .ToDictionary(obj => obj.Name, obj => obj.Rank);
         }
 
@@ -1045,7 +1045,7 @@ public class GuildRankService : LocatedServiceBase
 
         var assignedRanks = _repositoryFactory.GetRepository<GuildRankAssignmentRepository>()
                                               .GetQuery()
-                                              .Where(obj => obj.Guid.DiscordServerId == commandContext.Guild.Id)
+                                              .Where(obj => obj.GuildId == guildId)
                                               .Join(guildWarsAccounts,
                                                     obj => obj.UserId,
                                                     obj => obj.UserId,
@@ -1058,7 +1058,7 @@ public class GuildRankService : LocatedServiceBase
 
         var ranks = _repositoryFactory.GetRepository<GuildRankRepository>()
                                       .GetQuery()
-                                      .Where(obj => obj.Guild.DiscordServerId == commandContext.Guild.Id)
+                                      .Where(obj => obj.GuildId == guildId)
                                       .Select(obj => new
                                                      {
                                                          obj.InGameName,
@@ -1090,23 +1090,27 @@ public class GuildRankService : LocatedServiceBase
             }
         }
 
-        var embed = new EmbedBuilder().WithTitle(LocalizationGroup.GetText("RequiredRankChangesTitle", "Required rank changes"))
-                                      .WithDescription(LocalizationGroup.GetText("RequiredRankChangesDescription", "The following ranks have to be changed in game:"));
-
-        foreach (var rank in invalidRanks.OrderBy(obj => obj.Order).GroupBy(obj => obj.Rank))
+        if (invalidRanks.Any())
         {
-            var stringBuilder = new StringBuilder();
+            var embed = new EmbedBuilder().WithTitle(LocalizationGroup.GetText("RequiredRankChangesTitle", "Required rank changes"))
+                                          .WithDescription(LocalizationGroup.GetText("RequiredRankChangesDescription", "The following ranks have to be changed in game:"));
 
-            foreach (var user in rank.OrderBy(obj => obj.Name))
+            foreach (var rank in invalidRanks.OrderBy(obj => obj.Order).GroupBy(obj => obj.Rank))
             {
-                stringBuilder.AppendLine(user.Name);
+                var stringBuilder = new StringBuilder();
+
+                foreach (var user in rank.OrderBy(obj => obj.Name))
+                {
+                    stringBuilder.AppendLine(user.Name);
+                }
+
+                embed.AddField(rank.Key, stringBuilder.ToString());
             }
 
-            embed.AddField(rank.Key, stringBuilder.ToString());
+            return embed.Build();
         }
 
-        await commandContext.ReplyAsync(embed: embed.Build())
-                            .ConfigureAwait(false);
+        return null;
     }
 
     #endregion // Methods
