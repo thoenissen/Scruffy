@@ -429,7 +429,7 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
                                                          && obj.Type == GuildLogEntryEntity.Types.Upgrade
                                                          && obj.Action == GuildLogEntryEntity.Actions.Queued
                                                          && (obj.User == null
-                                                          || logEntries.Any(obj2 => obj2.Id > obj.Id
+                                                          || logEntries.Any(obj2 => obj2.Time > obj.Time
                                                                                  && obj2.UpgradeId == obj.UpgradeId
                                                                                  && obj2.Type == GuildLogEntryEntity.Types.Upgrade
                                                                                  && obj2.Action == GuildLogEntryEntity.Actions.Completed
