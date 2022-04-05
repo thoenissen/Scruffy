@@ -386,6 +386,7 @@ public class GuildRankService : LocatedServiceBase
                                                                  ON [Member].[Name] = [GuildWarsAccount].[Name]
                                                           LEFT JOIN [GuildWarsAccountDailyLoginChecks] AS [DailyLogin]
                                                                  ON [Member].[Name] = [DailyLogin].[Name]
+                                                                AND [DateRange].[Value] >= [DailyLogin].[Date]
                                                          
                                                               WHERE [Member].[GuildId] = @guildId
                                                          
@@ -1093,7 +1094,10 @@ public class GuildRankService : LocatedServiceBase
         if (invalidRanks.Any())
         {
             var embed = new EmbedBuilder().WithTitle(LocalizationGroup.GetText("RequiredRankChangesTitle", "Required rank changes"))
-                                          .WithDescription(LocalizationGroup.GetText("RequiredRankChangesDescription", "The following ranks have to be changed in game:"));
+                                          .WithDescription(LocalizationGroup.GetText("RequiredRankChangesDescription", "The following ranks have to be changed in game:"))
+                                          .WithColor(Color.Green)
+                                          .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
+                                          .WithTimestamp(DateTime.Now);
 
             foreach (var rank in invalidRanks.OrderBy(obj => obj.Order).GroupBy(obj => obj.Rank))
             {
