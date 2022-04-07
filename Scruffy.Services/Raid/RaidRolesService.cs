@@ -73,11 +73,20 @@ public class RaidRolesService : LocatedServiceBase
 
                     foreach (var subRole in role.SubRoles)
                     {
+                        var line = "> " + DiscordEmoteService.GetGuildEmote(commandContextContainer.Client, subRole.DiscordEmojiId) + ' ' + subRole.Description + '\n';
+                        if (line.Length + roles.Length > roles.Capacity)
+                        {
+                            builder.AddField($"{DiscordEmoteService.GetGuildEmote(commandContextContainer.Client, role.DiscordEmojiId)} {role.Description}", roles.ToString());
+
+                            roles = new StringBuilder(1024, 1024);
+                        }
+
+                        roles.Append(line);
+                    }
+
+                    if (roles.Length == 0)
+                    {
                         roles.Append("> ");
-                        roles.Append(DiscordEmoteService.GetGuildEmote(commandContextContainer.Client, subRole.DiscordEmojiId));
-                        roles.Append(' ');
-                        roles.Append(subRole.Description);
-                        roles.Append('\n');
                     }
 
                     roles.Append('\n');
@@ -123,7 +132,7 @@ public class RaidRolesService : LocatedServiceBase
 
         var userReaction = await userReactionTask.ConfigureAwait(false);
 
-        if (userReaction?.Emote is GuildEmote emote)
+        if (userReaction?.Emote is Emote emote)
         {
             if (emote.Name == addEmote.Name)
             {
@@ -155,7 +164,7 @@ public class RaidRolesService : LocatedServiceBase
                                                     .WaitForReactionAsync(currentBotMessage, commandContextContainer.User)
                                                     .ConfigureAwait(false);
 
-        if (reaction?.Emote is GuildEmote guildEmote)
+        if (reaction?.Emote is Emote guildEmote)
         {
             var roleData = new RaidRoleEntity
                            {
@@ -210,7 +219,7 @@ public class RaidRolesService : LocatedServiceBase
                                                                     .WaitForReactionAsync(currentBotMessage, commandContextContainer.User)
                                                                     .ConfigureAwait(false);
 
-                            if (reaction?.Emote is GuildEmote roleEmote)
+                            if (reaction?.Emote is Emote roleEmote)
                             {
                                 var subRoleData = new RaidRoleEntity
                                                   {
@@ -445,7 +454,7 @@ public class RaidRolesService : LocatedServiceBase
                                                     .WaitForReactionAsync(message, commandContextContainer.Member)
                                                     .ConfigureAwait(false);
 
-        if (response?.Emote is GuildEmote guildEmote)
+        if (response?.Emote is Emote guildEmote)
         {
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
@@ -472,7 +481,7 @@ public class RaidRolesService : LocatedServiceBase
                                                     .WaitForReactionAsync(currentBotMessage, commandContextContainer.User)
                                                     .ConfigureAwait(false);
 
-        if (reaction?.Emote is GuildEmote guildEmote)
+        if (reaction?.Emote is Emote guildEmote)
         {
             var subRoleData = new RaidRoleEntity
                               {
