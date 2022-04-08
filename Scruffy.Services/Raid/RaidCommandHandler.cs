@@ -281,6 +281,13 @@ public class RaidCommandHandler : LocatedServiceBase
                                                  .DeleteAsync()
                                                  .ConfigureAwait(false);
                 }
+                else if (container is InteractionContextContainer interactionContextContainer
+                      && interactionContextContainer.Interaction.Type == InteractionType.MessageComponent)
+                {
+                    await interactionContextContainer.Interaction
+                                                     .DeferAsync()
+                                                     .ConfigureAwait(false);
+                }
             }
             else
             {

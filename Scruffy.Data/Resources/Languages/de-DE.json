@@ -875,7 +875,9 @@
       "LevelsField": "Erfahrungslevel"
     },
     "RaidMessageBuilder": {
-      "SubstitutesBench": "Ersatzbank"
+      "SubstitutesBench": "Ersatzbank",
+      "Join": "Anmelden",
+      "Leave": "Abmelden" 
     },
     "RaidOverviewService": {
       "ParticipationOverview": "Übersicht der Teilnahmepunkte"

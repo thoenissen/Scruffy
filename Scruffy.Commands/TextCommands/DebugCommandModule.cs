@@ -134,17 +134,15 @@ public class DebugCommandModule : LocatedTextCommandModuleBase
         var builder = new ComponentBuilder();
 
         builder.WithButton("Ping 1",
-                           Context.Interactivity
-                                  .GetPermanentCustomerId(DebugMessageComponentCommandModule.Group,
-                                                          DebugMessageComponentCommandModule.CommandPing,
-                                                          "1"),
+                           InteractivityService.GetPermanentCustomerId(DebugMessageComponentCommandModule.Group,
+                                                                       DebugMessageComponentCommandModule.CommandPing,
+                                                                       "1"),
                            ButtonStyle.Primary,
                            DiscordEmoteService.GetBulletEmote(Context.Client));
         builder.WithButton("Ping 2",
-                           Context.Interactivity
-                                  .GetPermanentCustomerId(DebugMessageComponentCommandModule.Group,
-                                                          DebugMessageComponentCommandModule.CommandPing,
-                                                          "2"),
+                           InteractivityService.GetPermanentCustomerId(DebugMessageComponentCommandModule.Group,
+                                                                       DebugMessageComponentCommandModule.CommandPing,
+                                                                       "2"),
                            ButtonStyle.Secondary,
                            DiscordEmoteService.GetBulletEmote(Context.Client));
 

@@ -59,49 +59,51 @@ public class RaidMessageBuilder : LocatedServiceBase
                                                   && obj.IsCommitted == false)
                                        .OrderByDescending(obj => obj.TimeStamp)
                                        .Select(obj => new
-                                       {
-                                           obj.TimeStamp,
-                                           ChannelId = obj.RaidDayConfiguration.DiscordChannelId,
-                                           MessageId = obj.RaidDayConfiguration.DiscordMessageId,
-                                           obj.RaidDayTemplate.Thumbnail,
-                                           obj.RaidDayTemplate.Title,
-                                           obj.RaidDayTemplate.Description,
-                                           obj.GroupCount,
+                                                      {
+                                                          obj.TimeStamp,
+                                                          ChannelId = obj.RaidDayConfiguration.DiscordChannelId,
+                                                          MessageId = obj.RaidDayConfiguration.DiscordMessageId,
+                                                          obj.RaidDayConfiguration.AliasName,
+                                                          obj.RaidDayTemplate.Thumbnail,
+                                                          obj.RaidDayTemplate.Title,
+                                                          obj.RaidDayTemplate.Description,
+                                                          obj.GroupCount,
 
-                                           ExperienceLevels = obj.RaidDayTemplate
-                                                                                 .RaidExperienceAssignments
-                                                                                 .Select(obj2 => new
-                                                                                 {
-                                                                                     RaidExperienceLevelId = obj2.RaidExperienceLevel.Id,
-                                                                                     obj2.RaidExperienceLevel.DiscordEmoji,
-                                                                                     obj2.RaidExperienceLevel.Description,
-                                                                                     obj2.RaidExperienceLevel.Rank,
-                                                                                     obj2.Count
-                                                                                 })
-                                                                                 .ToList(),
+                                                          ExperienceLevels = obj.RaidDayTemplate
+                                                                                .RaidExperienceAssignments
+                                                                                .Select(obj2 => new
+                                                                                                {
+                                                                                                    RaidExperienceLevelId = obj2.RaidExperienceLevel.Id,
+                                                                                                    obj2.RaidExperienceLevel.DiscordEmoji,
+                                                                                                    obj2.RaidExperienceLevel.Description,
+                                                                                                    obj2.RaidExperienceLevel.Rank,
+                                                                                                    obj2.Count
+                                                                                                })
+                                                                                .ToList(),
 
-                                           Registrations = obj.RaidRegistrations
+                                                          Registrations = obj.RaidRegistrations
                                                                              .Select(obj3 => new
                                                                              {
                                                                                  UserId = obj3.User
-                                                                                                              .DiscordAccounts
-                                                                                                              .Select(obj4 => obj4.Id)
-                                                                                                              .FirstOrDefault(),
+                                                                                              .DiscordAccounts
+                                                                                              .Select(obj4 => obj4.Id)
+                                                                                              .FirstOrDefault(),
                                                                                  Points = currentRaidPoints.Where(obj4 => obj4.UserId == obj3.UserId)
-                                                                                                                           .Select(obj4 => obj4.Points).FirstOrDefault(),
+                                                                                                           .Select(obj4 => obj4.Points)
+                                                                                                           .FirstOrDefault(),
                                                                                  obj3.LineupExperienceLevelId,
                                                                                  ExperienceLevelId = (int?)obj3.User.RaidExperienceLevel.Id,
                                                                                  ExperienceLevelDiscordEmote = (ulong?)obj3.User.RaidExperienceLevel.DiscordEmoji,
                                                                                  Roles = obj3.RaidRegistrationRoleAssignments
-                                                                                                             .Select(obj4 => new
+                                                                                             .Select(obj4 => new
                                                                                                              {
                                                                                                                  MainRoleEmote = obj4.MainRaidRole.DiscordEmojiId,
                                                                                                                  SubRoleEmote = (ulong?)obj4.SubRaidRole.DiscordEmojiId
                                                                                                              })
-                                                                                                             .ToList()
+                                                                                             .ToList()
                                                                              })
                                                                              .ToList()
-                                       })
+                                                      })
                                        .FirstOrDefault();
 
             if (appointment != null)
@@ -272,7 +274,26 @@ public class RaidMessageBuilder : LocatedServiceBase
                         builder.WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64");
                         builder.WithTimestamp(DateTime.Now);
 
-                        await userMessage.ModifyAsync(obj => obj.Embed = builder.Build())
+                        var componentsBuilder = new ComponentBuilder();
+
+                        componentsBuilder.WithButton(LocalizationGroup.GetText("Join", "Join"),
+                                                     InteractivityService.GetPermanentCustomerId("raid",
+                                                                                                 "join",
+                                                                                                 appointment.AliasName),
+                                                     ButtonStyle.Secondary,
+                                                     DiscordEmoteService.GetCheckEmote(_client));
+                        componentsBuilder.WithButton(LocalizationGroup.GetText("Leave", "Leave"),
+                                                     InteractivityService.GetPermanentCustomerId("raid",
+                                                                                                 "leave",
+                                                                                                 appointment.AliasName),
+                                                     ButtonStyle.Secondary,
+                                                     DiscordEmoteService.GetCrossEmote(_client));
+
+                        await userMessage.ModifyAsync(obj =>
+                                                      {
+                                                          obj.Embed = builder.Build();
+                                                          obj.Components = componentsBuilder.Build();
+                                                      })
                                          .ConfigureAwait(false);
                     }
                 }

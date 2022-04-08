@@ -113,6 +113,8 @@ public class UserManagementService
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public async Task<UserData> GetUserByDiscordAccountId(ulong discordAccountId)
     {
+        await CheckDiscordAccountAsync(discordAccountId).ConfigureAwait(false);
+
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
             var userData =  await dbFactory.GetRepository<DiscordAccountRepository>()
@@ -123,10 +125,10 @@ public class UserManagementService
                                                               Id = obj.UserId,
                                                               ExperienceLevelRank = obj.User.RaidExperienceLevel != null ? obj.User.RaidExperienceLevel.Rank : 0
                                                           })
-                                           .FirstOrDefaultAsync()
+                                           .FirstAsync()
                                            .ConfigureAwait(false);
 
-            if (userData?.ExperienceLevelRank == 0)
+            if (userData.ExperienceLevelRank == 0)
             {
                 userData.ExperienceLevelRank = await GetRaidExperienceLevelRankByDiscordUserId(discordAccountId).ConfigureAwait(false);
             }
