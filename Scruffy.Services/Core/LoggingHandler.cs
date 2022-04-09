@@ -89,7 +89,7 @@ public class LoggingService
                                        ?? "Unknown Application");
 
         if (string.IsNullOrWhiteSpace(environment) == false
-         || string.IsNullOrWhiteSpace(openSearch) == false)
+         && string.IsNullOrWhiteSpace(openSearch) == false)
         {
             Func<ConnectionConfiguration, ConnectionConfiguration> modifyConnectionSettings = null;
 
