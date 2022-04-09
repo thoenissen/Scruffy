@@ -45,9 +45,9 @@ public class RaidRoleSelectionDialogElement : DialogSelectMenuElementBase<long?>
     /// Returning the message
     /// </summary>
     /// <returns>Message</returns>
-    public override string GetMessage() => _mainRoleId == null
+    public override string GetMessage() => CommandContext.User.Mention + " " + (_mainRoleId == null
                                                ? LocalizationGroup.GetText("ChooseMainRoleTitle", "Role selection")
-                                               : LocalizationGroup.GetText("ChooseSubRoleTitle", "Class selection");
+                                               : LocalizationGroup.GetText("ChooseSubRoleTitle", "Class selection"));
 
     /// <summary>
     /// Returning the placeholder
