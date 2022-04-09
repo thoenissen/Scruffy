@@ -1,5 +1,10 @@
-﻿using Discord.Interactions;
+﻿using Discord;
+using Discord.Interactions;
 
+using Microsoft.Extensions.DependencyInjection;
+
+using Scruffy.Data.Entity;
+using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Services.Discord;
 using Scruffy.Services.Raid;
 
@@ -9,7 +14,7 @@ namespace Scruffy.Commands.SlashCommands;
 /// Raid slash commands
 /// </summary>
 [Group("raid", "Raid commands")]
-public class RaidSlashCommandModule : LocatedInteractionModuleBase
+public class RaidSlashCommandModule : SlashCommandModuleBase
 {
     #region Properties
 
@@ -73,4 +78,52 @@ public class RaidSlashCommandModule : LocatedInteractionModuleBase
 
     #endregion // Commands
 
+    #region SlashCommandModuleBase
+
+    /// <summary>
+    /// Creates a list of all commands
+    /// </summary>
+    /// <remarks>Only the <see cref="SlashCommandBuildContext"/> is available and not the command context during this method.</remarks>
+    /// <param name="buildContext">Build context</param>
+    /// <returns>List of commands</returns>
+    public override IEnumerable<ApplicationCommandProperties> GetCommands(SlashCommandBuildContext buildContext)
+    {
+        var repositoryFactory = buildContext.ServiceProvider
+                                            .GetRequiredService<RepositoryFactory>();
+
+        var appointments = repositoryFactory.GetRepository<RaidDayConfigurationRepository>()
+                                            .GetQuery()
+                                            .Select(obj => new
+                                                           {
+                                                               obj.Day,
+                                                               obj.AliasName
+                                                           })
+                                            .ToList();
+
+        var choices = appointments.Select(obj => new ApplicationCommandOptionChoiceProperties
+                                                 {
+                                                     Value = obj.AliasName,
+                                                     Name = buildContext.CultureInfo.DateTimeFormat.GetDayName(obj.Day)
+                                                 })
+                                  .ToList();
+
+        return base.GetCommands(buildContext)
+                   .OfType<SlashCommandProperties>()
+                   .Select(obj =>
+                           {
+                               if (obj.Options.IsSpecified
+                                && obj.Name.IsSpecified
+                                && obj.Name.Value == "raid")
+                               {
+                                   foreach (var option in obj.Options.Value.Where(option => option.Name is "join" or "leave"))
+                                   {
+                                       option.Options[0].Choices = choices;
+                                   }
+                               }
+
+                               return obj;
+                           });
+    }
+
+    #endregion // SlashCommandModuleBase
 }

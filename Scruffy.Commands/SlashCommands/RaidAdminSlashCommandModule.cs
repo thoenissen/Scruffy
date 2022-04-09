@@ -11,7 +11,7 @@ namespace Scruffy.Commands.SlashCommands;
 /// </summary>
 [Group("raid-admin", "Raid commands")]
 [DefaultPermission(false)]
-public class RaidAdminSlashCommandModule : LocatedInteractionModuleBase
+public class RaidAdminSlashCommandModule : SlashCommandModuleBase
 {
     #region Properties
 

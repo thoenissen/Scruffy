@@ -7,7 +7,7 @@ namespace Scruffy.Commands.SlashCommands;
 /// <summary>
 /// Help slash commands
 /// </summary>
-public class HelpSlashCommandModule : LocatedInteractionModuleBase
+public class HelpSlashCommandModule : SlashCommandModuleBase
 {
     #region Properties
 

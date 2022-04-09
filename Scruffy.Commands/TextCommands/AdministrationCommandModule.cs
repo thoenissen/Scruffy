@@ -1,4 +1,6 @@
-﻿using Discord;
+﻿using System.Reflection;
+
+using Discord;
 using Discord.Commands;
 
 using Scruffy.Services.Administration;
@@ -173,13 +175,35 @@ public class AdministrationCommandModule : LocatedTextCommandModuleBase
         [RequireAdministratorPermissions]
         public async Task InstallSlashCommands()
         {
-            await InteractionService.AddModulesToGuildAsync(Context.Guild,
-                                                             true,
-                                                             InteractionService.Modules
-                                                                               .Where(obj => obj.IsSlashGroup
-                                                                                          || obj.SlashCommands.Any())
-                                                                               .ToArray())
-                                    .ConfigureAwait(false);
+            IEnumerable<ApplicationCommandProperties> commands = null;
+
+            var buildContext = new SlashCommandBuildContext
+                               {
+                                   Guild = Context.Guild,
+                                   ServiceProvider = Context.ServiceProvider,
+                                   CultureInfo = LocalizationGroup.CultureInfo
+                               };
+
+            foreach (var type in Assembly.Load("Scruffy.Commands")
+                                         .GetTypes()
+                                         .Where(obj => typeof(SlashCommandModuleBase).IsAssignableFrom(obj)
+                                                    && obj.IsAbstract == false))
+            {
+                var commandModule = (SlashCommandModuleBase)Activator.CreateInstance(type);
+                if (commandModule != null)
+                {
+                    commands = commands == null
+                                   ? commandModule.GetCommands(buildContext)
+                                   : commands.Concat(commandModule.GetCommands(buildContext));
+                }
+            }
+
+            if (commands != null)
+            {
+                await Context.Guild
+                             .BulkOverwriteApplicationCommandsAsync(commands.ToArray())
+                             .ConfigureAwait(false);
+            }
 
             await Context.Message
                          .AddReactionAsync(DiscordEmoteService.GetCheckEmote(Context.Client))
@@ -194,10 +218,9 @@ public class AdministrationCommandModule : LocatedTextCommandModuleBase
         [RequireAdministratorPermissions]
         public async Task UninstallSlashCommands()
         {
-            await InteractionService.AddCommandsToGuildAsync(Context.Guild,
-                                                 true,
-                                                 Array.Empty<Discord.Interactions.ICommandInfo>())
-                                    .ConfigureAwait(false);
+            await Context.Guild
+                         .BulkOverwriteApplicationCommandsAsync(Array.Empty<ApplicationCommandProperties>())
+                         .ConfigureAwait(false);
 
             await Context.Message
                          .AddReactionAsync(DiscordEmoteService.GetCheckEmote(Context.Client))

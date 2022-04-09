@@ -46,7 +46,15 @@ public class RaidMessageComponentCommandModule : LocatedInteractionModuleBase
     /// <param name="name">Name of the appointment</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [ComponentInteraction($"{Group};{CommandJoin};*")]
-    public Task Join(string name) => CommandHandler.Join(Context, name);
+    public async Task Join(string name)
+    {
+        await Context.Interaction
+                     .DeferAsync()
+                     .ConfigureAwait(false);
+
+        await CommandHandler.Join(Context, name)
+                            .ConfigureAwait(false);
+    }
 
     /// <summary>
     /// Leaving an appointment
@@ -54,7 +62,15 @@ public class RaidMessageComponentCommandModule : LocatedInteractionModuleBase
     /// <param name="name">Name of the appointment</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [ComponentInteraction($"{Group};{CommandLeave};*")]
-    public Task Leave(string name) => CommandHandler.Leave(Context, name);
+    public async Task Leave(string name)
+    {
+        await Context.Interaction
+                     .DeferAsync()
+                     .ConfigureAwait(false);
+
+        await CommandHandler.Leave(Context, name)
+                            .ConfigureAwait(false);
+    }
 
     #endregion // Commands
 }
