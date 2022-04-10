@@ -316,11 +316,14 @@ public class DebugService
 
                 stringBuilder = new StringBuilder();
 
+                var today = DateTime.Today;
+
                 foreach (var type in dbFactory.GetRepository<GuildLogEntryRepository>()
                                               .GetQuery()
                                               .Where(obj => obj.IsProcessed == false
                                                          && (obj.Type == GuildLogEntryEntity.Types.Stash
-                                                          || obj.Type == GuildLogEntryEntity.Types.Upgrade))
+                                                          || obj.Type == GuildLogEntryEntity.Types.Upgrade)
+                                                         && obj.Time < today)
                                               .GroupBy(obj => obj.Type)
                                               .Select(obj => new
                                                              {
