@@ -227,36 +227,6 @@ public sealed class DiscordBot : IAsyncDisposable
                     }
                 }
             }
-
-            /*
-            try
-            {
-                if (msg.Interaction != null
-                 && msg.Interaction.Name == "lild"
-                 && (msg.Interaction.User?.Id == 264072244525793281 || msg.Interaction.User?.Id == 699320744781545473))
-                {
-                    var embed = msg.Embeds.First();
-
-                    var builder = new EmbedBuilder()
-                                  .WithAuthor(new EmbedAuthorBuilder().WithIconUrl(embed.Author.Value.IconUrl).WithName(embed.Author.Value.Name))
-                                  .WithColor(embed.Color.Value)
-                                  .WithThumbnailUrl(embed.Thumbnail?.Url)
-                                  .WithFields(new[]
-                                              {
-                                                  new EmbedFieldBuilder().WithValue("<:lild:961006895294984282>I found a total of 0 on your account").WithName("0 Legendary Insights and Divinations on your account"),
-                                                  new EmbedFieldBuilder().WithValue("<:li:961006894846210159> Items on your account: 0").WithName("0x Legendary Insight"),
-                                                  new EmbedFieldBuilder().WithValue("<:ld:961006894825234542> Items on your account: 0").WithName("0x Legendary Divination"),
-                                              })
-                                  .WithTimestamp(embed.Timestamp.Value);
-
-                    await msg.Channel.SendMessageAsync(embed: builder.Build());
-
-                    await msg.DeleteAsync();
-                }
-            }
-            catch
-            {
-            }*/
         }
     }
 

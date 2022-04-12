@@ -69,6 +69,7 @@ namespace Scruffy.Services.Guild.Jobs
                 var users = _repositoryFactory.GetRepository<GuildRankCurrentPointsRepository>()
                                               .GetQuery()
                                               .Where(obj => obj.Date >= limit
+                                                         && obj.Date < today
                                                          && obj.GuildId == guildId
                                                          && accountsQuery.Any(obj2 => obj2.UserId == obj.UserId
                                                                                    && guildMemberQuery.Any(obj3 => obj3.Name == obj2.Name

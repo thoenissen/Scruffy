@@ -72,7 +72,8 @@ public class GuildRankVisualizationService : LocatedServiceBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public async Task PostOverview(IContextContainer context)
     {
-        var limit = DateTime.Today.AddDays(-64);
+        var limit = DateTime.Today.AddDays(-63);
+        var today = DateTime.Today;
 
         var guildMemberSubQuery = _dbFactory.GetRepository<GuildWarsGuildHistoricMemberRepository>()
                                             .GetQuery()
@@ -93,6 +94,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
         var userPoints = _dbFactory.GetRepository<GuildRankCurrentPointsRepository>()
                                    .GetQuery()
                                    .Where(obj => obj.Date >= limit
+                                              && obj.Date < today
                                               && obj.Guild.DiscordServerId == context.Guild.Id
                                               && accountsQuery.Any(obj2 => obj2.UserId == obj.UserId
                                                                         && guildMemberQuery.Any(obj3 => obj3.Name == obj2.Name
@@ -224,7 +226,8 @@ public class GuildRankVisualizationService : LocatedServiceBase
         var user = await _userManagementService.GetUserByDiscordAccountId(guildUser.Id)
                                                .ConfigureAwait(false);
 
-        var limit = DateTime.Today.AddDays(-64);
+        var limit = DateTime.Today.AddDays(-63);
+        var today = DateTime.Today;
 
         var guildMemberSubQuery = _dbFactory.GetRepository<GuildWarsGuildHistoricMemberRepository>()
                                             .GetQuery()
@@ -241,6 +244,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
         var userPoints = _dbFactory.GetRepository<GuildRankCurrentPointsRepository>()
                                    .GetQuery()
                                    .Where(obj => obj.Date >= limit
+                                              && obj.Date < today
                                               && obj.Guild.DiscordServerId == context.Guild.Id
                                               && obj.UserId == user.Id
                                               && accountsQuery.Any(obj2 => obj2.UserId == obj.UserId
