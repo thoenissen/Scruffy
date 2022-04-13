@@ -12,6 +12,7 @@ using Scruffy.Services.Core;
 using Scruffy.Services.Core.Extensions;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
+using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Interfaces;
 using Scruffy.Services.WebApi;
 
@@ -259,10 +260,66 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                    .OrderByDescending(obj => obj.Points)
                                    .ToList();
 
-        var embedBuilder = new EmbedBuilder();
-        embedBuilder.WithTitle($"{LocalizationGroup.GetText("RankingPersonalOverview", "Guild ranking personal points overview")} ({guildUser.TryGetDisplayName()})");
-        embedBuilder.WithColor(Color.DarkBlue);
-        embedBuilder.WithImageUrl("attachment://chart.png");
+        var summedPoints = userPoints.Sum(obj => obj.Points);
+        var rank = _dbFactory.GetRepository<GuildRankCurrentPointsRepository>()
+                             .GetQuery()
+                             .Where(obj => obj.Date >= limit
+                                        && obj.Date < today
+                                        && obj.Guild.DiscordServerId == context.Guild.Id
+                                        && obj.UserId == user.Id
+                                        && accountsQuery.Any(obj2 => obj2.UserId == obj.UserId
+                                                                  && guildMemberQuery.Any(obj3 => obj3.Name == obj2.Name
+                                                                                               && obj3.GuildId == obj.GuildId)))
+                             .GroupBy(obj => obj.UserId)
+                             .Select(obj => new
+                                            {
+                                                UserId = obj.Key,
+                                                Points = obj.Sum(obj2 => obj2.Points)
+                                            })
+                             .Count(obj => obj.Points > summedPoints)
+                 + 1;
+
+        var descriptionBuilder = new StringBuilder();
+
+        descriptionBuilder.Append(LocalizationGroup.GetText("RankingUser", "User"));
+        descriptionBuilder.Append(": ");
+        descriptionBuilder.Append(guildUser.Mention);
+        descriptionBuilder.Append(Environment.NewLine);
+
+        descriptionBuilder.Append(LocalizationGroup.GetText("RankingRank", "Rank"));
+        descriptionBuilder.Append(": ");
+        descriptionBuilder.Append(rank);
+
+        if (rank == 1)
+        {
+            descriptionBuilder.Append(' ');
+            descriptionBuilder.Append(DiscordEmoteService.GetGuildWars2GoldEmote(context.Client));
+        }
+        else if (rank == 2)
+        {
+            descriptionBuilder.Append(' ');
+            descriptionBuilder.Append(DiscordEmoteService.GetGuildWars2SilverEmote(context.Client));
+        }
+        else if (rank  == 3)
+        {
+            descriptionBuilder.Append(' ');
+            descriptionBuilder.Append(DiscordEmoteService.GetGuildWars2CopperEmote(context.Client));
+        }
+
+        descriptionBuilder.Append(Environment.NewLine);
+
+        descriptionBuilder.Append(LocalizationGroup.GetText("RankingPoints", "Points"));
+        descriptionBuilder.Append(": ");
+        descriptionBuilder.Append(summedPoints.ToString("0.00", LocalizationGroup.CultureInfo));
+        descriptionBuilder.Append(Environment.NewLine);
+
+        var embedBuilder = new EmbedBuilder()
+                .WithTitle($"{LocalizationGroup.GetText("RankingPersonalOverview", "Guild ranking personal points overview")}")
+                .WithDescription(descriptionBuilder.ToString())
+                .WithColor(Color.DarkBlue)
+                .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
+                .WithTimestamp(DateTime.Now)
+                .WithImageUrl("attachment://chart.png");
 
         var chartConfiguration = new ChartConfigurationData
                                  {
@@ -298,34 +355,13 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                                {
                                                    Plugins = new PluginsCollection
                                                              {
-                                                                 Legend = false,
-                                                                 OutLabels = new OutLabelsCollection
-                                                                             {
-                                                                                 Text = "%l",
-                                                                                 Stretch = 40
-                                                                             },
-                                                                 DoughnutLabel = new DoughnutLabelCollection
-                                                                                 {
-                                                                                     Labels = new List<Label>
-                                                                                              {
-                                                                                                  new ()
-                                                                                                  {
-                                                                                                      Color = "white",
-                                                                                                      Text = userPoints.Sum(obj => obj.Points).ToString("0.##", LocalizationGroup.CultureInfo)
-                                                                                                  },
-                                                                                                  new ()
-                                                                                                  {
-                                                                                                      Color = "white",
-                                                                                                      Text = LocalizationGroup.GetText("MeOverviewPoints", "points")
-                                                                                                  },
-                                                                                              }
-                                                                                 },
+                                                                 Legend = false
                                                              },
                                                    Title = new TitleConfiguration
                                                            {
                                                                Display = true,
                                                                FontColor = "white",
-                                                               FontSize = 30,
+                                                               FontSize = 26,
                                                                Text = LocalizationGroup.GetText("MeOverviewChartTitle", "Point distribution")
                                                            }
                                                }

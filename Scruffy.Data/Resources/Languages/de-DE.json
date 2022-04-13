@@ -466,6 +466,9 @@
     "GuildRankVisualizationService": {
       "RankingOverview": "Punkteübersicht",
       "RankingPersonalOverview": "Persönliche Punkteübersicht",
+      "RankingUser": "Benutzer",
+      "RankingRank": "Platzierung",
+      "RankingPoints": "Gesamtpunktzahl",
       "MeOverviewPoints": "Punkte",
       "MeOverviewChartTitle": "Punkteverteilung",
       "Login": "Spielanmeldungen",
