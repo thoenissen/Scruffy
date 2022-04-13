@@ -267,6 +267,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
                              .Where(obj => obj.Date >= limit
                                         && obj.Date < today
                                         && obj.Guild.DiscordServerId == context.Guild.Id
+                                        && obj.UserId != user.Id
                                         && accountsQuery.Any(obj2 => obj2.UserId == obj.UserId
                                                                   && guildMemberQuery.Any(obj3 => obj3.Name == obj2.Name
                                                                                                && obj3.GuildId == obj.GuildId)))
