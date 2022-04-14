@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.GuildWars2.Account;
 using Scruffy.Data.Enumerations.General;
+using Scruffy.Data.Enumerations.GuildWars2;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Exceptions.WebApi;
 using Scruffy.Services.Core.JobScheduler;
@@ -35,6 +36,7 @@ public class AchievementImportJob : LocatedAsyncJob
 
                 foreach (var account in await dbFactory.GetRepository<GuildWarsAccountRepository>()
                                                        .GetQuery()
+                                                       .Where(obj => obj.Permissions.HasFlag(GuildWars2ApiPermission.RequiredPermissions))
                                                        .Select(obj => new
                                                                       {
                                                                           obj.Name,

@@ -3,6 +3,7 @@
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.GuildWars2.Account;
 using Scruffy.Data.Enumerations.General;
+using Scruffy.Data.Enumerations.GuildWars2;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Exceptions.WebApi;
 using Scruffy.Services.Core.JobScheduler;
@@ -47,6 +48,7 @@ public class CharactersImportJob : LocatedAsyncJob
     {
         foreach (var account in await _dbFactory.GetRepository<GuildWarsAccountRepository>()
                                                 .GetQuery()
+                                                .Where(obj => obj.Permissions.HasFlag(GuildWars2ApiPermission.RequiredPermissions))
                                                 .Select(obj => new
                                                                {
                                                                    obj.Name,
@@ -70,7 +72,7 @@ public class CharactersImportJob : LocatedAsyncJob
                                             .ConfigureAwait(false) == false)
                         {
                             LoggingService.AddJobLogEntry(LogEntryLevel.Error,
-                                                          nameof(AchievementImportJob),
+                                                          nameof(CharactersImportJob),
                                                           $"Unknown error while importing account ({account}) characters",
                                                           null,
                                                           _dbFactory.LastError);
@@ -81,7 +83,7 @@ public class CharactersImportJob : LocatedAsyncJob
             catch (MissingGuildWars2ApiPermissionException ex)
             {
                 LoggingService.AddJobLogEntry(LogEntryLevel.Error,
-                                              nameof(AchievementImportJob),
+                                              nameof(CharactersImportJob),
                                               $"Missing permissions {account}",
                                               null,
                                               ex);
@@ -89,7 +91,7 @@ public class CharactersImportJob : LocatedAsyncJob
             catch (Exception ex)
             {
                 LoggingService.AddJobLogEntry(LogEntryLevel.Error,
-                                              nameof(AchievementImportJob),
+                                              nameof(CharactersImportJob),
                                               $"Unknown error with account {account}",
                                               null,
                                               ex);

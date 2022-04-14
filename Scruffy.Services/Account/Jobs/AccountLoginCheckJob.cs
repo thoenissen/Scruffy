@@ -1,7 +1,10 @@
-﻿using Scruffy.Data.Entity;
+﻿using System.Linq;
+
+using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Account;
 using Scruffy.Data.Entity.Tables.GuildWars2.Account;
 using Scruffy.Data.Enumerations.General;
+using Scruffy.Data.Enumerations.GuildWars2;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.JobScheduler;
 using Scruffy.Services.WebApi;
@@ -27,6 +30,7 @@ public class AccountLoginCheckJob : LocatedAsyncJob
         {
             foreach (var account in dbFactory.GetRepository<AccountRepository>()
                                              .GetQuery()
+                                             .Where(obj => obj.Permissions.HasFlag(GuildWars2ApiPermission.RequiredPermissions))
                                              .Select(obj => new
                                                             {
                                                                 obj.Name,
