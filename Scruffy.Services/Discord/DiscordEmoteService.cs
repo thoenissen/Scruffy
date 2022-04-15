@@ -206,6 +206,34 @@ public static class DiscordEmoteService
     public static IEmote GetLoadingEmote(BaseSocketClient client) => GetEmote(client, "Loading");
 
     /// <summary>
+    /// Get 'First'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetFirstEmote(BaseSocketClient client) => GetEmote(client, "First");
+
+    /// <summary>
+    /// Get 'Previous'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GePreviousEmote(BaseSocketClient client) => GetEmote(client, "Previous");
+
+    /// <summary>
+    /// Get 'Next'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetNextEmote(BaseSocketClient client) => GetEmote(client, "Next");
+
+    /// <summary>
+    /// Get 'Last'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetLastEmote(BaseSocketClient client) => GetEmote(client, "Last");
+
+    /// <summary>
     /// Get guild emoji
     /// </summary>
     /// <param name="client">Discord client</param>

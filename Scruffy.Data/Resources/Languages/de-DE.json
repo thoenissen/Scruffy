@@ -469,6 +469,7 @@
       "RankingUser": "Benutzer",
       "RankingRank": "Platzierung",
       "RankingPoints": "Gesamtpunktzahl",
+      "RankingUserCount": "Mitglieder",
       "MeOverviewPoints": "Punkte",
       "MeOverviewChartTitle": "Punkteverteilung",
       "Login": "Spielanmeldungen",
@@ -479,7 +480,8 @@
       "DiscordVoiceActivity": "Sprachaktivität",
       "DiscordMessageActivity": "Nachrichtenaktivität",
       "Events": "Eventteilnahme",
-      "Development": "Bot-Entwicklung"
+      "Development": "Bot-Entwicklung",
+      "PageFooter": "Seite {0} von {1}"
     },
     "GuildActivityDiscordMessageAddDialogElement": {
       "ChooseRoleTitle": "Wähle die Rolle aus, die hinzugefügt werden soll:",
