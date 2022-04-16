@@ -275,7 +275,7 @@ public class CommandHelpService : LocatedServiceBase
             }
         }
 
-        await context.ReplyAsync(embed: embedBuilder.Build())
+        await context.RespondAsync(embed: embedBuilder.Build())
                      .ConfigureAwait(false);
     }
 

@@ -74,7 +74,7 @@ public class DeveloperService : LocatedServiceBase
                                   .Refresh(obj => obj.Id == user.Id,
                                            obj => obj.GitHubAccount = accountName))
             {
-                await context.ReplyAsync(LocalizationGroup.GetText("AccountRefresh", "The account has been updated."))
+                await context.RespondAsync(LocalizationGroup.GetText("AccountRefresh", "The account has been updated."))
                              .ConfigureAwait(false);
             }
             else

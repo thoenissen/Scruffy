@@ -177,7 +177,7 @@ public class RaidCommitService : LocatedServiceBase
             }
             else
             {
-                await commandContext.ReplyAsync(LocalizationGroup.GetText("NoOpenAppointment", "There is no uncommitted appointment available."))
+                await commandContext.RespondAsync(LocalizationGroup.GetText("NoOpenAppointment", "There is no uncommitted appointment available."))
                                     .ConfigureAwait(false);
             }
         }

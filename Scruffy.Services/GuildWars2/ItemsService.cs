@@ -119,7 +119,7 @@ public class ItemsService : LocatedServiceBase
             }
             else
             {
-                await context.ReplyAsync(LocalizationGroup.GetText("InvalidItem", "There is no item with the specified ID."))
+                await context.RespondAsync(LocalizationGroup.GetText("InvalidItem", "There is no item with the specified ID."))
                              .ConfigureAwait(false);
             }
         }

@@ -190,7 +190,7 @@ public class RaidCommandHandler : LocatedServiceBase
             }
             else
             {
-                await container.ReplyAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."))
+                await container.RespondAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."))
                                .ConfigureAwait(false);
             }
         }
@@ -235,7 +235,7 @@ public class RaidCommandHandler : LocatedServiceBase
             }
             else
             {
-                await container.ReplyAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."))
+                await container.RespondAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."))
                                .ConfigureAwait(false);
             }
         }
@@ -284,7 +284,7 @@ public class RaidCommandHandler : LocatedServiceBase
             }
             else
             {
-                await container.ReplyAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."))
+                await container.RespondAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."))
                                .ConfigureAwait(false);
             }
         }
@@ -334,7 +334,7 @@ public class RaidCommandHandler : LocatedServiceBase
             }
             else
             {
-                await container.ReplyAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."))
+                await container.RespondAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."))
                                .ConfigureAwait(false);
             }
         }
@@ -376,7 +376,7 @@ public class RaidCommandHandler : LocatedServiceBase
             }
             else
             {
-                await container.ReplyAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."))
+                await container.RespondAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."))
                                .ConfigureAwait(false);
             }
         }
@@ -413,13 +413,13 @@ public class RaidCommandHandler : LocatedServiceBase
                     await _messageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
                                         .ConfigureAwait(false);
 
-                    await container.ReplyAsync(LocalizationGroup.GetText("GroupCountChanged", "The group count has been changed."))
+                    await container.RespondAsync(LocalizationGroup.GetText("GroupCountChanged", "The group count has been changed."))
                                    .ConfigureAwait(false);
                 }
             }
             else
             {
-                await container.ReplyAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."))
+                await container.RespondAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."))
                                .ConfigureAwait(false);
             }
         }
@@ -532,7 +532,7 @@ public class RaidCommandHandler : LocatedServiceBase
 
                 if (isFirstMessage)
                 {
-                    await context.ReplyAsync(embed: embedBuilder.Build())
+                    await context.RespondAsync(embed: embedBuilder.Build())
                                  .ConfigureAwait(false);
 
                     isFirstMessage = false;
@@ -546,7 +546,7 @@ public class RaidCommandHandler : LocatedServiceBase
         }
         else
         {
-            await context.ReplyAsync(LocalizationGroup.GetText("NoDpsReportToken", "The are no DPS-Report user tokens assigned to your account."))
+            await context.RespondAsync(LocalizationGroup.GetText("NoDpsReportToken", "The are no DPS-Report user tokens assigned to your account."))
                          .ConfigureAwait(false);
         }
     }
@@ -624,7 +624,7 @@ public class RaidCommandHandler : LocatedServiceBase
         stringBuilder.AppendLine($"{Format.Url("Snow Crows", "https://snowcrows.com/")} - {Format.Url("Lucky Noobs", "https://lucky-noobs.com/")} - {Format.Url("Hardstuck", "https://hardstuck.gg/")}");
         builder.AddField("Builds", stringBuilder.ToString());
 
-        await container.ReplyAsync(embed: builder.Build())
+        await container.RespondAsync(embed: builder.Build())
                        .ConfigureAwait(false);
     }
 

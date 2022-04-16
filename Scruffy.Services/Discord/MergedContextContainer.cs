@@ -116,39 +116,16 @@ public sealed class MergedContextContainer : IInteractionContext, ICommandContex
     /// <returns><see cref="MergedContextContainer"/>-Object</returns>
     public MergedContextContainer GetMergedContextContainer() => this;
 
-    /// <summary>
-    /// Reply to the user message or command
-    /// </summary>
-    /// <param name="text">The message to be sent.</param>
-    /// <param name="isTTS">Determines whether the message should be read aloud by Discord or not.</param>
-    /// <param name="embed">The <see cref="EmbedType.Rich"/> <see cref="Embed"/> to be sent.</param>
-    /// <param name="options">The options to be used when sending the request.</param>
-    /// <param name="allowedMentions">Specifies if notifications are sent for mentioned users and roles in the message <paramref name="text"/>. If <c>null</c>, all mentioned roles and users will be notified./// </param>
-    /// <param name="components">The message components to be included with this message. Used for interactions.</param>
-    /// <param name="stickers">A collection of stickers to send with the message.</param>
-    /// <param name="embeds">A array of <see cref="Embed"/>s to send with this response. Max 10.</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task<IUserMessage> ReplyAsync(string text = null, bool isTTS = false, Embed embed = null, RequestOptions options = null, AllowedMentions allowedMentions = null, MessageComponent components = null, ISticker[] stickers = null, Embed[] embeds = null)
+    /// <inheritdoc/>
+    public Task<IUserMessage> RespondAsync(string text = null, Embed[] embeds = null, bool isTTS = false, bool ephemeral = false, AllowedMentions allowedMentions = null, MessageComponent components = null, Embed embed = null, RequestOptions options = null)
     {
-        return _container.ReplyAsync(text, isTTS, embed, options, allowedMentions, components, stickers, embeds);
+        return _container.RespondAsync(text, embeds, isTTS, ephemeral, allowedMentions, components, embed, options);
     }
 
-    /// <summary>
-    /// Reply to the user message or command
-    /// </summary>
-    /// <param name="text">The message to be sent.</param>
-    /// <param name="isTTS">Determines whether the message should be read aloud by Discord or not.</param>
-    /// <param name="embed">The <see cref="EmbedType.Rich"/> <see cref="Embed"/> to be sent.</param>
-    /// <param name="options">The options to be used when sending the request.</param>
-    /// <param name="allowedMentions">Specifies if notifications are sent for mentioned users and roles in the message <paramref name="text"/>. If <c>null</c>, all mentioned roles and users will be notified./// </param>
-    /// <param name="messageReference">The message references to be included. Used to reply to specific messages.</param>
-    /// <param name="components">The message components to be included with this message. Used for interactions.</param>
-    /// <param name="stickers">A collection of stickers to send with the message.</param>
-    /// <param name="embeds">A array of <see cref="Embed"/>s to send with this response. Max 10.</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task<IUserMessage> SendMessageAsync(string text = null, bool isTTS = false, Embed embed = null, RequestOptions options = null, AllowedMentions allowedMentions = null, MessageReference messageReference = null, MessageComponent components = null, ISticker[] stickers = null, Embed[] embeds = null)
+    /// <inheritdoc/>
+    public Task<IUserMessage> SendMessageAsync(string text = null, Embed[] embeds = null, bool isTTS = false, bool ephemeral = false, AllowedMentions allowedMentions = null, MessageComponent components = null, Embed embed = null, RequestOptions options = null)
     {
-        return _container.SendMessageAsync(text, isTTS, embed, options, allowedMentions, messageReference, components, stickers, embeds);
+        return _container.SendMessageAsync(text, embeds, isTTS, ephemeral, allowedMentions, components, embed, options);
     }
 
     #endregion // IContextContainer

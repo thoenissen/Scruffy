@@ -130,7 +130,7 @@ public class RaidRegistrationService : LocatedServiceBase
             }
             else
             {
-                await commandContext.ReplyAsync(LocalizationGroup.GetText("RequiredExperienceLevelMissing", "You don't have the required experience level."))
+                await commandContext.RespondAsync(LocalizationGroup.GetText("RequiredExperienceLevelMissing", "You don't have the required experience level."))
                                     .ConfigureAwait(false);
             }
         }

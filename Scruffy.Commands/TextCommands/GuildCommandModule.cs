@@ -849,12 +849,12 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
                                                   .ConfigureAwait(false);
                 if (embed != null)
                 {
-                    await Context.ReplyAsync(embed: embed)
+                    await Context.RespondAsync(embed: embed)
                                  .ConfigureAwait(false);
                 }
                 else
                 {
-                    await Context.ReplyAsync(LocalizationGroup.GetText("NoChangedRequired", "No rank changed are required."))
+                    await Context.RespondAsync(LocalizationGroup.GetText("NoChangedRequired", "No rank changed are required."))
                                  .ConfigureAwait(false);
                 }
             }
