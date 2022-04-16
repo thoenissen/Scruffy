@@ -737,7 +737,7 @@
       "HelpCommandOverviewTitle": "Übersicht über die wichtigsten Befehle",
       "HelpCommandOverviewDescription": "In der folgenden Nachricht werden die wichtigsten Befehle der ausgewählten Kategorie ausgegeben."
     },
-    "InformationCommandModule": {
+    "InformationCommandHandler": {
       "GeneralInformationTitle": "Allgemeine Informationen",
       "GeneralInformationDescription": "Alle Daten, die durch {0} gesammelt werden, dienen nur zur Verwaltung der Gilde. Im folgenden wird auf die einzelnen Bereiche, in denen Daten ermittelt werden, eingegangen.",
       "GuildWars2ApiTitle": "Guild Wars 2 - API-Key",
