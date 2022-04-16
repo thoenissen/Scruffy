@@ -153,7 +153,7 @@ public class WorldsService : LocatedServiceBase
                                                                     {
                                                                         XAxes = new List<XAxis>
                                                                                 {
-                                                                                    new ()
+                                                                                    new()
                                                                                     {
                                                                                         Ticks = new AxisTicks
                                                                                                 {
@@ -163,7 +163,7 @@ public class WorldsService : LocatedServiceBase
                                                                                 },
                                                                         YAxes = new List<YAxis>
                                                                                 {
-                                                                                    new ()
+                                                                                    new()
                                                                                     {
                                                                                         Ticks = new AxisTicks<int>
                                                                                                 {

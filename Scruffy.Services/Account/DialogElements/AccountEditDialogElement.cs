@@ -107,7 +107,7 @@ public class AccountEditDialogElement : DialogEmbedReactionElementBase<bool>
     {
         return _reactions ??= new List<ReactionData<bool>>
                               {
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetEditEmote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("EditApiKeyCommand", "{0} Edit api key", DiscordEmoteService.GetEditEmote(CommandContext.Client)),
@@ -183,7 +183,7 @@ public class AccountEditDialogElement : DialogEmbedReactionElementBase<bool>
                                                  return success;
                                              }
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetEdit2Emote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("EditDpsReportUserTokenCommand", "{0} Edit dps report user token", DiscordEmoteService.GetEdit2Emote(CommandContext.Client)),
@@ -208,7 +208,7 @@ public class AccountEditDialogElement : DialogEmbedReactionElementBase<bool>
                                                  return true;
                                              }
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmoteService.GetCrossEmote(CommandContext.Client)),

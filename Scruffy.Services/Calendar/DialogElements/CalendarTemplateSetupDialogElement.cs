@@ -111,7 +111,7 @@ public class CalendarTemplateSetupDialogElement : DialogEmbedReactionElementBase
         {
             _reactions = new List<ReactionData<bool>>
                          {
-                             new ()
+                             new()
                              {
                                  Emote = DiscordEmoteService.GetAddEmote(CommandContext.Client),
                                  CommandText = LocalizationGroup.GetFormattedText("AddCommand", "{0} Add template", DiscordEmoteService.GetAddEmote(CommandContext.Client)),

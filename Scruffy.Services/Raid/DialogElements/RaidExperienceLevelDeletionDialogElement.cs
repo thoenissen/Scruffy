@@ -50,7 +50,7 @@ public class RaidExperienceLevelDeletionDialogElement : DialogReactionElementBas
     {
         return _reactions ??= new List<ReactionData<bool>>
                               {
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetCheckEmote(CommandContext.Client),
                                       Func = () =>
@@ -70,7 +70,7 @@ public class RaidExperienceLevelDeletionDialogElement : DialogReactionElementBas
                                                  return Task.FromResult(true);
                                              }
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
                                       Func = () => Task.FromResult(true)

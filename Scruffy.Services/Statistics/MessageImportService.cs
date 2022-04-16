@@ -22,7 +22,7 @@ public class MessageImportService : IAsyncDisposable
     /// <summary>
     /// Lock
     /// </summary>
-    private readonly object _lock = new ();
+    private readonly object _lock = new();
 
     /// <summary>
     /// Current messages

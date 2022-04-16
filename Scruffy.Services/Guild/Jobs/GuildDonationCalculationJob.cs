@@ -20,7 +20,7 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
     /// <summary>
     /// Upgrades which don't generate a 'completed' entry
     /// </summary>
-    private static readonly List<int> _upgradesWithoutCompleted = new ()
+    private static readonly List<int> _upgradesWithoutCompleted = new()
                                                                   {
                                                                       73,
                                                                       100,

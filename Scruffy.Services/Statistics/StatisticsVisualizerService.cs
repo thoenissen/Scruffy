@@ -246,12 +246,12 @@ public class StatisticsVisualizerService : LocatedServiceBase
                                                                                      {
                                                                                          Labels = new List<Label>
                                                                                                   {
-                                                                                                      new ()
+                                                                                                      new()
                                                                                                       {
                                                                                                           Color = "white",
                                                                                                           Text = messagesSum.ToString()
                                                                                                       },
-                                                                                                      new ()
+                                                                                                      new()
                                                                                                       {
                                                                                                           Color = "white",
                                                                                                           Text = LocalizationGroup.GetText("MeOverviewMessages", "messages")

@@ -72,7 +72,7 @@ internal static class CommandExtensions
     /// <param name="commandInfo">Command info</param>
     /// <returns>Converter object</returns>
     public static ApplicationCommandOptionProperties ToApplicationCommandOptionProps(this SlashCommandInfo commandInfo) =>
-        new ()
+        new()
         {
             Name = commandInfo.Name,
             Description = commandInfo.Description,
@@ -198,7 +198,7 @@ internal static class CommandExtensions
         return moduleInfo.IsSlashGroup
                    ? new List<ApplicationCommandOptionProperties>
                      {
-                         new ()
+                         new()
                          {
                              Name = moduleInfo.SlashGroupName.ToLower(),
                              Description = moduleInfo.Description,

@@ -14,7 +14,7 @@ public class Program
     /// <summary>
     /// Wait for program exit
     /// </summary>
-    private static TaskCompletionSource<bool> _waitForExitTaskSource = new ();
+    private static TaskCompletionSource<bool> _waitForExitTaskSource = new();
 
     #endregion // Fields
 

@@ -49,12 +49,12 @@ public class CalendarTemplateGuildPointsDialogElement : DialogReactionElementBas
     {
         return _reactions ??= new List<ReactionData<CalenderTemplateGuildData>>
                               {
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetCheckEmote(CommandContext.Client),
                                       Func = RunSubForm<CalenderTemplateGuildData>,
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
                                       Func = () => Task.FromResult<CalenderTemplateGuildData>(null)

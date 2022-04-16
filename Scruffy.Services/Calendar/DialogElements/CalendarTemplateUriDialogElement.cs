@@ -48,12 +48,12 @@ public class CalendarTemplateUriDialogElement : DialogReactionElementBase<string
     {
         return _reactions ??= new List<ReactionData<string>>
                               {
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetCheckEmote(CommandContext.Client),
                                       Func = RunSubElement<CalendarTemplateUriUriDialogElement, string>
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
                                       Func = () => Task.FromResult<string>(null)

@@ -489,7 +489,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                                             {
                                                                 XAxes = new List<XAxis>
                                                                         {
-                                                                            new ()
+                                                                            new()
                                                                             {
                                                                                 Ticks = new AxisTicks<double>
                                                                                         {
@@ -501,7 +501,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                                                         },
                                                                 YAxes = new List<YAxis>
                                                                         {
-                                                                            new ()
+                                                                            new()
                                                                             {
                                                                                 Ticks = new AxisTicks<double>
                                                                                         {

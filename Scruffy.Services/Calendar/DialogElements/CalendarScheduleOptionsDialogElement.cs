@@ -65,19 +65,19 @@ public class CalendarScheduleOptionsDialogElement : DialogEmbedReactionElementBa
     {
         return _reactions ??= new List<ReactionData<WeekDayOfMonthSpecialOptions>>
                               {
-                                  new ()
+                                  new()
                                   {
                                       Emote = Emoji.Parse(":one:"),
                                       CommandText = $"{Emoji.Parse(":one:")} {LocalizationGroup.GetText(WeekDayOfMonthSpecialOptions.None.ToString(), "No options")}",
                                       Func = () => Task.FromResult(WeekDayOfMonthSpecialOptions.None)
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = Emoji.Parse(":two:"),
                                       CommandText = $"{Emoji.Parse(":two:")} {LocalizationGroup.GetText(WeekDayOfMonthSpecialOptions.EvenMonth.ToString(), "Even month")}",
                                       Func = () => Task.FromResult(WeekDayOfMonthSpecialOptions.EvenMonth)
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = Emoji.Parse(":three:"),
                                       CommandText = $"{Emoji.Parse(":three:")} {LocalizationGroup.GetText(WeekDayOfMonthSpecialOptions.UnevenMonth.ToString(), "Uneven month")}",

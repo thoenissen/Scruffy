@@ -50,7 +50,7 @@ public class GuildSpecialRankDeletionDialogElement : DialogReactionElementBase<b
     {
         return _reactions ??= new List<ReactionData<bool>>
                               {
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetCheckEmote(CommandContext.Client),
                                       Func = () =>
@@ -67,7 +67,7 @@ public class GuildSpecialRankDeletionDialogElement : DialogReactionElementBase<b
                                                  return Task.FromResult(true);
                                              }
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
                                       Func = () => Task.FromResult(true)

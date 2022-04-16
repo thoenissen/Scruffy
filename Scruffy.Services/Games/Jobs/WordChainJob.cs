@@ -23,7 +23,7 @@ public class WordChainJob : LocatedAsyncJob
     /// <summary>
     /// Words
     /// </summary>
-    private static ConcurrentBag<string> _words = new ()
+    private static ConcurrentBag<string> _words = new()
                                                   {
                                                       "Aleepeep",
                                                       "Anroov",

@@ -93,7 +93,7 @@ public class RaidExperienceLevelEditDialogElement : DialogEmbedReactionElementBa
     {
         return _reactions ??= new List<ReactionData<bool>>
                               {
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetEditEmote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("EditSuperiorRoleCommand", "{0} Edit superior role", DiscordEmoteService.GetEditEmote(CommandContext.Client)),
@@ -128,7 +128,7 @@ public class RaidExperienceLevelEditDialogElement : DialogEmbedReactionElementBa
                                                  return true;
                                              }
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetEdit2Emote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("EditDescriptionCommand", "{0} Edit description", DiscordEmoteService.GetEdit2Emote(CommandContext.Client)),
@@ -148,7 +148,7 @@ public class RaidExperienceLevelEditDialogElement : DialogEmbedReactionElementBa
                                                  return true;
                                              }
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetEdit3Emote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("EditAliasNameCommand", "{0} Edit alias name", DiscordEmoteService.GetEdit3Emote(CommandContext.Client)),
@@ -168,7 +168,7 @@ public class RaidExperienceLevelEditDialogElement : DialogEmbedReactionElementBa
                                                  return true;
                                              }
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetEdit4Emote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("EditRoleCommand", "{0} Edit role", DiscordEmoteService.GetEdit4Emote(CommandContext.Client)),
@@ -188,7 +188,7 @@ public class RaidExperienceLevelEditDialogElement : DialogEmbedReactionElementBa
                                                  return true;
                                              }
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetEmojiEmote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("EditEmojiCommand", "{0} Edit emoji", DiscordEmoteService.GetEmojiEmote(CommandContext.Client)),
@@ -208,7 +208,7 @@ public class RaidExperienceLevelEditDialogElement : DialogEmbedReactionElementBa
                                                  return true;
                                              }
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmoteService.GetCrossEmote(CommandContext.Client)),

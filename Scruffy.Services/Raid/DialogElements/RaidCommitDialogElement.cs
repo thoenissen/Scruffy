@@ -115,7 +115,7 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
     {
         return _reactions ??= new List<ReactionData<bool>>
                               {
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetAddEmote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("AddCommand", "{0} Add user", DiscordEmoteService.GetAddEmote(CommandContext.Client)),
@@ -143,7 +143,7 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
                                                  return true;
                                              }
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetEditEmote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("SetPointsCommand", "{0} Set points", DiscordEmoteService.GetEditEmote(CommandContext.Client)),
@@ -162,7 +162,7 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
                                                  return true;
                                              }
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetTrashCanEmote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("RemoveCommand", "{0} Remove user", DiscordEmoteService.GetTrashCanEmote(CommandContext.Client)),
@@ -181,7 +181,7 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
                                                  return true;
                                              }
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetCheckEmote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("CommitCommand", "{0} Commit", DiscordEmoteService.GetCheckEmote(CommandContext.Client)),
@@ -313,7 +313,7 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
                                                  return false;
                                              }
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmoteService.GetCrossEmote(CommandContext.Client)),
