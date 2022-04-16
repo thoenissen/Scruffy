@@ -1,5 +1,9 @@
+using Discord;
+using Discord.Rest;
+
 using Microsoft.OpenApi.Models;
 
+using Scruffy.Data.Entity;
 using Scruffy.Data.Enumerations.General;
 using Scruffy.Services.Core;
 
@@ -16,7 +20,8 @@ public class Program
     /// Main method
     /// </summary>
     /// <param name="args">Arguments</param>
-    public static void Main(string[] args)
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public static async Task Main(string[] args)
     {
         LoggingService.Initialize(config => config.Enrich.FromLogContext().CreateBootstrapLogger());
         LoggingService.AddServiceLogEntry(LogEntryLevel.Information, nameof(Program), "Starting up", null);
@@ -57,26 +62,44 @@ public class Program
                                                                             }
                                                                         });
                                            });
+#if !DEBUG
             builder.Services.AddAuthentication("Bearer")
-                   .AddJwtBearer(options =>
-                                 {
-                                     options.Authority = Environment.GetEnvironmentVariable("SCRUFFY_AUTHORITY");
-                                     options.TokenValidationParameters.ValidateAudience = false;
-                                     options.RequireHttpsMetadata = false;
-                                 });
+                            .AddJwtBearer(options =>
+                                          {
+                                              options.Authority = Environment.GetEnvironmentVariable("SCRUFFY_AUTHORITY");
+                                              options.TokenValidationParameters.ValidateAudience = false;
+                                              options.RequireHttpsMetadata = false;
+                                          });
             builder.Services.AddAuthorization(options => options.AddPolicy("ApiScope", policy =>
                                                                                        {
                                                                                            policy.RequireAuthenticatedUser();
                                                                                            policy.RequireClaim("scope", "api_v1");
                                                                                        }));
+#endif
+
+            var discordClient = new DiscordRestClient();
+
+            await discordClient.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_TOKEN"))
+                               .ConfigureAwait(false);
+
+            builder.Services.AddSingleton(discordClient);
+            builder.Services.AddSingleton<RepositoryFactory>();
 
             var app = builder.Build();
+
             app.UseSwagger();
             app.UseSwaggerUI();
             app.UseAuthentication();
             app.UseAuthorization();
+
+#if DEBUG
+            app.MapControllers();
+#else
             app.MapControllers().RequireAuthorization("ApiScope");
-            app.Run();
+#endif
+
+            await app.RunAsync()
+                     .ConfigureAwait(false);
         }
         catch (Exception ex)
         {
