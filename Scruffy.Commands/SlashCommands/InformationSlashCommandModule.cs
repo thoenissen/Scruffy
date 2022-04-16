@@ -1,18 +1,14 @@
-﻿using Discord.Commands;
+﻿using Discord.Interactions;
 
 using Scruffy.Services.Discord;
-using Scruffy.Services.Discord.Attributes;
 using Scruffy.Services.Information;
 
-namespace Scruffy.Commands.TextCommands;
+namespace Scruffy.Commands.SlashCommands;
 
 /// <summary>
-/// Calendar commands
+/// Shows general informations about Scruffy
 /// </summary>
-[Group("information")]
-[Alias("info", "i")]
-[BlockedChannelCheck]
-public class InformationCommandModule : LocatedTextCommandModuleBase
+public class InformationSlashCommandModule : SlashCommandModuleBase
 {
     #region Properties
 
@@ -26,11 +22,10 @@ public class InformationCommandModule : LocatedTextCommandModuleBase
     #region Methods
 
     /// <summary>
-    /// Adding a one time event
+    /// Shows general informations about Scruffy
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    [Command]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
+    [SlashCommand("info", "Display infos about Scruffy")]
     public Task Info() => CommandHandler.Info(Context);
 
     #endregion // Methods
