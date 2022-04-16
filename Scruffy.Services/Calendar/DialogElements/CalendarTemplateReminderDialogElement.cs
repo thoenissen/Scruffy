@@ -49,12 +49,12 @@ public class CalendarTemplateReminderDialogElement : DialogReactionElementBase<C
     {
         return _reactions ??= new List<ReactionData<CalenderTemplateReminderData>>
                               {
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetCheckEmote(CommandContext.Client),
                                       Func = RunSubForm<CalenderTemplateReminderData>,
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
                                       Func = () => Task.FromResult<CalenderTemplateReminderData>(null)

@@ -54,13 +54,13 @@ public class RaidRoleSelectionNextDialogElement : DialogButtonElementBase<bool>
     {
         return _buttons ??= new List<ButtonData<bool>>
                             {
-                                new ()
+                                new()
                                 {
                                     CommandText = LocalizationGroup.GetText("Yes", "Yes"),
                                     Emote = DiscordEmoteService.GetCheckEmote(CommandContext.Client),
                                     Func = () => Task.FromResult(true)
                                 },
-                                new ()
+                                new()
                                 {
                                     CommandText = LocalizationGroup.GetText("No", "No"),
                                     Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),

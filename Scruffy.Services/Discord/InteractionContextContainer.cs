@@ -88,7 +88,7 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
     /// Get merged context container
     /// </summary>
     /// <returns><see cref="MergedContextContainer"/>-Object</returns>
-    public MergedContextContainer GetMergedContextContainer() => new (this);
+    public MergedContextContainer GetMergedContextContainer() => new(this);
 
     /// <summary>
     /// Reply to the user message or command

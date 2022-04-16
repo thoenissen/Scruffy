@@ -136,7 +136,7 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedReactionElementB
     {
         return _reactions ??= new List<ReactionData<bool>>
                               {
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetAddEmote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("AddUserCommand", "{0} Add user", DiscordEmoteService.GetAddEmote(CommandContext.Client)),
@@ -161,7 +161,7 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedReactionElementB
                                                  return true;
                                              }
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetAdd2Emote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("AddVoiceChannelCommand", "{0} Add channel", DiscordEmoteService.GetAdd2Emote(CommandContext.Client)),
@@ -186,7 +186,7 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedReactionElementB
                                                  return true;
                                              }
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetTrashCanEmote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("RemoveUserCommand", "{0} Remove user", DiscordEmoteService.GetTrashCanEmote(CommandContext.Client)),
@@ -208,7 +208,7 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedReactionElementB
                                                  return true;
                                              }
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetStarEmote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("SetLeaderCommand", "{0} Leader", DiscordEmoteService.GetStarEmote(CommandContext.Client)),
@@ -238,7 +238,7 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedReactionElementB
                                                  return true;
                                              }
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetCheckEmote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("CommitCommand", "{0} Commit", DiscordEmoteService.GetCheckEmote(CommandContext.Client)),
@@ -277,7 +277,7 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedReactionElementB
                                                  return false;
                                              }
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmoteService.GetCrossEmote(CommandContext.Client)),

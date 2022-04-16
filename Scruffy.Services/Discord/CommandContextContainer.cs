@@ -119,7 +119,7 @@ public sealed class CommandContextContainer : ICommandContext, ICommandContextOp
     /// Get merged context container
     /// </summary>
     /// <returns><see cref="MergedContextContainer"/>-Object</returns>
-    public MergedContextContainer GetMergedContextContainer() => new (this);
+    public MergedContextContainer GetMergedContextContainer() => new(this);
 
     /// <summary>
     /// Reply to the user message or command

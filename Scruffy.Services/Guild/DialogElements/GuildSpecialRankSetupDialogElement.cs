@@ -117,7 +117,7 @@ public class GuildSpecialRankSetupDialogElement : DialogEmbedReactionElementBase
         {
             _reactions = new List<ReactionData<bool>>
                          {
-                             new ()
+                             new()
                              {
                                  Emote = DiscordEmoteService.GetAddEmote(CommandContext.Client),
                                  CommandText = LocalizationGroup.GetFormattedText("AddCommand", "{0} Add rank", DiscordEmoteService.GetAddEmote(CommandContext.Client)),

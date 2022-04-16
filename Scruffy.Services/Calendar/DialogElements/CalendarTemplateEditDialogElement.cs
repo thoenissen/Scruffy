@@ -102,7 +102,7 @@ public class CalendarTemplateEditDialogElement : DialogEmbedReactionElementBase<
     {
         return _reactions ??= new List<ReactionData<bool>>
                               {
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetEditEmote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("EditDescriptionCommand", "{0} Edit description", DiscordEmoteService.GetEditEmote(CommandContext.Client)),
@@ -122,7 +122,7 @@ public class CalendarTemplateEditDialogElement : DialogEmbedReactionElementBase<
                                                  return true;
                                              }
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetEdit2Emote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("EditUriCommand", "{0} Edit link", DiscordEmoteService.GetEdit2Emote(CommandContext.Client)),
@@ -142,7 +142,7 @@ public class CalendarTemplateEditDialogElement : DialogEmbedReactionElementBase<
                                                  return true;
                                              }
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetEdit3Emote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("EditAppointmentTimeCommand", "{0} Edit appointment time", DiscordEmoteService.GetEdit3Emote(CommandContext.Client)),
@@ -162,7 +162,7 @@ public class CalendarTemplateEditDialogElement : DialogEmbedReactionElementBase<
                                                  return true;
                                              }
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetEdit4Emote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("EditReminderCommand", "{0} Edit reminder", DiscordEmoteService.GetEdit4Emote(CommandContext.Client)),
@@ -186,7 +186,7 @@ public class CalendarTemplateEditDialogElement : DialogEmbedReactionElementBase<
                                                  return true;
                                              }
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetEdit5Emote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("EditGuildPointsCommand", "{0} Edit guild points", DiscordEmoteService.GetEdit5Emote(CommandContext.Client)),
@@ -210,7 +210,7 @@ public class CalendarTemplateEditDialogElement : DialogEmbedReactionElementBase<
                                                  return true;
                                              }
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmoteService.GetCrossEmote(CommandContext.Client)),

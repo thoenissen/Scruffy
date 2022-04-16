@@ -48,11 +48,11 @@ public class Program
                                                           })
                             .AddInMemoryApiScopes(new ApiScope[]
                                                   {
-                                                      new ("api_v1")
+                                                      new("api_v1")
                                                   })
                             .AddInMemoryClients(new Client[]
                                                 {
-                                                    new ()
+                                                    new()
                                                     {
                                                         ClientId = Environment.GetEnvironmentVariable("SCRUFFY_WEBAPI_CLIENT_ID"),
                                                         ClientSecrets = { new Secret(Environment.GetEnvironmentVariable("SCRUFFY_WEBAPI_CLIENT_SECRET").Sha256()) },
@@ -60,7 +60,7 @@ public class Program
                                                         AllowOfflineAccess = true,
                                                         AllowedScopes = { "openid", "profile", "api_v1" }
                                                     },
-                                                    new ()
+                                                    new()
                                                     {
                                                         ClientId = Environment.GetEnvironmentVariable("SCRUFFY_WEBAPP_CLIENT_ID"),
                                                         ClientSecrets = { new Secret(Environment.GetEnvironmentVariable("SCRUFFY_WEBAPP_CLIENT_SECRET").Sha256()) },
@@ -69,7 +69,7 @@ public class Program
                                                         AllowOfflineAccess = true,
                                                         AllowedScopes = { "openid", "profile", "api_v1" }
                                                     },
-                                                    new ()
+                                                    new()
                                                     {
                                                         ClientId = Environment.GetEnvironmentVariable("SCRUFFY_OPENSEARCH_CLIENT_ID"),
                                                         ClientSecrets = { new Secret(Environment.GetEnvironmentVariable("SCRUFFY_OPENSEARCH_CLIENT_SECRET").Sha256()) },

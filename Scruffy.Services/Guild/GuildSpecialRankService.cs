@@ -125,7 +125,7 @@ public class GuildSpecialRankService : LocatedServiceBase
                                                                             {
                                                                                 Annotations = new List<Annotation>
                                                                                               {
-                                                                                                  new ()
+                                                                                                  new()
                                                                                                   {
                                                                                                       BorderColor = "#f45b5b",
                                                                                                       BorderWidth = 2,
@@ -134,7 +134,7 @@ public class GuildSpecialRankService : LocatedServiceBase
                                                                                                       Type = "line",
                                                                                                       Value = configuration.RemoveThreshold
                                                                                                   },
-                                                                                                  new ()
+                                                                                                  new()
                                                                                                   {
                                                                                                       BorderColor = "#90ee7e",
                                                                                                       BorderWidth = 2,
@@ -149,7 +149,7 @@ public class GuildSpecialRankService : LocatedServiceBase
                                                                         {
                                                                             XAxes = new List<XAxis>
                                                                                     {
-                                                                                        new ()
+                                                                                        new()
                                                                                         {
                                                                                             Ticks = new AxisTicks
                                                                                                     {
@@ -159,7 +159,7 @@ public class GuildSpecialRankService : LocatedServiceBase
                                                                                     },
                                                                             YAxes = new List<YAxis>
                                                                                     {
-                                                                                        new ()
+                                                                                        new()
                                                                                         {
                                                                                             Ticks = new AxisTicks
                                                                                                     {

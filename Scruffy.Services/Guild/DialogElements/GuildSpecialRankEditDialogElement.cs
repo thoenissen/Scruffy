@@ -122,7 +122,7 @@ public class GuildSpecialRankEditDialogElement : DialogEmbedReactionElementBase<
     {
         return _reactions ??= new List<ReactionData<bool>>
                               {
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetEditEmote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("EditDescriptionCommand", "{0} Edit description", DiscordEmoteService.GetEditEmote(CommandContext.Client)),
@@ -142,7 +142,7 @@ public class GuildSpecialRankEditDialogElement : DialogEmbedReactionElementBase<
                                                  return true;
                                              }
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetEdit2Emote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("EditRoleCommand", "{0} Edit role", DiscordEmoteService.GetEdit2Emote(CommandContext.Client)),
@@ -162,7 +162,7 @@ public class GuildSpecialRankEditDialogElement : DialogEmbedReactionElementBase<
                                                  return true;
                                              }
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetEdit3Emote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("EditMaximumPointsCommand", "{0} Edit maximum points", DiscordEmoteService.GetEdit3Emote(CommandContext.Client)),
@@ -182,7 +182,7 @@ public class GuildSpecialRankEditDialogElement : DialogEmbedReactionElementBase<
                                                  return true;
                                              }
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetEdit4Emote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("EditGrantThresholdCommand", "{0} Edit grant threshold", DiscordEmoteService.GetEdit4Emote(CommandContext.Client)),
@@ -202,7 +202,7 @@ public class GuildSpecialRankEditDialogElement : DialogEmbedReactionElementBase<
                                                  return true;
                                              }
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetEdit5Emote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("EditRemoveThresholdCommand", "{0} Edit remove threshold", DiscordEmoteService.GetEdit5Emote(CommandContext.Client)),
@@ -222,7 +222,7 @@ public class GuildSpecialRankEditDialogElement : DialogEmbedReactionElementBase<
                                                  return true;
                                              }
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetAddEmote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("AddPointRoleCommand", "{0} Add point role", DiscordEmoteService.GetAddEmote(CommandContext.Client)),
@@ -248,7 +248,7 @@ public class GuildSpecialRankEditDialogElement : DialogEmbedReactionElementBase<
                                                  return true;
                                              }
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetTrashCanEmote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("RemovePointRoleCommand", "{0} Remove point role", DiscordEmoteService.GetTrashCanEmote(CommandContext.Client)),
@@ -268,7 +268,7 @@ public class GuildSpecialRankEditDialogElement : DialogEmbedReactionElementBase<
                                                  return true;
                                              }
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetAdd2Emote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("AddIgnoreRoleCommand", "{0} Add ignore role", DiscordEmoteService.GetAdd2Emote(CommandContext.Client)),
@@ -293,7 +293,7 @@ public class GuildSpecialRankEditDialogElement : DialogEmbedReactionElementBase<
                                                  return true;
                                              }
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetTrashCan2Emote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("RemoveIgnoreRoleCommand", "{0} Remove ignore role", DiscordEmoteService.GetTrashCan2Emote(CommandContext.Client)),
@@ -313,7 +313,7 @@ public class GuildSpecialRankEditDialogElement : DialogEmbedReactionElementBase<
                                                  return true;
                                              }
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmoteService.GetCrossEmote(CommandContext.Client)),

@@ -32,7 +32,7 @@ public sealed class GuidWars2ApiConnector : IAsyncDisposable,
     /// <summary>
     /// Lock
     /// </summary>
-    private static object _lock = new ();
+    private static object _lock = new();
 
     /// <summary>
     /// Current minute

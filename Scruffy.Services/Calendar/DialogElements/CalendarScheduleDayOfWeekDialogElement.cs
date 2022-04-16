@@ -76,43 +76,43 @@ public class CalendarScheduleDayOfWeekDialogElement : DialogEmbedReactionElement
     {
         return _reactions ??= new List<ReactionData<DayOfWeek>>
                               {
-                                  new ()
+                                  new()
                                   {
                                       Emote = Emoji.Parse(":one:"),
                                       CommandText = $"{Emoji.Parse(":one:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Monday)}",
                                       Func = () => GetReturnValue(DayOfWeek.Monday)
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = Emoji.Parse(":two:"),
                                       CommandText = $"{Emoji.Parse(":two:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Tuesday)}",
                                       Func = () => GetReturnValue(DayOfWeek.Tuesday)
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = Emoji.Parse(":three:"),
                                       CommandText = $"{Emoji.Parse(":three:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Wednesday)}",
                                       Func = () => GetReturnValue(DayOfWeek.Wednesday)
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = Emoji.Parse(":four:"),
                                       CommandText = $"{Emoji.Parse(":four:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Thursday)}",
                                       Func = () => GetReturnValue(DayOfWeek.Thursday)
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = Emoji.Parse(":five:"),
                                       CommandText = $"{Emoji.Parse(":five:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Friday)}",
                                       Func = () => GetReturnValue(DayOfWeek.Friday)
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = Emoji.Parse(":six:"),
                                       CommandText = $"{Emoji.Parse(":six:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Saturday)}",
                                       Func = () => GetReturnValue(DayOfWeek.Saturday)
                                   },
-                                  new ()
+                                  new()
                                   {
                                       Emote = Emoji.Parse(":seven:"),
                                       CommandText = $"{Emoji.Parse(":seven:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Sunday)}",
