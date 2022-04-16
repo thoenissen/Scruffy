@@ -57,7 +57,7 @@ public class GamesSlashCommandModule : SlashCommandModuleBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("games", "Manage mini games")]
     [RequireContext(ContextType.Guild)]
-    [RequireAdministratorPermissions]
+    [DefaultPermission(false)]
     public async Task Manage(GameType type, GameCommandAction action)
     {
         var message = await Context.DeferProcessing().ConfigureAwait(false);
