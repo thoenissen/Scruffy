@@ -4,7 +4,7 @@
 /// Guild Wars 2 API Permission
 /// </summary>
 [Flags]
-public enum GuildWars2ApiPermission : ulong
+public enum GuildWars2ApiPermission : long
 {
     /// <summary>
     /// Minimum required rights
