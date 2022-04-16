@@ -29,12 +29,12 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("setup", "Starting the raid configuration")]
-    // Test
     public Task Setup() => CommandHandler.Setup(Context);
 
     /// <summary>
     /// Joining an appointment
     /// </summary>
+    /// <param name="user">User</param>
     /// <param name="name">Name</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("join-user", "Register a user to an appointment")]
