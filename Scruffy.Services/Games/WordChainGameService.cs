@@ -3,7 +3,7 @@ using Scruffy.Data.Entity.Repositories.Games;
 using Scruffy.Data.Enumerations.Games;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
-using Scruffy.Services.Discord;
+using Scruffy.Services.Discord.Interfaces;
 
 namespace Scruffy.Services.Games;
 
@@ -32,7 +32,7 @@ public class WordChainGameService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task<bool> Add(CommandContextContainer commandContext)
+    public Task<bool> Add(IContextContainer commandContext)
     {
         return Task.Run(() =>
                         {
@@ -54,7 +54,7 @@ public class WordChainGameService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task<bool> Remove(CommandContextContainer commandContext)
+    public Task<bool> Remove(IContextContainer commandContext)
     {
         return Task.Run(() =>
                         {
