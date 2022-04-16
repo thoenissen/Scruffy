@@ -190,7 +190,7 @@ public class RaidCommandHandler : LocatedServiceBase
             }
             else
             {
-                await container.RespondAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."))
+                await container.RespondAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."), ephemeral: true)
                                .ConfigureAwait(false);
             }
         }
@@ -235,7 +235,7 @@ public class RaidCommandHandler : LocatedServiceBase
             }
             else
             {
-                await container.RespondAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."))
+                await container.RespondAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."), ephemeral: true)
                                .ConfigureAwait(false);
             }
         }
@@ -284,7 +284,7 @@ public class RaidCommandHandler : LocatedServiceBase
             }
             else
             {
-                await container.RespondAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."))
+                await container.RespondAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."), ephemeral: true)
                                .ConfigureAwait(false);
             }
         }
@@ -334,7 +334,7 @@ public class RaidCommandHandler : LocatedServiceBase
             }
             else
             {
-                await container.RespondAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."))
+                await container.RespondAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."), ephemeral: true)
                                .ConfigureAwait(false);
             }
         }
@@ -370,13 +370,13 @@ public class RaidCommandHandler : LocatedServiceBase
                     await _messageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
                                          .ConfigureAwait(false);
 
-                    await container.SendMessageAsync(LocalizationGroup.GetText("TemplateChanged", "The template has been changed."))
+                    await container.RespondAsync(LocalizationGroup.GetText("TemplateChanged", "The template has been changed."), ephemeral: true)
                                    .ConfigureAwait(false);
                 }
             }
             else
             {
-                await container.RespondAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."))
+                await container.RespondAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."), ephemeral: true)
                                .ConfigureAwait(false);
             }
         }
@@ -413,13 +413,13 @@ public class RaidCommandHandler : LocatedServiceBase
                     await _messageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
                                         .ConfigureAwait(false);
 
-                    await container.RespondAsync(LocalizationGroup.GetText("GroupCountChanged", "The group count has been changed."))
+                    await container.RespondAsync(LocalizationGroup.GetText("GroupCountChanged", "The group count has been changed."), ephemeral: true)
                                    .ConfigureAwait(false);
                 }
             }
             else
             {
-                await container.RespondAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."))
+                await container.RespondAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."), ephemeral: true)
                                .ConfigureAwait(false);
             }
         }
@@ -546,7 +546,7 @@ public class RaidCommandHandler : LocatedServiceBase
         }
         else
         {
-            await context.RespondAsync(LocalizationGroup.GetText("NoDpsReportToken", "The are no DPS-Report user tokens assigned to your account."))
+            await context.RespondAsync(LocalizationGroup.GetText("NoDpsReportToken", "The are no DPS-Report user tokens assigned to your account."), ephemeral: true)
                          .ConfigureAwait(false);
         }
     }

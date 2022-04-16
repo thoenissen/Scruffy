@@ -69,6 +69,12 @@ public abstract class DialogElementBase
     /// <returns>Result</returns>
     internal abstract Task<object> InternalRun();
 
+    /// <summary>
+    /// Whether the return message is ephemeral
+    /// </summary>
+    /// <returns>Ephemeral</returns>
+    public virtual bool IsEphemeral() => false;
+
     #endregion // Methods
 }
 

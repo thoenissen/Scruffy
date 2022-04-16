@@ -77,7 +77,7 @@ public abstract class DialogSelectMenuElementBase<TData> : DialogElementBase<TDa
                 componentsBuilder.WithSelectMenu(selectMenu);
             }
 
-            var message = await CommandContext.SendMessageAsync(GetMessage(), components: componentsBuilder.Build())
+            var message = await CommandContext.SendMessageAsync(GetMessage(), ephemeral: IsEphemeral(), components: componentsBuilder.Build())
                                               .ConfigureAwait(false);
 
             DialogContext.Messages.Add(message);

@@ -43,7 +43,7 @@ public class RaidSlashCommandModule : SlashCommandModuleBase
     [SlashCommand("leave", "Leave an appointment")]
     public async Task Leave([Summary("Name", "Name of the appointment")]string name)
     {
-        var message = await Context.DeferProcessing()
+        var message = await Context.DeferProcessing(ephemeral: true)
                                    .ConfigureAwait(false);
 
         await CommandHandler.Leave(Context, name)
@@ -62,7 +62,7 @@ public class RaidSlashCommandModule : SlashCommandModuleBase
     public async Task Logs([Summary("day", "Day of the logs (yyyy-MM-dd)")]string day = null)
     {
         await Context.Interaction
-                     .DeferAsync()
+                     .DeferAsync(ephemeral: true)
                      .ConfigureAwait(false);
 
         await CommandHandler.Logs(Context, day)

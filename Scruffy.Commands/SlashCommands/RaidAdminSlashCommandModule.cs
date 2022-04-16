@@ -51,7 +51,7 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
     public async Task Leave([Summary("User")]IGuildUser user,
                             [Summary("Name", "Name of the appointment")]string name)
     {
-        var message = await Context.DeferProcessing()
+        var message = await Context.DeferProcessing(ephemeral: true)
                                    .ConfigureAwait(false);
 
         await CommandHandler.Leave(Context, user, name)
@@ -80,7 +80,7 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
                                   [Summary("Count", "Group count")]int count)
     {
         await Context.Interaction
-                     .DeferAsync()
+                     .DeferAsync(ephemeral: true)
                      .ConfigureAwait(false);
 
         await CommandHandler.SetTemplate(Context, name, count)

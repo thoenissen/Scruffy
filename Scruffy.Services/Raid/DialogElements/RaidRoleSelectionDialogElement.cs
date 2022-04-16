@@ -41,26 +41,20 @@ public class RaidRoleSelectionDialogElement : DialogSelectMenuElementBase<long?>
 
     #region DialogEmbedMessageElementBase<long?>
 
-    /// <summary>
-    /// Returning the message
-    /// </summary>
-    /// <returns>Message</returns>
-    public override string GetMessage() => CommandContext.User.Mention + " " + (_mainRoleId == null
+    /// <inheritdoc/>
+    public override string GetMessage() => _mainRoleId == null
                                                ? LocalizationGroup.GetText("ChooseMainRoleTitle", "Role selection")
-                                               : LocalizationGroup.GetText("ChooseSubRoleTitle", "Class selection"));
+                                               : LocalizationGroup.GetText("ChooseSubRoleTitle", "Class selection");
 
-    /// <summary>
-    /// Returning the placeholder
-    /// </summary>
-    /// <returns>Placeholder</returns>
+    /// <inheritdoc/>
+    public override bool IsEphemeral() => true;
+
+    /// <inheritdoc/>
     public override string GetPlaceholder() => _mainRoleId == null
                                                    ? LocalizationGroup.GetText("ChooseMainRoleDescription", "Please choose one of the following roles...")
                                                    : LocalizationGroup.GetText("ChooseSubRoleDescription", "Please choose one of the following classes...");
 
-    /// <summary>
-    /// Returns the select menu entries which should be added to the message
-    /// </summary>
-    /// <returns>Reactions</returns>
+    /// <inheritdoc/>
     public override IReadOnlyList<SelectMenuEntryData<long?>> GetEntries()
     {
         if (_entries == null)
@@ -104,10 +98,7 @@ public class RaidRoleSelectionDialogElement : DialogSelectMenuElementBase<long?>
         return _entries;
     }
 
-    /// <summary>
-    /// Default case if none of the given buttons is used
-    /// </summary>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     protected override long? DefaultFunc() => throw new InvalidOperationException();
 
     #endregion // DialogEmbedMessageElementBase<long?>

@@ -142,8 +142,7 @@ public class RaidCommitService : LocatedServiceBase
                     {
                     }
 
-                    await commandContext.Channel
-                                        .SendMessageAsync(LocalizationGroup.GetText("CommitCompleted", "The raid appointment has been committed."))
+                    await commandContext.RespondAsync(LocalizationGroup.GetText("CommitCompleted", "The raid appointment has been committed."), ephemeral: true)
                                         .ConfigureAwait(false);
 
                     await _messageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
@@ -177,7 +176,7 @@ public class RaidCommitService : LocatedServiceBase
             }
             else
             {
-                await commandContext.RespondAsync(LocalizationGroup.GetText("NoOpenAppointment", "There is no uncommitted appointment available."))
+                await commandContext.RespondAsync(LocalizationGroup.GetText("NoOpenAppointment", "There is no uncommitted appointment available."), ephemeral: true)
                                     .ConfigureAwait(false);
             }
         }
