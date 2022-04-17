@@ -12,7 +12,6 @@ using Scruffy.Data.Json.GuildWars2.Core;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
 using Scruffy.Services.Discord;
-using Scruffy.Services.GuildWars2;
 using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.Account.DialogElements;

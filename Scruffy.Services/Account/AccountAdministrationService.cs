@@ -15,7 +15,6 @@ using Scruffy.Services.Core;
 using Scruffy.Services.Core.Exceptions.WebApi;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord;
-using Scruffy.Services.GuildWars2;
 using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.Account;

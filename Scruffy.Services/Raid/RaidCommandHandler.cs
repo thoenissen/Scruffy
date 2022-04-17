@@ -157,8 +157,9 @@ public class RaidCommandHandler : LocatedServiceBase
     /// </summary>
     /// <param name="container">Context container</param>
     /// <param name="name">Name</param>
+    /// <param name="isDisplayRoleSelection">Should the role selection be displayed?</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task Join(IContextContainer container, string name)
+    public async Task Join(IContextContainer container, string name, bool isDisplayRoleSelection)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
@@ -181,8 +182,11 @@ public class RaidCommandHandler : LocatedServiceBase
 
                 if (registrationId != null)
                 {
-                    await _roleAssignmentService.AssignRoles(container, registrationId.Value)
-                                                .ConfigureAwait(false);
+                    if (isDisplayRoleSelection)
+                    {
+                        await _roleAssignmentService.AssignRoles(container, registrationId.Value)
+                                                    .ConfigureAwait(false);
+                    }
 
                     await _messageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
                                         .ConfigureAwait(false);

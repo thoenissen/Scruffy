@@ -882,7 +882,8 @@
     "RaidMessageBuilder": {
       "SubstitutesBench": "Ersatzbank",
       "Join": "Anmelden",
-      "Leave": "Abmelden" 
+      "Leave": "Abmelden",
+      "Roles": "Rollen" 
     },
     "RaidOverviewService": {
       "ParticipationOverview": "Übersicht der Teilnahmepunkte"

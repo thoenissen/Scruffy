@@ -1,7 +1,5 @@
 ﻿using System.Net.Http;
 
-using Discord;
-
 using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;

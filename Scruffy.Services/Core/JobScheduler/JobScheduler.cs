@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Calendar;
+using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Data.Entity.Repositories.Reminder;
 using Scruffy.Services.Calendar.Jobs;
 using Scruffy.Services.Debug.Jobs;
@@ -12,6 +13,7 @@ using Scruffy.Services.Fractals;
 using Scruffy.Services.Fractals.Jobs;
 using Scruffy.Services.Games.Jobs;
 using Scruffy.Services.Guild.Jobs;
+using Scruffy.Services.Raid.Jobs;
 using Scruffy.Services.Reminder.Jobs;
 
 namespace Scruffy.Services.Core.JobScheduler;
@@ -131,6 +133,19 @@ public sealed class JobScheduler : SingletonLocatedServiceBase,
                 }
 
                 JobManager.AddJob(new CalendarReminderDeletionJob(entry.Id), obj => obj.ToRunOnceAt(entry.TimeStamp));
+            }
+
+            // raid
+            foreach (var appointment in dbFactory.GetRepository<RaidAppointmentRepository>()
+                                                 .GetQuery()
+                                                 .Where(obj => obj.IsCommitted == false)
+                                                 .Select(obj => new
+                                                                {
+                                                                    obj.ConfigurationId,
+                                                                    obj.TimeStamp
+                                                                }))
+            {
+                JobManager.AddJob(new RaidMessageRefreshJob(appointment.ConfigurationId), obj => obj.ToRunOnceAt(appointment.TimeStamp));
             }
         }
 #endif

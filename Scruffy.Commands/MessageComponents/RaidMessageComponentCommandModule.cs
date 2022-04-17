@@ -23,6 +23,11 @@ public class RaidMessageComponentCommandModule : LocatedInteractionModuleBase
     public const string CommandJoin = "join";
 
     /// <summary>
+    /// Command role selection
+    /// </summary>
+    public const string CommandRoleSelection = "roleSelection";
+
+    /// <summary>
     /// Command leave
     /// </summary>
     public const string CommandLeave = "leave";
@@ -52,7 +57,23 @@ public class RaidMessageComponentCommandModule : LocatedInteractionModuleBase
                      .DeferAsync()
                      .ConfigureAwait(false);
 
-        await CommandHandler.Join(Context, name)
+        await CommandHandler.Join(Context, name, false)
+                            .ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Joining an appointment
+    /// </summary>
+    /// <param name="name">Name of the appointment</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ComponentInteraction($"{Group};{CommandRoleSelection};*")]
+    public async Task RoleSelection(string name)
+    {
+        await Context.Interaction
+                     .DeferAsync()
+                     .ConfigureAwait(false);
+
+        await CommandHandler.Join(Context, name, true)
                             .ConfigureAwait(false);
     }
 

@@ -4,10 +4,12 @@ using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Data.Entity.Tables.Raid;
 using Scruffy.Data.Services.Raid;
+using Scruffy.Services.Core.JobScheduler;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
 using Scruffy.Services.Discord;
 using Scruffy.Services.Raid.DialogElements.Forms;
+using Scruffy.Services.Raid.Jobs;
 
 namespace Scruffy.Services.Raid.DialogElements;
 
@@ -22,6 +24,11 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
     /// User management service
     /// </summary>
     private readonly UserManagementService _userManagementService;
+
+    /// <summary>
+    /// Job scheduler
+    /// </summary>
+    private readonly JobScheduler _jobScheduler;
 
     /// <summary>
     /// Reactions
@@ -48,12 +55,14 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
     /// <param name="commitData">Commit data</param>
     /// <param name="userManagementService">User management service</param>
     /// <param name="localizationService">Localization service</param>
-    public RaidCommitDialogElement(LocalizationService localizationService, UserManagementService userManagementService, RaidCommitContainer commitData)
+    /// <param name="jobScheduler">Job scheduler</param>
+    public RaidCommitDialogElement(LocalizationService localizationService, UserManagementService userManagementService, RaidCommitContainer commitData, JobScheduler jobScheduler)
         : base(localizationService)
     {
         _localizationService = localizationService;
         _userManagementService = userManagementService;
         _commitData = commitData;
+        _jobScheduler = jobScheduler;
     }
 
     #endregion // Constructor
@@ -308,6 +317,8 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
 
                                                      dbFactory.GetRepository<RaidAppointmentRepository>()
                                                               .Add(nextAppointment);
+
+                                                     _jobScheduler.AddJob(new RaidMessageRefreshJob(nextAppointment.ConfigurationId), nextAppointment.TimeStamp);
                                                  }
 
                                                  return false;

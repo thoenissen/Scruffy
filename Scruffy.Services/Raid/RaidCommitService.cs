@@ -1,13 +1,11 @@
-﻿using Discord;
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Calendar;
 using Scruffy.Data.Entity.Repositories.Raid;
-using Scruffy.Data.Entity.Tables.Calendar;
 using Scruffy.Data.Services.Raid;
 using Scruffy.Services.Core;
+using Scruffy.Services.Core.JobScheduler;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
 using Scruffy.Services.Discord;
@@ -38,6 +36,11 @@ public class RaidCommitService : LocatedServiceBase
     /// </summary>
     private UserManagementService _userManagementService;
 
+    /// <summary>
+    /// Job scheduler
+    /// </summary>
+    private JobScheduler _jobScheduler;
+
     #endregion // Fields
 
     #region Constructor
@@ -48,12 +51,14 @@ public class RaidCommitService : LocatedServiceBase
     /// <param name="localizationService">Localization service</param>
     /// <param name="userManagementService">User management service</param>
     /// <param name="messageBuilder">Message builder</param>
-    public RaidCommitService(LocalizationService localizationService, UserManagementService userManagementService, RaidMessageBuilder messageBuilder)
+    /// <param name="jobScheduler">Job scheduler</param>
+    public RaidCommitService(LocalizationService localizationService, UserManagementService userManagementService, RaidMessageBuilder messageBuilder, JobScheduler jobScheduler)
         : base(localizationService)
     {
         _localizationService = localizationService;
         _userManagementService = userManagementService;
         _messageBuilder = messageBuilder;
+        _jobScheduler = jobScheduler;
     }
 
     #endregion // Constructor
@@ -138,7 +143,7 @@ public class RaidCommitService : LocatedServiceBase
                 var dialogHandler = new DialogHandler(commandContext);
                 await using (dialogHandler.ConfigureAwait(false))
                 {
-                    while (await dialogHandler.Run<RaidCommitDialogElement, bool>(new RaidCommitDialogElement(_localizationService, _userManagementService, container)).ConfigureAwait(false))
+                    while (await dialogHandler.Run<RaidCommitDialogElement, bool>(new RaidCommitDialogElement(_localizationService, _userManagementService, container, _jobScheduler)).ConfigureAwait(false))
                     {
                     }
 
