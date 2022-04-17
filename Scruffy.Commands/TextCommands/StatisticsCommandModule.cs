@@ -13,7 +13,6 @@ namespace Scruffy.Commands.TextCommands;
 [Alias("stats", "st")]
 [RequireDeveloperPermissions]
 [BlockedChannelCheck]
-[HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
 public class StatisticsCommandModule : LocatedTextCommandModuleBase
 {
     #region Properties
@@ -33,7 +32,6 @@ public class StatisticsCommandModule : LocatedTextCommandModuleBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("me")]
     [RequireContext(ContextType.Guild)]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
     public Task Me() => VisualizerService.PostMeOverview(Context);
 
     #endregion // Methods

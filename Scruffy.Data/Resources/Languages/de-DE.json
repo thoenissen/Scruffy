@@ -524,7 +524,7 @@
       "ChooseRoleDescription": "Wähle eine der folgenden Rollen aus..."
     },
     "GuildRankingCommandModule": {
-      "NoChangedRequired": "Es sind keine Rangänderungen erforderlich." 
+      "NoChangedRequired": "Es sind keine Rangänderungen erforderlich."
     },
     "GuildActivityDiscordVoiceSetupDialogElement": {
       "CommandTitle": "Befehle",
@@ -767,6 +767,9 @@
       "Wallet": "wallet",
       "MissingPermissions": "Der hinterlegte API-Schlüssel hat nicht die benötigten Berechtigungen ({0}) um den Befehl auszuführen."
     },
+    "LocatedTextCommandModuleBase": {
+      "SlashCommandMigrationHint": "Textbasierte Befehle stehen nicht mehr zur Verfügung. Du kannst diesen Befehl über den Slash Command `/{0}` ausführen." 
+    },
     "OneTimeReminderJob": {
       "EmptyReminder": "{0} Erinnerung",
       "SingleLineReminder": "{0} Erinnerung: {1}",
@@ -882,7 +885,7 @@
     "RaidMessageBuilder": {
       "SubstitutesBench": "Ersatzbank",
       "Join": "Anmelden",
-      "Leave": "Abmelden" 
+      "Leave": "Abmelden"
     },
     "RaidOverviewService": {
       "ParticipationOverview": "Übersicht der Teilnahmepunkte"

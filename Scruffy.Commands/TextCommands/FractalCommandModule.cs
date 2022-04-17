@@ -12,7 +12,6 @@ namespace Scruffy.Commands.TextCommands;
 [Group("fractal")]
 [Alias("f")]
 [BlockedChannelCheck]
-[HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
 public class FractalCommandModule : LocatedTextCommandModuleBase
 {
     #region Properties
@@ -54,7 +53,6 @@ public class FractalCommandModule : LocatedTextCommandModuleBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [Command("join")]
     [RequireContext(ContextType.Guild)]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
     public Task Join(string alias, string timeSpan, params string[] days) => LfgService.Join(Context, new List<string> { alias, timeSpan }.Concat(days));
 
     /// <summary>
@@ -76,7 +74,6 @@ public class FractalCommandModule : LocatedTextCommandModuleBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("leave")]
     [RequireContext(ContextType.Guild)]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
     public Task Leave(string alias, string timeSpan, params string[] days) => LfgService.Leave(Context, new List<string> { alias, timeSpan }.Concat(days));
 
     /// <summary>

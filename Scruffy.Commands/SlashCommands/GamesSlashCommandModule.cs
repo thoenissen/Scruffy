@@ -1,7 +1,6 @@
 ﻿using Discord.Interactions;
 
 using Scruffy.Services.Discord;
-using Scruffy.Services.Discord.Attributes;
 using Scruffy.Services.Games;
 
 namespace Scruffy.Commands.SlashCommands;
@@ -64,7 +63,7 @@ public class GamesSlashCommandModule : SlashCommandModuleBase
 
         if (type == GameType.Counter)
         {
-            if ((action == GameCommandAction.Add)
+            if (action == GameCommandAction.Add
                 ? await CounterGameService.Add(Context).ConfigureAwait(false)
                 : await CounterGameService.Remove(Context).ConfigureAwait(false))
             {
@@ -73,7 +72,7 @@ public class GamesSlashCommandModule : SlashCommandModuleBase
         }
         else
         {
-            if ((action == GameCommandAction.Add)
+            if (action == GameCommandAction.Add
                 ? await WordChainGameService.Add(Context).ConfigureAwait(false)
                 : await WordChainGameService.Remove(Context).ConfigureAwait(false))
             {

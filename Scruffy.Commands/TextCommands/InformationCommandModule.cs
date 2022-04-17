@@ -14,24 +14,14 @@ namespace Scruffy.Commands.TextCommands;
 [BlockedChannelCheck]
 public class InformationCommandModule : LocatedTextCommandModuleBase
 {
-    #region Properties
-
-    /// <summary>
-    /// Visualizer
-    /// </summary>
-    public InformationCommandHandler CommandHandler { get; set; }
-
-    #endregion // Properties
-
     #region Methods
 
     /// <summary>
-    /// Adding a one time event
+    /// Show information about Scruffy
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-    public Task Info() => CommandHandler.Info(Context);
+    public Task Info() => ShowMigrationMessage("info");
 
     #endregion // Methods
 }

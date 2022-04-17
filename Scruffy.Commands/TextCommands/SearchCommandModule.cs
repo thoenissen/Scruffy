@@ -22,7 +22,6 @@ namespace Scruffy.Commands.TextCommands;
 [BlockedChannelCheck]
 [Group("search")]
 [Alias("se")]
-[HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
 public class SearchCommandModule : LocatedTextCommandModuleBase
 {
     #region Command methods
@@ -33,7 +32,6 @@ public class SearchCommandModule : LocatedTextCommandModuleBase
     /// <param name="searchTerm">Search term</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [Command("google")]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
     public async Task Google([Remainder] string searchTerm)
     {
         using (var customSearchService = new CustomsearchService(new BaseClientService.Initializer
@@ -89,7 +87,6 @@ public class SearchCommandModule : LocatedTextCommandModuleBase
     /// <param name="searchTerm">Search term</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [Command("gw2wiki")]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
     public async Task GW2Wiki([Remainder] string searchTerm)
     {
         var embedBuilder = new EmbedBuilder

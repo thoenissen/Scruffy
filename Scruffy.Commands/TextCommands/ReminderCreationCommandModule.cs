@@ -19,7 +19,6 @@ namespace Scruffy.Commands.TextCommands;
 [BlockedChannelCheck]
 [Group("reminder")]
 [Alias("re")]
-[HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
 public class ReminderCreationCommandModule : LocatedTextCommandModuleBase
 {
     #region Properties
@@ -40,7 +39,6 @@ public class ReminderCreationCommandModule : LocatedTextCommandModuleBase
     /// <param name="message">Optional message of the reminder</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("in")]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
     public async Task RemindMeIn(string timeSpan, [Remainder] string message = null)
     {
         var checkUser = UserManagementService.CheckDiscordAccountAsync(Context.User.Id);
@@ -108,7 +106,6 @@ public class ReminderCreationCommandModule : LocatedTextCommandModuleBase
     /// <param name="time">Time</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("at")]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
     public Task RemindMeAt(string time) => RemindMeAt(time, null, null);
 
     /// <summary>

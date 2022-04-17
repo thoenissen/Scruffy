@@ -16,7 +16,6 @@ namespace Scruffy.Commands.TextCommands;
 [Alias("ad")]
 [RequireContext(ContextType.Guild)]
 [RequireAdministratorPermissions]
-[HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
 public class AdministrationCommandModule : LocatedTextCommandModuleBase
 {
     #region Properties
@@ -38,7 +37,6 @@ public class AdministrationCommandModule : LocatedTextCommandModuleBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("rename")]
     [RequireAdministratorPermissions]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public async Task Rename(IGuildUser member, [Remainder] string name)
     {
         try
@@ -62,7 +60,6 @@ public class AdministrationCommandModule : LocatedTextCommandModuleBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("rename")]
     [RequireAdministratorPermissions]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public async Task Rename(IRole role, [Remainder] string name)
     {
         try
@@ -89,7 +86,6 @@ public class AdministrationCommandModule : LocatedTextCommandModuleBase
     [Alias("c")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
     public class AdministrationChannelCommandModule : LocatedTextCommandModuleBase
     {
         #region Properties
@@ -153,7 +149,6 @@ public class AdministrationCommandModule : LocatedTextCommandModuleBase
     [Alias("s")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
     public class AdministrationSlashCommandsCommandModule : LocatedTextCommandModuleBase
     {
         #region Properties

@@ -14,7 +14,6 @@ namespace Scruffy.Commands.TextCommands;
 [RequireContext(ContextType.Guild)]
 [RequireAdministratorPermissions]
 [BlockedChannelCheck]
-[HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
 public class CalendarCommandModule : LocatedTextCommandModuleBase
 {
     #region Properties
@@ -40,7 +39,6 @@ public class CalendarCommandModule : LocatedTextCommandModuleBase
     [Command("add")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public async Task AddOneTimeEvent()
     {
         await CalendarScheduleService.AddOneTimeEvent(Context)
@@ -55,7 +53,6 @@ public class CalendarCommandModule : LocatedTextCommandModuleBase
     [Alias("p")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public async Task EditParticipants()
     {
         await CalendarParticipantsService.EditParticipants(Context)
@@ -73,7 +70,6 @@ public class CalendarCommandModule : LocatedTextCommandModuleBase
     [Alias("t")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public class CalendarTemplateCommandModule : LocatedTextCommandModuleBase
     {
         #region Properties
@@ -94,7 +90,6 @@ public class CalendarCommandModule : LocatedTextCommandModuleBase
         [Command("setup")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public async Task Setup()
         {
             await CalendarTemplateService.RunAssistantAsync(Context)
@@ -116,7 +111,6 @@ public class CalendarCommandModule : LocatedTextCommandModuleBase
     [Alias("s")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public class CalendarScheduleCommandModule : LocatedTextCommandModuleBase
     {
         #region Properties
@@ -137,7 +131,6 @@ public class CalendarCommandModule : LocatedTextCommandModuleBase
         [Command("setup")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public async Task Setup()
         {
             await CalendarScheduleService.RunAssistantAsync(Context)

@@ -13,7 +13,6 @@ namespace Scruffy.Commands.TextCommands;
 [Alias("dev", "de")]
 [RequireContext(ContextType.Guild)]
 [RequireAdministratorPermissions]
-[HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
 public class DeveloperCommandModule : LocatedTextCommandModuleBase
 {
     #region Properties

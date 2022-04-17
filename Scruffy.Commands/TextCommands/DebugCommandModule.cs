@@ -24,7 +24,6 @@ namespace Scruffy.Commands.TextCommands;
 [Group("debug")]
 [Alias("d")]
 [RequireDeveloperPermissions]
-[HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
 public class DebugCommandModule : LocatedTextCommandModuleBase
 {
     #region Methods
@@ -34,7 +33,6 @@ public class DebugCommandModule : LocatedTextCommandModuleBase
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("info")]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public async Task Info()
     {
         var embed = new EmbedBuilder();
@@ -51,7 +49,6 @@ public class DebugCommandModule : LocatedTextCommandModuleBase
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("message")]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public async Task Message()
     {
         await Context.Message
@@ -70,7 +67,6 @@ public class DebugCommandModule : LocatedTextCommandModuleBase
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("reaction")]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public async Task Reaction()
     {
         var message = await Context.Message
@@ -203,7 +199,6 @@ public class DebugCommandModule : LocatedTextCommandModuleBase
     /// </summary>
     [Group("dump")]
     [Alias("d")]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugDumpModule : LocatedTextCommandModuleBase
     {
         #region Properties
@@ -222,7 +217,6 @@ public class DebugCommandModule : LocatedTextCommandModuleBase
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("text")]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
         public async Task Roles()
         {
             await DebugService.DumpText(Context)
@@ -241,7 +235,6 @@ public class DebugCommandModule : LocatedTextCommandModuleBase
     /// </summary>
     [Group("raid")]
     [Alias("r")]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugRaidModule : LocatedTextCommandModuleBase
     {
         #region Properties
@@ -283,7 +276,6 @@ public class DebugCommandModule : LocatedTextCommandModuleBase
     /// </summary>
     [Group("list")]
     [Alias("l")]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugListModule : LocatedTextCommandModuleBase
     {
         #region Properties
@@ -302,7 +294,6 @@ public class DebugCommandModule : LocatedTextCommandModuleBase
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("roles")]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
         public async Task Roles()
         {
             await DebugService.ListRoles(Context)
@@ -314,7 +305,6 @@ public class DebugCommandModule : LocatedTextCommandModuleBase
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("users")]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
         public async Task Users()
         {
             await DebugService.ListUsers(Context)
@@ -326,7 +316,6 @@ public class DebugCommandModule : LocatedTextCommandModuleBase
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("emojis")]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
         public async Task Emojis()
         {
             await DebugService.ListEmojis(Context)
@@ -338,7 +327,6 @@ public class DebugCommandModule : LocatedTextCommandModuleBase
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("channels")]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
         public async Task Channels()
         {
             await DebugService.ListChannels(Context)
@@ -357,7 +345,6 @@ public class DebugCommandModule : LocatedTextCommandModuleBase
     /// </summary>
     [Group("account")]
     [Alias("a")]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugAccountModule : LocatedTextCommandModuleBase
     {
         #region Properties
@@ -390,7 +377,6 @@ public class DebugCommandModule : LocatedTextCommandModuleBase
     /// </summary>
     [Group("gw")]
     [Alias("g")]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugGuildWarsModule : LocatedTextCommandModuleBase
     {
         #region Properties
@@ -439,7 +425,6 @@ public class DebugCommandModule : LocatedTextCommandModuleBase
     /// </summary>
     [Group("calendar")]
     [Alias("c")]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugCalendarModule : LocatedTextCommandModuleBase
     {
         #region Properties
@@ -515,7 +500,6 @@ public class DebugCommandModule : LocatedTextCommandModuleBase
     /// </summary>
     [Group("user")]
     [Alias("u")]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugUserModule : LocatedTextCommandModuleBase
     {
         #region Methods
@@ -548,7 +532,6 @@ public class DebugCommandModule : LocatedTextCommandModuleBase
     /// </summary>
     [Group("guild")]
     [Alias("g")]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugGuildModule : LocatedTextCommandModuleBase
     {
         #region Properties
@@ -634,7 +617,6 @@ public class DebugCommandModule : LocatedTextCommandModuleBase
     /// </summary>
     [Group("import")]
     [Alias("i")]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugImportModule : LocatedTextCommandModuleBase
     {
         #region Properties
@@ -709,7 +691,6 @@ public class DebugCommandModule : LocatedTextCommandModuleBase
     /// </summary>
     [Group("network")]
     [Alias("n")]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugNetworkModule : LocatedTextCommandModuleBase
     {
         #region Properties
@@ -729,7 +710,6 @@ public class DebugCommandModule : LocatedTextCommandModuleBase
         /// <param name="domain">Domain name</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("dnsinfo")]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
         public async Task GetDnsInformation(string domain)
         {
             var embed = new EmbedBuilder().WithTitle("DNS Information")
@@ -766,7 +746,6 @@ public class DebugCommandModule : LocatedTextCommandModuleBase
     /// </summary>
     [Group("log")]
     [Alias("d")]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
     public class DebugLogModule : LocatedTextCommandModuleBase
     {
         #region Properties
@@ -786,7 +765,6 @@ public class DebugCommandModule : LocatedTextCommandModuleBase
         /// <param name="id">Id</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("entry")]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
         public async Task ShowLogEntry(int id)
         {
             await DebugService.PostLogEntry(Context, id)
@@ -798,7 +776,6 @@ public class DebugCommandModule : LocatedTextCommandModuleBase
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("overview")]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
         public async Task ShowLogOverview()
         {
             await DebugService.PostLogOverview(Context.Channel, DateTime.Today, false)
@@ -811,7 +788,6 @@ public class DebugCommandModule : LocatedTextCommandModuleBase
         /// <param name="date">Date</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("overview")]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Developer)]
         public async Task ShowLogOverview(string date)
         {
             if (DateTime.TryParseExact(date,

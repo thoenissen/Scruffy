@@ -20,7 +20,6 @@ namespace Scruffy.Commands.TextCommands;
 [Group("guild")]
 [Alias("g")]
 [BlockedChannelCheck]
-[HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
 public class GuildCommandModule : LocatedTextCommandModuleBase
 {
     #region Properties
@@ -183,7 +182,6 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
     [Group("bank")]
     [Alias("b")]
     [RequireContext(ContextType.Guild)]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public class GuildBankCommandModule : LocatedTextCommandModuleBase
     {
         #region Properties
@@ -203,7 +201,6 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("check")]
         [RequireContext(ContextType.Guild)]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public async Task SetNotificationChannel()
         {
             await BankService.Check(Context)
@@ -220,7 +217,6 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Group("unlocks")]
         [Alias("u")]
         [RequireContext(ContextType.Guild)]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public class GuildBankUnlocksCommandModule : LocatedTextCommandModuleBase
         {
             #region Constructor
@@ -244,7 +240,6 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("dyes")]
             [RequireContext(ContextType.Guild)]
-            [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
             public async Task SetNotificationChannel()
             {
                 await BankService.CheckUnlocksDyes(Context)
@@ -268,7 +263,6 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
     [Alias("r")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public class GuildRankCommandModule : LocatedTextCommandModuleBase
     {
         #region Methods
@@ -306,7 +300,6 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
     [Alias("s")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public class GuildSpecialRankCommandModule : LocatedTextCommandModuleBase
     {
         #region Properties
@@ -346,7 +339,6 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("overview")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public async Task Overview()
         {
             await SpecialRankService.PostOverview(Context)
@@ -367,7 +359,6 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
     [Alias("c")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public class GuildChartCommandModule : LocatedTextCommandModuleBase
     {
         #region Properties
@@ -388,7 +379,6 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("worlds")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public async Task SetNotificationChannel()
         {
             await WorldsService.PostWorldsOverview(Context)
@@ -409,7 +399,6 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
     [Alias("a")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public class GuildActivityCommandModule : LocatedTextCommandModuleBase
     {
         #region Methods
@@ -421,7 +410,6 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("voice")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public async Task VoiceConfiguration()
         {
             var dialogHandler = new DialogHandler(Context);
@@ -440,7 +428,6 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("message")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public async Task MessageConfiguration()
         {
             var dialogHandler = new DialogHandler(Context);
@@ -466,7 +453,6 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
     [Alias("e")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public class GuildExportCommandModule : LocatedTextCommandModuleBase
     {
         #region Properties
@@ -494,7 +480,6 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("stash")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public async Task ExportStashLog(string mode, string sinceDate)
         {
             if (DateTime.TryParseExact(sinceDate,
@@ -526,7 +511,6 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("stash")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public async Task ExportStashLog(string mode, string sinceDate, string sinceTime)
         {
             if (DateTime.TryParseExact(sinceDate,
@@ -560,7 +544,6 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("upgrades")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public async Task ExportUpgradesLog(string mode, string sinceDate)
         {
             if (DateTime.TryParseExact(sinceDate,
@@ -592,7 +575,6 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("upgrades")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public async Task ExportUpgradesLog(string mode, string sinceDate, string sinceTime)
         {
             if (DateTime.TryParseExact(sinceDate,
@@ -624,7 +606,6 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("activity")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public async Task ExportUpgradesLog()
         {
             await GuildExportService.ExportLoginActivityLog(Context)
@@ -638,7 +619,6 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("representation")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public async Task ExportRepresentation()
         {
             await GuildExportService.ExportRepresentation(Context)
@@ -652,7 +632,6 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("members")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public async Task ExportGuildMembers()
         {
             await GuildExportService.ExportGuildMembers(Context)
@@ -666,7 +645,6 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("roles")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public async Task ExportGuildRoles()
         {
             await GuildExportService.ExportGuildRoles(Context)
@@ -681,7 +659,6 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("points")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public async Task ExportCurrentRankPoints(string sinceDate)
         {
             if (DateTime.TryParseExact(sinceDate,
@@ -702,7 +679,6 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("items")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public Task ExportCustomValues() => ItemsService.ExportCustomValues(Context);
 
         /// <summary>
@@ -732,7 +708,6 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
     [Alias("c", "config")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public class GuildConfigurationCommandModule : LocatedTextCommandModuleBase
     {
         #region Properties
@@ -759,7 +734,6 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("item")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public Task StartItemsConfiguration(int id) => ItemsService.ConfigureItem(Context, id);
 
         /// <summary>

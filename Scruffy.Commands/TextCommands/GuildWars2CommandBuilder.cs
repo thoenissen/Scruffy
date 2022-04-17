@@ -11,7 +11,6 @@ namespace Scruffy.Commands.TextCommands;
 /// </summary>
 [Group("gw2")]
 [BlockedChannelCheck]
-[HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
 public class GuildWars2CommandBuilder : LocatedTextCommandModuleBase
 {
     #region Properties
@@ -35,7 +34,6 @@ public class GuildWars2CommandBuilder : LocatedTextCommandModuleBase
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("quaggan")]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
     public Task Quaggan() => QuagganService.PostRandomQuaggan(Context);
 
     /// <summary>
@@ -43,7 +41,6 @@ public class GuildWars2CommandBuilder : LocatedTextCommandModuleBase
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("update")]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
     public Task Update() => GuildWarsUpdateService.PostUpdateOverview(Context);
 
     #endregion // Command methods

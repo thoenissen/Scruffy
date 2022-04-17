@@ -12,7 +12,6 @@ namespace Scruffy.Commands.TextCommands;
 [Group("account")]
 [Alias("ac")]
 [BlockedChannelCheck]
-[HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
 public class AccountCommandModule : LocatedTextCommandModuleBase
 {
     #region Properties
@@ -31,7 +30,6 @@ public class AccountCommandModule : LocatedTextCommandModuleBase
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [Command("add")]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
     public async Task Add()
     {
        await UserManagementService.CheckDiscordAccountAsync(Context.User.Id)
@@ -46,7 +44,6 @@ public class AccountCommandModule : LocatedTextCommandModuleBase
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [Command("edit")]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
     public async Task Edit()
     {
         await UserManagementService.CheckDiscordAccountAsync(Context.User.Id)
@@ -61,7 +58,6 @@ public class AccountCommandModule : LocatedTextCommandModuleBase
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [Command("remove")]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
     public async Task Remove()
     {
         await UserManagementService.CheckDiscordAccountAsync(Context.User.Id)
@@ -77,7 +73,6 @@ public class AccountCommandModule : LocatedTextCommandModuleBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [Command("validation")]
     [RequireAdministratorPermissions]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
     public async Task Validation()
     {
         await AdministrationService.Validate(Context)
