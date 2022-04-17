@@ -10,9 +10,12 @@ using Microsoft.AspNetCore.WebUtilities;
 
 using Newtonsoft.Json;
 
+using Scruffy.Data.Enumerations.General;
 using Scruffy.Data.Json.MediaWiki;
+using Scruffy.Services.Core;
 using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Attributes;
+using Scruffy.Services.Discord.Extensions;
 
 namespace Scruffy.Commands.TextCommands;
 
@@ -99,84 +102,98 @@ public class SearchCommandModule : LocatedTextCommandModuleBase
 
         embedBuilder.WithTitle(LocalizationGroup.GetText("SearchResults", "Search results"));
 
-        var client = HttpClientFactory.CreateClient();
+        var client = HttpClientFactory.CreateClient("GW2Wiki");
 
-        using (var response = await client.GetAsync(QueryHelpers.AddQueryString("https://wiki.guildwars2.com/api.php",
-                                                                                new Dictionary<string, string>
-                                                                                {
-                                                                                    ["action"] = "query",
-                                                                                    ["srwhat"] = "title",
-                                                                                    ["list"] = "search",
-                                                                                    ["format"] = "json",
-                                                                                    ["srsearch"] = searchTerm,
-                                                                                }))
-                                          .ConfigureAwait(false))
+        try
         {
-            var jsonResult = await response.Content
-                                           .ReadAsStringAsync()
-                                           .ConfigureAwait(false);
-
-            var stringBuilder = new StringBuilder(1024);
-
-            var searchResult = JsonConvert.DeserializeObject<SearchQueryRoot>(jsonResult);
-
-            if (searchResult?.Query?.Search?.Count > 0)
+            using (var response = await client.GetAsync(QueryHelpers.AddQueryString("https://wiki.guildwars2.com/api.php",
+                                                                                    new Dictionary<string, string>
+                                                                                    {
+                                                                                        ["action"] = "query",
+                                                                                        ["srwhat"] = "text",
+                                                                                        ["list"] = "search",
+                                                                                        ["format"] = "json",
+                                                                                        ["srsearch"] = "intitle:" + searchTerm,
+                                                                                    }))
+                                              .ConfigureAwait(false))
             {
-                foreach (var result in searchResult.Query.Search)
+                var jsonResult = await response.Content
+                                               .ReadAsStringAsync()
+                                               .ConfigureAwait(false);
+
+                var stringBuilder = new StringBuilder(1024);
+
+                var searchResult = JsonConvert.DeserializeObject<SearchQueryRoot>(jsonResult);
+
+                if (searchResult?.Query?.Search?.Count > 0)
                 {
-                    var current = "> " + Format.Url(result.Title, "https://wiki.guildwars2.com/?curid=" + result.PageId) + "\n";
-
-                    if (current.Length + stringBuilder.Length > stringBuilder.Capacity)
+                    foreach (var result in searchResult.Query.Search)
                     {
-                        break;
+                        var current = "> " + Format.Url(result.Title, "https://wiki.guildwars2.com/?curid=" + result.PageId) + "\n";
+
+                        if (current.Length + stringBuilder.Length > stringBuilder.Capacity)
+                        {
+                            break;
+                        }
+
+                        stringBuilder.Append(current);
                     }
-
-                    stringBuilder.Append(current);
                 }
+
+                stringBuilder.Append("\u200B");
+
+                embedBuilder.AddField(LocalizationGroup.GetText("TitleSearch", "Title search"), stringBuilder.ToString());
             }
-
-            stringBuilder.Append("\u200B");
-
-            embedBuilder.AddField(LocalizationGroup.GetText("TitleSearch", "Title search"), stringBuilder.ToString());
+        }
+        catch (Exception ex)
+        {
+            LoggingService.AddTextCommandLogEntry(LogEntryLevel.Warning, Context.Command.GetFullName(), "title", searchTerm, null, ex);
         }
 
-        using (var response = await client.GetAsync(QueryHelpers.AddQueryString("https://wiki.guildwars2.com/api.php",
-                                                                                new Dictionary<string, string>
-                                                                                {
-                                                                                    ["action"] = "query",
-                                                                                    ["srwhat"] = "text",
-                                                                                    ["list"] = "search",
-                                                                                    ["format"] = "json",
-                                                                                    ["srsearch"] = searchTerm,
-                                                                                }))
-                                          .ConfigureAwait(false))
+        try
         {
-            var jsonResult = await response.Content
-                                           .ReadAsStringAsync()
-                                           .ConfigureAwait(false);
-
-            var stringBuilder = new StringBuilder(1024);
-
-            var searchResult = JsonConvert.DeserializeObject<SearchQueryRoot>(jsonResult);
-
-            if (searchResult?.Query?.Search?.Count > 0)
+            using (var response = await client.GetAsync(QueryHelpers.AddQueryString("https://wiki.guildwars2.com/api.php",
+                                                                                    new Dictionary<string, string>
+                                                                                    {
+                                                                                        ["action"] = "query",
+                                                                                        ["srwhat"] = "text",
+                                                                                        ["list"] = "search",
+                                                                                        ["format"] = "json",
+                                                                                        ["srsearch"] = searchTerm,
+                                                                                    }))
+                                              .ConfigureAwait(false))
             {
-                foreach (var result in searchResult.Query.Search)
+                var jsonResult = await response.Content
+                                               .ReadAsStringAsync()
+                                               .ConfigureAwait(false);
+
+                var stringBuilder = new StringBuilder(1024);
+
+                var searchResult = JsonConvert.DeserializeObject<SearchQueryRoot>(jsonResult);
+
+                if (searchResult?.Query?.Search?.Count > 0)
                 {
-                    var current = "> " + Format.Url(result.Title, "https://wiki.guildwars2.com/?curid=" + result.PageId) + "\n";
-
-                    if (current.Length + stringBuilder.Length > stringBuilder.Capacity)
+                    foreach (var result in searchResult.Query.Search)
                     {
-                        break;
+                        var current = "> " + Format.Url(result.Title, "https://wiki.guildwars2.com/?curid=" + result.PageId) + "\n";
+
+                        if (current.Length + stringBuilder.Length > stringBuilder.Capacity)
+                        {
+                            break;
+                        }
+
+                        stringBuilder.Append(current);
                     }
-
-                    stringBuilder.Append(current);
                 }
+
+                stringBuilder.Append("\u200B");
+
+                embedBuilder.AddField(LocalizationGroup.GetText("TextSearch", "Text search"), stringBuilder.ToString());
             }
-
-            stringBuilder.Append("\u200B");
-
-            embedBuilder.AddField(LocalizationGroup.GetText("TextSearch", "Text search"), stringBuilder.ToString());
+        }
+        catch (Exception ex)
+        {
+            LoggingService.AddTextCommandLogEntry(LogEntryLevel.Warning, Context.Command.GetFullName(), "text", searchTerm, null, ex);
         }
 
         embedBuilder.WithThumbnailUrl("https://media.discordapp.net/attachments/847555191842537552/861182143987712010/gw2.png");
