@@ -33,7 +33,7 @@ public class RaidSlashCommandModule : SlashCommandModuleBase
     /// <param name="name">Name</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("join", "Join an appointment")]
-    public Task Join([Summary("Name", "Name of the appointment")]string name) => CommandHandler.Join(Context, name);
+    public Task Join([Summary("Name", "Name of the appointment")]string name) => CommandHandler.Join(Context, name, true);
 
     /// <summary>
     /// Leaving an appointment

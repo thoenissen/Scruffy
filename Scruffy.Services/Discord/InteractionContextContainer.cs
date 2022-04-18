@@ -16,6 +16,15 @@ namespace Scruffy.Services.Discord;
 /// </summary>
 public sealed class InteractionContextContainer : IInteractionContext, IContextContainer, IDisposable
 {
+    #region Fields
+
+    /// <summary>
+    /// First followup message
+    /// </summary>
+    private IUserMessage _firstFollowup;
+
+    #endregion // Fields
+
     #region Constructor
 
     /// <summary>
@@ -117,6 +126,46 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
 
             return await Interaction.GetOriginalResponseAsync()
                                     .ConfigureAwait(false);
+        }
+
+        if (Interaction is IComponentInteraction)
+        {
+            if (_firstFollowup == null)
+            {
+                _firstFollowup = await Interaction.FollowupAsync(text, embeds, isTTS, false, allowedMentions, components, embed, options)
+                                                  .ConfigureAwait(false);
+            }
+            else
+            {
+                await _firstFollowup.ModifyAsync(obj =>
+                                                 {
+                                                     if (text != null)
+                                                     {
+                                                         obj.Content = text;
+                                                     }
+
+                                                     if (embed != null)
+                                                     {
+                                                         obj.Embed = embed;
+                                                     }
+
+                                                     if (allowedMentions != null)
+                                                     {
+                                                         obj.AllowedMentions = allowedMentions;
+                                                     }
+
+                                                     if (components != null)
+                                                     {
+                                                         obj.Components = components;
+                                                     }
+
+                                                     if (embeds != null)
+                                                     {
+                                                         obj.Embeds = embeds;
+                                                     }
+                                                 })
+                                    .ConfigureAwait(false);
+            }
         }
 
         return await Interaction.ModifyOriginalResponseAsync(obj =>

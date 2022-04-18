@@ -60,7 +60,8 @@ public class GuildUserConfigurationService : LocatedServiceBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public async Task ConfigureUser(IContextContainer context, IGuildUser discordUser)
     {
-        var user = _userManagementService.GetUserByDiscordAccountId(discordUser.Id);
+        var user = await _userManagementService.GetUserByDiscordAccountId(discordUser.Id)
+                                               .ConfigureAwait(false);
         var guildId = _repositoryFactory.GetRepository<GuildRepository>()
                                         .GetQuery()
                                         .Where(obj => obj.DiscordServerId == discordUser.GuildId)

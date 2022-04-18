@@ -281,13 +281,25 @@ public class RaidMessageBuilder : LocatedServiceBase
                                                                                                  "join",
                                                                                                  appointment.AliasName),
                                                      ButtonStyle.Secondary,
-                                                     DiscordEmoteService.GetCheckEmote(_client));
+                                                     DiscordEmoteService.GetCheckEmote(_client),
+                                                     null,
+                                                     appointment.TimeStamp <= DateTime.Now);
+                        componentsBuilder.WithButton(LocalizationGroup.GetText("Roles", "Roles"),
+                                                     InteractivityService.GetPermanentCustomerId("raid",
+                                                                                                 "roleSelection",
+                                                                                                 appointment.AliasName),
+                                                     ButtonStyle.Secondary,
+                                                     DiscordEmoteService.GetEditEmote(_client),
+                                                     null,
+                                                     appointment.TimeStamp <= DateTime.Now);
                         componentsBuilder.WithButton(LocalizationGroup.GetText("Leave", "Leave"),
                                                      InteractivityService.GetPermanentCustomerId("raid",
                                                                                                  "leave",
                                                                                                  appointment.AliasName),
                                                      ButtonStyle.Secondary,
-                                                     DiscordEmoteService.GetCrossEmote(_client));
+                                                     DiscordEmoteService.GetCrossEmote(_client),
+                                                     null,
+                                                     appointment.TimeStamp <= DateTime.Now);
 
                         await userMessage.ModifyAsync(obj =>
                                                       {

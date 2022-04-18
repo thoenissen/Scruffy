@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-using Scruffy.Data.Entity;
+﻿using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Account;
 using Scruffy.Data.Entity.Tables.GuildWars2.Account;
 using Scruffy.Data.Enumerations.General;
