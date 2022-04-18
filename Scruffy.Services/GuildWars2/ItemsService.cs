@@ -69,42 +69,41 @@ public class ItemsService : LocatedServiceBase
     /// Item configuration
     /// </summary>
     /// <param name="context">Context</param>
-    /// <param name="id">Id</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task ConfigureItem(IContextContainer context, int id)
+    public async Task ConfigureItem(IContextContainer context)
     {
-        var connector = new GuidWars2ApiConnector(null);
-        await using (connector.ConfigureAwait(false))
+        var dialogHandler = new DialogHandler(context);
+        await using (dialogHandler.ConfigureAwait(false))
         {
-            var item = await connector.GetItem(id)
+            var data = await dialogHandler.RunForm<ItemConfigurationFormData>()
                                       .ConfigureAwait(false);
-            if (item != null)
+            if (data != null)
             {
-                var dialogHandler = new DialogHandler(context);
-                await using (dialogHandler.ConfigureAwait(false))
+                var connector = new GuidWars2ApiConnector(null);
+                await using (connector.ConfigureAwait(false))
                 {
-                    var data = await dialogHandler.RunForm<ItemConfigurationFormData>()
-                                                  .ConfigureAwait(false);
-                    if (data != null)
+                    var item = await connector.GetItem(data.ItemId)
+                                              .ConfigureAwait(false);
+                    if (item != null)
                     {
                         using (var dbFactory = RepositoryFactory.CreateInstance())
                         {
                             if (dbFactory.GetRepository<GuildWarsItemRepository>()
-                                          .AddOrRefresh(obj => obj.ItemId == id,
-                                                        obj =>
-                                                        {
-                                                            if (obj.ItemId == id)
-                                                            {
-                                                                obj.ItemId = id;
-                                                                obj.Name = item.Name;
-                                                                obj.Type = GuildWars2ApiDataConverter.ToItemType(item.Type);
-                                                                obj.VendorValue = item.VendorValue;
-                                                            }
+                                         .AddOrRefresh(obj => obj.ItemId == data.ItemId,
+                                                       obj =>
+                                                       {
+                                                           if (obj.ItemId == data.ItemId)
+                                                           {
+                                                               obj.ItemId = data.ItemId;
+                                                               obj.Name = item.Name;
+                                                               obj.Type = GuildWars2ApiDataConverter.ToItemType(item.Type);
+                                                               obj.VendorValue = item.VendorValue;
+                                                           }
 
-                                                            obj.CustomValue = data.CustomValue;
-                                                            obj.CustomValueValidDate = null;
-                                                            obj.IsCustomValueThresholdActivated = data.IsThresholdItem;
-                                                        }))
+                                                           obj.CustomValue = data.CustomValue;
+                                                           obj.CustomValueValidDate = null;
+                                                           obj.IsCustomValueThresholdActivated = data.IsThresholdItem;
+                                                       }))
                             {
                                 await context.SendMessageAsync(LocalizationGroup.GetText("ValueAssigned", "The value has been assigned."))
                                              .ConfigureAwait(false);
@@ -115,12 +114,12 @@ public class ItemsService : LocatedServiceBase
                             }
                         }
                     }
+                    else
+                    {
+                        await context.ReplyAsync(LocalizationGroup.GetText("InvalidItem", "There is no item with the specified ID."))
+                                     .ConfigureAwait(false);
+                    }
                 }
-            }
-            else
-            {
-                await context.ReplyAsync(LocalizationGroup.GetText("InvalidItem", "There is no item with the specified ID."))
-                             .ConfigureAwait(false);
             }
         }
     }

@@ -2,7 +2,6 @@
 
 using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Attributes;
-using Scruffy.Services.Information;
 
 namespace Scruffy.Commands.TextCommands;
 

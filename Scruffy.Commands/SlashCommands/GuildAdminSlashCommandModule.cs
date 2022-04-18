@@ -1,0 +1,320 @@
+﻿using Discord;
+using Discord.Interactions;
+
+using Scruffy.Services.Discord;
+using Scruffy.Services.Guild;
+using Scruffy.Services.Guild.Modals;
+
+namespace Scruffy.Commands.SlashCommands;
+
+/// <summary>
+/// Guild administration commands
+/// </summary>
+[Group("guild-admin", "Guild administration related commands")]
+public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
+{
+    #region Enumeration
+
+    /// <summary>
+    /// Configuration types
+    /// </summary>
+    public enum ConfigurationType
+    {
+        [ChoiceDisplay("General")]
+        General,
+        [ChoiceDisplay("Guild Wars 2 item")]
+        GuildWarsItems,
+        [ChoiceDisplay("User")]
+        User,
+        [ChoiceDisplay("Ranks")]
+        Ranks,
+        [ChoiceDisplay("Special ranks")]
+        SpecialRanks,
+        [ChoiceDisplay("Message activity roles")]
+        MessageActivity,
+        [ChoiceDisplay("Voice activity roles")]
+        VoiceActivity,
+        [ChoiceDisplay("Notification channels")]
+        NotificationChannels,
+    }
+
+    /// <summary>
+    /// Overview types
+    /// </summary>
+    public enum OverviewType
+    {
+        [ChoiceDisplay("Ranking")]
+        Ranking,
+        [ChoiceDisplay("Notification channels")]
+        SpecialRanks,
+        [ChoiceDisplay("Worlds")]
+        Worlds
+    }
+
+    /// <summary>
+    /// Export types
+    /// </summary>
+    public enum DataType
+    {
+        [ChoiceDisplay("Stash")]
+        Stash,
+        [ChoiceDisplay("Upgrades")]
+        Upgrades,
+        [ChoiceDisplay("Login activity")]
+        LoginActivity,
+        [ChoiceDisplay("Representation")]
+        Representation,
+        [ChoiceDisplay("Members")]
+        Members,
+        [ChoiceDisplay("Roles")]
+        Roles,
+        [ChoiceDisplay("Points")]
+        Points,
+        [ChoiceDisplay("Items")]
+        Items,
+        [ChoiceDisplay("Assignments")]
+        Assignments
+    }
+
+    /// <summary>
+    /// Check types
+    /// </summary>
+    public enum CheckType
+    {
+        [ChoiceDisplay("In game rank assignments")]
+        RankAssignment,
+    }
+
+    #endregion // Enumeration
+
+    #region Properties
+
+    /// <summary>
+    /// Command handler
+    /// </summary>
+    public GuildCommandHandler CommandHandler { get; set; }
+
+    #endregion // Properties
+
+    #region Methods
+
+    /// <summary>
+    /// Guild configuration
+    /// </summary>
+    /// <param name="type">Type</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [SlashCommand("configuration", "Guild configuration")]
+    public async Task Configuration([Summary("Type", "Configuration type")] ConfigurationType type)
+    {
+        switch (type)
+        {
+            case ConfigurationType.General:
+                {
+                    await CommandHandler.ConfigureGuild(Context)
+                                        .ConfigureAwait(false);
+                }
+                break;
+
+            case ConfigurationType.VoiceActivity:
+                {
+                    await CommandHandler.ConfigureVoiceActivityRoles(Context)
+                                        .ConfigureAwait(false);
+                }
+                break;
+
+            case ConfigurationType.MessageActivity:
+                {
+                    await CommandHandler.ConfigureMessageActivityRoles(Context)
+                                        .ConfigureAwait(false);
+                }
+                break;
+
+            case ConfigurationType.NotificationChannels:
+                {
+                    await CommandHandler.ConfigureNotificationChannel(Context)
+                                        .ConfigureAwait(false);
+                }
+                break;
+
+            case ConfigurationType.GuildWarsItems:
+                {
+                    await CommandHandler.ConfigureItem(Context)
+                                        .ConfigureAwait(false);
+                }
+                break;
+
+            case ConfigurationType.User:
+                {
+                    await CommandHandler.ConfigureUser(Context)
+                                        .ConfigureAwait(false);
+                }
+                break;
+
+            case ConfigurationType.Ranks:
+                {
+                    await CommandHandler.ConfigureRanks(Context)
+                                        .ConfigureAwait(false);
+                }
+                break;
+
+            case ConfigurationType.SpecialRanks:
+                {
+                    await CommandHandler.ConfigureSpecialRanks(Context)
+                                        .ConfigureAwait(false);
+                }
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException(nameof(type), type, null);
+        }
+    }
+
+    /// <summary>
+    /// Overview
+    /// </summary>
+    /// <param name="type">Type</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [SlashCommand("overview", "Guild overview")]
+    public async Task Configuration([Summary("Type", "Overview type")] OverviewType type)
+    {
+        switch (type)
+        {
+            case OverviewType.Ranking:
+                {
+                    await CommandHandler.PostRankingOverview(Context)
+                                        .ConfigureAwait(false);
+                }
+                break;
+
+            case OverviewType.SpecialRanks:
+                {
+                    await CommandHandler.PostSpecialRankOverview(Context)
+                                        .ConfigureAwait(false);
+                }
+                break;
+
+            case OverviewType.Worlds:
+                {
+                    await CommandHandler.PostWorldsOverview(Context)
+                                        .ConfigureAwait(false);
+                }
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException(nameof(type), type, null);
+        }
+    }
+
+    /// <summary>
+    /// Overview
+    /// </summary>
+    /// <param name="type">Type</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [SlashCommand("export", "Export data")]
+    public async Task Export([Summary("Type", "Data type")] DataType type)
+    {
+        switch (type)
+        {
+            case DataType.Stash:
+                {
+                    await Context.Interaction
+                                 .RespondWithModalAsync<GuildExportStashModalData>(GuildExportStashModalData.CustomId)
+                                 .ConfigureAwait(false);
+                }
+                break;
+
+            case DataType.Upgrades:
+                {
+                    await Context.Interaction
+                                 .RespondWithModalAsync<GuildExportUpgradesModalData>(GuildExportUpgradesModalData.CustomId)
+                                 .ConfigureAwait(false);
+                }
+                break;
+
+            case DataType.LoginActivity:
+                {
+                    await CommandHandler.ExportLoginActivity(Context)
+                                        .ConfigureAwait(false);
+                }
+                break;
+
+            case DataType.Representation:
+                {
+                    await CommandHandler.ExportRepresentation(Context)
+                                        .ConfigureAwait(false);
+                }
+                break;
+
+            case DataType.Members:
+                {
+                    await CommandHandler.ExportMembers(Context)
+                                        .ConfigureAwait(false);
+                }
+                break;
+
+            case DataType.Roles:
+                {
+                    await CommandHandler.ExportRoles(Context)
+                                        .ConfigureAwait(false);
+                }
+                break;
+
+            case DataType.Points:
+                {
+                    await Context.Interaction
+                                 .RespondWithModalAsync<GuildExportCurrentPointsModalData>(GuildExportCurrentPointsModalData.CustomId)
+                                 .ConfigureAwait(false);
+                }
+                break;
+
+            case DataType.Items:
+                {
+                    await CommandHandler.ExportItems(Context)
+                                        .ConfigureAwait(false);
+                }
+                break;
+
+            case DataType.Assignments:
+                {
+                    await CommandHandler.ExportAssignments(Context)
+                                        .ConfigureAwait(false);
+                }
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException(nameof(type), type, null);
+        }
+    }
+
+    /// <summary>
+    /// Personal ranking data
+    /// </summary>
+    /// <param name="user">User</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [SlashCommand("ranking-of", "Personal guild ranking overview")]
+    public Task PostPersonalRankingOverview([Summary("User", "User")]IGuildUser user) => CommandHandler.PostPersonalRankingOverview(Context, user);
+
+    /// <summary>
+    /// Execute checks
+    /// </summary>
+    /// <param name="type">Type</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [SlashCommand("check", "Check execution")]
+    public async Task Check([Summary("Type", "Check type")]CheckType type)
+    {
+        switch (type)
+        {
+            case CheckType.RankAssignment:
+                {
+                    await CommandHandler.CheckRankAssignments(Context)
+                                        .ConfigureAwait(false);
+                }
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException(nameof(type), type, null);
+        }
+    }
+
+    #endregion // Methods
+}

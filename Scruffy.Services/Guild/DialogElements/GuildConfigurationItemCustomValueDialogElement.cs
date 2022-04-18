@@ -10,7 +10,7 @@ namespace Scruffy.Services.Guild.DialogElements;
 /// <summary>
 /// Acquisition of the custom value
 /// </summary>
-public class GuildConfigurationItemCustomerValueDialogElement : DialogMessageElementBase<long>
+public class GuildConfigurationItemCustomValueDialogElement : DialogMessageElementBase<long>
 {
     #region Constructor
 
@@ -18,7 +18,7 @@ public class GuildConfigurationItemCustomerValueDialogElement : DialogMessageEle
     /// Constructor
     /// </summary>
     /// <param name="localizationService">Localization service</param>
-    public GuildConfigurationItemCustomerValueDialogElement(LocalizationService localizationService)
+    public GuildConfigurationItemCustomValueDialogElement(LocalizationService localizationService)
         : base(localizationService)
     {
     }

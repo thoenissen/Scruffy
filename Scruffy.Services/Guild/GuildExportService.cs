@@ -14,7 +14,7 @@ using Scruffy.Data.Enumerations.GuildWars2;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Extensions;
 using Scruffy.Services.Core.Localization;
-using Scruffy.Services.Discord;
+using Scruffy.Services.Discord.Interfaces;
 using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.Guild;
@@ -45,7 +45,7 @@ public class GuildExportService : LocatedServiceBase
     /// <param name="commandContext">Command context</param>
     /// <param name="sinceDate">Since date</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task ExportStashLog(CommandContextContainer commandContext, DateTime sinceDate)
+    public async Task ExportStashLog(IContextContainer commandContext, DateTime sinceDate)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
@@ -136,7 +136,7 @@ public class GuildExportService : LocatedServiceBase
     /// <param name="commandContext">Command context</param>
     /// <param name="sinceDate">Since date</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task ExportStashLogSummarized(CommandContextContainer commandContext, DateTime sinceDate)
+    public async Task ExportStashLogSummarized(IContextContainer commandContext, DateTime sinceDate)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
@@ -233,7 +233,7 @@ public class GuildExportService : LocatedServiceBase
     /// <param name="commandContext">Command context</param>
     /// <param name="sinceDate">Since date</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task ExportUpgradesLog(CommandContextContainer commandContext, DateTime sinceDate)
+    public async Task ExportUpgradesLog(IContextContainer commandContext, DateTime sinceDate)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
@@ -348,7 +348,7 @@ public class GuildExportService : LocatedServiceBase
     /// <param name="commandContext">Command context</param>
     /// <param name="sinceDate">Since date</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task ExportUpgradesLogSummarized(CommandContextContainer commandContext, DateTime sinceDate)
+    public async Task ExportUpgradesLogSummarized(IContextContainer commandContext, DateTime sinceDate)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
@@ -468,7 +468,7 @@ public class GuildExportService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task ExportLoginActivityLog(CommandContextContainer commandContext)
+    public async Task ExportLoginActivityLog(IContextContainer commandContext)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
@@ -518,7 +518,7 @@ public class GuildExportService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task ExportRepresentation(CommandContextContainer commandContext)
+    public async Task ExportRepresentation(IContextContainer commandContext)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
@@ -605,7 +605,7 @@ public class GuildExportService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task ExportGuildMembers(CommandContextContainer commandContext)
+    public async Task ExportGuildMembers(IContextContainer commandContext)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
@@ -679,7 +679,7 @@ public class GuildExportService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task ExportGuildRoles(CommandContextContainer commandContext)
+    public async Task ExportGuildRoles(IContextContainer commandContext)
     {
         var members = new List<(string Role, string User)>();
 
@@ -729,7 +729,7 @@ public class GuildExportService : LocatedServiceBase
     /// <param name="commandContext">Command context</param>
     /// <param name="sinceDate">Since date</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task ExportGuildRankPoints(CommandContextContainer commandContext, DateTime sinceDate)
+    public async Task ExportGuildRankPoints(IContextContainer commandContext, DateTime sinceDate)
     {
         var members = new Dictionary<ulong, string>();
 
@@ -794,7 +794,7 @@ public class GuildExportService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task ExportGuildRankAssignments(CommandContextContainer commandContext)
+    public async Task ExportGuildRankAssignments(IContextContainer commandContext)
     {
         var members = new Dictionary<ulong, string>();
 

@@ -9,6 +9,7 @@ using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
 using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Interfaces;
+using Scruffy.Services.Guild.DialogElements;
 
 namespace Scruffy.Services.Guild;
 
@@ -56,15 +57,17 @@ public class GuildUserConfigurationService : LocatedServiceBase
     /// Configuration of an user
     /// </summary>
     /// <param name="context">Context</param>
-    /// <param name="discordUser">User</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task ConfigureUser(IContextContainer context, IGuildUser discordUser)
+    public async Task ConfigureUser(IContextContainer context)
     {
-        var user = await _userManagementService.GetUserByDiscordAccountId(discordUser.Id)
+        var member = await DialogHandler.Run<GuildUserConfigurationUserDialogElement, IGuildUser>(context)
+                                        .ConfigureAwait(false);
+
+        var user = await _userManagementService.GetUserByDiscordAccountId(member.Id)
                                                .ConfigureAwait(false);
         var guildId = _repositoryFactory.GetRepository<GuildRepository>()
                                         .GetQuery()
-                                        .Where(obj => obj.DiscordServerId == discordUser.GuildId)
+                                        .Where(obj => obj.DiscordServerId == member.GuildId)
                                         .Select(obj => obj.Id)
                                         .FirstOrDefault();
 
@@ -90,7 +93,7 @@ public class GuildUserConfigurationService : LocatedServiceBase
                 builder.WithTitle(LocalizationGroup.GetText("UserConfiguration", "User configuration"));
                 builder.WithDescription(LocalizationGroup.GetText("Description", "With the following assistant you are able to change the user configuration. Select one of the following options to change them."));
 
-                builder.AddField(LocalizationGroup.GetText("User", "User"), discordUser.Mention);
+                builder.AddField(LocalizationGroup.GetText("User", "User"), member.Mention);
 
                 var stringBuilder = new StringBuilder();
                 stringBuilder.AppendLine($"{LocalizationGroup.GetText(nameof(userConfiguration.IsFixedRank), "Excluded from ranking changes")}: {(userConfiguration.IsFixedRank ? DiscordEmoteService.GetCheckEmote(context.Client) : DiscordEmoteService.GetCrossEmote(context.Client))}");
@@ -153,7 +156,7 @@ public class GuildUserConfigurationService : LocatedServiceBase
 
                 continueEdit = _repositoryFactory.GetRepository<GuildUserConfigurationRepository>()
                                                  .AddOrRefresh(obj => obj.UserId == user.Id
-                                                                   && obj.Guild.DiscordServerId == discordUser.GuildId,
+                                                                   && obj.Guild.DiscordServerId == member.GuildId,
                                                                obj =>
                                                                {
                                                                    obj.GuildId = userConfiguration.GuildId;

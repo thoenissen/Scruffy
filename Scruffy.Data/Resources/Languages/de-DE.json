@@ -454,6 +454,9 @@
       "BuildingProgress": "Erstellung...",
       "CreationCompletedMessage": "Erstellung abgechlossen! Alle Nachrichten der Erstellung werden in 30 Sekunden gelöscht."
     },
+    "GuildUserConfigurationUserDialogElement": {
+      "Message": "Gebe bitte den Benutzer ein:"
+    },
     "GuildUserConfigurationService": {
       "UserConfiguration": "Benutzerkonfiguration",
       "Description": "Mit den folgenden Assistenten kannst du die Benutzereinstellungen ändern. Wähle dafür eine der folgenden Optionen aus.",
@@ -523,7 +526,7 @@
       "ChooseRoleTitle": "Wähle die Rolle aus, die gelöscht werden soll:",
       "ChooseRoleDescription": "Wähle eine der folgenden Rollen aus..."
     },
-    "GuildRankingCommandModule": {
+    "GuildCommandHandler": {
       "NoChangedRequired": "Es sind keine Rangänderungen erforderlich."
     },
     "GuildActivityDiscordVoiceSetupDialogElement": {
@@ -538,6 +541,15 @@
     },
     "GuildApiKeyDialogElement": {
       "Message": "Gib den zu verwendenden API-Key ein:"
+    },
+    "GuildNotificationChannelConfigurationSelectDialogElement": {
+      "Message": "Wähle einen der folgenden Typen aus:",
+      "SpecialRankNotification": "Spezial-Ränge",
+      "CalendarReminderNotification": "Kalendererinnerungen",
+      "GuildLogNotification": "Gildenprotokoll",
+      "GuildRankChangeNotification": "Gildenrangänderungen",
+      "MessageOfTheDay": "Nachricht des Tages",
+      "Calendar": "Kalender"
     },
     "GuildBankService": {
       "BankValidation": "Banküberprüfung",
@@ -721,8 +733,11 @@
       "UpdateField": "Allgemein",
       "EodField": "End of Dragons"
     },
-    "GuildConfigurationItemCustomerValueDialogElement": {
+    "GuildConfigurationItemCustomValueDialogElement": {
       "Message": "Gib den benutzerdefinierten Wert in Kupfer ein, der dem Gegenstand zugewiesen werden soll."
+    },
+    "GuildConfigurationItemItemIdDialogElement": {
+      "Message": "Gibt bitte die ID des Gegenstandes ein."
     },
     "GuildConfigurationItemCustomValueThresholdDialogElement": {
       "Message": "Soll bei diesem Gegenstand der Schwellenwert berücksichtig werden?",
@@ -768,7 +783,7 @@
       "MissingPermissions": "Der hinterlegte API-Schlüssel hat nicht die benötigten Berechtigungen ({0}) um den Befehl auszuführen."
     },
     "LocatedTextCommandModuleBase": {
-      "SlashCommandMigrationHint": "Textbasierte Befehle stehen nicht mehr zur Verfügung. Du kannst diesen Befehl über den Slash Command `/{0}` ausführen." 
+      "SlashCommandMigrationHint": "Textbasierte Befehle stehen nicht mehr zur Verfügung. Du kannst diesen Befehl über den Slash Command `/{0}` ausführen."
     },
     "OneTimeReminderJob": {
       "EmptyReminder": "{0} Erinnerung",
@@ -886,7 +901,7 @@
       "SubstitutesBench": "Ersatzbank",
       "Join": "Anmelden",
       "Leave": "Abmelden",
-      "Roles": "Rollen" 
+      "Roles": "Rollen"
     },
     "RaidOverviewService": {
       "ParticipationOverview": "Übersicht der Teilnahmepunkte"
