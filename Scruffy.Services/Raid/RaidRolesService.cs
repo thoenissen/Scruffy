@@ -6,6 +6,7 @@ using Scruffy.Data.Entity.Tables.Raid;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord;
+using Scruffy.Services.Discord.Interfaces;
 
 namespace Scruffy.Services.Raid;
 
@@ -34,7 +35,7 @@ public class RaidRolesService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContextContainer">Current command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task RunAssistantAsync(CommandContextContainer commandContextContainer)
+    public async Task RunAssistantAsync(IContextContainer commandContextContainer)
     {
         var builder = new EmbedBuilder();
         builder.WithTitle(LocalizationGroup.GetText("AssistantTitle", "Raid role configuration"));
@@ -154,7 +155,7 @@ public class RaidRolesService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContextContainer">Current command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private async Task RunAddAssistantAsync(CommandContextContainer commandContextContainer)
+    private async Task RunAddAssistantAsync(IContextContainer commandContextContainer)
     {
         var currentBotMessage = await commandContextContainer.Channel
                                                              .SendMessageAsync(LocalizationGroup.GetText("ReactWithEmojiPrompt", "Please react with emoji which should be assigned to the role."))
@@ -292,7 +293,7 @@ public class RaidRolesService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContextContainer">Current command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private async Task RunEditAssistantAsync(CommandContextContainer commandContextContainer)
+    private async Task RunEditAssistantAsync(IContextContainer commandContextContainer)
     {
         var roleId = await SelectRoleAsync(commandContextContainer, null).ConfigureAwait(false);
         if (roleId != null)
@@ -416,7 +417,7 @@ public class RaidRolesService : LocatedServiceBase
     /// <param name="commandContextContainer">Current command context</param>
     /// <param name="roleId">Id of the role</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private async Task RunEditDescriptionAssistantAsync(CommandContextContainer commandContextContainer, long roleId)
+    private async Task RunEditDescriptionAssistantAsync(IContextContainer commandContextContainer, long roleId)
     {
         await commandContextContainer.Channel
                                      .SendMessageAsync(LocalizationGroup.GetText("DescriptionPrompt", "Please enter the description of the role."))
@@ -444,7 +445,7 @@ public class RaidRolesService : LocatedServiceBase
     /// <param name="commandContextContainer">Current command context</param>
     /// <param name="roleId">Id of the role</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private async Task RunEditEmojiAssistantAsync(CommandContextContainer commandContextContainer, long roleId)
+    private async Task RunEditEmojiAssistantAsync(IContextContainer commandContextContainer, long roleId)
     {
         var message = await commandContextContainer.Channel
                                                    .SendMessageAsync(LocalizationGroup.GetText("ReactWithEmojiPrompt", "Please react with emoji which should be assigned to the role."))
@@ -471,7 +472,7 @@ public class RaidRolesService : LocatedServiceBase
     /// <param name="commandContextContainer">Current command context</param>
     /// <param name="mainRoleId">Id of the role</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private async Task RunAddSubRoleAssistantAsync(CommandContextContainer commandContextContainer, long mainRoleId)
+    private async Task RunAddSubRoleAssistantAsync(IContextContainer commandContextContainer, long mainRoleId)
     {
         var currentBotMessage = await commandContextContainer.Channel
                                                              .SendMessageAsync(LocalizationGroup.GetText("ReactWithEmojiPrompt", "Please react with emoji which should be assigned to the role."))
@@ -517,7 +518,7 @@ public class RaidRolesService : LocatedServiceBase
     /// <param name="commandContextContainer">Current command context</param>
     /// <param name="mainRoleId">Id of the role</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private async Task RunEditSubRoleAssistantAsync(CommandContextContainer commandContextContainer, long mainRoleId)
+    private async Task RunEditSubRoleAssistantAsync(IContextContainer commandContextContainer, long mainRoleId)
     {
         var roleId = await SelectRoleAsync(commandContextContainer, mainRoleId).ConfigureAwait(false);
         if (roleId != null)
@@ -568,7 +569,7 @@ public class RaidRolesService : LocatedServiceBase
     /// <param name="commandContextContainer">Current command context</param>
     /// <param name="mainRoleId">Id of the role</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private async Task RunDeleteSubRoleAssistantAsync(CommandContextContainer commandContextContainer, long mainRoleId)
+    private async Task RunDeleteSubRoleAssistantAsync(IContextContainer commandContextContainer, long mainRoleId)
     {
         var roleId = await SelectRoleAsync(commandContextContainer, mainRoleId).ConfigureAwait(false);
         if (roleId != null)
@@ -604,7 +605,7 @@ public class RaidRolesService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContextContainer">Current command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private async Task RunDeleteAssistantAsync(CommandContextContainer commandContextContainer)
+    private async Task RunDeleteAssistantAsync(IContextContainer commandContextContainer)
     {
         var roleId = await SelectRoleAsync(commandContextContainer, null).ConfigureAwait(false);
         if (roleId != null)
@@ -641,7 +642,7 @@ public class RaidRolesService : LocatedServiceBase
     /// <param name="commandContextContainer">Current command context</param>
     /// <param name="mainRoleId">Id of the main role</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private async Task<long?> SelectRoleAsync(CommandContextContainer commandContextContainer, long? mainRoleId)
+    private async Task<long?> SelectRoleAsync(IContextContainer commandContextContainer, long? mainRoleId)
     {
         long? roleId = null;
 

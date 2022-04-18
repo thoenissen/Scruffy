@@ -1,19 +1,8 @@
 ﻿using Discord;
 using Discord.Commands;
 
-using Microsoft.EntityFrameworkCore;
-
-using Scruffy.Data.Entity;
-using Scruffy.Data.Entity.Repositories.CoreData;
-using Scruffy.Data.Entity.Repositories.Discord;
-using Scruffy.Data.Entity.Repositories.Raid;
-using Scruffy.Data.Entity.Tables.CoreData;
-using Scruffy.Data.Entity.Tables.Discord;
-using Scruffy.Data.Enumerations.CoreData;
 using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Attributes;
-using Scruffy.Services.Raid;
-using Scruffy.Services.Raid.DialogElements;
 
 namespace Scruffy.Commands.TextCommands;
 
@@ -133,20 +122,6 @@ public class RaidCommandModule : LocatedTextCommandModuleBase
     [Alias("r")]
     public class RaidRolesCommandModule : LocatedTextCommandModuleBase
     {
-        #region Properties
-
-        /// <summary>
-        /// Message builder
-        /// </summary>
-        public RaidMessageBuilder MessageBuilder { get; set; }
-
-        /// <summary>
-        /// Raid roles service
-        /// </summary>
-        public RaidRolesService RaidRolesService { get; set; }
-
-        #endregion // Properties
-
         #region Methods
 
         /// <summary>
@@ -156,11 +131,7 @@ public class RaidCommandModule : LocatedTextCommandModuleBase
         [Command("setup")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        public async Task SetupRoles()
-        {
-            await RaidRolesService.RunAssistantAsync(Context)
-                                  .ConfigureAwait(false);
-        }
+        public Task SetupRoles() => ShowMigrationMessage("raid-admin configuration");
 
         #endregion // Methods
     }
@@ -185,17 +156,7 @@ public class RaidCommandModule : LocatedTextCommandModuleBase
         [Command("setup")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        public async Task Setup()
-        {
-            bool repeat;
-
-            do
-            {
-                repeat = await DialogHandler.Run<RaidTemplateSetupDialogElement, bool>(Context)
-                                            .ConfigureAwait(false);
-            }
-            while (repeat);
-        }
+        public Task Setup() => ShowMigrationMessage("raid-admin configuration");
 
         #endregion // Methods
     }
@@ -211,25 +172,6 @@ public class RaidCommandModule : LocatedTextCommandModuleBase
     [Alias("l", "level")]
     public class RaidExperienceLevelsCommandModule : LocatedTextCommandModuleBase
     {
-        #region Properties
-
-        /// <summary>
-        /// Experience level service
-        /// </summary>
-        public RaidExperienceLevelsService RaidExperienceLevelsService { get; set; }
-
-        /// <summary>
-        /// Raid registration
-        /// </summary>
-        public RaidRegistrationService RaidRegistrationService { get; set; }
-
-        /// <summary>
-        /// Message builder
-        /// </summary>
-        public RaidMessageBuilder MessageBuilder { get; set; }
-
-        #endregion // Properties
-
         #region Methods
 
         /// <summary>
@@ -239,17 +181,7 @@ public class RaidCommandModule : LocatedTextCommandModuleBase
         [Command("setup")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        public async Task Setup()
-        {
-            bool repeat;
-
-            do
-            {
-                repeat = await DialogHandler.Run<RaidExperienceLevelSetupDialogElement, bool>(Context)
-                                            .ConfigureAwait(false);
-            }
-            while (repeat);
-        }
+        public Task Setup() => ShowMigrationMessage("raid-admin configuration");
 
         /// <summary>
         /// Set experience levels to players
@@ -260,124 +192,7 @@ public class RaidCommandModule : LocatedTextCommandModuleBase
         [Command("set")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        public async Task SetExperienceLevel(string aliasName, params IGuildUser[] discordUsers)
-        {
-            using (var dbFactory = RepositoryFactory.CreateInstance())
-            {
-                var experienceLevelId = await dbFactory.GetRepository<RaidExperienceLevelRepository>()
-                                                       .GetQuery()
-                                                       .Where(obj => obj.AliasName == aliasName)
-                                                       .Select(obj => obj.Id)
-                                                       .FirstOrDefaultAsync()
-                                                       .ConfigureAwait(false);
-
-                if (experienceLevelId > 0)
-                {
-                    var changedRanks = new List<(IGuildUser User, long? OldExperienceLevelId, long NewExperienceLevelId)>();
-
-                    foreach (var discordUser in discordUsers)
-                    {
-                        if (dbFactory.GetRepository<UserRepository>()
-                                     .Refresh(obj => obj.DiscordAccounts.Any(obj2 => obj2.Id == discordUser.Id),
-                                              obj =>
-                                              {
-                                                  if (obj.RaidExperienceLevelId != experienceLevelId)
-                                                  {
-                                                      changedRanks.Add((discordUser,
-                                                                        obj.RaidExperienceLevelId, experienceLevelId));
-                                                  }
-
-                                                  obj.RaidExperienceLevelId = experienceLevelId;
-                                              })
-                         == false)
-                        {
-                            var user = new UserEntity
-                                       {
-                                           CreationTimeStamp = DateTime.Now,
-                                           Type = UserType.DiscordUser,
-                                           RaidExperienceLevelId = experienceLevelId
-                                       };
-
-                            if (dbFactory.GetRepository<UserRepository>()
-                                         .Add(user))
-                            {
-                                dbFactory.GetRepository<DiscordAccountRepository>()
-                                         .Add(new DiscordAccountEntity
-                                              {
-                                                  Id = discordUser.Id,
-                                                  UserId = user.Id
-                                              });
-
-                                changedRanks.Add((discordUser, null, experienceLevelId));
-                            }
-                        }
-                    }
-
-                    var now = DateTime.Now;
-
-                    var discordUserIds = discordUsers.Select(obj => obj.Id)
-                                                     .ToList();
-
-                    var appointments = dbFactory.GetRepository<RaidAppointmentRepository>()
-                                                .GetQuery()
-                                                .Where(obj => obj.IsCommitted == false
-                                                           && obj.TimeStamp > now
-                                                           && obj.RaidRegistrations.Any(obj2 => obj2.User.DiscordAccounts.Any(obj3 => discordUserIds.Contains(obj3.Id))))
-                                                .Select(obj => new
-                                                               {
-                                                                   obj.Id,
-                                                                   obj.ConfigurationId
-                                                               })
-                                                .ToList();
-
-                    foreach (var appointment in appointments)
-                    {
-                        await RaidRegistrationService.RefreshAppointment(appointment.Id)
-                                                     .ConfigureAwait(false);
-
-                        await MessageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
-                                            .ConfigureAwait(false);
-                    }
-
-                    await Context.Message
-                                 .DeleteAsync()
-                                 .ConfigureAwait(false);
-
-                    var experienceLevels = dbFactory.GetRepository<RaidExperienceLevelRepository>()
-                                                    .GetQuery()
-                                                    .Select(obj => new
-                                                                   {
-                                                                       obj.Id,
-                                                                       obj.Description,
-                                                                       obj.Rank
-                                                                   })
-                                                    .ToList();
-
-                    foreach (var changedRank in changedRanks.Where(obj => obj.NewExperienceLevelId != obj.OldExperienceLevelId))
-                    {
-                        var oldRank = experienceLevels.FirstOrDefault(obj => obj.Id == changedRank.OldExperienceLevelId);
-                        var newRank = experienceLevels.FirstOrDefault(obj => obj.Id == changedRank.NewExperienceLevelId);
-
-                        await Context.Channel
-                                     .SendMessageAsync(LocalizationGroup.GetFormattedText("NewRankFormat",
-                                                                                          "Level changed for {0}: {1} {2} {3}",
-                                                                                          changedRank.User.Mention,
-                                                                                          oldRank?.Description,
-                                                                                          oldRank == null || oldRank.Rank > newRank?.Rank
-                                                                                              ? DiscordEmoteService.GetArrowUpEmote(Context.Client)
-                                                                                              : DiscordEmoteService.GetArrowDownEmote(Context.Client),
-                                                                                          newRank?.Description))
-                                     .ConfigureAwait(false);
-                    }
-                }
-                else
-                {
-                    await Context.Message
-                                 .ReplyAsync(LocalizationGroup.GetText("UnknownExperienceLevel", "The experience role by the given name does not exist."))
-                                 .ConfigureAwait(false);
-                }
-            }
-        }
+        public Task SetExperienceLevel(string aliasName, params IGuildUser[] discordUsers) => ShowMigrationMessage("raid-admin set-experience-level");
 
         #endregion // Methods
     }
@@ -393,20 +208,6 @@ public class RaidCommandModule : LocatedTextCommandModuleBase
     [Alias("o")]
     public class RaidOverviewCommandModule : LocatedTextCommandModuleBase
     {
-        #region Properties
-
-        /// <summary>
-        /// Experience level service
-        /// </summary>
-        public RaidExperienceLevelsService RaidExperienceLevelsService { get; set; }
-
-        /// <summary>
-        /// Overviews service
-        /// </summary>
-        public RaidOverviewService RaidOverviewService { get; set; }
-
-        #endregion // Properties
-
         #region Methods
 
         /// <summary>
@@ -415,11 +216,7 @@ public class RaidCommandModule : LocatedTextCommandModuleBase
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("participation")]
         [RequireContext(ContextType.Guild)]
-        public async Task PostParticipationOverview()
-        {
-            await RaidOverviewService.PostParticipationOverview(Context)
-                                     .ConfigureAwait(false);
-        }
+        public Task PostParticipationOverview() => ShowMigrationMessage("raid-admin overview");
 
         /// <summary>
         /// Post overview of experience roles
@@ -427,11 +224,7 @@ public class RaidCommandModule : LocatedTextCommandModuleBase
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("levels")]
         [RequireContext(ContextType.Guild)]
-        public async Task PostExperienceLevelOverview()
-        {
-            await RaidExperienceLevelsService.PostExperienceLevelOverview(Context)
-                                             .ConfigureAwait(false);
-        }
+        public Task PostExperienceLevelOverview() => ShowMigrationMessage("raid-admin overview");
 
         #endregion // Methods
     }

@@ -7,6 +7,7 @@ using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord;
+using Scruffy.Services.Discord.Interfaces;
 
 namespace Scruffy.Services.Raid;
 
@@ -35,7 +36,7 @@ public class RaidExperienceLevelsService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContextContainer">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task PostExperienceLevelOverview(CommandContextContainer commandContextContainer)
+    public async Task PostExperienceLevelOverview(IContextContainer commandContextContainer)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {

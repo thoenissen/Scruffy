@@ -8,7 +8,7 @@ using Scruffy.Data.Json.QuickChart;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Extensions;
 using Scruffy.Services.Core.Localization;
-using Scruffy.Services.Discord;
+using Scruffy.Services.Discord.Interfaces;
 using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.Raid;
@@ -49,7 +49,7 @@ public class RaidOverviewService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task PostParticipationOverview(CommandContextContainer commandContext)
+    public async Task PostParticipationOverview(IContextContainer commandContext)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
