@@ -10,7 +10,7 @@ namespace Scruffy.Commands.SlashCommands;
 /// </summary>
 public class GamesSlashCommandModule : SlashCommandModuleBase
 {
-    #region Enums
+    #region Enumerations
 
     /// <summary>
     /// The type of game
@@ -30,7 +30,7 @@ public class GamesSlashCommandModule : SlashCommandModuleBase
         Remove
     }
 
-    #endregion
+    #endregion // Enumerations
 
     #region Properties
 

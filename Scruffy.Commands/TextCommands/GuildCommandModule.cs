@@ -30,11 +30,6 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
     public GuildConfigurationService ConfigurationService { get; set; }
 
     /// <summary>
-    /// Emblem service
-    /// </summary>
-    public GuildEmblemService GuildEmblemService { get; set; }
-
-    /// <summary>
     /// Items service
     /// </summary>
     public ItemsService ItemsService { get; set; }
@@ -145,15 +140,6 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
     [Alias("e")]
     public class GuildEmblemCommandModule : LocatedTextCommandModuleBase
     {
-        #region Properties
-
-        /// <summary>
-        /// Emblem service
-        /// </summary>
-        public GuildEmblemService GuildEmblemService { get; set; }
-
-        #endregion // Properties
-
         #region Methods
 
         /// <summary>
@@ -163,11 +149,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("random")]
         [RequireContext(ContextType.Guild)]
-        public async Task SetNotificationChannel(int count)
-        {
-            await GuildEmblemService.PostRandomGuildEmblems(Context, count)
-                                    .ConfigureAwait(false);
-        }
+        public Task SetNotificationChannel(int count) => ShowMigrationMessage("guild random-emblem");
 
         #endregion // Methods
     }
@@ -184,15 +166,6 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
     [RequireContext(ContextType.Guild)]
     public class GuildBankCommandModule : LocatedTextCommandModuleBase
     {
-        #region Properties
-
-        /// <summary>
-        /// Bank service
-        /// </summary>
-        public GuildBankService BankService { get; set; }
-
-        #endregion // Properties
-
         #region Methods
 
         /// <summary>
@@ -201,11 +174,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("check")]
         [RequireContext(ContextType.Guild)]
-        public async Task SetNotificationChannel()
-        {
-            await BankService.Check(Context)
-                             .ConfigureAwait(false);
-        }
+        public Task SetNotificationChannel() => ShowMigrationMessage("guild bank-check");
 
         #endregion // Methods
 
@@ -219,19 +188,6 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [RequireContext(ContextType.Guild)]
         public class GuildBankUnlocksCommandModule : LocatedTextCommandModuleBase
         {
-            #region Constructor
-
-            #endregion // Constructor
-
-            #region Properties
-
-            /// <summary>
-            /// Bank service
-            /// </summary>
-            public GuildBankService BankService { get; set; }
-
-            #endregion // Properties
-
             #region Methods
 
             /// <summary>
@@ -240,11 +196,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("dyes")]
             [RequireContext(ContextType.Guild)]
-            public async Task SetNotificationChannel()
-            {
-                await BankService.CheckUnlocksDyes(Context)
-                                 .ConfigureAwait(false);
-            }
+            public Task SetNotificationChannel() => ShowMigrationMessage("guild bank-unlocks");
 
             #endregion // Methods
         }
@@ -751,7 +703,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
 
     #endregion Activity
 
-    #region Configuration
+    #region Ranking
 
     /// <summary>
     /// Guild bank
@@ -791,7 +743,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("me")]
         [RequireContext(ContextType.Guild)]
-        public Task PostPersonalOverview() => GuildRankVisualizationService.PostPersonalOverview(Context, Context.Member);
+        public Task PostPersonalOverview() => ShowMigrationMessage("guild ranking-me");
 
         /// <summary>
         /// Personal overview
@@ -837,5 +789,5 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         #endregion // Methods
     }
 
-    #endregion Activity
+    #endregion Ranking
 }
