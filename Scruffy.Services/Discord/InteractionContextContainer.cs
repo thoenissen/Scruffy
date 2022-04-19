@@ -110,8 +110,9 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
     /// <param name="components">The message components to be included with this message. Used for interactions.</param>
     /// <param name="stickers">A collection of stickers to send with the message.</param>
     /// <param name="embeds">A array of <see cref="Embed"/>s to send with this response. Max 10.</param>
+    /// <param name="ephemeral">Should the message be posted ephemeral if possible?</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task<IUserMessage> ReplyAsync(string text = null, bool isTTS = false, Embed embed = null, RequestOptions options = null, AllowedMentions allowedMentions = null, MessageComponent components = null, ISticker[] stickers = null, Embed[] embeds = null)
+    public async Task<IUserMessage> ReplyAsync(string text = null, bool isTTS = false, Embed embed = null, RequestOptions options = null, AllowedMentions allowedMentions = null, MessageComponent components = null, ISticker[] stickers = null, Embed[] embeds = null, bool ephemeral = false)
     {
         if (stickers != null)
         {
@@ -121,7 +122,7 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
         if (Interaction is SocketInteraction { HasResponded: false }
                         or RestInteraction { HasResponded: false })
         {
-            await Interaction.RespondAsync(text, embeds, isTTS, false, allowedMentions, components, embed, options)
+            await Interaction.RespondAsync(text, embeds, isTTS, ephemeral, allowedMentions, components, embed, options)
                              .ConfigureAwait(false);
 
             return await Interaction.GetOriginalResponseAsync()
@@ -132,7 +133,7 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
         {
             if (_firstFollowup == null)
             {
-                _firstFollowup = await Interaction.FollowupAsync(text, embeds, isTTS, false, allowedMentions, components, embed, options)
+                _firstFollowup = await Interaction.FollowupAsync(text, embeds, isTTS, ephemeral, allowedMentions, components, embed, options)
                                                   .ConfigureAwait(false);
             }
             else

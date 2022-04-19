@@ -13,6 +13,10 @@
       "ListOfInvalidAccounts": "Die folgenden Accounts sind ungültig:",
       "NoInvalidAccounts": "Es konnten keine ungültigen Accounts gefunden werden"
     },
+    "AdministrationCommandHandler": {
+      "ActionSuccess": "Die Aktion wurde erfolgreich ausgeführt",
+      "ActionFailed": "Die Ausführung der Aktion ist fehlgeschlagen." 
+    },
     "AccountApiKeyDialogElement": {
       "AddTitle": "Account Konfiguration",
       "AddDescription": "Gib bitte den zu verwendenen API-Key ein. Ein API-Key kann auf der offiziellen [Guild Wars 2 Website](https://account.arena.net/applications) erstellt werden."

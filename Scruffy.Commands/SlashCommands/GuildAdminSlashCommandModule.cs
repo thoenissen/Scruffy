@@ -10,7 +10,8 @@ namespace Scruffy.Commands.SlashCommands;
 /// <summary>
 /// Guild administration commands
 /// </summary>
-[Group("guild-admin", "Guild administration related commands")]
+[Group("guild-admin", "Guild administration commands")]
+[DefaultPermission(false)]
 public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
 {
     #region Enumeration

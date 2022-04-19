@@ -23,7 +23,7 @@ public class AdministrationCommandModule : LocatedTextCommandModuleBase
     /// <summary>
     /// Configuration service
     /// </summary>
-    public AdministrationService AdministrationService { get; set; }
+    public AdministrationCommandHandler AdministrationService { get; set; }
 
     #endregion // Properties
 
@@ -37,20 +37,7 @@ public class AdministrationCommandModule : LocatedTextCommandModuleBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("rename")]
     [RequireAdministratorPermissions]
-    public async Task Rename(IGuildUser member, [Remainder] string name)
-    {
-        try
-        {
-            await AdministrationService.RenameMember(member, name)
-                                       .ConfigureAwait(false);
-        }
-        catch
-        {
-            await Context.Message
-                         .ReplyAsync(LocalizationGroup.GetText("NotAllowedToPerform", "I'm not allowed to perform this action."))
-                         .ConfigureAwait(false);
-        }
-    }
+    public Task Rename(IGuildUser member, [Remainder] string name) => ShowMigrationMessage("admin rename-member");
 
     /// <summary>
     /// Rename user
@@ -60,20 +47,7 @@ public class AdministrationCommandModule : LocatedTextCommandModuleBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("rename")]
     [RequireAdministratorPermissions]
-    public async Task Rename(IRole role, [Remainder] string name)
-    {
-        try
-        {
-            await AdministrationService.RenameRole(role, name)
-                                       .ConfigureAwait(false);
-        }
-        catch
-        {
-            await Context.Message
-                         .ReplyAsync(LocalizationGroup.GetText("NotAllowedToPerform", "I'm not allowed to perform this action."))
-                         .ConfigureAwait(false);
-        }
-    }
+    public Task Rename(IRole role, [Remainder] string name) => ShowMigrationMessage("admin rename-role");
 
     #endregion // Methods
 
