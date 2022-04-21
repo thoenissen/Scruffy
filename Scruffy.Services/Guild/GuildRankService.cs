@@ -369,7 +369,7 @@ public class GuildRankService : LocatedServiceBase
                                                              SELECT [DateRange].[Value] AS [Date],
                                                                     [GuildWarsAccount].[UserId], 
                                                                     CASE
-                                                                        WHEN MAX([DailyLogin].[Date]) IS NULL THEN -0.7
+                                                                        WHEN MAX([DailyLogin].[Date]) IS NULL THEN 0
                                                                         WHEN DATEDIFF(day, MAX([DailyLogin].[Date]), [DateRange].[Value]) > 28 THEN -0.57
                                                                         WHEN DATEDIFF(day, MAX([DailyLogin].[Date]), [DateRange].[Value]) > 21 THEN -0.43
                                                                         WHEN DATEDIFF(day, MAX([DailyLogin].[Date]), [DateRange].[Value]) > 14 THEN -0.29

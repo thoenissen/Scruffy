@@ -245,7 +245,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                                       Type = obj.Key,
                                                       Points = obj.Sum(obj2 => obj2.Points)
                                                   })
-                                   .Where(obj => obj.Points > 0)
+                                     .Where(obj => obj.Points != 0)
                                    .OrderByDescending(obj => obj.Points)
                                    .ToList();
 
