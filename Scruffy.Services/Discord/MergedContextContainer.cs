@@ -43,7 +43,7 @@ public sealed class MergedContextContainer : IInteractionContext, ICommandContex
         }
         else if (container is InteractionContextContainer interactionContextContainer)
         {
-            Interaction = interactionContextContainer.Interaction;
+            Interaction = ((IInteractionContext)interactionContextContainer).Interaction;
         }
     }
 

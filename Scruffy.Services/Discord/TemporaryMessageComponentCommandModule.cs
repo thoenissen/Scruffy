@@ -1,4 +1,5 @@
-﻿using Discord.Interactions;
+﻿using Discord;
+using Discord.Interactions;
 using Discord.WebSocket;
 
 namespace Scruffy.Services.Discord;
@@ -18,14 +19,13 @@ public class TemporaryMessageComponentCommandModule : LocatedInteractionModuleBa
     [ComponentInteraction("temporary;button;*")]
     public async Task ExecuteTemporaryButton(string identification)
     {
-        if (Context.Interaction is SocketMessageComponent component)
+        if (((IInteractionContext)Context).Interaction is SocketMessageComponent component)
         {
             Context.Interactivity.CheckButtonComponent(identification, component);
         }
         else
         {
-            await Context.Interaction
-                         .DeferAsync()
+            await Context.DeferAsync()
                          .ConfigureAwait(false);
         }
     }
@@ -39,14 +39,13 @@ public class TemporaryMessageComponentCommandModule : LocatedInteractionModuleBa
     [ComponentInteraction("temporary;selectMenu;*")]
     public async Task ExecuteTemporarySelectMenu(string identification, string[] unused)
     {
-        if (Context.Interaction is SocketMessageComponent component)
+        if (((IInteractionContext)Context).Interaction is SocketMessageComponent component)
         {
             Context.Interactivity.CheckSelectMenuComponent(identification, component);
         }
         else
         {
-            await Context.Interaction
-                         .DeferAsync()
+            await Context.DeferAsync()
                          .ConfigureAwait(false);
         }
     }

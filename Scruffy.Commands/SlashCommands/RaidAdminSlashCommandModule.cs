@@ -139,8 +139,7 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
     public async Task SetTemplate([Summary("Name", "Name of the appointment")]string name,
                                   [Summary("Count", "Group count")]int count)
     {
-        await Context.Interaction
-                     .DeferAsync()
+        await Context.DeferAsync()
                      .ConfigureAwait(false);
 
         await CommandHandler.SetTemplate(Context, name, count)

@@ -7,7 +7,7 @@ namespace Scruffy.Services.Core.Exceptions.WebApi;
 /// <summary>
 /// Missing Guild Wars 2 API permission exception
 /// </summary>
-public class MissingGuildWars2ApiPermissionException : ScruffyException
+public class MissingGuildWars2ApiPermissionException : ScruffyUserMessageException
 {
     #region Fields
 
@@ -41,7 +41,7 @@ public class MissingGuildWars2ApiPermissionException : ScruffyException
     {
         using (var serviceProvider = ServiceProviderContainer.Current.GetServiceProvider())
         {
-            var localizationGroup = serviceProvider.GetService<LocalizationService>()
+            var localizationGroup = serviceProvider.GetRequiredService<LocalizationService>()
                                                    .GetGroup(nameof(MissingGuildWars2ApiPermissionException));
 
             var permissions = string.Empty;

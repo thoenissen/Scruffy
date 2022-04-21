@@ -1,8 +1,8 @@
 ﻿namespace Scruffy.Services.Core.Exceptions;
 
 /// <summary>
-/// Exception base class
+/// Execution aborted
 /// </summary>
-public abstract class ScruffyException : Exception
+public class ScruffyAbortedException : ScruffyException
 {
 }

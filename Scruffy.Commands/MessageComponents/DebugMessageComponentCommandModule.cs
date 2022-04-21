@@ -33,8 +33,7 @@ public class DebugMessageComponentCommandModule : LocatedInteractionModuleBase
     [ComponentInteraction($"{Group};{CommandPing};*")]
     public async Task Ping(string id)
     {
-        await Context.Interaction
-                     .DeferAsync()
+        await Context.DeferAsync()
                      .ConfigureAwait(false);
 
         await Context.Channel

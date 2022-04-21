@@ -61,8 +61,7 @@ public class RaidSlashCommandModule : SlashCommandModuleBase
     [SlashCommand("logs", "Creates a listing of all logs of the given day")]
     public async Task Logs([Summary("day", "Day of the logs (yyyy-MM-dd)")]string day = null)
     {
-        await Context.Interaction
-                     .DeferAsync()
+        await Context.DeferAsync()
                      .ConfigureAwait(false);
 
         await CommandHandler.Logs(Context, day)

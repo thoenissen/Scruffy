@@ -6,6 +6,7 @@ using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Services.Core;
+using Scruffy.Services.Core.Exceptions;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord.Interfaces;
 
@@ -22,6 +23,11 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
     /// First followup message
     /// </summary>
     private IUserMessage _firstFollowup;
+
+    /// <summary>
+    /// Interaction
+    /// </summary>
+    private IDiscordInteraction _interaction;
 
     #endregion // Fields
 
@@ -41,7 +47,7 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
         Guild = (interaction.User as IGuildUser)?.Guild;
         Channel = interaction.Channel;
         User = interaction.User;
-        Interaction = interaction;
+        _interaction = interaction;
     }
 
     #endregion // Constructor
@@ -73,15 +79,59 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public async Task<IUserMessage> DeferProcessing()
     {
-        await Interaction.RespondAsync(ServiceProvider.GetRequiredService<LocalizationService>()
-                                                      .GetGroup(nameof(InteractionContextContainer))
-                                                      .GetFormattedText("Processing",
-                                                                        "{0} The action is being processed.",
-                                                                        DiscordEmoteService.GetLoadingEmote(Client)))
-                         .ConfigureAwait(false);
+        try
+        {
+            await _interaction.RespondAsync(ServiceProvider.GetRequiredService<LocalizationService>()
+                                                           .GetGroup(nameof(InteractionContextContainer))
+                                                           .GetFormattedText("Processing",
+                                                                             "{0} The action is being processed.",
+                                                                             DiscordEmoteService.GetLoadingEmote(Client)))
+                              .ConfigureAwait(false);
 
-        return await Interaction.GetOriginalResponseAsync()
-                                .ConfigureAwait(false);
+            return await _interaction.GetOriginalResponseAsync()
+                                     .ConfigureAwait(false);
+        }
+        catch (TimeoutException)
+        {
+            throw new ScruffyAbortedException();
+        }
+    }
+
+    /// <summary>
+    /// Acknowledge the interaction
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public async Task DeferAsync()
+    {
+        try
+        {
+            await _interaction.DeferAsync()
+                              .ConfigureAwait(false);
+        }
+        catch (TimeoutException)
+        {
+            throw new ScruffyAbortedException();
+        }
+    }
+
+    /// <summary>
+    /// Response with a modal
+    /// </summary>
+    /// <param name="customId">Custom ID</param>
+    /// <typeparam name="TModal">Modal data</typeparam>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public async Task RespondWithModalAsync<TModal>(string customId)
+        where TModal : class, IModal
+    {
+        try
+        {
+            await _interaction.RespondWithModalAsync<TModal>(customId)
+                              .ConfigureAwait(false);
+        }
+        catch (TimeoutException)
+        {
+            throw new ScruffyAbortedException();
+        }
     }
 
     #endregion // Methods
@@ -114,89 +164,96 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public async Task<IUserMessage> ReplyAsync(string text = null, bool isTTS = false, Embed embed = null, RequestOptions options = null, AllowedMentions allowedMentions = null, MessageComponent components = null, ISticker[] stickers = null, Embed[] embeds = null, bool ephemeral = false)
     {
-        if (stickers != null)
+        try
         {
-            throw new NotSupportedException();
-        }
-
-        if (Interaction is SocketInteraction { HasResponded: false }
-                        or RestInteraction { HasResponded: false })
-        {
-            await Interaction.RespondAsync(text, embeds, isTTS, ephemeral, allowedMentions, components, embed, options)
-                             .ConfigureAwait(false);
-
-            return await Interaction.GetOriginalResponseAsync()
-                                    .ConfigureAwait(false);
-        }
-
-        if (Interaction is IComponentInteraction)
-        {
-            if (_firstFollowup == null)
+            if (stickers != null)
             {
-                _firstFollowup = await Interaction.FollowupAsync(text, embeds, isTTS, ephemeral, allowedMentions, components, embed, options)
-                                                  .ConfigureAwait(false);
+                throw new NotSupportedException();
             }
-            else
+
+            if (_interaction is SocketInteraction { HasResponded: false }
+                or RestInteraction { HasResponded: false })
             {
-                await _firstFollowup.ModifyAsync(obj =>
-                                                 {
-                                                     if (text != null)
-                                                     {
-                                                         obj.Content = text;
-                                                     }
+                await _interaction.RespondAsync(text, embeds, isTTS, ephemeral, allowedMentions, components, embed, options)
+                                  .ConfigureAwait(false);
 
-                                                     if (embed != null)
-                                                     {
-                                                         obj.Embed = embed;
-                                                     }
-
-                                                     if (allowedMentions != null)
-                                                     {
-                                                         obj.AllowedMentions = allowedMentions;
-                                                     }
-
-                                                     if (components != null)
-                                                     {
-                                                         obj.Components = components;
-                                                     }
-
-                                                     if (embeds != null)
-                                                     {
-                                                         obj.Embeds = embeds;
-                                                     }
-                                                 })
-                                    .ConfigureAwait(false);
+                return await _interaction.GetOriginalResponseAsync()
+                                         .ConfigureAwait(false);
             }
+
+            if (_interaction is IComponentInteraction)
+            {
+                if (_firstFollowup == null)
+                {
+                    _firstFollowup = await _interaction.FollowupAsync(text, embeds, isTTS, ephemeral, allowedMentions, components, embed, options)
+                                                       .ConfigureAwait(false);
+                }
+                else
+                {
+                    await _firstFollowup.ModifyAsync(obj =>
+                                                     {
+                                                         if (text != null)
+                                                         {
+                                                             obj.Content = text;
+                                                         }
+
+                                                         if (embed != null)
+                                                         {
+                                                             obj.Embed = embed;
+                                                         }
+
+                                                         if (allowedMentions != null)
+                                                         {
+                                                             obj.AllowedMentions = allowedMentions;
+                                                         }
+
+                                                         if (components != null)
+                                                         {
+                                                             obj.Components = components;
+                                                         }
+
+                                                         if (embeds != null)
+                                                         {
+                                                             obj.Embeds = embeds;
+                                                         }
+                                                     })
+                                        .ConfigureAwait(false);
+                }
+            }
+
+            return await _interaction.ModifyOriginalResponseAsync(obj =>
+                                                                  {
+                                                                      if (text != null)
+                                                                      {
+                                                                          obj.Content = text;
+                                                                      }
+
+                                                                      if (embed != null)
+                                                                      {
+                                                                          obj.Embed = embed;
+                                                                      }
+
+                                                                      if (allowedMentions != null)
+                                                                      {
+                                                                          obj.AllowedMentions = allowedMentions;
+                                                                      }
+
+                                                                      if (components != null)
+                                                                      {
+                                                                          obj.Components = components;
+                                                                      }
+
+                                                                      if (embeds != null)
+                                                                      {
+                                                                          obj.Embeds = embeds;
+                                                                      }
+                                                                  })
+                                     .ConfigureAwait(false);
         }
-
-        return await Interaction.ModifyOriginalResponseAsync(obj =>
-                                                             {
-                                                                 if (text != null)
-                                                                 {
-                                                                     obj.Content = text;
-                                                                 }
-
-                                                                 if (embed != null)
-                                                                 {
-                                                                     obj.Embed = embed;
-                                                                 }
-
-                                                                 if (allowedMentions != null)
-                                                                 {
-                                                                     obj.AllowedMentions = allowedMentions;
-                                                                 }
-
-                                                                 if (components != null)
-                                                                 {
-                                                                     obj.Components = components;
-                                                                 }
-
-                                                                 if (embeds != null)
-                                                                 {
-                                                                     obj.Embeds = embeds;
-                                                                 }
-                                                             })
-                                .ConfigureAwait(false);
+        catch (TimeoutException)
+        {
+            throw new ScruffyAbortedException();
+        }
     }
 
     /// <summary>
@@ -214,23 +271,30 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public async Task<IUserMessage> SendMessageAsync(string text = null, bool isTTS = false, Embed embed = null, RequestOptions options = null, AllowedMentions allowedMentions = null, MessageReference messageReference = null, MessageComponent components = null, ISticker[] stickers = null, Embed[] embeds = null)
     {
-        if (Interaction is SocketInteraction { HasResponded: false }
-                        or RestInteraction { HasResponded: false })
+        try
         {
-            if (stickers != null)
+            if (_interaction is SocketInteraction { HasResponded: false }
+                or RestInteraction { HasResponded: false })
             {
-                throw new NotSupportedException();
+                if (stickers != null)
+                {
+                    throw new NotSupportedException();
+                }
+
+                await _interaction.RespondAsync(text, embeds, isTTS, false, allowedMentions, components, embed, options)
+                                  .ConfigureAwait(false);
+
+                return await _interaction.GetOriginalResponseAsync()
+                                         .ConfigureAwait(false);
             }
 
-            await Interaction.RespondAsync(text, embeds, isTTS, false, allowedMentions, components, embed, options)
-                             .ConfigureAwait(false);
-
-            return await Interaction.GetOriginalResponseAsync()
-                                    .ConfigureAwait(false);
+            return await Channel.SendMessageAsync(text, isTTS, embed, options, allowedMentions, messageReference, components, stickers, embeds)
+                                .ConfigureAwait(false);
         }
-
-        return await Channel.SendMessageAsync(text, isTTS, embed, options, allowedMentions, messageReference, components, stickers, embeds)
-                            .ConfigureAwait(false);
+        catch (TimeoutException)
+        {
+            throw new ScruffyAbortedException();
+        }
     }
 
     #endregion // IContextContainer
@@ -266,7 +330,7 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
     /// <summary>
     /// Gets the underlying interaction.
     /// </summary>
-    public IDiscordInteraction Interaction { get; }
+    IDiscordInteraction IInteractionContext.Interaction => _interaction;
 
     #endregion // IInteractionContext
 

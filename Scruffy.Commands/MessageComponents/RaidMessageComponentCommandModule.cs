@@ -53,8 +53,7 @@ public class RaidMessageComponentCommandModule : LocatedInteractionModuleBase
     [ComponentInteraction($"{Group};{CommandJoin};*")]
     public async Task Join(string name)
     {
-        await Context.Interaction
-                     .DeferAsync()
+        await Context.DeferAsync()
                      .ConfigureAwait(false);
 
         await CommandHandler.Join(Context, name, false)
@@ -69,8 +68,7 @@ public class RaidMessageComponentCommandModule : LocatedInteractionModuleBase
     [ComponentInteraction($"{Group};{CommandRoleSelection};*")]
     public async Task RoleSelection(string name)
     {
-        await Context.Interaction
-                     .DeferAsync()
+        await Context.DeferAsync()
                      .ConfigureAwait(false);
 
         await CommandHandler.Join(Context, name, true)
@@ -85,8 +83,7 @@ public class RaidMessageComponentCommandModule : LocatedInteractionModuleBase
     [ComponentInteraction($"{Group};{CommandLeave};*")]
     public async Task Leave(string name)
     {
-        await Context.Interaction
-                     .DeferAsync()
+        await Context.DeferAsync()
                      .ConfigureAwait(false);
 
         await CommandHandler.Leave(Context, name)

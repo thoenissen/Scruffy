@@ -7,7 +7,7 @@ namespace Scruffy.Services.Core.Exceptions;
 /// <summary>
 /// Timeout
 /// </summary>
-public class ScruffyTimeoutException : ScruffyException
+public class ScruffyTimeoutException : ScruffyUserMessageException
 {
     #region ScruffyException
 

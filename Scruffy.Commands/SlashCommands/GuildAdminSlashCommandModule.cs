@@ -218,16 +218,14 @@ public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
         {
             case DataType.Stash:
                 {
-                    await Context.Interaction
-                                 .RespondWithModalAsync<GuildExportStashModalData>(GuildExportStashModalData.CustomId)
+                    await Context.RespondWithModalAsync<GuildExportStashModalData>(GuildExportStashModalData.CustomId)
                                  .ConfigureAwait(false);
                 }
                 break;
 
             case DataType.Upgrades:
                 {
-                    await Context.Interaction
-                                 .RespondWithModalAsync<GuildExportUpgradesModalData>(GuildExportUpgradesModalData.CustomId)
+                    await Context.RespondWithModalAsync<GuildExportUpgradesModalData>(GuildExportUpgradesModalData.CustomId)
                                  .ConfigureAwait(false);
                 }
                 break;
@@ -262,8 +260,7 @@ public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
 
             case DataType.Points:
                 {
-                    await Context.Interaction
-                                 .RespondWithModalAsync<GuildExportCurrentPointsModalData>(GuildExportCurrentPointsModalData.CustomId)
+                    await Context.RespondWithModalAsync<GuildExportCurrentPointsModalData>(GuildExportCurrentPointsModalData.CustomId)
                                  .ConfigureAwait(false);
                 }
                 break;

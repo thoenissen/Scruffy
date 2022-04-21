@@ -116,6 +116,8 @@ public sealed class DiscordBot : IAsyncDisposable
         _interaction = new InteractionService(_discordClient, interactionConfiguration);
         _interaction.Log += OnInteractionServiceLog;
         _interaction.ComponentCommandExecuted += OnComponentCommandExecuted;
+        _interaction.SlashCommandExecuted += OnSlashCommandExecuted;
+        _interaction.ModalCommandExecuted += OnModalCommandExecuted;
 
         _serviceProviderContainer.Initialize(obj =>
                                              {
@@ -299,11 +301,14 @@ public sealed class DiscordBot : IAsyncDisposable
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     private async Task HandleCommandException(CommandContextContainer context, Exception ex)
     {
-        if (ex is ScruffyException scruffyException)
+        if (ex is ScruffyException)
         {
-            await context.Channel
-                         .SendMessageAsync($"{context.Message.Author.Mention} {scruffyException.GetLocalizedMessage()}")
-                         .ConfigureAwait(false);
+            if (ex is ScruffyUserMessageException userException)
+            {
+                await context.Channel
+                             .SendMessageAsync($"{context.Message.Author.Mention} {userException.GetLocalizedMessage()}")
+                             .ConfigureAwait(false);
+            }
         }
         else
         {
@@ -377,17 +382,20 @@ public sealed class DiscordBot : IAsyncDisposable
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     private async Task HandleCommandException(InteractionContextContainer context, Exception ex)
     {
-        if (ex is ScruffyException scruffyException)
+        if (ex is ScruffyException)
         {
-            await context.Channel
-                         .SendMessageAsync($"{context.User.Mention} {scruffyException.GetLocalizedMessage()}")
-                         .ConfigureAwait(false);
+            if (ex is ScruffyUserMessageException userException)
+            {
+                await context.Channel
+                             .SendMessageAsync($"{context.User.Mention} {userException.GetLocalizedMessage()}")
+                             .ConfigureAwait(false);
+            }
         }
         else
         {
-            if (context.Interaction.Data is IComponentInteractionData interactionData)
+            if (((IInteractionContext)context).Interaction.Data is IComponentInteractionData interactionData)
             {
-                var logEntryId = LoggingService.AddComponentInteractionLogEntry(LogEntryLevel.CriticalError, interactionData.CustomId, ex);
+                var logEntryId = LoggingService.AddInteractionLogEntry(LogEntryLevel.CriticalError, interactionData.CustomId, ex);
 
                 var client = context.ServiceProvider.GetService<IHttpClientFactory>().CreateClient();
 
@@ -431,13 +439,93 @@ public sealed class DiscordBot : IAsyncDisposable
     }
 
     /// <summary>
-    /// Component component executed
+    /// Component command executed
     /// </summary>
     /// <param name="command">Command</param>
     /// <param name="context">Context</param>
     /// <param name="result">Result</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     private async Task OnComponentCommandExecuted(ComponentCommandInfo command, IInteractionContext context, global::Discord.Interactions.IResult result)
+    {
+        if (context is InteractionContextContainer container)
+        {
+            using (container)
+            {
+                if (result.IsSuccess == false)
+                {
+                    switch (result.Error)
+                    {
+                        case InteractionCommandError.Exception:
+                            {
+                                if (result is global::Discord.Interactions.ExecuteResult executeResult)
+                                {
+                                    await HandleCommandException(container, executeResult.Exception).ConfigureAwait(false);
+                                }
+                            }
+                            break;
+                        case InteractionCommandError.UnknownCommand:
+                        case InteractionCommandError.ParseFailed:
+                        case InteractionCommandError.ConvertFailed:
+                        case InteractionCommandError.BadArgs:
+                        case InteractionCommandError.UnmetPrecondition:
+                        case InteractionCommandError.Unsuccessful:
+                        case null:
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Modal command executed
+    /// </summary>
+    /// <param name="command">Command</param>
+    /// <param name="context">Context</param>
+    /// <param name="result">Result</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    private async Task OnModalCommandExecuted(ModalCommandInfo command, IInteractionContext context, global::Discord.Interactions.IResult result)
+    {
+        if (context is InteractionContextContainer container)
+        {
+            using (container)
+            {
+                if (result.IsSuccess == false)
+                {
+                    switch (result.Error)
+                    {
+                        case InteractionCommandError.Exception:
+                            {
+                                if (result is global::Discord.Interactions.ExecuteResult executeResult)
+                                {
+                                    await HandleCommandException(container, executeResult.Exception).ConfigureAwait(false);
+                                }
+                            }
+                            break;
+                        case InteractionCommandError.UnknownCommand:
+                        case InteractionCommandError.ParseFailed:
+                        case InteractionCommandError.ConvertFailed:
+                        case InteractionCommandError.BadArgs:
+                        case InteractionCommandError.UnmetPrecondition:
+                        case InteractionCommandError.Unsuccessful:
+                        case null:
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Slash command executed
+    /// </summary>
+    /// <param name="command">Command</param>
+    /// <param name="context">Context</param>
+    /// <param name="result">Result</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    private async Task OnSlashCommandExecuted(SlashCommandInfo command, IInteractionContext context, global::Discord.Interactions.IResult result)
     {
         if (context is InteractionContextContainer container)
         {

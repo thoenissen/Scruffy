@@ -155,9 +155,9 @@ public class LoggingService
     /// <param name="customId">Custom id</param>
     /// <param name="ex">Exception</param>
     /// <returns>Log entry id</returns>
-    public static long? AddComponentInteractionLogEntry(LogEntryLevel level, string customId, Exception ex = null)
+    public static long? AddInteractionLogEntry(LogEntryLevel level, string customId, Exception ex = null)
     {
-        return _logger.WriteLine(LogEntryType.ComponentInteraction, level, customId, null, null, null, ex);
+        return _logger.WriteLine(LogEntryType.ComponentInteraction, level, customId, null, ex?.Message, ex?.ToString(), ex);
     }
 
     /// <summary>
