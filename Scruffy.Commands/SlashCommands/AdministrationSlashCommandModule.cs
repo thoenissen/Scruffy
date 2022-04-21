@@ -13,6 +13,19 @@ namespace Scruffy.Commands.SlashCommands;
 [DefaultPermission(false)]
 public class AdministrationSlashCommandModule : SlashCommandModuleBase
 {
+    #region Enumerations
+
+    /// <summary>
+    /// Channel configurations
+    /// </summary>
+    public enum ChannelConfigurationType
+    {
+        Block,
+        Unblock
+    }
+
+    #endregion // Enumerations
+
     #region Properties
 
     /// <summary>
@@ -43,6 +56,35 @@ public class AdministrationSlashCommandModule : SlashCommandModuleBase
     [SlashCommand("rename-role", "Renaming a user")]
     public Task RenameRole([Summary("Role", "Role")]IRole member,
                              [Summary("Name", "New name")]string name) => CommandHandler.RenameRole(Context, member, name);
+
+    /// <summary>
+    /// Configuration of the current channel
+    /// </summary>
+    /// <param name="type">Type</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [SlashCommand("channel-configuration", "Configuration of the current channel")]
+    public async Task ChannelConfiguration([Summary("Configuration", "Configuration type")]ChannelConfigurationType type)
+    {
+        switch (type)
+        {
+            case ChannelConfigurationType.Block:
+                {
+                    await CommandHandler.BlockChannel(Context)
+                                        .ConfigureAwait(false);
+                }
+                break;
+
+            case ChannelConfigurationType.Unblock:
+                {
+                    await CommandHandler.UnblockChannel(Context)
+                                        .ConfigureAwait(false);
+                }
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException(nameof(type), type, null);
+        }
+    }
 
     #endregion // Methods
 }

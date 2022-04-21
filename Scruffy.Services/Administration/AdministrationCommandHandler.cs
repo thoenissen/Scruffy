@@ -2,6 +2,7 @@
 
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Interfaces;
 
 namespace Scruffy.Services.Administration;
@@ -11,15 +12,26 @@ namespace Scruffy.Services.Administration;
 /// </summary>
 public class AdministrationCommandHandler : LocatedServiceBase
 {
+    #region Fields
+
+    /// <summary>
+    /// Blocked channels
+    /// </summary>
+    private readonly BlockedChannelService _blockedChannelService;
+
+    #endregion // Fields
+
     #region Constructor
 
     /// <summary>
     /// Constructor
     /// </summary>
     /// <param name="localizationService">Localization service</param>
-    public AdministrationCommandHandler(LocalizationService localizationService)
+    /// <param name="blockedChannelService">Blocked channels</param>
+    public AdministrationCommandHandler(LocalizationService localizationService, BlockedChannelService blockedChannelService)
         : base(localizationService)
     {
+        _blockedChannelService = blockedChannelService;
     }
 
     #endregion // Constructor
@@ -70,6 +82,44 @@ public class AdministrationCommandHandler : LocatedServiceBase
         catch
         {
             await context.ReplyAsync(LocalizationGroup.GetText("ActionFailed", "The execution of the action failed."), ephemeral: true)
+                         .ConfigureAwait(false);
+        }
+    }
+
+    /// <summary>
+    /// Block channel
+    /// </summary>
+    /// <param name="context">Command context</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task BlockChannel(InteractionContextContainer context)
+    {
+        if (context.Channel is IGuildChannel guildChannel)
+        {
+            var message = await context.DeferProcessing()
+                                       .ConfigureAwait(false);
+
+            _blockedChannelService.AddChannel(guildChannel);
+
+            await message.DeleteAsync()
+                         .ConfigureAwait(false);
+        }
+    }
+
+    /// <summary>
+    /// Block channel
+    /// </summary>
+    /// <param name="context">Command context</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task UnblockChannel(InteractionContextContainer context)
+    {
+        if (context.Channel is IGuildChannel guildChannel)
+        {
+            var message = await context.DeferProcessing()
+                                       .ConfigureAwait(false);
+
+            _blockedChannelService.RemoveChannel(guildChannel);
+
+            await message.DeleteAsync()
                          .ConfigureAwait(false);
         }
     }
