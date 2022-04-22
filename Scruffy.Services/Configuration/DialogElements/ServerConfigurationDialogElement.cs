@@ -29,7 +29,8 @@ namespace Scruffy.Services.Configuration.DialogElements
                                                                            "admin",
                                                                            "games",
                                                                            "guild-admin",
-                                                                           "raid-admin"
+                                                                           "raid-admin",
+                                                                           "reminder-admin"
                                                                        };
 
         /// <summary>

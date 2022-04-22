@@ -78,8 +78,6 @@ public class BlockedChannelService : SingletonLocatedServiceBase
             var isBlocked = commandContext.Channel is IGuildChannel guildChannel
                          && _blockedChannels.ContainsKey((guildChannel.GuildId, guildChannel.Id));
 
-            isBlocked = true;
-
             if (isBlocked)
             {
                 commandContext.Interaction.RespondAsync(LocalizationGroup.GetText("ChannelIsBlocked", "You can't use this command here. Please use the designated channels."), ephemeral: true);

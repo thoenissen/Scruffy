@@ -49,9 +49,6 @@
     "AccountWantToDeleteDialogElement": {
       "Prompt": "Bist du sicher, dass der Account '{0}' gelöscht werden soll?"
     },
-    "AdministrationCommandModule": {
-      "NotAllowedToPerform": "Diese Aktion darf ich nicht ausführen."
-    },
     "BlockedChannelService": {
       "ChannelIsBlocked": "Dieser Befehl kann in diesem Kanal nicht verwendet werden. Bitte verwende einen dafür vorgesehenen Kanal."
     },
@@ -752,10 +749,6 @@
       "ValueAssigned": "Der Wert wurde zugewiesen.",
       "InvalidItem": "Es konnte kein Gegenstand mit der angegebenen ID gefunden werden."
     },
-    "HelpOverviewCommandModule": {
-      "HelpCommandOverviewTitle": "Übersicht über die wichtigsten Befehle",
-      "HelpCommandOverviewDescription": "In der folgenden Nachricht werden die wichtigsten Befehle der ausgewählten Kategorie ausgegeben."
-    },
     "InformationCommandHandler": {
       "GeneralInformationTitle": "Allgemeine Informationen",
       "GeneralInformationDescription": "Alle Daten, die durch {0} gesammelt werden, dienen nur zur Verwaltung der Gilde. Im folgenden wird auf die einzelnen Bereiche, in denen Daten ermittelt werden, eingegangen.",
@@ -794,16 +787,13 @@
       "SingleLineReminder": "{0} Erinnerung: {1}",
       "MultiLineReminder": "{0} Erinnerung:\n\n{1}"
     },
-    "RaidCommandModule": {
-      "NoActiveAppointment": "Es besteht kein aktiver Termin.",
-      "TemplateChanged": "Die Schablone wurde angepasst.",
-      "GroupCountChanged": "Die Anzahl der Gruppen wurde angepasst."
-    },
     "RaidCommandHandler": {
       "NoActiveAppointment": "Es besteht kein aktiver Termin.",
       "TemplateChanged": "Die Schablone wurde angepasst.",
       "GroupCountChanged": "Die Anzahl der Gruppen wurde angepasst.",
-      "NoDpsReportToken": "Deinem Account sind keine DPS-Report-User-Tokens zugeordnet."
+      "NoDpsReportToken": "Deinem Account sind keine DPS-Report-User-Tokens zugeordnet.",
+      "UnknownExperienceLevel": "Das angegebene Erfahrungslevel existiert nicht.",
+      "NewRankFormat": "Neue Wertung für {0}: {1} {2} {3}"
     },
     "RaidCommitDialogElement": {
       "CommitTitle": "Fortschreibung Teilnahmepunkte",
@@ -872,10 +862,6 @@
       "ChooseLevelDescription": "Wähle eine der folgenden Rollen aus",
       "NoDiscordRole": "Keine Rolle",
       "RolesField": "Rollen"
-    },
-    "RaidExperienceLevelsCommandModule": {
-      "UnknownExperienceLevel": "Das angegebene Erfahrungslevel existiert nicht.",
-      "NewRankFormat": "Neue Wertung für {0}: {1} {2} {3}"
     },
     "RaidExperienceLevelSelectionDialogElement": {
       "ChooseLevelTitle": "Erfahrungslevelauswahl",
@@ -998,7 +984,7 @@
     "RaidTemplateTitleDialogElement": {
       "Message": "Gib bitte den zu verwendenden Titel ein:"
     },
-    "ReminderCreationCommandModule": {
+    "ReminderCommandHandler": {
       "CommandProgressed": "Der Befehl wurde verarbeitet.",
       "ChooseChannelPrompt": "Wähle bitte einen der folgenden Kanäle aus:",
       "ChannelSelectionTitle": "Kanalauswahl",
@@ -1013,14 +999,11 @@
     "ScruffyTimeoutException": {
       "CommandTimeout": "Die Verarbeitung des Befehls wurde wegen einer Zeitüberschreitung abgebrochen."
     },
-    "SearchCommandModule": {
+    "SearchCommandHandler": {
       "SearchResults": "Suchergebnis",
       "NoResults": "Ich konnte leider keine Ergebnisse finden.",
       "TitleSearch": "Titelsuche",
       "TextSearch": "Textsuche"
-    },
-    "ServerConfigurationCommandModule": {
-      "UsingNewPrefix": "Ich werde nun den folgenden Präfix verwenden: {0}"
     },
     "WorldsService": {
       "Overview": "Weltenübersicht"
