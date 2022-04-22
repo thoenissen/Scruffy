@@ -60,15 +60,6 @@ public class AdministrationCommandModule : LocatedTextCommandModuleBase
     [RequireAdministratorPermissions]
     public class AdministrationChannelCommandModule : LocatedTextCommandModuleBase
     {
-        #region Properties
-
-        /// <summary>
-        /// Blocked channels
-        /// </summary>
-        public BlockedChannelService BlockedChannelService { get; set; }
-
-        #endregion // Properties
-
         #region Methods
 
         /// <summary>
@@ -103,15 +94,6 @@ public class AdministrationCommandModule : LocatedTextCommandModuleBase
     [RequireAdministratorPermissions]
     public class AdministrationSlashCommandsCommandModule : LocatedTextCommandModuleBase
     {
-        #region Properties
-
-        /// <summary>
-        /// Interaction service
-        /// </summary>
-        public Discord.Interactions.InteractionService InteractionService { get; set; }
-
-        #endregion // Properties
-
         #region Methods
 
         /// <summary>
