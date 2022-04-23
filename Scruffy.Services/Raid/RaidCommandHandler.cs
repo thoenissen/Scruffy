@@ -527,9 +527,9 @@ public class RaidCommandHandler : LocatedServiceBase
         var user = await _userManagementService.GetUserByDiscordAccountId(context.User.Id)
                                                .ConfigureAwait(false);
 
-        var tokens = _repositoryFactory.GetRepository<GuildWarsAccountRepository>()
+        var tokens = _repositoryFactory.GetRepository<UserRepository>()
                                        .GetQuery()
-                                       .Where(obj => obj.UserId == user.Id
+                                       .Where(obj => obj.Id == user.Id
                                                   && obj.DpsReportUserToken != null)
                                        .Select(obj => obj.DpsReportUserToken)
                                        .Distinct()

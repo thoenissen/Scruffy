@@ -19,7 +19,12 @@ public class SelectMenuEntryData<TData>
     public IEmote Emote { get; set; }
 
     /// <summary>
-    /// Function corresponding to the reaction
+    /// Function to react with an interaction
     /// </summary>
-    public Func<Task<TData>> Func { get; set; }
+    public Func<IDiscordInteraction, Task<TData>> InteractionResponse { get; set; }
+
+    /// <summary>
+    /// Function to react with a standard message
+    /// </summary>
+    public Func<Task<TData>> Response { get; set; }
 }

@@ -30,42 +30,21 @@ public class AccountCommandModule : LocatedTextCommandModuleBase
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [Command("add")]
-    public async Task Add()
-    {
-       await UserManagementService.CheckDiscordAccountAsync(Context.User.Id)
-                                  .ConfigureAwait(false);
-
-       await AdministrationService.Add(Context)
-                                  .ConfigureAwait(false);
-    }
+    public Task Add() => ShowMigrationMessage("account");
 
     /// <summary>
     /// Editing an account
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [Command("edit")]
-    public async Task Edit()
-    {
-        await UserManagementService.CheckDiscordAccountAsync(Context.User.Id)
-                                   .ConfigureAwait(false);
-
-        await AdministrationService.Edit(Context)
-                                   .ConfigureAwait(false);
-    }
+    public Task Edit() => ShowMigrationMessage("account");
 
     /// <summary>
     /// Remove an account
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [Command("remove")]
-    public async Task Remove()
-    {
-        await UserManagementService.CheckDiscordAccountAsync(Context.User.Id)
-                                   .ConfigureAwait(false);
-
-        await AdministrationService.Remove(Context)
-                                   .ConfigureAwait(false);
-    }
+    public Task Remove() => ShowMigrationMessage("account");
 
     /// <summary>
     /// Validation of all accounts
@@ -73,11 +52,7 @@ public class AccountCommandModule : LocatedTextCommandModuleBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [Command("validation")]
     [RequireAdministratorPermissions]
-    public async Task Validation()
-    {
-        await AdministrationService.Validate(Context)
-                                   .ConfigureAwait(false);
-    }
+    public Task Validation() => ShowMigrationMessage("guild-admin check");
 
     #endregion // Command methods
 

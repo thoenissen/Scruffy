@@ -42,7 +42,7 @@ public class ReminderSlashCommandModule : SlashCommandModuleBase
     [SlashCommand("at", "Creation of a reminder which will executed at the given time.")]
     public Task ReminderAt([Summary("Message", "Message of the reminder")]string message,
                            [Summary("Time", "Time of the reminder (hh:mm)")]string time,
-                           [Summary("Time", "Time of the reminder (yyyy-MM-dd)")]string date = null) => CommandHandler.ReminderAt(Context, message, date, time);
+                           [Summary("Date", "Date of the reminder (yyyy-MM-dd)")]string date = null) => CommandHandler.ReminderAt(Context, message, date, time);
 
     #endregion // Methods
 }

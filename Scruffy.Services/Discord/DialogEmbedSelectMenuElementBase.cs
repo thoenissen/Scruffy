@@ -8,7 +8,7 @@ namespace Scruffy.Services.Discord;
 /// Dialog element with select menu
 /// </summary>
 /// <typeparam name="TData">Type of the result</typeparam>
-public abstract class DialogEmbedSelectMenuElementBase<TData> : DialogElementBase<TData>
+public abstract class DialogEmbedSelectMenuElementBase<TData> : InteractionDialogElementBase<TData>
 {
     #region Constructor
 
@@ -82,41 +82,71 @@ public abstract class DialogEmbedSelectMenuElementBase<TData> : DialogElementBas
 
             DialogContext.Messages.Add(message);
 
+            string selectedValue = null;
+
+            async Task DisableComponents()
+            {
+                var disabledComponentBuilder = new ComponentBuilder();
+
+                foreach (var selectMenuComponent in componentsBuilder.ActionRows.SelectMany(obj => obj.Components).OfType<SelectMenuComponent>())
+                {
+                    disabledComponentBuilder.WithSelectMenu(selectMenuComponent.ToBuilder()
+                                                                               .WithOptions(selectMenuComponent.Options
+                                                                                                               .Where(obj => selectedValue == null
+                                                                                                                          || obj.Value == selectedValue)
+                                                                                                               .Select(obj => new SelectMenuOptionBuilder().WithLabel(obj.Label)
+                                                                                                                                                           .WithValue(obj.Value)
+                                                                                                                                                           .WithEmote(obj.Emote)
+                                                                                                                                                           .WithDefault(true))
+                                                                                                               .ToList())
+                                                                               .WithDisabled(true));
+                }
+
+                await message.ModifyAsync(obj => obj.Components = disabledComponentBuilder.Build())
+                             .ConfigureAwait(false);
+            }
+
             components.StartTimeout();
 
             var (component, _) = await components.Task
                                                  .ConfigureAwait(false);
 
-            var selectedValue = component.Data.Values.FirstOrDefault();
+            selectedValue = component.Data.Values.FirstOrDefault();
+
+            var executedButton = entries?.Take(Convert.ToInt32(selectedValue))
+                                        .LastOrDefault();
+
+            if (executedButton != null)
+            {
+                if (executedButton.InteractionResponse != null)
+                {
+                    var interaction = executedButton.InteractionResponse(component)
+                                                    .ConfigureAwait(false);
+
+                    await DisableComponents().ConfigureAwait(false);
+
+                    return await interaction;
+                }
+
+                await component.DeferAsync()
+                               .ConfigureAwait(false);
+
+                if (executedButton.Response != null)
+                {
+                    await DisableComponents().ConfigureAwait(false);
+
+                    return await executedButton.Response()
+                                               .ConfigureAwait(false);
+                }
+            }
+
+            await DisableComponents()
+                .ConfigureAwait(false);
 
             await component.DeferAsync()
                            .ConfigureAwait(false);
 
-            var disabledComponentBuilder = new ComponentBuilder();
-
-            foreach (var selectMenuComponent in componentsBuilder.ActionRows.SelectMany(obj => obj.Components).OfType<SelectMenuComponent>())
-            {
-                disabledComponentBuilder.WithSelectMenu(selectMenuComponent.ToBuilder()
-                                                                           .WithOptions(selectMenuComponent.Options
-                                                                                                           .Where(obj => obj.Value == selectedValue)
-                                                                                                           .Select(obj => new SelectMenuOptionBuilder().WithLabel(obj.Label)
-                                                                                                                                                       .WithValue(obj.Label)
-                                                                                                                                                       .WithEmote(obj.Emote)
-                                                                                                                                                       .WithDefault(true))
-                                                                                                           .Take(1)
-                                                                                                           .ToList())
-                                                                           .WithDisabled(true));
-            }
-
-            await message.ModifyAsync(obj => obj.Components = disabledComponentBuilder.Build())
-                         .ConfigureAwait(false);
-
-            var executedButton = entries?.Take(Convert.ToInt32(selectedValue)).LastOrDefault();
-
-            return executedButton != null
-                       ? await executedButton.Func()
-                                             .ConfigureAwait(false)
-                       : DefaultFunc();
+            return DefaultFunc();
         }
     }
 

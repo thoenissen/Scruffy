@@ -1,32 +1,32 @@
 ﻿using Discord.Interactions;
 
-using Scruffy.Services.Configuration;
+using Scruffy.Services.Account;
 using Scruffy.Services.Discord;
 
 namespace Scruffy.Commands.SlashCommands;
 
 /// <summary>
-/// Server configuration commands
+/// Account management
 /// </summary>
-public class ConfigurationSlashCommandModule : SlashCommandModuleBase
+public class AccountSlashCommandModule : SlashCommandModuleBase
 {
     #region Properties
 
     /// <summary>
     /// Command handler
     /// </summary>
-    public ConfigurationCommandHandler CommandHandler { get; set; }
+    public AccountCommandHandler CommandHandler { get; set; }
 
     #endregion // Properties
 
     #region Methods
 
     /// <summary>
-    /// Server configuration
+    /// Account configuration
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    [SlashCommand("configuration", "Server configuration")]
-    public Task Configure() => CommandHandler.Configure(Context);
+    [SlashCommand("account", "Account configuration")]
+    public Task ConfigureAccount() => CommandHandler.ConfigureAccount(Context);
 
     #endregion // Methods
 }

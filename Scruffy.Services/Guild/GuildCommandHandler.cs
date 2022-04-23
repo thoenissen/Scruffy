@@ -5,6 +5,7 @@ using Discord;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Guild;
 using Scruffy.Data.Enumerations.Guild;
+using Scruffy.Services.Account;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord;
@@ -76,6 +77,11 @@ public class GuildCommandHandler : LocatedServiceBase
     /// </summary>
     private readonly GuildUserConfigurationService _userConfigurationService;
 
+    /// <summary>
+    /// Account administration service
+    /// </summary>
+    private readonly AccountAdministrationService _accountAdministrationService;
+
     #endregion // Fields
 
     #region Constructor
@@ -95,6 +101,7 @@ public class GuildCommandHandler : LocatedServiceBase
     /// <param name="repositoryFactory">Repository factory</param>
     /// <param name="rankService">Rank service</param>
     /// <param name="userConfigurationService">User configuration service</param>
+    /// <param name="accountAdministrationService">Account administration service</param>
     public GuildCommandHandler(LocalizationService localizationService,
                                GuildBankService bankService,
                                GuildEmblemService emblemService,
@@ -106,7 +113,8 @@ public class GuildCommandHandler : LocatedServiceBase
                                ItemsService itemsService,
                                RepositoryFactory repositoryFactory,
                                GuildRankService rankService,
-                               GuildUserConfigurationService userConfigurationService)
+                               GuildUserConfigurationService userConfigurationService,
+                               AccountAdministrationService accountAdministrationService)
         : base(localizationService)
     {
         _bankService = bankService;
@@ -120,6 +128,7 @@ public class GuildCommandHandler : LocatedServiceBase
         _repositoryFactory = repositoryFactory;
         _rankService = rankService;
         _userConfigurationService = userConfigurationService;
+        _accountAdministrationService = accountAdministrationService;
     }
 
     #endregion // Constructor
@@ -481,6 +490,13 @@ public class GuildCommandHandler : LocatedServiceBase
                          .ConfigureAwait(false);
         }
     }
+
+    /// <summary>
+    /// Check Guild Wars 2 accounts
+    /// </summary>
+    /// <param name="context">Command context</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public Task CheckGuildWarsAccounts(IContextContainer context) => _accountAdministrationService.Validate(context);
 
     #endregion // Methods
 }

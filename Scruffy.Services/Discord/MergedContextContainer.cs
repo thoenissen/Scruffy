@@ -35,7 +35,6 @@ public sealed class MergedContextContainer : IInteractionContext, ICommandContex
         Guild = container.Guild;
         Channel = container.Channel;
         User = container.User;
-        Member = container.Member;
 
         if (container is CommandContextContainer commandContextContainer)
         {
@@ -74,17 +73,17 @@ public sealed class MergedContextContainer : IInteractionContext, ICommandContex
     /// <summary>
     /// Guild
     /// </summary>
-    public IGuild Guild { get; }
+    public IGuild Guild { get; private set; }
 
     /// <summary>
     /// Channel
     /// </summary>
-    public IMessageChannel Channel { get; }
+    public IMessageChannel Channel { get; private set; }
 
     /// <summary>
     /// user
     /// </summary>
-    public IUser User { get; }
+    public IUser User { get; private set; }
 
     /// <summary>
     /// Interaction
@@ -99,7 +98,7 @@ public sealed class MergedContextContainer : IInteractionContext, ICommandContex
     /// <summary>
     /// Member
     /// </summary>
-    public IGuildUser Member { get; }
+    public IGuildUser Member => User as IGuildUser;
 
     /// <summary>
     /// Interactivity service
@@ -109,6 +108,23 @@ public sealed class MergedContextContainer : IInteractionContext, ICommandContex
     #endregion // Properties
 
     #region IContextContainer
+
+    /// <summary>
+    /// Switching to a direct message context
+    /// </summary>
+    /// <returns>ICommandContext-implementation</returns>
+    public async Task SwitchToDirectMessageContext()
+    {
+        if (Channel is not IDMChannel)
+        {
+            var dmChannel = await Member.CreateDMChannelAsync()
+                                        .ConfigureAwait(false);
+
+            Guild = null;
+            Channel = dmChannel;
+            User = dmChannel.Recipient;
+        }
+    }
 
     /// <summary>
     /// Get merged context container

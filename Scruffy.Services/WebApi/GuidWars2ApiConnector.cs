@@ -719,7 +719,7 @@ public sealed class GuidWars2ApiConnector : IAsyncDisposable,
     /// </summary>
     /// <typeparam name="T">Type</typeparam>
     /// <param name="permission">Permission</param>
-    /// <param name="func">Func</param>
+    /// <param name="func">Response</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     private static async Task<T> Invoke<T>(GuildWars2ApiPermission permission, Func<Task<T>> func)
     {

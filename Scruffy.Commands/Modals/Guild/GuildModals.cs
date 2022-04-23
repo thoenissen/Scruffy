@@ -4,7 +4,7 @@ using Scruffy.Services.Discord;
 using Scruffy.Services.Guild;
 using Scruffy.Services.Guild.Modals;
 
-namespace Scruffy.Commands.Modals;
+namespace Scruffy.Commands.Modals.Guild;
 
 /// <summary>
 /// Guild modals

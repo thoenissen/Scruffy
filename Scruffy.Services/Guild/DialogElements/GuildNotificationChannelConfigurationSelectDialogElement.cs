@@ -57,7 +57,7 @@ internal class GuildNotificationChannelConfigurationSelectDialogElement : Dialog
                    .Select(obj => new SelectMenuEntryData<ChannelType?>
                                   {
                                       CommandText = LocalizationGroup.GetText(obj.ToString(), obj.ToString()),
-                                      Func = () => Task.FromResult((ChannelType?)obj)
+                                      Response = () => Task.FromResult((ChannelType?)obj)
                                   })
                    .ToList();
     }

@@ -84,6 +84,8 @@ public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
     {
         [ChoiceDisplay("In game rank assignments")]
         RankAssignment,
+        [ChoiceDisplay("Guild Wars 2 account permissions")]
+        GuildWarsAccountPermissions,
     }
 
     #endregion // Enumeration
@@ -305,6 +307,13 @@ public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
             case CheckType.RankAssignment:
                 {
                     await CommandHandler.CheckRankAssignments(Context)
+                                        .ConfigureAwait(false);
+                }
+                break;
+
+            case CheckType.GuildWarsAccountPermissions:
+                {
+                    await CommandHandler.CheckGuildWarsAccounts(Context)
                                         .ConfigureAwait(false);
                 }
                 break;

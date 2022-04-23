@@ -4,16 +4,11 @@ using Scruffy.Services.Discord;
 namespace Scruffy.Services.Account.DialogElements;
 
 /// <summary>
-/// Do you want to add a new account?
+/// Do you accept the extended data processing terns?
 /// </summary>
-public class AccountWantToDeleteDialogElement : DialogButtonElementBase<bool>
+public class AccountGuildStatisticsTermsDialogElement : DialogButtonElementBase<bool>
 {
     #region Fields
-
-    /// <summary>
-    /// Account name
-    /// </summary>
-    private readonly string _name;
 
     /// <summary>
     /// Buttons
@@ -28,11 +23,9 @@ public class AccountWantToDeleteDialogElement : DialogButtonElementBase<bool>
     /// Constructor
     /// </summary>
     /// <param name="localizationService">Localization service</param>
-    /// <param name="name">Account name</param>
-    public AccountWantToDeleteDialogElement(LocalizationService localizationService, string name)
+    public AccountGuildStatisticsTermsDialogElement(LocalizationService localizationService)
         : base(localizationService)
     {
-        _name = name;
     }
 
     #endregion // Constructor
@@ -43,7 +36,7 @@ public class AccountWantToDeleteDialogElement : DialogButtonElementBase<bool>
     /// Editing the message
     /// </summary>
     /// <returns>Message</returns>
-    public override string GetMessage() => LocalizationGroup.GetFormattedText("Prompt", "Are you sure you want to delete the account '{0}'?", _name);
+    public override string GetMessage() => LocalizationGroup.GetFormattedText("AcceptTerms", "Do you agree to allow to use your data to use then in statistical visualisations?");
 
     /// <summary>
     /// Returns the buttons which should be added to the message

@@ -4,16 +4,11 @@ using Scruffy.Services.Discord;
 namespace Scruffy.Services.Account.DialogElements;
 
 /// <summary>
-/// Do you want to add a new account?
+/// Do you accept the data processing terms?
 /// </summary>
-public class AccountWantToDeleteDialogElement : DialogButtonElementBase<bool>
+public class AccountDataProcessingTermsDialogElement : DialogButtonElementBase<bool>
 {
     #region Fields
-
-    /// <summary>
-    /// Account name
-    /// </summary>
-    private readonly string _name;
 
     /// <summary>
     /// Buttons
@@ -28,11 +23,9 @@ public class AccountWantToDeleteDialogElement : DialogButtonElementBase<bool>
     /// Constructor
     /// </summary>
     /// <param name="localizationService">Localization service</param>
-    /// <param name="name">Account name</param>
-    public AccountWantToDeleteDialogElement(LocalizationService localizationService, string name)
+    public AccountDataProcessingTermsDialogElement(LocalizationService localizationService)
         : base(localizationService)
     {
-        _name = name;
     }
 
     #endregion // Constructor
@@ -43,7 +36,7 @@ public class AccountWantToDeleteDialogElement : DialogButtonElementBase<bool>
     /// Editing the message
     /// </summary>
     /// <returns>Message</returns>
-    public override string GetMessage() => LocalizationGroup.GetFormattedText("Prompt", "Are you sure you want to delete the account '{0}'?", _name);
+    public override string GetMessage() => LocalizationGroup.GetText("AcceptStorage", "To use this feature, you must agree to the processing and storage of your data to provide the functionalities of this bot. The command `/info` can be used to display a detailed list of the data that will be stored and processed. Do you agree to this processing and storage?");
 
     /// <summary>
     /// Returns the buttons which should be added to the message

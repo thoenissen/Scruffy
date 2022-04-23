@@ -50,6 +50,12 @@ public interface IContextContainer
     #region Methods
 
     /// <summary>
+    /// Switching to a direct message context
+    /// </summary>
+    /// <returns>ICommandContext-implementation</returns>
+    Task SwitchToDirectMessageContext();
+
+    /// <summary>
     /// Get merged context container
     /// </summary>
     /// <returns><see cref="MergedContextContainer"/>-Object</returns>

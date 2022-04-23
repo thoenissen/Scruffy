@@ -234,6 +234,27 @@ public static class DiscordEmoteService
     public static IEmote GetLastEmote(BaseSocketClient client) => GetEmote(client, "Last");
 
     /// <summary>
+    /// Get 'Guild Wars 2'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetGuildWars2Emote(BaseSocketClient client) => GetEmote(client, "GuildWars2");
+
+    /// <summary>
+    /// Get 'GitHub'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetGitHubEmote(BaseSocketClient client) => GetEmote(client, "GitHub");
+
+    /// <summary>
+    /// Get 'GW2 DPS Reports'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetDpsReportEmote(BaseSocketClient client) => GetEmote(client, "DpsReport");
+
+    /// <summary>
     /// Get guild emoji
     /// </summary>
     /// <param name="client">Discord client</param>

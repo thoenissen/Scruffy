@@ -393,44 +393,50 @@ public sealed class DiscordBot : IAsyncDisposable
         }
         else
         {
-            if (((IInteractionContext)context).Interaction.Data is IComponentInteractionData interactionData)
+            long? logEntryId;
+
+            if (((IInteractionContext)context).Interaction?.Data is IComponentInteractionData interactionData)
             {
-                var logEntryId = LoggingService.AddInteractionLogEntry(LogEntryLevel.CriticalError, interactionData.CustomId, ex);
+                logEntryId = LoggingService.AddInteractionLogEntry(LogEntryLevel.CriticalError, interactionData.CustomId, ex);
+            }
+            else
+            {
+                logEntryId = LoggingService.AddInteractionLogEntry(LogEntryLevel.CriticalError, "unknown", ex);
+            }
 
-                var client = context.ServiceProvider.GetService<IHttpClientFactory>().CreateClient();
+            var client = context.ServiceProvider.GetService<IHttpClientFactory>().CreateClient();
 
-                using (var response = await client.GetAsync("https://g.tenor.com/v1/search?q=funny%20cat&key=RXM3VE2UGRU9&limit=50&contentfilter=high&ar_range=all")
-                                                  .ConfigureAwait(false))
+            using (var response = await client.GetAsync("https://g.tenor.com/v1/search?q=funny%20cat&key=RXM3VE2UGRU9&limit=50&contentfilter=high&ar_range=all")
+                                              .ConfigureAwait(false))
+            {
+                var jsonResult = await response.Content
+                                               .ReadAsStringAsync()
+                                               .ConfigureAwait(false);
+
+                var searchResult = JsonConvert.DeserializeObject<SearchResultRoot>(jsonResult);
+                if (searchResult != null)
                 {
-                    var jsonResult = await response.Content
-                                                   .ReadAsStringAsync()
-                                                   .ConfigureAwait(false);
+                    var tenorEntry = searchResult.Results[new Random(DateTime.Now.Millisecond).Next(0, searchResult.Results.Count - 1)];
 
-                    var searchResult = JsonConvert.DeserializeObject<SearchResultRoot>(jsonResult);
-                    if (searchResult != null)
+                    var gifUrl = tenorEntry.Media[0].Gif.Size < 8_388_608
+                                        ? tenorEntry.Media[0].Gif.Url
+                                        : tenorEntry.Media[0].MediumGif.Size < 8_388_608
+                                            ? tenorEntry.Media[0].MediumGif.Url
+                                            : tenorEntry.Media[0].NanoGif.Url;
+
+                    using (var downloadResponse = await client.GetAsync(gifUrl)
+                                                              .ConfigureAwait(false))
                     {
-                        var tenorEntry = searchResult.Results[new Random(DateTime.Now.Millisecond).Next(0, searchResult.Results.Count - 1)];
+                        var stream = await downloadResponse.Content
+                                                           .ReadAsStreamAsync()
+                                                           .ConfigureAwait(false);
 
-                        var gifUrl = tenorEntry.Media[0].Gif.Size < 8_388_608
-                                         ? tenorEntry.Media[0].Gif.Url
-                                         : tenorEntry.Media[0].MediumGif.Size < 8_388_608
-                                             ? tenorEntry.Media[0].MediumGif.Url
-                                             : tenorEntry.Media[0].NanoGif.Url;
-
-                        using (var downloadResponse = await client.GetAsync(gifUrl)
-                                                                  .ConfigureAwait(false))
+                        await using (stream.ConfigureAwait(false))
                         {
-                            var stream = await downloadResponse.Content
-                                                               .ReadAsStreamAsync()
-                                                               .ConfigureAwait(false);
-
-                            await using (stream.ConfigureAwait(false))
-                            {
-                                await context.Channel
-                                             .SendFilesAsync(new[] { new FileAttachment(stream, "cat.gif") },
-                                                             _localizationGroup.GetFormattedText("CommandFailedMessage", "The command could not be executed. But I have an error code ({0}) and funny cat picture.", logEntryId ?? -1))
-                                             .ConfigureAwait(false);
-                            }
+                            await context.Channel
+                                         .SendFilesAsync(new[] { new FileAttachment(stream, "cat.gif") },
+                                                         _localizationGroup.GetFormattedText("CommandFailedMessage", "The command could not be executed. But I have an error code ({0}) and funny cat picture.", logEntryId ?? -1))
+                                         .ConfigureAwait(false);
                         }
                     }
                 }

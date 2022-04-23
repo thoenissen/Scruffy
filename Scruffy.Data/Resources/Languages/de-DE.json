@@ -15,7 +15,7 @@
     },
     "AdministrationCommandHandler": {
       "ActionSuccess": "Die Aktion wurde erfolgreich ausgeführt",
-      "ActionFailed": "Die Ausführung der Aktion ist fehlgeschlagen." 
+      "ActionFailed": "Die Ausführung der Aktion ist fehlgeschlagen."
     },
     "AccountApiKeyDialogElement": {
       "AddTitle": "Account Konfiguration",
@@ -48,6 +48,25 @@
     },
     "AccountWantToDeleteDialogElement": {
       "Prompt": "Bist du sicher, dass der Account '{0}' gelöscht werden soll?"
+    },
+    "AccountCommandHandler": {
+      "SwitchToPrivate": "Ich habe deinen Befehl als private Nachricht beantwortet.",
+      "AcceptStorage": "Zur Verwendung dieser Funktion musst du der Verarbeitung und Speicherung deiner Daten zur Bereitstellung der Funktionalitäten dieses Bots zustimmen. Über den Befehl `/info` kann eine detaillierte Auflistung der Daten angezeigt werden, die gespeichert und verarbeitet werden. Stimmst du dieser Verarbeitung und Speicherung zu?",
+      "Yes": "Ja",
+      "No": "Nein",
+      "CommandProcessed": "Der Befehl wurde verarbeitet." 
+    },
+    "AccountOverviewDialogElement": {
+      "AccountConfiguration": "Accounteinstellungen",
+      "Description": "Mit dem folgenden Assistenten kannst du deine Accounteinstellungen konfigurieren.",
+      "Accounts": "Accounts",
+      "Name": "Name",
+      "Birthday": "Geburtsdatum",
+      "PersonalData": "Persönliche Daten",
+      "General": "Allgemein",
+      "ExtendedGuildStatistics": "Erweiterte Gildenstatistiken",
+      "DataProcessingTerms": "Zustimmung Datenverarbeitung",
+      "Placeholder": "Wähle zur Bearbeitung eine dieser Optionen..." 
     },
     "BlockedChannelService": {
       "ChannelIsBlocked": "Dieser Befehl kann in diesem Kanal nicht verwendet werden. Bitte verwende einen dafür vorgesehenen Kanal."

@@ -144,6 +144,25 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
     public IGuildUser Member => User as IGuildUser;
 
     /// <summary>
+    /// Switching to a direct message context
+    /// </summary>
+    /// <returns>ICommandContext-implementation</returns>
+    public async Task SwitchToDirectMessageContext()
+    {
+        if (Channel is not IDMChannel)
+        {
+            var dmChannel = await Member.CreateDMChannelAsync()
+                                        .ConfigureAwait(false);
+
+            Guild = null;
+            Channel = dmChannel;
+            User = dmChannel.Recipient;
+
+            _interaction = null;
+        }
+    }
+
+    /// <summary>
     /// Get merged context container
     /// </summary>
     /// <returns><see cref="MergedContextContainer"/>-Object</returns>
@@ -315,17 +334,17 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
     /// Gets the guild the interaction originated from.
     /// </summary>
     /// <remarks> Will be <see langword="null" /> if the interaction originated from a DM channel or the interaction was a Context Command interaction. </remarks>
-    public IGuild Guild { get; }
+    public IGuild Guild { get; private set; }
 
     /// <summary>
     /// Gets the channel the interaction originated from.
     /// </summary>
-    public IMessageChannel Channel { get; }
+    public IMessageChannel Channel { get; private set; }
 
     /// <summary>
     /// Gets the user who invoked the interaction event.
     /// </summary>
-    public IUser User { get; }
+    public IUser User { get; private set; }
 
     /// <summary>
     /// Gets the underlying interaction.

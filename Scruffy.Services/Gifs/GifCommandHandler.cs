@@ -18,7 +18,7 @@ public class GifCommandHandler : LocatedServiceBase
     #region Fields
 
     /// <summary>
-    /// GIF service
+    /// <see cref="HttpClient"/>-Factory
     /// </summary>
     private IHttpClientFactory _httpClientFactory;
 
@@ -94,6 +94,7 @@ public class GifCommandHandler : LocatedServiceBase
                              .SendMessageAsync(searchResult.Results[rnd.Next(searchResult.Results.Count - 1)].ItemUrl)
                              .ConfigureAwait(false);
                 }
+
                 LoggingService.AddServiceLogEntry(LogEntryLevel.Information, nameof(GifCommandHandler), "Post random gif", searchTerm);
             }
         }
