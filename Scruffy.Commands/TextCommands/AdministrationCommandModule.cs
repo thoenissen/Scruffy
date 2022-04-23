@@ -16,15 +16,6 @@ namespace Scruffy.Commands.TextCommands;
 [RequireAdministratorPermissions]
 public class AdministrationCommandModule : LocatedTextCommandModuleBase
 {
-    #region Properties
-
-    /// <summary>
-    /// Configuration service
-    /// </summary>
-    public AdministrationCommandHandler AdministrationService { get; set; }
-
-    #endregion // Properties
-
     #region Methods
 
     /// <summary>

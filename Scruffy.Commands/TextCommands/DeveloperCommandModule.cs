@@ -15,15 +15,6 @@ namespace Scruffy.Commands.TextCommands;
 [RequireAdministratorPermissions]
 public class DeveloperCommandModule : LocatedTextCommandModuleBase
 {
-    #region Properties
-
-    /// <summary>
-    /// Developer service
-    /// </summary>
-    public DeveloperService DeveloperService { get; set; }
-
-    #endregion // Properties
-
     #region Methods
 
     /// <summary>
@@ -32,7 +23,7 @@ public class DeveloperCommandModule : LocatedTextCommandModuleBase
     /// <param name="accountName">name</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("setAccount")]
-    public Task SetAccount(string accountName) => DeveloperService.SetAccount(Context, accountName);
+    public Task SetAccount(string accountName) => ShowMigrationMessage("account");
 
     #endregion // Methods
 }

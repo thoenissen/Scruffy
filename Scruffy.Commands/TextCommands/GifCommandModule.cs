@@ -1,17 +1,7 @@
-﻿using System.Net.Http;
+﻿using Discord.Commands;
 
-using Discord.Commands;
-
-using Microsoft.AspNetCore.WebUtilities;
-
-using Newtonsoft.Json;
-
-using Scruffy.Data.Enumerations.General;
-using Scruffy.Data.Json.Tenor;
-using Scruffy.Services.Core;
 using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Attributes;
-using Scruffy.Services.Discord.Extensions;
 
 namespace Scruffy.Commands.TextCommands;
 

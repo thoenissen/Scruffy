@@ -14,15 +14,6 @@ namespace Scruffy.Commands.TextCommands;
 [BlockedChannelCheck]
 public class AccountCommandModule : LocatedTextCommandModuleBase
 {
-    #region Properties
-
-    /// <summary>
-    /// Account administration service
-    /// </summary>
-    public AccountAdministrationService AdministrationService { get; set; }
-
-    #endregion // Properties
-
     #region Command methods
 
     /// <summary>

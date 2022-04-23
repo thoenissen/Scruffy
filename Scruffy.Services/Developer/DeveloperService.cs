@@ -1,11 +1,8 @@
 ﻿using Scruffy.Data.Entity;
-using Scruffy.Data.Entity.Repositories.CoreData;
 using Scruffy.Data.Entity.Repositories.Developer;
 using Scruffy.Data.Enumerations.General;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
-using Scruffy.Services.CoreData;
-using Scruffy.Services.Discord.Interfaces;
 using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.Developer;
@@ -16,11 +13,6 @@ namespace Scruffy.Services.Developer;
 public class DeveloperService : LocatedServiceBase
 {
     #region Fields
-
-    /// <summary>
-    /// User management service
-    /// </summary>
-    private readonly UserManagementService _userManagementService;
 
     /// <summary>
     /// Repository factory
@@ -40,16 +32,13 @@ public class DeveloperService : LocatedServiceBase
     /// Constructor
     /// </summary>
     /// <param name="localizationService">Localization service</param>
-    /// <param name="userManagementService">User management service</param>
     /// <param name="repositoryFactory">Repository factory</param>
     /// <param name="gitHubConnector">GitHub connector</param>
     public DeveloperService(LocalizationService localizationService,
-                            UserManagementService userManagementService,
                             RepositoryFactory repositoryFactory,
                             GitHubConnector gitHubConnector)
         : base(localizationService)
     {
-        _userManagementService = userManagementService;
         _repositoryFactory = repositoryFactory;
         _gitHubConnector = gitHubConnector;
     }
@@ -57,32 +46,6 @@ public class DeveloperService : LocatedServiceBase
     #endregion // Constructor
 
     #region Methods
-
-    /// <summary>
-    /// Set account name
-    /// </summary>
-    /// <param name="context">Context</param>
-    /// <param name="accountName">Account name</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task SetAccount(IContextContainer context, string accountName)
-    {
-        var user = await _userManagementService.GetUserByDiscordAccountId(context.User.Id)
-                                               .ConfigureAwait(false);
-        if (user != null)
-        {
-            if (_repositoryFactory.GetRepository<UserRepository>()
-                                  .Refresh(obj => obj.Id == user.Id,
-                                           obj => obj.GitHubAccount = accountName))
-            {
-                await context.ReplyAsync(LocalizationGroup.GetText("AccountRefresh", "The account has been updated."))
-                             .ConfigureAwait(false);
-            }
-            else
-            {
-                throw _repositoryFactory.LastError;
-            }
-        }
-    }
 
     /// <summary>
     /// Import commits

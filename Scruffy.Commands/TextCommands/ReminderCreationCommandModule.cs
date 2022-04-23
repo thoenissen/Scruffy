@@ -1,6 +1,5 @@
 ﻿using Discord.Commands;
 
-using Scruffy.Services.Core.JobScheduler;
 using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Attributes;
 
@@ -14,15 +13,6 @@ namespace Scruffy.Commands.TextCommands;
 [Alias("re")]
 public class ReminderCreationCommandModule : LocatedTextCommandModuleBase
 {
-    #region Properties
-
-    /// <summary>
-    /// Scheduling jobs
-    /// </summary>
-    public JobScheduler JobScheduler { get; set; }
-
-    #endregion // Properties
-
     #region Command methods
 
     /// <summary>
