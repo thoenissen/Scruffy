@@ -9,8 +9,6 @@ using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Data.Entity.Repositories.Reminder;
 using Scruffy.Services.Calendar.Jobs;
 using Scruffy.Services.Debug.Jobs;
-using Scruffy.Services.Fractals;
-using Scruffy.Services.Fractals.Jobs;
 using Scruffy.Services.Games.Jobs;
 using Scruffy.Services.Guild.Jobs;
 using Scruffy.Services.Raid.Jobs;
@@ -47,7 +45,6 @@ public sealed class JobScheduler : SingletonLocatedServiceBase,
 #if RELEASE
         // Daily
         JobManager.AddJob<CalendarRefreshJob>(obj => obj.ToRunEvery(1).Days().At(0, 0));
-        JobManager.AddJob<FractalDailyRefreshJob>(obj => obj.ToRunEvery(1).Days().At(0, 0));
         JobManager.AddJob<LogOverviewJob>(obj => obj.ToRunEvery(1).Days().At(1, 0));
         JobManager.AddJob<GuildRankingBatchJob>(obj => obj.ToRunEvery(1).Days().At(0, 10));
         JobManager.AddJob<BackupJob>(obj => obj.ToRunEvery(1).Days().At(2, 0));
@@ -58,19 +55,6 @@ public sealed class JobScheduler : SingletonLocatedServiceBase,
         // Games
         JobManager.AddJob<CounterGameJob>(obj => obj.ToRunEvery(10).Minutes());
         JobManager.AddJob<WordChainJob>(obj => obj.ToRunEvery(10).Minutes());
-
-        // fractal reminders
-        var serviceProvider = ServiceProviderContainer.Current.GetServiceProvider();
-        await using (serviceProvider.ConfigureAwait(false))
-        {
-            var fractalReminderService = serviceProvider.GetRequiredService<FractalLfgReminderService>();
-
-            await fractalReminderService.CreateNextReminderJobAsync()
-                                        .ConfigureAwait(false);
-
-            await fractalReminderService.CreateReminderDeletionJobsAsync()
-                                        .ConfigureAwait(false);
-        }
 
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {

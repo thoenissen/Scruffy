@@ -6,7 +6,6 @@ using Scruffy.Data.Entity.Tables.Calendar;
 using Scruffy.Data.Entity.Tables.CoreData;
 using Scruffy.Data.Entity.Tables.Developer;
 using Scruffy.Data.Entity.Tables.Discord;
-using Scruffy.Data.Entity.Tables.Fractals;
 using Scruffy.Data.Entity.Tables.Games;
 using Scruffy.Data.Entity.Tables.General;
 using Scruffy.Data.Entity.Tables.Guild;
@@ -160,24 +159,6 @@ public class ScruffyDbContext : DbContext
 
         // General
         modelBuilder.Entity<LogEntryEntity>();
-
-        // Fractals
-        modelBuilder.Entity<FractalLfgConfigurationEntity>();
-        modelBuilder.Entity<FractalRegistrationEntity>();
-        modelBuilder.Entity<FractalAppointmentEntity>();
-
-        modelBuilder.Entity<FractalLfgConfigurationEntity>()
-                    .HasMany(obj => obj.FractalRegistrations)
-                    .WithOne(obj => obj.FractalLfgConfiguration)
-                    .IsRequired();
-
-        modelBuilder.Entity<FractalRegistrationEntity>()
-                    .HasKey(obj => new
-                                   {
-                                       obj.ConfigurationId,
-                                       obj.AppointmentTimeStamp,
-                                       obj.UserId
-                                   });
 
         // Raid
         modelBuilder.Entity<RaidAppointmentEntity>();

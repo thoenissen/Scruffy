@@ -46,12 +46,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Entity\Queryable\Fractals\" />
     <Folder Include="Entity\Queryable\General\" />
     <Folder Include="Entity\Queryable\Account\" />
     <Folder Include="Entity\Queryable\Games\" />
     <Folder Include="Entity\Queryable\Reminder\" />
-    <Folder Include="Entity\Repositories\Fractals\" />
     <Folder Include="Entity\Repositories\General\" />
     <Folder Include="Entity\Repositories\Account\" />
     <Folder Include="Entity\Repositories\Games\" />
