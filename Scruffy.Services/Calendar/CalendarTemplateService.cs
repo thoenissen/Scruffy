@@ -2,6 +2,7 @@
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord;
+using Scruffy.Services.Discord.Interfaces;
 
 namespace Scruffy.Services.Calendar;
 
@@ -30,7 +31,7 @@ public class CalendarTemplateService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task RunAssistantAsync(CommandContextContainer commandContext)
+    public async Task RunAssistantAsync(IContextContainer commandContext)
     {
         bool repeat;
 

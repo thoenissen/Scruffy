@@ -30,7 +30,8 @@ public class ServerConfigurationDialogElement : DialogEmbedSelectMenuElementBase
                                                                        "games",
                                                                        "guild-admin",
                                                                        "raid-admin",
-                                                                       "reminder-admin"
+                                                                       "reminder-admin",
+                                                                       "calendar-admin"
                                                                    };
 
     /// <summary>

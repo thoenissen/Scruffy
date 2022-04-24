@@ -226,7 +226,7 @@ public class GuildBankService : LocatedServiceBase
                                                           ? $"{DiscordEmoteService.GetCheckEmote(commandContext.Client)} {item.Name}"
                                                           : $"{DiscordEmoteService.GetCrossEmote(commandContext.Client)} {item.Name}";
 
-                                    if (fieldBuilder.Length + currentLine.Length > 1024)
+                                    if (fieldBuilder.Length + currentLine.Length > 1000)
                                     {
                                         builder.AddField(LocalizationGroup.GetFormattedText("DyesFields", "Dyes #{0}", fieldCounter), fieldBuilder.ToString(), true);
 

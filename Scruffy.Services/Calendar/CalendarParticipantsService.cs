@@ -6,6 +6,7 @@ using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
 using Scruffy.Services.Discord;
+using Scruffy.Services.Discord.Interfaces;
 
 namespace Scruffy.Services.Calendar;
 
@@ -52,7 +53,7 @@ public class CalendarParticipantsService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command Context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task EditParticipants(CommandContextContainer commandContext)
+    public async Task EditParticipants(IContextContainer commandContext)
     {
         var dialogHandler = new DialogHandler(commandContext);
         await using (dialogHandler.ConfigureAwait(false))
