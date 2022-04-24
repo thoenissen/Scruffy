@@ -14,6 +14,7 @@ using Scruffy.Services.Calendar.DialogElements.Forms;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord;
+using Scruffy.Services.Discord.Interfaces;
 
 namespace Scruffy.Services.Calendar;
 
@@ -53,7 +54,7 @@ public class CalendarScheduleService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task RunAssistantAsync(CommandContextContainer commandContext)
+    public async Task RunAssistantAsync(IContextContainer commandContext)
     {
         bool repeat;
 
@@ -194,7 +195,7 @@ public class CalendarScheduleService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task AddOneTimeEvent(CommandContextContainer commandContext)
+    public async Task AddOneTimeEvent(IContextContainer commandContext)
     {
         var data = await DialogHandler.RunForm<CreateOneTimeEventFormData>(commandContext, false)
                                       .ConfigureAwait(false);

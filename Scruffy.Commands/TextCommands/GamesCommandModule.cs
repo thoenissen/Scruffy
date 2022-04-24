@@ -2,7 +2,6 @@
 
 using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Attributes;
-using Scruffy.Services.Games;
 
 namespace Scruffy.Commands.TextCommands;
 
@@ -25,15 +24,6 @@ public class GamesCommandModule : LocatedTextCommandModuleBase
     [RequireAdministratorPermissions]
     public class GamesCounterCommandModule : LocatedTextCommandModuleBase
     {
-        #region Properties
-
-        /// <summary>
-        /// Counter game service
-        /// </summary>
-        public CounterGameService CounterGameService { get; set; }
-
-        #endregion // Properties
-
         #region Methods
 
         /// <summary>
@@ -43,16 +33,7 @@ public class GamesCommandModule : LocatedTextCommandModuleBase
         [Command("add")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        public async Task Add()
-        {
-            if (await CounterGameService.Add(Context)
-                                        .ConfigureAwait(false))
-            {
-                await Context.Message
-                             .DeleteAsync()
-                             .ConfigureAwait(false);
-            }
-        }
+        public Task Add() => ShowMigrationMessage("games");
 
         /// <summary>
         /// Adds the counter game to the channel
@@ -61,16 +42,7 @@ public class GamesCommandModule : LocatedTextCommandModuleBase
         [Command("remove")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        public async Task Remove()
-        {
-           if (await CounterGameService.Remove(Context)
-                                       .ConfigureAwait(false))
-           {
-               await Context.Message
-                            .DeleteAsync()
-                            .ConfigureAwait(false);
-           }
-        }
+        public Task Remove() => ShowMigrationMessage("games");
 
         #endregion // Methods
     }
@@ -87,15 +59,6 @@ public class GamesCommandModule : LocatedTextCommandModuleBase
     [RequireAdministratorPermissions]
     public class GamesWordChainCommandModule : LocatedTextCommandModuleBase
     {
-        #region Properties
-
-        /// <summary>
-        /// Word chain game service
-        /// </summary>
-        public WordChainGameService WordChainGameService { get; set; }
-
-        #endregion // Properties
-
         #region Methods
 
         /// <summary>
@@ -105,16 +68,7 @@ public class GamesCommandModule : LocatedTextCommandModuleBase
         [Command("add")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        public async Task Add()
-        {
-            if (await WordChainGameService.Add(Context)
-                                          .ConfigureAwait(false))
-            {
-                await Context.Message
-                             .DeleteAsync()
-                             .ConfigureAwait(false);
-            }
-        }
+        public Task Add() => ShowMigrationMessage("games");
 
         /// <summary>
         /// Adds the Word chain game to the channel
@@ -123,16 +77,7 @@ public class GamesCommandModule : LocatedTextCommandModuleBase
         [Command("remove")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        public async Task Remove()
-        {
-            if (await WordChainGameService.Remove(Context)
-                                          .ConfigureAwait(false))
-            {
-                await Context.Message
-                             .DeleteAsync()
-                             .ConfigureAwait(false);
-            }
-        }
+        public Task Remove() => ShowMigrationMessage("games");
 
         #endregion // Methods
     }

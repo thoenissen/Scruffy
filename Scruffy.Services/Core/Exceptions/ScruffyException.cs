@@ -5,9 +5,4 @@
 /// </summary>
 public abstract class ScruffyException : Exception
 {
-    /// <summary>
-    /// Returns localized message
-    /// </summary>
-    /// <returns>Message</returns>
-    public abstract string GetLocalizedMessage();
 }

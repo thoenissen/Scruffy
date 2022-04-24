@@ -40,6 +40,31 @@ public class UserEntity
     /// </summary>
     public string GitHubAccount { get; set; }
 
+    /// <summary>
+    /// dps.report user token
+    /// </summary>
+    public string DpsReportUserToken { get; set; }
+
+    /// <summary>
+    /// Are the data storage terms accepted?
+    /// </summary>
+    public bool? IsDataStorageAccepted { get; set; }
+
+    /// <summary>
+    /// Are the extended data storage terms accepted?
+    /// </summary>
+    public bool? IsExtendedDataStorageAccepted { get; set; }
+
+    /// <summary>
+    /// Name
+    /// </summary>
+    public string Name { get; set; }
+
+    /// <summary>
+    /// Birthday
+    /// </summary>
+    public DateTime? Birthday { get; set; }
+
     #region Navigation properties
 
     /// <summary>

@@ -184,7 +184,16 @@ public abstract class RepositoryBase<TQueryable, TEntity> : RepositoryBase
 
         try
         {
-            refreshAction(_dbContext.Set<TEntity>().First(expression));
+            var set = _dbContext.Set<TEntity>();
+
+            var entity = set.First(expression);
+
+            if (set.Local.Contains(entity) == false)
+            {
+                set.Attach(entity);
+            }
+
+            refreshAction(entity);
 
             _dbContext.SaveChanges();
 

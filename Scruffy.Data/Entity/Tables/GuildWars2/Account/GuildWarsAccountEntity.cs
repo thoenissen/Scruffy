@@ -26,11 +26,6 @@ public class GuildWarsAccountEntity
     public long UserId { get; set; }
 
     /// <summary>
-    /// dps.report user token
-    /// </summary>
-    public string DpsReportUserToken { get; set; }
-
-    /// <summary>
     /// Api key
     /// </summary>
     public string ApiKey { get; set; }

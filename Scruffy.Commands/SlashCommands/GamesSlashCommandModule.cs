@@ -10,7 +10,7 @@ namespace Scruffy.Commands.SlashCommands;
 /// </summary>
 public class GamesSlashCommandModule : SlashCommandModuleBase
 {
-    #region Enums
+    #region Enumerations
 
     /// <summary>
     /// The type of game
@@ -30,7 +30,7 @@ public class GamesSlashCommandModule : SlashCommandModuleBase
         Remove
     }
 
-    #endregion
+    #endregion // Enumerations
 
     #region Properties
 
@@ -59,13 +59,16 @@ public class GamesSlashCommandModule : SlashCommandModuleBase
     [DefaultPermission(false)]
     public async Task Manage(GameType type, GameCommandAction action)
     {
-        var message = await Context.DeferProcessing().ConfigureAwait(false);
+        var message = await Context.DeferProcessing()
+                                   .ConfigureAwait(false);
 
         if (type == GameType.Counter)
         {
             if (action == GameCommandAction.Add
-                ? await CounterGameService.Add(Context).ConfigureAwait(false)
-                : await CounterGameService.Remove(Context).ConfigureAwait(false))
+                ? await CounterGameService.Add(Context)
+                                          .ConfigureAwait(false)
+                : await CounterGameService.Remove(Context)
+                                          .ConfigureAwait(false))
             {
                 await message.DeleteAsync().ConfigureAwait(false);
             }
@@ -73,10 +76,13 @@ public class GamesSlashCommandModule : SlashCommandModuleBase
         else
         {
             if (action == GameCommandAction.Add
-                ? await WordChainGameService.Add(Context).ConfigureAwait(false)
-                : await WordChainGameService.Remove(Context).ConfigureAwait(false))
+                ? await WordChainGameService.Add(Context)
+                                            .ConfigureAwait(false)
+                : await WordChainGameService.Remove(Context)
+                                            .ConfigureAwait(false))
             {
-                await message.DeleteAsync().ConfigureAwait(false);
+                await message.DeleteAsync()
+                             .ConfigureAwait(false);
             }
         }
     }

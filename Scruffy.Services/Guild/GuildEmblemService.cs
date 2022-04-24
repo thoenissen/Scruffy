@@ -5,7 +5,7 @@ using Discord;
 
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
-using Scruffy.Services.Discord;
+using Scruffy.Services.Discord.Interfaces;
 using Scruffy.Services.WebApi;
 
 using SixLabors.ImageSharp;
@@ -52,7 +52,7 @@ public class GuildEmblemService : LocatedServiceBase
     /// <param name="commandContext">Command context</param>
     /// <param name="count">Count</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task PostRandomGuildEmblems(CommandContextContainer commandContext, int count)
+    public async Task PostRandomGuildEmblems(IContextContainer commandContext, int count)
     {
         var connector = new GuidWars2ApiConnector(null);
         await using (connector.ConfigureAwait(false))

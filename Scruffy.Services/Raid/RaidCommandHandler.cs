@@ -5,15 +5,21 @@ using Discord;
 using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;
+using Scruffy.Data.Entity.Repositories.CoreData;
+using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Entity.Repositories.GuildWars2.Account;
 using Scruffy.Data.Entity.Repositories.Raid;
+using Scruffy.Data.Entity.Tables.CoreData;
+using Scruffy.Data.Entity.Tables.Discord;
 using Scruffy.Data.Entity.Tables.Raid;
+using Scruffy.Data.Enumerations.CoreData;
 using Scruffy.Data.Json.DpsReport;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
 using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Interfaces;
+using Scruffy.Services.Raid.DialogElements;
 using Scruffy.Services.Raid.DialogElements.Forms;
 using Scruffy.Services.WebApi;
 
@@ -47,6 +53,21 @@ public class RaidCommandHandler : LocatedServiceBase
     private readonly RaidRoleAssignmentService _roleAssignmentService;
 
     /// <summary>
+    /// Roles service
+    /// </summary>
+    private readonly RaidRolesService _rolesService;
+
+    /// <summary>
+    /// Overview service
+    /// </summary>
+    private readonly RaidOverviewService _overviewService;
+
+    /// <summary>
+    /// Experience levels service
+    /// </summary>
+    private readonly RaidExperienceLevelsService _experienceLevelsService;
+
+    /// <summary>
     /// User management service
     /// </summary>
     private readonly UserManagementService _userManagementService;
@@ -72,7 +93,10 @@ public class RaidCommandHandler : LocatedServiceBase
     /// <param name="messageBuilder">Message builder</param>
     /// <param name="commitService">Commit service</param>
     /// <param name="registrationService">Registration service</param>
+    /// <param name="rolesService">Roles service</param>
     /// <param name="roleAssignmentService">Role assignment service</param>
+    /// <param name="overviewService">Overview service</param>
+    /// <param name="experienceLevelsService">Experience levels service</param>
     /// <param name="userManagementService">User management service</param>
     /// <param name="repositoryFactory">Repository factory</param>
     /// <param name="dpsReportConnector">DPS-Report connector</param>
@@ -80,7 +104,10 @@ public class RaidCommandHandler : LocatedServiceBase
                               RaidMessageBuilder messageBuilder,
                               RaidCommitService commitService,
                               RaidRegistrationService registrationService,
+                              RaidRolesService rolesService,
                               RaidRoleAssignmentService roleAssignmentService,
+                              RaidOverviewService overviewService,
+                              RaidExperienceLevelsService experienceLevelsService,
                               UserManagementService userManagementService,
                               RepositoryFactory repositoryFactory,
                               DpsReportConnector dpsReportConnector)
@@ -89,7 +116,10 @@ public class RaidCommandHandler : LocatedServiceBase
         _messageBuilder = messageBuilder;
         _commitService = commitService;
         _registrationService = registrationService;
+        _rolesService = rolesService;
         _roleAssignmentService = roleAssignmentService;
+        _overviewService = overviewService;
+        _experienceLevelsService = experienceLevelsService;
         _userManagementService = userManagementService;
         _repositoryFactory = repositoryFactory;
         _dpsReportConnector = dpsReportConnector;
@@ -100,11 +130,11 @@ public class RaidCommandHandler : LocatedServiceBase
     #region Methods
 
     /// <summary>
-    /// Starts the setup assistant
+    /// Starts the appoint configuration assistant
     /// </summary>
     /// <param name="container">Context container</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task Setup(IContextContainer container)
+    public async Task AppointmentConfiguration(IContextContainer container)
     {
         var data = await DialogHandler.RunForm<CreateRaidDayFormData>(container, true)
                                       .ConfigureAwait(false);
@@ -150,6 +180,51 @@ public class RaidCommandHandler : LocatedServiceBase
             await _messageBuilder.RefreshMessageAsync(configuration.Id)
                                 .ConfigureAwait(false);
         }
+    }
+
+    /// <summary>
+    /// Starts the roles assistant
+    /// </summary>
+    /// <param name="container">Context container</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task RolesConfiguration(IContextContainer container)
+    {
+        await _rolesService.RunAssistantAsync(container)
+                           .ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Starts the levels configuration assistant
+    /// </summary>
+    /// <param name="container">Context container</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task LevelsConfiguration(IContextContainer container)
+    {
+        bool repeat;
+
+        do
+        {
+            repeat = await DialogHandler.Run<RaidExperienceLevelSetupDialogElement, bool>(container)
+                                        .ConfigureAwait(false);
+        }
+        while (repeat);
+    }
+
+    /// <summary>
+    /// Starts the template configuration assistant
+    /// </summary>
+    /// <param name="container">Context container</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task TemplatesConfiguration(IContextContainer container)
+    {
+        bool repeat;
+
+        do
+        {
+            repeat = await DialogHandler.Run<RaidTemplateSetupDialogElement, bool>(container)
+                                        .ConfigureAwait(false);
+        }
+        while (repeat);
     }
 
     /// <summary>
@@ -452,9 +527,9 @@ public class RaidCommandHandler : LocatedServiceBase
         var user = await _userManagementService.GetUserByDiscordAccountId(context.User.Id)
                                                .ConfigureAwait(false);
 
-        var tokens = _repositoryFactory.GetRepository<GuildWarsAccountRepository>()
+        var tokens = _repositoryFactory.GetRepository<UserRepository>()
                                        .GetQuery()
-                                       .Where(obj => obj.UserId == user.Id
+                                       .Where(obj => obj.Id == user.Id
                                                   && obj.DpsReportUserToken != null)
                                        .Select(obj => obj.DpsReportUserToken)
                                        .Distinct()
@@ -630,6 +705,149 @@ public class RaidCommandHandler : LocatedServiceBase
 
         await container.ReplyAsync(embed: builder.Build())
                        .ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Set experience levels to players
+    /// </summary>
+    /// <param name="context">Command context</param>
+    /// <param name="aliasName">Alias name</param>
+    /// <param name="discordUsers">Users</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task SetExperienceLevel(IContextContainer context, string aliasName, params IGuildUser[] discordUsers)
+    {
+        using (var dbFactory = RepositoryFactory.CreateInstance())
+        {
+            var experienceLevelId = await dbFactory.GetRepository<RaidExperienceLevelRepository>()
+                                                   .GetQuery()
+                                                   .Where(obj => obj.AliasName == aliasName)
+                                                   .Select(obj => obj.Id)
+                                                   .FirstOrDefaultAsync()
+                                                   .ConfigureAwait(false);
+
+            if (experienceLevelId > 0)
+            {
+                var changedRanks = new List<(IGuildUser User, long? OldExperienceLevelId, long NewExperienceLevelId)>();
+
+                foreach (var discordUser in discordUsers)
+                {
+                    if (dbFactory.GetRepository<UserRepository>()
+                                 .Refresh(obj => obj.DiscordAccounts.Any(obj2 => obj2.Id == discordUser.Id),
+                                          obj =>
+                                          {
+                                              if (obj.RaidExperienceLevelId != experienceLevelId)
+                                              {
+                                                  changedRanks.Add((discordUser,
+                                                                    obj.RaidExperienceLevelId, experienceLevelId));
+                                              }
+
+                                              obj.RaidExperienceLevelId = experienceLevelId;
+                                          })
+                     == false)
+                    {
+                        var user = new UserEntity
+                        {
+                            CreationTimeStamp = DateTime.Now,
+                            Type = UserType.DiscordUser,
+                            RaidExperienceLevelId = experienceLevelId
+                        };
+
+                        if (dbFactory.GetRepository<UserRepository>()
+                                     .Add(user))
+                        {
+                            dbFactory.GetRepository<DiscordAccountRepository>()
+                                     .Add(new DiscordAccountEntity
+                                     {
+                                         Id = discordUser.Id,
+                                         UserId = user.Id
+                                     });
+
+                            changedRanks.Add((discordUser, null, experienceLevelId));
+                        }
+                    }
+                }
+
+                var now = DateTime.Now;
+
+                var discordUserIds = discordUsers.Select(obj => obj.Id)
+                                                 .ToList();
+
+                var appointments = dbFactory.GetRepository<RaidAppointmentRepository>()
+                                            .GetQuery()
+                                            .Where(obj => obj.IsCommitted == false
+                                                       && obj.TimeStamp > now
+                                                       && obj.RaidRegistrations.Any(obj2 => obj2.User.DiscordAccounts.Any(obj3 => discordUserIds.Contains(obj3.Id))))
+                                            .Select(obj => new
+                                            {
+                                                obj.Id,
+                                                obj.ConfigurationId
+                                            })
+                                            .ToList();
+
+                foreach (var appointment in appointments)
+                {
+                    await _registrationService.RefreshAppointment(appointment.Id)
+                                              .ConfigureAwait(false);
+
+                    await _messageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
+                                         .ConfigureAwait(false);
+                }
+
+                var experienceLevels = dbFactory.GetRepository<RaidExperienceLevelRepository>()
+                                                .GetQuery()
+                                                .Select(obj => new
+                                                {
+                                                    obj.Id,
+                                                    obj.Description,
+                                                    obj.Rank
+                                                })
+                                                .ToList();
+
+                foreach (var changedRank in changedRanks.Where(obj => obj.NewExperienceLevelId != obj.OldExperienceLevelId))
+                {
+                    var oldRank = experienceLevels.FirstOrDefault(obj => obj.Id == changedRank.OldExperienceLevelId);
+                    var newRank = experienceLevels.FirstOrDefault(obj => obj.Id == changedRank.NewExperienceLevelId);
+
+                    await context.Channel
+                                 .SendMessageAsync(LocalizationGroup.GetFormattedText("NewRankFormat",
+                                                                                      "Level changed for {0}: {1} {2} {3}",
+                                                                                      changedRank.User.Mention,
+                                                                                      oldRank?.Description,
+                                                                                      oldRank == null || oldRank.Rank > newRank?.Rank
+                                                                                          ? DiscordEmoteService.GetArrowUpEmote(context.Client)
+                                                                                          : DiscordEmoteService.GetArrowDownEmote(context.Client),
+                                                                                      newRank?.Description))
+                                 .ConfigureAwait(false);
+                }
+            }
+            else
+            {
+                await context.ReplyAsync(LocalizationGroup.GetText("UnknownExperienceLevel", "The experience role by the given name does not exist."))
+                             .ConfigureAwait(false);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Post overview of participation points
+    /// </summary>
+    /// <param name="context">Command context</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task PostParticipationOverview(IContextContainer context)
+    {
+        await _overviewService.PostParticipationOverview(context)
+                                 .ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Post overview of experience roles
+    /// </summary>
+    /// <param name="context">Command context</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task PostExperienceLevelOverview(IContextContainer context)
+    {
+        await _experienceLevelsService.PostExperienceLevelOverview(context)
+                                      .ConfigureAwait(false);
     }
 
     #endregion // Methods

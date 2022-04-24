@@ -17,7 +17,7 @@ namespace Scruffy.Data.Entity.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.1")
+                .HasAnnotation("ProductVersion", "6.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -179,10 +179,25 @@ namespace Scruffy.Data.Entity.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
+                    b.Property<DateTime?>("Birthday")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("CreationTimeStamp")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("DpsReportUserToken")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("GitHubAccount")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("IsDataStorageAccepted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsExtendedDataStorageAccepted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("RaidExperienceLevelId")
@@ -836,9 +851,6 @@ namespace Scruffy.Data.Entity.Migrations
 
                     b.Property<int?>("DailyAchievementPoints")
                         .HasColumnType("int");
-
-                    b.Property<string>("DpsReportUserToken")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("LastAge")
                         .HasColumnType("bigint");

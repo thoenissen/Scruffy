@@ -7,6 +7,7 @@ using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Entity.Tables.Discord;
 using Scruffy.Services.Core;
+using Scruffy.Services.Core.Exceptions;
 
 namespace Scruffy.Services.Discord;
 
@@ -23,6 +24,27 @@ public class BlockedChannelService : SingletonLocatedServiceBase
     private ConcurrentDictionary<(ulong Server, ulong ChannelId), byte> _blockedChannels;
 
     #endregion // Fields
+
+    #region Constructor
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public BlockedChannelService()
+    {
+        Current = this;
+    }
+
+    #endregion // Properties
+
+    #region Properties
+
+    /// <summary>
+    /// Current singleton
+    /// </summary>
+    public static BlockedChannelService Current { get; private set; }
+
+    #endregion // Properties
 
     #region Methods
 
@@ -42,6 +64,31 @@ public class BlockedChannelService : SingletonLocatedServiceBase
         }
 
         return isBlocked;
+    }
+
+    /// <summary>
+    /// Check if the channel ist blocked
+    /// </summary>
+    /// <param name="commandContext">Context</param>
+    /// <returns>Is channel blocked?</returns>
+    public bool IsChannelBlocked(IInteractionContext commandContext)
+    {
+        try
+        {
+            var isBlocked = commandContext.Channel is IGuildChannel guildChannel
+                         && _blockedChannels.ContainsKey((guildChannel.GuildId, guildChannel.Id));
+
+            if (isBlocked)
+            {
+                commandContext.Interaction.RespondAsync(LocalizationGroup.GetText("ChannelIsBlocked", "You can't use this command here. Please use the designated channels."), ephemeral: true);
+            }
+
+            return isBlocked;
+        }
+        catch (TimeoutException)
+        {
+            throw new ScruffyAbortedException();
+        }
     }
 
     /// <summary>

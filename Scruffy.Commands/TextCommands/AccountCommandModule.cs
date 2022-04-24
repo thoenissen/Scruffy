@@ -12,18 +12,8 @@ namespace Scruffy.Commands.TextCommands;
 [Group("account")]
 [Alias("ac")]
 [BlockedChannelCheck]
-[HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
 public class AccountCommandModule : LocatedTextCommandModuleBase
 {
-    #region Properties
-
-    /// <summary>
-    /// Account administration service
-    /// </summary>
-    public AccountAdministrationService AdministrationService { get; set; }
-
-    #endregion // Properties
-
     #region Command methods
 
     /// <summary>
@@ -31,45 +21,21 @@ public class AccountCommandModule : LocatedTextCommandModuleBase
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [Command("add")]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-    public async Task Add()
-    {
-       await UserManagementService.CheckDiscordAccountAsync(Context.User.Id)
-                                  .ConfigureAwait(false);
-
-       await AdministrationService.Add(Context)
-                                  .ConfigureAwait(false);
-    }
+    public Task Add() => ShowMigrationMessage("account");
 
     /// <summary>
     /// Editing an account
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [Command("edit")]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-    public async Task Edit()
-    {
-        await UserManagementService.CheckDiscordAccountAsync(Context.User.Id)
-                                   .ConfigureAwait(false);
-
-        await AdministrationService.Edit(Context)
-                                   .ConfigureAwait(false);
-    }
+    public Task Edit() => ShowMigrationMessage("account");
 
     /// <summary>
     /// Remove an account
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [Command("remove")]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-    public async Task Remove()
-    {
-        await UserManagementService.CheckDiscordAccountAsync(Context.User.Id)
-                                   .ConfigureAwait(false);
-
-        await AdministrationService.Remove(Context)
-                                   .ConfigureAwait(false);
-    }
+    public Task Remove() => ShowMigrationMessage("account");
 
     /// <summary>
     /// Validation of all accounts
@@ -77,12 +43,7 @@ public class AccountCommandModule : LocatedTextCommandModuleBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [Command("validation")]
     [RequireAdministratorPermissions]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-    public async Task Validation()
-    {
-        await AdministrationService.Validate(Context)
-                                   .ConfigureAwait(false);
-    }
+    public Task Validation() => ShowMigrationMessage("guild-admin check");
 
     #endregion // Command methods
 

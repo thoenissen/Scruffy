@@ -35,7 +35,6 @@ public sealed class MergedContextContainer : IInteractionContext, ICommandContex
         Guild = container.Guild;
         Channel = container.Channel;
         User = container.User;
-        Member = container.Member;
 
         if (container is CommandContextContainer commandContextContainer)
         {
@@ -43,7 +42,7 @@ public sealed class MergedContextContainer : IInteractionContext, ICommandContex
         }
         else if (container is InteractionContextContainer interactionContextContainer)
         {
-            Interaction = interactionContextContainer.Interaction;
+            Interaction = ((IInteractionContext)interactionContextContainer).Interaction;
         }
     }
 
@@ -74,17 +73,17 @@ public sealed class MergedContextContainer : IInteractionContext, ICommandContex
     /// <summary>
     /// Guild
     /// </summary>
-    public IGuild Guild { get; }
+    public IGuild Guild { get; private set; }
 
     /// <summary>
     /// Channel
     /// </summary>
-    public IMessageChannel Channel { get; }
+    public IMessageChannel Channel { get; private set; }
 
     /// <summary>
     /// user
     /// </summary>
-    public IUser User { get; }
+    public IUser User { get; private set; }
 
     /// <summary>
     /// Interaction
@@ -99,7 +98,7 @@ public sealed class MergedContextContainer : IInteractionContext, ICommandContex
     /// <summary>
     /// Member
     /// </summary>
-    public IGuildUser Member { get; }
+    public IGuildUser Member => User as IGuildUser;
 
     /// <summary>
     /// Interactivity service
@@ -109,6 +108,23 @@ public sealed class MergedContextContainer : IInteractionContext, ICommandContex
     #endregion // Properties
 
     #region IContextContainer
+
+    /// <summary>
+    /// Switching to a direct message context
+    /// </summary>
+    /// <returns>ICommandContext-implementation</returns>
+    public async Task SwitchToDirectMessageContext()
+    {
+        if (Channel is not IDMChannel)
+        {
+            var dmChannel = await Member.CreateDMChannelAsync()
+                                        .ConfigureAwait(false);
+
+            Guild = null;
+            Channel = dmChannel;
+            User = dmChannel.Recipient;
+        }
+    }
 
     /// <summary>
     /// Get merged context container
@@ -127,10 +143,11 @@ public sealed class MergedContextContainer : IInteractionContext, ICommandContex
     /// <param name="components">The message components to be included with this message. Used for interactions.</param>
     /// <param name="stickers">A collection of stickers to send with the message.</param>
     /// <param name="embeds">A array of <see cref="Embed"/>s to send with this response. Max 10.</param>
+    /// <param name="ephemeral">Should the message be posted ephemeral if possible?</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task<IUserMessage> ReplyAsync(string text = null, bool isTTS = false, Embed embed = null, RequestOptions options = null, AllowedMentions allowedMentions = null, MessageComponent components = null, ISticker[] stickers = null, Embed[] embeds = null)
+    public Task<IUserMessage> ReplyAsync(string text = null, bool isTTS = false, Embed embed = null, RequestOptions options = null, AllowedMentions allowedMentions = null, MessageComponent components = null, ISticker[] stickers = null, Embed[] embeds = null, bool ephemeral = false)
     {
-        return _container.ReplyAsync(text, isTTS, embed, options, allowedMentions, components, stickers, embeds);
+        return _container.ReplyAsync(text, isTTS, embed, options, allowedMentions, components, stickers, embeds, ephemeral);
     }
 
     /// <summary>

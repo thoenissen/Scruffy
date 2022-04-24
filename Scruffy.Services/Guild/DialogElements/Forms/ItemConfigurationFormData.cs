@@ -8,9 +8,15 @@ namespace Scruffy.Services.Guild.DialogElements.Forms;
 public class ItemConfigurationFormData
 {
     /// <summary>
+    /// Item id
+    /// </summary>
+    [DialogElementAssignment(typeof(GuildConfigurationItemItemIdDialogElement))]
+    public int ItemId { get; set; }
+
+    /// <summary>
     /// Custom value
     /// </summary>
-    [DialogElementAssignment(typeof(GuildConfigurationItemCustomerValueDialogElement))]
+    [DialogElementAssignment(typeof(GuildConfigurationItemCustomValueDialogElement))]
     public long CustomValue { get; set; }
 
     /// <summary>

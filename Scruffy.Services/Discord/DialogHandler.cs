@@ -62,7 +62,7 @@ public sealed class DialogHandler : IAsyncDisposable, IDisposable
     /// <param name="commandContext">Current command context</param>
     /// <param name="onInitialize">Initialization</param>
     /// <returns>Result</returns>
-    public static async Task<TData> Run<T, TData>(CommandContextContainer commandContext, Action<DialogContext> onInitialize = null) where T : DialogElementBase<TData>
+    public static async Task<TData> Run<T, TData>(IContextContainer commandContext, Action<DialogContext> onInitialize = null) where T : DialogElementBase<TData>
     {
         var serviceProvider = ServiceProviderContainer.Current.GetServiceProvider();
         await using (serviceProvider.ConfigureAwait(false))

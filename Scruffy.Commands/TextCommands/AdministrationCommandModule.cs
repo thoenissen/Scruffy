@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-using Discord;
+﻿using Discord;
 using Discord.Commands;
 
 using Scruffy.Services.Administration;
@@ -16,18 +14,8 @@ namespace Scruffy.Commands.TextCommands;
 [Alias("ad")]
 [RequireContext(ContextType.Guild)]
 [RequireAdministratorPermissions]
-[HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
 public class AdministrationCommandModule : LocatedTextCommandModuleBase
 {
-    #region Properties
-
-    /// <summary>
-    /// Configuration service
-    /// </summary>
-    public AdministrationService AdministrationService { get; set; }
-
-    #endregion // Properties
-
     #region Methods
 
     /// <summary>
@@ -38,21 +26,7 @@ public class AdministrationCommandModule : LocatedTextCommandModuleBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("rename")]
     [RequireAdministratorPermissions]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-    public async Task Rename(IGuildUser member, [Remainder] string name)
-    {
-        try
-        {
-            await AdministrationService.RenameMember(member, name)
-                                       .ConfigureAwait(false);
-        }
-        catch
-        {
-            await Context.Message
-                         .ReplyAsync(LocalizationGroup.GetText("NotAllowedToPerform", "I'm not allowed to perform this action."))
-                         .ConfigureAwait(false);
-        }
-    }
+    public Task Rename(IGuildUser member, [Remainder] string name) => ShowMigrationMessage("admin rename-member");
 
     /// <summary>
     /// Rename user
@@ -62,21 +36,7 @@ public class AdministrationCommandModule : LocatedTextCommandModuleBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [Command("rename")]
     [RequireAdministratorPermissions]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-    public async Task Rename(IRole role, [Remainder] string name)
-    {
-        try
-        {
-            await AdministrationService.RenameRole(role, name)
-                                       .ConfigureAwait(false);
-        }
-        catch
-        {
-            await Context.Message
-                         .ReplyAsync(LocalizationGroup.GetText("NotAllowedToPerform", "I'm not allowed to perform this action."))
-                         .ConfigureAwait(false);
-        }
-    }
+    public Task Rename(IRole role, [Remainder] string name) => ShowMigrationMessage("admin rename-role");
 
     #endregion // Methods
 
@@ -89,18 +49,8 @@ public class AdministrationCommandModule : LocatedTextCommandModuleBase
     [Alias("c")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
     public class AdministrationChannelCommandModule : LocatedTextCommandModuleBase
     {
-        #region Properties
-
-        /// <summary>
-        /// Blocked channels
-        /// </summary>
-        public BlockedChannelService BlockedChannelService { get; set; }
-
-        #endregion // Properties
-
         #region Methods
 
         /// <summary>
@@ -109,17 +59,7 @@ public class AdministrationCommandModule : LocatedTextCommandModuleBase
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("block")]
         [RequireAdministratorPermissions]
-        public async Task BlockChannel()
-        {
-            if (Context.Channel is IGuildChannel guildChannel)
-            {
-                BlockedChannelService.AddChannel(guildChannel);
-
-                await Context.Message
-                             .DeleteAsync()
-                             .ConfigureAwait(false);
-            }
-        }
+        public Task BlockChannel() => ShowMigrationMessage("admin channel-configuration");
 
         /// <summary>
         /// Block channel
@@ -127,17 +67,7 @@ public class AdministrationCommandModule : LocatedTextCommandModuleBase
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("unblock")]
         [RequireAdministratorPermissions]
-        public async Task UnblockChannel()
-        {
-            if (Context.Channel is IGuildChannel guildChannel)
-            {
-                BlockedChannelService.RemoveChannel(guildChannel);
-
-                await Context.Message
-                             .DeleteAsync()
-                             .ConfigureAwait(false);
-            }
-        }
+        public Task UnblockChannel() => ShowMigrationMessage("admin channel-configuration");
 
         #endregion // Methods
     }
@@ -153,18 +83,8 @@ public class AdministrationCommandModule : LocatedTextCommandModuleBase
     [Alias("s")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
     public class AdministrationSlashCommandsCommandModule : LocatedTextCommandModuleBase
     {
-        #region Properties
-
-        /// <summary>
-        /// Interaction service
-        /// </summary>
-        public Discord.Interactions.InteractionService InteractionService { get; set; }
-
-        #endregion // Properties
-
         #region Methods
 
         /// <summary>
@@ -173,42 +93,7 @@ public class AdministrationCommandModule : LocatedTextCommandModuleBase
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("install")]
         [RequireAdministratorPermissions]
-        public async Task InstallSlashCommands()
-        {
-            IEnumerable<ApplicationCommandProperties> commands = null;
-
-            var buildContext = new SlashCommandBuildContext
-                               {
-                                   Guild = Context.Guild,
-                                   ServiceProvider = Context.ServiceProvider,
-                                   CultureInfo = LocalizationGroup.CultureInfo
-                               };
-
-            foreach (var type in Assembly.Load("Scruffy.Commands")
-                                         .GetTypes()
-                                         .Where(obj => typeof(SlashCommandModuleBase).IsAssignableFrom(obj)
-                                                    && obj.IsAbstract == false))
-            {
-                var commandModule = (SlashCommandModuleBase)Activator.CreateInstance(type);
-                if (commandModule != null)
-                {
-                    commands = commands == null
-                                   ? commandModule.GetCommands(buildContext)
-                                   : commands.Concat(commandModule.GetCommands(buildContext));
-                }
-            }
-
-            if (commands != null)
-            {
-                await Context.Guild
-                             .BulkOverwriteApplicationCommandsAsync(commands.ToArray())
-                             .ConfigureAwait(false);
-            }
-
-            await Context.Message
-                         .AddReactionAsync(DiscordEmoteService.GetCheckEmote(Context.Client))
-                         .ConfigureAwait(false);
-        }
+        public Task InstallSlashCommands() => ShowMigrationMessage("configuration");
 
         /// <summary>
         /// Uninstall SlashCommands
@@ -216,16 +101,7 @@ public class AdministrationCommandModule : LocatedTextCommandModuleBase
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("uninstall")]
         [RequireAdministratorPermissions]
-        public async Task UninstallSlashCommands()
-        {
-            await Context.Guild
-                         .BulkOverwriteApplicationCommandsAsync(Array.Empty<ApplicationCommandProperties>())
-                         .ConfigureAwait(false);
-
-            await Context.Message
-                         .AddReactionAsync(DiscordEmoteService.GetCheckEmote(Context.Client))
-                         .ConfigureAwait(false);
-        }
+        public Task UninstallSlashCommands() => ShowMigrationMessage("configuration");
 
         /// <summary>
         /// Set SlashCommand permissions
@@ -235,27 +111,7 @@ public class AdministrationCommandModule : LocatedTextCommandModuleBase
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("set-permissions")]
         [RequireAdministratorPermissions]
-        public async Task SetSlashCommandsPermissions(string groupName, IRole role)
-        {
-            var module = InteractionService.Modules
-                                           .FirstOrDefault(obj => obj.SlashGroupName == groupName);
-
-            if (module != null)
-            {
-                await InteractionService.ModifySlashCommandPermissionsAsync(module, Context.Guild, new ApplicationCommandPermission(role, true))
-                                        .ConfigureAwait(false);
-
-                await Context.Message
-                             .AddReactionAsync(DiscordEmoteService.GetCheckEmote(Context.Client))
-                             .ConfigureAwait(false);
-            }
-            else
-            {
-                await Context.Message
-                             .AddReactionAsync(DiscordEmoteService.GetCrossEmote(Context.Client))
-                             .ConfigureAwait(false);
-            }
-        }
+        public Task SetSlashCommandsPermissions(string groupName, IRole role) => ShowMigrationMessage("configuration");
 
         /// <summary>
         /// Remove SlashCommands permissions
@@ -265,27 +121,7 @@ public class AdministrationCommandModule : LocatedTextCommandModuleBase
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("remove-permissions")]
         [RequireAdministratorPermissions]
-        public async Task RemoveSlashCommandsPermissions(string groupName, IRole role)
-        {
-            var module = InteractionService.Modules
-                                           .FirstOrDefault(obj => obj.SlashGroupName == groupName);
-
-            if (module != null)
-            {
-                await InteractionService.ModifySlashCommandPermissionsAsync(module, Context.Guild, new ApplicationCommandPermission(role, true))
-                                        .ConfigureAwait(false);
-
-                await Context.Message
-                             .AddReactionAsync(DiscordEmoteService.GetCheckEmote(Context.Client))
-                             .ConfigureAwait(false);
-            }
-            else
-            {
-                await Context.Message
-                             .AddReactionAsync(DiscordEmoteService.GetCrossEmote(Context.Client))
-                             .ConfigureAwait(false);
-            }
-        }
+        public Task RemoveSlashCommandsPermissions(string groupName, IRole role) => ShowMigrationMessage("configuration");
 
         #endregion // Methods
     }

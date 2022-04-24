@@ -13,6 +13,10 @@
       "ListOfInvalidAccounts": "Die folgenden Accounts sind ungültig:",
       "NoInvalidAccounts": "Es konnten keine ungültigen Accounts gefunden werden"
     },
+    "AdministrationCommandHandler": {
+      "ActionSuccess": "Die Aktion wurde erfolgreich ausgeführt",
+      "ActionFailed": "Die Ausführung der Aktion ist fehlgeschlagen."
+    },
     "AccountApiKeyDialogElement": {
       "AddTitle": "Account Konfiguration",
       "AddDescription": "Gib bitte den zu verwendenen API-Key ein. Ein API-Key kann auf der offiziellen [Guild Wars 2 Website](https://account.arena.net/applications) erstellt werden."
@@ -45,8 +49,24 @@
     "AccountWantToDeleteDialogElement": {
       "Prompt": "Bist du sicher, dass der Account '{0}' gelöscht werden soll?"
     },
-    "AdministrationCommandModule": {
-      "NotAllowedToPerform": "Diese Aktion darf ich nicht ausführen."
+    "AccountCommandHandler": {
+      "SwitchToPrivate": "Ich habe deinen Befehl als private Nachricht beantwortet.",
+      "AcceptStorage": "Zur Verwendung dieser Funktion musst du der Verarbeitung und Speicherung deiner Daten zur Bereitstellung der Funktionalitäten dieses Bots zustimmen. Über den Befehl `/info` kann eine detaillierte Auflistung der Daten angezeigt werden, die gespeichert und verarbeitet werden. Stimmst du dieser Verarbeitung und Speicherung zu?",
+      "Yes": "Ja",
+      "No": "Nein",
+      "CommandProcessed": "Der Befehl wurde verarbeitet." 
+    },
+    "AccountOverviewDialogElement": {
+      "AccountConfiguration": "Accounteinstellungen",
+      "Description": "Mit dem folgenden Assistenten kannst du deine Accounteinstellungen konfigurieren.",
+      "Accounts": "Accounts",
+      "Name": "Name",
+      "Birthday": "Geburtsdatum",
+      "PersonalData": "Persönliche Daten",
+      "General": "Allgemein",
+      "ExtendedGuildStatistics": "Erweiterte Gildenstatistiken",
+      "DataProcessingTerms": "Zustimmung Datenverarbeitung",
+      "Placeholder": "Wähle zur Bearbeitung eine dieser Optionen..." 
     },
     "BlockedChannelService": {
       "ChannelIsBlocked": "Dieser Befehl kann in diesem Kanal nicht verwendet werden. Bitte verwende einen dafür vorgesehenen Kanal."
@@ -454,6 +474,9 @@
       "BuildingProgress": "Erstellung...",
       "CreationCompletedMessage": "Erstellung abgechlossen! Alle Nachrichten der Erstellung werden in 30 Sekunden gelöscht."
     },
+    "GuildUserConfigurationUserDialogElement": {
+      "Message": "Gebe bitte den Benutzer ein:"
+    },
     "GuildUserConfigurationService": {
       "UserConfiguration": "Benutzerkonfiguration",
       "Description": "Mit den folgenden Assistenten kannst du die Benutzereinstellungen ändern. Wähle dafür eine der folgenden Optionen aus.",
@@ -523,8 +546,8 @@
       "ChooseRoleTitle": "Wähle die Rolle aus, die gelöscht werden soll:",
       "ChooseRoleDescription": "Wähle eine der folgenden Rollen aus..."
     },
-    "GuildRankingCommandModule": {
-      "NoChangedRequired": "Es sind keine Rangänderungen erforderlich." 
+    "GuildCommandHandler": {
+      "NoChangedRequired": "Es sind keine Rangänderungen erforderlich."
     },
     "GuildActivityDiscordVoiceSetupDialogElement": {
       "CommandTitle": "Befehle",
@@ -538,6 +561,15 @@
     },
     "GuildApiKeyDialogElement": {
       "Message": "Gib den zu verwendenden API-Key ein:"
+    },
+    "GuildNotificationChannelConfigurationSelectDialogElement": {
+      "Message": "Wähle einen der folgenden Typen aus:",
+      "SpecialRankNotification": "Spezial-Ränge",
+      "CalendarReminderNotification": "Kalendererinnerungen",
+      "GuildLogNotification": "Gildenprotokoll",
+      "GuildRankChangeNotification": "Gildenrangänderungen",
+      "MessageOfTheDay": "Nachricht des Tages",
+      "Calendar": "Kalender"
     },
     "GuildBankService": {
       "BankValidation": "Banküberprüfung",
@@ -721,8 +753,11 @@
       "UpdateField": "Allgemein",
       "EodField": "End of Dragons"
     },
-    "GuildConfigurationItemCustomerValueDialogElement": {
+    "GuildConfigurationItemCustomValueDialogElement": {
       "Message": "Gib den benutzerdefinierten Wert in Kupfer ein, der dem Gegenstand zugewiesen werden soll."
+    },
+    "GuildConfigurationItemItemIdDialogElement": {
+      "Message": "Gibt bitte die ID des Gegenstandes ein."
     },
     "GuildConfigurationItemCustomValueThresholdDialogElement": {
       "Message": "Soll bei diesem Gegenstand der Schwellenwert berücksichtig werden?",
@@ -732,10 +767,6 @@
     "ItemsService": {
       "ValueAssigned": "Der Wert wurde zugewiesen.",
       "InvalidItem": "Es konnte kein Gegenstand mit der angegebenen ID gefunden werden."
-    },
-    "HelpOverviewCommandModule": {
-      "HelpCommandOverviewTitle": "Übersicht über die wichtigsten Befehle",
-      "HelpCommandOverviewDescription": "In der folgenden Nachricht werden die wichtigsten Befehle der ausgewählten Kategorie ausgegeben."
     },
     "InformationCommandHandler": {
       "GeneralInformationTitle": "Allgemeine Informationen",
@@ -767,21 +798,21 @@
       "Wallet": "wallet",
       "MissingPermissions": "Der hinterlegte API-Schlüssel hat nicht die benötigten Berechtigungen ({0}) um den Befehl auszuführen."
     },
+    "LocatedTextCommandModuleBase": {
+      "SlashCommandMigrationHint": "Textbasierte Befehle stehen nicht mehr zur Verfügung. Du kannst diesen Befehl über den Slash Command `/{0}` ausführen."
+    },
     "OneTimeReminderJob": {
       "EmptyReminder": "{0} Erinnerung",
       "SingleLineReminder": "{0} Erinnerung: {1}",
       "MultiLineReminder": "{0} Erinnerung:\n\n{1}"
     },
-    "RaidCommandModule": {
-      "NoActiveAppointment": "Es besteht kein aktiver Termin.",
-      "TemplateChanged": "Die Schablone wurde angepasst.",
-      "GroupCountChanged": "Die Anzahl der Gruppen wurde angepasst."
-    },
     "RaidCommandHandler": {
       "NoActiveAppointment": "Es besteht kein aktiver Termin.",
       "TemplateChanged": "Die Schablone wurde angepasst.",
       "GroupCountChanged": "Die Anzahl der Gruppen wurde angepasst.",
-      "NoDpsReportToken": "Deinem Account sind keine DPS-Report-User-Tokens zugeordnet."
+      "NoDpsReportToken": "Deinem Account sind keine DPS-Report-User-Tokens zugeordnet.",
+      "UnknownExperienceLevel": "Das angegebene Erfahrungslevel existiert nicht.",
+      "NewRankFormat": "Neue Wertung für {0}: {1} {2} {3}"
     },
     "RaidCommitDialogElement": {
       "CommitTitle": "Fortschreibung Teilnahmepunkte",
@@ -851,10 +882,6 @@
       "NoDiscordRole": "Keine Rolle",
       "RolesField": "Rollen"
     },
-    "RaidExperienceLevelsCommandModule": {
-      "UnknownExperienceLevel": "Das angegebene Erfahrungslevel existiert nicht.",
-      "NewRankFormat": "Neue Wertung für {0}: {1} {2} {3}"
-    },
     "RaidExperienceLevelSelectionDialogElement": {
       "ChooseLevelTitle": "Erfahrungslevelauswahl",
       "ChooseLevelDescription": "Wähle eines der folgenden Erfahrungslevel aus:",
@@ -883,7 +910,7 @@
       "SubstitutesBench": "Ersatzbank",
       "Join": "Anmelden",
       "Leave": "Abmelden",
-      "Roles": "Rollen" 
+      "Roles": "Rollen"
     },
     "RaidOverviewService": {
       "ParticipationOverview": "Übersicht der Teilnahmepunkte"
@@ -976,7 +1003,7 @@
     "RaidTemplateTitleDialogElement": {
       "Message": "Gib bitte den zu verwendenden Titel ein:"
     },
-    "ReminderCreationCommandModule": {
+    "ReminderCommandHandler": {
       "CommandProgressed": "Der Befehl wurde verarbeitet.",
       "ChooseChannelPrompt": "Wähle bitte einen der folgenden Kanäle aus:",
       "ChannelSelectionTitle": "Kanalauswahl",
@@ -991,14 +1018,11 @@
     "ScruffyTimeoutException": {
       "CommandTimeout": "Die Verarbeitung des Befehls wurde wegen einer Zeitüberschreitung abgebrochen."
     },
-    "SearchCommandModule": {
+    "SearchCommandHandler": {
       "SearchResults": "Suchergebnis",
       "NoResults": "Ich konnte leider keine Ergebnisse finden.",
       "TitleSearch": "Titelsuche",
       "TextSearch": "Textsuche"
-    },
-    "ServerConfigurationCommandModule": {
-      "UsingNewPrefix": "Ich werde nun den folgenden Präfix verwenden: {0}"
     },
     "WorldsService": {
       "Overview": "Weltenübersicht"

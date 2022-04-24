@@ -123,7 +123,10 @@ public class UserManagementService
                                            .Select(obj => new UserData
                                                           {
                                                               Id = obj.UserId,
-                                                              ExperienceLevelRank = obj.User.RaidExperienceLevel != null ? obj.User.RaidExperienceLevel.Rank : 0
+                                                              ExperienceLevelRank = obj.User.RaidExperienceLevel != null
+                                                                                        ? obj.User.RaidExperienceLevel.Rank
+                                                                                        : 0,
+                                                              IsDataStorageAccepted = obj.User.IsDataStorageAccepted
                                                           })
                                            .FirstAsync()
                                            .ConfigureAwait(false);
@@ -134,6 +137,21 @@ public class UserManagementService
             }
 
             return userData;
+        }
+    }
+
+    /// <summary>
+    /// Refresh <see cref="UserEntity.IsDataStorageAccepted"/>
+    /// </summary>
+    /// <param name="userDataId">User id</param>
+    /// <param name="isAccepted">Is accepted?</param>
+    /// <returns>Successful refresh?</returns>
+    public bool SetIsDataStorageAccepted(long userDataId, bool isAccepted)
+    {
+        using (var dbFactory = RepositoryFactory.CreateInstance())
+        {
+            return dbFactory.GetRepository<UserRepository>()
+                            .Refresh(obj => obj.Id == userDataId, obj => obj.IsDataStorageAccepted = isAccepted);
         }
     }
 

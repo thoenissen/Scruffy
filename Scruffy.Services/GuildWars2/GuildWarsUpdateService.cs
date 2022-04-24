@@ -4,6 +4,7 @@ using Scruffy.Data.Json.ThatShaman;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord;
+using Scruffy.Services.Discord.Interfaces;
 using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.GuildWars2;
@@ -44,7 +45,7 @@ public class GuildWarsUpdateService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task PostUpdateOverview(CommandContextContainer commandContext)
+    public async Task PostUpdateOverview(IContextContainer commandContext)
     {
         var now = DateTime.Now;
 
@@ -154,12 +155,7 @@ public class GuildWarsUpdateService : LocatedServiceBase
                  await _thatShamanConnector.GetNextUpdate()
                                            .ConfigureAwait(false));
 
-        AddField(LocalizationGroup.GetText("EodField", "End of Dragons"),
-                 await _thatShamanConnector.GetEODRelease()
-                                           .ConfigureAwait(false));
-
-        await commandContext.Message
-                            .ReplyAsync(embed: builder.Build())
+        await commandContext.ReplyAsync(embed: builder.Build())
                             .ConfigureAwait(false);
     }
 

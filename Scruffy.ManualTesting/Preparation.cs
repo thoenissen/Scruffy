@@ -24,8 +24,8 @@ internal static class Preparation
     internal static async Task SetEnvironmentVariables()
     {
         var configurationFile = EnvironmentSettings.UseProductiveConfiguration
-                                    ? "..\\..\\..\\..\\Scruffy.ServiceHost\\Docker_Productive.env"
-                                    : "..\\..\\..\\..\\Scruffy.ServiceHost\\Docker.env";
+                                    ? "..\\..\\..\\..\\Scruffy.ServiceHosts.Discord\\Docker_Productive.env"
+                                    : "..\\..\\..\\..\\Scruffy.ServiceHosts.Discord\\Docker.env";
 
         foreach (var line in await File.ReadAllLinesAsync(configurationFile).ConfigureAwait(false))
         {

@@ -79,7 +79,7 @@ public class DiscordRoleSelectionDialogElement : DialogSelectMenuElementBase<ulo
                                      Emote = role.Emoji.Name != null
                                                  ? role.Emoji
                                                  : null,
-                                     Func = () => Task.FromResult(role.Id)
+                                     Response = () => Task.FromResult(role.Id)
                                  });
                 }
             }

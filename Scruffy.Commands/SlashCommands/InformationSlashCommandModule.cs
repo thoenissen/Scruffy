@@ -6,14 +6,14 @@ using Scruffy.Services.Information;
 namespace Scruffy.Commands.SlashCommands;
 
 /// <summary>
-/// Shows general informations about Scruffy
+/// Shows general information about Scruffy
 /// </summary>
 public class InformationSlashCommandModule : SlashCommandModuleBase
 {
     #region Properties
 
     /// <summary>
-    /// Visualizer
+    /// Command handler
     /// </summary>
     public InformationCommandHandler CommandHandler { get; set; }
 
@@ -22,10 +22,10 @@ public class InformationSlashCommandModule : SlashCommandModuleBase
     #region Methods
 
     /// <summary>
-    /// Shows general informations about Scruffy
+    /// Shows general information about Scruffy
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    [SlashCommand("info", "Display infos about Scruffy")]
+    [SlashCommand("info", "Display information about Scruffy")]
     public Task Info() => CommandHandler.Info(Context);
 
     #endregion // Methods

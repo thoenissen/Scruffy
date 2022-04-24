@@ -1,16 +1,8 @@
-﻿using System.Globalization;
-
-using Discord;
+﻿using Discord;
 using Discord.Commands;
 
-using Scruffy.Data.Entity;
-using Scruffy.Data.Entity.Repositories.Guild;
-using Scruffy.Data.Enumerations.Guild;
 using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Attributes;
-using Scruffy.Services.Guild;
-using Scruffy.Services.Guild.DialogElements;
-using Scruffy.Services.GuildWars2;
 
 namespace Scruffy.Commands.TextCommands;
 
@@ -20,28 +12,8 @@ namespace Scruffy.Commands.TextCommands;
 [Group("guild")]
 [Alias("g")]
 [BlockedChannelCheck]
-[HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
 public class GuildCommandModule : LocatedTextCommandModuleBase
 {
-    #region Properties
-
-    /// <summary>
-    /// Configuration service
-    /// </summary>
-    public GuildConfigurationService ConfigurationService { get; set; }
-
-    /// <summary>
-    /// Emblem service
-    /// </summary>
-    public GuildEmblemService GuildEmblemService { get; set; }
-
-    /// <summary>
-    /// Items service
-    /// </summary>
-    public ItemsService ItemsService { get; set; }
-
-    #endregion // Properties
-
     #region Methods
 
     /// <summary>
@@ -51,11 +23,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
     [Command("setup")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    public async Task Setup()
-    {
-        await ConfigurationService.CreateGuildConfiguration(Context)
-                                  .ConfigureAwait(false);
-    }
+    public Task Setup() => ShowMigrationMessage("guild-admin configuration");
 
     /// <summary>
     /// Setting the special rank notification channel
@@ -64,11 +32,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
     [Command("setSpecialRankNotification")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    public async Task SetSpecialRankNotification()
-    {
-        await ConfigurationService.SetNotificationChannel(Context, GuildChannelConfigurationType.SpecialRankRankChange)
-                                  .ConfigureAwait(false);
-    }
+    public Task SetSpecialRankNotification() => ShowMigrationMessage("guild-admin configuration");
 
     /// <summary>
     /// Setting the calendar notification channel
@@ -77,11 +41,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
     [Command("setCalendarReminderNotification")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    public async Task SetCalendarReminderNotification()
-    {
-        await ConfigurationService.SetNotificationChannel(Context, GuildChannelConfigurationType.CalendarReminder)
-                                  .ConfigureAwait(false);
-    }
+    public Task SetCalendarReminderNotification() => ShowMigrationMessage("guild-admin configuration");
 
     /// <summary>
     /// Setting the guild log notification
@@ -90,11 +50,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
     [Command("setGuildLogNotification")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    public async Task SetGuildLogNotification()
-    {
-        await ConfigurationService.SetNotificationChannel(Context, GuildChannelConfigurationType.GuildLogNotification)
-                                  .ConfigureAwait(false);
-    }
+    public Task SetGuildLogNotification() => ShowMigrationMessage("guild-admin configuration");
 
     /// <summary>
     /// Setting the guild log notification
@@ -103,11 +59,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
     [Command("setRankNotification")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    public async Task SetRankNotification()
-    {
-        await ConfigurationService.SetNotificationChannel(Context, GuildChannelConfigurationType.GuildRankChanges)
-                                  .ConfigureAwait(false);
-    }
+    public Task SetRankNotification() => ShowMigrationMessage("guild-admin configuration");
 
     /// <summary>
     /// Setting up the motd builder
@@ -116,11 +68,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
     [Command("motd")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    public async Task SetupMotd()
-    {
-        await ConfigurationService.SetupMotd(Context)
-                                  .ConfigureAwait(false);
-    }
+    public Task SetupMotd() => ShowMigrationMessage("guild-admin configuration");
 
     /// <summary>
     /// Setting up the calendar
@@ -129,11 +77,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
     [Command("calendar")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    public async Task SetupCalendar()
-    {
-        await ConfigurationService.SetupCalendar(Context)
-                                  .ConfigureAwait(false);
-    }
+    public Task SetupCalendar() => ShowMigrationMessage("guild-admin configuration");
 
     #endregion // Methods
 
@@ -146,15 +90,6 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
     [Alias("e")]
     public class GuildEmblemCommandModule : LocatedTextCommandModuleBase
     {
-        #region Properties
-
-        /// <summary>
-        /// Emblem service
-        /// </summary>
-        public GuildEmblemService GuildEmblemService { get; set; }
-
-        #endregion // Properties
-
         #region Methods
 
         /// <summary>
@@ -164,11 +99,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("random")]
         [RequireContext(ContextType.Guild)]
-        public async Task SetNotificationChannel(int count)
-        {
-            await GuildEmblemService.PostRandomGuildEmblems(Context, count)
-                                    .ConfigureAwait(false);
-        }
+        public Task SetNotificationChannel(int count) => ShowMigrationMessage("guild random-emblem");
 
         #endregion // Methods
     }
@@ -183,18 +114,8 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
     [Group("bank")]
     [Alias("b")]
     [RequireContext(ContextType.Guild)]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public class GuildBankCommandModule : LocatedTextCommandModuleBase
     {
-        #region Properties
-
-        /// <summary>
-        /// Bank service
-        /// </summary>
-        public GuildBankService BankService { get; set; }
-
-        #endregion // Properties
-
         #region Methods
 
         /// <summary>
@@ -203,12 +124,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("check")]
         [RequireContext(ContextType.Guild)]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-        public async Task SetNotificationChannel()
-        {
-            await BankService.Check(Context)
-                             .ConfigureAwait(false);
-        }
+        public Task SetNotificationChannel() => ShowMigrationMessage("guild bank-check");
 
         #endregion // Methods
 
@@ -220,22 +136,8 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Group("unlocks")]
         [Alias("u")]
         [RequireContext(ContextType.Guild)]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
         public class GuildBankUnlocksCommandModule : LocatedTextCommandModuleBase
         {
-            #region Constructor
-
-            #endregion // Constructor
-
-            #region Properties
-
-            /// <summary>
-            /// Bank service
-            /// </summary>
-            public GuildBankService BankService { get; set; }
-
-            #endregion // Properties
-
             #region Methods
 
             /// <summary>
@@ -244,12 +146,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
             /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
             [Command("dyes")]
             [RequireContext(ContextType.Guild)]
-            [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Standard)]
-            public async Task SetNotificationChannel()
-            {
-                await BankService.CheckUnlocksDyes(Context)
-                                 .ConfigureAwait(false);
-            }
+            public Task SetNotificationChannel() => ShowMigrationMessage("guild bank-unlocks");
 
             #endregion // Methods
         }
@@ -268,7 +165,6 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
     [Alias("r")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public class GuildRankCommandModule : LocatedTextCommandModuleBase
     {
         #region Methods
@@ -280,17 +176,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("setup")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        public async Task Setup()
-        {
-            bool repeat;
-
-            do
-            {
-                repeat = await DialogHandler.Run<GuildRankSetupDialogElement, bool>(Context)
-                                            .ConfigureAwait(false);
-            }
-            while (repeat);
-        }
+        public Task Setup() => ShowMigrationMessage("guild-admin configuration");
 
         #endregion // Methods
     }
@@ -306,18 +192,8 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
     [Alias("s")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public class GuildSpecialRankCommandModule : LocatedTextCommandModuleBase
     {
-        #region Properties
-
-        /// <summary>
-        /// Special rank service
-        /// </summary>
-        public GuildSpecialRankService SpecialRankService { get; set; }
-
-        #endregion // Properties
-
         #region Methods
 
         /// <summary>
@@ -327,17 +203,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("setup")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        public async Task Setup()
-        {
-            bool repeat;
-
-            do
-            {
-                repeat = await DialogHandler.Run<GuildSpecialRankSetupDialogElement, bool>(Context)
-                                            .ConfigureAwait(false);
-            }
-            while (repeat);
-        }
+        public Task Setup() => ShowMigrationMessage("guild-admin configuration");
 
         /// <summary>
         /// Special ranks configuration
@@ -346,12 +212,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("overview")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-        public async Task Overview()
-        {
-            await SpecialRankService.PostOverview(Context)
-                                    .ConfigureAwait(false);
-        }
+        public Task Overview() => ShowMigrationMessage("guild-admin overview");
 
         #endregion // Methods
     }
@@ -367,18 +228,8 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
     [Alias("c")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public class GuildChartCommandModule : LocatedTextCommandModuleBase
     {
-        #region Properties
-
-        /// <summary>
-        /// Bank service
-        /// </summary>
-        public WorldsService WorldsService { get; set; }
-
-        #endregion // Properties
-
         #region Methods
 
         /// <summary>
@@ -388,12 +239,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("worlds")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-        public async Task SetNotificationChannel()
-        {
-            await WorldsService.PostWorldsOverview(Context)
-                               .ConfigureAwait(false);
-        }
+        public Task SetNotificationChannel() => ShowMigrationMessage("guild-admin overviews");
 
         #endregion // Methods
     }
@@ -409,7 +255,6 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
     [Alias("a")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public class GuildActivityCommandModule : LocatedTextCommandModuleBase
     {
         #region Methods
@@ -421,17 +266,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("voice")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-        public async Task VoiceConfiguration()
-        {
-            var dialogHandler = new DialogHandler(Context);
-            await using (dialogHandler.ConfigureAwait(false))
-            {
-                while (await dialogHandler.Run<GuildActivityDiscordVoiceSetupDialogElement, bool>().ConfigureAwait(false))
-                {
-                }
-            }
-        }
+        public Task VoiceConfiguration() => ShowMigrationMessage("guild-admin configuration");
 
         /// <summary>
         /// Message roles configuration
@@ -440,17 +275,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("message")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-        public async Task MessageConfiguration()
-        {
-            var dialogHandler = new DialogHandler(Context);
-            await using (dialogHandler.ConfigureAwait(false))
-            {
-                while (await dialogHandler.Run<GuildActivityDiscordMessageSetupDialogElement, bool>().ConfigureAwait(false))
-                {
-                }
-            }
-        }
+        public Task MessageConfiguration() => ShowMigrationMessage("guild-admin configuration");
 
         #endregion // Methods
     }
@@ -466,23 +291,8 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
     [Alias("e")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public class GuildExportCommandModule : LocatedTextCommandModuleBase
     {
-        #region Properties
-
-        /// <summary>
-        /// Export service
-        /// </summary>
-        public GuildExportService GuildExportService { get; set; }
-
-        /// <summary>
-        /// Item service
-        /// </summary>
-        public ItemsService ItemsService { get; set; }
-
-        #endregion // Properties
-
         #region Methods
 
         /// <summary>
@@ -494,27 +304,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("stash")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-        public async Task ExportStashLog(string mode, string sinceDate)
-        {
-            if (DateTime.TryParseExact(sinceDate,
-                                       "yyyy-MM-dd",
-                                       CultureInfo.InvariantCulture,
-                                       DateTimeStyles.None,
-                                       out var date))
-            {
-                if (mode == "sum")
-                {
-                    await GuildExportService.ExportStashLogSummarized(Context, date)
-                                            .ConfigureAwait(false);
-                }
-                else
-                {
-                    await GuildExportService.ExportStashLog(Context, date)
-                                            .ConfigureAwait(false);
-                }
-            }
-        }
+        public Task ExportStashLog(string mode, string sinceDate) => ShowMigrationMessage("guild-admin export");
 
         /// <summary>
         /// Worlds overview
@@ -526,30 +316,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("stash")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-        public async Task ExportStashLog(string mode, string sinceDate, string sinceTime)
-        {
-            if (DateTime.TryParseExact(sinceDate,
-                                       "yyyy-MM-dd",
-                                       CultureInfo.InvariantCulture,
-                                       DateTimeStyles.None,
-                                       out var date)
-             && TimeSpan.TryParseExact(sinceTime, "hh\\:mm", null, out var time))
-            {
-                date = date.Add(time);
-
-                if (mode == "sum")
-                {
-                    await GuildExportService.ExportStashLogSummarized(Context, date)
-                                            .ConfigureAwait(false);
-                }
-                else
-                {
-                    await GuildExportService.ExportStashLog(Context, date)
-                                            .ConfigureAwait(false);
-                }
-            }
-        }
+        public Task ExportStashLog(string mode, string sinceDate, string sinceTime) => ShowMigrationMessage("guild-admin export");
 
         /// <summary>
         /// Worlds overview
@@ -560,27 +327,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("upgrades")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-        public async Task ExportUpgradesLog(string mode, string sinceDate)
-        {
-            if (DateTime.TryParseExact(sinceDate,
-                                       "yyyy-MM-dd",
-                                       CultureInfo.InvariantCulture,
-                                       DateTimeStyles.None,
-                                       out var date))
-            {
-                if (mode == "sum")
-                {
-                    await GuildExportService.ExportUpgradesLogSummarized(Context, date)
-                                            .ConfigureAwait(false);
-                }
-                else
-                {
-                    await GuildExportService.ExportUpgradesLog(Context, date)
-                                            .ConfigureAwait(false);
-                }
-            }
-        }
+        public Task ExportUpgradesLog(string mode, string sinceDate) => ShowMigrationMessage("guild-admin export");
 
         /// <summary>
         /// Worlds overview
@@ -592,30 +339,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("upgrades")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-        public async Task ExportUpgradesLog(string mode, string sinceDate, string sinceTime)
-        {
-            if (DateTime.TryParseExact(sinceDate,
-                                       "yyyy-MM-dd",
-                                       CultureInfo.InvariantCulture,
-                                       DateTimeStyles.None,
-                                       out var date)
-             && TimeSpan.TryParseExact(sinceTime, "hh\\:mm", null, out var time))
-            {
-                date = date.Add(time);
-
-                if (mode == "sum")
-                {
-                    await GuildExportService.ExportUpgradesLogSummarized(Context, date)
-                                            .ConfigureAwait(false);
-                }
-                else
-                {
-                    await GuildExportService.ExportUpgradesLog(Context, date)
-                                            .ConfigureAwait(false);
-                }
-            }
-        }
+        public Task ExportUpgradesLog(string mode, string sinceDate, string sinceTime) => ShowMigrationMessage("guild-admin export");
 
         /// <summary>
         /// Login Activity
@@ -624,12 +348,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("activity")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-        public async Task ExportUpgradesLog()
-        {
-            await GuildExportService.ExportLoginActivityLog(Context)
-                                    .ConfigureAwait(false);
-        }
+        public Task ExportUpgradesLog() => ShowMigrationMessage("guild-admin export");
 
         /// <summary>
         /// Representation state
@@ -638,12 +357,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("representation")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-        public async Task ExportRepresentation()
-        {
-            await GuildExportService.ExportRepresentation(Context)
-                                    .ConfigureAwait(false);
-        }
+        public Task ExportRepresentation() => ShowMigrationMessage("guild-admin export");
 
         /// <summary>
         /// Members
@@ -652,12 +366,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("members")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-        public async Task ExportGuildMembers()
-        {
-            await GuildExportService.ExportGuildMembers(Context)
-                                    .ConfigureAwait(false);
-        }
+        public Task ExportGuildMembers() => ShowMigrationMessage("guild-admin export");
 
         /// <summary>
         /// Roles
@@ -666,12 +375,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("roles")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-        public async Task ExportGuildRoles()
-        {
-            await GuildExportService.ExportGuildRoles(Context)
-                                    .ConfigureAwait(false);
-        }
+        public Task ExportGuildRoles() => ShowMigrationMessage("guild-admin export");
 
         /// <summary>
         /// Current rank points
@@ -681,19 +385,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("points")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-        public async Task ExportCurrentRankPoints(string sinceDate)
-        {
-            if (DateTime.TryParseExact(sinceDate,
-                                       "yyyy-MM-dd",
-                                       CultureInfo.InvariantCulture,
-                                       DateTimeStyles.None,
-                                       out var date))
-            {
-                await GuildExportService.ExportGuildRankPoints(Context, date)
-                                        .ConfigureAwait(false);
-            }
-        }
+        public Task ExportCurrentRankPoints(string sinceDate) => ShowMigrationMessage("guild-admin export");
 
         /// <summary>
         /// Custom values
@@ -702,8 +394,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("items")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-        public Task ExportCustomValues() => ItemsService.ExportCustomValues(Context);
+        public Task ExportCustomValues() => ShowMigrationMessage("guild-admin export");
 
         /// <summary>
         /// Current rank assignments
@@ -712,11 +403,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("assignments")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        public async Task ExportCurrentRankAssignments()
-        {
-            await GuildExportService.ExportGuildRankAssignments(Context)
-                                    .ConfigureAwait(false);
-        }
+        public Task ExportCurrentRankAssignments() => ShowMigrationMessage("guild-admin export");
 
         #endregion // Methods
     }
@@ -732,23 +419,8 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
     [Alias("c", "config")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public class GuildConfigurationCommandModule : LocatedTextCommandModuleBase
     {
-        #region Properties
-
-        /// <summary>
-        /// Item service
-        /// </summary>
-        public ItemsService ItemsService { get; set; }
-
-        /// <summary>
-        /// User configuration
-        /// </summary>
-        public GuildUserConfigurationService GuildUserConfigurationService { get; set; }
-
-        #endregion // Properties
-
         #region Methods
 
         /// <summary>
@@ -759,8 +431,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("item")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-        public Task StartItemsConfiguration(int id) => ItemsService.ConfigureItem(Context, id);
+        public Task StartItemsConfiguration(int id) => ShowMigrationMessage("guild-admin configuration");
 
         /// <summary>
         /// User configuration
@@ -770,14 +441,14 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("user")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        public Task StartUserConfiguration(IGuildUser user) => GuildUserConfigurationService.ConfigureUser(Context, user);
+        public Task StartUserConfiguration(IGuildUser user) => ShowMigrationMessage("guild-admin configuration");
 
         #endregion // Methods
     }
 
     #endregion Activity
 
-    #region Configuration
+    #region Ranking
 
     /// <summary>
     /// Guild bank
@@ -786,20 +457,6 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
     [RequireContext(ContextType.Guild)]
     public class GuildRankingCommandModule : LocatedTextCommandModuleBase
     {
-        #region Properties
-
-        /// <summary>
-        ///  Guild rank visualization service
-        /// </summary>
-        public GuildRankVisualizationService GuildRankVisualizationService { get; set; }
-
-        /// <summary>
-        ///  Guild rank service
-        /// </summary>
-        public GuildRankService GuildRankService { get; set; }
-
-        #endregion // Properties
-
         #region Methods
 
         /// <summary>
@@ -809,7 +466,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("overview")]
         [RequireAdministratorPermissions]
         [RequireContext(ContextType.Guild)]
-        public Task PostOverview() => GuildRankVisualizationService.PostOverview(Context);
+        public Task PostOverview() => ShowMigrationMessage("guild-admin overview");
 
         /// <summary>
         /// Personal overview
@@ -817,7 +474,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [Command("me")]
         [RequireContext(ContextType.Guild)]
-        public Task PostPersonalOverview() => GuildRankVisualizationService.PostPersonalOverview(Context, Context.Member);
+        public Task PostPersonalOverview() => ShowMigrationMessage("guild ranking-me");
 
         /// <summary>
         /// Personal overview
@@ -827,7 +484,7 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command]
         [RequireAdministratorPermissions]
         [RequireContext(ContextType.Guild)]
-        public Task PostPersonalOverview(IGuildUser user) => GuildRankVisualizationService.PostPersonalOverview(Context, user);
+        public Task PostPersonalOverview(IGuildUser user) => ShowMigrationMessage("guild-admin ranking-of");
 
         /// <summary>
         /// Check assignments
@@ -836,32 +493,10 @@ public class GuildCommandModule : LocatedTextCommandModuleBase
         [Command("check")]
         [RequireAdministratorPermissions]
         [RequireContext(ContextType.Guild)]
-        public async Task PostAssignmentOverview()
-        {
-            using (var repositoryFactory = RepositoryFactory.CreateInstance())
-            {
-                var embed = await GuildRankService.CheckCurrentAssignments(repositoryFactory.GetRepository<GuildRepository>()
-                                                                                            .GetQuery()
-                                                                                            .Where(obj => obj.DiscordServerId == Context.Guild.Id)
-                                                                                            .Select(obj => obj.Id)
-                                                                                            .First(),
-                                                                           true)
-                                                  .ConfigureAwait(false);
-                if (embed != null)
-                {
-                    await Context.ReplyAsync(embed: embed)
-                                 .ConfigureAwait(false);
-                }
-                else
-                {
-                    await Context.ReplyAsync(LocalizationGroup.GetText("NoChangedRequired", "No rank changed are required."))
-                                 .ConfigureAwait(false);
-                }
-            }
-        }
+        public Task PostAssignmentOverview() => ShowMigrationMessage("guild-admin check");
 
         #endregion // Methods
     }
 
-    #endregion Activity
+    #endregion Ranking
 }

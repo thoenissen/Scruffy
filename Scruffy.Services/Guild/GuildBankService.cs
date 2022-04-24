@@ -5,7 +5,9 @@ using Scruffy.Data.Entity.Repositories.Account;
 using Scruffy.Data.Entity.Repositories.Guild;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.CoreData;
 using Scruffy.Services.Discord;
+using Scruffy.Services.Discord.Interfaces;
 using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.Guild;
@@ -15,15 +17,26 @@ namespace Scruffy.Services.Guild;
 /// </summary>
 public class GuildBankService : LocatedServiceBase
 {
+    #region Fields
+
+    /// <summary>
+    /// User management service
+    /// </summary>
+    private readonly UserManagementService _userManagementService;
+
+    #endregion // Fields
+
     #region Constructor
 
     /// <summary>
     /// Constructor
     /// </summary>
     /// <param name="localizationService">Localization service</param>
-    public GuildBankService(LocalizationService localizationService)
+    /// <param name="userManagementService">User management service</param>
+    public GuildBankService(LocalizationService localizationService, UserManagementService userManagementService)
         : base(localizationService)
     {
+        _userManagementService = userManagementService;
     }
 
     #endregion // Constructor
@@ -35,7 +48,7 @@ public class GuildBankService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task Check(CommandContextContainer commandContext)
+    public async Task Check(IContextContainer commandContext)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
@@ -70,8 +83,7 @@ public class GuildBankService : LocatedServiceBase
 
                         foreach (var slot in stash.Slots)
                         {
-                            if (slot != null
-                             && slot.Count < 250)
+                            if (slot is { Count: < 250 })
                             {
                                 slots.Add((slot.ItemId, (i % 10) + 1, (i / 10) + 1));
                             }
@@ -143,7 +155,7 @@ public class GuildBankService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task CheckUnlocksDyes(CommandContextContainer commandContext)
+    public async Task CheckUnlocksDyes(IContextContainer commandContext)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
@@ -159,8 +171,8 @@ public class GuildBankService : LocatedServiceBase
 
             if (string.IsNullOrWhiteSpace(guild?.ApiKey) == false)
             {
-                var user = await commandContext.GetCurrentUser()
-                                               .ConfigureAwait(false);
+                var user = await _userManagementService.GetUserByDiscordAccountId(commandContext.User.Id)
+                                                       .ConfigureAwait(false);
 
                 var apiKeys = dbFactory.GetRepository<AccountRepository>()
                                        .GetQuery()
@@ -214,7 +226,7 @@ public class GuildBankService : LocatedServiceBase
                                                           ? $"{DiscordEmoteService.GetCheckEmote(commandContext.Client)} {item.Name}"
                                                           : $"{DiscordEmoteService.GetCrossEmote(commandContext.Client)} {item.Name}";
 
-                                    if (fieldBuilder.Length + currentLine.Length > 1024)
+                                    if (fieldBuilder.Length + currentLine.Length > 1000)
                                     {
                                         builder.AddField(LocalizationGroup.GetFormattedText("DyesFields", "Dyes #{0}", fieldCounter), fieldBuilder.ToString(), true);
 
@@ -227,8 +239,7 @@ public class GuildBankService : LocatedServiceBase
 
                                 builder.AddField(LocalizationGroup.GetFormattedText("DyesFields", "Dyes #{0}", fieldCounter), fieldBuilder.ToString(), true);
 
-                                await commandContext.Message
-                                                    .ReplyAsync(embed: builder.Build())
+                                await commandContext.ReplyAsync(embed: builder.Build())
                                                     .ConfigureAwait(false);
                             }
                         }

@@ -57,4 +57,19 @@ public class LocatedTextCommandModuleBase : ModuleBase<CommandContextContainer>
     }
 
     #endregion // ModuleBase
+
+    #region Methods
+
+    /// <summary>
+    /// Post a migration hint
+    /// </summary>
+    /// <param name="slashCommandName">Name of the new Slash Command</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    protected async Task ShowMigrationMessage(string slashCommandName)
+    {
+        await Context.ReplyAsync(LocalizationService.GetGroup(nameof(LocatedTextCommandModuleBase)).GetFormattedText("SlashCommandMigrationHint", "Text commands aren't available anymore. You can execute this command with the new slash command `/{0}`.", slashCommandName))
+                     .ConfigureAwait(false);
+    }
+
+    #endregion // Methods
 }

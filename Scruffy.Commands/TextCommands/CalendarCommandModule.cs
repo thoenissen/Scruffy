@@ -1,6 +1,5 @@
 ﻿using Discord.Commands;
 
-using Scruffy.Services.Calendar;
 using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Attributes;
 
@@ -14,23 +13,8 @@ namespace Scruffy.Commands.TextCommands;
 [RequireContext(ContextType.Guild)]
 [RequireAdministratorPermissions]
 [BlockedChannelCheck]
-[HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
 public class CalendarCommandModule : LocatedTextCommandModuleBase
 {
-    #region Properties
-
-    /// <summary>
-    /// Calendar schedules service
-    /// </summary>
-    public CalendarScheduleService CalendarScheduleService { get; set; }
-
-    /// <summary>
-    /// Participants service
-    /// </summary>
-    public CalendarParticipantsService CalendarParticipantsService { get; set; }
-
-    #endregion // Properties
-
     #region Methods
 
     /// <summary>
@@ -40,12 +24,7 @@ public class CalendarCommandModule : LocatedTextCommandModuleBase
     [Command("add")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-    public async Task AddOneTimeEvent()
-    {
-        await CalendarScheduleService.AddOneTimeEvent(Context)
-                                     .ConfigureAwait(false);
-    }
+    public Task AddOneTimeEvent() => ShowMigrationMessage("calendar-admin configuration");
 
     /// <summary>
     /// Editing participants
@@ -55,12 +34,7 @@ public class CalendarCommandModule : LocatedTextCommandModuleBase
     [Alias("p")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-    public async Task EditParticipants()
-    {
-        await CalendarParticipantsService.EditParticipants(Context)
-                                         .ConfigureAwait(false);
-    }
+    public Task EditParticipants() => ShowMigrationMessage("calendar-admin participants");
 
     #endregion // Methods
 
@@ -73,18 +47,8 @@ public class CalendarCommandModule : LocatedTextCommandModuleBase
     [Alias("t")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public class CalendarTemplateCommandModule : LocatedTextCommandModuleBase
     {
-        #region Properties
-
-        /// <summary>
-        /// Calendar template service
-        /// </summary>
-        public CalendarTemplateService CalendarTemplateService { get; set; }
-
-        #endregion // Properties
-
         #region Methods
 
         /// <summary>
@@ -94,12 +58,7 @@ public class CalendarCommandModule : LocatedTextCommandModuleBase
         [Command("setup")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-        public async Task Setup()
-        {
-            await CalendarTemplateService.RunAssistantAsync(Context)
-                                         .ConfigureAwait(false);
-        }
+        public Task Setup() => ShowMigrationMessage("calendar-admin configuration");
 
         #endregion // Methods
 
@@ -116,18 +75,8 @@ public class CalendarCommandModule : LocatedTextCommandModuleBase
     [Alias("s")]
     [RequireContext(ContextType.Guild)]
     [RequireAdministratorPermissions]
-    [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
     public class CalendarScheduleCommandModule : LocatedTextCommandModuleBase
     {
-        #region Properties
-
-        /// <summary>
-        /// Calendar schedules service
-        /// </summary>
-        public CalendarScheduleService CalendarScheduleService { get; set; }
-
-        #endregion // Properties
-
         #region Methods
 
         /// <summary>
@@ -137,12 +86,7 @@ public class CalendarCommandModule : LocatedTextCommandModuleBase
         [Command("setup")]
         [RequireContext(ContextType.Guild)]
         [RequireAdministratorPermissions]
-        [HelpOverviewCommand(HelpOverviewCommandAttribute.OverviewType.Administration)]
-        public async Task Setup()
-        {
-            await CalendarScheduleService.RunAssistantAsync(Context)
-                                         .ConfigureAwait(false);
-        }
+        public Task Setup() => ShowMigrationMessage("calendar-admin configuration");
 
         #endregion // Methods
 

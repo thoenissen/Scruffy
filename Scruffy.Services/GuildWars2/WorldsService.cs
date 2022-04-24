@@ -9,7 +9,7 @@ using Scruffy.Data.Enumerations.General;
 using Scruffy.Data.Json.QuickChart;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
-using Scruffy.Services.Discord;
+using Scruffy.Services.Discord.Interfaces;
 using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.GuildWars2;
@@ -94,7 +94,7 @@ public class WorldsService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task PostWorldsOverview(CommandContextContainer commandContext)
+    public async Task PostWorldsOverview(IContextContainer commandContext)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {

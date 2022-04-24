@@ -86,7 +86,7 @@ public class RaidRoleSelectionDialogElement : DialogSelectMenuElementBase<long?>
                              {
                                  CommandText = LocalizationGroup.GetText("NoRole", "No role specification"),
                                  Emote = null,
-                                 Func = () => Task.FromResult<long?>(null)
+                                 Response = () => Task.FromResult<long?>(null)
                              });
 
                 foreach (var role in roles)
@@ -95,7 +95,7 @@ public class RaidRoleSelectionDialogElement : DialogSelectMenuElementBase<long?>
                                  {
                                      CommandText = role.Description,
                                      Emote = DiscordEmoteService.GetGuildEmote(CommandContext.Client, role.DiscordEmojiId),
-                                     Func = () => Task.FromResult<long?>(role.Id)
+                                     Response = () => Task.FromResult<long?>(role.Id)
                                  });
                 }
             }

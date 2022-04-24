@@ -8,6 +8,7 @@ using Scruffy.Services.Calendar;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord;
+using Scruffy.Services.Discord.Interfaces;
 using Scruffy.Services.Guild.DialogElements.Forms;
 
 namespace Scruffy.Services.Guild;
@@ -55,7 +56,7 @@ public class GuildConfigurationService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task CreateGuildConfiguration(CommandContextContainer commandContext)
+    public async Task CreateGuildConfiguration(IContextContainer commandContext)
     {
         var data = await DialogHandler.RunForm<CreateGuildFormData>(commandContext, true)
                                       .ConfigureAwait(false);
@@ -81,8 +82,7 @@ public class GuildConfigurationService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <param name="type">Type</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task SetNotificationChannel(CommandContextContainer commandContext, GuildChannelConfigurationType type)
+    public void SetNotificationChannel(IContextContainer commandContext, GuildChannelConfigurationType type)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
@@ -105,10 +105,6 @@ public class GuildConfigurationService : LocatedServiceBase
                                        });
             }
         }
-
-        await commandContext.Message
-                            .DeleteAsync()
-                            .ConfigureAwait(false);
     }
 
     /// <summary>
@@ -116,7 +112,7 @@ public class GuildConfigurationService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task SetupMotd(CommandContextContainer commandContext)
+    public async Task SetupMotd(IContextContainer commandContext)
     {
         var message = await commandContext.Channel
                                           .SendMessageAsync(LocalizationGroup.GetText("MotdBuilding", "The message of the day will be build with the next refresh."))
@@ -157,7 +153,7 @@ public class GuildConfigurationService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task SetupCalendar(CommandContextContainer commandContext)
+    public async Task SetupCalendar(IContextContainer commandContext)
     {
         var data = await DialogHandler.RunForm<SetGuildCalendarFormData>(commandContext, true)
                                       .ConfigureAwait(false);
