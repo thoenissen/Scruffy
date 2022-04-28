@@ -144,8 +144,9 @@ public sealed class MergedContextContainer : IInteractionContext, ICommandContex
     /// <param name="stickers">A collection of stickers to send with the message.</param>
     /// <param name="embeds">A array of <see cref="Embed"/>s to send with this response. Max 10.</param>
     /// <param name="ephemeral">Should the message be posted ephemeral if possible?</param>
+    /// <param name="attachments">File attachments</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task<IUserMessage> ReplyAsync(string text = null, bool isTTS = false, Embed embed = null, RequestOptions options = null, AllowedMentions allowedMentions = null, MessageComponent components = null, ISticker[] stickers = null, Embed[] embeds = null, bool ephemeral = false)
+    public Task<IUserMessage> ReplyAsync(string text = null, bool isTTS = false, Embed embed = null, RequestOptions options = null, AllowedMentions allowedMentions = null, MessageComponent components = null, ISticker[] stickers = null, Embed[] embeds = null, bool ephemeral = false, IEnumerable<FileAttachment> attachments = null)
     {
         return _container.ReplyAsync(text, isTTS, embed, options, allowedMentions, components, stickers, embeds, ephemeral);
     }
@@ -162,8 +163,10 @@ public sealed class MergedContextContainer : IInteractionContext, ICommandContex
     /// <param name="components">The message components to be included with this message. Used for interactions.</param>
     /// <param name="stickers">A collection of stickers to send with the message.</param>
     /// <param name="embeds">A array of <see cref="Embed"/>s to send with this response. Max 10.</param>
+    /// <param name="ephemeral">Should the message be posted ephemeral if possible?</param>
+    /// <param name="attachments">File attachments</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task<IUserMessage> SendMessageAsync(string text = null, bool isTTS = false, Embed embed = null, RequestOptions options = null, AllowedMentions allowedMentions = null, MessageReference messageReference = null, MessageComponent components = null, ISticker[] stickers = null, Embed[] embeds = null)
+    public Task<IUserMessage> SendMessageAsync(string text = null, bool isTTS = false, Embed embed = null, RequestOptions options = null, AllowedMentions allowedMentions = null, MessageReference messageReference = null, MessageComponent components = null, ISticker[] stickers = null, Embed[] embeds = null, bool ephemeral = false, IEnumerable<FileAttachment> attachments = null)
     {
         return _container.SendMessageAsync(text, isTTS, embed, options, allowedMentions, messageReference, components, stickers, embeds);
     }

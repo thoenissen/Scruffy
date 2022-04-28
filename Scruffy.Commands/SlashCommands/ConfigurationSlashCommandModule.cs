@@ -1,4 +1,5 @@
-﻿using Discord.Interactions;
+﻿using Discord;
+using Discord.Interactions;
 
 using Scruffy.Services.Configuration;
 using Scruffy.Services.Discord;
@@ -8,6 +9,8 @@ namespace Scruffy.Commands.SlashCommands;
 /// <summary>
 /// Server configuration commands
 /// </summary>
+[DefaultMemberPermissions(GuildPermission.Administrator)]
+[DontAutoRegister]
 public class ConfigurationSlashCommandModule : SlashCommandModuleBase
 {
     #region Properties

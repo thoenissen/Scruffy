@@ -8,6 +8,7 @@ using Scruffy.Data.Json.QuickChart;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Extensions;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Interfaces;
 using Scruffy.Services.WebApi;
 
@@ -49,8 +50,11 @@ public class GuildSpecialRankService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task PostOverview(IContextContainer commandContext)
+    public async Task PostOverview(InteractionContextContainer commandContext)
     {
+        await commandContext.DeferProcessing()
+                            .ConfigureAwait(false);
+
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
             foreach (var configuration in dbFactory.GetRepository<GuildSpecialRankConfigurationRepository>()
@@ -90,11 +94,14 @@ public class GuildSpecialRankService : LocatedServiceBase
                                                       .OrderByDescending(obj => obj.Points)
                                                       .ThenBy(obj => obj.UserId))
                     {
-                        var member = await commandContext.Guild
-                                                         .GetUserAsync(user.UserId)
-                                                         .ConfigureAwait(false);
+                        if (user.UserId > 0)
+                        {
+                            var member = await commandContext.Guild
+                                                             .GetUserAsync(user.UserId)
+                                                             .ConfigureAwait(false);
 
-                        users.Add($"{member.TryGetDisplayName()} ({user.Points:0.##})");
+                            users.Add($"{member.TryGetDisplayName()} ({user.Points:0.##})");
+                        }
                     }
 
                     var chartConfiguration = new ChartConfigurationData
@@ -192,8 +199,7 @@ public class GuildSpecialRankService : LocatedServiceBase
 
                     await using (chartStream.ConfigureAwait(false))
                     {
-                        await commandContext.Channel
-                                            .SendFileAsync(new FileAttachment(chartStream, "chart.png"))
+                        await commandContext.ReplyAsync(attachments: new[] { new FileAttachment(chartStream, "chart.png") })
                                             .ConfigureAwait(false);
                     }
                 }

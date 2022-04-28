@@ -1,6 +1,5 @@
 ﻿using Discord;
 using Discord.Interactions;
-using Discord.Rest;
 using Discord.WebSocket;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -180,94 +179,89 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
     /// <param name="stickers">A collection of stickers to send with the message.</param>
     /// <param name="embeds">A array of <see cref="Embed"/>s to send with this response. Max 10.</param>
     /// <param name="ephemeral">Should the message be posted ephemeral if possible?</param>
+    /// <param name="attachments">File attachments</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task<IUserMessage> ReplyAsync(string text = null, bool isTTS = false, Embed embed = null, RequestOptions options = null, AllowedMentions allowedMentions = null, MessageComponent components = null, ISticker[] stickers = null, Embed[] embeds = null, bool ephemeral = false)
+    public async Task<IUserMessage> ReplyAsync(string text = null, bool isTTS = false, Embed embed = null, RequestOptions options = null, AllowedMentions allowedMentions = null, MessageComponent components = null, ISticker[] stickers = null, Embed[] embeds = null, bool ephemeral = false, IEnumerable<FileAttachment> attachments = null)
     {
         try
         {
-            if (stickers != null)
+            if (_interaction != null)
             {
-                throw new NotSupportedException();
-            }
+                if (stickers != null)
+                {
+                    throw new NotSupportedException();
+                }
 
-            if (_interaction is SocketInteraction { HasResponded: false }
-                or RestInteraction { HasResponded: false })
-            {
-                await _interaction.RespondAsync(text, embeds, isTTS, ephemeral, allowedMentions, components, embed, options)
-                                  .ConfigureAwait(false);
+                if (_interaction.HasResponded == false)
+                {
+                    if (attachments == null)
+                    {
+                        await _interaction.RespondAsync(text, embeds, isTTS, ephemeral, allowedMentions, components, embed, options)
+                                          .ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        await _interaction.RespondWithFilesAsync(attachments, text, embeds, isTTS, ephemeral, allowedMentions, components, embed, options)
+                                          .ConfigureAwait(false);
+                    }
 
-                return await _interaction.GetOriginalResponseAsync()
+                    return await _interaction.GetOriginalResponseAsync()
+                                             .ConfigureAwait(false);
+                }
+
+                if (_interaction is IComponentInteraction)
+                {
+                    if (_firstFollowup == null)
+                    {
+                        _firstFollowup = attachments != null
+                                             ? await _interaction.FollowupAsync(text, embeds, isTTS, ephemeral, allowedMentions, components, embed, options)
+                                                                 .ConfigureAwait(false)
+                                             : await _interaction.FollowupWithFilesAsync(attachments, text, embeds, isTTS, ephemeral, allowedMentions, components, embed, options)
+                                                                 .ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        await _firstFollowup.ModifyAsync(obj =>
+                                                         {
+                                                             obj.Content = text;
+                                                             obj.Embed = embed;
+                                                             obj.AllowedMentions = allowedMentions;
+                                                             obj.Components = components;
+                                                             obj.Embeds = embeds;
+                                                             obj.Attachments = new Optional<IEnumerable<FileAttachment>>(attachments ?? Enumerable.Empty<FileAttachment>());
+                                                         })
+                                            .ConfigureAwait(false);
+
+                        return _firstFollowup;
+                    }
+                }
+
+                return await _interaction.ModifyOriginalResponseAsync(obj =>
+                                                                      {
+                                                                          if (text == null
+                                                                           && embed == null)
+                                                                          {
+                                                                              obj.Content = "\u200b";
+                                                                          }
+                                                                          else
+                                                                          {
+                                                                              obj.Content = text;
+                                                                              obj.Embed = embed;
+                                                                          }
+
+                                                                          obj.AllowedMentions = allowedMentions;
+                                                                          obj.Components = components;
+                                                                          obj.Embeds = embeds;
+                                                                          obj.Attachments = new Optional<IEnumerable<FileAttachment>>(attachments ?? Enumerable.Empty<FileAttachment>());
+                                                                      })
                                          .ConfigureAwait(false);
             }
 
-            if (_interaction is IComponentInteraction)
-            {
-                if (_firstFollowup == null)
-                {
-                    _firstFollowup = await _interaction.FollowupAsync(text, embeds, isTTS, ephemeral, allowedMentions, components, embed, options)
-                                                       .ConfigureAwait(false);
-                }
-                else
-                {
-                    await _firstFollowup.ModifyAsync(obj =>
-                                                     {
-                                                         if (text != null)
-                                                         {
-                                                             obj.Content = text;
-                                                         }
-
-                                                         if (embed != null)
-                                                         {
-                                                             obj.Embed = embed;
-                                                         }
-
-                                                         if (allowedMentions != null)
-                                                         {
-                                                             obj.AllowedMentions = allowedMentions;
-                                                         }
-
-                                                         if (components != null)
-                                                         {
-                                                             obj.Components = components;
-                                                         }
-
-                                                         if (embeds != null)
-                                                         {
-                                                             obj.Embeds = embeds;
-                                                         }
-                                                     })
-                                        .ConfigureAwait(false);
-                }
-            }
-
-            return await _interaction.ModifyOriginalResponseAsync(obj =>
-                                                                  {
-                                                                      if (text != null)
-                                                                      {
-                                                                          obj.Content = text;
-                                                                      }
-
-                                                                      if (embed != null)
-                                                                      {
-                                                                          obj.Embed = embed;
-                                                                      }
-
-                                                                      if (allowedMentions != null)
-                                                                      {
-                                                                          obj.AllowedMentions = allowedMentions;
-                                                                      }
-
-                                                                      if (components != null)
-                                                                      {
-                                                                          obj.Components = components;
-                                                                      }
-
-                                                                      if (embeds != null)
-                                                                      {
-                                                                          obj.Embeds = embeds;
-                                                                      }
-                                                                  })
-                                     .ConfigureAwait(false);
+            return attachments == null
+                       ? await Channel.SendMessageAsync(text, isTTS, embed, options, allowedMentions, null, components, stickers, embeds)
+                                      .ConfigureAwait(false)
+                       : await Channel.SendFilesAsync(attachments, text, isTTS, embed, options, allowedMentions, null, components, stickers, embeds)
+                                      .ConfigureAwait(false);
         }
         catch (TimeoutException)
         {
@@ -287,28 +281,49 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
     /// <param name="components">The message components to be included with this message. Used for interactions.</param>
     /// <param name="stickers">A collection of stickers to send with the message.</param>
     /// <param name="embeds">A array of <see cref="Embed"/>s to send with this response. Max 10.</param>
+    /// <param name="ephemeral">Should the message be posted ephemeral if possible?</param>
+    /// <param name="attachments">File attachments</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task<IUserMessage> SendMessageAsync(string text = null, bool isTTS = false, Embed embed = null, RequestOptions options = null, AllowedMentions allowedMentions = null, MessageReference messageReference = null, MessageComponent components = null, ISticker[] stickers = null, Embed[] embeds = null)
+    public async Task<IUserMessage> SendMessageAsync(string text = null, bool isTTS = false, Embed embed = null, RequestOptions options = null, AllowedMentions allowedMentions = null, MessageReference messageReference = null, MessageComponent components = null, ISticker[] stickers = null, Embed[] embeds = null, bool ephemeral = false, IEnumerable<FileAttachment> attachments = null)
     {
         try
         {
-            if (_interaction is SocketInteraction { HasResponded: false }
-                or RestInteraction { HasResponded: false })
+            if (_interaction != null)
             {
-                if (stickers != null)
+                if (_interaction.HasResponded == false)
                 {
-                    throw new NotSupportedException();
+                    if (stickers != null)
+                    {
+                        throw new NotSupportedException();
+                    }
+
+                    if (attachments == null)
+                    {
+                        await _interaction.RespondAsync(text, embeds, isTTS, ephemeral, allowedMentions, components, embed, options)
+                                          .ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        await _interaction.RespondWithFilesAsync(attachments, text, embeds, isTTS, ephemeral, allowedMentions, components, embed, options)
+                                          .ConfigureAwait(false);
+                    }
+
+                    return await _interaction.GetOriginalResponseAsync()
+                                             .ConfigureAwait(false);
                 }
 
-                await _interaction.RespondAsync(text, embeds, isTTS, false, allowedMentions, components, embed, options)
-                                  .ConfigureAwait(false);
-
-                return await _interaction.GetOriginalResponseAsync()
-                                         .ConfigureAwait(false);
+                return attachments == null
+                           ? await _interaction.FollowupAsync(text, embeds, isTTS, ephemeral, allowedMentions, components, embed, options)
+                                               .ConfigureAwait(false)
+                           : await _interaction.FollowupWithFilesAsync(attachments, text, embeds, isTTS, ephemeral, allowedMentions, components, embed, options)
+                                               .ConfigureAwait(false);
             }
 
-            return await Channel.SendMessageAsync(text, isTTS, embed, options, allowedMentions, messageReference, components, stickers, embeds)
-                                .ConfigureAwait(false);
+            return attachments == null
+                       ? await Channel.SendMessageAsync(text, isTTS, embed, options, allowedMentions, messageReference, components, stickers, embeds)
+                                      .ConfigureAwait(false)
+                       : await Channel.SendFilesAsync(attachments, text, isTTS, embed, options, allowedMentions, messageReference, components, stickers, embeds)
+                                      .ConfigureAwait(false);
         }
         catch (TimeoutException)
         {

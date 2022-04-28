@@ -29,6 +29,18 @@ using var scope = serviceProvider.CreateScope();
 var globalCommand = new SlashCommandBuilder();
 globalCommand.WithName("configuration");
 globalCommand.WithDescription("Server configuration");
+globalCommand.DefaultMemberPermissions = GuildPermission.Administrator;
+globalCommand.IsDMEnabled = false;
+
+var globalCommand2 = new SlashCommandBuilder();
+globalCommand2.WithName("account");
+globalCommand2.WithDescription("Account configuration");
+globalCommand2.IsDMEnabled = true;
+
+var globalCommand3 = new SlashCommandBuilder();
+globalCommand3.WithName("info");
+globalCommand3.WithDescription("Information about Scruffy");
+globalCommand3.IsDMEnabled = true;
 
 // With global commands we don't need the guild.
-await Preparation.DiscordClient.BulkOverwriteGlobalApplicationCommandsAsync(new[] { globalCommand.Build() });
+await Preparation.DiscordClient.BulkOverwriteGlobalApplicationCommandsAsync(new[] { globalCommand.Build(), globalCommand2.Build(), globalCommand3.Build() });

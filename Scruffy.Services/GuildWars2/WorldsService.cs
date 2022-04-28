@@ -9,6 +9,7 @@ using Scruffy.Data.Enumerations.General;
 using Scruffy.Data.Json.QuickChart;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Interfaces;
 using Scruffy.Services.WebApi;
 
@@ -94,8 +95,11 @@ public class WorldsService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task PostWorldsOverview(IContextContainer commandContext)
+    public async Task PostWorldsOverview(InteractionContextContainer commandContext)
     {
+        await commandContext.DeferProcessing()
+                            .ConfigureAwait(false);
+
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
             var worldsQuery = dbFactory.GetRepository<GuildWarsWorldRepository>()
@@ -198,8 +202,7 @@ public class WorldsService : LocatedServiceBase
 
                 await using (chartStream.ConfigureAwait(false))
                 {
-                    await commandContext.Channel
-                                        .SendFileAsync(new FileAttachment(chartStream, "chart.png"), embed: embedBuilder.Build())
+                    await commandContext.ReplyAsync(embed: embedBuilder.Build(), attachments: new[] { new FileAttachment(chartStream, "chart.png") })
                                         .ConfigureAwait(false);
                 }
             }

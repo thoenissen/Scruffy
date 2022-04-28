@@ -11,7 +11,7 @@ namespace Scruffy.Commands.SlashCommands;
 /// Guild administration commands
 /// </summary>
 [Group("guild-admin", "Guild administration commands")]
-[DefaultPermission(false)]
+[DefaultMemberPermissions(GuildPermission.Administrator)]
 public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
 {
     #region Enumeration
@@ -46,7 +46,7 @@ public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
     {
         [ChoiceDisplay("Ranking")]
         Ranking,
-        [ChoiceDisplay("Notification channels")]
+        [ChoiceDisplay("Special ranks")]
         SpecialRanks,
         [ChoiceDisplay("Worlds")]
         Worlds

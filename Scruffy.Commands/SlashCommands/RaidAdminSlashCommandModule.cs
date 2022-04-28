@@ -14,7 +14,7 @@ namespace Scruffy.Commands.SlashCommands;
 /// Raid slash commands
 /// </summary>
 [Group("raid-admin", "Raid commands")]
-[DefaultPermission(false)]
+[DefaultMemberPermissions(GuildPermission.Administrator)]
 public class RaidAdminSlashCommandModule : SlashCommandModuleBase
 {
     #region Enumerations
@@ -24,9 +24,13 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
     /// </summary>
     public enum ConfigurationType
     {
-        Appointment,
+        [ChoiceDisplay("Appointments")]
+        Appointments,
+        [ChoiceDisplay("Roles")]
         Roles,
+        [ChoiceDisplay("Experience levels")]
         ExperienceLevels,
+        [ChoiceDisplay("Templates")]
         Templates
     }
 
@@ -62,7 +66,7 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
     {
         switch (type)
         {
-            case ConfigurationType.Appointment:
+            case ConfigurationType.Appointments:
                 {
                     await CommandHandler.AppointmentConfiguration(Context)
                                         .ConfigureAwait(false);
@@ -172,6 +176,9 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
     [SlashCommand("overview", "Overview of the given data type")]
     public async Task Overview([Summary("Type", "Type of the data which should be visualized")]OverviewType type)
     {
+        await Context.DeferProcessing()
+                     .ConfigureAwait(false);
+
         switch (type)
         {
             case OverviewType.Participation:
@@ -215,12 +222,28 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
                                                      })
                                       .ToList();
 
-        var choices = levels.Select(obj => new ApplicationCommandOptionChoiceProperties
-                                           {
-                                               Value = obj.AliasName,
-                                               Name = obj.Description
-                                           })
-                                  .ToList();
+        var levelChoices = levels.Select(obj => new ApplicationCommandOptionChoiceProperties
+                                          {
+                                              Value = obj.AliasName,
+                                              Name = obj.Description
+                                          })
+                           .ToList();
+
+        var appointments = repositoryFactory.GetRepository<RaidDayConfigurationRepository>()
+                                            .GetQuery()
+                                            .Select(obj => new
+                                                           {
+                                                               obj.Day,
+                                                               obj.AliasName
+                                                           })
+                                            .ToList();
+
+        var appointmentChoices = appointments.Select(obj => new ApplicationCommandOptionChoiceProperties
+                                                      {
+                                                          Value = obj.AliasName,
+                                                          Name = buildContext.CultureInfo.DateTimeFormat.GetDayName(obj.Day)
+                                                      })
+                                       .ToList();
 
         return base.GetCommands(buildContext)
                    .OfType<SlashCommandProperties>()
@@ -230,9 +253,26 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
                         && obj.Name.IsSpecified
                         && obj.Name.Value == "raid-admin")
                        {
-                           foreach (var option in obj.Options.Value.Where(option => option.Name is "set-experience-level"))
+                           foreach (var option in obj.Options.Value)
                            {
-                               option.Options[0].Choices = choices;
+                               if (option.Name is "commit"
+                                               or "set-template"
+                                               or "set-group-count"
+                                               or "join-user"
+                                               or "leave-user")
+                               {
+                                   foreach (var innerOption in option.Options.Where(obj2 => obj2.Name == "name"))
+                                   {
+                                       innerOption.Choices = appointmentChoices;
+                                   }
+                               }
+                               else if (option.Name is "set-experience-level")
+                               {
+                                   foreach (var innerOption in option.Options.Where(obj2 => obj2.Name == "role"))
+                                   {
+                                       innerOption.Choices = levelChoices;
+                                   }
+                               }
                            }
                        }
 

@@ -48,8 +48,11 @@ public class GuildBankService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task Check(IContextContainer commandContext)
+    public async Task Check(InteractionContextContainer commandContext)
     {
+        await commandContext.DeferProcessing()
+                            .ConfigureAwait(false);
+
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
             var guild = dbFactory.GetRepository<GuildRepository>()
@@ -137,14 +140,12 @@ public class GuildBankService : LocatedServiceBase
                     }
                 }
 
-                await commandContext.Channel
-                                    .SendMessageAsync(embed: msg.Build())
+                await commandContext.ReplyAsync(embed: msg.Build())
                                     .ConfigureAwait(false);
             }
             else
             {
-                await commandContext.Channel
-                                    .SendMessageAsync(LocalizationGroup.GetText("NoApiKey", "The guild ist not configured."))
+                await commandContext.ReplyAsync(LocalizationGroup.GetText("NoApiKey", "The guild ist not configured."))
                                     .ConfigureAwait(false);
             }
         }
@@ -155,8 +156,11 @@ public class GuildBankService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task CheckUnlocksDyes(IContextContainer commandContext)
+    public async Task CheckUnlocksDyes(InteractionContextContainer commandContext)
     {
+        await commandContext.DeferProcessing()
+                            .ConfigureAwait(false);
+
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
             var guild = dbFactory.GetRepository<GuildRepository>()
@@ -237,6 +241,11 @@ public class GuildBankService : LocatedServiceBase
                                     fieldBuilder.AppendLine(currentLine);
                                 }
 
+                                if (fieldBuilder.Length == 0)
+                                {
+                                    fieldBuilder.Append("\u200b");
+                                }
+
                                 builder.AddField(LocalizationGroup.GetFormattedText("DyesFields", "Dyes #{0}", fieldCounter), fieldBuilder.ToString(), true);
 
                                 await commandContext.ReplyAsync(embed: builder.Build())
@@ -247,15 +256,13 @@ public class GuildBankService : LocatedServiceBase
                 }
                 else
                 {
-                    await commandContext.Channel
-                                        .SendMessageAsync(LocalizationGroup.GetText("NoAccountApiKey", "You don't have any api keys configured."))
+                    await commandContext.ReplyAsync(LocalizationGroup.GetText("NoAccountApiKey", "You don't have any api keys configured."))
                                         .ConfigureAwait(false);
                 }
             }
             else
             {
-                await commandContext.Channel
-                                    .SendMessageAsync(LocalizationGroup.GetText("NoApiKey", "The guild ist not configured."))
+                await commandContext.ReplyAsync(LocalizationGroup.GetText("NoApiKey", "The guild ist not configured."))
                                     .ConfigureAwait(false);
             }
         }

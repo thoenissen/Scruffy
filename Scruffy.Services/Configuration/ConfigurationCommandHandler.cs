@@ -49,10 +49,11 @@ public class ConfigurationCommandHandler : LocatedServiceBase
             var dialogHandler = new DialogHandler(context);
             await using (dialogHandler.ConfigureAwait(false))
             {
-                while (await dialogHandler.Run<ServerConfigurationDialogElement, bool>()
-                                          .ConfigureAwait(false))
-                {
-                }
+                await dialogHandler.Run<ServerConfigurationDialogElement, bool>()
+                                          .ConfigureAwait(false);
+
+                await dialogHandler.DeleteMessages()
+                                   .ConfigureAwait(false);
             }
         }
         else

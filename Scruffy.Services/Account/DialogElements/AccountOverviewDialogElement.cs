@@ -52,6 +52,7 @@ public class AccountOverviewDialogElement : DialogEmbedSelectMenuElementBase<boo
                                         .WithDescription(LocalizationGroup.GetText("Description", "With the following assistant you will be able to edit all your account data."))
                                         .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
                                         .WithColor(Color.Green)
+                                        .WithThumbnailUrl(CommandContext.User.GetAvatarUrl())
                                         .WithTimestamp(DateTime.Now);
 
         // Guild Wars 2

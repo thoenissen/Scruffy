@@ -129,8 +129,11 @@ public class ItemsService : LocatedServiceBase
     /// </summary>
     /// <param name="context">Context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task ExportCustomValues(IContextContainer context)
+    public async Task ExportCustomValues(InteractionContextContainer context)
     {
+        await context.DeferProcessing()
+                     .ConfigureAwait(false);
+
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
             var items = await dbFactory.GetRepository<GuildWarsItemRepository>()
@@ -170,8 +173,7 @@ public class ItemsService : LocatedServiceBase
 
                     memoryStream.Position = 0;
 
-                    await context.Channel
-                                 .SendFileAsync(new FileAttachment(memoryStream, "custom_values.csv"))
+                    await context.ReplyAsync(attachments: new[] { new FileAttachment(memoryStream, "custom_values.csv") })
                                  .ConfigureAwait(false);
                 }
             }

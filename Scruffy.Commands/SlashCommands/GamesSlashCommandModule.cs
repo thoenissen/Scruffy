@@ -1,4 +1,5 @@
-﻿using Discord.Interactions;
+﻿using Discord;
+using Discord.Interactions;
 
 using Scruffy.Services.Discord;
 using Scruffy.Services.Games;
@@ -8,6 +9,7 @@ namespace Scruffy.Commands.SlashCommands;
 /// <summary>
 /// Games
 /// </summary>
+[DefaultMemberPermissions(GuildPermission.Administrator)]
 public class GamesSlashCommandModule : SlashCommandModuleBase
 {
     #region Enumerations
@@ -55,8 +57,6 @@ public class GamesSlashCommandModule : SlashCommandModuleBase
     /// <param name="action">The action to perform on the mini game.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("games", "Manage mini games")]
-    [RequireContext(ContextType.Guild)]
-    [DefaultPermission(false)]
     public async Task Manage(GameType type, GameCommandAction action)
     {
         var message = await Context.DeferProcessing()

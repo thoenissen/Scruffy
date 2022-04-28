@@ -140,14 +140,14 @@ public class GuildCommandHandler : LocatedServiceBase
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task GuildBankCheck(IContextContainer context) => _bankService.Check(context);
+    public Task GuildBankCheck(InteractionContextContainer context) => _bankService.Check(context);
 
     /// <summary>
     /// Check of all dyes which are stored in the guild bank are unlocked
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task GuildBankUnlocksDyes(IContextContainer context) => _bankService.CheckUnlocksDyes(context);
+    public Task GuildBankUnlocksDyes(InteractionContextContainer context) => _bankService.CheckUnlocksDyes(context);
 
     /// <summary>
     /// Check of all dyes which are stored in the guild bank are unlocked
@@ -155,14 +155,14 @@ public class GuildCommandHandler : LocatedServiceBase
     /// <param name="context">Command context</param>
     /// <param name="count">Count</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task RandomEmblems(IContextContainer context, int count) => _emblemService.PostRandomGuildEmblems(context, count);
+    public Task RandomEmblems(InteractionContextContainer context, int count) => _emblemService.PostRandomGuildEmblems(context, count);
 
     /// <summary>
     /// Post a guild ranking overview
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task PostRankingOverview(IContextContainer context) => _rankVisualizationService.PostOverview(context);
+    public Task PostRankingOverview(InteractionContextContainer context) => _rankVisualizationService.PostOverview(context);
 
     /// <summary>
     /// Post a personal guild ranking overview
@@ -170,7 +170,7 @@ public class GuildCommandHandler : LocatedServiceBase
     /// <param name="context">Command context</param>
     /// <param name="user">User</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task PostPersonalRankingOverview(IContextContainer context, IGuildUser user) => _rankVisualizationService.PostPersonalOverview(context, user);
+    public Task PostPersonalRankingOverview(InteractionContextContainer context, IGuildUser user) => _rankVisualizationService.PostPersonalOverview(context, user);
 
     /// <summary>
     /// Create guild configuration
@@ -218,53 +218,54 @@ public class GuildCommandHandler : LocatedServiceBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task ConfigureNotificationChannel(InteractionContextContainer context)
     {
-        var processingMessage = await context.DeferProcessing()
-                               .ConfigureAwait(false);
-
-        var type = await DialogHandler.Run<GuildNotificationChannelConfigurationSelectDialogElement, GuildNotificationChannelConfigurationSelectDialogElement.ChannelType?>(context)
-                                      .ConfigureAwait(false);
-
-        switch (type)
+        var dialogHandler = new DialogHandler(context);
+        await using (dialogHandler.ConfigureAwait(false))
         {
-            case GuildNotificationChannelConfigurationSelectDialogElement.ChannelType.SpecialRankNotification:
-                {
-                    _configurationService.SetNotificationChannel(context, GuildChannelConfigurationType.SpecialRankRankChange);
-                }
-                break;
-            case GuildNotificationChannelConfigurationSelectDialogElement.ChannelType.CalendarReminderNotification:
-                {
-                    _configurationService.SetNotificationChannel(context, GuildChannelConfigurationType.CalendarReminder);
-                }
-                break;
-            case GuildNotificationChannelConfigurationSelectDialogElement.ChannelType.GuildLogNotification:
-                {
-                    _configurationService.SetNotificationChannel(context, GuildChannelConfigurationType.GuildLogNotification);
-                }
-                break;
-            case GuildNotificationChannelConfigurationSelectDialogElement.ChannelType.GuildRankChangeNotification:
-                {
-                    _configurationService.SetNotificationChannel(context, GuildChannelConfigurationType.GuildRankChanges);
-                }
-                break;
-            case GuildNotificationChannelConfigurationSelectDialogElement.ChannelType.MessageOfTheDay:
-                {
-                    await _configurationService.SetupMotd(context)
-                                               .ConfigureAwait(false);
-                }
-                break;
-            case GuildNotificationChannelConfigurationSelectDialogElement.ChannelType.Calendar:
-                {
-                    await _configurationService.SetupCalendar(context)
-                                               .ConfigureAwait(false);
-                }
-                break;
-            case null:
-            default:
-                break;
-        }
+            var type = await dialogHandler.Run<GuildNotificationChannelConfigurationSelectDialogElement, GuildNotificationChannelConfigurationSelectDialogElement.ChannelType?>()
+                                          .ConfigureAwait(false);
 
-        await processingMessage.DeleteAsync()
+            switch (type)
+            {
+                case GuildNotificationChannelConfigurationSelectDialogElement.ChannelType.SpecialRankNotification:
+                    {
+                        _configurationService.SetNotificationChannel(context, GuildChannelConfigurationType.SpecialRankRankChange);
+                    }
+                    break;
+                case GuildNotificationChannelConfigurationSelectDialogElement.ChannelType.CalendarReminderNotification:
+                    {
+                        _configurationService.SetNotificationChannel(context, GuildChannelConfigurationType.CalendarReminder);
+                    }
+                    break;
+                case GuildNotificationChannelConfigurationSelectDialogElement.ChannelType.GuildLogNotification:
+                    {
+                        _configurationService.SetNotificationChannel(context, GuildChannelConfigurationType.GuildLogNotification);
+                    }
+                    break;
+                case GuildNotificationChannelConfigurationSelectDialogElement.ChannelType.GuildRankChangeNotification:
+                    {
+                        _configurationService.SetNotificationChannel(context, GuildChannelConfigurationType.GuildRankChanges);
+                    }
+                    break;
+                case GuildNotificationChannelConfigurationSelectDialogElement.ChannelType.MessageOfTheDay:
+                    {
+                        await _configurationService.SetupMotd(context)
+                                                   .ConfigureAwait(false);
+                    }
+                    break;
+                case GuildNotificationChannelConfigurationSelectDialogElement.ChannelType.Calendar:
+                    {
+                        await _configurationService.SetupCalendar(context)
+                                                   .ConfigureAwait(false);
+                    }
+                    break;
+                case null:
+                default:
+                    break;
+            }
+
+            await dialogHandler.DeleteMessages()
                                .ConfigureAwait(false);
+        }
     }
 
     /// <summary>
@@ -320,56 +321,56 @@ public class GuildCommandHandler : LocatedServiceBase
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task PostSpecialRankOverview(IContextContainer context) => _specialRankService.PostOverview(context);
+    public Task PostSpecialRankOverview(InteractionContextContainer context) => _specialRankService.PostOverview(context);
 
     /// <summary>
     /// Special rank overview
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task PostWorldsOverview(IContextContainer context) => _worldsService.PostWorldsOverview(context);
+    public Task PostWorldsOverview(InteractionContextContainer context) => _worldsService.PostWorldsOverview(context);
 
     /// <summary>
     /// Export login activity
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task ExportLoginActivity(IContextContainer context) => _exportService.ExportLoginActivityLog(context);
+    public Task ExportLoginActivity(InteractionContextContainer context) => _exportService.ExportLoginActivityLog(context);
 
     /// <summary>
     /// Export representation state
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task ExportRepresentation(IContextContainer context) => _exportService.ExportRepresentation(context);
+    public Task ExportRepresentation(InteractionContextContainer context) => _exportService.ExportRepresentation(context);
 
     /// <summary>
     /// Export members
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task ExportMembers(IContextContainer context) => _exportService.ExportGuildMembers(context);
+    public Task ExportMembers(InteractionContextContainer context) => _exportService.ExportGuildMembers(context);
 
     /// <summary>
     /// Export roles
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task ExportRoles(IContextContainer context) => _exportService.ExportGuildRoles(context);
+    public Task ExportRoles(InteractionContextContainer context) => _exportService.ExportGuildRoles(context);
 
     /// <summary>
     /// Export items
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task ExportItems(IContextContainer context) => _itemsService.ExportCustomValues(context);
+    public Task ExportItems(InteractionContextContainer context) => _itemsService.ExportCustomValues(context);
 
     /// <summary>
     /// Export rank assignments
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task ExportAssignments(IContextContainer context) => _exportService.ExportGuildRankAssignments(context);
+    public Task ExportAssignments(InteractionContextContainer context) => _exportService.ExportGuildRankAssignments(context);
 
     /// <summary>
     /// Export stash
@@ -379,7 +380,7 @@ public class GuildCommandHandler : LocatedServiceBase
     /// <param name="sinceDate">Since date</param>
     /// <param name="sinceTime">Since time</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task ExportStash(IContextContainer context, string mode, string sinceDate, string sinceTime)
+    public async Task ExportStash(InteractionContextContainer context, string mode, string sinceDate, string sinceTime)
     {
         if (DateTime.TryParseExact(sinceDate,
                                    "yyyy-MM-dd",
@@ -416,7 +417,7 @@ public class GuildCommandHandler : LocatedServiceBase
     /// <param name="sinceDate">Since date</param>
     /// <param name="sinceTime">Since time</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task ExportUpgrades(IContextContainer context, string mode, string sinceDate, string sinceTime)
+    public async Task ExportUpgrades(InteractionContextContainer context, string mode, string sinceDate, string sinceTime)
     {
         if (DateTime.TryParseExact(sinceDate,
                                    "yyyy-MM-dd",
@@ -451,7 +452,7 @@ public class GuildCommandHandler : LocatedServiceBase
     /// <param name="context">Command context</param>
     /// <param name="sinceDate">Since date</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task ExportCurrentPoints(IContextContainer context, string sinceDate)
+    public async Task ExportCurrentPoints(InteractionContextContainer context, string sinceDate)
     {
         if (DateTime.TryParseExact(sinceDate,
                                    "yyyy-MM-dd",
@@ -496,7 +497,7 @@ public class GuildCommandHandler : LocatedServiceBase
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task CheckGuildWarsAccounts(IContextContainer context) => _accountAdministrationService.Validate(context);
+    public Task CheckGuildWarsAccounts(InteractionContextContainer context) => _accountAdministrationService.Validate(context);
 
     #endregion // Methods
 }

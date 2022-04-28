@@ -285,7 +285,7 @@ public class ReminderCommandHandler : LocatedServiceBase
 
             embedBuilder.AddField(LocalizationGroup.GetText("WeekdaySelectionTitle", "Weekday selection"), stringBuilder.ToString());
 
-            currentBotMessage = await context.ReplyAsync(embed: embedBuilder.Build())
+            currentBotMessage = await context.SendMessageAsync(embed: embedBuilder.Build())
                                              .ConfigureAwait(false);
 
             messagesToBeDeleted.Add(currentBotMessage);

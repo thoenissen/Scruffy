@@ -115,8 +115,7 @@ public class RaidRolesService : LocatedServiceBase
 
         builder.AddField(LocalizationGroup.GetText("AssistantCommandsField", "Commands"), commands.ToString());
 
-        var message = await commandContextContainer.Channel
-                                                   .SendMessageAsync(embed: builder.Build())
+        var message = await commandContextContainer.ReplyAsync(embed: builder.Build())
                                                    .ConfigureAwait(false);
 
         var userReactionTask = commandContextContainer.Interactivity

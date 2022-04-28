@@ -75,8 +75,11 @@ public class GuildRankVisualizationService : LocatedServiceBase
     /// </summary>
     /// <param name="context">Context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task PostOverview(IContextContainer context)
+    public async Task PostOverview(InteractionContextContainer context)
     {
+        await context.DeferProcessing()
+                     .ConfigureAwait(false);
+
         var userPoints = await GetOverviewUsers(context.Guild.Id).ConfigureAwait(false);
 
         foreach (var user in userPoints)
@@ -210,8 +213,11 @@ public class GuildRankVisualizationService : LocatedServiceBase
     /// <param name="context">Context</param>
     /// <param name="guildUser">User</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task PostPersonalOverview(IContextContainer context, IGuildUser guildUser)
+    public async Task PostPersonalOverview(InteractionContextContainer context, IGuildUser guildUser)
     {
+        await context.DeferProcessing()
+                     .ConfigureAwait(false);
+
         var user = await _userManagementService.GetUserByDiscordAccountId(guildUser.Id)
                                                .ConfigureAwait(false);
 
@@ -375,9 +381,8 @@ public class GuildRankVisualizationService : LocatedServiceBase
         {
             embedBuilder.WithImageUrl("attachment://chart.png");
 
-            await context.Channel
-                         .SendFileAsync(new FileAttachment(chartStream, "chart.png"),
-                                        embed: embedBuilder.Build())
+            await context.ReplyAsync(embed: embedBuilder.Build(),
+                                     attachments: new[] { new FileAttachment(chartStream, "chart.png") })
                          .ConfigureAwait(false);
         }
     }
@@ -456,13 +461,13 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                              .WithTimestamp(DateTime.Now)
                                              .WithImageUrl("attachment://chart.png");
 
-        var minValue = page.Min(obj => obj.Points);
+        var minValue = page.Any() ? page.Min(obj => obj.Points) : 0;
 
         minValue = minValue > 0
                        ? 0
                        : -10 * (((int)Math.Ceiling(minValue * -1) / 10) + 1);
 
-        var maxValue = (((int)Math.Ceiling(page.Max(obj => obj.Points)) / 10) + 1) * 10;
+        var maxValue = (((int)Math.Ceiling(page.Any() ? page.Max(obj => obj.Points) : 0) / 10) + 1) * 10;
 
         var chartConfiguration = new ChartConfigurationData
                                  {
@@ -534,23 +539,24 @@ public class GuildRankVisualizationService : LocatedServiceBase
 
         await using (chartStream.ConfigureAwait(false))
         {
-            if (messageId != null)
-            {
-                await context.Channel
-                             .ModifyMessageAsync(messageId.Value,
-                                                 obj =>
-                                                 {
-                                                     obj.Attachments = new[] { new FileAttachment(chartStream, "chart.png") };
-                                                     obj.Embed = embedBuilder.Build();
-                                                     obj.Components = buttons;
-                                                 })
-                             .ConfigureAwait(false);
+            //if (messageId != null)
+            //{
+            //    await context.Channel
+            //                 .ModifyMessageAsync(messageId.Value,
+            //                                     obj =>
+            //                                     {
+            //                                         obj.Attachments = new[] { new FileAttachment(chartStream, "chart.png") };
+            //                                         obj.Embed = embedBuilder.Build();
+            //                                         obj.Components = buttons;
+            //                                     })
+            //                 .ConfigureAwait(false);
+            //
+            //    return messageId.Value;
+            //}
 
-                return messageId.Value;
-            }
-
-            return (await context.Channel
-                                 .SendFileAsync(new FileAttachment(chartStream, "chart.png"), embed: embedBuilder.Build(), components: buttons)
+            return (await context.ReplyAsync(embed: embedBuilder.Build(),
+                                             components: buttons,
+                                             attachments: new[] { new FileAttachment(chartStream, "chart.png") })
                                  .ConfigureAwait(false)).Id;
         }
     }

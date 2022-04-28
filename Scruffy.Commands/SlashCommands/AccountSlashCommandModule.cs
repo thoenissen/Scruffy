@@ -8,6 +8,7 @@ namespace Scruffy.Commands.SlashCommands;
 /// <summary>
 /// Account management
 /// </summary>
+[DontAutoRegister]
 public class AccountSlashCommandModule : SlashCommandModuleBase
 {
     #region Properties

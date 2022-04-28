@@ -23,12 +23,12 @@ public class HelpSlashCommandModule : SlashCommandModuleBase
     /// <summary>
     /// Display command help
     /// </summary>
-    /// <param name="command">Command</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [DefaultMemberPermissions(Discord.GuildPermission.SendMessages)]
     [SlashCommand("help", "Shows the Scruffy help message", true)]
-    public async Task Show([Summary("command", "Name of the command")]string command = null)
+    public async Task Show()
     {
-        await CommandHelpService.ShowHelp(Context, command)
+        await CommandHelpService.ShowHelp(Context)
                                 .ConfigureAwait(false);
     }
 

@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.CoreData;
 using Scruffy.Data.Entity.Repositories.Discord;
-using Scruffy.Data.Entity.Repositories.GuildWars2.Account;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Data.Entity.Tables.CoreData;
 using Scruffy.Data.Entity.Tables.Discord;
@@ -326,7 +325,7 @@ public class RaidCommandHandler : LocatedServiceBase
     /// <param name="container">Context container</param>
     /// <param name="name">Name</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task Leave(IContextContainer container, string name)
+    public async Task<bool> Leave(IContextContainer container, string name)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
@@ -360,12 +359,14 @@ public class RaidCommandHandler : LocatedServiceBase
                                                  .DeleteAsync()
                                                  .ConfigureAwait(false);
                 }
+
+                return true;
             }
-            else
-            {
-                await container.ReplyAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."))
-                               .ConfigureAwait(false);
-            }
+
+            await container.ReplyAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."))
+                           .ConfigureAwait(false);
+
+            return false;
         }
     }
 
@@ -714,8 +715,11 @@ public class RaidCommandHandler : LocatedServiceBase
     /// <param name="aliasName">Alias name</param>
     /// <param name="discordUsers">Users</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task SetExperienceLevel(IContextContainer context, string aliasName, params IGuildUser[] discordUsers)
+    public async Task SetExperienceLevel(InteractionContextContainer context, string aliasName, params IGuildUser[] discordUsers)
     {
+        var deferMessage = await context.DeferProcessing()
+                                        .ConfigureAwait(false);
+
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
             var experienceLevelId = await dbFactory.GetRepository<RaidExperienceLevelRepository>()
@@ -819,10 +823,13 @@ public class RaidCommandHandler : LocatedServiceBase
                                                                                       newRank?.Description))
                                  .ConfigureAwait(false);
                 }
+
+                await deferMessage.DeleteAsync()
+                                  .ConfigureAwait(false);
             }
             else
             {
-                await context.ReplyAsync(LocalizationGroup.GetText("UnknownExperienceLevel", "The experience role by the given name does not exist."))
+                await context.ReplyAsync(LocalizationGroup.GetText("UnknownExperienceLevel", "The experience role by the given name does not exist."), ephemeral: true)
                              .ConfigureAwait(false);
             }
         }
@@ -836,7 +843,7 @@ public class RaidCommandHandler : LocatedServiceBase
     public async Task PostParticipationOverview(IContextContainer context)
     {
         await _overviewService.PostParticipationOverview(context)
-                                 .ConfigureAwait(false);
+                              .ConfigureAwait(false);
     }
 
     /// <summary>

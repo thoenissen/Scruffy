@@ -22,7 +22,7 @@ public class GuildExportStashModalData : IModal
     /// Mode
     /// </summary>
     [InputLabel("Mode (raw or sum)")]
-    [RequiredInput]
+    [RequiredInput(false)]
     [ModalTextInput(nameof(Mode), TextInputStyle.Short, "raw", 3, 3)]
     public string Mode { get; set; }
 

@@ -1,14 +1,11 @@
 ﻿using System.Reflection;
 
 using Discord;
-using Discord.Interactions;
 
 using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.CoreData;
-using Scruffy.Services.Core;
-using Scruffy.Services.Core.DialogElements;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord;
 
@@ -22,32 +19,9 @@ public class ServerConfigurationDialogElement : DialogEmbedSelectMenuElementBase
     #region Fields
 
     /// <summary>
-    /// Administration commands
-    /// </summary>
-    private static readonly List<string> _administrationCommands = new()
-                                                                   {
-                                                                       "admin",
-                                                                       "games",
-                                                                       "guild-admin",
-                                                                       "raid-admin",
-                                                                       "reminder-admin",
-                                                                       "calendar-admin"
-                                                                   };
-
-    /// <summary>
     /// Repository factory
     /// </summary>
     private readonly RepositoryFactory _repositoryFactory;
-
-    /// <summary>
-    /// Permissions validation service
-    /// </summary>
-    private readonly AdministrationPermissionsValidationService _permissionsValidationService;
-
-    /// <summary>
-    /// Interaction service
-    /// </summary>
-    private readonly InteractionService _interactionService;
 
     #endregion // Fields
 
@@ -58,17 +32,11 @@ public class ServerConfigurationDialogElement : DialogEmbedSelectMenuElementBase
     /// </summary>
     /// <param name="localizationService">Localization service</param>
     /// <param name="repositoryFactory">Repository factory</param>
-    /// <param name="permissionsValidationService">Permission validation service</param>
-    /// <param name="interactionService">Interaction service</param>
     public ServerConfigurationDialogElement(LocalizationService localizationService,
-                                            RepositoryFactory repositoryFactory,
-                                            AdministrationPermissionsValidationService permissionsValidationService,
-                                            InteractionService interactionService)
+                                            RepositoryFactory repositoryFactory)
         : base(localizationService)
     {
         _repositoryFactory = repositoryFactory;
-        _permissionsValidationService = permissionsValidationService;
-        _interactionService = interactionService;
     }
 
     #endregion // Constructor
@@ -79,32 +47,15 @@ public class ServerConfigurationDialogElement : DialogEmbedSelectMenuElementBase
     /// Return the message of element
     /// </summary>
     /// <returns>Message</returns>
-    public override async Task<EmbedBuilder> GetMessage()
+    public override Task<EmbedBuilder> GetMessage()
     {
-        var builder = new EmbedBuilder().WithTitle(CommandContext.Guild.Name);
+        var builder = new EmbedBuilder().WithTitle(LocalizationGroup.GetText("Title", "Server configuration"))
+                                        .WithDescription(LocalizationGroup.GetText("Description", "With the following assistant you are able to configure your server."))
+                                        .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
+                                        .WithColor(Color.Green)
+                                        .WithTimestamp(DateTime.Now);
 
-        var configuration = new StringBuilder();
-        configuration.Append(LocalizationGroup.GetText("AdminRole", "Administrator role"));
-        configuration.Append(": ");
-
-        var administrationRoleId = await _repositoryFactory.GetRepository<ServerConfigurationRepository>()
-                                                           .GetQuery()
-                                                           .Where(obj => obj.DiscordServerId == CommandContext.Guild.Id)
-                                                           .Select(obj => obj.DiscordAdministratorRoleId)
-                                                           .FirstOrDefaultAsync()
-                                                           .ConfigureAwait(false);
-
-        if (administrationRoleId != null
-         && CommandContext.Guild.GetRole(administrationRoleId.Value) is { } administrationRole)
-        {
-            configuration.AppendLine(administrationRole.Mention);
-        }
-        else
-        {
-            configuration.AppendLine(DiscordEmoteService.GetCrossEmote(CommandContext.Client).ToString());
-        }
-
-        return builder;
+        return Task.FromResult(builder);
     }
 
     /// <summary>
@@ -121,22 +72,6 @@ public class ServerConfigurationDialogElement : DialogEmbedSelectMenuElementBase
     {
         return new List<SelectMenuEntryData<bool>>
                {
-                   new()
-                   {
-                       CommandText = LocalizationGroup.GetText("SetAdminRole", "Set administration role"),
-                       Response = async () =>
-                              {
-                                  var roleId = await RunSubElement<DiscordRoleSelectionDialogElement, ulong>().ConfigureAwait(false);
-                                  if (roleId > 0)
-                                  {
-                                      _permissionsValidationService.AddOrRefresh(CommandContext.Guild.Id, roleId);
-
-                                      return true;
-                                  }
-
-                                  return false;
-                              }
-                   },
                    new()
                    {
                        CommandText = LocalizationGroup.GetText("InstallSlashCommands", "Slash command installation"),
@@ -167,9 +102,16 @@ public class ServerConfigurationDialogElement : DialogEmbedSelectMenuElementBase
 
                                   if (commands != null)
                                   {
-                                      await CommandContext.Guild
-                                                          .BulkOverwriteApplicationCommandsAsync(commands.ToArray())
-                                                          .ConfigureAwait(false);
+                                      try
+                                      {
+                                          await CommandContext.Guild
+                                                              .BulkOverwriteApplicationCommandsAsync(commands.ToArray())
+                                                              .ConfigureAwait(false);
+                                      }
+                                      catch
+                                      {
+                                          // TODO Currently throwing an exception after the creation of the commands
+                                      }
                                   }
 
                                   return true;
@@ -185,27 +127,6 @@ public class ServerConfigurationDialogElement : DialogEmbedSelectMenuElementBase
                                                       .ConfigureAwait(false);
 
                                   return true;
-                              }
-                   },
-                   new()
-                   {
-                       CommandText = LocalizationGroup.GetText("SetSlashCommandPermissions", "Set Slash command permissions"),
-                       Response = async () =>
-                              {
-                                  var roleId = await RunSubElement<DiscordRoleSelectionDialogElement, ulong>().ConfigureAwait(false);
-                                  if (roleId > 0
-                                   && CommandContext.Guild.GetRole(roleId) is { } role)
-                                  {
-                                      foreach (var module in _interactionService.Modules.Where(obj => _administrationCommands.Contains(obj.SlashGroupName)))
-                                      {
-                                          await _interactionService.ModifySlashCommandPermissionsAsync(module, CommandContext.Guild, new ApplicationCommandPermission(role, true))
-                                                                   .ConfigureAwait(false);
-                                      }
-
-                                      return true;
-                                  }
-
-                                  return false;
                               }
                    }
                };

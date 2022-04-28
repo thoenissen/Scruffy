@@ -119,8 +119,7 @@ public class RaidExperienceLevelsService : LocatedServiceBase
                 stringBuilder = new StringBuilder();
             }
 
-            await commandContextContainer.Channel
-                                         .SendMessageAsync(embed: embedBuilder.Build())
+            await commandContextContainer.ReplyAsync(null, embed: embedBuilder.Build())
                                          .ConfigureAwait(false);
         }
     }

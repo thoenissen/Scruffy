@@ -50,7 +50,8 @@ internal static class CommandExtensions
                     {
                         Name = commandInfo.Name,
                         Description = commandInfo.Description,
-                        IsDefaultPermission = commandInfo.DefaultPermission,
+                        IsDMEnabled = commandInfo.IsEnabledInDm,
+                        DefaultMemberPermissions = (commandInfo.DefaultMemberPermissions ?? 0) | (commandInfo.Module.DefaultMemberPermissions ?? 0)
                     }.Build();
 
         if (commandInfo.Parameters.Count > SlashCommandBuilder.MaxOptionsCount)
@@ -89,8 +90,20 @@ internal static class CommandExtensions
     public static ApplicationCommandProperties ToApplicationCommandProps(this ContextCommandInfo commandInfo)
         => commandInfo.CommandType switch
         {
-            ApplicationCommandType.Message => new MessageCommandBuilder { Name = commandInfo.Name, IsDefaultPermission = commandInfo.DefaultPermission }.Build(),
-            ApplicationCommandType.User => new UserCommandBuilder { Name = commandInfo.Name, IsDefaultPermission = commandInfo.DefaultPermission }.Build(),
+            ApplicationCommandType.Message => new MessageCommandBuilder
+                                              {
+                                                  Name = commandInfo.Name,
+                                                  IsDefaultPermission = commandInfo.DefaultPermission,
+                                                  DefaultMemberPermissions = (commandInfo.DefaultMemberPermissions ?? 0) | (commandInfo.Module.DefaultMemberPermissions ?? 0),
+                                                  IsDMEnabled = commandInfo.IsEnabledInDm
+                                              }.Build(),
+            ApplicationCommandType.User => new UserCommandBuilder
+                                           {
+                                               Name = commandInfo.Name,
+                                               IsDefaultPermission = commandInfo.DefaultPermission,
+                                               DefaultMemberPermissions = (commandInfo.DefaultMemberPermissions ?? 0) | (commandInfo.Module.DefaultMemberPermissions ?? 0),
+                                               IsDMEnabled = commandInfo.IsEnabledInDm
+                                           }.Build(),
             _ => throw new InvalidOperationException($"{commandInfo.CommandType} isn't a supported command type.")
         };
 
@@ -148,9 +161,10 @@ internal static class CommandExtensions
 
                 var props = new SlashCommandBuilder
                             {
-                                Name = moduleInfo.SlashGroupName.ToLower(),
+                                Name = moduleInfo.SlashGroupName,
                                 Description = moduleInfo.Description,
-                                IsDefaultPermission = moduleInfo.DefaultPermission,
+                                IsDMEnabled = moduleInfo.IsEnabledInDm,
+                                DefaultMemberPermissions = moduleInfo.DefaultMemberPermissions
                             }.Build();
 
                 if (options.Count > SlashCommandBuilder.MaxOptionsCount)

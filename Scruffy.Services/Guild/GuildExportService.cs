@@ -14,6 +14,7 @@ using Scruffy.Data.Enumerations.GuildWars2;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Extensions;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Interfaces;
 using Scruffy.Services.WebApi;
 
@@ -45,8 +46,11 @@ public class GuildExportService : LocatedServiceBase
     /// <param name="commandContext">Command context</param>
     /// <param name="sinceDate">Since date</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task ExportStashLog(IContextContainer commandContext, DateTime sinceDate)
+    public async Task ExportStashLog(InteractionContextContainer commandContext, DateTime sinceDate)
     {
+        await commandContext.DeferProcessing()
+                            .ConfigureAwait(false);
+
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
             var logEntries = await dbFactory.GetRepository<GuildLogEntryRepository>()
@@ -121,8 +125,7 @@ public class GuildExportService : LocatedServiceBase
 
                         memoryStream.Position = 0;
 
-                        await commandContext.Channel
-                                            .SendFileAsync(new FileAttachment(memoryStream, "stash_log.csv"))
+                        await commandContext.ReplyAsync(attachments: new[] { new FileAttachment(memoryStream, "stash_log.csv") })
                                             .ConfigureAwait(false);
                     }
                 }
@@ -136,8 +139,11 @@ public class GuildExportService : LocatedServiceBase
     /// <param name="commandContext">Command context</param>
     /// <param name="sinceDate">Since date</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task ExportStashLogSummarized(IContextContainer commandContext, DateTime sinceDate)
+    public async Task ExportStashLogSummarized(InteractionContextContainer commandContext, DateTime sinceDate)
     {
+        await commandContext.DeferProcessing()
+                            .ConfigureAwait(false);
+
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
             var logEntries = await dbFactory.GetRepository<GuildLogEntryRepository>()
@@ -218,8 +224,7 @@ public class GuildExportService : LocatedServiceBase
 
                         memoryStream.Position = 0;
 
-                        await commandContext.Channel
-                                            .SendFileAsync(new FileAttachment(memoryStream, "stash_log.csv"))
+                        await commandContext.ReplyAsync(attachments: new[] { new FileAttachment(memoryStream, "stash_log.csv") })
                                             .ConfigureAwait(false);
                     }
                 }
@@ -233,8 +238,11 @@ public class GuildExportService : LocatedServiceBase
     /// <param name="commandContext">Command context</param>
     /// <param name="sinceDate">Since date</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task ExportUpgradesLog(IContextContainer commandContext, DateTime sinceDate)
+    public async Task ExportUpgradesLog(InteractionContextContainer commandContext, DateTime sinceDate)
     {
+        await commandContext.DeferProcessing()
+                            .ConfigureAwait(false);
+
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
             var logEntriesQuery = dbFactory.GetRepository<GuildLogEntryRepository>()
@@ -333,8 +341,7 @@ public class GuildExportService : LocatedServiceBase
 
                         memoryStream.Position = 0;
 
-                        await commandContext.Channel
-                                            .SendFileAsync(new FileAttachment(memoryStream, "upgrades_log.csv"))
+                        await commandContext.ReplyAsync(attachments: new[] { new FileAttachment(memoryStream, "upgrades_log.csv") })
                                             .ConfigureAwait(false);
                     }
                 }
@@ -348,8 +355,11 @@ public class GuildExportService : LocatedServiceBase
     /// <param name="commandContext">Command context</param>
     /// <param name="sinceDate">Since date</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task ExportUpgradesLogSummarized(IContextContainer commandContext, DateTime sinceDate)
+    public async Task ExportUpgradesLogSummarized(InteractionContextContainer commandContext, DateTime sinceDate)
     {
+        await commandContext.DeferProcessing()
+                            .ConfigureAwait(false);
+
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
             var logEntriesQuery = dbFactory.GetRepository<GuildLogEntryRepository>()
@@ -454,8 +464,7 @@ public class GuildExportService : LocatedServiceBase
 
                         memoryStream.Position = 0;
 
-                        await commandContext.Channel
-                                            .SendFileAsync(new FileAttachment(memoryStream, "upgrades_log.csv"))
+                        await commandContext.ReplyAsync(attachments: new[] { new FileAttachment(memoryStream, "upgrades_log.csv") })
                                             .ConfigureAwait(false);
                     }
                 }
@@ -468,8 +477,11 @@ public class GuildExportService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task ExportLoginActivityLog(IContextContainer commandContext)
+    public async Task ExportLoginActivityLog(InteractionContextContainer commandContext)
     {
+        await commandContext.DeferProcessing()
+                            .ConfigureAwait(false);
+
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
             var dateLimit = DateTime.Today.AddDays(-7);
@@ -505,8 +517,7 @@ public class GuildExportService : LocatedServiceBase
 
                     memoryStream.Position = 0;
 
-                    await commandContext.Channel
-                                        .SendFileAsync(new FileAttachment(memoryStream, "activity_log.csv"))
+                    await commandContext.ReplyAsync(attachments: new[] { new FileAttachment(memoryStream, "activity_log.csv") })
                                         .ConfigureAwait(false);
                 }
             }
@@ -518,8 +529,11 @@ public class GuildExportService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task ExportRepresentation(IContextContainer commandContext)
+    public async Task ExportRepresentation(InteractionContextContainer commandContext)
     {
+        await commandContext.DeferProcessing()
+                            .ConfigureAwait(false);
+
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
             var guildId = dbFactory.GetRepository<GuildRepository>()
@@ -592,8 +606,7 @@ public class GuildExportService : LocatedServiceBase
 
                     memoryStream.Position = 0;
 
-                    await commandContext.Channel
-                                        .SendFileAsync(new FileAttachment(memoryStream, "representation.csv"))
+                    await commandContext.ReplyAsync(attachments: new[] { new FileAttachment(memoryStream, "representation.csv") })
                                         .ConfigureAwait(false);
                 }
             }
@@ -605,8 +618,11 @@ public class GuildExportService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task ExportGuildMembers(IContextContainer commandContext)
+    public async Task ExportGuildMembers(InteractionContextContainer commandContext)
     {
+        await commandContext.DeferProcessing()
+                            .ConfigureAwait(false);
+
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
             var guild = dbFactory.GetRepository<GuildRepository>()
@@ -666,8 +682,7 @@ public class GuildExportService : LocatedServiceBase
 
                     memoryStream.Position = 0;
 
-                    await commandContext.Channel
-                                        .SendFileAsync(new FileAttachment(memoryStream, "members.csv"))
+                    await commandContext.ReplyAsync(attachments: new[] { new FileAttachment(memoryStream, "members.csv") })
                                         .ConfigureAwait(false);
                 }
             }
@@ -679,8 +694,11 @@ public class GuildExportService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task ExportGuildRoles(IContextContainer commandContext)
+    public async Task ExportGuildRoles(InteractionContextContainer commandContext)
     {
+        await commandContext.DeferProcessing()
+                            .ConfigureAwait(false);
+
         var members = new List<(string Role, string User)>();
 
         foreach (var user in await commandContext.Guild
@@ -716,8 +734,7 @@ public class GuildExportService : LocatedServiceBase
 
                 memoryStream.Position = 0;
 
-                await commandContext.Channel
-                                    .SendFileAsync(new FileAttachment(memoryStream, "roles.csv"))
+                await commandContext.ReplyAsync(attachments: new[] { new FileAttachment(memoryStream, "roles.csv") })
                                     .ConfigureAwait(false);
             }
         }
@@ -729,8 +746,11 @@ public class GuildExportService : LocatedServiceBase
     /// <param name="commandContext">Command context</param>
     /// <param name="sinceDate">Since date</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task ExportGuildRankPoints(IContextContainer commandContext, DateTime sinceDate)
+    public async Task ExportGuildRankPoints(InteractionContextContainer commandContext, DateTime sinceDate)
     {
+        await commandContext.DeferProcessing()
+                            .ConfigureAwait(false);
+
         var members = new Dictionary<ulong, string>();
 
         foreach (var user in await commandContext.Guild
@@ -782,8 +802,7 @@ public class GuildExportService : LocatedServiceBase
 
                 memoryStream.Position = 0;
 
-                await commandContext.Channel
-                                    .SendFileAsync(new FileAttachment(memoryStream, "roles.csv"))
+                await commandContext.ReplyAsync(attachments: new[] { new FileAttachment(memoryStream, "rank_points.csv") })
                                     .ConfigureAwait(false);
             }
         }
@@ -794,8 +813,11 @@ public class GuildExportService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task ExportGuildRankAssignments(IContextContainer commandContext)
+    public async Task ExportGuildRankAssignments(InteractionContextContainer commandContext)
     {
+        await commandContext.DeferProcessing()
+                            .ConfigureAwait(false);
+
         var members = new Dictionary<ulong, string>();
 
         foreach (var user in await commandContext.Guild
@@ -846,8 +868,7 @@ public class GuildExportService : LocatedServiceBase
 
                 memoryStream.Position = 0;
 
-                await commandContext.Channel
-                                    .SendFileAsync(new FileAttachment(memoryStream, "assignments.csv"))
+                await commandContext.ReplyAsync(attachments: new[] { new FileAttachment(memoryStream, "assignments.csv") })
                                     .ConfigureAwait(false);
             }
         }

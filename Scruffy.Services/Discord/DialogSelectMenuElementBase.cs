@@ -82,28 +82,9 @@ public abstract class DialogSelectMenuElementBase<TData> : DialogElementBase<TDa
 
             DialogContext.Messages.Add(message);
 
-            components.StartTimeout();
-
             string selectedValue = null;
 
-            try
-            {
-                var (component, _) = await components.Task
-                                     .ConfigureAwait(false);
-
-                selectedValue = component.Data.Values.FirstOrDefault();
-
-                await component.DeferAsync()
-                               .ConfigureAwait(false);
-
-                var executedButton = entries?.Take(Convert.ToInt32(selectedValue)).LastOrDefault();
-
-                return executedButton != null
-                           ? await executedButton.Response()
-                                                 .ConfigureAwait(false)
-                           : DefaultFunc();
-            }
-            finally
+            async Task DisableComponents()
             {
                 var disabledComponentBuilder = new ComponentBuilder();
 
@@ -112,12 +93,11 @@ public abstract class DialogSelectMenuElementBase<TData> : DialogElementBase<TDa
                     disabledComponentBuilder.WithSelectMenu(selectMenuComponent.ToBuilder()
                                                                                .WithOptions(selectMenuComponent.Options
                                                                                                                .Where(obj => selectedValue == null
-                                                                                                                          && obj.Value == selectedValue)
+                                                                                                                          || obj.Value == selectedValue)
                                                                                                                .Select(obj => new SelectMenuOptionBuilder().WithLabel(obj.Label)
-                                                                                                                                                           .WithValue(obj.Label)
+                                                                                                                                                           .WithValue(obj.Value)
                                                                                                                                                            .WithEmote(obj.Emote)
                                                                                                                                                            .WithDefault(true))
-                                                                                                               .Take(1)
                                                                                                                .ToList())
                                                                                .WithDisabled(true));
                 }
@@ -125,6 +105,48 @@ public abstract class DialogSelectMenuElementBase<TData> : DialogElementBase<TDa
                 await message.ModifyAsync(obj => obj.Components = disabledComponentBuilder.Build())
                              .ConfigureAwait(false);
             }
+
+            components.StartTimeout();
+
+            var (component, _) = await components.Task
+                                                 .ConfigureAwait(false);
+
+            selectedValue = component.Data.Values.FirstOrDefault();
+
+            var executedButton = entries?.Take(Convert.ToInt32(selectedValue))
+                                        .LastOrDefault();
+
+            if (executedButton != null)
+            {
+                if (executedButton.InteractionResponse != null)
+                {
+                    var interaction = executedButton.InteractionResponse(component)
+                                                    .ConfigureAwait(false);
+
+                    await DisableComponents().ConfigureAwait(false);
+
+                    return await interaction;
+                }
+
+                await component.DeferAsync()
+                               .ConfigureAwait(false);
+
+                if (executedButton.Response != null)
+                {
+                    await DisableComponents().ConfigureAwait(false);
+
+                    return await executedButton.Response()
+                                               .ConfigureAwait(false);
+                }
+            }
+
+            await DisableComponents()
+                .ConfigureAwait(false);
+
+            await component.DeferAsync()
+                           .ConfigureAwait(false);
+
+            return DefaultFunc();
         }
     }
 

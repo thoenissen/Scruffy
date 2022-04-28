@@ -16,7 +16,7 @@ public class GuildWarsAccountModal : IModal
     /// <summary>
     /// Title
     /// </summary>
-    public string Title => "Add or refresh a Guild Wars 2 account";
+    public string Title => "Guild Wars 2 account";
 
     /// <summary>
     /// API-Key

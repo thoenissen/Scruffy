@@ -1,4 +1,5 @@
-﻿using Discord.Interactions;
+﻿using Discord;
+using Discord.Interactions;
 
 using Scruffy.Services.Discord;
 using Scruffy.Services.Reminder;
@@ -9,7 +10,7 @@ namespace Scruffy.Commands.SlashCommands;
 /// Reminder commands
 /// </summary>
 [Group("reminder-admin", "Reminder creation")]
-[DefaultPermission(false)]
+[DefaultMemberPermissions(GuildPermission.Administrator)]
 public class ReminderAdminSlashCommandModule : SlashCommandModuleBase
 {
     #region Enumerations

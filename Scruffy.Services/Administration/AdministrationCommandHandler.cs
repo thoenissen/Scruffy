@@ -86,43 +86,5 @@ public class AdministrationCommandHandler : LocatedServiceBase
         }
     }
 
-    /// <summary>
-    /// Block channel
-    /// </summary>
-    /// <param name="context">Command context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task BlockChannel(InteractionContextContainer context)
-    {
-        if (context.Channel is IGuildChannel guildChannel)
-        {
-            var message = await context.DeferProcessing()
-                                       .ConfigureAwait(false);
-
-            _blockedChannelService.AddChannel(guildChannel);
-
-            await message.DeleteAsync()
-                         .ConfigureAwait(false);
-        }
-    }
-
-    /// <summary>
-    /// Block channel
-    /// </summary>
-    /// <param name="context">Command context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task UnblockChannel(InteractionContextContainer context)
-    {
-        if (context.Channel is IGuildChannel guildChannel)
-        {
-            var message = await context.DeferProcessing()
-                                       .ConfigureAwait(false);
-
-            _blockedChannelService.RemoveChannel(guildChannel);
-
-            await message.DeleteAsync()
-                         .ConfigureAwait(false);
-        }
-    }
-
     #endregion // Methods
 }

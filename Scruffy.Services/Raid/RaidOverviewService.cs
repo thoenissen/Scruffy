@@ -74,7 +74,7 @@ public class RaidOverviewService : LocatedServiceBase
                 embedBuilder.WithImageUrl("attachment://chart.png");
 
                 var userNames = new List<string>();
-                foreach (var user in users)
+                foreach (var user in users.Where(obj => obj.UserId > 0))
                 {
                     var member = await commandContext.Guild
                                                      .GetUserAsync(user.UserId)
@@ -152,8 +152,7 @@ public class RaidOverviewService : LocatedServiceBase
 
                 await using (chartStream.ConfigureAwait(false))
                 {
-                    await commandContext.Channel
-                                        .SendFileAsync(new FileAttachment(chartStream, "chart.png"), embed: embedBuilder.Build())
+                    await commandContext.ReplyAsync(null, embed: embedBuilder.Build(), attachments: new[] { new FileAttachment(chartStream, "chart.png") })
                                         .ConfigureAwait(false);
                 }
             }

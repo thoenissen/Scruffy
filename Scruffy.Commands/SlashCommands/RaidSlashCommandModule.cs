@@ -46,11 +46,12 @@ public class RaidSlashCommandModule : SlashCommandModuleBase
         var message = await Context.DeferProcessing()
                                    .ConfigureAwait(false);
 
-        await CommandHandler.Leave(Context, name)
-                            .ConfigureAwait(false);
-
-        await message.DeleteAsync()
-                     .ConfigureAwait(false);
+        if (await CommandHandler.Leave(Context, name)
+                                .ConfigureAwait(false))
+        {
+            await message.DeleteAsync()
+                         .ConfigureAwait(false);
+        }
     }
 
     /// <summary>

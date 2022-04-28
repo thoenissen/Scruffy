@@ -1,4 +1,5 @@
-﻿using Discord.Interactions;
+﻿using Discord;
+using Discord.Interactions;
 
 using Scruffy.Services.Calendar;
 using Scruffy.Services.Discord;
@@ -9,6 +10,7 @@ namespace Scruffy.Commands.SlashCommands
     /// Calendar admin commands
     /// </summary>
     [Group("calendar-admin", "Calendar administration commands")]
+    [DefaultMemberPermissions(GuildPermission.Administrator)]
     public class CalendarAdminSlashCommandModule : SlashCommandModuleBase
     {
         #region Enumerations

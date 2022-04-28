@@ -6,7 +6,7 @@ using Scruffy.Data.Json.GuildWars2.Core;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Exceptions.WebApi;
 using Scruffy.Services.Core.Localization;
-using Scruffy.Services.Discord.Interfaces;
+using Scruffy.Services.Discord;
 using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.Account;
@@ -34,10 +34,13 @@ public class AccountAdministrationService : LocatedServiceBase
     /// <summary>
     /// Editing a existing account
     /// </summary>
-    /// <param name="commandContextContainer">Command context</param>
+    /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task Validate(IContextContainer commandContextContainer)
+    public async Task Validate(InteractionContextContainer context)
     {
+        await context.DeferProcessing()
+                     .ConfigureAwait(false);
+
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
             var invalidAccounts = new List<(string Name, GuildWars2ApiPermission Permissions)>();
@@ -96,15 +99,13 @@ public class AccountAdministrationService : LocatedServiceBase
 
                 sb.Append("```");
 
-                await commandContextContainer.Channel
-                                             .SendMessageAsync(sb.ToString())
-                                             .ConfigureAwait(false);
+                await context.ReplyAsync(sb.ToString())
+                             .ConfigureAwait(false);
             }
             else
             {
-                await commandContextContainer.Channel
-                                             .SendMessageAsync(LocalizationGroup.GetText("NoInvalidAccounts", "There are no invalid accounts."))
-                                             .ConfigureAwait(false);
+                await context.ReplyAsync(LocalizationGroup.GetText("NoInvalidAccounts", "There are no invalid accounts."))
+                             .ConfigureAwait(false);
             }
         }
     }
