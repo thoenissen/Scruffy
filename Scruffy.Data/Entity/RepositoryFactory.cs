@@ -122,8 +122,12 @@ public sealed class RepositoryFactory : IDisposable
     {
         int? value = null;
 
+        var timeout = _dbContext.Database.GetCommandTimeout();
+
         try
         {
+            _dbContext.Database.SetCommandTimeout(1200);
+
             value = await _dbContext.Database
                                     .ExecuteSqlRawAsync(sql, parameters)
                                     .ConfigureAwait(false);
@@ -131,6 +135,10 @@ public sealed class RepositoryFactory : IDisposable
         catch (Exception ex)
         {
             _dbContext.LastError = ex;
+        }
+        finally
+        {
+            _dbContext.Database.SetCommandTimeout(timeout);
         }
 
         return value;
