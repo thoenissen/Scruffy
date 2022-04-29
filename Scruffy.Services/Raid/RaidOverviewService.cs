@@ -138,7 +138,7 @@ public class RaidOverviewService : LocatedServiceBase
                 var chartStream = await _quickChartConnector.GetChartAsStream(new ChartData
                                                                               {
                                                                                   Width = 500,
-                                                                                  Height = 20 * userNames.Count,
+                                                                                  Height = (20 * userNames.Count) + 40,
                                                                                   DevicePixelRatio = 1,
                                                                                   BackgroundColor = "#262626",
                                                                                   Format = "png",

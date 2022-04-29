@@ -525,7 +525,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
         var chartStream = await _quickChartConnector.GetChartAsStream(new ChartData
                                                                       {
                                                                           Width = 500,
-                                                                          Height = 20 * page.Count,
+                                                                          Height = (20 * page.Count) + 40,
                                                                           DevicePixelRatio = 1,
                                                                           BackgroundColor = "#262626",
                                                                           Format = "png",
@@ -539,21 +539,6 @@ public class GuildRankVisualizationService : LocatedServiceBase
 
         await using (chartStream.ConfigureAwait(false))
         {
-            //if (messageId != null)
-            //{
-            //    await context.Channel
-            //                 .ModifyMessageAsync(messageId.Value,
-            //                                     obj =>
-            //                                     {
-            //                                         obj.Attachments = new[] { new FileAttachment(chartStream, "chart.png") };
-            //                                         obj.Embed = embedBuilder.Build();
-            //                                         obj.Components = buttons;
-            //                                     })
-            //                 .ConfigureAwait(false);
-            //
-            //    return messageId.Value;
-            //}
-
             return (await context.ReplyAsync(embed: embedBuilder.Build(),
                                              components: buttons,
                                              attachments: new[] { new FileAttachment(chartStream, "chart.png") })
