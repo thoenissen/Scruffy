@@ -29,9 +29,14 @@ public class GuildRankVisualizationService : LocatedServiceBase
     #region Fields
 
     /// <summary>
-    /// Lock
+    /// Lock (Accessing <see cref="_overviews"/>)
     /// </summary>
-    private static LockFactory _lock = new();
+    private static LockFactory _overviewsLock = new();
+
+    /// <summary>
+    /// Lock (Modifying the message)
+    /// </summary>
+    private static LockFactory _modifyLock = new();
 
     /// <summary>
     /// Guild overviews
@@ -318,7 +323,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
     {
         GuildRankingOverviewData data = null;
 
-        var scopeLock = await _lock.CreateLockAsync()
+        var scopeLock = await _overviewsLock.CreateLockAsync()
                                    .ConfigureAwait(false);
         await using (scopeLock.ConfigureAwait(false))
         {
@@ -561,14 +566,19 @@ public class GuildRankVisualizationService : LocatedServiceBase
             {
                 if (await channel.GetMessageAsync(messageId).ConfigureAwait(false) is IUserMessage message)
                 {
-                    await message.ModifyAsync(obj =>
-                                              {
-                                                  obj.Content = null;
-                                                  obj.Embed = embedBuilder.Build();
-                                                  obj.Components = componentsBuilder.Build();
-                                                  obj.Attachments = new[] { new FileAttachment(chartStream, "chart.png") };
-                                              })
-                                 .ConfigureAwait(false);
+                    var scopeLock = await _modifyLock.CreateLockAsync()
+                                                     .ConfigureAwait(false);
+                    await using (scopeLock.ConfigureAwait(false))
+                    {
+                        await message.ModifyAsync(obj =>
+                                                  {
+                                                      obj.Content = null;
+                                                      obj.Embed = embedBuilder.Build();
+                                                      obj.Components = componentsBuilder.Build();
+                                                      obj.Attachments = new[] { new FileAttachment(chartStream, "chart.png") };
+                                                  })
+                                     .ConfigureAwait(false);
+                    }
                 }
             }
         }

@@ -370,7 +370,7 @@ public sealed class DiscordBot : IAsyncDisposable
         }
         catch (Exception ex)
         {
-            await HandleCommandException(context, ex).ConfigureAwait(false);
+            await HandleInteractionException(context, ex).ConfigureAwait(false);
         }
     }
 
@@ -380,14 +380,13 @@ public sealed class DiscordBot : IAsyncDisposable
     /// <param name="context">Context</param>
     /// <param name="ex">Exception</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private async Task HandleCommandException(InteractionContextContainer context, Exception ex)
+    private async Task HandleInteractionException(InteractionContextContainer context, Exception ex)
     {
         if (ex is ScruffyException)
         {
             if (ex is ScruffyUserMessageException userException)
             {
-                await context.Channel
-                             .SendMessageAsync($"{context.User.Mention} {userException.GetLocalizedMessage()}")
+                await context.ReplyAsync($"{context.User.Mention} {userException.GetLocalizedMessage()}", ephemeral: true)
                              .ConfigureAwait(false);
             }
         }
@@ -433,9 +432,9 @@ public sealed class DiscordBot : IAsyncDisposable
 
                         await using (stream.ConfigureAwait(false))
                         {
-                            await context.Channel
-                                         .SendFilesAsync(new[] { new FileAttachment(stream, "cat.gif") },
-                                                         _localizationGroup.GetFormattedText("CommandFailedMessage", "The command could not be executed. But I have an error code ({0}) and funny cat picture.", logEntryId ?? -1))
+                            await context.ReplyAsync(_localizationGroup.GetFormattedText("CommandFailedMessage", "The command could not be executed. But I have an error code ({0}) and funny cat picture.", logEntryId ?? -1),
+                                                     ephemeral: true,
+                                                     attachments: new[] { new FileAttachment(stream, "cat.gif") })
                                          .ConfigureAwait(false);
                         }
                     }
@@ -465,7 +464,7 @@ public sealed class DiscordBot : IAsyncDisposable
                             {
                                 if (result is global::Discord.Interactions.ExecuteResult executeResult)
                                 {
-                                    await HandleCommandException(container, executeResult.Exception).ConfigureAwait(false);
+                                    await HandleInteractionException(container, executeResult.Exception).ConfigureAwait(false);
                                 }
                             }
                             break;
@@ -505,7 +504,7 @@ public sealed class DiscordBot : IAsyncDisposable
                             {
                                 if (result is global::Discord.Interactions.ExecuteResult executeResult)
                                 {
-                                    await HandleCommandException(container, executeResult.Exception).ConfigureAwait(false);
+                                    await HandleInteractionException(container, executeResult.Exception).ConfigureAwait(false);
                                 }
                             }
                             break;
@@ -545,7 +544,7 @@ public sealed class DiscordBot : IAsyncDisposable
                             {
                                 if (result is global::Discord.Interactions.ExecuteResult executeResult)
                                 {
-                                    await HandleCommandException(container, executeResult.Exception).ConfigureAwait(false);
+                                    await HandleInteractionException(container, executeResult.Exception).ConfigureAwait(false);
                                 }
                             }
                             break;
