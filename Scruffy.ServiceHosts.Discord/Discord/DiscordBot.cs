@@ -396,11 +396,11 @@ public sealed class DiscordBot : IAsyncDisposable
 
             if (((IInteractionContext)context).Interaction?.Data is IComponentInteractionData interactionData)
             {
-                logEntryId = LoggingService.AddInteractionLogEntry(LogEntryLevel.CriticalError, interactionData.CustomId, ex);
+                logEntryId = LoggingService.AddInteractionLogEntry(LogEntryLevel.CriticalError, interactionData.CustomId, "Unhandled execution error", context.User.ToString(), ex);
             }
             else
             {
-                logEntryId = LoggingService.AddInteractionLogEntry(LogEntryLevel.CriticalError, "unknown", ex);
+                logEntryId = LoggingService.AddInteractionLogEntry(LogEntryLevel.CriticalError, "unknown", "Unhandled execution error", context.User.ToString(), ex);
             }
 
             await context.SendMessageAsync(_localizationGroup.GetFormattedText("CommandFailedMessage", "The command could not be executed. (Error code 0x{0:X}).", logEntryId ?? -1),
@@ -420,6 +420,11 @@ public sealed class DiscordBot : IAsyncDisposable
     {
         if (context is InteractionContextContainer container)
         {
+            if (((IInteractionContext)container).Interaction?.Data is IComponentInteractionData interactionData)
+            {
+                LoggingService.AddInteractionLogEntry(LogEntryLevel.CriticalError, interactionData.CustomId, "Component command executed", container.User.ToString());
+            }
+
             using (container)
             {
                 if (result.IsSuccess == false)
@@ -460,6 +465,11 @@ public sealed class DiscordBot : IAsyncDisposable
     {
         if (context is InteractionContextContainer container)
         {
+            if (((IInteractionContext)container).Interaction?.Data is IComponentInteractionData interactionData)
+            {
+                LoggingService.AddInteractionLogEntry(LogEntryLevel.CriticalError, interactionData.CustomId, "Modal executed", container.User.ToString());
+            }
+
             using (container)
             {
                 if (result.IsSuccess == false)
@@ -500,6 +510,11 @@ public sealed class DiscordBot : IAsyncDisposable
     {
         if (context is InteractionContextContainer container)
         {
+            if (((IInteractionContext)container).Interaction?.Data is IComponentInteractionData interactionData)
+            {
+                LoggingService.AddInteractionLogEntry(LogEntryLevel.CriticalError, interactionData.CustomId, "Slash command executed", container.User.ToString());
+            }
+
             using (container)
             {
                 if (result.IsSuccess == false)
