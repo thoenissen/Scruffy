@@ -82,7 +82,8 @@ public class GuildConfigurationService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <param name="type">Type</param>
-    public void SetNotificationChannel(IContextContainer commandContext, GuildChannelConfigurationType type)
+    /// <param name="messageId">Message ID</param>
+    public void SetChannel(IContextContainer commandContext, GuildChannelConfigurationType type, ulong? messageId)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
@@ -102,6 +103,7 @@ public class GuildConfigurationService : LocatedServiceBase
                                            obj.GuildId = guildId;
                                            obj.Type = type;
                                            obj.DiscordChannelId = commandContext.Channel.Id;
+                                           obj.DiscordMessageId = messageId;
                                        });
             }
         }

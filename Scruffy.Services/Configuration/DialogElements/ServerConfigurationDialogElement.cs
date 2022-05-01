@@ -102,16 +102,9 @@ public class ServerConfigurationDialogElement : DialogEmbedSelectMenuElementBase
 
                                   if (commands != null)
                                   {
-                                      try
-                                      {
-                                          await CommandContext.Guild
-                                                              .BulkOverwriteApplicationCommandsAsync(commands.ToArray())
-                                                              .ConfigureAwait(false);
-                                      }
-                                      catch
-                                      {
-                                          // TODO Currently throwing an exception after the creation of the commands
-                                      }
+                                      await CommandContext.Guild
+                                                          .BulkOverwriteApplicationCommandsAsync(commands.ToArray())
+                                                          .ConfigureAwait(false);
                                   }
 
                                   return true;

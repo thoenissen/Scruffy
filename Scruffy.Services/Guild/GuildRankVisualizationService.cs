@@ -91,17 +91,21 @@ public class GuildRankVisualizationService : LocatedServiceBase
     /// Post overview
     /// </summary>
     /// <param name="context">Context</param>
+    /// <param name="messageId">Optional message id which will be refreshed</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task<ulong> PostOverview(InteractionContextContainer context)
+    public async Task PostOverview(InteractionContextContainer context, ulong? messageId)
     {
-        var message = await context.DeferProcessing()
-                                   .ConfigureAwait(false);
+        if (messageId == null)
+        {
+            var message = await context.DeferProcessing()
+                                       .ConfigureAwait(false);
+
+            messageId = message.Id;
+        }
 
         var data = await GetOverviewData(context.Guild.Id, false).ConfigureAwait(false);
 
-        await RefreshOverviewMessage(data, 0, context.Channel.Id, message.Id).ConfigureAwait(false);
-
-        return message.Id;
+        await RefreshOverviewMessage(data, 0, context.Channel.Id, messageId.Value).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -421,6 +425,8 @@ public class GuildRankVisualizationService : LocatedServiceBase
                     page.Add(user);
                 }
 
+                data.UserCount = users.Count;
+
                 _overviews[discordServerId] = data;
             }
         }
@@ -450,7 +456,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
             pageNumber = 0;
         }
 
-        componentsBuilder.WithButton(null, $"guild;navigate_to_page_guild_ranking;0;first", ButtonStyle.Secondary, DiscordEmoteService.GetFirstEmote(_discordClient), null, pageNumber == 0);
+        componentsBuilder.WithButton(null, "guild;navigate_to_page_guild_ranking;0;first", ButtonStyle.Secondary, DiscordEmoteService.GetFirstEmote(_discordClient), null, pageNumber == 0);
         componentsBuilder.WithButton(null, $"guild;navigate_to_page_guild_ranking;{pageNumber - 1};previous", ButtonStyle.Secondary, DiscordEmoteService.GePreviousEmote(_discordClient), null, pageNumber - 1 < 0);
         componentsBuilder.WithButton(null, $"guild;navigate_to_page_guild_ranking;{pageNumber + 1};next", ButtonStyle.Secondary, DiscordEmoteService.GetNextEmote(_discordClient), null, pageNumber + 1 >= data.Pages.Count);
         componentsBuilder.WithButton(null, $"guild;navigate_to_page_guild_ranking;{data.Pages.Count - 1};last", ButtonStyle.Secondary, DiscordEmoteService.GetLastEmote(_discordClient), null, pageNumber + 1 >= data.Pages.Count);
@@ -467,7 +473,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
         var embedBuilder = new EmbedBuilder().WithTitle(LocalizationGroup.GetText("RankingOverview", "Guild ranking points overview"))
                                              .WithDescription(description)
                                              .WithColor(Color.DarkBlue)
-                                             .WithFooter(LocalizationGroup.GetFormattedText("PageFooter", "Page {0} of {1}", pageNumber, data.Pages.Count), "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
+                                             .WithFooter(LocalizationGroup.GetFormattedText("PageFooter", "Page {0} of {1}", pageNumber + 1, data.Pages.Count), "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
                                              .WithTimestamp(DateTime.Now)
                                              .WithImageUrl("attachment://chart.png");
 

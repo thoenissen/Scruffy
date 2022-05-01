@@ -364,7 +364,8 @@
       "Message": "Gib bitte den Titel der Kalenders ein."
     },
     "GuildCommandHandler": {
-      "NoChangedRequired": "Es sind keine Rangänderungen erforderlich."
+      "NoChangedRequired": "Es sind keine Rangänderungen erforderlich.",
+      "OverviewCreation": "Die Übersicht wird gerade erstellt."
     },
     "GuildConfigurationItemCustomValueDialogElement": {
       "Message": "Gib den benutzerdefinierten Wert in Kupfer ein, der dem Gegenstand zugewiesen werden soll."
@@ -400,6 +401,11 @@
       "Message": "Wähle einen der folgenden Typen aus:",
       "MessageOfTheDay": "Nachricht des Tages",
       "SpecialRankNotification": "Spezial-Ränge"
+    },
+    "GuildOverviewMessageConfigurationSelectDialogElement": {
+      "Message": "Wähle einen der folgenden Typen aus.",
+      "Ranking": "Gilden-Ranking"
+
     },
     "GuildRankDeletionDialogElement": {
       "DeletePrompt": "Bist du sicher, dass der Rang gelöscht werden soll?"

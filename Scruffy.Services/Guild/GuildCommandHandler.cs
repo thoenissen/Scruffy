@@ -162,7 +162,7 @@ public class GuildCommandHandler : LocatedServiceBase
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task PostRankingOverview(InteractionContextContainer context) => _rankVisualizationService.PostOverview(context);
+    public Task PostRankingOverview(InteractionContextContainer context) => _rankVisualizationService.PostOverview(context, null);
 
     /// <summary>
     /// Post a personal guild ranking overview
@@ -228,22 +228,22 @@ public class GuildCommandHandler : LocatedServiceBase
             {
                 case GuildNotificationChannelConfigurationSelectDialogElement.ChannelType.SpecialRankNotification:
                     {
-                        _configurationService.SetNotificationChannel(context, GuildChannelConfigurationType.SpecialRankRankChange);
+                        _configurationService.SetChannel(context, GuildChannelConfigurationType.SpecialRankRankChange, null);
                     }
                     break;
                 case GuildNotificationChannelConfigurationSelectDialogElement.ChannelType.CalendarReminderNotification:
                     {
-                        _configurationService.SetNotificationChannel(context, GuildChannelConfigurationType.CalendarReminder);
+                        _configurationService.SetChannel(context, GuildChannelConfigurationType.CalendarReminder, null);
                     }
                     break;
                 case GuildNotificationChannelConfigurationSelectDialogElement.ChannelType.GuildLogNotification:
                     {
-                        _configurationService.SetNotificationChannel(context, GuildChannelConfigurationType.GuildLogNotification);
+                        _configurationService.SetChannel(context, GuildChannelConfigurationType.GuildLogNotification, null);
                     }
                     break;
                 case GuildNotificationChannelConfigurationSelectDialogElement.ChannelType.GuildRankChangeNotification:
                     {
-                        _configurationService.SetNotificationChannel(context, GuildChannelConfigurationType.GuildRankChanges);
+                        _configurationService.SetChannel(context, GuildChannelConfigurationType.GuildRankChanges, null);
                     }
                     break;
                 case GuildNotificationChannelConfigurationSelectDialogElement.ChannelType.MessageOfTheDay:
@@ -256,6 +256,43 @@ public class GuildCommandHandler : LocatedServiceBase
                     {
                         await _configurationService.SetupCalendar(context)
                                                    .ConfigureAwait(false);
+                    }
+                    break;
+                case null:
+                default:
+                    break;
+            }
+
+            await dialogHandler.DeleteMessages()
+                               .ConfigureAwait(false);
+        }
+    }
+
+    /// <summary>
+    /// Overview message configuration
+    /// </summary>
+    /// <param name="context">Command context</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task ConfigureOverviewMessages(InteractionContextContainer context)
+    {
+        var dialogHandler = new DialogHandler(context);
+        await using (dialogHandler.ConfigureAwait(false))
+        {
+            var type = await dialogHandler.Run<GuildOverviewMessageConfigurationSelectDialogElement, GuildOverviewMessageConfigurationSelectDialogElement.MessageType?>()
+                                          .ConfigureAwait(false);
+
+            switch (type)
+            {
+                case GuildOverviewMessageConfigurationSelectDialogElement.MessageType.Ranking:
+                    {
+                        var message = await context.Channel
+                                                   .SendMessageAsync(DiscordEmoteService.GetLoadingEmote(context.Client) + " " + LocalizationGroup.GetText("OverviewCreation", "The overview is being created."))
+                                                   .ConfigureAwait(false);
+
+                        _configurationService.SetChannel(context, GuildChannelConfigurationType.GuildOverviewRanking, message.Id);
+
+                        await _rankVisualizationService.PostOverview(context, message.Id)
+                                                       .ConfigureAwait(false);
                     }
                     break;
                 case null:

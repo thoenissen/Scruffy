@@ -34,4 +34,9 @@ public enum GuildChannelConfigurationType
     /// Guild rank changes
     /// </summary>
     GuildRankChanges = 4000,
+
+    /// <summary>
+    /// Guid ranking overview
+    /// </summary>
+    GuildOverviewRanking = 5000,
 }

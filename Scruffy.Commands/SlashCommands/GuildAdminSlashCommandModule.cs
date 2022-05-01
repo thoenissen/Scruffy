@@ -37,6 +37,8 @@ public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
         VoiceActivity,
         [ChoiceDisplay("Notification channels")]
         NotificationChannels,
+        [ChoiceDisplay("Overview")]
+        Overviews
     }
 
     /// <summary>
@@ -135,6 +137,13 @@ public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
             case ConfigurationType.NotificationChannels:
                 {
                     await CommandHandler.ConfigureNotificationChannel(Context)
+                                        .ConfigureAwait(false);
+                }
+                break;
+
+            case ConfigurationType.Overviews:
+                {
+                    await CommandHandler.ConfigureOverviewMessages(Context)
                                         .ConfigureAwait(false);
                 }
                 break;
