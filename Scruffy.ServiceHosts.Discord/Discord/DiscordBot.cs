@@ -386,7 +386,7 @@ public sealed class DiscordBot : IAsyncDisposable
         {
             if (ex is ScruffyUserMessageException userException)
             {
-                await context.ReplyAsync($"{context.User.Mention} {userException.GetLocalizedMessage()}", ephemeral: true)
+                await context.SendMessageAsync($"{context.User.Mention} {userException.GetLocalizedMessage()}", ephemeral: true)
                              .ConfigureAwait(false);
             }
         }
@@ -403,43 +403,9 @@ public sealed class DiscordBot : IAsyncDisposable
                 logEntryId = LoggingService.AddInteractionLogEntry(LogEntryLevel.CriticalError, "unknown", ex);
             }
 
-            var client = context.ServiceProvider.GetService<IHttpClientFactory>().CreateClient();
-
-            using (var response = await client.GetAsync("https://g.tenor.com/v1/search?q=funny%20cat&key=RXM3VE2UGRU9&limit=50&contentfilter=high&ar_range=all")
-                                              .ConfigureAwait(false))
-            {
-                var jsonResult = await response.Content
-                                               .ReadAsStringAsync()
-                                               .ConfigureAwait(false);
-
-                var searchResult = JsonConvert.DeserializeObject<SearchResultRoot>(jsonResult);
-                if (searchResult != null)
-                {
-                    var tenorEntry = searchResult.Results[new Random(DateTime.Now.Millisecond).Next(0, searchResult.Results.Count - 1)];
-
-                    var gifUrl = tenorEntry.Media[0].Gif.Size < 8_388_608
-                                        ? tenorEntry.Media[0].Gif.Url
-                                        : tenorEntry.Media[0].MediumGif.Size < 8_388_608
-                                            ? tenorEntry.Media[0].MediumGif.Url
-                                            : tenorEntry.Media[0].NanoGif.Url;
-
-                    using (var downloadResponse = await client.GetAsync(gifUrl)
-                                                              .ConfigureAwait(false))
-                    {
-                        var stream = await downloadResponse.Content
-                                                           .ReadAsStreamAsync()
-                                                           .ConfigureAwait(false);
-
-                        await using (stream.ConfigureAwait(false))
-                        {
-                            await context.ReplyAsync(_localizationGroup.GetFormattedText("CommandFailedMessage", "The command could not be executed. But I have an error code ({0}) and funny cat picture.", logEntryId ?? -1),
-                                                     ephemeral: true,
-                                                     attachments: new[] { new FileAttachment(stream, "cat.gif") })
-                                         .ConfigureAwait(false);
-                        }
-                    }
-                }
-            }
+            await context.SendMessageAsync(_localizationGroup.GetFormattedText("CommandFailedMessage", "The command could not be executed. (Error code 0x{0:X}).", logEntryId ?? -1),
+                                           ephemeral: true)
+                         .ConfigureAwait(false);
         }
     }
 

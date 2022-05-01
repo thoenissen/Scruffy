@@ -570,14 +570,22 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                                      .ConfigureAwait(false);
                     await using (scopeLock.ConfigureAwait(false))
                     {
-                        await message.ModifyAsync(obj =>
-                                                  {
-                                                      obj.Content = null;
-                                                      obj.Embed = embedBuilder.Build();
-                                                      obj.Components = componentsBuilder.Build();
-                                                      obj.Attachments = new[] { new FileAttachment(chartStream, "chart.png") };
-                                                  })
-                                     .ConfigureAwait(false);
+                        try
+                        {
+                            await message.ModifyAsync(obj =>
+                                                      {
+                                                          obj.Content = null;
+                                                          obj.Embed = embedBuilder.Build();
+                                                          obj.Components = componentsBuilder.Build();
+                                                          obj.Attachments = new[] { new FileAttachment(chartStream, "chart.png") };
+                                                      })
+                                         .ConfigureAwait(false);
+                        }
+                        catch (ObjectDisposedException)
+                        {
+                            // TODO Reproduce error
+                            // Sometime if multiple buttons are executed the internal stream gets disposed
+                        }
                     }
                 }
             }

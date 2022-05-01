@@ -275,7 +275,7 @@
       "PleaseTryAgain": "Deine Eingabe war ungültig. Versuche es noch einmal."
     },
     "DiscordBot": {
-      "CommandFailedMessage": "Der Befehl konnte nicht ausgeführt werden. Aber dafür habe ich einen Fehlercode ({0}) und ein lustiges Katzenbild für dich."
+      "CommandFailedMessage": "Der Befehl konnte nicht ausgeführt werden. (Fehlercode 0x{0})"
     },
     "FractalLfgCreationAliasNameDialogElement": {
       "Message": "Gib bitte den zu verwendende Aliasnamen ein."
