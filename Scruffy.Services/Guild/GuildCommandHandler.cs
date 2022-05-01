@@ -499,5 +499,13 @@ public class GuildCommandHandler : LocatedServiceBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task CheckGuildWarsAccounts(InteractionContextContainer context) => _accountAdministrationService.Validate(context);
 
+    /// <summary>
+    /// Navigate to guild ranking overview page
+    /// </summary>
+    /// <param name="context">Context</param>
+    /// <param name="page">Page number</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public Task NavigateToPageGuildRanking(InteractionContextContainer context, int page) => _rankVisualizationService.RefreshOverview(context.Guild.Id, context.Channel.Id, context.Message.Id, page, false);
+
     #endregion // Methods
 }

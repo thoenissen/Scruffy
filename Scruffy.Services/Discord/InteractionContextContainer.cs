@@ -68,6 +68,11 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
     /// </summary>
     public ICommandInfo Command { get; internal set; }
 
+    /// <summary>
+    /// Message
+    /// </summary>
+    public IMessage Message => (_interaction as IComponentInteraction)?.Message;
+
     #endregion Propeties
 
     #region Methods
