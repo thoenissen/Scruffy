@@ -8,6 +8,7 @@ using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Account;
 using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Entity.Repositories.Guild;
+using Scruffy.Data.Entity.Repositories.GuildWars2.Account;
 using Scruffy.Data.Entity.Repositories.GuildWars2.GameData;
 using Scruffy.Data.Enumerations.Guild;
 using Scruffy.Data.Enumerations.GuildWars2;
@@ -15,7 +16,6 @@ using Scruffy.Services.Core;
 using Scruffy.Services.Core.Extensions;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord;
-using Scruffy.Services.Discord.Interfaces;
 using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.Guild;
@@ -536,11 +536,17 @@ public class GuildExportService : LocatedServiceBase
 
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
+            var today = DateTime.Today;
+
             var guildId = dbFactory.GetRepository<GuildRepository>()
                                    .GetQuery()
                                    .Where(obj => obj.DiscordServerId == commandContext.Guild.Id)
                                    .Select(obj => obj.GuildId)
                                    .FirstOrDefault();
+
+            var characters = dbFactory.GetRepository<GuildWarsAccountHistoricCharacterRepository>()
+                                      .GetQuery()
+                                      .Select(obj => obj);
 
             var entries = await dbFactory.GetRepository<AccountRepository>()
                                          .GetQuery()
@@ -551,7 +557,11 @@ public class GuildExportService : LocatedServiceBase
                                                                                   .DiscordAccounts
                                                                                   .Select(obj2 => obj2.Id)
                                                                                   .FirstOrDefault(),
-                                                            obj.ApiKey
+                                                            CharactersCount = characters.Count(obj2 => obj2.Date == today
+                                                                                                    && obj2.AccountName == obj.Name),
+                                                            CharactersRepresentationCount = characters.Count(obj2 => obj2.Date == today
+                                                                                                                  && obj2.AccountName == obj.Name
+                                                                                                                  && obj2.GuildId == guildId)
                                                         })
                                          .ToListAsync()
                                          .ConfigureAwait(false);
@@ -574,14 +584,7 @@ public class GuildExportService : LocatedServiceBase
 
                 if (user != null)
                 {
-                    var connector = new GuidWars2ApiConnector(entry.ApiKey);
-                    await using (connector.ConfigureAwait(false))
-                    {
-                        var characters = await connector.GetCharactersAsync()
-                                                        .ConfigureAwait(false);
-
-                        accounts.Add((user.TryGetDisplayName(), entry.Name, characters?.Count ?? 0, characters?.Count(obj => obj.Guild == guildId) ?? 0));
-                    }
+                    accounts.Add((user.TryGetDisplayName(), entry.Name, entry.CharactersCount, entry.CharactersRepresentationCount));
                 }
             }
 
@@ -594,10 +597,10 @@ public class GuildExportService : LocatedServiceBase
                     await writer.WriteLineAsync("User;AccountName;Characters;Representation;Percentage")
                                 .ConfigureAwait(false);
 
-                    foreach (var (user, accountName, characters, representation) in accounts.OrderBy(obj => obj.User)
+                    foreach (var (user, accountName, charactersCount, representationCount) in accounts.OrderBy(obj => obj.User)
                                                                                             .ThenBy(obj => obj.AccountName))
                     {
-                        await writer.WriteLineAsync($"{user};{accountName};{characters};{representation};{(characters != 0 ? representation / (double)characters : 0)}")
+                        await writer.WriteLineAsync($"{user};{accountName};{charactersCount};{representationCount};{(charactersCount != 0 ? representationCount / (double)charactersCount : 0)}")
                                     .ConfigureAwait(false);
                     }
 
