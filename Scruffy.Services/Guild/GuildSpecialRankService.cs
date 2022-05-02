@@ -54,6 +54,8 @@ public class GuildSpecialRankService : LocatedServiceBase
         await commandContext.DeferProcessing()
                             .ConfigureAwait(false);
 
+        var isFirstReply = true;
+
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
             foreach (var configuration in dbFactory.GetRepository<GuildSpecialRankConfigurationRepository>()
@@ -198,8 +200,18 @@ public class GuildSpecialRankService : LocatedServiceBase
 
                     await using (chartStream.ConfigureAwait(false))
                     {
-                        await commandContext.ReplyAsync(attachments: new[] { new FileAttachment(chartStream, "chart.png") })
-                                            .ConfigureAwait(false);
+                        if (isFirstReply)
+                        {
+                            isFirstReply = false;
+
+                            await commandContext.ReplyAsync(attachments: new[] { new FileAttachment(chartStream, "chart.png") })
+                                                .ConfigureAwait(false);
+                        }
+                        else
+                        {
+                            await commandContext.SendMessageAsync(attachments: new[] { new FileAttachment(chartStream, "chart.png") })
+                                                .ConfigureAwait(false);
+                        }
                     }
                 }
             }
