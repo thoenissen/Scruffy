@@ -7,7 +7,6 @@ using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
 using Scruffy.Services.Discord;
-using Scruffy.Services.Discord.Interfaces;
 using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.Guild;
@@ -161,6 +160,8 @@ public class GuildBankService : LocatedServiceBase
         await commandContext.DeferProcessing()
                             .ConfigureAwait(false);
 
+        var isFirstReply = true;
+
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
             var guild = dbFactory.GetRepository<GuildRepository>()
@@ -248,8 +249,18 @@ public class GuildBankService : LocatedServiceBase
 
                                 builder.AddField(LocalizationGroup.GetFormattedText("DyesFields", "Dyes #{0}", fieldCounter), fieldBuilder.ToString(), true);
 
-                                await commandContext.ReplyAsync(embed: builder.Build())
-                                                    .ConfigureAwait(false);
+                                if (isFirstReply)
+                                {
+                                    isFirstReply = false;
+
+                                    await commandContext.ReplyAsync(embed: builder.Build())
+                                                        .ConfigureAwait(false);
+                                }
+                                else
+                                {
+                                    await commandContext.SendMessageAsync(embed: builder.Build())
+                                                        .ConfigureAwait(false);
+                                }
                             }
                         }
                     }
