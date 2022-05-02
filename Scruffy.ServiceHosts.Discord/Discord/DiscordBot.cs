@@ -249,23 +249,13 @@ public sealed class DiscordBot : IAsyncDisposable
                 {
                     switch (result.Error)
                     {
-                        case CommandError.UnknownCommand:
-                        case CommandError.ParseFailed:
                         case CommandError.BadArgCount:
-                        case CommandError.ObjectNotFound:
                         case CommandError.MultipleMatches:
                             {
-                                var pos = 0;
-
-                                if (container.Message.HasStringPrefix(_prefixResolver.GetPrefix(container.Message), ref pos, StringComparison.InvariantCultureIgnoreCase)
-                                 || container.Message.HasMentionPrefix(_discordClient.CurrentUser, ref pos))
-                                {
-                                    await container.Operations
-                                                   .ShowHelp(container.Message.Content[pos..])
-                                                   .ConfigureAwait(false);
-                                }
+                                await context.Channel
+                                             .SendMessageAsync(_localizationGroup.GetText("TextCommandMigration", "Text commands aren't available anymore. You can execute the slash command`/help` to show all available commands."))
+                                             .ConfigureAwait(false);
                             }
-
                             break;
 
                         case CommandError.Exception:
@@ -284,6 +274,10 @@ public sealed class DiscordBot : IAsyncDisposable
                                                .ConfigureAwait(false);
                             }
                             break;
+
+                        case CommandError.UnknownCommand:
+                        case CommandError.ParseFailed:
+                        case CommandError.ObjectNotFound:
                         case CommandError.Unsuccessful:
                         default:
                             break;

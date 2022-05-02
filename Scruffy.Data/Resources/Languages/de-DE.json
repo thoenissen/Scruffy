@@ -275,7 +275,8 @@
       "PleaseTryAgain": "Deine Eingabe war ungültig. Versuche es noch einmal."
     },
     "DiscordBot": {
-      "CommandFailedMessage": "Der Befehl konnte nicht ausgeführt werden. (Fehlercode 0x{0})"
+      "CommandFailedMessage": "Der Befehl konnte nicht ausgeführt werden. (Fehlercode 0x{0})",
+      "TextCommandMigration": "Textbasierte Befehle stehen nicht mehr zur Verfügung. Du kannst dir über den Slash Command `/help` alle zur Verfügung stehenden Slash Commands anzeigen lassen."
     },
     "FractalLfgCreationAliasNameDialogElement": {
       "Message": "Gib bitte den zu verwendende Aliasnamen ein."

@@ -168,21 +168,6 @@ public sealed class CommandContextContainer : ICommandContext, ICommandContextOp
                                                                                               .ConfigureAwait(false);
 
     /// <summary>
-    /// Show help of the given command
-    /// </summary>
-    /// <param name="commandName">Command name</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    async Task ICommandContextOperations.ShowHelp(string commandName)
-    {
-        var helpService = ServiceProvider.GetService<CommandHelpService>();
-        if (helpService != null)
-        {
-            await helpService.ShowHelp(this)
-                             .ConfigureAwait(false);
-        }
-    }
-
-    /// <summary>
     /// Show unmet precondition hint
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
