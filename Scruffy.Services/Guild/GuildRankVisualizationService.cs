@@ -173,138 +173,146 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                                       Type = obj.Key,
                                                       Points = obj.Sum(obj2 => obj2.Points)
                                                   })
-                                     .Where(obj => obj.Points != 0)
+                                   .Where(obj => obj.Points != 0)
                                    .OrderByDescending(obj => obj.Points)
                                    .ToList();
 
-        var summedPoints = userPoints.Sum(obj => obj.Points);
-
-        var rank = _dbFactory.GetRepository<GuildRankCurrentPointsRepository>()
-                             .GetQuery()
-                             .Where(obj => obj.Date >= limit
-                                        && obj.Date < today
-                                        && obj.Guild.DiscordServerId == context.Guild.Id
-                                        && obj.UserId != user.Id
-                                        && accountsQuery.Any(obj2 => obj2.UserId == obj.UserId
-                                                                  && guildMemberQuery.Any(obj3 => obj3.Name == obj2.Name
-                                                                                               && obj3.GuildId == obj.GuildId)))
-                             .GroupBy(obj => obj.UserId)
-                             .Select(obj => new
-                                            {
-                                                UserId = obj.Key,
-                                                Points = obj.Sum(obj2 => obj2.Points)
-                                            })
-                             .Count(obj => obj.Points > summedPoints)
-                 + 1;
-
-        var descriptionBuilder = new StringBuilder();
-
-        descriptionBuilder.Append(LocalizationGroup.GetText("RankingUser", "User"));
-        descriptionBuilder.Append(": ");
-        descriptionBuilder.Append(guildUser.Mention);
-        descriptionBuilder.Append(Environment.NewLine);
-
-        descriptionBuilder.Append(LocalizationGroup.GetText("RankingRank", "Rank"));
-        descriptionBuilder.Append(": ");
-        descriptionBuilder.Append(rank);
-
-        if (rank == 1)
+        if (userPoints.Count > 0)
         {
-            descriptionBuilder.Append(' ');
-            descriptionBuilder.Append(DiscordEmoteService.GetGuildWars2GoldEmote(context.Client));
-        }
-        else if (rank == 2)
-        {
-            descriptionBuilder.Append(' ');
-            descriptionBuilder.Append(DiscordEmoteService.GetGuildWars2SilverEmote(context.Client));
-        }
-        else if (rank  == 3)
-        {
-            descriptionBuilder.Append(' ');
-            descriptionBuilder.Append(DiscordEmoteService.GetGuildWars2CopperEmote(context.Client));
-        }
+            var summedPoints = userPoints.Sum(obj => obj.Points);
 
-        descriptionBuilder.Append(Environment.NewLine);
+            var rank = _dbFactory.GetRepository<GuildRankCurrentPointsRepository>()
+                                 .GetQuery()
+                                 .Where(obj => obj.Date >= limit
+                                            && obj.Date < today
+                                            && obj.Guild.DiscordServerId == context.Guild.Id
+                                            && obj.UserId != user.Id
+                                            && accountsQuery.Any(obj2 => obj2.UserId == obj.UserId
+                                                                      && guildMemberQuery.Any(obj3 => obj3.Name == obj2.Name
+                                                                                                   && obj3.GuildId == obj.GuildId)))
+                                 .GroupBy(obj => obj.UserId)
+                                 .Select(obj => new
+                                                {
+                                                    UserId = obj.Key,
+                                                    Points = obj.Sum(obj2 => obj2.Points)
+                                                })
+                                 .Count(obj => obj.Points > summedPoints)
+                     + 1;
 
-        descriptionBuilder.Append(LocalizationGroup.GetText("RankingPoints", "Points"));
-        descriptionBuilder.Append(": ");
-        descriptionBuilder.Append(summedPoints.ToString("0.00", LocalizationGroup.CultureInfo));
-        descriptionBuilder.Append(Environment.NewLine);
+            var descriptionBuilder = new StringBuilder();
 
-        var embedBuilder = new EmbedBuilder()
-                .WithTitle($"{LocalizationGroup.GetText("RankingPersonalOverview", "Guild ranking personal points overview")}")
-                .WithDescription(descriptionBuilder.ToString())
-                .WithColor(Color.DarkBlue)
-                .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
-                .WithTimestamp(DateTime.Now)
-                .WithImageUrl("attachment://chart.png");
+            descriptionBuilder.Append(LocalizationGroup.GetText("RankingUser", "User"));
+            descriptionBuilder.Append(": ");
+            descriptionBuilder.Append(guildUser.Mention);
+            descriptionBuilder.Append(Environment.NewLine);
 
-        var chartConfiguration = new ChartConfigurationData
-                                 {
-                                     Type = "bar",
-                                     Data = new Data.Json.QuickChart.Data
-                                            {
-                                                DataSets = new List<DataSet>
-                                                           {
-                                                               new DataSet<double>
+            descriptionBuilder.Append(LocalizationGroup.GetText("RankingRank", "Rank"));
+            descriptionBuilder.Append(": ");
+            descriptionBuilder.Append(rank);
+
+            if (rank == 1)
+            {
+                descriptionBuilder.Append(' ');
+                descriptionBuilder.Append(DiscordEmoteService.GetGuildWars2GoldEmote(context.Client));
+            }
+            else if (rank == 2)
+            {
+                descriptionBuilder.Append(' ');
+                descriptionBuilder.Append(DiscordEmoteService.GetGuildWars2SilverEmote(context.Client));
+            }
+            else if (rank  == 3)
+            {
+                descriptionBuilder.Append(' ');
+                descriptionBuilder.Append(DiscordEmoteService.GetGuildWars2CopperEmote(context.Client));
+            }
+
+            descriptionBuilder.Append(Environment.NewLine);
+
+            descriptionBuilder.Append(LocalizationGroup.GetText("RankingPoints", "Points"));
+            descriptionBuilder.Append(": ");
+            descriptionBuilder.Append(summedPoints.ToString("0.00", LocalizationGroup.CultureInfo));
+            descriptionBuilder.Append(Environment.NewLine);
+
+            var embedBuilder = new EmbedBuilder()
+                               .WithTitle($"{LocalizationGroup.GetText("RankingPersonalOverview", "Guild ranking personal points overview")}")
+                               .WithDescription(descriptionBuilder.ToString())
+                               .WithColor(Color.DarkBlue)
+                               .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
+                               .WithTimestamp(DateTime.Now)
+                               .WithImageUrl("attachment://chart.png");
+
+            var chartConfiguration = new ChartConfigurationData
+                                     {
+                                         Type = "bar",
+                                         Data = new Data.Json.QuickChart.Data
+                                                {
+                                                    DataSets = new List<DataSet>
                                                                {
-                                                                   BorderColor = "#333333",
-                                                                   BackgroundColor = new List<string>
-                                                                                     {
-                                                                                         "#0d1c26",
-                                                                                         "#142b39",
-                                                                                         "#1d3e53",
-                                                                                         "#21475e",
-                                                                                         "#2e6384",
-                                                                                         "#357197",
-                                                                                         "#3c80aa",
-                                                                                         "#428ebd",
-                                                                                         "#5599c3",
-                                                                                         "#68a4ca"
-                                                                                     },
-                                                                   Data = userPoints.Select(obj => obj.Points)
-                                                                                    .ToList()
+                                                                   new DataSet<double>
+                                                                   {
+                                                                       BorderColor = "#333333",
+                                                                       BackgroundColor = new List<string>
+                                                                                         {
+                                                                                             "#0d1c26",
+                                                                                             "#142b39",
+                                                                                             "#1d3e53",
+                                                                                             "#21475e",
+                                                                                             "#2e6384",
+                                                                                             "#357197",
+                                                                                             "#3c80aa",
+                                                                                             "#428ebd",
+                                                                                             "#5599c3",
+                                                                                             "#68a4ca"
+                                                                                         },
+                                                                       Data = userPoints.Select(obj => obj.Points)
+                                                                                        .ToList()
+                                                                   }
+                                                               },
+                                                    Labels = userPoints.Select(obj => $"{LocalizationGroup.GetText(obj.Type.ToString(), obj.Type.ToString())} ({obj.Points.ToString("0.##", LocalizationGroup.CultureInfo)})")
+                                                                       .ToList()
+                                                },
+                                         Options = new OptionsCollection
+                                                   {
+                                                       Plugins = new PluginsCollection
+                                                                 {
+                                                                     Legend = false
+                                                                 },
+                                                       Title = new TitleConfiguration
+                                                               {
+                                                                   Display = true,
+                                                                   FontColor = "white",
+                                                                   FontSize = 26,
+                                                                   Text = LocalizationGroup.GetText("MeOverviewChartTitle", "Point distribution")
                                                                }
-                                                           },
-                                                Labels = userPoints.Select(obj => $"{LocalizationGroup.GetText(obj.Type.ToString(), obj.Type.ToString())} ({obj.Points.ToString("0.##", LocalizationGroup.CultureInfo)})")
-                                                                   .ToList()
-                                            },
-                                     Options = new OptionsCollection
-                                               {
-                                                   Plugins = new PluginsCollection
-                                                             {
-                                                                 Legend = false
-                                                             },
-                                                   Title = new TitleConfiguration
-                                                           {
-                                                               Display = true,
-                                                               FontColor = "white",
-                                                               FontSize = 26,
-                                                               Text = LocalizationGroup.GetText("MeOverviewChartTitle", "Point distribution")
-                                                           }
-                                               }
-                                 };
+                                                   }
+                                     };
 
-        var chartStream = await _quickChartConnector.GetChartAsStream(new ChartData
-                                                                      {
-                                                                          Width = 600,
-                                                                          Height = 500,
-                                                                          BackgroundColor = "#2f3136",
-                                                                          Format = "png",
-                                                                          Config = JsonConvert.SerializeObject(chartConfiguration,
-                                                                                                               new JsonSerializerSettings
-                                                                                                               {
-                                                                                                                   NullValueHandling = NullValueHandling.Ignore
-                                                                                                               })
-                                                                      })
-                                                    .ConfigureAwait(false);
+            var chartStream = await _quickChartConnector.GetChartAsStream(new ChartData
+                                                                          {
+                                                                              Width = 600,
+                                                                              Height = 500,
+                                                                              BackgroundColor = "#2f3136",
+                                                                              Format = "png",
+                                                                              Config = JsonConvert.SerializeObject(chartConfiguration,
+                                                                                                                   new JsonSerializerSettings
+                                                                                                                   {
+                                                                                                                       NullValueHandling = NullValueHandling.Ignore
+                                                                                                                   })
+                                                                          })
+                                                        .ConfigureAwait(false);
 
-        await using (chartStream.ConfigureAwait(false))
+            await using (chartStream.ConfigureAwait(false))
+            {
+                embedBuilder.WithImageUrl("attachment://chart.png");
+
+                await context.ReplyAsync(embed: embedBuilder.Build(),
+                                         attachments: new[] { new FileAttachment(chartStream, "chart.png") })
+                             .ConfigureAwait(false);
+            }
+        }
+        else
         {
-            embedBuilder.WithImageUrl("attachment://chart.png");
-
-            await context.ReplyAsync(embed: embedBuilder.Build(),
-                                     attachments: new[] { new FileAttachment(chartStream, "chart.png") })
+            await context.ReplyAsync(LocalizationGroup.GetText("NoPersonalData", "No ranking data is available."))
                          .ConfigureAwait(false);
         }
     }
