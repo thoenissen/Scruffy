@@ -416,7 +416,7 @@ public sealed class DiscordBot : IAsyncDisposable
         {
             if (((IInteractionContext)container).Interaction?.Data is IComponentInteractionData interactionData)
             {
-                LoggingService.AddInteractionLogEntry(LogEntryLevel.CriticalError, interactionData.CustomId, "Component command executed", container.User.ToString());
+                LoggingService.AddInteractionLogEntry(LogEntryLevel.Information, interactionData.CustomId, "Component command executed", container.User.ToString());
             }
 
             using (container)
@@ -461,7 +461,7 @@ public sealed class DiscordBot : IAsyncDisposable
         {
             if (((IInteractionContext)container).Interaction?.Data is IComponentInteractionData interactionData)
             {
-                LoggingService.AddInteractionLogEntry(LogEntryLevel.CriticalError, interactionData.CustomId, "Modal executed", container.User.ToString());
+                LoggingService.AddInteractionLogEntry(LogEntryLevel.Information, interactionData.CustomId, "Modal executed", container.User.ToString());
             }
 
             using (container)
@@ -506,7 +506,7 @@ public sealed class DiscordBot : IAsyncDisposable
         {
             if (((IInteractionContext)container).Interaction?.Data is IComponentInteractionData interactionData)
             {
-                LoggingService.AddInteractionLogEntry(LogEntryLevel.CriticalError, interactionData.CustomId, "Slash command executed", container.User.ToString());
+                LoggingService.AddInteractionLogEntry(LogEntryLevel.Information, interactionData.CustomId, "Slash command executed", container.User.ToString());
             }
 
             using (container)
