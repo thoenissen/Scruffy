@@ -86,5 +86,34 @@ public class AdministrationCommandHandler : LocatedServiceBase
         }
     }
 
+    /// <summary>
+    /// Move users to another channel
+    /// </summary>
+    /// <param name="context">Context</param>
+    /// <param name="source">Source</param>
+    /// <param name="destination">Destination</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public async Task MoveUsers(InteractionContextContainer context, IVoiceChannel source, IVoiceChannel destination)
+    {
+        var message = await context.DeferProcessing()
+                                   .ConfigureAwait(false);
+
+        var moveTasks = new List<Task>();
+
+        await foreach (var users in source.GetUsersAsync())
+        {
+            foreach (var user in users)
+            {
+                moveTasks.Add(context.Guild.MoveAsync(user, destination));
+            }
+        }
+
+        await Task.WhenAll(moveTasks)
+                  .ConfigureAwait(false);
+
+        await message.DeleteAsync()
+                     .ConfigureAwait(false);
+    }
+
     #endregion // Methods
 }

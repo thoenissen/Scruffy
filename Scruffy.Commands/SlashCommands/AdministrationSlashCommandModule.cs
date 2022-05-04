@@ -55,7 +55,17 @@ public class AdministrationSlashCommandModule : SlashCommandModuleBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("rename-role", "Renaming a user")]
     public Task RenameRole([Summary("Role", "Role")]IRole member,
-                             [Summary("Name", "New name")]string name) => CommandHandler.RenameRole(Context, member, name);
+                           [Summary("Name", "New name")]string name) => CommandHandler.RenameRole(Context, member, name);
+
+    /// <summary>
+    /// Moves users
+    /// </summary>
+    /// <param name="source">Source</param>
+    /// <param name="destination">Destination</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [SlashCommand("move", "Move users from one channel to another")]
+    public Task MoveUsers([Summary("Source", "Source channel")] IVoiceChannel source,
+                          [Summary("Destination", "Destination channel")] IVoiceChannel destination) => CommandHandler.MoveUsers(Context, source, destination);
 
     #endregion // Methods
 }
