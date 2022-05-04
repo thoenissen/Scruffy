@@ -180,7 +180,7 @@ public class RaidRegistrationService : LocatedServiceBase
                          .Remove(obj => obj.Id == registration.Id);
 
                 if ((registration.AvailableSlots != null
-                  && registration.AvailableSlots != registration.Registrations)
+                  && registration.AvailableSlots > registration.Registrations)
                  || registration.IsDeadlineReached)
                 {
                     success = true;

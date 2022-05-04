@@ -111,7 +111,7 @@ public class GuildRankAssignmentJob : LocatedAsyncJob
                                                                                     {
                                                                                         RankId = obj.Id,
                                                                                         Order = obj.Order,
-                                                                                        Slots = (int)Math.Round(obj.Percentage * users.Count)
+                                                                                        Slots = (int)Math.Round(obj.Percentage * users.Count, MidpointRounding.AwayFromZero)
                                                                                     }));
 
             var currentAssignment = ranksStack.Peek();
