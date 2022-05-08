@@ -96,7 +96,7 @@ public class CalendarScheduleService : LocatedServiceBase
                             var additionalData = JsonConvert.DeserializeObject<WeekDayOfMonthData>(schedule.AdditionalData);
 
                             var currentDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-                            var endDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(3);
+                            var endDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(4);
 
                             bool CheckOptions(DateTime timeStamp)
                             {
