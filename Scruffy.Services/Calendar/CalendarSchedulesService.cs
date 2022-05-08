@@ -115,6 +115,12 @@ public class CalendarScheduleService : LocatedServiceBase
                                             isValid = timeStamp.Month % 2 == 1;
                                         }
                                         break;
+
+                                    case WeekDayOfMonthSpecialOptions.MonthSelection:
+                                        {
+                                            isValid = additionalData.OptionsData != null && JsonConvert.DeserializeObject<List<int>>(additionalData.OptionsData)?.Contains(timeStamp.Month) == true;
+                                        }
+                                        break;
                                 }
 
                                 return isValid;

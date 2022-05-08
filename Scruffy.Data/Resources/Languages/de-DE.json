@@ -146,12 +146,16 @@
       "EditScheduleCommand": "{0} Zeitplan bearbeiten",
       "EditTemplateCommand": "{0} Schablone bearbeiten"
     },
+    "CalendarScheduleMonthSelectionDialogElement": {
+      "Message": "Wähle die Monate aus:" 
+    },
     "CalendarScheduleOccurenceCountDialogElement": {
       "Message": "Bitte gib an, am wievielten {0} im Monat der Termin angelegt werden soll oder null, wenn der Termin jede Woche stattfinden soll."
     },
     "CalendarScheduleOptionsDialogElement": {
       "Description": "Wähle bitte eine der folgenden Optionen:",
       "EvenMonth": "Grade Monate",
+      "MonthSelection": "Monatsauswahl",
       "None": "Keine Optionen",
       "Reactions": "Optionen",
       "Title": "Auswahl der Zeitplanoptionen",

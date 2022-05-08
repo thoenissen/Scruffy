@@ -82,6 +82,12 @@ public class CalendarScheduleOptionsDialogElement : DialogEmbedReactionElementBa
                                       Emote = Emoji.Parse(":three:"),
                                       CommandText = $"{Emoji.Parse(":three:")} {LocalizationGroup.GetText(WeekDayOfMonthSpecialOptions.UnevenMonth.ToString(), "Uneven month")}",
                                       Func = () => Task.FromResult(WeekDayOfMonthSpecialOptions.UnevenMonth)
+                                  },
+                                  new()
+                                  {
+                                      Emote = Emoji.Parse(":four:"),
+                                      CommandText = $"{Emoji.Parse(":four:")} {LocalizationGroup.GetText(WeekDayOfMonthSpecialOptions.MonthSelection.ToString(), "Month selection")}",
+                                      Func = () => Task.FromResult(WeekDayOfMonthSpecialOptions.MonthSelection)
                                   }
                               };
     }

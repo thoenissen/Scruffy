@@ -18,5 +18,10 @@ public enum  WeekDayOfMonthSpecialOptions
     /// <summary>
     /// Only uneven month
     /// </summary>
-    UnevenMonth
+    UnevenMonth,
+
+    /// <summary>
+    /// Selection of months
+    /// </summary>
+    MonthSelection,
 }

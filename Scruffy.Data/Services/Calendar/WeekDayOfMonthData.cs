@@ -24,5 +24,10 @@ public class WeekDayOfMonthData
     /// </summary>
     public WeekDayOfMonthSpecialOptions Options { get; set; }
 
+    /// <summary>
+    /// Additional data for the selected option
+    /// </summary>
+    public string OptionsData { get; set; }
+
     #endregion // Properties
 }

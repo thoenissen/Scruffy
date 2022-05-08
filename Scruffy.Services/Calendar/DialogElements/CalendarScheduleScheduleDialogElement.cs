@@ -94,11 +94,19 @@ public class CalendarScheduleScheduleDialogElement : DialogEmbedMessageElementBa
                     {
                         var typeData = await RunSubForm<CreateWeekDayOfMonthForm>().ConfigureAwait(false);
 
+                        object optionsData = null;
+
+                        if (typeData.Options == WeekDayOfMonthSpecialOptions.MonthSelection)
+                        {
+                            optionsData = await RunSubElement<CalendarScheduleMonthSelectionDialogElement, List<int>>().ConfigureAwait(false);
+                        }
+
                         additionalData = new WeekDayOfMonthData
                                          {
                                              DayOfWeek = typeData.DayOfWeek,
                                              OccurenceCount = typeData.OccurenceCount,
-                                             Options = typeData.Options
+                                             Options = typeData.Options,
+                                             OptionsData = optionsData != null ? JsonConvert.SerializeObject(optionsData) : null
                                          };
                     }
                     break;
