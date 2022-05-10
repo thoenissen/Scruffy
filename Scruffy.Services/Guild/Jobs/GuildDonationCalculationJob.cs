@@ -331,7 +331,8 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
                                 calculatedValue = (item.VendorValue.Value, false);
                             }
                         }
-                        else
+
+                        if (calculatedValue == null)
                         {
                             if (recipes.TryGetValue(itemId, out var recipe) == false)
                             {
@@ -432,7 +433,8 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
                                                           || logEntries.Any(obj2 => obj2.Time >= obj.Time
                                                                                  && obj2.UpgradeId == obj.UpgradeId
                                                                                  && obj2.Type == GuildLogEntryEntity.Types.Upgrade
-                                                                                 && obj2.Action == GuildLogEntryEntity.Actions.Completed
+                                                                                 && (obj2.Action == GuildLogEntryEntity.Actions.Completed
+                                                                                  || obj2.Action == GuildLogEntryEntity.Actions.Complete)
                                                                                  && obj2.IsProcessed)))
                                               .ToListAsync()
                                               .ConfigureAwait(false))
