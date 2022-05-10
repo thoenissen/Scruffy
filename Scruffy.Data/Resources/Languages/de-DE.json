@@ -18,7 +18,8 @@
     },
     "AccountCommandHandler": {
       "CommandProcessed": "Der Befehl wurde verarbeitet.",
-      "SwitchToPrivate": "Ich habe deinen Befehl als private Nachricht beantwortet."
+      "SwitchToPrivate": "Ich habe deinen Befehl als private Nachricht beantwortet.",
+      "InvalidToken": "Der angegebene API-Key hat nicht die benötigten Berechtigungen oder ist ungültig."
     },
     "AccountDataProcessingTermsDialogElement": {
       "AcceptStorage": "Zur Verwendung dieser Funktion musst du der Verarbeitung und Speicherung deiner Daten zur Bereitstellung der Funktionalitäten dieses Bots zustimmen. Über den Befehl `/info` kann eine detaillierte Auflistung der Daten angezeigt werden, die gespeichert und verarbeitet werden. Stimmst du dieser Verarbeitung und Speicherung zu?",
