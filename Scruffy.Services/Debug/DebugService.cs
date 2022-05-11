@@ -356,7 +356,7 @@ public class DebugService
                            .RefreshRangeAsync(obj => obj.Permissions == GuildWars2ApiPermission.None,
                                               async obj =>
                                               {
-                                                  var connector = new GuidWars2ApiConnector(obj.ApiKey);
+                                                  var connector = new GuildWars2ApiConnector(obj.ApiKey);
                                                   await using (connector.ConfigureAwait(false))
                                                   {
                                                       var tokenInfo = await connector.GetTokenInformationAsync()

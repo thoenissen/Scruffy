@@ -47,7 +47,7 @@ public class GuildGuildDialogElement : DialogEmbedMessageElementBase<string>
 
         _guilds = new Dictionary<int, string>();
 
-        using (var connector = new GuidWars2ApiConnector(DialogContext.GetValue<string>("ApiKey")))
+        using (var connector = new GuildWars2ApiConnector(DialogContext.GetValue<string>("ApiKey")))
         {
             var fieldText = new StringBuilder();
             var i = 1;

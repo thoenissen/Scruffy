@@ -87,7 +87,7 @@ public class GuildExportService : LocatedServiceBase
                                     .Distinct()
                                     .ToList();
 
-            var connector = new GuidWars2ApiConnector(null);
+            var connector = new GuildWars2ApiConnector(null);
             await using (connector.ConfigureAwait(false))
             {
                 var tradingsPostValues = await connector.GetTradingPostPrices(itemIds)
@@ -186,7 +186,7 @@ public class GuildExportService : LocatedServiceBase
                                     .Distinct()
                                     .ToList();
 
-            var connector = new GuidWars2ApiConnector(null);
+            var connector = new GuildWars2ApiConnector(null);
             await using (connector.ConfigureAwait(false))
             {
                 var tradingsPostValues = await connector.GetTradingPostPrices(itemIds)
@@ -296,7 +296,7 @@ public class GuildExportService : LocatedServiceBase
                                        .Distinct()
                                        .ToList();
 
-            var connector = new GuidWars2ApiConnector(null);
+            var connector = new GuildWars2ApiConnector(null);
             await using (connector.ConfigureAwait(false))
             {
                 var tradingsPostValues = await connector.GetTradingPostPrices(itemIds)
@@ -419,7 +419,7 @@ public class GuildExportService : LocatedServiceBase
                                        .Distinct()
                                        .ToList();
 
-            var connector = new GuidWars2ApiConnector(null);
+            var connector = new GuildWars2ApiConnector(null);
             await using (connector.ConfigureAwait(false))
             {
                 var tradingsPostValues = await connector.GetTradingPostPrices(itemIds)
@@ -650,7 +650,7 @@ public class GuildExportService : LocatedServiceBase
 
             var members = new List<(string Name, DateTime? Joined, bool IsApiKeyValid, bool HasAllPermissions)>();
 
-            var connector = new GuidWars2ApiConnector(guild.ApiKey);
+            var connector = new GuildWars2ApiConnector(guild.ApiKey);
             await using (connector.ConfigureAwait(false))
             {
                 foreach (var member in await connector.GetGuildMembers(guild.GuildId)

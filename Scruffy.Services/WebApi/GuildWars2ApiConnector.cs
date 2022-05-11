@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Newtonsoft.Json;
 
+using Scruffy.Data.Enumerations.General;
 using Scruffy.Data.Enumerations.GuildWars2;
 using Scruffy.Data.Json.GuildWars2.Account;
 using Scruffy.Data.Json.GuildWars2.Achievements;
@@ -21,12 +22,14 @@ using Scruffy.Data.Json.GuildWars2.World;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Exceptions.WebApi;
 
+using Serilog;
+
 namespace Scruffy.Services.WebApi;
 
 /// <summary>
 /// Accessing the Guild Wars 2 WEB API
 /// </summary>
-public sealed class GuidWars2ApiConnector : IAsyncDisposable,
+public sealed class GuildWars2ApiConnector : IAsyncDisposable,
                                             IDisposable
 {
     /// <summary>
@@ -69,7 +72,7 @@ public sealed class GuidWars2ApiConnector : IAsyncDisposable,
     /// Constructor
     /// </summary>
     /// <param name="apiKey">Api Key</param>
-    public GuidWars2ApiConnector(string apiKey)
+    public GuildWars2ApiConnector(string apiKey)
     {
         _apiKey = apiKey;
         _serviceProvider = ServiceProviderContainer.Current.GetServiceProvider();
@@ -786,12 +789,37 @@ public sealed class GuidWars2ApiConnector : IAsyncDisposable,
             message.Headers.Add("Authorization", "Bearer " + _apiKey);
         }
 
-        var request = await HttpClient.SendAsync(message)
-                                      .ConfigureAwait(false);
+        var response = await HttpClient.SendAsync(message)
+                                       .ConfigureAwait(false);
 
-        request.EnsureSuccessStatusCode();
+        if (response.IsSuccessStatusCode == false)
+        {
+            string content = null;
 
-        return request;
+            try
+            {
+                content = await response.Content
+                                        .ReadAsStringAsync()
+                                        .ConfigureAwait(false);
+            }
+            catch
+            {
+            }
+
+            Log.Logger
+               .ForContext("type", LogEntryType.Service)
+               .ForContext("source", nameof(GuildWars2ApiConnector))
+               .ForContext("url", uri)
+               .ForContext("apiKey", _apiKey)
+               .ForContext("statusCode", response.StatusCode)
+               .ForContext("reasonPhrase", response.ReasonPhrase)
+               .ForContext("content", content)
+               .Write(Serilog.Events.LogEventLevel.Warning, "Unsuccessful Request");
+        }
+
+        response.EnsureSuccessStatusCode();
+
+        return response;
     }
 
     #endregion // Methods

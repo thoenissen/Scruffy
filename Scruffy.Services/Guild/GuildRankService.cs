@@ -74,7 +74,7 @@ public class GuildRankService : LocatedServiceBase
                                                           })
                                            .ToList())
             {
-                var connector = new GuidWars2ApiConnector(guild.ApiKey);
+                var connector = new GuildWars2ApiConnector(guild.ApiKey);
                 await using (connector.ConfigureAwait(false))
                 {
                     var members = await connector.GetGuildMembers(guild.GuildId)
@@ -1057,7 +1057,7 @@ public class GuildRankService : LocatedServiceBase
                                                          })
                                           .First();
 
-            var connector = new GuidWars2ApiConnector(guild.ApiKey);
+            var connector = new GuildWars2ApiConnector(guild.ApiKey);
             await using (connector.ConfigureAwait(false))
             {
                 var members = await connector.GetGuildMembers(guild.GuildId)

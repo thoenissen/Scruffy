@@ -174,7 +174,7 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
                                            .ToListAsync()
                                            .ConfigureAwait(false);
 
-        var connector = new GuidWars2ApiConnector(null);
+        var connector = new GuildWars2ApiConnector(null);
 
         var tradingsPostValues = await connector.GetTradingPostPrices(itemIds)
                                                 .ConfigureAwait(false);
@@ -272,7 +272,7 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
                                             .ToListAsync()
                                             .ConfigureAwait(false);
 
-        var connector = new GuidWars2ApiConnector(null);
+        var connector = new GuildWars2ApiConnector(null);
 
         var tradingsPostValues = (await connector.GetTradingPostPrices(itemIds).ConfigureAwait(false)).ToDictionary(obj => obj.Id, obj => obj);
         var items = (await connector.GetItems(itemIds).ConfigureAwait(false)).ToDictionary(obj => obj.Id, obj => obj);

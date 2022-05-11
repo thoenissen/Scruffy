@@ -57,7 +57,7 @@ public class GuildEmblemService : LocatedServiceBase
         var deferMessage = await commandContext.DeferProcessing()
                                                .ConfigureAwait(false);
 
-        var connector = new GuidWars2ApiConnector(null);
+        var connector = new GuildWars2ApiConnector(null);
         await using (connector.ConfigureAwait(false))
         {
             var random = new Random(DateTime.Now.Millisecond);

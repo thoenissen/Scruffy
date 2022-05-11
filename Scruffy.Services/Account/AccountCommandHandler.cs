@@ -115,7 +115,7 @@ public class AccountCommandHandler : LocatedServiceBase
 
         try
         {
-            var connector = new GuidWars2ApiConnector(apiKey);
+            var connector = new GuildWars2ApiConnector(apiKey);
             await using (connector.ConfigureAwait(false))
             {
                 var tokenInformation = await connector.GetTokenInformationAsync()

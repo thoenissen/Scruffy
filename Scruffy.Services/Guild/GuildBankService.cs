@@ -72,7 +72,7 @@ public class GuildBankService : LocatedServiceBase
                 msg.WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64");
                 msg.WithTimestamp(DateTime.Now);
 
-                var connector = new GuidWars2ApiConnector(guild.ApiKey);
+                var connector = new GuildWars2ApiConnector(guild.ApiKey);
                 await using (connector.ConfigureAwait(false))
                 {
                     var vault =  await connector.GetGuildVault(guild.GuildId)
@@ -191,7 +191,7 @@ public class GuildBankService : LocatedServiceBase
 
                 if (apiKeys.Count > 0)
                 {
-                    var guildConnector = new GuidWars2ApiConnector(guild.ApiKey);
+                    var guildConnector = new GuildWars2ApiConnector(guild.ApiKey);
                     await using (guildConnector.ConfigureAwait(false))
                     {
                         var vault = await guildConnector.GetGuildVault(guild.GuildId)
@@ -208,7 +208,7 @@ public class GuildBankService : LocatedServiceBase
 
                         foreach (var apiKey in apiKeys)
                         {
-                            var accountConnector = new GuidWars2ApiConnector(apiKey.ApiKey);
+                            var accountConnector = new GuildWars2ApiConnector(apiKey.ApiKey);
                             await using (accountConnector.ConfigureAwait(false))
                             {
                                 var dyes = await accountConnector.GetDyes()

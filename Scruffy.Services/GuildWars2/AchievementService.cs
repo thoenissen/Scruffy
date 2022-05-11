@@ -33,7 +33,7 @@ public class AchievementService : LocatedServiceBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public async Task<bool> ImportAchievements()
     {
-        var connector = new GuidWars2ApiConnector(null);
+        var connector = new GuildWars2ApiConnector(null);
         await using (connector.ConfigureAwait(false))
         {
             var achievementIds = await connector.GetAllAchievementIds()
@@ -59,7 +59,7 @@ public class AchievementService : LocatedServiceBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public async Task<bool> ImportAccountAchievements(string accountName, string apiKey)
     {
-        var connector = new GuidWars2ApiConnector(apiKey);
+        var connector = new GuildWars2ApiConnector(apiKey);
         await using (connector.ConfigureAwait(false))
         {
             var achievements = await connector.GetAccountAchievements()

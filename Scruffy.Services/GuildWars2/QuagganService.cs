@@ -33,7 +33,7 @@ public class QuagganService : LocatedServiceBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public async Task PostRandomQuaggan(IContextContainer commandContext)
     {
-        var connector = new GuidWars2ApiConnector(null);
+        var connector = new GuildWars2ApiConnector(null);
         await using (connector.ConfigureAwait(false))
         {
             var quaggans = await connector.GetQuaggans()

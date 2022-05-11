@@ -44,7 +44,7 @@ public class ItemsService : LocatedServiceBase
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
-            var connector = new GuidWars2ApiConnector(null);
+            var connector = new GuildWars2ApiConnector(null);
             await using (connector.ConfigureAwait(false))
             {
                 var itemIds = await connector.GetAllItemIds()
@@ -79,7 +79,7 @@ public class ItemsService : LocatedServiceBase
                                       .ConfigureAwait(false);
             if (data != null)
             {
-                var connector = new GuidWars2ApiConnector(null);
+                var connector = new GuildWars2ApiConnector(null);
                 await using (connector.ConfigureAwait(false))
                 {
                     var item = await connector.GetItem(data.ItemId)

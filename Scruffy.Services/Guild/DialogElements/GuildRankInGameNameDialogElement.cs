@@ -65,7 +65,7 @@ public class GuildRankInGameNameDialogElement : DialogEmbedMessageElementBase<st
                                                 })
                                  .First();
 
-            var connector = new GuidWars2ApiConnector(guild.ApiKey);
+            var connector = new GuildWars2ApiConnector(guild.ApiKey);
 
             foreach (var rank in connector.GetGuildRanks(guild.GuildId)
                                           .Result

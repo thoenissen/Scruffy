@@ -63,7 +63,7 @@ public class GuildLogImportJob : LocatedAsyncJob
                                                                   .ConfigureAwait(false) as IMessageChannel
                                              : null;
 
-                    var connector = new GuidWars2ApiConnector(guild.ApiKey);
+                    var connector = new GuildWars2ApiConnector(guild.ApiKey);
                     await using (connector.ConfigureAwait(false))
                     {
                         try

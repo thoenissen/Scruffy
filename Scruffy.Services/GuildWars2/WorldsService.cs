@@ -58,7 +58,7 @@ public class WorldsService : LocatedServiceBase
         {
             try
             {
-                var connector = new GuidWars2ApiConnector(null);
+                var connector = new GuildWars2ApiConnector(null);
                 await using (connector.ConfigureAwait(false))
                 {
                     var worlds = await connector.GetWorlds().ConfigureAwait(false);

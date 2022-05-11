@@ -56,7 +56,7 @@ public class AccountAdministrationService : LocatedServiceBase
 
             foreach (var account in accounts)
             {
-                var connector = new GuidWars2ApiConnector(account.ApiKey);
+                var connector = new GuildWars2ApiConnector(account.ApiKey);
                 await using (connector.ConfigureAwait(false))
                 {
                     try

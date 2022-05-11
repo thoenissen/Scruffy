@@ -40,7 +40,7 @@ public class AccountLoginCheckJob : LocatedAsyncJob
             {
                 try
                 {
-                    var connector = new GuidWars2ApiConnector(account.ApiKey);
+                    var connector = new GuildWars2ApiConnector(account.ApiKey);
                     await using (connector.ConfigureAwait(false))
                     {
                         var accountInformation = await connector.GetAccountInformationAsync()
