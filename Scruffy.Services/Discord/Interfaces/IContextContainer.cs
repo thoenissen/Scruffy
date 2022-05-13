@@ -56,10 +56,10 @@ public interface IContextContainer
     Task SwitchToDirectMessageContext();
 
     /// <summary>
-    /// Get merged context container
+    /// Response general processing message
     /// </summary>
-    /// <returns><see cref="MergedContextContainer"/>-Object</returns>
-    public MergedContextContainer GetMergedContextContainer();
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task<IUserMessage> DeferProcessing();
 
     /// <summary>
     /// Reply to the user message or command

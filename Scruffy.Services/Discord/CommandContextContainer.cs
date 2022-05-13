@@ -82,6 +82,12 @@ public sealed class CommandContextContainer : ICommandContext, ICommandContextOp
         }
     }
 
+    /// <summary>
+    /// Response general processing message
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public Task<IUserMessage> DeferProcessing() => Task.FromResult<IUserMessage>(null);
+
     #endregion // Methods
 
     #region Properties
@@ -114,12 +120,6 @@ public sealed class CommandContextContainer : ICommandContext, ICommandContextOp
     #endregion // Properties
 
     #region Methods
-
-    /// <summary>
-    /// Get merged context container
-    /// </summary>
-    /// <returns><see cref="MergedContextContainer"/>-Object</returns>
-    public MergedContextContainer GetMergedContextContainer() => new(this);
 
     /// <summary>
     /// Reply to the user message or command

@@ -28,6 +28,11 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
     /// </summary>
     private IDiscordInteraction _interaction;
 
+    /// <summary>
+    /// Is defer processing active?
+    /// </summary>
+    private bool _isDeferProcessingActive;
+
     #endregion // Fields
 
     #region Constructor
@@ -91,6 +96,8 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
                                                                              "{0} The action is being processed.",
                                                                              DiscordEmoteService.GetLoadingEmote(Client)))
                               .ConfigureAwait(false);
+
+            _isDeferProcessingActive = true;
 
             return await _interaction.GetOriginalResponseAsync()
                                      .ConfigureAwait(false);
@@ -167,12 +174,6 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
     }
 
     /// <summary>
-    /// Get merged context container
-    /// </summary>
-    /// <returns><see cref="MergedContextContainer"/>-Object</returns>
-    public MergedContextContainer GetMergedContextContainer() => new(this);
-
-    /// <summary>
     /// Reply to the user message or command
     /// </summary>
     /// <param name="text">The message to be sent.</param>
@@ -240,6 +241,8 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
                         return _firstFollowup;
                     }
                 }
+
+                _isDeferProcessingActive = false;
 
                 return await _interaction.ModifyOriginalResponseAsync(obj =>
                                                                       {
@@ -314,6 +317,29 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
                     }
 
                     return await _interaction.GetOriginalResponseAsync()
+                                             .ConfigureAwait(false);
+                }
+
+                if (_isDeferProcessingActive)
+                {
+                    return await _interaction.ModifyOriginalResponseAsync(obj =>
+                                                                          {
+                                                                              if (text == null
+                                                                               && embed == null)
+                                                                              {
+                                                                                  obj.Content = "\u200b";
+                                                                              }
+                                                                              else
+                                                                              {
+                                                                                  obj.Content = text;
+                                                                                  obj.Embed = embed;
+                                                                              }
+
+                                                                              obj.AllowedMentions = allowedMentions;
+                                                                              obj.Components = components;
+                                                                              obj.Embeds = embeds;
+                                                                              obj.Attachments = new Optional<IEnumerable<FileAttachment>>(attachments ?? Enumerable.Empty<FileAttachment>());
+                                                                          })
                                              .ConfigureAwait(false);
                 }
 

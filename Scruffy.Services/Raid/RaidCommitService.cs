@@ -73,6 +73,9 @@ public class RaidCommitService : LocatedServiceBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public async Task CommitRaidAppointment(IContextContainer commandContext, string aliasName)
     {
+        await commandContext.DeferProcessing()
+                            .ConfigureAwait(false);
+
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
             var now = DateTime.Now;
