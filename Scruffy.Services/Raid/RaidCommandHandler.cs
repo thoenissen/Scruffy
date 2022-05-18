@@ -268,7 +268,7 @@ public class RaidCommandHandler : LocatedServiceBase
             }
             else
             {
-                await container.ReplyAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."))
+                await container.ReplyAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."), ephemeral: true)
                                .ConfigureAwait(false);
             }
         }
