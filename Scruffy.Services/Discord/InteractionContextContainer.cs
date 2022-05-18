@@ -237,9 +237,9 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
                                                              obj.Attachments = new Optional<IEnumerable<FileAttachment>>(attachments ?? Enumerable.Empty<FileAttachment>());
                                                          })
                                             .ConfigureAwait(false);
-
-                        return _firstFollowup;
                     }
+
+                    return _firstFollowup;
                 }
 
                 _isDeferProcessingActive = false;
