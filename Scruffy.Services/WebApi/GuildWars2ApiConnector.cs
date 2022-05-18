@@ -274,7 +274,9 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
                                                              .ReadAsStringAsync()
                                                              .ConfigureAwait(false);
 
-                              return JsonConvert.DeserializeObject<List<GuildMember>>(jsonResult);
+                              return JsonConvert.DeserializeObject<List<GuildMember>>(jsonResult)
+                                                ?.Where(obj => obj.Rank != "invited")
+                                                .ToList();
                           }
                       });
     }
