@@ -219,7 +219,7 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
                 {
                     if (_firstFollowup == null)
                     {
-                        _firstFollowup = attachments != null
+                        _firstFollowup = attachments == null
                                              ? await _interaction.FollowupAsync(text, embeds, isTTS, ephemeral, allowedMentions, components, embed, options)
                                                                  .ConfigureAwait(false)
                                              : await _interaction.FollowupWithFilesAsync(attachments, text, embeds, isTTS, ephemeral, allowedMentions, components, embed, options)
