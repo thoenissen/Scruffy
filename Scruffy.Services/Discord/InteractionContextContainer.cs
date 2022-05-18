@@ -191,6 +191,8 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
     {
         try
         {
+            _isDeferProcessingActive = false;
+
             if (_interaction != null)
             {
                 if (stickers != null)
@@ -241,8 +243,6 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
 
                     return _firstFollowup;
                 }
-
-                _isDeferProcessingActive = false;
 
                 return await _interaction.ModifyOriginalResponseAsync(obj =>
                                                                       {
@@ -300,6 +300,8 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
             {
                 if (_interaction.HasResponded == false)
                 {
+                    _isDeferProcessingActive = false;
+
                     if (stickers != null)
                     {
                         throw new NotSupportedException();
@@ -322,6 +324,8 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
 
                 if (_isDeferProcessingActive)
                 {
+                    _isDeferProcessingActive = false;
+
                     return await _interaction.ModifyOriginalResponseAsync(obj =>
                                                                           {
                                                                               if (text == null
