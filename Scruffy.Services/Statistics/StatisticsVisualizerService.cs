@@ -7,7 +7,7 @@ using Scruffy.Data.Entity.Repositories.Statistics;
 using Scruffy.Data.Json.QuickChart;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
-using Scruffy.Services.Discord;
+using Scruffy.Services.Discord.Interfaces;
 using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.Statistics;
@@ -48,7 +48,7 @@ public class StatisticsVisualizerService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task PostMeOverview(CommandContextContainer commandContext)
+    public async Task PostMeOverview(IContextContainer commandContext)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
@@ -287,10 +287,8 @@ public class StatisticsVisualizerService : LocatedServiceBase
             {
                 embedBuilder.WithImageUrl("attachment://chart.png");
 
-                await commandContext.Channel
-                                    .SendFileAsync(new FileAttachment(chartStream, "chart.png"),
-                                                   embed: embedBuilder.Build(),
-                                                   messageReference: new MessageReference(commandContext.Message.Id, commandContext.Channel?.Id, commandContext.Guild?.Id))
+                await commandContext.ReplyAsync(embed: embedBuilder.Build(),
+                                                attachments: new[] { new FileAttachment(chartStream, "chart.png") })
                                     .ConfigureAwait(false);
             }
         }

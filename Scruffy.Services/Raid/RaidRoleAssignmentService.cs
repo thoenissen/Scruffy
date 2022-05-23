@@ -50,11 +50,6 @@ public class RaidRoleAssignmentService : LocatedServiceBase
         var dialogHandler = new DialogHandler(commandContext);
         await using (dialogHandler.ConfigureAwait(false))
         {
-            if (commandContext is CommandContextContainer commandContextContainer)
-            {
-                dialogHandler.DialogContext.Messages.Add(commandContextContainer.Message);
-            }
-
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
                 try

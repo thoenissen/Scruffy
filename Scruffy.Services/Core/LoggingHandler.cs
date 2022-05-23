@@ -2,7 +2,6 @@
 using System.Reflection;
 
 using Discord;
-using Discord.Commands;
 using Discord.Interactions;
 
 using Elasticsearch.Net;
@@ -233,15 +232,6 @@ public class LoggingService
     public static long? AddServiceLogEntry(LogEntryLevel level, string className, string action, string message, string additionalInformation, Exception ex = null)
     {
         return _logger.WriteLine(LogEntryType.Service, level, className, action, message, additionalInformation, ex);
-    }
-
-    /// <summary>
-    /// Writing <see cref="CommandService"/> log messages
-    /// </summary>
-    /// <param name="logMessage">Log message</param>
-    public static void AddCommandServiceLog(LogMessage logMessage)
-    {
-        _logger.WriteLine(LogEntryType.CommandsService, logMessage.Severity.ToLogEntryLevel(), logMessage.Source, null, logMessage.Message, null, logMessage.Exception);
     }
 
     /// <summary>

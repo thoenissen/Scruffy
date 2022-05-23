@@ -3,7 +3,6 @@ using Discord.Interactions;
 
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
-using Scruffy.Services.Discord.Extensions;
 using Scruffy.Services.Discord.Interfaces;
 
 namespace Scruffy.Services.Discord;

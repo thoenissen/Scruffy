@@ -45,7 +45,15 @@ internal static class Preparation
                      {
                          LogLevel = LogSeverity.Info,
                          MessageCacheSize = 100,
-                         GatewayIntents = GatewayIntents.All
+                         GatewayIntents = GatewayIntents.Guilds
+                                        | GatewayIntents.GuildMembers
+                                        | GatewayIntents.GuildEmojis
+                                        | GatewayIntents.GuildIntegrations
+                                        | GatewayIntents.GuildVoiceStates
+                                        | GatewayIntents.GuildMessages
+                                        | GatewayIntents.GuildMessageReactions
+                                        | GatewayIntents.DirectMessages
+                                        | GatewayIntents.DirectMessageReactions
                      };
 
         DiscordClient = new DiscordSocketClient(config);

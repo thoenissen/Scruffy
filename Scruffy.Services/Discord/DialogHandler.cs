@@ -112,11 +112,6 @@ public sealed class DialogHandler : IAsyncDisposable, IDisposable
 
             if (deleteMessages)
             {
-                if (context is CommandContextContainer contextContainer)
-                {
-                    dialogContext.Messages.Add(contextContainer.Message);
-                }
-
                 if (context.Channel is ITextChannel textChannel)
                 {
                     await textChannel.DeleteMessagesAsync(dialogContext.Messages)

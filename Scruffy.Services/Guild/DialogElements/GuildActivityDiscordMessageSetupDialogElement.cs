@@ -7,7 +7,6 @@ using Scruffy.Data.Enumerations.Guild;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord;
-using Scruffy.Services.Discord.Extensions;
 using Scruffy.Services.Guild.DialogElements.Forms;
 
 namespace Scruffy.Services.Guild.DialogElements;
@@ -164,15 +163,11 @@ public class GuildActivityDiscordMessageSetupDialogElement : DialogEmbedReaction
                                                                            })
                                                  == false)
                                                 {
-                                                    if (CommandContext is CommandContextContainer commandContextContainer)
-                                                    {
-                                                        LoggingService.AddTextCommandLogEntry(LogEntryLevel.Error,
-                                                                                              commandContextContainer.Command.GetFullName(),
-                                                                                              nameof(GuildActivityDiscordMessageAddFormData),
-                                                                                              null,
-                                                                                              null,
-                                                                                              dbFactory.LastError);
-                                                    }
+                                                    LoggingService.AddInteractionLogEntry(LogEntryLevel.Error,
+                                                                                          CommandContext.CustomId,
+                                                                                          nameof(GuildActivityDiscordMessageAddFormData),
+                                                                                          null,
+                                                                                          dbFactory.LastError);
                                                 }
                                             }
 
@@ -215,15 +210,11 @@ public class GuildActivityDiscordMessageSetupDialogElement : DialogEmbedReaction
                                                        })
                              == false)
                             {
-                                if (CommandContext is CommandContextContainer commandContextContainer)
-                                {
-                                    LoggingService.AddTextCommandLogEntry(LogEntryLevel.Error,
-                                                                          commandContextContainer.Command.GetFullName(),
-                                                                          nameof(GuildActivityDiscordMessageEditFormData),
-                                                                          null,
-                                                                          null,
-                                                                          dbFactory.LastError);
-                                }
+                                LoggingService.AddInteractionLogEntry(LogEntryLevel.Error,
+                                                                      CommandContext.CustomId,
+                                                                      nameof(GuildActivityDiscordMessageEditFormData),
+                                                                      null,
+                                                                      dbFactory.LastError);
                             }
                         }
 
@@ -246,15 +237,11 @@ public class GuildActivityDiscordMessageSetupDialogElement : DialogEmbedReaction
                                          .Remove(obj => obj.Guild.DiscordServerId == CommandContext.Guild.Id && obj.Type == DiscordActivityPointsType.Message && obj.RoleId == roleId)
                              == false)
                             {
-                                if (CommandContext is CommandContextContainer commandContextContainer)
-                                {
-                                    LoggingService.AddTextCommandLogEntry(LogEntryLevel.Error,
-                                                                          commandContextContainer.Command.GetFullName(),
-                                                                          nameof(GuildActivityDiscordMessagePointsDialogElement),
-                                                                          null,
-                                                                          null,
-                                                                          dbFactory.LastError);
-                                }
+                                LoggingService.AddInteractionLogEntry(LogEntryLevel.Error,
+                                                                      CommandContext.CustomId,
+                                                                      nameof(GuildActivityDiscordMessagePointsDialogElement),
+                                                                      null,
+                                                                      dbFactory.LastError);
                             }
                         }
 

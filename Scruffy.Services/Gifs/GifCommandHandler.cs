@@ -5,7 +5,6 @@ using Scruffy.Data.Enumerations.General;
 using Scruffy.Data.Json.Tenor;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
-using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Interfaces;
 
 namespace Scruffy.Services.Gifs;
@@ -72,28 +71,16 @@ public class GifCommandHandler : LocatedServiceBase
             var searchResult = JsonConvert.DeserializeObject<SearchResultRoot>(jsonResult);
             if (searchResult != null)
             {
-                if (commandContext is InteractionContextContainer interactionContext)
-                {
-                    var processingMessage = await interactionContext.DeferProcessing()
-                                                                    .ConfigureAwait(false);
+                var processingMessage = await commandContext.DeferProcessing()
+                                                            .ConfigureAwait(false);
 
-                    await commandContext.Channel
-                             .SendMessageAsync(searchResult.Results[rnd.Next(searchResult.Results.Count - 1)].ItemUrl)
-                             .ConfigureAwait(false);
+                await commandContext.Channel
+                                    .SendMessageAsync(searchResult.Results[rnd.Next(searchResult.Results.Count - 1)]
+                                                                  .ItemUrl)
+                                    .ConfigureAwait(false);
 
-                    await processingMessage.DeleteAsync()
-                                           .ConfigureAwait(false);
-                }
-                else if (commandContext is CommandContextContainer textContext)
-                {
-                    await textContext.Message
-                                     .DeleteAsync()
-                                     .ConfigureAwait(false);
-
-                    await commandContext.Channel
-                             .SendMessageAsync(searchResult.Results[rnd.Next(searchResult.Results.Count - 1)].ItemUrl)
-                             .ConfigureAwait(false);
-                }
+                await processingMessage.DeleteAsync()
+                                       .ConfigureAwait(false);
 
                 LoggingService.AddServiceLogEntry(LogEntryLevel.Information, nameof(GifCommandHandler), "Post random gif", searchTerm);
             }

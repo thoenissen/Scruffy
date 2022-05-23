@@ -47,6 +47,7 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
         ServiceProvider = ServiceProviderContainer.Current.GetServiceProvider();
         Interactivity = ServiceProvider.GetService<InteractivityService>();
 
+        CustomId = (interaction.Data as IComponentInteractionData)?.CustomId;
         Client = discordClient;
         Guild = (interaction.User as IGuildUser)?.Guild;
         Channel = interaction.Channel;
@@ -57,6 +58,11 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
     #endregion // Constructor
 
     #region Properties
+
+    /// <summary>
+    /// Custom Id
+    /// </summary>
+    public string CustomId { get; }
 
     /// <summary>
     /// Service provider

@@ -2,10 +2,7 @@
 
 using Discord;
 
-using Microsoft.EntityFrameworkCore;
-
 using Scruffy.Data.Entity;
-using Scruffy.Data.Entity.Repositories.CoreData;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord;
 

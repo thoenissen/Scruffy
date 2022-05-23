@@ -2,7 +2,6 @@
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord.Interfaces;
-using Scruffy.Services.Statistics;
 
 namespace Scruffy.Services.Information;
 

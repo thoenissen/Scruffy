@@ -1,23 +1,17 @@
-﻿using System.Net.Http;
-using System.Reflection;
+﻿using System.Reflection;
 
 using Discord;
-using Discord.Commands;
 using Discord.Interactions;
 using Discord.WebSocket;
 
 using Microsoft.Extensions.DependencyInjection;
 
-using Newtonsoft.Json;
-
 using Scruffy.Data.Enumerations.General;
-using Scruffy.Data.Json.Tenor;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Exceptions;
 using Scruffy.Services.Core.JobScheduler;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord;
-using Scruffy.Services.Discord.Extensions;
 
 namespace Scruffy.ServiceHosts.Discord.Discord;
 
@@ -49,21 +43,13 @@ public sealed class DiscordBot : IAsyncDisposable
     private DiscordSocketClient _discordClient;
 
     /// <summary>
-    /// Commands
-    /// </summary>
-    private CommandService _commands;
-
-    /// <summary>
     /// Interaction service
     /// </summary>
     private InteractionService _interaction;
 
-    /// <summary>
-    /// Prefix resolver
-    /// </summary>
-    private PrefixResolvingService _prefixResolver;
-
     #endregion // Fields
+
+    #region Constructor
 
     /// <summary>
     /// Constructor
@@ -72,6 +58,8 @@ public sealed class DiscordBot : IAsyncDisposable
     {
         _serviceProviderContainer = new ServiceProviderContainer();
     }
+
+    #endregion // Constructor
 
     #region Methods
 
@@ -82,36 +70,30 @@ public sealed class DiscordBot : IAsyncDisposable
     public async Task StartAsync()
     {
         var config = new DiscordSocketConfig
-        {
-            LogLevel = LogSeverity.Info,
-            MessageCacheSize = 100,
-            GatewayIntents = GatewayIntents.All
-        };
+                     {
+                         LogLevel = LogSeverity.Info,
+                         MessageCacheSize = 100,
+                         GatewayIntents = GatewayIntents.Guilds
+                                        | GatewayIntents.GuildMembers
+                                        | GatewayIntents.GuildEmojis
+                                        | GatewayIntents.GuildIntegrations
+                                        | GatewayIntents.GuildVoiceStates
+                                        | GatewayIntents.GuildMessages
+                                        | GatewayIntents.GuildMessageReactions
+                                        | GatewayIntents.DirectMessages
+                                        | GatewayIntents.DirectMessageReactions
+                     };
 
         _discordClient = new DiscordSocketClient(config);
-        _discordClient.MessageReceived += OnMessageReceived;
         _discordClient.InteractionCreated += OnInteractionCreated;
         _discordClient.Log += OnDiscordClientLog;
 
-        var commandConfiguration = new CommandServiceConfig
-        {
-            LogLevel = LogSeverity.Info,
-            CaseSensitiveCommands = false,
-            DefaultRunMode = global::Discord.Commands.RunMode.Async,
-            IgnoreExtraArgs = false,
-            ThrowOnError = true
-        };
-
-        _commands = new CommandService(commandConfiguration);
-        _commands.CommandExecuted += OnCommandExecuted;
-        _commands.Log += OnCommandServiceLog;
-
         var interactionConfiguration = new InteractionServiceConfig
-        {
-            LogLevel = LogSeverity.Info,
-            DefaultRunMode = global::Discord.Interactions.RunMode.Async,
-            ThrowOnError = true
-        };
+                                       {
+                                           LogLevel = LogSeverity.Info,
+                                           DefaultRunMode = RunMode.Async,
+                                           ThrowOnError = true
+                                       };
 
         _interaction = new InteractionService(_discordClient, interactionConfiguration);
         _interaction.Log += OnInteractionServiceLog;
@@ -122,7 +104,6 @@ public sealed class DiscordBot : IAsyncDisposable
         _serviceProviderContainer.Initialize(obj =>
                                              {
                                                  obj.AddSingleton(_discordClient);
-                                                 obj.AddSingleton(_commands);
                                                  obj.AddSingleton(_interaction);
                                              });
 
@@ -132,16 +113,10 @@ public sealed class DiscordBot : IAsyncDisposable
                                           .GetRequiredService<LocalizationService>()
                                           .GetGroup(nameof(DiscordBot));
 
-        _prefixResolver = _serviceScope.ServiceProvider
-                                       .GetRequiredService<PrefixResolvingService>();
-
         _discordClient.Connected += OnConnected;
 
         await _interaction.AddModulesAsync(Assembly.Load("Scruffy.Commands"), _serviceScope.ServiceProvider)
                           .ConfigureAwait(false);
-
-        await _commands.AddModulesAsync(Assembly.Load("Scruffy.Commands"), _serviceScope.ServiceProvider)
-                       .ConfigureAwait(false);
 
         await _discordClient.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_TOKEN"))
                             .ConfigureAwait(false);
@@ -177,18 +152,6 @@ public sealed class DiscordBot : IAsyncDisposable
     }
 
     /// <summary>
-    /// Commands service logging
-    /// </summary>
-    /// <param name="e">Argument</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private Task OnCommandServiceLog(LogMessage e)
-    {
-        LoggingService.AddCommandServiceLog(e);
-
-        return Task.CompletedTask;
-    }
-
-    /// <summary>
     /// Interaction service logging
     /// </summary>
     /// <param name="e">Argument</param>
@@ -198,154 +161,6 @@ public sealed class DiscordBot : IAsyncDisposable
         LoggingService.AddInteractionServiceLog(e);
 
         return Task.CompletedTask;
-    }
-
-    /// <summary>
-    /// Fired when a message is received.
-    /// </summary>
-    /// <param name="e">Message</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private async Task OnMessageReceived(SocketMessage e)
-    {
-        if (e is SocketUserMessage msg)
-        {
-            if (msg.Author.Id != _discordClient.CurrentUser.Id
-             && msg.Author.IsBot == false)
-            {
-                var pos = 0;
-                if (msg.HasStringPrefix(_prefixResolver.GetPrefix(msg), ref pos, StringComparison.InvariantCultureIgnoreCase)
-                 || msg.HasMentionPrefix(_discordClient.CurrentUser, ref pos))
-                {
-                    var context = new CommandContextContainer(_discordClient, msg);
-
-                    try
-                    {
-                        await _commands.ExecuteAsync(context, pos, context.ServiceProvider)
-                                       .ConfigureAwait(false);
-                    }
-                    catch (Exception ex)
-                    {
-                        await HandleCommandException(context, ex).ConfigureAwait(false);
-                    }
-                }
-            }
-        }
-    }
-
-    /// <summary>
-    /// Command executed
-    /// </summary>
-    /// <param name="commandInfo">Command info</param>
-    /// <param name="context">Context</param>
-    /// <param name="result">Result</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private async Task OnCommandExecuted(Optional<CommandInfo> commandInfo, ICommandContext context, global::Discord.Commands.IResult result)
-    {
-        if (context is CommandContextContainer container)
-        {
-            using (container)
-            {
-                if (result.IsSuccess == false)
-                {
-                    switch (result.Error)
-                    {
-                        case CommandError.BadArgCount:
-                        case CommandError.MultipleMatches:
-                            {
-                                await context.Channel
-                                             .SendMessageAsync(_localizationGroup.GetText("TextCommandMigration", "Text commands aren't available anymore. You can execute the slash command`/help` to show all available commands."))
-                                             .ConfigureAwait(false);
-                            }
-                            break;
-
-                        case CommandError.Exception:
-                            {
-                                if (result is global::Discord.Commands.ExecuteResult executeResult)
-                                {
-                                    await HandleCommandException(container, executeResult.Exception).ConfigureAwait(false);
-                                }
-                            }
-                            break;
-
-                        case CommandError.UnmetPrecondition:
-                            {
-                                await container.Operations
-                                               .ShowUnmetPrecondition()
-                                               .ConfigureAwait(false);
-                            }
-                            break;
-
-                        case CommandError.UnknownCommand:
-                        case CommandError.ParseFailed:
-                        case CommandError.ObjectNotFound:
-                        case CommandError.Unsuccessful:
-                        default:
-                            break;
-                    }
-                }
-            }
-        }
-    }
-
-    /// <summary>
-    /// Handling command exceptions
-    /// </summary>
-    /// <param name="context">Context</param>
-    /// <param name="ex">Exception</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private async Task HandleCommandException(CommandContextContainer context, Exception ex)
-    {
-        if (ex is ScruffyException)
-        {
-            if (ex is ScruffyUserMessageException userException)
-            {
-                await context.Channel
-                             .SendMessageAsync($"{context.Message.Author.Mention} {userException.GetLocalizedMessage()}")
-                             .ConfigureAwait(false);
-            }
-        }
-        else
-        {
-            var logEntryId = LoggingService.AddTextCommandLogEntry(LogEntryLevel.CriticalError, context.Command?.GetFullName(), null, ex.Message, ex.ToString());
-
-            var client = context.ServiceProvider.GetService<IHttpClientFactory>().CreateClient();
-
-            using (var response = await client.GetAsync("https://g.tenor.com/v1/search?q=funny%20cat&key=RXM3VE2UGRU9&limit=50&contentfilter=high&ar_range=all")
-                                              .ConfigureAwait(false))
-            {
-                var jsonResult = await response.Content
-                                               .ReadAsStringAsync()
-                                               .ConfigureAwait(false);
-
-                var searchResult = JsonConvert.DeserializeObject<SearchResultRoot>(jsonResult);
-                if (searchResult != null)
-                {
-                    var tenorEntry = searchResult.Results[new Random(DateTime.Now.Millisecond).Next(0, searchResult.Results.Count - 1)];
-
-                    var gifUrl = tenorEntry.Media[0].Gif.Size < 8_388_608
-                                     ? tenorEntry.Media[0].Gif.Url
-                                     : tenorEntry.Media[0].MediumGif.Size < 8_388_608
-                                         ? tenorEntry.Media[0].MediumGif.Url
-                                         : tenorEntry.Media[0].NanoGif.Url;
-
-                    using (var downloadResponse = await client.GetAsync(gifUrl)
-                                                              .ConfigureAwait(false))
-                    {
-                        var stream = await downloadResponse.Content
-                                                           .ReadAsStreamAsync()
-                                                           .ConfigureAwait(false);
-
-                        await using (stream.ConfigureAwait(false))
-                        {
-                            await context.Channel
-                                         .SendFilesAsync(new[] { new FileAttachment(stream, "cat.gif") },
-                                                         _localizationGroup.GetFormattedText("CommandFailedMessage", "The command could not be executed. But I have an error code ({0}) and funny cat picture.", logEntryId ?? -1))
-                                         .ConfigureAwait(false);
-                        }
-                    }
-                }
-            }
-        }
     }
 
     /// <summary>
@@ -410,7 +225,7 @@ public sealed class DiscordBot : IAsyncDisposable
     /// <param name="context">Context</param>
     /// <param name="result">Result</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private async Task OnComponentCommandExecuted(ComponentCommandInfo command, IInteractionContext context, global::Discord.Interactions.IResult result)
+    private async Task OnComponentCommandExecuted(ComponentCommandInfo command, IInteractionContext context, IResult result)
     {
         if (context is InteractionContextContainer container)
         {
@@ -427,7 +242,7 @@ public sealed class DiscordBot : IAsyncDisposable
                     {
                         case InteractionCommandError.Exception:
                             {
-                                if (result is global::Discord.Interactions.ExecuteResult executeResult)
+                                if (result is ExecuteResult executeResult)
                                 {
                                     await HandleInteractionException(container, executeResult.Exception).ConfigureAwait(false);
                                 }
@@ -455,7 +270,7 @@ public sealed class DiscordBot : IAsyncDisposable
     /// <param name="context">Context</param>
     /// <param name="result">Result</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private async Task OnModalCommandExecuted(ModalCommandInfo command, IInteractionContext context, global::Discord.Interactions.IResult result)
+    private async Task OnModalCommandExecuted(ModalCommandInfo command, IInteractionContext context, IResult result)
     {
         if (context is InteractionContextContainer container)
         {
@@ -472,7 +287,7 @@ public sealed class DiscordBot : IAsyncDisposable
                     {
                         case InteractionCommandError.Exception:
                             {
-                                if (result is global::Discord.Interactions.ExecuteResult executeResult)
+                                if (result is ExecuteResult executeResult)
                                 {
                                     await HandleInteractionException(container, executeResult.Exception).ConfigureAwait(false);
                                 }
@@ -500,7 +315,7 @@ public sealed class DiscordBot : IAsyncDisposable
     /// <param name="context">Context</param>
     /// <param name="result">Result</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private async Task OnSlashCommandExecuted(SlashCommandInfo command, IInteractionContext context, global::Discord.Interactions.IResult result)
+    private async Task OnSlashCommandExecuted(SlashCommandInfo command, IInteractionContext context, IResult result)
     {
         if (context is InteractionContextContainer container)
         {
@@ -517,7 +332,7 @@ public sealed class DiscordBot : IAsyncDisposable
                     {
                         case InteractionCommandError.Exception:
                             {
-                                if (result is global::Discord.Interactions.ExecuteResult executeResult)
+                                if (result is ExecuteResult executeResult)
                                 {
                                     await HandleInteractionException(container, executeResult.Exception).ConfigureAwait(false);
                                 }
@@ -548,12 +363,6 @@ public sealed class DiscordBot : IAsyncDisposable
     /// <returns>A task that represents the asynchronous dispose operation.</returns>
     public async ValueTask DisposeAsync()
     {
-        if (_commands != null)
-        {
-            ((IDisposable)_commands).Dispose();
-            _commands = null;
-        }
-
         if (_interaction != null)
         {
             _interaction.Dispose();
@@ -566,8 +375,8 @@ public sealed class DiscordBot : IAsyncDisposable
 
             await _discordClient.LogoutAsync()
                                 .ConfigureAwait(false);
-
-            _discordClient.Dispose();
+            await _discordClient.DisposeAsync()
+                                .ConfigureAwait(false);
             _discordClient = null;
         }
 

@@ -11,9 +11,14 @@ public interface IContextContainer
     #region Properties
 
     /// <summary>
+    /// Custom ID
+    /// </summary>
+    string CustomId { get; }
+
+    /// <summary>
     /// Service provider
     /// </summary>
-    public IServiceProvider ServiceProvider { get; }
+    IServiceProvider ServiceProvider { get; }
 
     /// <summary>
     /// Gets the <see cref="T:Discord.DiscordSocketClient" /> that the command is executed with.

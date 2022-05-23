@@ -1,6 +1,5 @@
 ﻿using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
-using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Interfaces;
 using Scruffy.Services.WebApi;
 
@@ -44,28 +43,15 @@ public class QuagganService : LocatedServiceBase
             var quagganData = await connector.GetQuaggan(quagganName)
                                              .ConfigureAwait(false);
 
-            if (commandContext is InteractionContextContainer interactionContext)
-            {
-                var processingMessage = await interactionContext.DeferProcessing()
-                                                                .ConfigureAwait(false);
+            var processingMessage = await commandContext.DeferProcessing()
+                                                        .ConfigureAwait(false);
 
-                await commandContext.Channel
-                                    .SendMessageAsync(quagganData.Url)
-                                    .ConfigureAwait(false);
+            await commandContext.Channel
+                                .SendMessageAsync(quagganData.Url)
+                                .ConfigureAwait(false);
 
-                await processingMessage.DeleteAsync()
-                                       .ConfigureAwait(false);
-            }
-            else if (commandContext is CommandContextContainer textContext)
-            {
-                await textContext.Message
-                                 .DeleteAsync()
-                                 .ConfigureAwait(false);
-
-                await commandContext.Channel
-                                    .SendMessageAsync(quagganData.Url)
-                                    .ConfigureAwait(false);
-            }
+            await processingMessage.DeleteAsync()
+                                   .ConfigureAwait(false);
         }
     }
 

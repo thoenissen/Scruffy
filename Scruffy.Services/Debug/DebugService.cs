@@ -9,7 +9,7 @@ using Scruffy.Data.Entity.Repositories.General;
 using Scruffy.Data.Entity.Repositories.Guild;
 using Scruffy.Data.Entity.Tables.Guild;
 using Scruffy.Data.Enumerations.GuildWars2;
-using Scruffy.Services.Discord;
+using Scruffy.Services.Discord.Interfaces;
 using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.Debug;
@@ -22,30 +22,11 @@ public class DebugService
     #region Methods
 
     /// <summary>
-    /// Dump text of reply
-    /// </summary>
-    /// <param name="commandContext">Context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task DumpText(CommandContextContainer commandContext)
-    {
-        if (commandContext.Message.ReferencedMessage != null)
-        {
-            var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(commandContext.Message.ReferencedMessage.Content));
-            await using (memoryStream.ConfigureAwait(false))
-            {
-                await commandContext.Channel
-                                    .SendFileAsync(new FileAttachment(memoryStream, "dump.txt"), messageReference: new MessageReference(commandContext.Message.Id, commandContext.Channel?.Id, commandContext.Guild?.Id))
-                                    .ConfigureAwait(false);
-            }
-        }
-    }
-
-    /// <summary>
     /// List roles
     /// </summary>
     /// <param name="commandContext">Context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task ListRoles(CommandContextContainer commandContext)
+    public async Task ListRoles(IContextContainer commandContext)
     {
         await ListEntries(commandContext, "Roles", commandContext.Guild.Roles.Select(obj => obj.Mention).OrderBy(obj => obj)).ConfigureAwait(false);
     }
@@ -55,7 +36,7 @@ public class DebugService
     /// </summary>
     /// <param name="commandContext">Context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task ListChannels(CommandContextContainer commandContext)
+    public async Task ListChannels(IContextContainer commandContext)
     {
         var channels = await commandContext.Guild
                                            .GetChannelsAsync()
@@ -69,7 +50,7 @@ public class DebugService
     /// </summary>
     /// <param name="commandContext">Context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task ListEmojis(CommandContextContainer commandContext)
+    public async Task ListEmojis(IContextContainer commandContext)
     {
         await ListEntries(commandContext, "Emojis", commandContext.Guild.Emotes.Select(obj => obj.ToString()).OrderBy(obj => obj)).ConfigureAwait(false);
     }
@@ -79,7 +60,7 @@ public class DebugService
     /// </summary>
     /// <param name="commandContext">Context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task ListUsers(CommandContextContainer commandContext)
+    public async Task ListUsers(IContextContainer commandContext)
     {
         var members = await commandContext.Guild
                                           .GetUsersAsync()
@@ -100,7 +81,7 @@ public class DebugService
     /// <param name="entries">Entries</param>
     /// <param name="isAddInline">Adding inline code</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    private async Task ListEntries(CommandContextContainer commandContext, string description, IEnumerable<string> entries, bool isAddInline = true)
+    private async Task ListEntries(IContextContainer commandContext, string description, IEnumerable<string> entries, bool isAddInline = true)
     {
         var embedBuilder = new EmbedBuilder
                            {
@@ -158,7 +139,7 @@ public class DebugService
     /// <param name="commandContext">Command context</param>
     /// <param name="id">Id</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task PostLogEntry(CommandContextContainer commandContext, int id)
+    public async Task PostLogEntry(IContextContainer commandContext, int id)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
@@ -250,8 +231,7 @@ public class DebugService
             }
             else
             {
-                await commandContext.Message
-                                    .ReplyAsync("Unknown log entry")
+                await commandContext.ReplyAsync("Unknown log entry")
                                     .ConfigureAwait(false);
             }
         }
@@ -280,7 +260,7 @@ public class DebugService
             if (suppressEmpty == false
              || logEntries.Count > 0)
             {
-                var builder = new EmbedBuilder().WithTitle($"Bot state report")
+                var builder = new EmbedBuilder().WithTitle("Bot state report")
                                                 .WithColor(Color.Green)
                                                 .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
                                                 .WithTimestamp(DateTime.Now);

@@ -15,6 +15,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ContextCommands\**" />
+    <EmbeddedResource Remove="ContextCommands\**" />
+    <None Remove="ContextCommands\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
   </ItemGroup>
 
@@ -30,10 +36,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Scruffy.Services\Scruffy.Services.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ContextCommands\" />
   </ItemGroup>
 
 </Project>

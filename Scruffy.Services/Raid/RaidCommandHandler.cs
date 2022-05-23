@@ -353,13 +353,6 @@ public class RaidCommandHandler : LocatedServiceBase
                                         .ConfigureAwait(false);
                 }
 
-                if (container is CommandContextContainer commandContextContainer)
-                {
-                    await commandContextContainer.Message
-                                                 .DeleteAsync()
-                                                 .ConfigureAwait(false);
-                }
-
                 return true;
             }
 
@@ -403,13 +396,6 @@ public class RaidCommandHandler : LocatedServiceBase
                 {
                     await _messageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
                                         .ConfigureAwait(false);
-                }
-
-                if (container is CommandContextContainer commandContextContainer)
-                {
-                    await commandContextContainer.Message
-                                                 .DeleteAsync()
-                                                 .ConfigureAwait(false);
                 }
             }
             else
