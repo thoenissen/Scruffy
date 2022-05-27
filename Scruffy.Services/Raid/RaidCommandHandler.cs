@@ -561,6 +561,8 @@ public class RaidCommandHandler : LocatedServiceBase
                                 uploads.Add(upload);
                             }
                         }
+
+                        continueLoop = continueLoop && page.Pages < currentPageId;
                     }
                     else
                     {
