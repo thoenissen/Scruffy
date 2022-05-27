@@ -50,6 +50,7 @@ internal static class Preparation
                                         | GatewayIntents.GuildEmojis
                                         | GatewayIntents.GuildIntegrations
                                         | GatewayIntents.GuildVoiceStates
+                                        | GatewayIntents.GuildPresences
                                         | GatewayIntents.GuildMessages
                                         | GatewayIntents.GuildMessageReactions
                                         | GatewayIntents.DirectMessages
