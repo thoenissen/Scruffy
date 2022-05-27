@@ -145,9 +145,6 @@ public class AccountCommandHandler : LocatedServiceBase
                                                        obj.Permissions = GuildWars2ApiDataConverter.ToPermission(tokenInformation.Permissions);
                                                    }))
                         {
-                            await deferMessage.DeleteAsync()
-                                              .ConfigureAwait(false);
-
                             await AccountOverview(context).ConfigureAwait(false);
                         }
                     }
@@ -174,8 +171,8 @@ public class AccountCommandHandler : LocatedServiceBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public async Task AddOrRefreshDpsReportUserToken(InteractionContextContainer context, string userToken)
     {
-        var deferMessage = await context.DeferProcessing()
-                                        .ConfigureAwait(false);
+        await context.DeferProcessing()
+                     .ConfigureAwait(false);
 
         var discordQuery = _repositoryFactory.GetRepository<DiscordAccountRepository>()
                                              .GetQuery()
@@ -186,9 +183,6 @@ public class AccountCommandHandler : LocatedServiceBase
                                                                     && obj2.Id == context.User.Id),
                                        obj => obj.DpsReportUserToken = string.IsNullOrWhiteSpace(userToken) ? null : userToken))
         {
-            await deferMessage.DeleteAsync()
-                              .ConfigureAwait(false);
-
             await AccountOverview(context).ConfigureAwait(false);
         }
         else
@@ -205,8 +199,8 @@ public class AccountCommandHandler : LocatedServiceBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public async Task AddOrRefreshGitHubAccount(InteractionContextContainer context, string accountName)
     {
-        var deferMessage = await context.DeferProcessing()
-                                        .ConfigureAwait(false);
+        await context.DeferProcessing()
+                     .ConfigureAwait(false);
 
         var discordQuery = _repositoryFactory.GetRepository<DiscordAccountRepository>()
                                              .GetQuery()
@@ -217,9 +211,6 @@ public class AccountCommandHandler : LocatedServiceBase
                                                                     && obj2.Id == context.User.Id),
                                        obj => obj.GitHubAccount = string.IsNullOrWhiteSpace(accountName) ? null : accountName))
         {
-            await deferMessage.DeleteAsync()
-                              .ConfigureAwait(false);
-
             await AccountOverview(context).ConfigureAwait(false);
         }
         else
@@ -237,8 +228,8 @@ public class AccountCommandHandler : LocatedServiceBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public async Task AddOrRefreshPersonalData(InteractionContextContainer context, string name, string birthday)
     {
-        var deferMessage = await context.DeferProcessing()
-                                        .ConfigureAwait(false);
+        await context.DeferProcessing()
+                     .ConfigureAwait(false);
 
         var discordQuery = _repositoryFactory.GetRepository<DiscordAccountRepository>()
                                              .GetQuery()
@@ -262,9 +253,6 @@ public class AccountCommandHandler : LocatedServiceBase
                                            }
                                        }))
         {
-            await deferMessage.DeleteAsync()
-                              .ConfigureAwait(false);
-
             await AccountOverview(context).ConfigureAwait(false);
         }
         else
