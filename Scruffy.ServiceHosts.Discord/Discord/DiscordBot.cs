@@ -214,7 +214,7 @@ public sealed class DiscordBot : IAsyncDisposable
             }
 
             await context.SendMessageAsync(_localizationGroup.GetFormattedText("CommandFailedMessage", "The command could not be executed. (Error code 0x{0:X}).", logEntryId ?? -1),
-                                           ephemeral: true)
+                                           ephemeral: context.HasResponded == false)
                          .ConfigureAwait(false);
         }
     }

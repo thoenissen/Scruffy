@@ -84,6 +84,11 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
     /// </summary>
     public IMessage Message => (_interaction as IComponentInteraction)?.Message;
 
+    /// <summary>
+    /// Gets whether or not this interaction has been responded to
+    /// </summary>
+    public bool HasResponded => _interaction?.HasResponded == true;
+
     #endregion Propeties
 
     #region Methods
