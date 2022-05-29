@@ -85,7 +85,7 @@ public class CalendarAddVoiceChannelDialogElement : DialogEmbedMessageElementBas
             {
                 await foreach (var entry in voiceChannel.GetUsersAsync())
                 {
-                    foreach (var user in entry)
+                    foreach (var user in entry.Where(obj => obj.VoiceChannel?.Id == voiceChannel.Id))
                     {
                         members.Add(user);
                     }
