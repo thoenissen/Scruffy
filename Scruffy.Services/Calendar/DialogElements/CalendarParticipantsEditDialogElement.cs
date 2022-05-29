@@ -97,23 +97,38 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedReactionElementB
             }
         }
 
+        var fieldCounter = 1;
+
         foreach (var entry in _data.Participants
                                    .OrderBy(obj => obj.Member.TryGetDisplayName()))
         {
-            message.Append($"> {entry.Member.Mention}");
+            var line = $"> {entry.Member.Mention}";
 
             if (entry.IsLeader)
             {
-                message.Append(' ');
-                message.Append(DiscordEmoteService.GetStarEmote(CommandContext.Client));
+                line += ' ';
+                line += DiscordEmoteService.GetStarEmote(CommandContext.Client);
             }
 
-            message.Append('\n');
+            line += '\n';
+
+            if (line.Length + message.Length > 1000)
+            {
+                builder.AddField(LocalizationGroup.GetText("Participants", "Participants") + " #" + fieldCounter, message.ToString());
+
+                message = new StringBuilder();
+                fieldCounter++;
+            }
+
+            message.Append(line);
         }
 
-        message.AppendLine("\u200b");
+        if (message.Length == 0)
+        {
+            message.AppendLine("\u200b");
+        }
 
-        builder.AddField($"{LocalizationGroup.GetText("Participants", "Participants")} ({_data.Participants.Count})", message.ToString());
+        builder.AddField(LocalizationGroup.GetText("Participants", "Participants") + " #" + fieldCounter, message.ToString());
     }
 
     /// <summary>
