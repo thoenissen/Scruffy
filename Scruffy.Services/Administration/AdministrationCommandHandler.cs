@@ -102,7 +102,7 @@ public class AdministrationCommandHandler : LocatedServiceBase
 
         await foreach (var users in source.GetUsersAsync())
         {
-            foreach (var user in users)
+            foreach (var user in users.Where(obj => obj.VoiceChannel?.Id == source.Id))
             {
                 moveTasks.Add(context.Guild.MoveAsync(user, destination));
             }
