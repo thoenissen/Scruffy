@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.IO;
+using System.Reflection;
 
 using Discord;
 using Discord.Interactions;
@@ -28,6 +29,11 @@ public sealed class DiscordBot : IAsyncDisposable
     private ServiceProviderContainer _serviceProviderContainer;
 
     /// <summary>
+    /// Is the task scheduler initialized?
+    /// </summary>
+    private bool _isSchedulerInitialized;
+
+    /// <summary>
     /// Service scope
     /// </summary>
     private IServiceScope _serviceScope;
@@ -46,6 +52,11 @@ public sealed class DiscordBot : IAsyncDisposable
     /// Interaction service
     /// </summary>
     private InteractionService _interaction;
+
+    /// <summary>
+    /// Debug channel id
+    /// </summary>
+    private ulong _debugChannel;
 
     #endregion // Fields
 
@@ -69,6 +80,12 @@ public sealed class DiscordBot : IAsyncDisposable
     /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
     public async Task StartAsync()
     {
+        var debugChannel = Environment.GetEnvironmentVariable("SCRUFFY_DEBUG_CHANNEL");
+        if (string.IsNullOrWhiteSpace(debugChannel) == false)
+        {
+            _debugChannel = Convert.ToUInt64(debugChannel);
+        }
+
         var config = new DiscordSocketConfig
                      {
                          LogLevel = LogSeverity.Info,
@@ -132,12 +149,27 @@ public sealed class DiscordBot : IAsyncDisposable
     /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
     private async Task OnConnected()
     {
-        _discordClient.Connected -= OnConnected;
+        if (_isSchedulerInitialized == false)
+        {
+            _isSchedulerInitialized = true;
 
-        await _serviceScope.ServiceProvider
-                           .GetRequiredService<JobScheduler>()
-                           .StartAsync()
-                           .ConfigureAwait(false);
+            await _serviceScope.ServiceProvider
+                               .GetRequiredService<JobScheduler>()
+                               .StartAsync()
+                               .ConfigureAwait(false);
+        }
+
+        if (_debugChannel > 0)
+        {
+            var channel = await _discordClient.GetChannelAsync(_debugChannel)
+                                              .ConfigureAwait(false);
+
+            if (channel is ITextChannel textChannel)
+            {
+                await textChannel.SendMessageAsync($"The connection to Discord has been established..\n```Version: {new FileInfo(Assembly.GetExecutingAssembly().Location).CreationTime:yyyy-MM-dd HH:mm:ss}```")
+                                 .ConfigureAwait(false);
+            }
+        }
     }
 
     /// <summary>
