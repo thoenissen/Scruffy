@@ -51,8 +51,6 @@ public class Program
         finally
         {
             LoggingService.AddServiceLogEntry(LogEntryLevel.Information, nameof(Program), "End", null);
-
-            LoggingService.CloseAndFlush();
         }
     }
 

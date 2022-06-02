@@ -22,8 +22,6 @@ using Scruffy.Data.Json.GuildWars2.World;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Exceptions.WebApi;
 
-using Serilog;
-
 namespace Scruffy.Services.WebApi;
 
 /// <summary>
@@ -808,15 +806,18 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
             {
             }
 
-            Log.Logger
-               .ForContext("type", LogEntryType.Service)
-               .ForContext("source", nameof(GuildWars2ApiConnector))
-               .ForContext("url", uri)
-               .ForContext("apiKey", _apiKey)
-               .ForContext("statusCode", response.StatusCode)
-               .ForContext("reasonPhrase", response.ReasonPhrase)
-               .ForContext("content", content)
-               .Write(Serilog.Events.LogEventLevel.Warning, "Unsuccessful Request");
+            LoggingService.AddServiceLogEntry(LogEntryLevel.Warning,
+                                              nameof(GuildWars2ApiConnector),
+                                              "Unsuccessful Request",
+                                              null,
+                                              new
+                                              {
+                                                  Url = uri,
+                                                  ApiKey = _apiKey,
+                                                  response.StatusCode,
+                                                  response.ReasonPhrase,
+                                                  Content = content
+                                              });
         }
 
         response.EnsureSuccessStatusCode();

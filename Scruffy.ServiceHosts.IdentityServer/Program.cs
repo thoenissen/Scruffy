@@ -22,7 +22,11 @@ public class Program
     /// <param name="args">Arguments</param>
     public static void Main(string[] args)
     {
-        LoggingService.Initialize(config => config.Enrich.FromLogContext().CreateBootstrapLogger());
+        Log.Logger = new LoggerConfiguration()
+                     .Enrich.FromLogContext()
+                     .WriteTo.Console(outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
+                     .CreateBootstrapLogger();
+
         LoggingService.AddServiceLogEntry(LogEntryLevel.Information, nameof(Program), "Starting up", null);
 
         try
@@ -124,7 +128,8 @@ public class Program
         finally
         {
             LoggingService.AddServiceLogEntry(LogEntryLevel.Information, nameof(Program), "Shut down complete", null);
-            LoggingService.CloseAndFlush();
+
+            Log.CloseAndFlush();
         }
     }
 }

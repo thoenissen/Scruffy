@@ -4,17 +4,15 @@ using System.Reflection;
 using Discord;
 using Discord.Interactions;
 
-using Elasticsearch.Net;
+using OpenSearch.Net;
+
+using Osc;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.General;
 using Scruffy.Data.Entity.Tables.General;
 using Scruffy.Data.Enumerations.General;
-using Scruffy.Services.Core.Extensions;
 using Scruffy.Services.Discord.Extensions;
-
-using Serilog;
-using Serilog.Sinks.Elasticsearch;
 
 namespace Scruffy.Services.Core;
 
@@ -28,12 +26,22 @@ public class LoggingService
     /// <summary>
     /// Internal logger
     /// </summary>
-    private static readonly LoggingService _logger;
+    private static LoggingService _logger;
 
     /// <summary>
     /// Lock
     /// </summary>
     private readonly object _lock = new();
+
+    /// <summary>
+    /// Environment
+    /// </summary>
+    private readonly string _environment;
+
+    /// <summary>
+    /// OpenSearch client
+    /// </summary>
+    private readonly OpenSearchClient _openSearchClient;
 
     /// <summary>
     /// Stop watch
@@ -52,16 +60,28 @@ public class LoggingService
     /// <summary>
     /// Constructor
     /// </summary>
-    static LoggingService()
-    {
-        _logger = new LoggingService();
-    }
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
     private LoggingService()
     {
+        _environment = Environment.GetEnvironmentVariable("SCRUFFY_ENVIRONMENT")?.ToLowerInvariant();
+        var openSearchUrl = Environment.GetEnvironmentVariable("SCRUFFY_OPENSEARCH");
+
+        if (string.IsNullOrWhiteSpace(_environment) == false
+         && string.IsNullOrWhiteSpace(openSearchUrl) == false)
+        {
+            var node = new Uri(openSearchUrl);
+            var settings = new ConnectionSettings(node);
+
+            settings.ServerCertificateValidationCallback(CertificateValidations.AllowAll);
+
+            var user = Environment.GetEnvironmentVariable("SCRUFFY_OPENSEARCH_USER");
+
+            if (string.IsNullOrWhiteSpace(user) == false)
+            {
+                settings.BasicAuthentication(user, Environment.GetEnvironmentVariable("SCRUFFY_OPENSEARCH_PASSWORD"));
+            }
+
+            _openSearchClient = new OpenSearchClient(settings);
+        }
     }
 
     #endregion // Constructor
@@ -71,64 +91,9 @@ public class LoggingService
     /// <summary>
     /// Initialize
     /// </summary>
-    /// <param name="configurationAction">Additional configurations</param>
-    public static void Initialize(Func<LoggerConfiguration, ILogger> configurationAction = null)
+    public static void Initialize()
     {
-        var environment = Environment.GetEnvironmentVariable("SCRUFFY_ENVIRONMENT");
-        var openSearch = Environment.GetEnvironmentVariable("SCRUFFY_OPENSEARCH");
-
-        var configuration = new LoggerConfiguration();
-
-        configuration.Enrich.WithProperty("Environment", environment);
-
-        configuration.Enrich.WithProperty("Application",
-                                          Assembly.GetEntryAssembly()
-                                                  ?.GetName()
-                                                  .Name
-                                       ?? "Unknown Application");
-
-        if (string.IsNullOrWhiteSpace(environment) == false
-         && string.IsNullOrWhiteSpace(openSearch) == false)
-        {
-            Func<ConnectionConfiguration, ConnectionConfiguration> modifyConnectionSettings = null;
-
-            var user = Environment.GetEnvironmentVariable("SCRUFFY_OPENSEARCH_USER");
-
-            if (string.IsNullOrWhiteSpace(user) == false)
-            {
-                modifyConnectionSettings = obj =>
-                                           {
-                                               obj.BasicAuthentication(user, Environment.GetEnvironmentVariable("SCRUFFY_OPENSEARCH_PASSWORD"));
-
-                                               // HACK / TODO - Create real certificate
-                                               obj.ServerCertificateValidationCallback(CertificateValidations.AllowAll);
-
-                                               return obj;
-                                           };
-            }
-
-            configuration.WriteTo
-                         .Elasticsearch(new ElasticsearchSinkOptions(new Uri(openSearch))
-                                        {
-                                            AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv7,
-                                            AutoRegisterTemplate = true,
-                                            MinimumLogEventLevel = Serilog.Events.LogEventLevel.Verbose,
-                                            IndexFormat = $"scruffy-{environment}-{{0:yyyy-MM}}",
-                                            ModifyConnectionSettings = modifyConnectionSettings
-                                        });
-        }
-
-        configuration.WriteTo
-                     .Console(outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}");
-
-        if (configurationAction != null)
-        {
-            Log.Logger = configurationAction.Invoke(configuration);
-        }
-        else
-        {
-            Log.Logger = configuration.CreateLogger();
-        }
+        _logger = new LoggingService();
     }
 
     /// <summary>
@@ -144,7 +109,7 @@ public class LoggingService
     public static long? AddTextCommandLogEntry(LogEntryLevel level, string qualifiedCommandName, string lastUserCommand, string message, string additionalInformation = null, Exception ex = null)
     {
         // TODO No direct logging to this method. Implementation of logging in IContextContainer.
-        return _logger.WriteLine(LogEntryType.Command, level, qualifiedCommandName, lastUserCommand, message, additionalInformation, ex);
+        return _logger.WriteLine<object>(LogEntryType.Command, level, qualifiedCommandName, lastUserCommand, message, additionalInformation, ex, null);
     }
 
     /// <summary>
@@ -158,7 +123,7 @@ public class LoggingService
     /// <returns>Log entry id</returns>
     public static long? AddInteractionLogEntry(LogEntryLevel level, string customId, string message, string additionalInformation, Exception ex = null)
     {
-        return _logger.WriteLine(LogEntryType.ComponentInteraction, level, customId, null, message, additionalInformation, ex);
+        return _logger.WriteLine<object>(LogEntryType.ComponentInteraction, level, customId, null, message, additionalInformation, ex, null);
     }
 
     /// <summary>
@@ -173,7 +138,7 @@ public class LoggingService
     /// <returns>Log entry id</returns>
     public static long? AddMessageComponentCommandLogEntry(LogEntryLevel level, string group, string command, string message, string additionalInformation = null, Exception ex = null)
     {
-        return _logger.WriteLine(LogEntryType.Command, level, group, command, message, additionalInformation, ex);
+        return _logger.WriteLine<object>(LogEntryType.Command, level, group, command, message, additionalInformation, ex, null);
     }
 
     /// <summary>
@@ -187,7 +152,7 @@ public class LoggingService
     /// <returns>Log entry id</returns>
     public static long? AddJobLogEntry(LogEntryLevel level, string className, string message, string additionalInformation = null, Exception ex = null)
     {
-        return _logger.WriteLine(LogEntryType.Job, level, className, null, message, additionalInformation, ex);
+        return _logger.WriteLine<object>(LogEntryType.Job, level, className, null, message, additionalInformation, ex, null);
     }
 
     /// <summary>
@@ -202,7 +167,7 @@ public class LoggingService
     /// <returns>Log entry id</returns>
     public static long? AddJobLogEntry(LogEntryLevel level, string className, string action, string message, string additionalInformation = null, Exception ex = null)
     {
-        return _logger.WriteLine(LogEntryType.Job, level, className, action, message, additionalInformation, ex);
+        return _logger.WriteLine<object>(LogEntryType.Job, level, className, action, message, additionalInformation, ex, null);
     }
 
     /// <summary>
@@ -216,7 +181,22 @@ public class LoggingService
     /// <returns>Log entry id</returns>
     public static long? AddServiceLogEntry(LogEntryLevel level, string className, string message, string additionalInformation, Exception ex = null)
     {
-        return _logger.WriteLine(LogEntryType.Service, level, className, null, message, additionalInformation, ex);
+        return _logger.WriteLine<object>(LogEntryType.Service, level, className, null, message, additionalInformation, ex, null);
+    }
+
+    /// <summary>
+    /// Adding a log entry
+    /// </summary>
+    /// <param name="level">Level</param>
+    /// <param name="className">Class name</param>
+    /// <param name="message">Message</param>
+    /// <param name="additionalInformation">Additional information</param>
+    /// <param name="customData">Custom data</param>
+    /// <typeparam name="T">Custom data type</typeparam>
+    /// <returns>Log entry id</returns>
+    public static long? AddServiceLogEntry<T>(LogEntryLevel level, string className, string message, string additionalInformation, T customData)
+    {
+        return _logger.WriteLine(LogEntryType.Service, level, className, null, message, additionalInformation, null, customData);
     }
 
     /// <summary>
@@ -231,7 +211,7 @@ public class LoggingService
     /// <returns>Log entry id</returns>
     public static long? AddServiceLogEntry(LogEntryLevel level, string className, string action, string message, string additionalInformation, Exception ex = null)
     {
-        return _logger.WriteLine(LogEntryType.Service, level, className, action, message, additionalInformation, ex);
+        return _logger.WriteLine<object>(LogEntryType.Service, level, className, action, message, additionalInformation, ex, null);
     }
 
     /// <summary>
@@ -240,7 +220,7 @@ public class LoggingService
     /// <param name="logMessage">Log message</param>
     public static void AddInteractionServiceLog(LogMessage logMessage)
     {
-        _logger.WriteLine(LogEntryType.InteractionService, logMessage.Severity.ToLogEntryLevel(), logMessage.Source, null, logMessage.Message, null, logMessage.Exception);
+        _logger.WriteLine<object>(LogEntryType.InteractionService, logMessage.Severity.ToLogEntryLevel(), logMessage.Source, null, logMessage.Message, null, logMessage.Exception, null);
     }
 
     /// <summary>
@@ -249,7 +229,7 @@ public class LoggingService
     /// <param name="logMessage">Log message</param>
     public static void AddDiscordClientLog(LogMessage logMessage)
     {
-        _logger.WriteLine(LogEntryType.DiscordClient, logMessage.Severity.ToLogEntryLevel(), logMessage.Source, null, logMessage.Message, null, logMessage.Exception);
+        _logger.WriteLine<object>(LogEntryType.DiscordClient, logMessage.Severity.ToLogEntryLevel(), logMessage.Source, null, logMessage.Message, null, logMessage.Exception, null);
     }
 
     /// <summary>
@@ -262,20 +242,27 @@ public class LoggingService
     /// <param name="message">Message</param>
     /// <param name="additionalInformation">Additional Information</param>
     /// <param name="ex">Exception</param>
+    /// <param name="customData">Custom data</param>
     /// <returns>Log entry id</returns>
-    private long? WriteLine(LogEntryType type, LogEntryLevel level, string source, string subSource, string message, string additionalInformation, Exception ex)
+    /// <typeparam name="T">Custom data type</typeparam>
+    private long? WriteLine<T>(LogEntryType type, LogEntryLevel level, string source, string subSource, string message, string additionalInformation, Exception ex, T customData)
     {
+        Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss} {level}] [{source}{(string.IsNullOrWhiteSpace(subSource) ? string.Empty : "|")}{(string.IsNullOrWhiteSpace(subSource) ? string.Empty : subSource)}]: {message}{(string.IsNullOrWhiteSpace(additionalInformation) ? null : " - ")}{additionalInformation}");
+
         long? logEntryId = null;
 
         lock (_lock)
         {
-            Log.Logger
-               .ForContext("type", type)
-               .ForContext("source", source)
-               .ForContext("subSource", subSource)
-               .ForContext("message", message)
-               .ForContext("additionalInformation", additionalInformation)
-               .Write(level.ToLogEventLevel(), ex, $"[{source}{(string.IsNullOrWhiteSpace(subSource) ? string.Empty : "|")}{(string.IsNullOrWhiteSpace(subSource) ? string.Empty : subSource)}]: {message}{(string.IsNullOrWhiteSpace(additionalInformation) ? null : " - ")}{additionalInformation}");
+            var logEntry = new LogEntryEntity
+                           {
+                               TimeStamp = DateTime.Now,
+                               Level = level,
+                               Type = type,
+                               Source = source,
+                               SubSource = subSource,
+                               Message = message,
+                               AdditionalInformation = additionalInformation
+                           };
 
             if (_stopwatch.Elapsed > TimeSpan.FromMinutes(1))
             {
@@ -287,17 +274,6 @@ public class LoggingService
             {
                 using (var dbFactory = RepositoryFactory.CreateInstance())
                 {
-                    var logEntry = new LogEntryEntity
-                                   {
-                                       TimeStamp = DateTime.Now,
-                                       Level = level,
-                                       Type = type,
-                                       Source = source,
-                                       SubSource = subSource,
-                                       Message = message,
-                                       AdditionalInformation = additionalInformation
-                                   };
-
                     if (dbFactory.GetRepository<LogEntryRepository>()
                                  .Add(logEntry))
                     {
@@ -305,17 +281,28 @@ public class LoggingService
                     }
                 }
             }
+
+            if (_openSearchClient != null)
+            {
+                var openSearchEntry = new
+                                      {
+                                          logEntry.TimeStamp,
+                                          Level = logEntry.Level.ToString(),
+                                          Type = logEntry.Type.ToString(),
+                                          logEntry.Source,
+                                          logEntry.SubSource,
+                                          logEntry.Message,
+                                          logEntry.AdditionalInformation,
+                                          Environment = _environment,
+                                          Application = Assembly.GetEntryAssembly()?.GetName().Name ?? "Unknown Application",
+                                          Custom = customData
+                                      };
+
+                _openSearchClient.Index(openSearchEntry, obj => obj.Index($"scruffy-{_environment}-{DateTime.Today:yyyy-MM}"));
+            }
         }
 
         return logEntryId;
-    }
-
-    /// <summary>
-    /// Close and flush
-    /// </summary>
-    public static void CloseAndFlush()
-    {
-        Log.CloseAndFlush();
     }
 
     #endregion // Methods
