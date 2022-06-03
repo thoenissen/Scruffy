@@ -166,7 +166,7 @@ public sealed class DiscordBot : IAsyncDisposable
 
             if (channel is ITextChannel textChannel)
             {
-                await textChannel.SendMessageAsync($"The connection to Discord has been established..\n```Version: {new FileInfo(Assembly.GetExecutingAssembly().Location).CreationTime:yyyy-MM-dd HH:mm:ss}```")
+                await textChannel.SendMessageAsync($"The connection to Discord has been established.\n```Version: {new FileInfo(Assembly.GetExecutingAssembly().Location).CreationTime:yyyy-MM-dd HH:mm:ss}```")
                                  .ConfigureAwait(false);
             }
         }

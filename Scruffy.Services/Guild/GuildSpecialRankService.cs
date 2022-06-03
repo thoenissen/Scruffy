@@ -204,12 +204,12 @@ public class GuildSpecialRankService : LocatedServiceBase
                         {
                             isFirstReply = false;
 
-                            await commandContext.ReplyAsync(attachments: new[] { new FileAttachment(chartStream, "chart.png") })
+                            await commandContext.ReplyAsync(embed: embedBuilder.Build(), attachments: new[] { new FileAttachment(chartStream, "chart.png") })
                                                 .ConfigureAwait(false);
                         }
                         else
                         {
-                            await commandContext.SendMessageAsync(attachments: new[] { new FileAttachment(chartStream, "chart.png") })
+                            await commandContext.SendMessageAsync(embed: embedBuilder.Build(), attachments: new[] { new FileAttachment(chartStream, "chart.png") })
                                                 .ConfigureAwait(false);
                         }
                     }
