@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Reflection;
+using System.Text;
 
 using Discord;
 using Discord.Interactions;
@@ -57,6 +58,11 @@ public sealed class DiscordBot : IAsyncDisposable
     /// Debug channel id
     /// </summary>
     private ulong _debugChannel;
+
+    /// <summary>
+    /// Last disconnect exception
+    /// </summary>
+    private Exception _lastDisconnect;
 
     #endregion // Fields
 
@@ -132,6 +138,7 @@ public sealed class DiscordBot : IAsyncDisposable
                                           .GetGroup(nameof(DiscordBot));
 
         _discordClient.Connected += OnConnected;
+        _discordClient.Disconnected += OnDisconnected;
 
         await _interaction.AddModulesAsync(Assembly.Load("Scruffy.Commands"), _serviceScope.ServiceProvider)
                           .ConfigureAwait(false);
@@ -166,10 +173,40 @@ public sealed class DiscordBot : IAsyncDisposable
 
             if (channel is ITextChannel textChannel)
             {
-                await textChannel.SendMessageAsync($"The connection to Discord has been established.\n```Version: {new FileInfo(Assembly.GetExecutingAssembly().Location).CreationTime:yyyy-MM-dd HH:mm:ss}```")
+                var message = new StringBuilder();
+
+                message.AppendLine("The connection to Discord has been established.");
+
+                message.AppendLine("```");
+
+                message.AppendLine($"Version: {new FileInfo(Assembly.GetExecutingAssembly().Location).CreationTime:yyyy-MM-dd HH:mm:ss}");
+
+                if (_lastDisconnect != null)
+                {
+                    message.Append("Last disconnect message: ");
+                    message.AppendLine(_lastDisconnect.ToString());
+
+                    _lastDisconnect = null;
+                }
+
+                message.AppendLine("```");
+
+                await textChannel.SendMessageAsync(message.ToString())
                                  .ConfigureAwait(false);
             }
         }
+    }
+
+    /// <summary>
+    /// The discord client disconnected
+    /// </summary>
+    /// <param name="ex">Exception</param>
+    /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+    private Task OnDisconnected(Exception ex)
+    {
+        _lastDisconnect = ex;
+
+        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -405,6 +442,7 @@ public sealed class DiscordBot : IAsyncDisposable
         if (_discordClient != null)
         {
             _discordClient.Connected -= OnConnected;
+            _discordClient.Disconnected -= OnDisconnected;
 
             await _discordClient.LogoutAsync()
                                 .ConfigureAwait(false);
