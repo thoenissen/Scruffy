@@ -1,30 +1,31 @@
-﻿using FluentScheduler;
-
-using Scruffy.Data.Entity;
+﻿using Scruffy.Data.Entity;
 using Scruffy.Data.Enumerations.General;
+using Scruffy.Services.Core.JobScheduler;
 
 namespace Scruffy.Services.Core;
 
 /// <summary>
 /// Backup of the sql database
 /// </summary>
-public class BackupJob : IJob
+public class BackupJob : LocatedAsyncJob
 {
-    #region IJob
+    #region LocatedAsyncJob
 
     /// <summary>
-    /// Executes the job.
+    /// Executes the job
     /// </summary>
-    public void Execute()
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public override async Task ExecuteOverrideAsync()
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
-            if (dbFactory.ExecuteSqlCommand($"BACKUP DATABASE [{Environment.GetEnvironmentVariable("SCRUFFY_DB_CATALOG")}] TO  DISK = N'{Environment.GetEnvironmentVariable("SCRUFFY_DB_BACKUP_DIRECTORY")}{Environment.GetEnvironmentVariable("SCRUFFY_DB_CATALOG")}_{DateTime.Now:yyyyMMdd}.bak' WITH NOFORMAT, NOINIT,  NAME = N'{Environment.GetEnvironmentVariable("SCRUFFY_DB_CATALOG")}-Full Database Backup', SKIP, NOREWIND, NOUNLOAD") == null)
+            if (await dbFactory.ExecuteSqlRawAsync($"BACKUP DATABASE [{Environment.GetEnvironmentVariable("SCRUFFY_DB_CATALOG")}] TO  DISK = N'{Environment.GetEnvironmentVariable("SCRUFFY_DB_BACKUP_DIRECTORY")}{Environment.GetEnvironmentVariable("SCRUFFY_DB_CATALOG")}_{DateTime.Now:yyyyMMdd}.bak' WITH NOFORMAT, NOINIT,  NAME = N'{Environment.GetEnvironmentVariable("SCRUFFY_DB_CATALOG")}-Full Database Backup', SKIP, NOREWIND, NOUNLOAD")
+                               .ConfigureAwait(false) == null)
             {
                 LoggingService.AddJobLogEntry(LogEntryLevel.CriticalError, nameof(BackupJob), dbFactory.LastError.Message, null, dbFactory.LastError.ToString());
             }
         }
     }
 
-    #endregion // IJob
+    #endregion // LocatedAsyncJob
 }

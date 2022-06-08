@@ -96,7 +96,7 @@ public sealed class RepositoryFactory : IDisposable
     /// <param name="sql">SQL-Script</param>
     /// <param name="parameters">Parameters</param>
     /// <returns>Number of rows affected</returns>
-    public int? ExecuteSqlCommand(string sql, params object[] parameters)
+    public int? ExecuteSqlRaw(string sql, params object[] parameters)
     {
         int? value = null;
 
