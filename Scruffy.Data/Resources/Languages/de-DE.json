@@ -641,14 +641,15 @@
       "MultiLineReminder": "{0} Erinnerung:\n\n{1}",
       "SingleLineReminder": "{0} Erinnerung: {1}"
     },
-    "RaidCommandHandler": {
+   "RaidCommandHandler": {
       "GroupCountChanged": "Die Anzahl der Gruppen wurde angepasst.",
       "NewRankFormat": "Neue Wertung für {0}: {1} {2} {3}",
       "NoActiveAppointment": "Es besteht kein aktiver Termin.",
       "NoDpsReportToken": "Deinem Account sind keine DPS-Report-User-Tokens zugeordnet.",
+      "NoRoleSelectionAfterDeadline": "Die Bearbeitung deiner präferierten Rollen ist nach dem Anmeldeschluss nicht mehr möglich.",
       "TemplateChanged": "Die Schablone wurde angepasst.",
       "UnknownExperienceLevel": "Das angegebene Erfahrungslevel existiert nicht."
-    },
+   },
     "RaidCommitDialogElement": {
       "AddCommand": "{0} Teilnehmer hinzufügen",
       "CancelCommand": "{0} Abbrechen",

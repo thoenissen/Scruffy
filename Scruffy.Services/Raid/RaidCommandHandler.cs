@@ -242,10 +242,11 @@ public class RaidCommandHandler : LocatedServiceBase
                                              .Where(obj => obj.TimeStamp > DateTime.Now
                                                         && obj.RaidDayConfiguration.AliasName == name)
                                              .Select(obj => new
-                                             {
-                                                 obj.Id,
-                                                 obj.ConfigurationId
-                                             })
+                                                            {
+                                                                obj.Id,
+                                                                obj.ConfigurationId,
+                                                                obj.Deadline
+                                                            })
                                              .FirstOrDefaultAsync()
                                              .ConfigureAwait(false);
 
@@ -258,12 +259,20 @@ public class RaidCommandHandler : LocatedServiceBase
                 {
                     if (isDisplayRoleSelection)
                     {
-                        await _roleAssignmentService.AssignRoles(container, registrationId.Value)
-                                                    .ConfigureAwait(false);
+                        if (DateTime.Now < appointment.Deadline)
+                        {
+                            await _roleAssignmentService.AssignRoles(container, registrationId.Value)
+                                                        .ConfigureAwait(false);
+                        }
+                        else
+                        {
+                            await container.ReplyAsync(LocalizationGroup.GetText("NoRoleSelectionAfterDeadline", "It is not possible to edit your preferred roles after the registration deadline."), ephemeral: true)
+                                           .ConfigureAwait(false);
+                        }
                     }
 
                     await _messageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
-                                        .ConfigureAwait(false);
+                                         .ConfigureAwait(false);
                 }
             }
             else
