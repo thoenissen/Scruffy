@@ -332,8 +332,8 @@ public class GuildRankVisualizationService : LocatedServiceBase
         var user = await _userManagementService.GetUserByDiscordAccountId(guildUser.Id)
                                                .ConfigureAwait(false);
 
-        var from = DateTime.Today.AddDays(-62);
-        var to = DateTime.Today;
+        var from = DateTime.Today.AddDays(-63);
+        var to = DateTime.Today.AddDays(-1);
 
         var currentPoints = _dbFactory.GetRepository<GuildRankCurrentPointsRepository>()
                                           .GetQuery()
@@ -353,7 +353,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
         {
             var dataSets = new List<DataSet>();
 
-            var dates = Enumerable.Range(-62, 63)
+            var dates = Enumerable.Range(-63, 63)
                                   .Select(obj => DateTime.Today.AddDays(obj))
                                   .ToList();
 
