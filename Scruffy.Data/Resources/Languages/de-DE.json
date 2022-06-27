@@ -467,7 +467,7 @@
       "NoSuperior": "Kein übergeordneter Rang",
       "RanksField": "Ränge"
     },
-    "GuildRankVisualizationService": {
+   "GuildRankVisualizationService": {
       "AchievementPoints": "Erfolgspunkte",
       "Development": "Bot-Entwicklung",
       "DiscordMessageActivity": "Nachrichtenaktivität",
@@ -482,12 +482,13 @@
       "PageFooter": "Seite {0} von {1}",
       "RankingOverview": "Punkteübersicht",
       "RankingPersonalOverview": "Persönliche Punkteübersicht",
+      "RankingPersonalTypeHistoryOverview": "Persönliche Punktehistorie",
       "RankingPoints": "Gesamtpunktzahl",
       "RankingRank": "Platzierung",
       "RankingUser": "Benutzer",
       "RankingUserCount": "Mitglieder",
       "Representation": "Repräsentieren"
-    },
+   },
     "GuildSpecialRankDeletionDialogElement": {
       "DeletePrompt": "Soll der Spezial-Rang wirklich gelöscht werden?"
     },

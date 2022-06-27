@@ -30,4 +30,10 @@ public class OptionsCollection
     /// </summary>
     [JsonProperty("title")]
     public TitleConfiguration Title { get; set; }
+
+    /// <summary>
+    /// Legend
+    /// </summary>
+    [JsonProperty("legend")]
+    public ChartLegendConfiguration Legend { get; set; }
 }

@@ -90,6 +90,17 @@ public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
         GuildWarsAccountPermissions,
     }
 
+    /// <summary>
+    /// Guild ranking visualization type
+    /// </summary>
+    public enum GuildRankingVisualizationType
+    {
+        [ChoiceDisplay("Current points")]
+        Current,
+        [ChoiceDisplay("History per type")]
+        HistoryTypes
+    }
+
     #endregion // Enumeration
 
     #region Properties
@@ -299,9 +310,30 @@ public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
     /// Personal ranking data
     /// </summary>
     /// <param name="user">User</param>
+    /// <param name="type">Type</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("ranking-of", "Personal guild ranking overview")]
-    public Task PostPersonalRankingOverview([Summary("User", "User")]IGuildUser user) => CommandHandler.PostPersonalRankingOverview(Context, user);
+    public async Task PostPersonalRankingOverview([Summary("User", "User")]IGuildUser user,
+                                                  [Summary("Type", "Visualization type")]GuildRankingVisualizationType type = GuildRankingVisualizationType.Current)
+    {
+        switch (type)
+        {
+            case GuildRankingVisualizationType.Current:
+                {
+                    await CommandHandler.PostPersonalRankingOverview(Context, user)
+                                        .ConfigureAwait(false);
+                }
+                break;
+            case GuildRankingVisualizationType.HistoryTypes:
+                {
+                    await CommandHandler.PostPersonalRankingHistoryTypeOverview(Context, user)
+                                        .ConfigureAwait(false);
+                }
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(type), type, null);
+        }
+    }
 
     /// <summary>
     /// Execute checks

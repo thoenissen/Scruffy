@@ -43,4 +43,10 @@ public class DataSet<T> : DataSet
     /// </summary>
     [JsonProperty("data")]
     public List<T> Data { get; set; }
+
+    /// <summary>
+    /// Point radius
+    /// </summary>
+    [JsonProperty("pointRadius")]
+    public double? PointRadius { get; set; }
 }

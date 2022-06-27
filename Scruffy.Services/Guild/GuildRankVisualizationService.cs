@@ -10,6 +10,7 @@ using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Entity.Repositories.Guild;
 using Scruffy.Data.Entity.Repositories.GuildWars2.Account;
 using Scruffy.Data.Entity.Repositories.GuildWars2.Guild;
+using Scruffy.Data.Enumerations.Guild;
 using Scruffy.Data.Json.QuickChart;
 using Scruffy.Data.Services.Guild;
 using Scruffy.Services.Core;
@@ -291,6 +292,136 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                                                           {
                                                                               Width = 600,
                                                                               Height = 500,
+                                                                              BackgroundColor = "#2f3136",
+                                                                              Format = "png",
+                                                                              Config = JsonConvert.SerializeObject(chartConfiguration,
+                                                                                                                   new JsonSerializerSettings
+                                                                                                                   {
+                                                                                                                       NullValueHandling = NullValueHandling.Ignore
+                                                                                                                   })
+                                                                          })
+                                                        .ConfigureAwait(false);
+
+            await using (chartStream.ConfigureAwait(false))
+            {
+                embedBuilder.WithImageUrl("attachment://chart.png");
+
+                await context.ReplyAsync(embed: embedBuilder.Build(),
+                                         attachments: new[] { new FileAttachment(chartStream, "chart.png") })
+                             .ConfigureAwait(false);
+            }
+        }
+        else
+        {
+            await context.ReplyAsync(LocalizationGroup.GetText("NoPersonalData", "No ranking data is available."))
+                         .ConfigureAwait(false);
+        }
+    }
+
+    /// <summary>
+    /// Post personal overview
+    /// </summary>
+    /// <param name="context">Context</param>
+    /// <param name="guildUser">User</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public async Task PostPersonalHistoryTypeOverview(InteractionContextContainer context, IGuildUser guildUser)
+    {
+        await context.DeferProcessing()
+                     .ConfigureAwait(false);
+
+        var user = await _userManagementService.GetUserByDiscordAccountId(guildUser.Id)
+                                               .ConfigureAwait(false);
+
+        var from = DateTime.Today.AddDays(-62);
+        var to = DateTime.Today;
+
+        var currentPoints = _dbFactory.GetRepository<GuildRankCurrentPointsRepository>()
+                                          .GetQuery()
+                                          .Where(obj => obj.UserId == user.Id
+                                                     && obj.Date >= from
+                                                     && obj.Date <= to
+                                                     && obj.Points != 0)
+                                          .Select(obj => new
+                                                         {
+                                                             obj.Date,
+                                                             obj.Type,
+                                                             obj.Points
+                                                         })
+                                          .ToList();
+
+        if (currentPoints.Count > 0)
+        {
+            var dataSets = new List<DataSet>();
+
+            var dates = Enumerable.Range(-62, 63)
+                                  .Select(obj => DateTime.Today.AddDays(obj))
+                                  .ToList();
+
+            var colors = new List<string>
+                         {
+                             "#0d1c26",
+                             "#142b39",
+                             "#1d3e53",
+                             "#21475e",
+                             "#2e6384",
+                             "#357197",
+                             "#3c80aa",
+                             "#428ebd",
+                             "#5599c3",
+                             "#68a4ca"
+                         };
+
+            foreach (var type in Enum.GetValues(typeof(GuildRankPointType))
+                                     .OfType<GuildRankPointType>())
+            {
+                dataSets.Add(new DataSet<double>
+                             {
+                                 Label = LocalizationGroup.GetText(type.ToString(), type.ToString()),
+                                 BorderColor = colors[(int)type],
+                                 Data = dates.Select(obj => currentPoints.FirstOrDefault(obj2 => obj2.Date == obj
+                                                                                              && obj2.Type == type)?.Points
+                                                         ?? 0.0)
+                                             .ToList(),
+                                 Fill = false,
+                                 PointRadius = 0.0
+                             });
+            }
+
+            var embedBuilder = new EmbedBuilder().WithTitle($"{LocalizationGroup.GetText("RankingPersonalTypeHistoryOverview", "Guild ranking history per type")}")
+                                                 .WithColor(Color.DarkBlue)
+                                                 .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
+                                                 .WithTimestamp(DateTime.Now)
+                                                 .WithImageUrl("attachment://chart.png");
+
+            var chartConfiguration = new ChartConfigurationData
+                                     {
+                                         Type = "line",
+                                         Data = new Data.Json.QuickChart.Data
+                                                {
+                                                    Labels = dates.Select(obj => obj.ToString("d", LocalizationGroup.CultureInfo))
+                                                                  .ToList(),
+                                                    DataSets = dataSets
+                                                },
+                                         Options = new OptionsCollection
+                                                   {
+                                                       Legend = new ChartLegendConfiguration
+                                                                {
+                                                                    Position = "bottom"
+                                                                },
+                                                       Title = new TitleConfiguration
+                                                               {
+                                                                   Display = true,
+                                                                   FontColor = "white",
+                                                                   FontSize = 26,
+                                                                   Text = LocalizationGroup.GetText("MeOverviewChartTitle", "Point distribution")
+                                                               }
+                                                   }
+                                     };
+
+            var chartStream = await _quickChartConnector.GetChartAsStream(new ChartData
+                                                                          {
+                                                                              Width = 600,
+                                                                              Height = 600,
                                                                               BackgroundColor = "#2f3136",
                                                                               Format = "png",
                                                                               Config = JsonConvert.SerializeObject(chartConfiguration,
