@@ -306,14 +306,14 @@ public class GuildRankVisualizationService : LocatedServiceBase
             {
                 embedBuilder.WithImageUrl("attachment://chart.png");
 
-                await context.ReplyAsync(embed: embedBuilder.Build(),
-                                         attachments: new[] { new FileAttachment(chartStream, "chart.png") })
+                await context.SendMessageAsync(embed: embedBuilder.Build(),
+                                               attachments: new[] { new FileAttachment(chartStream, "chart.png") })
                              .ConfigureAwait(false);
             }
         }
         else
         {
-            await context.ReplyAsync(LocalizationGroup.GetText("NoPersonalData", "No ranking data is available."))
+            await context.SendMessageAsync(LocalizationGroup.GetText("NoPersonalData", "No ranking data is available."))
                          .ConfigureAwait(false);
         }
     }
@@ -340,7 +340,8 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                           .Where(obj => obj.UserId == user.Id
                                                      && obj.Date >= from
                                                      && obj.Date <= to
-                                                     && obj.Points != 0)
+                                                     && obj.Points != 0
+                                                     && obj.Guild.DiscordServerId == context.Guild.Id)
                                           .Select(obj => new
                                                          {
                                                              obj.Date,
@@ -383,11 +384,19 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                                          ?? 0.0)
                                              .ToList(),
                                  Fill = false,
-                                 PointRadius = 0.0
+                                 PointRadius = 0.0,
+                                 BorderDash = (int)type % 2  == 0 ?  new double[] { 5 } : null
                              });
             }
 
+            var descriptionBuilder = new StringBuilder();
+
+            descriptionBuilder.Append(LocalizationGroup.GetText("RankingUser", "User"));
+            descriptionBuilder.Append(": ");
+            descriptionBuilder.Append(guildUser.Mention);
+
             var embedBuilder = new EmbedBuilder().WithTitle($"{LocalizationGroup.GetText("RankingPersonalTypeHistoryOverview", "Guild ranking history per type")}")
+                                                 .WithDescription(descriptionBuilder.ToString())
                                                  .WithColor(Color.DarkBlue)
                                                  .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
                                                  .WithTimestamp(DateTime.Now)
@@ -436,14 +445,14 @@ public class GuildRankVisualizationService : LocatedServiceBase
             {
                 embedBuilder.WithImageUrl("attachment://chart.png");
 
-                await context.ReplyAsync(embed: embedBuilder.Build(),
-                                         attachments: new[] { new FileAttachment(chartStream, "chart.png") })
+                await context.SendMessageAsync(embed: embedBuilder.Build(),
+                                               attachments: new[] { new FileAttachment(chartStream, "chart.png") })
                              .ConfigureAwait(false);
             }
         }
         else
         {
-            await context.ReplyAsync(LocalizationGroup.GetText("NoPersonalData", "No ranking data is available."))
+            await context.SendMessageAsync(LocalizationGroup.GetText("NoPersonalData", "No ranking data is available."))
                          .ConfigureAwait(false);
         }
     }

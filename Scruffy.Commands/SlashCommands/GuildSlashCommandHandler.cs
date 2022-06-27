@@ -79,7 +79,14 @@ public class GuildSlashCommandHandler : SlashCommandModuleBase
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("ranking-me", "Personal guild ranking overview")]
-    public Task PostPersonalRankingOverview() => CommandHandler.PostPersonalRankingOverview(Context, Context.Member);
+    public async Task PostPersonalRankingOverview()
+    {
+        await CommandHandler.PostPersonalRankingOverview(Context, Context.Member)
+                            .ConfigureAwait(false);
+
+        await CommandHandler.PostPersonalRankingHistoryTypeOverview(Context, Context.Member)
+                            .ConfigureAwait(false);
+    }
 
     #endregion // Methods
 }

@@ -49,4 +49,10 @@ public class DataSet<T> : DataSet
     /// </summary>
     [JsonProperty("pointRadius")]
     public double? PointRadius { get; set; }
+
+    /// <summary>
+    /// Border dash
+    /// </summary>
+    [JsonProperty("borderDash")]
+    public double[] BorderDash { get; set; }
 }

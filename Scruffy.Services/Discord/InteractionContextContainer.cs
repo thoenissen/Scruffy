@@ -29,9 +29,9 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
     private IDiscordInteraction _interaction;
 
     /// <summary>
-    /// Is defer processing active?
+    /// Defer processing message
     /// </summary>
-    private bool _isDeferProcessingActive;
+    private IUserMessage _deferMessage;
 
     #endregion // Fields
 
@@ -101,17 +101,13 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
     {
         try
         {
-            await _interaction.RespondAsync(ServiceProvider.GetRequiredService<LocalizationService>()
-                                                           .GetGroup(nameof(InteractionContextContainer))
-                                                           .GetFormattedText("Processing",
-                                                                             "{0} The action is being processed.",
-                                                                             DiscordEmoteService.GetLoadingEmote(Client)))
-                              .ConfigureAwait(false);
+            _deferMessage = await SendMessageAsync(ServiceProvider.GetRequiredService<LocalizationService>()
+                                                                .GetGroup(nameof(InteractionContextContainer))
+                                                                .GetFormattedText("Processing",
+                                                                                  "{0} The action is being processed.",
+                                                                                  DiscordEmoteService.GetLoadingEmote(Client))).ConfigureAwait(false);
 
-            _isDeferProcessingActive = true;
-
-            return await _interaction.GetOriginalResponseAsync()
-                                     .ConfigureAwait(false);
+            return _deferMessage;
         }
         catch (TimeoutException)
         {
@@ -202,7 +198,7 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
     {
         try
         {
-            _isDeferProcessingActive = false;
+            _deferMessage = null;
 
             if (_interaction != null)
             {
@@ -311,7 +307,7 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
             {
                 if (_interaction.HasResponded == false)
                 {
-                    _isDeferProcessingActive = false;
+                    _deferMessage = null;
 
                     if (stickers != null)
                     {
@@ -333,29 +329,33 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
                                              .ConfigureAwait(false);
                 }
 
-                if (_isDeferProcessingActive)
+                if (_deferMessage != null)
                 {
-                    _isDeferProcessingActive = false;
+                    var deferMessage = _deferMessage;
 
-                    return await _interaction.ModifyOriginalResponseAsync(obj =>
-                                                                          {
-                                                                              if (text == null
-                                                                               && embed == null)
-                                                                              {
-                                                                                  obj.Content = "\u200b";
-                                                                              }
-                                                                              else
-                                                                              {
-                                                                                  obj.Content = text;
-                                                                                  obj.Embed = embed;
-                                                                              }
+                    _deferMessage = null;
 
-                                                                              obj.AllowedMentions = allowedMentions;
-                                                                              obj.Components = components;
-                                                                              obj.Embeds = embeds;
-                                                                              obj.Attachments = new Optional<IEnumerable<FileAttachment>>(attachments ?? Enumerable.Empty<FileAttachment>());
-                                                                          })
-                                             .ConfigureAwait(false);
+                    await deferMessage.ModifyAsync(obj =>
+                                                   {
+                                                       if (text == null
+                                                        && embed == null)
+                                                       {
+                                                           obj.Content = "\u200b";
+                                                       }
+                                                       else
+                                                       {
+                                                           obj.Content = text;
+                                                           obj.Embed = embed;
+                                                       }
+
+                                                       obj.AllowedMentions = allowedMentions;
+                                                       obj.Components = components;
+                                                       obj.Embeds = embeds;
+                                                       obj.Attachments = new Optional<IEnumerable<FileAttachment>>(attachments ?? Enumerable.Empty<FileAttachment>());
+                                                   })
+                                      .ConfigureAwait(false);
+
+                    return deferMessage;
                 }
 
                 return attachments == null
