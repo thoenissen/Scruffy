@@ -61,7 +61,6 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedReactionElementB
     public override async Task EditMessage(EmbedBuilder builder)
     {
         builder.WithTitle(LocalizationGroup.GetText("CommitTitle", "Participants"));
-        builder.WithDescription(LocalizationGroup.GetText("CommitText", "The following participants are recorded:"));
         builder.WithColor(Color.Green);
         builder.WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64");
         builder.WithTimestamp(DateTime.Now);
@@ -95,6 +94,15 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedReactionElementB
                                            });
                 }
             }
+        }
+
+        if (_data.Participants.Count > 0)
+        {
+            builder.WithDescription(LocalizationGroup.GetFormattedText("CommitCountText", "The following {0} participants are recorded:", _data.Participants.Count));
+        }
+        else
+        {
+            builder.WithDescription(LocalizationGroup.GetText("CommitText", "The following participants are recorded:"));
         }
 
         var fieldCounter = 1;
