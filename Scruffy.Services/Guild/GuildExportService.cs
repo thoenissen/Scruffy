@@ -674,7 +674,9 @@ public class GuildExportService : LocatedServiceBase
                     await writer.WriteLineAsync("AccountName;Joined;API-Key;Permissions")
                                 .ConfigureAwait(false);
 
-                    foreach (var (name, joined, isApiKeyValid, hasAllPermissions) in members.OrderBy(obj => obj.IsApiKeyValid).ThenBy(obj => obj.Name))
+                    foreach (var (name, joined, isApiKeyValid, hasAllPermissions) in members.OrderBy(obj => obj.IsApiKeyValid)
+                                                                                            .ThenBy(obj => obj.HasAllPermissions)
+                                                                                            .ThenBy(obj => obj.Name))
                     {
                         await writer.WriteLineAsync($"{name};{joined?.ToString("g", LocalizationGroup.CultureInfo)};{(isApiKeyValid ? "✔️" : "❌")};{(hasAllPermissions ? "✔️" : "❌")}")
                                     .ConfigureAwait(false);
