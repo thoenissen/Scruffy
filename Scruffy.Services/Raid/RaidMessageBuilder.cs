@@ -61,6 +61,7 @@ public class RaidMessageBuilder : LocatedServiceBase
                                        .Select(obj => new
                                                       {
                                                           obj.TimeStamp,
+                                                          obj.Deadline,
                                                           ChannelId = obj.RaidDayConfiguration.DiscordChannelId,
                                                           MessageId = obj.RaidDayConfiguration.DiscordMessageId,
                                                           obj.RaidDayConfiguration.AliasName,
@@ -291,7 +292,8 @@ public class RaidMessageBuilder : LocatedServiceBase
                                                      ButtonStyle.Secondary,
                                                      DiscordEmoteService.GetEditEmote(_client),
                                                      null,
-                                                     appointment.TimeStamp <= DateTime.Now);
+                                                     appointment.Deadline <= DateTime.Now
+                                                  || appointment.TimeStamp <= DateTime.Now);
                         componentsBuilder.WithButton(LocalizationGroup.GetText("Leave", "Leave"),
                                                      InteractivityService.GetPermanentCustomerId("raid",
                                                                                                  "leave",

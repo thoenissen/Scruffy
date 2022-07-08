@@ -126,9 +126,11 @@ public sealed class JobScheduler : SingletonLocatedServiceBase,
                                                  .Select(obj => new
                                                                 {
                                                                     obj.ConfigurationId,
-                                                                    obj.TimeStamp
+                                                                    obj.TimeStamp,
+                                                                    obj.Deadline
                                                                 }))
             {
+                JobManager.AddJob(new RaidMessageRefreshJob(appointment.ConfigurationId), obj => obj.ToRunOnceAt(appointment.Deadline));
                 JobManager.AddJob(new RaidMessageRefreshJob(appointment.ConfigurationId), obj => obj.ToRunOnceAt(appointment.TimeStamp));
             }
         }

@@ -318,6 +318,7 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
                                                      dbFactory.GetRepository<RaidAppointmentRepository>()
                                                               .Add(nextAppointment);
 
+                                                     _jobScheduler.AddJob(new RaidMessageRefreshJob(nextAppointment.ConfigurationId), nextAppointment.Deadline);
                                                      _jobScheduler.AddJob(new RaidMessageRefreshJob(nextAppointment.ConfigurationId), nextAppointment.TimeStamp);
                                                  }
 
