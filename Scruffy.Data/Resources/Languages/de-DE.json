@@ -489,7 +489,8 @@
       "RankingUser": "Benutzer",
       "RankingUserCount": "Mitglieder",
       "Representation": "Repräsentieren",
-      "TotalScore": "Gesamtpunkte" 
+      "ScoreType": "Typ",
+      "TotalScore": "Gesamtpunkte"
    },
     "GuildSpecialRankDeletionDialogElement": {
       "DeletePrompt": "Soll der Spezial-Rang wirklich gelöscht werden?"
