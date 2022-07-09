@@ -284,7 +284,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                                                    Display = true,
                                                                    FontColor = "white",
                                                                    FontSize = 26,
-                                                                   Text = LocalizationGroup.GetText("CompareOverviewChartTitle", "Point compare")
+                                                                   Text = LocalizationGroup.GetText("MeOverviewChartTitle", "Point distribution")
                                                                }
                                                    }
                                      };
@@ -467,7 +467,8 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                                                                                .ToList()
                                                                    }
                                                                },
-                                                    Labels = userPoints.Select(obj => $"{LocalizationGroup.GetText(obj.Type.ToString(), obj.Type.ToString())} ({obj.Points.ToString("0.##", LocalizationGroup.CultureInfo)} vs {compareUserPoints.Where(obj => obj.Type == obj.Type).Select(obj2 => obj2.Points).First().ToString("0.##", LocalizationGroup.CultureInfo)})")
+                                                    Labels = userPoints.OrderBy(obj => obj.Type)
+                                                                       .Select(obj => $"{LocalizationGroup.GetText(obj.Type.ToString(), obj.Type.ToString())} ({obj.Points.ToString("0.##", LocalizationGroup.CultureInfo)} vs {compareUserPoints.Where(obj2 => obj2.Type == obj.Type).Select(obj2 => obj2.Points).First().ToString("0.##", LocalizationGroup.CultureInfo)})")
                                                                        .ToList()
                                                 },
                                          Options = new OptionsCollection
