@@ -464,9 +464,13 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                                 },
                                          Options = new OptionsCollection
                                                    {
+                                                       Legend = new ChartLegendConfiguration
+                                                                {
+                                                                    Position = "bottom"
+                                                                },
                                                        Plugins = new PluginsCollection
                                                                  {
-                                                                     Legend = false
+                                                                     Legend = true
                                                                  },
                                                        Title = new TitleConfiguration
                                                                {
