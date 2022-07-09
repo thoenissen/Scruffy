@@ -336,6 +336,19 @@ public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
     }
 
     /// <summary>
+    /// Personal ranking data compare
+    /// </summary>
+    /// <param name="user">User</param>
+    /// <param name="compareUser">Compare user</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [SlashCommand("compare-of", "Personal guild ranking compare overview")]
+    public Task PostPersonalRankingCompareOverview([Summary("UserOne", "First user")] IGuildUser user,
+                                                         [Summary("UserTwo", "Second user")] IGuildUser compareUser)
+    {
+        return CommandHandler.PostPersonalCompareOverview(Context, user, compareUser);
+    }
+
+    /// <summary>
     /// Execute checks
     /// </summary>
     /// <param name="type">Type</param>
