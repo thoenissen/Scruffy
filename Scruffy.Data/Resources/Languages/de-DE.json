@@ -470,7 +470,6 @@
     },
    "GuildRankVisualizationService": {
       "AchievementPoints": "Erfolgspunkte",
-      "Compare": "Vergleich",
       "CompareOverviewChartTitle": "Punktevergleich",
       "Development": "Bot-Entwicklung",
       "DiscordMessageActivity": "Nachrichtenaktivität",

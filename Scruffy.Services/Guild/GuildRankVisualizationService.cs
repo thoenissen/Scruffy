@@ -413,11 +413,19 @@ public class GuildRankVisualizationService : LocatedServiceBase
 
             var descriptionBuilder = new StringBuilder();
 
-            descriptionBuilder.Append(LocalizationGroup.GetText("Compare", "Compare"));
+            descriptionBuilder.Append(LocalizationGroup.GetText("RankingUser", "User"));
             descriptionBuilder.Append(": ");
             descriptionBuilder.Append(guildUser.Mention);
             descriptionBuilder.Append(" vs ");
             descriptionBuilder.Append(compareGuildUser.Mention);
+            descriptionBuilder.Append(Environment.NewLine);
+
+            descriptionBuilder.Append(LocalizationGroup.GetText("RankingPoints", "Points"));
+            descriptionBuilder.Append(": ");
+            descriptionBuilder.Append(userPoints.Sum(obj => obj.Points).ToString("0.00", LocalizationGroup.CultureInfo));
+            descriptionBuilder.Append(" vs ");
+            descriptionBuilder.Append(compareUserPoints.Sum(obj => obj.Points).ToString("0.00", LocalizationGroup.CultureInfo));
+            descriptionBuilder.Append(Environment.NewLine);
 
             var embedBuilder = new EmbedBuilder()
                                .WithTitle($"{LocalizationGroup.GetText("RankingCompareOverview", "Guild ranking points compare overview")}")
