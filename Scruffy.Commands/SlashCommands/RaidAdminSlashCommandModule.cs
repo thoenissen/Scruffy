@@ -227,7 +227,7 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
                                               Value = obj.AliasName,
                                               Name = obj.Description
                                           })
-                           .ToList();
+                                 .ToList();
 
         var appointments = repositoryFactory.GetRepository<RaidDayConfigurationRepository>()
                                             .GetQuery()

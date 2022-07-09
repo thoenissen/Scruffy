@@ -122,7 +122,7 @@ public class RaidMessageBuilder : LocatedServiceBase
                     if (message is IUserMessage userMessage)
                     {
                         var fieldBuilder = new StringBuilder();
-
+                        var areSlotsAvailable = false;
                         int fieldCounter;
 
                         // Building the message
@@ -135,6 +135,10 @@ public class RaidMessageBuilder : LocatedServiceBase
                                                            .Where(obj => obj.LineupExperienceLevelId == slot.RaidExperienceLevelId)
                                                            .OrderByDescending(obj => obj.Points)
                                                            .ToList();
+                            if (registrations.Count < slot.Count* appointment.GroupCount)
+                            {
+                                areSlotsAvailable = true;
+                            }
 
                             foreach (var registration in registrations)
                             {
@@ -284,7 +288,8 @@ public class RaidMessageBuilder : LocatedServiceBase
                                                      ButtonStyle.Secondary,
                                                      DiscordEmoteService.GetCheckEmote(_client),
                                                      null,
-                                                     appointment.TimeStamp <= DateTime.Now);
+                                                     (appointment.Deadline <= DateTime.Now && areSlotsAvailable == false)
+                                                  || appointment.TimeStamp <= DateTime.Now);
                         componentsBuilder.WithButton(LocalizationGroup.GetText("Roles", "Roles"),
                                                      InteractivityService.GetPermanentCustomerId("raid",
                                                                                                  "roleSelection",
