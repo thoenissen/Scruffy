@@ -60,7 +60,7 @@ public class GuildVisualizationRefreshJob : LocatedAsyncJob
         {
             if (entry.DiscordMessageId != null)
             {
-                await _visualizationService.RefreshOverview(entry.DiscordServerId, entry.DiscordChannelId, entry.DiscordMessageId.Value, 0, true)
+                await _visualizationService.RefreshOverview(entry.DiscordServerId, entry.DiscordChannelId, entry.DiscordMessageId.Value, 0, null, true)
                                            .ConfigureAwait(false);
             }
         }

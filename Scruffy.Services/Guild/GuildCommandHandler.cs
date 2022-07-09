@@ -549,8 +549,9 @@ public class GuildCommandHandler : LocatedServiceBase
     /// </summary>
     /// <param name="context">Context</param>
     /// <param name="page">Page number</param>
+    /// <param name="pointType">Point type</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task NavigateToPageGuildRanking(InteractionContextContainer context, int page) => _rankVisualizationService.RefreshOverview(context.Guild.Id, context.Channel.Id, context.Message.Id, page, false);
+    public Task NavigateToPageGuildRanking(InteractionContextContainer context, int page, GuildRankPointType? pointType) => _rankVisualizationService.RefreshOverview(context.Guild.Id, context.Channel.Id, context.Message.Id, page, pointType, false);
 
     #endregion // Methods
 }

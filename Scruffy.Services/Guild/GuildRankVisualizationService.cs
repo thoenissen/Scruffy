@@ -42,7 +42,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
     /// <summary>
     /// Guild overviews
     /// </summary>
-    private static Dictionary<ulong, GuildRankingOverviewData> _overviews = new();
+    private static Dictionary<(ulong, GuildRankPointType?), GuildRankingOverviewData> _overviews = new();
 
     /// <summary>
     /// Repository factory
@@ -109,9 +109,9 @@ public class GuildRankVisualizationService : LocatedServiceBase
             messageId = message.Id;
         }
 
-        var data = await GetOverviewData(context.Guild.Id, false).ConfigureAwait(false);
+        var data = await GetOverviewData(context.Guild.Id, null, false).ConfigureAwait(false);
 
-        await RefreshOverviewMessage(data, 0, context.Channel.Id, messageId.Value).ConfigureAwait(false);
+        await RefreshOverviewMessage(data, 0, null, context.Channel.Id, messageId.Value).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -121,13 +121,14 @@ public class GuildRankVisualizationService : LocatedServiceBase
     /// <param name="channelId">Id of the channel</param>
     /// <param name="messageId">Id of the message</param>
     /// <param name="page">Page</param>
+    /// <param name="pointType">Point type</param>
     /// <param name="isForceRefresh">Force refresh data?</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task RefreshOverview(ulong discordServerId, ulong channelId, ulong messageId, int page, bool isForceRefresh)
+    public async Task RefreshOverview(ulong discordServerId, ulong channelId, ulong messageId, int page, GuildRankPointType? pointType, bool isForceRefresh)
     {
-        var data = await GetOverviewData(discordServerId, isForceRefresh).ConfigureAwait(false);
+        var data = await GetOverviewData(discordServerId, pointType, isForceRefresh).ConfigureAwait(false);
 
-        await RefreshOverviewMessage(data, page, channelId, messageId).ConfigureAwait(false);
+        await RefreshOverviewMessage(data, page, pointType, channelId, messageId).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -465,18 +466,19 @@ public class GuildRankVisualizationService : LocatedServiceBase
     /// Determinate overview data
     /// </summary>
     /// <param name="discordServerId">Discord server id</param>
+    /// <param name="pointType">Point type</param>
     /// <param name="isForceRefresh">Force to refresh the cached data?</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private async Task<GuildRankingOverviewData> GetOverviewData(ulong discordServerId, bool isForceRefresh)
+    private async Task<GuildRankingOverviewData> GetOverviewData(ulong discordServerId, GuildRankPointType? pointType, bool isForceRefresh)
     {
         GuildRankingOverviewData data = null;
 
         var scopeLock = await _overviewsLock.CreateLockAsync()
-                                   .ConfigureAwait(false);
+                                            .ConfigureAwait(false);
         await using (scopeLock.ConfigureAwait(false))
         {
             if (isForceRefresh
-             || _overviews.TryGetValue(discordServerId, out data) == false)
+             || _overviews.TryGetValue((discordServerId, pointType), out data) == false)
             {
                 data = new GuildRankingOverviewData();
 
@@ -507,6 +509,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                             .GetQuery()
                                             .Where(obj => obj.Date >= limit
                                                        && obj.Date < today
+                                                       && (pointType == null || obj.Type == pointType)
                                                        && obj.Guild.DiscordServerId == discordServerId
                                                        && accountsQuery.Any(obj2 => obj2.UserId == obj.UserId
                                                                                  && guildMemberQuery.Any(obj3 => obj3.Name == obj2.Name
@@ -542,6 +545,15 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                 {
                                     userName = $"{member.TryGetDisplayName()}";
                                 }
+                                else
+                                {
+                                    var discordUser = await _discordClient.GetUserAsync(user.DiscordUserId.Value)
+                                                                          .ConfigureAwait(false);
+                                    if (discordUser != null)
+                                    {
+                                        userName = discordUser.Username;
+                                    }
+                                }
                             }
                             catch
                             {
@@ -569,7 +581,11 @@ public class GuildRankVisualizationService : LocatedServiceBase
 
                 foreach (var user in users)
                 {
+#if DEBUG
+                    if (page.Count == 1)
+#else
                     if (page.Count == 20)
+#endif
                     {
                         page = new List<OverviewUserPointsData>();
                         data.Pages.Add(page);
@@ -580,7 +596,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
 
                 data.UserCount = users.Count;
 
-                _overviews[discordServerId] = data;
+                _overviews[(discordServerId, pointType)] = data;
             }
         }
 
@@ -592,10 +608,11 @@ public class GuildRankVisualizationService : LocatedServiceBase
     /// </summary>
     /// <param name="data">Data</param>
     /// <param name="pageNumber">Page number</param>
+    /// <param name="currentPointType">Current point type</param>
     /// <param name="channelId">Id of the channel</param>
     /// <param name="messageId">Id of the message</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private async Task RefreshOverviewMessage(GuildRankingOverviewData data, int pageNumber, ulong channelId, ulong messageId)
+    private async Task RefreshOverviewMessage(GuildRankingOverviewData data, int pageNumber, GuildRankPointType? currentPointType, ulong channelId, ulong messageId)
     {
         var componentsBuilder = new ComponentBuilder();
 
@@ -609,16 +626,43 @@ public class GuildRankVisualizationService : LocatedServiceBase
             pageNumber = 0;
         }
 
-        componentsBuilder.WithButton(null, "guild;navigate_to_page_guild_ranking;0;first", ButtonStyle.Secondary, DiscordEmoteService.GetFirstEmote(_discordClient), null, pageNumber == 0);
-        componentsBuilder.WithButton(null, $"guild;navigate_to_page_guild_ranking;{pageNumber - 1};previous", ButtonStyle.Secondary, DiscordEmoteService.GePreviousEmote(_discordClient), null, pageNumber - 1 < 0);
-        componentsBuilder.WithButton(null, $"guild;navigate_to_page_guild_ranking;{pageNumber + 1};next", ButtonStyle.Secondary, DiscordEmoteService.GetNextEmote(_discordClient), null, pageNumber + 1 >= data.Pages.Count);
-        componentsBuilder.WithButton(null, $"guild;navigate_to_page_guild_ranking;{data.Pages.Count - 1};last", ButtonStyle.Secondary, DiscordEmoteService.GetLastEmote(_discordClient), null, pageNumber + 1 >= data.Pages.Count);
+        var typeRow = new ActionRowBuilder();
+
+        var options = new List<SelectMenuOptionBuilder>
+                      {
+                          new(LocalizationGroup.GetText("TotalScore", "Total score"), "-1", isDefault: currentPointType == null)
+                      };
+
+        foreach (var type in Enum.GetValues(typeof(GuildRankPointType)).OfType<GuildRankPointType>())
+        {
+            options.Add(new SelectMenuOptionBuilder(LocalizationGroup.GetText(type.ToString(), type.ToString()), ((int)type).ToString(), isDefault: type == currentPointType));
+        }
+
+        typeRow.WithSelectMenu("guild;navigate_to_page_guild_ranking;", options, LocalizationGroup.GetText("RankingTypePlaceHolder", "Type selection"));
+
+        componentsBuilder.AddRow(typeRow);
+
+        var buttonRow = new ActionRowBuilder();
+
+        buttonRow.WithButton(null, $"guild;navigate_to_page_guild_ranking;0;first;{(int?)currentPointType ?? -1}", ButtonStyle.Secondary, DiscordEmoteService.GetFirstEmote(_discordClient), null, pageNumber == 0);
+        buttonRow.WithButton(null, $"guild;navigate_to_page_guild_ranking;{pageNumber - 1};previous;{(int?)currentPointType ?? -1}", ButtonStyle.Secondary, DiscordEmoteService.GePreviousEmote(_discordClient), null, pageNumber - 1 < 0);
+        buttonRow.WithButton(null, $"guild;navigate_to_page_guild_ranking;{pageNumber + 1};next;{(int?)currentPointType ?? -1}", ButtonStyle.Secondary, DiscordEmoteService.GetNextEmote(_discordClient), null, pageNumber + 1 >= data.Pages.Count);
+        buttonRow.WithButton(null, $"guild;navigate_to_page_guild_ranking;{data.Pages.Count - 1};last;{(int?)currentPointType ?? -1}", ButtonStyle.Secondary, DiscordEmoteService.GetLastEmote(_discordClient), null, pageNumber + 1 >= data.Pages.Count);
+
+        componentsBuilder.AddRow(buttonRow);
 
         var descriptionBuilder = new StringBuilder();
 
         descriptionBuilder.Append(LocalizationGroup.GetText("RankingUserCount", "User count"));
         descriptionBuilder.Append(": ");
         descriptionBuilder.Append(data.UserCount);
+        descriptionBuilder.Append(Environment.NewLine);
+
+        descriptionBuilder.Append(LocalizationGroup.GetText("ScoreType", "Score type"));
+        descriptionBuilder.Append(": ");
+        descriptionBuilder.Append(currentPointType == null
+                                      ? LocalizationGroup.GetText("TotalScore", "Total score")
+                                      : LocalizationGroup.GetText(currentPointType.Value.ToString(), currentPointType.Value.ToString()));
         descriptionBuilder.Append(Environment.NewLine);
 
         var description = descriptionBuilder.ToString();
@@ -740,5 +784,5 @@ public class GuildRankVisualizationService : LocatedServiceBase
         }
     }
 
-    #endregion // Private methods
+#endregion // Private methods
 }

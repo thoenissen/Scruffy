@@ -488,7 +488,8 @@
       "RankingRank": "Platzierung",
       "RankingUser": "Benutzer",
       "RankingUserCount": "Mitglieder",
-      "Representation": "Repräsentieren"
+      "Representation": "Repräsentieren",
+      "TotalScore": "Gesamtpunkte" 
    },
     "GuildSpecialRankDeletionDialogElement": {
       "DeletePrompt": "Soll der Spezial-Rang wirklich gelöscht werden?"
