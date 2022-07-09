@@ -446,10 +446,8 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                                                    {
                                                                        Label = guildUser.TryGetDisplayName(),
                                                                        BorderColor = "#333333",
-                                                                       BackgroundColor = new List<string>
-                                                                                         {
-                                                                                             "#142b39"
-                                                                                         },
+                                                                       BackgroundColor = Enumerable.Repeat("#142b39", userPoints.Count)
+                                                                                                   .ToList(),
                                                                        Data = userPoints.OrderBy(obj => obj.Type)
                                                                                         .Select(obj => obj.Points)
                                                                                         .ToList()
@@ -458,10 +456,8 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                                                    {
                                                                        Label = compareGuildUser.TryGetDisplayName(),
                                                                        BorderColor = "#333333",
-                                                                       BackgroundColor = new List<string>
-                                                                                         {
-                                                                                             "#428ebd"
-                                                                                         },
+                                                                       BackgroundColor = Enumerable.Repeat("#428ebd", compareUserPoints.Count)
+                                                                                                   .ToList(),
                                                                        Data = compareUserPoints.OrderBy(obj => obj.Type)
                                                                                                .Select(obj => obj.Points)
                                                                                                .ToList()
