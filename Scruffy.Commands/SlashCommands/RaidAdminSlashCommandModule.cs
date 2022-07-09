@@ -146,7 +146,7 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
         await Context.DeferAsync()
                      .ConfigureAwait(false);
 
-        await CommandHandler.SetTemplate(Context, name, count)
+        await CommandHandler.SetGroupCount(Context, name, count)
                             .ConfigureAwait(false);
     }
 

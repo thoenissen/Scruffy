@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Data;
+using System.Globalization;
 
 using Discord;
 
@@ -464,7 +465,7 @@ public class RaidCommandHandler : LocatedServiceBase
     /// <param name="name">Alias name</param>
     /// <param name="count">Count</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task SetTemplate(IContextContainer container, string name, int count)
+    public async Task SetGroupCount(IContextContainer container, string name, int count)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
@@ -483,7 +484,7 @@ public class RaidCommandHandler : LocatedServiceBase
             if (appointment != null)
             {
                 if (await _registrationService.SetGroupCount(appointment.Id, count)
-                                             .ConfigureAwait(false))
+                                              .ConfigureAwait(false))
                 {
                     await _messageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
                                         .ConfigureAwait(false);
@@ -787,8 +788,16 @@ public class RaidCommandHandler : LocatedServiceBase
 
                 foreach (var appointment in appointments)
                 {
-                    await _registrationService.RefreshAppointment(appointment.Id)
-                                              .ConfigureAwait(false);
+                    var transaction = dbFactory.BeginTransaction(IsolationLevel.RepeatableRead);
+                    await using (transaction.ConfigureAwait(false))
+                    {
+                        if (await _registrationService.RefreshAppointment(dbFactory, appointment.Id)
+                                                      .ConfigureAwait(false))
+                        {
+                            await transaction.CommitAsync()
+                                             .ConfigureAwait(false);
+                        }
+                    }
 
                     await _messageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
                                          .ConfigureAwait(false);

@@ -753,9 +753,10 @@
     "RaidOverviewService": {
       "ParticipationOverview": "Übersicht der Teilnahmepunkte"
     },
-    "RaidRegistrationService": {
+   "RaidRegistrationService": {
+      "DeadlineReached": "Die Anmeldung ist nach Anmeldeschluss nicht mehr möglich, wenn keine freien Plätze zur Verfügung stehen.",
       "RequiredExperienceLevelMissing": "Du hast noch nicht das erforderlichen Erfahrungslevel für diesen Termin."
-    },
+   },
     "RaidRoleSelectionDialogElement": {
       "ChooseMainRoleDescription": "Wähle eine der folgenden Rollen...",
       "ChooseMainRoleTitle": "Rollenauswahl",
