@@ -173,6 +173,15 @@ public class GuildCommandHandler : LocatedServiceBase
     public Task PostPersonalRankingOverview(InteractionContextContainer context, IGuildUser user) => _rankVisualizationService.PostPersonalOverview(context, user);
 
     /// <summary>
+    /// Post a personal guild ranking compare overview
+    /// </summary>
+    /// <param name="context">Command context</param>
+    /// <param name="user">User</param>
+    /// <param name="compareUser">Compare user</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public Task PostPersonalCompareOverview(InteractionContextContainer context, IGuildUser user, IGuildUser compareUser) => _rankVisualizationService.PostPersonalCompareOverview(context, user, compareUser);
+
+    /// <summary>
     /// Post a personal guild ranking history overview
     /// </summary>
     /// <param name="context">Command context</param>

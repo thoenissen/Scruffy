@@ -1,4 +1,5 @@
-﻿using Discord.Interactions;
+﻿using Discord;
+using Discord.Interactions;
 
 using Scruffy.Services.Discord;
 using Scruffy.Services.Guild;
@@ -85,6 +86,18 @@ public class GuildSlashCommandHandler : SlashCommandModuleBase
                             .ConfigureAwait(false);
 
         await CommandHandler.PostPersonalRankingHistoryTypeOverview(Context, Context.Member)
+                            .ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Personal ranking data compare
+    /// </summary>
+    /// <param name="compareUser">Compare user</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [SlashCommand("ranking-compare", "Personal guild ranking compare")]
+    public async Task PostPersonalCompareOverview([Summary("User", "Compare your points with the given user")]IGuildUser compareUser)
+    {
+        await CommandHandler.PostPersonalCompareOverview(Context, Context.Member, compareUser)
                             .ConfigureAwait(false);
     }
 

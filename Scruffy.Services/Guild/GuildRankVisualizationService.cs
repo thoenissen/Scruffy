@@ -170,7 +170,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                                                         && guildMemberQuery.Any(obj3 => obj3.Name == obj2.Name
                                                                                                      && obj3.GuildId == obj.GuildId)))
                                    .GroupBy(obj => obj.Type)
-                                   .Select(obj => new
+                                   .Select(obj => new GuildRankUserPointsData
                                                   {
                                                       Type = obj.Key,
                                                       Points = obj.Sum(obj2 => obj2.Points)
@@ -284,7 +284,196 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                                                    Display = true,
                                                                    FontColor = "white",
                                                                    FontSize = 26,
-                                                                   Text = LocalizationGroup.GetText("MeOverviewChartTitle", "Point distribution")
+                                                                   Text = LocalizationGroup.GetText("CompareOverviewChartTitle", "Point compare")
+                                                               }
+                                                   }
+                                     };
+
+            var chartStream = await _quickChartConnector.GetChartAsStream(new ChartData
+                                                                          {
+                                                                              Width = 600,
+                                                                              Height = 500,
+                                                                              BackgroundColor = "#2f3136",
+                                                                              Format = "png",
+                                                                              Config = JsonConvert.SerializeObject(chartConfiguration,
+                                                                                                                   new JsonSerializerSettings
+                                                                                                                   {
+                                                                                                                       NullValueHandling = NullValueHandling.Ignore
+                                                                                                                   })
+                                                                          })
+                                                        .ConfigureAwait(false);
+
+            await using (chartStream.ConfigureAwait(false))
+            {
+                embedBuilder.WithImageUrl("attachment://chart.png");
+
+                await context.SendMessageAsync(embed: embedBuilder.Build(),
+                                               attachments: new[] { new FileAttachment(chartStream, "chart.png") })
+                             .ConfigureAwait(false);
+            }
+        }
+        else
+        {
+            await context.SendMessageAsync(LocalizationGroup.GetText("NoPersonalData", "No ranking data is available."))
+                         .ConfigureAwait(false);
+        }
+    }
+
+    /// <summary>
+    /// Post compare overview
+    /// </summary>
+    /// <param name="context">Context</param>
+    /// <param name="guildUser">User</param>
+    /// <param name="compareGuildUser">Compare user</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public async Task PostPersonalCompareOverview(InteractionContextContainer context, IGuildUser guildUser, IGuildUser compareGuildUser)
+    {
+        await context.DeferProcessing()
+                     .ConfigureAwait(false);
+
+        var user = await _userManagementService.GetUserByDiscordAccountId(guildUser.Id)
+                                               .ConfigureAwait(false);
+
+        var compareUser = await _userManagementService.GetUserByDiscordAccountId(compareGuildUser.Id)
+                                                      .ConfigureAwait(false);
+
+        var limit = DateTime.Today.AddDays(-63);
+        var today = DateTime.Today;
+
+        var guildMemberSubQuery = _dbFactory.GetRepository<GuildWarsGuildHistoricMemberRepository>()
+                                            .GetQuery()
+                                            .Select(obj => obj);
+
+        var guildMemberQuery = _dbFactory.GetRepository<GuildWarsGuildHistoricMemberRepository>()
+                                         .GetQuery()
+                                         .Where(obj => guildMemberSubQuery.Any(obj2 => obj2.GuildId == obj.GuildId
+                                                                                    && obj2.Date > obj.Date) == false);
+        var accountsQuery = _dbFactory.GetRepository<GuildWarsAccountRepository>()
+                                      .GetQuery()
+                                      .Select(obj => obj);
+
+        var userPoints = _dbFactory.GetRepository<GuildRankCurrentPointsRepository>()
+                                   .GetQuery()
+                                   .Where(obj => obj.Date >= limit
+                                              && obj.Date < today
+                                              && obj.Guild.DiscordServerId == context.Guild.Id
+                                              && obj.UserId == user.Id
+                                              && accountsQuery.Any(obj2 => obj2.UserId == obj.UserId
+                                                                        && guildMemberQuery.Any(obj3 => obj3.Name == obj2.Name
+                                                                                                     && obj3.GuildId == obj.GuildId)))
+                                   .GroupBy(obj => obj.Type)
+                                   .Select(obj => new GuildRankUserPointsData
+                                                  {
+                                                      Type = obj.Key,
+                                                      Points = obj.Sum(obj2 => obj2.Points)
+                                                  })
+                                   .Where(obj => obj.Points != 0)
+                                   .OrderByDescending(obj => obj.Points)
+                                   .ToList();
+
+        var compareUserPoints = _dbFactory.GetRepository<GuildRankCurrentPointsRepository>()
+                                          .GetQuery()
+                                          .Where(obj => obj.Date >= limit
+                                                     && obj.Date < today
+                                                     && obj.Guild.DiscordServerId == context.Guild.Id
+                                                     && obj.UserId == compareUser.Id
+                                                     && accountsQuery.Any(obj2 => obj2.UserId == obj.UserId
+                                                                               && guildMemberQuery.Any(obj3 => obj3.Name == obj2.Name
+                                                                                                            && obj3.GuildId == obj.GuildId)))
+                                          .GroupBy(obj => obj.Type)
+                                          .Select(obj => new GuildRankUserPointsData
+                                                         {
+                                                             Type = obj.Key,
+                                                             Points = obj.Sum(obj2 => obj2.Points)
+                                                         })
+                                          .Where(obj => obj.Points != 0)
+                                          .OrderByDescending(obj => obj.Points)
+                                          .ToList();
+
+        if (userPoints.Count > 0
+         || compareUserPoints.Count > 0)
+        {
+            foreach (var entry in userPoints.Where(obj1 => compareUserPoints.Any(obj2 => obj2.Type == obj1.Type) == false))
+            {
+                compareUserPoints.Add(new GuildRankUserPointsData
+                                      {
+                                          Type = entry.Type,
+                                          Points = 0
+                                      });
+            }
+
+            foreach (var entry in compareUserPoints.Where(obj1 => userPoints.Any(obj2 => obj2.Type == obj1.Type) == false))
+            {
+                userPoints.Add(new GuildRankUserPointsData
+                               {
+                                   Type = entry.Type,
+                                   Points = 0
+                               });
+            }
+
+            var descriptionBuilder = new StringBuilder();
+
+            descriptionBuilder.Append(LocalizationGroup.GetText("Compare", "Compare"));
+            descriptionBuilder.Append(": ");
+            descriptionBuilder.Append(guildUser.Mention);
+            descriptionBuilder.Append(" vs ");
+            descriptionBuilder.Append(compareGuildUser.Mention);
+
+            var embedBuilder = new EmbedBuilder()
+                               .WithTitle($"{LocalizationGroup.GetText("RankingCompareOverview", "Guild ranking points compare overview")}")
+                               .WithDescription(descriptionBuilder.ToString())
+                               .WithColor(Color.DarkBlue)
+                               .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
+                               .WithTimestamp(DateTime.Now)
+                               .WithImageUrl("attachment://chart.png");
+
+            var chartConfiguration = new ChartConfigurationData
+                                     {
+                                         Type = "bar",
+                                         Data = new Data.Json.QuickChart.Data
+                                                {
+                                                    DataSets = new List<DataSet>
+                                                               {
+                                                                   new DataSet<double>
+                                                                   {
+                                                                       Label = guildUser.TryGetDisplayName(),
+                                                                       BorderColor = "#333333",
+                                                                       BackgroundColor = new List<string>
+                                                                                         {
+                                                                                             "#142b39"
+                                                                                         },
+                                                                       Data = userPoints.OrderBy(obj => obj.Type)
+                                                                                        .Select(obj => obj.Points)
+                                                                                        .ToList()
+                                                                   },
+                                                                   new DataSet<double>
+                                                                   {
+                                                                       Label = compareGuildUser.TryGetDisplayName(),
+                                                                       BorderColor = "#333333",
+                                                                       BackgroundColor = new List<string>
+                                                                                         {
+                                                                                             "#428ebd"
+                                                                                         },
+                                                                       Data = compareUserPoints.OrderBy(obj => obj.Type)
+                                                                                               .Select(obj => obj.Points)
+                                                                                               .ToList()
+                                                                   }
+                                                               },
+                                                    Labels = userPoints.Select(obj => $"{LocalizationGroup.GetText(obj.Type.ToString(), obj.Type.ToString())} ({obj.Points.ToString("0.##", LocalizationGroup.CultureInfo)} vs {compareUserPoints.Where(obj => obj.Type == obj.Type).Select(obj2 => obj2.Points).First().ToString("0.##", LocalizationGroup.CultureInfo)})")
+                                                                       .ToList()
+                                                },
+                                         Options = new OptionsCollection
+                                                   {
+                                                       Plugins = new PluginsCollection
+                                                                 {
+                                                                     Legend = false
+                                                                 },
+                                                       Title = new TitleConfiguration
+                                                               {
+                                                                   Display = true,
+                                                                   FontColor = "white",
+                                                                   FontSize = 26,
+                                                                   Text = LocalizationGroup.GetText("CompareOverviewChartTitle", "Point distribution")
                                                                }
                                                    }
                                      };

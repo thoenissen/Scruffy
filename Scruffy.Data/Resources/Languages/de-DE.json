@@ -470,6 +470,8 @@
     },
    "GuildRankVisualizationService": {
       "AchievementPoints": "Erfolgspunkte",
+      "Compare": "Vergleich",
+      "CompareOverviewChartTitle": "Punktevergleich",
       "Development": "Bot-Entwicklung",
       "DiscordMessageActivity": "Nachrichtenaktivität",
       "DiscordVoiceActivity": "Sprachaktivität",
@@ -481,6 +483,7 @@
       "NoPersonalData": "Es stehen keine Gildenrankingdaten zur Verfügung.",
       "MeOverviewPoints": "Punkte",
       "PageFooter": "Seite {0} von {1}",
+      "RankingCompareOverview": "Persönlicher Punktevergleich",
       "RankingOverview": "Punkteübersicht",
       "RankingPersonalOverview": "Persönliche Punkteübersicht",
       "RankingPersonalTypeHistoryOverview": "Persönliche Punktehistorie",
