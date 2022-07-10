@@ -3,6 +3,7 @@ using Scruffy.Data.Entity.Repositories.Guild;
 using Scruffy.Data.Entity.Repositories.GuildWars2.Account;
 using Scruffy.Data.Entity.Repositories.GuildWars2.Guild;
 using Scruffy.Data.Services.Guild;
+using Scruffy.Services.Core;
 using Scruffy.Services.Core.JobScheduler;
 
 namespace Scruffy.Services.Guild.Jobs;
@@ -66,6 +67,12 @@ public class GuildRankAssignmentJob : LocatedAsyncJob
                                                     .GetQuery()
                                                     .Select(obj => obj);
 
+            var loginQuery = _repositoryFactory.GetRepository<GuildWarsAccountDailyLoginCheckRepository>()
+                                               .GetQuery()
+                                               .Select(obj => obj);
+
+            var inactivityLimit = DateTime.Today.AddMonths(-1);
+
             var users = _repositoryFactory.GetRepository<GuildRankCurrentPointsRepository>()
                                           .GetQuery()
                                           .Where(obj => obj.Date >= limit
@@ -114,6 +121,10 @@ public class GuildRankAssignmentJob : LocatedAsyncJob
                                                                                         Slots = (int)Math.Round(obj.Percentage * users.Count, MidpointRounding.AwayFromZero)
                                                                                     }));
 
+            var inactiveRankId = ranks.OrderByDescending(obj2 => obj2.Order)
+                                      .Select(obj2 => obj2.Id)
+                                      .FirstOrDefault();
+
             var currentAssignment = ranksStack.Peek();
 
             foreach (var user in users)
@@ -129,46 +140,56 @@ public class GuildRankAssignmentJob : LocatedAsyncJob
                  && (user.CurrentRankAssignment == null
                   || DateTime.Now - user.CurrentRankAssignment > TimeSpan.FromDays(7)))
                 {
-                    _repositoryFactory.GetRepository<GuildRankAssignmentRepository>()
-                                      .AddOrRefresh(obj => obj.UserId == user.UserId
-                                                        && obj.GuildId == guildId,
-                                                    obj =>
-                                                    {
-                                                        obj.GuildId = guildId;
-                                                        obj.UserId = user.UserId;
-
-                                                        var oldRank = ranks.FirstOrDefault(obj2 => obj2.Id == user.CurrentRankId);
-                                                        if (oldRank == null)
+                    if (_repositoryFactory.GetRepository<GuildRankAssignmentRepository>()
+                                          .AddOrRefresh(obj => obj.UserId == user.UserId
+                                                            && obj.GuildId == guildId,
+                                                        obj =>
                                                         {
-                                                            obj.RankId = ranks.OrderByDescending(obj2 => obj2.Order)
-                                                                              .Select(obj2 => obj2.Id)
-                                                                              .FirstOrDefault();
-                                                        }
-                                                        else if (Math.Abs(oldRank.Order - currentAssignment.Order) > 1)
-                                                        {
-                                                            var nextOrder = currentAssignment.Order > oldRank.Order
-                                                                                ? oldRank.Order + 1
-                                                                                : oldRank.Order - 1;
+                                                            obj.GuildId = guildId;
+                                                            obj.UserId = user.UserId;
 
-                                                            obj.RankId = ranks.Where(obj2 => obj2.Order == nextOrder)
-                                                                              .Select(obj2 => obj2.Id)
-                                                                              .FirstOrDefault();
-                                                        }
-                                                        else
-                                                        {
-                                                            obj.RankId = currentAssignment.RankId;
-                                                        }
+                                                            var isAssignmentAllowed = true;
 
-                                                        obj.TimeStamp = DateTime.Now;
-                                                    });
+                                                            if (obj.RankId == inactiveRankId)
+                                                            {
+                                                                isAssignmentAllowed = loginQuery.Any(obj2 => obj2.Account.UserId == obj.UserId
+                                                                                                          && obj2.Date > inactivityLimit);
+                                                            }
+
+                                                            if (isAssignmentAllowed)
+                                                            {
+                                                                var oldRank = ranks.FirstOrDefault(obj2 => obj2.Id == user.CurrentRankId);
+                                                                if (oldRank == null)
+                                                                {
+                                                                    obj.RankId = ranks.OrderByDescending(obj2 => obj2.Order)
+                                                                                      .Select(obj2 => obj2.Id)
+                                                                                      .FirstOrDefault();
+                                                                }
+                                                                else if (Math.Abs(oldRank.Order - currentAssignment.Order) > 1)
+                                                                {
+                                                                    var nextOrder = currentAssignment.Order > oldRank.Order
+                                                                                        ? oldRank.Order + 1
+                                                                                        : oldRank.Order - 1;
+
+                                                                    obj.RankId = ranks.Where(obj2 => obj2.Order == nextOrder)
+                                                                                      .Select(obj2 => obj2.Id)
+                                                                                      .FirstOrDefault();
+                                                                }
+                                                                else
+                                                                {
+                                                                    obj.RankId = currentAssignment.RankId;
+                                                                }
+
+                                                                obj.TimeStamp = DateTime.Now;
+                                                            }
+                                                        }) == false)
+                    {
+                        LoggingService.AddServiceLogEntry(Data.Enumerations.General.LogEntryLevel.Error, nameof(GuildRankAssignmentJob), "Assignment failed", null, _repositoryFactory.LastError);
+                    }
                 }
 
                 --currentAssignment.Slots;
             }
-
-            var loginQuery = _repositoryFactory.GetRepository<GuildWarsAccountDailyLoginCheckRepository>()
-                                               .GetQuery()
-                                               .Select(obj => obj);
 
             var rankAssignmentQuery = _repositoryFactory.GetRepository<GuildRankAssignmentRepository>()
                                                         .GetQuery()
@@ -179,7 +200,6 @@ public class GuildRankAssignmentJob : LocatedAsyncJob
                                   .Skip(1)
                                   .FirstOrDefault();
 
-            var inactivityLimit = DateTime.Today.AddMonths(-1);
             var assignmentLimit = DateTime.Now.AddDays(-7);
 
             foreach (var userId in _repositoryFactory.GetRepository<GuildWarsGuildHistoricMemberRepository>()
