@@ -4,7 +4,9 @@ using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Guild;
 using Scruffy.Data.Entity.Repositories.GuildWars2.GameData;
 using Scruffy.Data.Entity.Tables.Guild;
+using Scruffy.Data.Enumerations.General;
 using Scruffy.Data.Json.GuildWars2.Items;
+using Scruffy.Services.Core;
 using Scruffy.Services.Core.JobScheduler;
 using Scruffy.Services.WebApi;
 
@@ -388,7 +390,21 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
                                     calculatedValue = (value.Value / recipe.OutputItemCount, false);
                                 }
                             }
+                            else
+                            {
+                                LoggingService.AddServiceLogEntry(LogEntryLevel.Error,
+                                                                  nameof(GuildDonationCalculationJob),
+                                                                  "Item value calculation failed",
+                                                                  itemId.ToString());
+                            }
                         }
+                    }
+                    else
+                    {
+                        LoggingService.AddServiceLogEntry(LogEntryLevel.Error,
+                                                          nameof(GuildDonationCalculationJob),
+                                                          "Unknown item",
+                                                          itemId.ToString());
                     }
                 }
             }
