@@ -20,7 +20,8 @@ internal class GuildNotificationChannelConfigurationSelectDialogElement : Dialog
         GuildLogNotification,
         GuildRankChangeNotification,
         MessageOfTheDay,
-        Calendar
+        Calendar,
+        UserNotification
     }
 
     #endregion // Enumerations

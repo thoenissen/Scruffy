@@ -82,6 +82,11 @@ public class GuildCommandHandler : LocatedServiceBase
     /// </summary>
     private readonly AccountAdministrationService _accountAdministrationService;
 
+    /// <summary>
+    /// Guild user service
+    /// </summary>
+    private readonly GuildUserService _guildUserService;
+
     #endregion // Fields
 
     #region Constructor
@@ -102,6 +107,7 @@ public class GuildCommandHandler : LocatedServiceBase
     /// <param name="rankService">Rank service</param>
     /// <param name="userConfigurationService">User configuration service</param>
     /// <param name="accountAdministrationService">Account administration service</param>
+    /// <param name="guildUserService">Guild user service</param>
     public GuildCommandHandler(LocalizationService localizationService,
                                GuildBankService bankService,
                                GuildEmblemService emblemService,
@@ -114,7 +120,8 @@ public class GuildCommandHandler : LocatedServiceBase
                                RepositoryFactory repositoryFactory,
                                GuildRankService rankService,
                                GuildUserConfigurationService userConfigurationService,
-                               AccountAdministrationService accountAdministrationService)
+                               AccountAdministrationService accountAdministrationService,
+                               GuildUserService guildUserService)
         : base(localizationService)
     {
         _bankService = bankService;
@@ -129,6 +136,7 @@ public class GuildCommandHandler : LocatedServiceBase
         _rankService = rankService;
         _userConfigurationService = userConfigurationService;
         _accountAdministrationService = accountAdministrationService;
+        _guildUserService = guildUserService;
     }
 
     #endregion // Constructor
@@ -273,6 +281,11 @@ public class GuildCommandHandler : LocatedServiceBase
                     {
                         await _configurationService.SetupCalendar(context)
                                                    .ConfigureAwait(false);
+                    }
+                    break;
+                case GuildNotificationChannelConfigurationSelectDialogElement.ChannelType.UserNotification:
+                    {
+                        _guildUserService.SetChannel(context.Guild.Id, context.Channel.Id);
                     }
                     break;
                 case null:
