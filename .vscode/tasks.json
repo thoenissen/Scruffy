@@ -1,0 +1,39 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "docker-build",
+            "label": "docker-build-discord-debug",
+            "dependsOn": [
+                "build"
+            ],
+            "dockerBuild": {
+                "tag": "scruffy:dev",
+                "target": "base",
+                "dockerfile": "${workspaceFolder}/Scruffy.ServiceHosts.Discord/Dockerfile",
+                "context": "${workspaceFolder}",
+                "runArgs": [
+                    "--env-file", "${workspaceFolder}/Scruffy.ServiceHosts.Discord/Docker.env"
+                ], 
+                "pull": true
+            },
+            "netCore": {
+                "appProject": "${workspaceFolder}/Scruffy.ServiceHosts.Discord/Scruffy.ServiceHosts.Discord.csproj"
+            }
+        },
+        {
+            "type": "docker-run",
+            "label": "docker-run-discord-debug",
+            "dependsOn": [
+                "docker-build-discord-debug"
+            ],
+            "dockerRun": {
+                "envFiles": ["${workspaceFolder}/Scruffy.ServiceHosts.Discord/Docker.env"]
+            },
+            "netCore": {
+                "appProject": "${workspaceFolder}/Scruffy.ServiceHosts.Discord/Scruffy.ServiceHosts.Discord.csproj",
+                "enableDebugging": true
+            }
+        }
+    ]
+}

@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Discord",
+            "type": "docker",
+            "request": "launch",
+            "preLaunchTask": "docker-run-discord-debug",
+            "netCore": {
+                "appProject": "${workspaceFolder}/Scruffy.ServiceHosts.Discord/Scruffy.ServiceHosts.Discord.csproj"
+            }
+        }
+    ]
+}
