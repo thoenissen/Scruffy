@@ -42,7 +42,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
     /// <summary>
     /// Guild overviews
     /// </summary>
-    private static Dictionary<(ulong, GuildRankPointType?), GuildRankingOverviewData> _overviews = new();
+    private static Dictionary<(ulong DiscordServerId, GuildRankPointType? PointType), GuildRankingOverviewData> _overviews = new();
 
     /// <summary>
     /// Repository factory
@@ -675,8 +675,22 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                             .ConfigureAwait(false);
         await using (scopeLock.ConfigureAwait(false))
         {
-            if (isForceRefresh
-             || _overviews.TryGetValue((discordServerId, pointType), out data) == false)
+            if (isForceRefresh)
+            {
+                if (pointType == null)
+                {
+                    foreach (var overview in _overviews.Where(obj => obj.Key.DiscordServerId == discordServerId).ToList())
+                    {
+                        _overviews.Remove(overview.Key);
+                    }
+                }
+                else
+                {
+                    _overviews.Remove((discordServerId, pointType.Value));
+                }
+            }
+
+            if (_overviews.TryGetValue((discordServerId, pointType), out data) == false)
             {
                 data = new GuildRankingOverviewData();
 
