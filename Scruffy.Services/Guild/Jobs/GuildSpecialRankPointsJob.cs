@@ -205,10 +205,11 @@ public class GuildSpecialRankPointsJob : LocatedAsyncJob
 
                         if (configuration.ChannelId != null)
                         {
-                            var builder = new EmbedBuilder();
-                            builder.WithTitle(LocalizationGroup.GetText("RoleAssignment", "Role assignment"));
-                            builder.WithDescription($"{configuration.Description} ({guild.GetRole(configuration.DiscordRoleId).Mention})");
-                            builder.WithColor(Color.DarkBlue);
+                            var builder = new EmbedBuilder().WithTitle(LocalizationGroup.GetText("RoleAssignment", "Role assignment"))
+                                                            .WithDescription($"{configuration.Description} ({guild.GetRole(configuration.DiscordRoleId).Mention})")
+                                                            .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
+                                                            .WithColor(Color.Green)
+                                                            .WithTimestamp(DateTime.Now);
 
                             if (actions.Any(obj => obj.IsGrant == false))
                             {

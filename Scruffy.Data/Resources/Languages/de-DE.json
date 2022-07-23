@@ -15,7 +15,7 @@
          "UnknownUsers": "Unbekannte Mitglieder",
          "NoUnknownUsers": "Es existieren keine unbekannten Mitglieder.",
          "Days": "Tage",
-         "Day": "Tag" 
+         "Day": "Tag"
       },
       "AccountApiKeyDialogElement": {
          "AddDescription": "Gib bitte den zu verwendenen API-Key ein. Ein API-Key kann auf der offiziellen [Guild Wars 2 Website](https://account.arena.net/applications) erstellt werden.",
@@ -375,6 +375,12 @@
       "GuildCalendarTitleDialogElement": {
          "Message": "Gib bitte den Titel der Kalenders ein."
       },
+      "GuildCheckUnknownUsersJob": {
+          "UnknownUsers": "Unbekannte Mitglieder",
+          "NoUnknownUsers": "Es existieren keine unbekannten Mitglieder.",
+          "Days": "Tage",
+          "Day": "Tag"
+      },
       "GuildCommandHandler": {
          "NoChangedRequired": "Es sind keine Rangänderungen erforderlich.",
          "OverviewCreation": "Die Übersicht wird gerade erstellt."
@@ -413,7 +419,7 @@
          "Message": "Wähle einen der folgenden Typen aus:",
          "MessageOfTheDay": "Nachricht des Tages",
          "SpecialRankNotification": "Spezial-Ränge",
-         "UserNotification": "Benutzer-Benachrichtigungen" 
+         "UserNotification": "Benutzer-Benachrichtigungen"
       },
       "GuildOverviewMessageConfigurationSelectDialogElement": {
          "Message": "Wähle einen der folgenden Typen aus.",
