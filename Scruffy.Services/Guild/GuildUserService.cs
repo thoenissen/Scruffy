@@ -6,12 +6,15 @@ using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
+using Newtonsoft.Json;
+
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Entity.Repositories.Guild;
 using Scruffy.Data.Entity.Repositories.GuildWars2.Account;
 using Scruffy.Data.Enumerations.General;
 using Scruffy.Data.Enumerations.Guild;
+using Scruffy.Data.Services.Guild;
 using Scruffy.Services.Core;
 
 namespace Scruffy.Services.Guild;
@@ -24,9 +27,14 @@ public sealed class GuildUserService : SingletonLocatedServiceBase, IDisposable
     #region Fields
 
     /// <summary>
-    /// Administration roles
+    /// Notification channels
     /// </summary>
     private ConcurrentDictionary<ulong, ulong> _notificationChannels;
+
+    /// <summary>
+    /// Welcome messages
+    /// </summary>
+    private ConcurrentDictionary<ulong, WelcomeDirectMessageData> _welcomeMessages;
 
     /// <summary>
     /// Discord client
@@ -98,7 +106,12 @@ public sealed class GuildUserService : SingletonLocatedServiceBase, IDisposable
     /// </summary>
     /// <param name="user">User</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private Task OnUserJoined(SocketGuildUser user) => SendNotificationMessage(user, user.Guild, "UserJoined");
+    private async Task OnUserJoined(SocketGuildUser user)
+    {
+        await SendNotificationMessage(user, user.Guild, "UserJoined").ConfigureAwait(false);
+
+        await SendWelcomeMessage(user, user.Guild).ConfigureAwait(false);
+    }
 
     /// <summary>
     /// Send notification
@@ -154,6 +167,59 @@ public sealed class GuildUserService : SingletonLocatedServiceBase, IDisposable
         }
     }
 
+    /// <summary>
+    /// Send welcome direct message
+    /// </summary>
+    /// <param name="user">User</param>
+    /// <param name="guild">Guild</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    private async Task SendWelcomeMessage(SocketGuildUser user, SocketGuild guild)
+    {
+        try
+        {
+            if (_welcomeMessages.TryGetValue(guild.Id, out var data))
+            {
+                LoggingService.AddServiceLogEntry(LogEntryLevel.Information, nameof(GuildUserService), "Sending welcome message", guild.Id + "-" + user.Id);
+
+                var builder = new EmbedBuilder().WithColor(Color.Green)
+                                                .WithTimestamp(DateTime.Now);
+
+                if (string.IsNullOrWhiteSpace(data.Title) == false)
+                {
+                    builder.WithTitle(data.Title);
+                }
+
+                if (string.IsNullOrWhiteSpace(data.Description) == false)
+                {
+                    builder.WithDescription(data.Description.Replace("{{USER}}", user.Mention));
+                }
+
+                if (data.Fields?.Count > 0)
+                {
+                    foreach (var (title, text) in data.Fields)
+                    {
+                        builder.AddField(title, text);
+                    }
+                }
+
+                if (string.IsNullOrWhiteSpace(data.Footer) == false)
+                {
+                    builder.AddField("\u200b", data.Footer);
+                }
+
+                var channel = await user.CreateDMChannelAsync()
+                                        .ConfigureAwait(false);
+
+                await channel.SendMessageAsync(embed: builder.Build())
+                             .ConfigureAwait(false);
+            }
+        }
+        catch (Exception ex)
+        {
+            LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(GuildUserService), "Welcome message failed", null, ex);
+        }
+    }
+
     #endregion // Methods
 
     #region SingletonLocatedServiceBase
@@ -180,6 +246,17 @@ public sealed class GuildUserService : SingletonLocatedServiceBase, IDisposable
                                                                                                        obj.DiscordChannelId
                                                                                                    })
                                                                                     .ToDictionary(obj => obj.DiscordServerId, obj => obj.DiscordChannelId));
+
+            _welcomeMessages = new ConcurrentDictionary<ulong, WelcomeDirectMessageData>(dbFactory.GetRepository<GuildRepository>()
+                                                                                                  .GetQuery()
+                                                                                                  .Where(obj => obj.WelcomeDirectMessage != null)
+                                                                                                  .Select(obj => new
+                                                                                                              {
+                                                                                                                  obj.DiscordServerId,
+                                                                                                                  obj.WelcomeDirectMessage
+                                                                                                              })
+                                                                                                  .AsEnumerable()
+                                                                                                  .ToDictionary(obj => obj.DiscordServerId, obj => JsonConvert.DeserializeObject<WelcomeDirectMessageData>(obj.WelcomeDirectMessage)));
         }
 
         _discordClient = serviceProvider.GetRequiredService<DiscordSocketClient>();
