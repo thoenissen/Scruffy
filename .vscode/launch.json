@@ -9,6 +9,17 @@
             "netCore": {
                 "appProject": "${workspaceFolder}/Scruffy.ServiceHosts.Discord/Scruffy.ServiceHosts.Discord.csproj"
             }
+        },
+        {
+            "name": "ManualTesting",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/Scruffy.ManualTesting/bin/Debug/net6.0/Scruffy.ManualTesting.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/Scruffy.ManualTesting/bin/Debug/net6.0/",
+            "console": "internalConsole",
+            "stopAtEntry": false
         }
     ]
 }

@@ -34,6 +34,18 @@
                 "appProject": "${workspaceFolder}/Scruffy.ServiceHosts.Discord/Scruffy.ServiceHosts.Discord.csproj",
                 "enableDebugging": true
             }
+        },
+        {
+            "label": "build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/Scruffy.ManualTesting/Scruffy.ManualTesting.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
         }
     ]
 }

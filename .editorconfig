@@ -76,6 +76,9 @@ dotnet_code_quality_unused_parameters = non_public:error
 # Suppression preferences
 dotnet_remove_unnecessary_suppression_exclusions = all
 
+# Other
+dotnet_style_namespace_match_folder = true:suggestion
+
 #### C# Coding Conventions ####
 [*.cs]
 
@@ -122,6 +125,12 @@ csharp_style_prefer_range_operator = true:error
 csharp_style_throw_expression = true:error
 csharp_style_unused_value_assignment_preference = discard_variable:silent
 csharp_style_unused_value_expression_statement_preference = discard_variable:silent
+
+# Other
+csharp_style_namespace_declarations = block_scoped:silent
+csharp_style_prefer_method_group_conversion = true:silent
+csharp_style_prefer_null_check_over_type_check = true:suggestion
+csharp_style_prefer_local_over_anonymous_function = true:error
 
 # 'using' directive preferences
 csharp_using_directive_placement = outside_namespace:error
@@ -224,7 +233,7 @@ dotnet_naming_rule.private_fields_should_be__camelcase.style = _camelcase
 
 dotnet_naming_rule.private_static_fields_should_be_s_camelcase.severity = suggestion
 dotnet_naming_rule.private_static_fields_should_be_s_camelcase.symbols = private_static_fields
-dotnet_naming_rule.private_static_fields_should_be_s_camelcase.style = s_camelcase
+dotnet_naming_rule.private_static_fields_should_be_s_camelcase.style = _camelcase
 
 dotnet_naming_rule.public_constant_fields_should_be_pascalcase.severity = suggestion
 dotnet_naming_rule.public_constant_fields_should_be_pascalcase.symbols = public_constant_fields
