@@ -32,6 +32,11 @@ public class GuildEntity
     /// </summary>
     public ulong DiscordServerId { get; set; }
 
+    /// <summary>
+    /// Welcome direct message
+    /// </summary>
+    public string WelcomeDirectMessage { get; set; }
+
     #region Navigation - Properties
 
     /// <summary>

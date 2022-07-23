@@ -1,4 +1,4 @@
-﻿foreach($line in Get-Content .\Scruffy.ServiceHost\Docker.env) 
+﻿foreach($line in Get-Content .\Scruffy.ServiceHosts.Discord\Docker.env) 
 {
 	$tmp = $line.Split("=")
 

@@ -1,60 +1,60 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\Scruffy.Data.xml</DocumentationFile>
-    <CodeAnalysisRuleSet>..\StyleCop.Debug.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <DocumentationFile>bin\Debug\Scruffy.Data.xml</DocumentationFile>
+        <CodeAnalysisRuleSet>..\StyleCop.Debug.ruleset</CodeAnalysisRuleSet>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\Scruffy.Data.xml</DocumentationFile>
-    <CodeAnalysisRuleSet>..\StyleCop.Release.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <DocumentationFile>bin\Release\Scruffy.Data.xml</DocumentationFile>
+        <CodeAnalysisRuleSet>..\StyleCop.Release.ruleset</CodeAnalysisRuleSet>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Resources\Emotes.json" />
-    <None Remove="Resources\Languages\de-DE.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Emotes.json" />
-    <EmbeddedResource Include="Resources\Languages\de-DE.json" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Remove="Resources\Emotes.json" />
+        <None Remove="Resources\Languages\de-DE.json" />
+    </ItemGroup>
+    <ItemGroup>
+        <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="Resources\Emotes.json" />
+        <EmbeddedResource Include="Resources\Languages\de-DE.json" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Discord.Net" Version="3.7.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.4">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.4">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.406">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Discord.Net" Version="3.7.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.4" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.4">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.4" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.4">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+        <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.406">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Entity\Queryable\General\" />
-    <Folder Include="Entity\Queryable\Account\" />
-    <Folder Include="Entity\Queryable\Games\" />
-    <Folder Include="Entity\Queryable\Reminder\" />
-    <Folder Include="Entity\Repositories\General\" />
-    <Folder Include="Entity\Repositories\Account\" />
-    <Folder Include="Entity\Repositories\Games\" />
-    <Folder Include="Entity\Repositories\Raid\" />
-    <Folder Include="Entity\Repositories\Reminder\" />
-  </ItemGroup>
+    <ItemGroup>
+        <Folder Include="Entity\Queryable\General\" />
+        <Folder Include="Entity\Queryable\Account\" />
+        <Folder Include="Entity\Queryable\Games\" />
+        <Folder Include="Entity\Queryable\Reminder\" />
+        <Folder Include="Entity\Repositories\General\" />
+        <Folder Include="Entity\Repositories\Account\" />
+        <Folder Include="Entity\Repositories\Games\" />
+        <Folder Include="Entity\Repositories\Raid\" />
+        <Folder Include="Entity\Repositories\Reminder\" />
+    </ItemGroup>
 
 </Project>
