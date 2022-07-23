@@ -1,6 +1,9 @@
-﻿using Scruffy.Data.Converter;
+﻿using Discord;
+
+using Scruffy.Data.Converter;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.GuildWars2.Account;
+using Scruffy.Data.Entity.Repositories.GuildWars2.Guild;
 using Scruffy.Data.Enumerations.GuildWars2;
 using Scruffy.Data.Json.GuildWars2.Core;
 using Scruffy.Services.Core;
@@ -143,5 +146,84 @@ public class AccountAdministrationService : LocatedServiceBase
         }
     }
 
+    /// <summary>
+    /// Checking unknown users of the given guild
+    /// </summary>
+    /// <param name="context">Command context</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task CheckUnknownUsers(InteractionContextContainer context)
+    {
+        await context.DeferAsync()
+                     .ConfigureAwait(false);
+
+        using (var dbFactory = RepositoryFactory.CreateInstance())
+        {
+            var today = DateTime.Today;
+
+            var guildWarsAccounts = dbFactory.GetRepository<GuildWarsAccountRepository>()
+                                             .GetQuery()
+                                             .Select(obj => obj);
+
+            var unknownUsers = dbFactory.GetRepository<GuildWarsGuildHistoricMemberRepository>()
+                                        .GetQuery()
+                                        .Where(obj => obj.Date == today
+                                                   && obj.Guild.DiscordServerId == context.Guild.Id
+                                                   && guildWarsAccounts.Any(obj2 => obj2.Name == obj.Name) == false)
+                                        .Select(obj => new
+                                                       {
+                                                           obj.Name,
+                                                           obj.JoinedAt
+                                                       })
+                                        .OrderBy(obj => obj.JoinedAt)
+                                        .ToList();
+
+            if (unknownUsers.Count > 0)
+            {
+                var embedBuilder = new EmbedBuilder().WithTitle(LocalizationGroup.GetText("UnknownUsers", "Unknown users"))
+                                                     .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
+                                                     .WithColor(Color.Green)
+                                                     .WithTimestamp(DateTime.Now);
+
+                var stringBuilder = new StringBuilder();
+
+                foreach (var user in unknownUsers)
+                {
+                    stringBuilder.Append(Format.Bold(user.Name));
+                    stringBuilder.Append(" (");
+                    stringBuilder.Append(user.JoinedAt?.ToString("g", LocalizationGroup.CultureInfo));
+                    stringBuilder.Append(" | ");
+
+                    var days = (DateTime.Now - user.JoinedAt)?.TotalDays.ToString("0");
+
+                    stringBuilder.Append(days);
+                    stringBuilder.Append(" ");
+
+                    if (days == "1")
+                    {
+                        stringBuilder.Append(LocalizationGroup.GetText("Day", "Day"));
+                    }
+                    else
+                    {
+                        stringBuilder.Append(LocalizationGroup.GetText("Days", "Days"));
+                    }
+
+                    stringBuilder.Append(")");
+                    stringBuilder.Append(Environment.NewLine);
+                }
+
+                embedBuilder.WithDescription(stringBuilder.ToString());
+
+                await context.ReplyAsync(embed: embedBuilder.Build())
+                             .ConfigureAwait(false);
+            }
+            else
+            {
+                await context.ReplyAsync(LocalizationGroup.GetText("NoUnknownUsers", "There are no unknown users in the guild."))
+                             .ConfigureAwait(false);
+            }
+        }
+    }
+
     #endregion // Methods
+
 }

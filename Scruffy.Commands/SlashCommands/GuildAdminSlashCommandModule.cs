@@ -88,6 +88,8 @@ public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
         RankAssignment,
         [ChoiceDisplay("API Keys")]
         ApiKeys,
+        [ChoiceDisplay("Unknown users")]
+        UnknownUsers,
     }
 
     /// <summary>
@@ -368,6 +370,13 @@ public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
             case CheckType.ApiKeys:
                 {
                     await CommandHandler.CheckApiKeys(Context)
+                                        .ConfigureAwait(false);
+                }
+                break;
+
+            case CheckType.UnknownUsers:
+                {
+                    await CommandHandler.CheckUnknownUsers(Context)
                                         .ConfigureAwait(false);
                 }
                 break;

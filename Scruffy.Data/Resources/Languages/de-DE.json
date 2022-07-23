@@ -11,7 +11,11 @@
          "NoAccountExisting": "Du hast noch keine hinterlegten Accounts.",
          "NoAccounts": "Du hast aktuell keine konfigurierten Acccounts.",
          "NoInvalidAccounts": "Es konnten keine ungültigen Accounts gefunden werden",
-         "SwitchToPrivate": "Ich habe deinen Befehl als private Nachricht beantwortet."
+         "SwitchToPrivate": "Ich habe deinen Befehl als private Nachricht beantwortet.",
+         "UnknownUsers": "Unbekannte Mitglieder",
+         "NoUnknownUsers": "Es existieren keine unbekannten Mitglieder.",
+         "Days": "Tage",
+         "Day": "Tag" 
       },
       "AccountApiKeyDialogElement": {
          "AddDescription": "Gib bitte den zu verwendenen API-Key ein. Ein API-Key kann auf der offiziellen [Guild Wars 2 Website](https://account.arena.net/applications) erstellt werden.",

@@ -567,6 +567,13 @@ public class GuildCommandHandler : LocatedServiceBase
     public Task CheckApiKeys(InteractionContextContainer context) => _accountAdministrationService.Validate(context);
 
     /// <summary>
+    /// Checking unknown users of the given guild
+    /// </summary>
+    /// <param name="context">Command context</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public Task CheckUnknownUsers(InteractionContextContainer context) => _accountAdministrationService.CheckUnknownUsers(context);
+
+    /// <summary>
     /// Navigate to guild ranking overview page
     /// </summary>
     /// <param name="context">Context</param>
