@@ -11,12 +11,12 @@ namespace Scruffy.Data.Entity.Migrations
         /// Upgrade
         /// </summary>
         /// <param name="migrationBuilder">Builder</param>
-        protected override void Up(MigrationBuilder migrationBuilder) { migrationBuilder.AddColumn<decimal>(name: "NewUserDiscordRoleId", table: "Guilds", type: "decimal(20,0)", nullable: true); }
+        protected override void Up(MigrationBuilder migrationBuilder) => migrationBuilder.AddColumn<decimal>(name: "NewUserDiscordRoleId", table: "Guilds", type: "decimal(20,0)", nullable: true);
 
         /// <summary>
         /// Downgrade
         /// </summary>
         /// <param name="migrationBuilder">Buider</param>
-        protected override void Down(MigrationBuilder migrationBuilder) { migrationBuilder.DropColumn(name: "NewUserDiscordRoleId", table: "Guilds"); }
+        protected override void Down(MigrationBuilder migrationBuilder) => migrationBuilder.DropColumn(name: "NewUserDiscordRoleId", table: "Guilds");
     }
 }
