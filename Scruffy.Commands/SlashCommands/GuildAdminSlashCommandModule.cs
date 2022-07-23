@@ -86,8 +86,8 @@ public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
     {
         [ChoiceDisplay("In game rank assignments")]
         RankAssignment,
-        [ChoiceDisplay("Guild Wars 2 account permissions")]
-        GuildWarsAccountPermissions,
+        [ChoiceDisplay("API Keys")]
+        ApiKeys,
     }
 
     /// <summary>
@@ -365,9 +365,9 @@ public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
                 }
                 break;
 
-            case CheckType.GuildWarsAccountPermissions:
+            case CheckType.ApiKeys:
                 {
-                    await CommandHandler.CheckGuildWarsAccounts(Context)
+                    await CommandHandler.CheckApiKeys(Context)
                                         .ConfigureAwait(false);
                 }
                 break;

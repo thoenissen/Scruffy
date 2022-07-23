@@ -564,7 +564,7 @@ public class GuildCommandHandler : LocatedServiceBase
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task CheckGuildWarsAccounts(InteractionContextContainer context) => _accountAdministrationService.Validate(context);
+    public Task CheckApiKeys(InteractionContextContainer context) => _accountAdministrationService.Validate(context);
 
     /// <summary>
     /// Navigate to guild ranking overview page

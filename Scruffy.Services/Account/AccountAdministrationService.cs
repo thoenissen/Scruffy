@@ -43,7 +43,8 @@ public class AccountAdministrationService : LocatedServiceBase
 
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
-            var invalidAccounts = new List<(string Name, GuildWars2ApiPermission Permissions)>();
+            var invalidPermissions = new List<(string Name, GuildWars2ApiPermission Permissions)>();
+            var invalidNames = new List<(string Name, string NewName)>();
 
             var accounts = dbFactory.GetRepository<GuildWarsAccountRepository>()
                                     .GetQuery()
@@ -69,38 +70,70 @@ public class AccountAdministrationService : LocatedServiceBase
                          || tokenInformation.Permissions.Contains(TokenInformation.Permission.Characters) == false
                          || tokenInformation.Permissions.Contains(TokenInformation.Permission.Progression) == false)
                         {
-                            invalidAccounts.Add((account.Name, GuildWars2ApiDataConverter.ToPermission(tokenInformation?.Permissions)));
+                            invalidPermissions.Add((account.Name, GuildWars2ApiDataConverter.ToPermission(tokenInformation?.Permissions)));
+                        }
+                        else
+                        {
+                            var accountInformation = await connector.GetAccountInformationAsync()
+                                                                    .ConfigureAwait(false);
+                            if (accountInformation.Name != account.Name)
+                            {
+                                invalidNames.Add((account.Name, accountInformation.Name));
+                            }
                         }
                     }
                     catch (MissingGuildWars2ApiPermissionException)
                     {
-                        invalidAccounts.Add((account.Name, GuildWars2ApiPermission.None));
+                        invalidPermissions.Add((account.Name, GuildWars2ApiPermission.None));
                     }
                 }
             }
 
-            if (invalidAccounts.Count > 0)
+            if (invalidPermissions.Count > 0
+             || invalidNames.Count > 0)
             {
-                var sb = new StringBuilder();
-                sb.AppendLine(LocalizationGroup.GetText("ListOfInvalidAccounts", "The following accounts are invalid:"));
-                sb.Append("```");
-
-                foreach (var (name, permissions) in invalidAccounts)
+                if (invalidPermissions.Count > 0)
                 {
-                    dbFactory.GetRepository<GuildWarsAccountRepository>()
-                             .Refresh(obj => obj.Name == name,
-                                      obj => obj.Permissions = permissions);
+                    var sb = new StringBuilder();
+                    sb.AppendLine(LocalizationGroup.GetText("ListOfInvalidAccountsPermissions", "The following accounts are invalid or have missing permissions:"));
+                    sb.Append("```");
 
-                    sb.Append(name);
-                    sb.Append(" (");
-                    sb.Append(permissions);
-                    sb.AppendLine(")");
+                    foreach (var (name, permissions) in invalidPermissions)
+                    {
+                        dbFactory.GetRepository<GuildWarsAccountRepository>()
+                                 .Refresh(obj => obj.Name == name,
+                                          obj => obj.Permissions = permissions);
+
+                        sb.Append(name);
+                        sb.Append(" (");
+                        sb.Append(permissions);
+                        sb.AppendLine(")");
+                    }
+
+                    sb.Append("```");
+
+                    await context.SendMessageAsync(sb.ToString())
+                                 .ConfigureAwait(false);
                 }
 
-                sb.Append("```");
+                if (invalidNames.Count > 0)
+                {
+                    var sb = new StringBuilder();
+                    sb.AppendLine(LocalizationGroup.GetText("ListOfInvalidAccountsNewNames", "The following accounts are renamed"));
+                    sb.Append("```");
 
-                await context.ReplyAsync(sb.ToString())
-                             .ConfigureAwait(false);
+                    foreach (var (name, newName) in invalidNames)
+                    {
+                        sb.Append(name);
+                        sb.Append(" -> ");
+                        sb.Append(newName);
+                    }
+
+                    sb.Append("```");
+
+                    await context.SendMessageAsync(sb.ToString())
+                                 .ConfigureAwait(false);
+                }
             }
             else
             {
