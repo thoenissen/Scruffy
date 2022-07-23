@@ -37,6 +37,11 @@ public sealed class GuildUserService : SingletonLocatedServiceBase, IDisposable
     private ConcurrentDictionary<ulong, WelcomeDirectMessageData> _welcomeMessages;
 
     /// <summary>
+    /// Role of new users
+    /// </summary>
+    private ConcurrentDictionary<ulong, ulong> _newUserRoles;
+
+    /// <summary>
     /// Discord client
     /// </summary>
     private DiscordSocketClient _discordClient;
@@ -108,9 +113,33 @@ public sealed class GuildUserService : SingletonLocatedServiceBase, IDisposable
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     private async Task OnUserJoined(SocketGuildUser user)
     {
+        await SetNewUserRole(user, user.Guild).ConfigureAwait(false);
+
         await SendNotificationMessage(user, user.Guild, "UserJoined").ConfigureAwait(false);
 
         await SendWelcomeMessage(user, user.Guild).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Set new user role
+    /// </summary>
+    /// <param name="user">User</param>
+    /// <param name="guild">Guild</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    private async Task SetNewUserRole(SocketGuildUser user, SocketGuild guild)
+    {
+        try
+        {
+            if (_newUserRoles.TryGetValue(guild.Id, out var roleId))
+            {
+                await user.AddRoleAsync(roleId)
+                          .ConfigureAwait(false);
+            }
+        }
+        catch (Exception ex)
+        {
+            LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(GuildUserService), "Set new user role failed", null, ex);
+        }
     }
 
     /// <summary>
@@ -251,12 +280,22 @@ public sealed class GuildUserService : SingletonLocatedServiceBase, IDisposable
                                                                                                   .GetQuery()
                                                                                                   .Where(obj => obj.WelcomeDirectMessage != null)
                                                                                                   .Select(obj => new
-                                                                                                              {
-                                                                                                                  obj.DiscordServerId,
-                                                                                                                  obj.WelcomeDirectMessage
-                                                                                                              })
+                                                                                                                 {
+                                                                                                                     obj.DiscordServerId,
+                                                                                                                     obj.WelcomeDirectMessage
+                                                                                                                 })
                                                                                                   .AsEnumerable()
                                                                                                   .ToDictionary(obj => obj.DiscordServerId, obj => JsonConvert.DeserializeObject<WelcomeDirectMessageData>(obj.WelcomeDirectMessage)));
+
+            _newUserRoles = new ConcurrentDictionary<ulong, ulong>(dbFactory.GetRepository<GuildRepository>()
+                                                                            .GetQuery()
+                                                                            .Where(obj => obj.NewUserDiscordRoleId != null)
+                                                                            .Select(obj => new
+                                                                                           {
+                                                                                               obj.DiscordServerId,
+                                                                                               RoleId = obj.NewUserDiscordRoleId ?? 0
+                                                                                           })
+                                                                            .ToDictionary(obj => obj.DiscordServerId, obj => obj.RoleId));
         }
 
         _discordClient = serviceProvider.GetRequiredService<DiscordSocketClient>();
