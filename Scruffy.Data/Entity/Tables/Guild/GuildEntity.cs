@@ -37,6 +37,11 @@ public class GuildEntity
     /// </summary>
     public string WelcomeDirectMessage { get; set; }
 
+    /// <summary>
+    /// Role of new users
+    /// </summary>
+    public ulong? NewUserDiscordRoleId { get; set; }
+
     #region Navigation - Properties
 
     /// <summary>
