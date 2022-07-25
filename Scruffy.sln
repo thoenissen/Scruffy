@@ -37,7 +37,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "05_Libraries", "05_Libraries", "{1C9F1BFF-9118-4778-AEE0-E86413937617}"
 	ProjectSection(SolutionItems) = preProject
 		libs\OpenSearch.Net.dll = libs\OpenSearch.Net.dll
-		OpenSearch_License.txt = OpenSearch_License.txt
+		libs\OpenSearch_License.txt = libs\OpenSearch_License.txt
 		libs\Osc.dll = libs\Osc.dll
 	EndProjectSection
 EndProject
