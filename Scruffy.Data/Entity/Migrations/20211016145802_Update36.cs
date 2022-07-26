@@ -191,7 +191,9 @@ namespace Scruffy.Data.Entity.Migrations
                                    SELECT[NewId], [CreationTimeStamp], 0, [RaidExperienceLevelId] FROM[Users_Temp]");
 
             migrationBuilder.Sql(@"DECLARE @id as INT = (SELECT TOP 1 [Id] FROM [Users] ORDER BY [Id] DESC);
-                                   DBCC CHECKIDENT ('Users', RESEED, @id)");
+
+                                   IF @id > 0
+                                      DBCC CHECKIDENT ('Users', RESEED, @id);");
 
             migrationBuilder.Sql("SET IDENTITY_INSERT [Users] OFF");
 
