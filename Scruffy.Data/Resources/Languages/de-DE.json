@@ -884,9 +884,9 @@
       "ServerConfigurationDialogElement": {
          "ChooseAction": "Wähle eine der folgenden Optionen...",
          "Description": "Mit diesem Assistenten kannst du die Serverkonfiguration durchführen.",
-         "InstallSlashCommands": "Installation Slash Commands",
+         "InstallCommands": "Installation Commands",
          "Title": "Serverkonfiguration",
-         "UninstallSlashCommands": "Deinstallation Slash Commands"
+         "UninstallCommands": "Deinstallation Commands"
       },
       "WorldsService": {
          "Overview": "Weltenübersicht"

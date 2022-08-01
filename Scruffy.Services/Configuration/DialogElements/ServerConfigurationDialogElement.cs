@@ -71,7 +71,7 @@ public class ServerConfigurationDialogElement : DialogEmbedSelectMenuElementBase
                {
                    new()
                    {
-                       CommandText = LocalizationGroup.GetText("InstallSlashCommands", "Slash command installation"),
+                       CommandText = LocalizationGroup.GetText("InstallCommands", "Command installation"),
                        Response = async () =>
                               {
                                   IEnumerable<ApplicationCommandProperties> commands = null;
@@ -97,6 +97,20 @@ public class ServerConfigurationDialogElement : DialogEmbedSelectMenuElementBase
                                       }
                                   }
 
+                                  foreach (var type in Assembly.Load("Scruffy.Commands")
+                                                               .GetTypes()
+                                                               .Where(obj => typeof(MessageCommandModuleBase).IsAssignableFrom(obj)
+                                                                          && obj.IsAbstract == false))
+                                  {
+                                      var commandModule = (MessageCommandModuleBase)Activator.CreateInstance(type);
+                                      if (commandModule != null)
+                                      {
+                                          commands = commands == null
+                                                         ? commandModule.GetCommands(buildContext)
+                                                         : commands.Concat(commandModule.GetCommands(buildContext));
+                                      }
+                                  }
+
                                   if (commands != null)
                                   {
                                       await CommandContext.Guild
@@ -109,7 +123,7 @@ public class ServerConfigurationDialogElement : DialogEmbedSelectMenuElementBase
                    },
                    new()
                    {
-                       CommandText = LocalizationGroup.GetText("UninstallSlashCommands", "Slash command uninstallation"),
+                       CommandText = LocalizationGroup.GetText("UninstallCommands", "Command uninstallation"),
                        Response = async () =>
                               {
                                   await CommandContext.Guild
