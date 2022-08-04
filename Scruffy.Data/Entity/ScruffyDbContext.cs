@@ -195,8 +195,7 @@ public class ScruffyDbContext : DbContext
                     .HasKey(obj => new
                                    {
                                        obj.UserId,
-                                       obj.MainRoleId,
-                                       obj.SubRoleId
+                                       MainRoleId = obj.RoleId
                                    });
 
         modelBuilder.Entity<RaidRoleLineupAssignmentEntity>()

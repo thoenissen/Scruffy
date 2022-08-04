@@ -52,13 +52,13 @@ public class RaidRolesService : LocatedServiceBase
                                      .Select(obj => new
                                                     {
                                                         obj.DiscordEmojiId,
-                                                        obj.Description,
+                                                        Description = obj.SelectMenuDescription,
                                                         SubRoles = obj.SubRaidRoles
                                                                       .Where(obj2 => obj2.IsDeleted == false)
                                                                       .Select(obj2 => new
                                                                                       {
                                                                                           obj2.DiscordEmojiId,
-                                                                                          obj2.Description
+                                                                                          Description = obj2.SelectMenuDescription
                                                                                       })
                                                     })
                                      .OrderBy(obj => obj.Description)
@@ -182,7 +182,7 @@ public class RaidRolesService : LocatedServiceBase
 
             if (currentUserResponse != null)
             {
-                roleData.Description = currentUserResponse.Content;
+                roleData.SelectMenuDescription = currentUserResponse.Content;
 
                 var continueCreation = true;
                 var subRolesData = new List<RaidRoleEntity>();
@@ -237,7 +237,7 @@ public class RaidRolesService : LocatedServiceBase
 
                                 if (currentUserResponse != null)
                                 {
-                                    subRoleData.Description = currentUserResponse.Content;
+                                    subRoleData.SelectMenuDescription = currentUserResponse.Content;
 
                                     subRolesData.Add(subRoleData);
                                 }
@@ -312,13 +312,13 @@ public class RaidRolesService : LocatedServiceBase
                                      .Select(obj => new
                                                     {
                                                         obj.DiscordEmojiId,
-                                                        obj.Description,
+                                                        Description = obj.SelectMenuDescription,
                                                         SubRoles = obj.SubRaidRoles
                                                                       .Where(obj2 => obj2.IsDeleted == false)
                                                                       .Select(obj2 => new
                                                                                       {
                                                                                           obj2.DiscordEmojiId,
-                                                                                          obj2.Description
+                                                                                          Description = obj2.SelectMenuDescription
                                                                                       })
                                                     })
                                      .OrderBy(obj => obj.Description)
@@ -433,7 +433,7 @@ public class RaidRolesService : LocatedServiceBase
             {
                 dbFactory.GetRepository<RaidRoleRepository>()
                          .Refresh(obj => obj.Id == roleId,
-                                  obj => obj.Description = response.Content);
+                                  obj => obj.SelectMenuDescription = response.Content);
             }
         }
     }
@@ -500,7 +500,7 @@ public class RaidRolesService : LocatedServiceBase
 
             if (currentUserResponse != null)
             {
-                subRoleData.Description = currentUserResponse.Content;
+                subRoleData.SelectMenuDescription = currentUserResponse.Content;
 
                 using (var dbFactory = RepositoryFactory.CreateInstance())
                 {
@@ -662,7 +662,7 @@ public class RaidRolesService : LocatedServiceBase
                                                     {
                                                         obj.Id,
                                                         obj.DiscordEmojiId,
-                                                        obj.Description
+                                                        Description = obj.SelectMenuDescription
                                                     })
                                      .OrderBy(obj => obj.Description)
                                      .ToList();

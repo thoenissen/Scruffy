@@ -76,7 +76,7 @@ public class RaidRoleSelectionDialogElement : DialogSelectMenuElementBase<long?>
                                      .Select(obj => new
                                                     {
                                                         obj.Id,
-                                                        obj.Description,
+                                                        Description = obj.SelectMenuDescription,
                                                         obj.DiscordEmojiId
                                                     })
                                      .OrderBy(obj => obj.Description)

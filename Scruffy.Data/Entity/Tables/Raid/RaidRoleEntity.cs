@@ -27,9 +27,14 @@ public class RaidRoleEntity
     public ulong DiscordEmojiId { get; set; }
 
     /// <summary>
-    /// Description
+    /// Description (Select menu)
     /// </summary>
-    public string Description { get; set; }
+    public string SelectMenuDescription { get; set; }
+
+    /// <summary>
+    /// Description (Registration overview)
+    /// </summary>
+    public string RegistrationDescription { get; set; }
 
     /// <summary>
     /// Is the role deleted?
