@@ -41,6 +41,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "05_Libraries", "05_Librarie
 		libs\Osc.dll = libs\Osc.dll
 	EndProjectSection
 EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "Scruffy.ServiceHosts.WebApp", "Scruffy.ServiceHosts.WebApp\Scruffy.ServiceHosts.WebApp.esproj", "{72BE35E9-534F-4779-9BE5-A2D3F2B61554}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,12 @@ Global
 		{D1AA9A5E-2B58-4B56-9D9C-AF6EED40143F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1AA9A5E-2B58-4B56-9D9C-AF6EED40143F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1AA9A5E-2B58-4B56-9D9C-AF6EED40143F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72BE35E9-534F-4779-9BE5-A2D3F2B61554}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72BE35E9-534F-4779-9BE5-A2D3F2B61554}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72BE35E9-534F-4779-9BE5-A2D3F2B61554}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{72BE35E9-534F-4779-9BE5-A2D3F2B61554}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72BE35E9-534F-4779-9BE5-A2D3F2B61554}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72BE35E9-534F-4779-9BE5-A2D3F2B61554}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -87,6 +95,7 @@ Global
 		{4D69B0A9-6300-4E4D-9FE5-EDAB430C97AB} = {6CF14D6E-04D8-4E78-A84A-697AF9E286B1}
 		{E44342DC-2ABD-4EB6-976E-E33E014BA9D0} = {0A4BE441-DD39-4293-9FF8-B5C8E5E3BFA0}
 		{D1AA9A5E-2B58-4B56-9D9C-AF6EED40143F} = {0A4BE441-DD39-4293-9FF8-B5C8E5E3BFA0}
+		{72BE35E9-534F-4779-9BE5-A2D3F2B61554} = {0A4BE441-DD39-4293-9FF8-B5C8E5E3BFA0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ADE571FA-90CA-4B6B-8634-0AE4F774B904}

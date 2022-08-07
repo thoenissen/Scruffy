@@ -1,0 +1,37 @@
+body {
+  height: 100%;
+  margin: 0;
+}
+
+.box {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+}
+
+.box .row {
+  border: 1px dotted grey;
+}
+
+.box .row.header {
+  flex: 0 1 60px;
+  display: flex;
+  background-color: #1976d2;
+  align-items: center;
+  color: white;
+  font-weight: 600;
+}
+
+.box .row.header img {
+  margin: 0 16px;
+}
+
+.box .row.content {
+  background-color: lightgrey;
+  flex: 1 1 auto;
+}
+
+.box .row.footer {
+  background-color: #1976d2;
+  flex: 0 1 40px;
+}
