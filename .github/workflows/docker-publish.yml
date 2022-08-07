@@ -27,6 +27,9 @@ jobs:
     - name: Build ServiceHosts WebAPI
       run: docker build . --file ./Scruffy.ServiceHosts.WebApi/Dockerfile --tag thoenissen/scruffy.servicehosts.webapi:latest
 
+    - name: Build ServiceHosts WebApp
+      run: docker build ./Scruffy.ServiceHosts.WebApp --file ./Scruffy.ServiceHosts.WebApp/Dockerfile --tag thoenissen/scruffy.servicehosts.webapp:latest
+
     - name: Push ServiceHosts Discord
       run: docker push thoenissen/scruffy.servicehosts.discord
       
@@ -35,3 +38,6 @@ jobs:
 
     - name: Push ServiceHosts WebAPI
       run: docker push thoenissen/scruffy.servicehosts.webapi
+
+    - name: Push ServiceHosts WebApp
+      run: docker push thoenissen/scruffy.servicehosts.webapp
