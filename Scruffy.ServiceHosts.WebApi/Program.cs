@@ -28,8 +28,6 @@ public class Program
                      .WriteTo.Console(outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
                      .CreateBootstrapLogger();
 
-        LoggingService.AddServiceLogEntry(LogEntryLevel.Information, nameof(Program), "Starting up", null);
-
         try
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -106,12 +104,10 @@ public class Program
         }
         catch (Exception ex)
         {
-            LoggingService.AddServiceLogEntry(LogEntryLevel.CriticalError, nameof(Program), "Unhandled exception", null, ex);
+            Log.Error(ex, "Unhandled exception");
         }
         finally
         {
-            LoggingService.AddServiceLogEntry(LogEntryLevel.Information, nameof(Program), "Shut down complete", null);
-
             Log.CloseAndFlush();
         }
     }

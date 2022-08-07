@@ -1,7 +1,7 @@
 ﻿using Discord.Rest;
 
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Discord;
@@ -15,9 +15,9 @@ namespace Scruffy.ServiceHosts.WebApi.Controllers;
 /// Raid controller
 /// </summary>
 [ApiController]
-[Route("[controller]")]
+[Route("raid")]
 #if !DEBUG
-[Authorize]
+[Microsoft.AspNetCore.Authorization.Authorize]
 #endif
 public class RaidController : ControllerBase
 {
@@ -57,7 +57,7 @@ public class RaidController : ControllerBase
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpGet]
-    [Route("Appointments")]
+    [Route("appointments")]
     [Produces(typeof(List<ActiveRaidAppointmentDTO>))]
     public async Task<IActionResult> GetAppointments()
     {
@@ -118,6 +118,79 @@ public class RaidController : ControllerBase
         }
 
         return Ok(appointments);
+    }
+
+    /// <summary>
+    /// Get a list of all roles
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [HttpGet]
+    [Route("roles")]
+    [Produces(typeof(List<RaidRoleDTO>))]
+    public async Task<IActionResult> GetRoles()
+    {
+        return Ok(await _repositoryFactory.GetRepository<RaidRoleRepository>()
+                                          .GetQuery()
+                                          .Where(obj => obj.IsDeleted == false)
+                                          .Select(obj => new RaidRoleDTO
+                                                         {
+                                                             Id = obj.Id,
+                                                             Description = obj.SelectMenuDescription
+                                                         })
+                                          .ToListAsync()
+                                          .ConfigureAwait(false));
+    }
+
+    /// <summary>
+    /// Get all raid relevant users
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [HttpGet]
+    [Route("users")]
+    [Produces(typeof(List<RaidUserDTO>))]
+    public async Task<IActionResult> GetUsers()
+    {
+        var discordAccounts = _repositoryFactory.GetRepository<DiscordAccountRepository>()
+                                                .GetQuery()
+                                                .Select(obj => obj);
+
+        var users = new List<RaidUserDTO>();
+
+        foreach (var user in await _repositoryFactory.GetRepository<RaidUserRoleRepository>()
+                                                     .GetQuery()
+                                                     .Where(obj => obj.RaidRole.IsDeleted == false)
+                                                     .GroupBy(obj => obj.UserId)
+                                                     .Select(obj => new
+                                                                    {
+                                                                        Id = obj.Key,
+                                                                        DiscordAccountId = discordAccounts.Where(obj2 => obj2.UserId == obj.Key)
+                                                                                                          .Select(obj2 => (ulong?)obj2.Id)
+                                                                                                          .FirstOrDefault(),
+                                                                        AssignedRoles = obj.Select(obj2 => obj2.RoleId)
+                                                                                           .ToList()
+                                                                    })
+                                                     .ToListAsync()
+                                                     .ConfigureAwait(false))
+        {
+            string name = null;
+
+            if (user.DiscordAccountId != null)
+            {
+                var member = await _discordClient.GetGuildUserAsync(WebApiConfiguration.DiscordServerId, user.DiscordAccountId.Value)
+                                                 .ConfigureAwait(false);
+
+                name = member.TryGetDisplayName();
+            }
+
+            users.Add(new RaidUserDTO
+                      {
+                          Id = user.Id,
+                          Name = name,
+                          AssignedRoles = user.AssignedRoles
+                      });
+        }
+
+        return Ok(users);
     }
 
     #endregion // Methods
