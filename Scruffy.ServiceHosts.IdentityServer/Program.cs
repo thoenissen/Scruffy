@@ -67,19 +67,11 @@ public class Program
                                                         AllowedGrantTypes = GrantTypes.Code,
                                                         RedirectUris = { Environment.GetEnvironmentVariable("SCRUFFY_WEBAPP_REDIRECT_URI") },
                                                         AllowOfflineAccess = true,
-                                                        AllowedScopes = { "openid", "profile", "api_v1" }
-                                                    },
-                                                    new()
-                                                    {
-                                                        ClientId = Environment.GetEnvironmentVariable("SCRUFFY_OPENSEARCH_CLIENT_ID"),
-                                                        ClientSecrets = { new Secret(Environment.GetEnvironmentVariable("SCRUFFY_OPENSEARCH_CLIENT_SECRET").Sha256()) },
-                                                        AllowedGrantTypes = GrantTypes.Code,
-                                                        RedirectUris = { Environment.GetEnvironmentVariable("SCRUFFY_OPENSEARCH_REDIRECT_URI") },
-                                                        AllowOfflineAccess = true,
                                                         AllowedScopes = { "openid", "profile", "api_v1" },
-                                                        RequirePkce = false
-                                                    },
+                                                        AllowedCorsOrigins = new[] { Environment.GetEnvironmentVariable("SCRUFFY_WEBAPP_CORS_ORIGINS") }
+                                                    }
                                                 });
+
             builder.Services.AddAuthentication()
                             .AddDiscord(options =>
                                         {
@@ -87,9 +79,15 @@ public class Program
                                             options.ClientId = Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_OAUTH_CLIENT_ID");
                                             options.ClientSecret = Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_OAUTH_CLIENT_SECRET");
                                         });
+
             builder.Services.AddScoped<RepositoryFactory>();
 
             var app = builder.Build();
+
+            app.UseCookiePolicy(new CookiePolicyOptions
+                                {
+                                    MinimumSameSitePolicy = SameSiteMode.None
+                                });
 
             app.UseSerilogRequestLogging();
 
