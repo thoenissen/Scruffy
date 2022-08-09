@@ -16,7 +16,9 @@
     "importHelpers": true,
     "target": "es2017",
     "module": "es2020",
-    "lib": ["es2018", "dom"]
+    "lib": ["es2018", "dom"],
+    "types": ["node"],
+    "typeRoots": ["../node_modules/@types"]
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

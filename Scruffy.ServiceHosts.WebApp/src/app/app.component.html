@@ -1,7 +1,8 @@
 <div class="box">
   <div class="row header">
     <img width="60" alt="Scruffy Logo" src="/assets/Scruffy_Portrait.png" />
-    <p>Welcome</p>
+    <button *ngIf="isLoggedIn == false" (click)="login()">Login</button>
+    <button *ngIf="isLoggedIn" (click)="logout()">Logout</button>
   </div>
   <div class="row content">
     <!-- TODO -->
