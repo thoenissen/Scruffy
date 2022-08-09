@@ -142,7 +142,7 @@ public class RaidCommandHandler : LocatedServiceBase
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
             var message = await container.Channel
-                                       .SendMessageAsync(DiscordEmoteService.GetProgressEmote(container.Client).ToString())
+                                       .SendMessageAsync(DiscordEmoteService.GetLoadingEmote(container.Client).ToString())
                                        .ConfigureAwait(false);
 
             var configuration = new RaidDayConfigurationEntity

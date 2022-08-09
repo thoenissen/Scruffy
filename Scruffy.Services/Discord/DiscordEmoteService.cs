@@ -143,13 +143,6 @@ public static class DiscordEmoteService
     public static IEmote GetImageEmote(BaseSocketClient client) => GetEmote(client, "Image");
 
     /// <summary>
-    /// Get 'Progress'-Emote
-    /// </summary>
-    /// <param name="client">Discord client</param>
-    /// <returns>Emote</returns>
-    public static IEmote GetProgressEmote(BaseSocketClient client) => GetEmote(client, "Progress");
-
-    /// <summary>
     /// Get 'QuestionMark'-Emote
     /// </summary>
     /// <param name="client">Discord client</param>
