@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 using System.Globalization;
 
 using Discord;
@@ -541,13 +541,16 @@ public class RaidCommandHandler : LocatedServiceBase
                         foreach (var upload in page.Uploads)
                         {
                             var uploadTime = DateTimeOffset.FromUnixTimeSeconds(upload.UploadTime).ToLocalTime();
+
                             if (uploadTime.Date < day)
                             {
                                 continueLoop = false;
                                 break;
                             }
 
-                            if (uploadTime.Date == day)
+                            var encounterTime = DateTimeOffset.FromUnixTimeSeconds(upload.EncounterTime).ToLocalTime();
+
+                            if (encounterTime.Date == day)
                             {
                                 uploads.Add(upload);
                             }
