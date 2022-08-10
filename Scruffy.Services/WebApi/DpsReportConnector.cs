@@ -1,4 +1,4 @@
-using System.Net.Http;
+﻿using System.Net.Http;
 
 using Newtonsoft.Json;
 
@@ -54,74 +54,6 @@ public class DpsReportConnector
 
             return JsonConvert.DeserializeObject<Page>(jsonResult);
         }
-    }
-
-    /// <summary>
-    /// Get boss description
-    /// </summary>
-    /// <param name="bossId">Boss ID</param>
-    /// <returns>Boss description</returns>
-    public string GetBossDescription(int bossId)
-    {
-        var description = bossId switch
-        {
-            15438 => "Vale Guardian",
-            15429 => "Gorseval",
-            15375 => "Sabetha the Saboteur",
-            16123 => "Slothasor",
-            16115 => "Matthias Gabrel",
-            16235 => "Keep Construct",
-            16246 => "Xera",
-            17194 => "Cairn the Indomitable",
-            17172 => "Mursaat Overseer",
-            17188 => "Samarog",
-            17154 => "Deimos",
-            19767 => "Soulless Horror",
-            19450 => "Dhuum",
-            43974 => "Conjured Amalgamate",
-            21105 => "Twin Largos",
-            21089 => "Twin Largos",
-            20934 => "Qadim",
-            22006 => "Cardinal Adina",
-            21964 => "Cardinal Sabir",
-            22000 => "Qadim the Peerless",
-            16088 => "Bandit Trio",
-            16137 => "Bandit Trio",
-            16125 => "Bandit Trio",
-            16253 => "McLeod the Silent",
-            16247 => "Twisted Castle",
-            19828 => "Desmina Escort",
-            19691 => "Broken King",
-            19536 => "Soul Eater",
-            19651 => "Eye of Judgement",
-            19844 => "Eye of Fate",
-            17021 => "M A M A",
-            17028 => "Siax the Corrupted",
-            16948 => "Ensolyss of the Endless Torment",
-            17632 => "Skorvald the Shattered",
-            17949 => "Artsariiv",
-            17759 => "Arkk",
-            23254 => "Ai, Keeper of the Peak",
-            22154 => "Icebrood Construct",
-            22343 => "The Voice and The Claw",
-            22481 => "The Voice and The Claw",
-            22315 => "The Voice and the Claw",
-            22492 => "Fraenir of Jormag",
-            22436 => "Fraenir of Jormag",
-            22521 => "Boneskinner",
-            22711 => "Whisper of Jormag",
-            22836 => "Varinia Stormsounder",
-            21333 => "Freezie",
-            16199 => "Standard Kitty Golem",
-            19645 => "Medium Kitty Golem",
-            19676 => "Large Kitty Golem",
-            16202 => "Massive Kitty Golem",
-            16177 => "Average Kitty Golem",
-            16198 => "Vital Kitty Golem",
-            _ => "Unknown"
-        };
-
-        return description;
     }
 
     /// <summary>
