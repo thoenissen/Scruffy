@@ -15,7 +15,7 @@ public class LocatedServiceBase
     /// <param name="localizationService">Localization service</param>
     public LocatedServiceBase(LocalizationService localizationService)
     {
-        LocalizationGroup = localizationService.GetGroup(GetType().Name);
+        LocalizationGroup = localizationService?.GetGroup(GetType().Name);
     }
 
     #endregion // Constructor

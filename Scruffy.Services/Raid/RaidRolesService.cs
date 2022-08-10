@@ -34,6 +34,14 @@ namespace Scruffy.Services.Raid
             _discordClient = discordClient;
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public RaidRolesService()
+            : base(null)
+        {
+        }
+
         #endregion // Constructor
 
         #region Methods

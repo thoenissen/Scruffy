@@ -14,4 +14,14 @@ public class RaidParticipantDTO
     /// Name
     /// </summary>
     public string Name { get; set; }
+
+    /// <summary>
+    /// Roles of the user
+    /// </summary>
+    public List<long> Roles { get; set; }
+
+    /// <summary>
+    /// Preferred roles
+    /// </summary>
+    public List<long> PreferredRoles { get; set; }
 }

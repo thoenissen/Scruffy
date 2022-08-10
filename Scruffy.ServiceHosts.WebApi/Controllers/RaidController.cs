@@ -8,6 +8,7 @@ using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.ServiceHosts.WebApi.DTO.Raid;
 using Scruffy.Services.Core.Extensions;
+using Scruffy.Services.Raid;
 
 namespace Scruffy.ServiceHosts.WebApi.Controllers;
 
@@ -33,6 +34,11 @@ public class RaidController : ControllerBase
     /// </summary>
     private readonly RepositoryFactory _repositoryFactory;
 
+    /// <summary>
+    /// Raid role service
+    /// </summary>
+    private readonly RaidRolesService _raidRolesService;
+
     #endregion // Fields
 
     #region Constructor
@@ -42,10 +48,12 @@ public class RaidController : ControllerBase
     /// </summary>
     /// <param name="discordClient">Discord client</param>
     /// <param name="repositoryFactory">Repository factory</param>
-    public RaidController(DiscordRestClient discordClient, RepositoryFactory repositoryFactory)
+    /// <param name="raidRolesService">Raid roles service</param>
+    public RaidController(DiscordRestClient discordClient, RepositoryFactory repositoryFactory, RaidRolesService raidRolesService)
     {
         _discordClient = discordClient;
         _repositoryFactory = repositoryFactory;
+        _raidRolesService = raidRolesService;
     }
 
     #endregion // Constructor
@@ -65,6 +73,14 @@ public class RaidController : ControllerBase
                                                 .GetQuery()
                                                 .Select(obj => obj);
 
+        var userRoles = _repositoryFactory.GetRepository<RaidUserRoleRepository>()
+                                          .GetQuery()
+                                          .Select(obj => obj);
+
+        var registrationRoles = _repositoryFactory.GetRepository<RaidRegistrationRoleAssignmentRepository>()
+                                                  .GetQuery()
+                                                  .Select(obj => obj);
+
         var appointments = new List<ActiveRaidAppointmentDTO>();
 
         foreach (var appointment in _repositoryFactory.GetRepository<RaidAppointmentRepository>()
@@ -82,7 +98,13 @@ public class RaidController : ControllerBase
                                                                                                                Id = obj2.UserId,
                                                                                                                DiscordAccountId = discordAccounts.Where(obj3 => obj3.UserId == obj2.UserId)
                                                                                                                                                  .Select(obj3 => (ulong?)obj3.Id)
-                                                                                                                                                 .FirstOrDefault()
+                                                                                                                                                 .FirstOrDefault(),
+                                                                                                               Roles = userRoles.Where(obj3 => obj3.UserId == obj2.UserId)
+                                                                                                                                .Select(obj3 => obj3.RoleId)
+                                                                                                                                .ToList(),
+                                                                                                               PreferredRoles = registrationRoles.Where(obj3 => obj3.RegistrationId == obj2.Id)
+                                                                                                                                                 .Select(obj3 => obj3.RoleId)
+                                                                                                                                                 .ToList()
                                                                                                            })
                                                                                            .ToList()
                                                                      }))
@@ -105,6 +127,8 @@ public class RaidController : ControllerBase
                                  {
                                      Id = participant.Id,
                                      Name = name,
+                                     Roles = participant.Roles,
+                                     PreferredRoles = participant.PreferredRoles
                                  });
             }
 
@@ -129,15 +153,18 @@ public class RaidController : ControllerBase
     [Produces(typeof(List<RaidRoleDTO>))]
     public async Task<IActionResult> GetRoles()
     {
-        return Ok(await _repositoryFactory.GetRepository<RaidRoleRepository>()
-                                          .GetQuery()
-                                          .Select(obj => new RaidRoleDTO
-                                                         {
-                                                             Id = obj.Id,
-                                                             Description = "TODO", // obj.SelectMenuDescription
-                                                         })
-                                          .ToListAsync()
-                                          .ConfigureAwait(false));
+        var roles = await _repositoryFactory.GetRepository<RaidRoleRepository>()
+                                            .GetQuery()
+                                            .Select(obj => obj)
+                                            .ToListAsync()
+                                            .ConfigureAwait(false);
+
+        return Ok(roles.Select(obj => new RaidRoleDTO
+                                      {
+                                          Id = obj.Id,
+                                          Description = _raidRolesService.GetDescriptionAsText(obj)
+                                      })
+                       .ToList());
     }
 
     /// <summary>

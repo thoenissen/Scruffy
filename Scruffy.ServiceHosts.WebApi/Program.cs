@@ -6,6 +6,7 @@ using Microsoft.OpenApi.Models;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Enumerations.General;
 using Scruffy.Services.Core;
+using Scruffy.Services.Raid;
 
 using Serilog;
 
@@ -23,10 +24,9 @@ public class Program
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public static async Task Main(string[] args)
     {
-        Log.Logger = new LoggerConfiguration()
-                     .Enrich.FromLogContext()
-                     .WriteTo.Console(outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
-                     .CreateBootstrapLogger();
+        Log.Logger = new LoggerConfiguration().Enrich.FromLogContext()
+                                              .WriteTo.Console(outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
+                                              .CreateBootstrapLogger();
 
         try
         {
@@ -86,6 +86,7 @@ public class Program
 
             builder.Services.AddSingleton(discordClient);
             builder.Services.AddSingleton<RepositoryFactory>();
+            builder.Services.AddTransient<RaidRolesService>();
 
             var app = builder.Build();
             app.UseSwagger();
