@@ -248,6 +248,41 @@ public static class DiscordEmoteService
     public static IEmote GetDpsReportEmote(BaseSocketClient client) => GetEmote(client, "DpsReport");
 
     /// <summary>
+    /// Get 'Alacrity'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetAlacrityEmote(BaseSocketClient client) => GetEmote(client, "Alacrity");
+
+    /// <summary>
+    /// Get 'Quickness'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetQuicknessEmote(BaseSocketClient client) => GetEmote(client, "Quickness");
+
+    /// <summary>
+    /// Get 'Tank'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetTankEmote(BaseSocketClient client) => GetEmote(client, "Tank");
+
+    /// <summary>
+    /// Get 'Healers'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetHealerEmote(BaseSocketClient client) => GetEmote(client, "Healer");
+
+    /// <summary>
+    /// Get 'DamageDealer'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetDamageDealerEmote(BaseSocketClient client) => GetEmote(client, "DamageDealer");
+
+    /// <summary>
     /// Get guild emoji
     /// </summary>
     /// <param name="client">Discord client</param>

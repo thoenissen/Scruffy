@@ -13,14 +13,14 @@ public class RaidRoleSelectionDialogElement : DialogSelectMenuElementBase<long?>
     #region Fields
 
     /// <summary>
+    /// Raid roles service
+    /// </summary>
+    private readonly RaidRolesService _raidRoleService;
+
+    /// <summary>
     /// Roles
     /// </summary>
     private List<SelectMenuEntryData<long?>> _entries;
-
-    /// <summary>
-    /// Id of the main role
-    /// </summary>
-    private long? _mainRoleId;
 
     #endregion // Fields
 
@@ -30,11 +30,11 @@ public class RaidRoleSelectionDialogElement : DialogSelectMenuElementBase<long?>
     /// Constructor
     /// </summary>
     /// <param name="localizationService">Localization service</param>
-    /// <param name="mainRoleId">Id of the main role</param>
-    public RaidRoleSelectionDialogElement(LocalizationService localizationService, long? mainRoleId)
+    /// <param name="raidRolesService">Raid roles service</param>
+    public RaidRoleSelectionDialogElement(LocalizationService localizationService, RaidRolesService raidRolesService)
         : base(localizationService)
     {
-        _mainRoleId = mainRoleId;
+        _raidRoleService = raidRolesService;
     }
 
     #endregion // Constructor
@@ -45,17 +45,13 @@ public class RaidRoleSelectionDialogElement : DialogSelectMenuElementBase<long?>
     /// Returning the message
     /// </summary>
     /// <returns>Message</returns>
-    public override string GetMessage() => CommandContext.User.Mention + " " + (_mainRoleId == null
-                                               ? LocalizationGroup.GetText("ChooseMainRoleTitle", "Role selection")
-                                               : LocalizationGroup.GetText("ChooseSubRoleTitle", "Class selection"));
+    public override string GetMessage() => CommandContext.User.Mention + " " + LocalizationGroup.GetText("ChooseMainRoleTitle", "Role selection");
 
     /// <summary>
     /// Returning the placeholder
     /// </summary>
     /// <returns>Placeholder</returns>
-    public override string GetPlaceholder() => _mainRoleId == null
-                                                   ? LocalizationGroup.GetText("ChooseMainRoleDescription", "Please choose one of the following roles...")
-                                                   : LocalizationGroup.GetText("ChooseSubRoleDescription", "Please choose one of the following classes...");
+    public override string GetPlaceholder() => LocalizationGroup.GetText("ChooseMainRoleDescription", "Please choose one of the following roles...");
 
     /// <summary>
     /// Returns the select menu entries which should be added to the message
@@ -71,15 +67,7 @@ public class RaidRoleSelectionDialogElement : DialogSelectMenuElementBase<long?>
             {
                 var roles = dbFactory.GetRepository<RaidRoleRepository>()
                                      .GetQuery()
-                                     .Where(obj => obj.MainRoleId == _mainRoleId
-                                                && obj.IsDeleted == false)
-                                     .Select(obj => new
-                                                    {
-                                                        obj.Id,
-                                                        Description = obj.SelectMenuDescription,
-                                                        obj.DiscordEmojiId
-                                                    })
-                                     .OrderBy(obj => obj.Description)
+                                     .OrderBy(obj => obj.Id)
                                      .ToList();
 
                 _entries.Add(new SelectMenuEntryData<long?>
@@ -93,7 +81,7 @@ public class RaidRoleSelectionDialogElement : DialogSelectMenuElementBase<long?>
                 {
                     _entries.Add(new SelectMenuEntryData<long?>
                                  {
-                                     CommandText = role.Description,
+                                     CommandText = _raidRoleService.GetDescriptionAsText(role),
                                      Emote = DiscordEmoteService.GetGuildEmote(CommandContext.Client, role.DiscordEmojiId),
                                      Response = () => Task.FromResult<long?>(role.Id)
                                  });

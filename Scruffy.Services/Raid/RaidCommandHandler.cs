@@ -53,11 +53,6 @@ public class RaidCommandHandler : LocatedServiceBase
     private readonly RaidRoleAssignmentService _roleAssignmentService;
 
     /// <summary>
-    /// Roles service
-    /// </summary>
-    private readonly RaidRolesService _rolesService;
-
-    /// <summary>
     /// Overview service
     /// </summary>
     private readonly RaidOverviewService _overviewService;
@@ -93,7 +88,6 @@ public class RaidCommandHandler : LocatedServiceBase
     /// <param name="messageBuilder">Message builder</param>
     /// <param name="commitService">Commit service</param>
     /// <param name="registrationService">Registration service</param>
-    /// <param name="rolesService">Roles service</param>
     /// <param name="roleAssignmentService">Role assignment service</param>
     /// <param name="overviewService">Overview service</param>
     /// <param name="experienceLevelsService">Experience levels service</param>
@@ -104,7 +98,6 @@ public class RaidCommandHandler : LocatedServiceBase
                               RaidMessageBuilder messageBuilder,
                               RaidCommitService commitService,
                               RaidRegistrationService registrationService,
-                              RaidRolesService rolesService,
                               RaidRoleAssignmentService roleAssignmentService,
                               RaidOverviewService overviewService,
                               RaidExperienceLevelsService experienceLevelsService,
@@ -116,7 +109,6 @@ public class RaidCommandHandler : LocatedServiceBase
         _messageBuilder = messageBuilder;
         _commitService = commitService;
         _registrationService = registrationService;
-        _rolesService = rolesService;
         _roleAssignmentService = roleAssignmentService;
         _overviewService = overviewService;
         _experienceLevelsService = experienceLevelsService;
@@ -180,17 +172,6 @@ public class RaidCommandHandler : LocatedServiceBase
             await _messageBuilder.RefreshMessageAsync(configuration.Id)
                                 .ConfigureAwait(false);
         }
-    }
-
-    /// <summary>
-    /// Starts the roles assistant
-    /// </summary>
-    /// <param name="container">Context container</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task RolesConfiguration(IContextContainer container)
-    {
-        await _rolesService.RunAssistantAsync(container)
-                           .ConfigureAwait(false);
     }
 
     /// <summary>

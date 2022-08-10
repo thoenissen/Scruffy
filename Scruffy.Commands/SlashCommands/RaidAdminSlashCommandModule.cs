@@ -26,8 +26,6 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
     {
         [ChoiceDisplay("Appointments")]
         Appointments,
-        [ChoiceDisplay("Roles")]
-        Roles,
         [ChoiceDisplay("Experience levels")]
         ExperienceLevels,
         [ChoiceDisplay("Templates")]
@@ -69,12 +67,6 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
             case ConfigurationType.Appointments:
                 {
                     await CommandHandler.AppointmentConfiguration(Context)
-                                        .ConfigureAwait(false);
-                }
-                break;
-            case ConfigurationType.Roles:
-                {
-                    await CommandHandler.RolesConfiguration(Context)
                                         .ConfigureAwait(false);
                 }
                 break;

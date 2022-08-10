@@ -131,11 +131,10 @@ public class RaidController : ControllerBase
     {
         return Ok(await _repositoryFactory.GetRepository<RaidRoleRepository>()
                                           .GetQuery()
-                                          .Where(obj => obj.IsDeleted == false)
                                           .Select(obj => new RaidRoleDTO
                                                          {
                                                              Id = obj.Id,
-                                                             Description = obj.SelectMenuDescription
+                                                             Description = "TODO", // obj.SelectMenuDescription
                                                          })
                                           .ToListAsync()
                                           .ConfigureAwait(false));
@@ -158,7 +157,6 @@ public class RaidController : ControllerBase
 
         foreach (var user in await _repositoryFactory.GetRepository<RaidUserRoleRepository>()
                                                      .GetQuery()
-                                                     .Where(obj => obj.RaidRole.IsDeleted == false)
                                                      .GroupBy(obj => obj.UserId)
                                                      .Select(obj => new
                                                                     {

@@ -17,49 +17,34 @@ public class RaidRoleEntity
     public long Id { get; set; }
 
     /// <summary>
-    /// Id of the main role
-    /// </summary>
-    public long? MainRoleId { get; set; }
-
-    /// <summary>
     /// Discord emoji
     /// </summary>
     public ulong DiscordEmojiId { get; set; }
 
     /// <summary>
-    /// Description (Select menu)
+    /// Tank
     /// </summary>
-    public string SelectMenuDescription { get; set; }
+    public bool IsTank { get; set; }
 
     /// <summary>
-    /// Description (Registration overview)
+    /// Alacrity
     /// </summary>
-    public string RegistrationDescription { get; set; }
+    public bool IsProvidingAlacrity { get; set; }
 
     /// <summary>
-    /// Is the role deleted?
+    /// Quickness
     /// </summary>
-    public bool IsDeleted { get; set; }
-
-    #region Navigation properties
+    public bool IsProvidingQuickness { get; set; }
 
     /// <summary>
-    /// Main role
+    /// Healer
     /// </summary>
-    [ForeignKey(nameof(MainRoleId))]
-    public virtual RaidRoleEntity MainRaidRole { get; set; }
+    public bool IsHealer { get; set; }
 
     /// <summary>
-    /// Sub roles
+    /// Damage dealer
     /// </summary>
-    public virtual ICollection<RaidRoleEntity> SubRaidRoles { get; set; }
-
-    /// <summary>
-    /// Lineup entries
-    /// </summary>
-    public virtual ICollection<RaidRoleLineupEntryEntity> RaidRoleLineupEntries { get; set; }
-
-    #endregion // Navigation properties
+    public bool IsDamageDealer { get; set; }
 
     #endregion // Properties
 }

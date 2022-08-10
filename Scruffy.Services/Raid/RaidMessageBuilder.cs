@@ -19,7 +19,12 @@ public class RaidMessageBuilder : LocatedServiceBase
     /// <summary>
     /// Discord client
     /// </summary>
-    private DiscordSocketClient _client;
+    private readonly DiscordSocketClient _client;
+
+    /// <summary>
+    /// Raid roles service
+    /// </summary>
+    private readonly RaidRolesService _raidRolesService;
 
     #endregion // Fields
 
@@ -30,10 +35,12 @@ public class RaidMessageBuilder : LocatedServiceBase
     /// </summary>
     /// <param name="client">Discord client</param>
     /// <param name="localizationService">Localization service</param>
-    public RaidMessageBuilder(DiscordSocketClient client, LocalizationService localizationService)
+    /// <param name="raidRolesService">Raid roles service</param>
+    public RaidMessageBuilder(DiscordSocketClient client, LocalizationService localizationService, RaidRolesService raidRolesService)
         : base(localizationService)
     {
         _client = client;
+        _raidRolesService = raidRolesService;
     }
 
     #endregion // Constructor
@@ -96,11 +103,7 @@ public class RaidMessageBuilder : LocatedServiceBase
                                                                                  ExperienceLevelId = (int?)obj3.User.RaidExperienceLevel.Id,
                                                                                  ExperienceLevelDiscordEmote = (ulong?)obj3.User.RaidExperienceLevel.DiscordEmoji,
                                                                                  Roles = obj3.RaidRegistrationRoleAssignments
-                                                                                             .Select(obj4 => new
-                                                                                                             {
-                                                                                                                 MainRoleEmote = obj4.MainRaidRole.DiscordEmojiId,
-                                                                                                                 SubRoleEmote = (ulong?)obj4.SubRaidRole.DiscordEmojiId
-                                                                                                             })
+                                                                                             .Select(obj4 => obj4.Role)
                                                                                              .ToList()
                                                                              })
                                                                              .ToList()
@@ -163,12 +166,7 @@ public class RaidMessageBuilder : LocatedServiceBase
                                             first = false;
                                         }
 
-                                        lineBuilder.Append(DiscordEmoteService.GetGuildEmote(_client, role.MainRoleEmote));
-
-                                        if (role.SubRoleEmote != null)
-                                        {
-                                            lineBuilder.Append(DiscordEmoteService.GetGuildEmote(_client, role.SubRoleEmote.Value));
-                                        }
+                                        lineBuilder.Append(_raidRolesService.GetDescriptionAsEmoji(role));
                                     }
                                 }
                                 else
@@ -237,12 +235,7 @@ public class RaidMessageBuilder : LocatedServiceBase
                                         first = false;
                                     }
 
-                                    lineBuilder.Append(DiscordEmoteService.GetGuildEmote(_client, role.MainRoleEmote));
-
-                                    if (role.SubRoleEmote != null)
-                                    {
-                                        lineBuilder.Append(DiscordEmoteService.GetGuildEmote(_client, role.SubRoleEmote.Value));
-                                    }
+                                    lineBuilder.Append(_raidRolesService.GetDescriptionAsEmoji(role));
                                 }
                             }
                             else
@@ -310,6 +303,7 @@ public class RaidMessageBuilder : LocatedServiceBase
 
                         await userMessage.ModifyAsync(obj =>
                                                       {
+                                                          obj.Content = "\u200b";
                                                           obj.Embed = builder.Build();
                                                           obj.Components = componentsBuilder.Build();
                                                       })

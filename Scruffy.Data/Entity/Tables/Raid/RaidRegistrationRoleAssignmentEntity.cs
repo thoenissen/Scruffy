@@ -24,12 +24,7 @@ public class RaidRegistrationRoleAssignmentEntity
     /// <summary>
     /// Id of the main role
     /// </summary>
-    public long? MainRoleId { get; set; }
-
-    /// <summary>
-    /// Id of the sub role
-    /// </summary>
-    public long? SubRoleId { get; set; }
+    public long RoleId { get; set; }
 
     #region Navigation properties
 
@@ -42,14 +37,8 @@ public class RaidRegistrationRoleAssignmentEntity
     /// <summary>
     /// Main role
     /// </summary>
-    [ForeignKey(nameof(MainRoleId))]
-    public virtual RaidRoleEntity MainRaidRole { get; set; }
-
-    /// <summary>
-    /// Sub role
-    /// </summary>
-    [ForeignKey(nameof(SubRoleId))]
-    public virtual RaidRoleEntity SubRaidRole { get; set; }
+    [ForeignKey(nameof(RoleId))]
+    public virtual RaidRoleEntity Role { get; set; }
 
     #endregion // Navigation properties
 

@@ -19,7 +19,12 @@ public class RaidRoleAssignmentService : LocatedServiceBase
     /// <summary>
     /// Localization service
     /// </summary>
-    private LocalizationService _localizationService;
+    private readonly LocalizationService _localizationService;
+
+    /// <summary>
+    /// Raid roles service
+    /// </summary>
+    private readonly RaidRolesService _raidRolesService;
 
     #endregion // Fields
 
@@ -29,10 +34,12 @@ public class RaidRoleAssignmentService : LocatedServiceBase
     /// Constructor
     /// </summary>
     /// <param name="localizationService">Localization service</param>
-    public RaidRoleAssignmentService(LocalizationService localizationService)
+    /// <param name="raidRolesService">Raid roles service</param>
+    public RaidRoleAssignmentService(LocalizationService localizationService, RaidRolesService raidRolesService)
         : base(localizationService)
     {
         _localizationService = localizationService;
+        _raidRolesService = raidRolesService;
     }
 
     #endregion // Constructor
@@ -59,23 +66,18 @@ public class RaidRoleAssignmentService : LocatedServiceBase
 
                     do
                     {
-                        var mainRole = await dialogHandler.Run<RaidRoleSelectionDialogElement, long?>(new RaidRoleSelectionDialogElement(_localizationService, null))
+                        var roleId = await dialogHandler.Run<RaidRoleSelectionDialogElement, long?>(new RaidRoleSelectionDialogElement(_localizationService, _raidRolesService))
                                                           .ConfigureAwait(false);
 
-                        if (mainRole != null)
+                        if (roleId != null)
                         {
-                            var subRole = await dialogHandler.Run<RaidRoleSelectionDialogElement, long?>(new RaidRoleSelectionDialogElement(_localizationService, mainRole))
-                                                             .ConfigureAwait(false);
-
                             dbFactory.GetRepository<RaidRegistrationRoleAssignmentRepository>()
                                      .AddOrRefresh(obj => obj.RegistrationId == registrationId
-                                                       && obj.MainRoleId == mainRole.Value
-                                                       && obj.SubRoleId == subRole,
+                                                       && obj.RoleId == roleId.Value,
                                                    obj =>
                                                    {
                                                        obj.RegistrationId = registrationId;
-                                                       obj.MainRoleId = mainRole.Value;
-                                                       obj.SubRoleId = subRole;
+                                                       obj.RoleId = roleId.Value;
                                                    });
                         }
                         else

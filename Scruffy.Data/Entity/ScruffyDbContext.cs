@@ -167,14 +167,9 @@ public class ScruffyDbContext : DbContext
         modelBuilder.Entity<RaidExperienceLevelEntity>();
         modelBuilder.Entity<RaidRegistrationEntity>();
         modelBuilder.Entity<RaidRegistrationRoleAssignmentEntity>();
-        modelBuilder.Entity<RaidRequiredRoleEntity>();
-        modelBuilder.Entity<RaidRoleAliasNameEntity>();
         modelBuilder.Entity<RaidRoleEntity>();
         modelBuilder.Entity<RaidUserRoleEntity>();
         modelBuilder.Entity<RaidDayTemplateEntity>();
-        modelBuilder.Entity<RaidRoleLineupAssignmentEntity>();
-        modelBuilder.Entity<RaidRoleLineupEntryEntity>();
-        modelBuilder.Entity<RaidRoleLineupHeaderEntity>();
         modelBuilder.Entity<RaidCurrentUserPointsEntity>();
 
         modelBuilder.Entity<RaidExperienceAssignmentEntity>()
@@ -184,33 +179,11 @@ public class ScruffyDbContext : DbContext
                                        obj.ExperienceLevelId
                                    });
 
-        modelBuilder.Entity<RaidRequiredRoleEntity>()
-                    .HasKey(obj => new
-                                   {
-                                       obj.TemplateId,
-                                       obj.Index
-                                   });
-
         modelBuilder.Entity<RaidUserRoleEntity>()
                     .HasKey(obj => new
                                    {
                                        obj.UserId,
                                        MainRoleId = obj.RoleId
-                                   });
-
-        modelBuilder.Entity<RaidRoleLineupAssignmentEntity>()
-                    .HasKey(obj => new
-                                   {
-                                       obj.TemplateId,
-                                       obj.LineupHeaderId
-                                   });
-
-        modelBuilder.Entity<RaidRoleLineupEntryEntity>()
-                    .HasKey(obj => new
-                                   {
-                                       obj.LineupHeaderId,
-                                       obj.Position,
-                                       obj.RoleId
                                    });
 
         modelBuilder.Entity<RaidAppointmentEntity>()
@@ -247,16 +220,6 @@ public class ScruffyDbContext : DbContext
                     .HasForeignKey(obj => obj.RegistrationId)
                     .IsRequired();
 
-        modelBuilder.Entity<RaidRoleEntity>()
-                    .HasMany(obj => obj.SubRaidRoles)
-                    .WithOne(obj => obj.MainRaidRole)
-                    .HasForeignKey(obj => obj.MainRoleId);
-
-        modelBuilder.Entity<RaidRoleEntity>()
-                    .HasMany(obj => obj.RaidRoleLineupEntries)
-                    .WithOne(obj => obj.RaidRole)
-                    .HasForeignKey(obj => obj.RoleId);
-
         modelBuilder.Entity<RaidDayTemplateEntity>()
                     .HasMany(obj => obj.RaidAppointments)
                     .WithOne(obj => obj.RaidDayTemplate)
@@ -266,21 +229,6 @@ public class ScruffyDbContext : DbContext
                     .HasMany(obj => obj.RaidExperienceAssignments)
                     .WithOne(obj => obj.RaidDayTemplate)
                     .HasForeignKey(obj => obj.TemplateId);
-
-        modelBuilder.Entity<RaidDayTemplateEntity>()
-                    .HasMany(obj => obj.RaidRoleLineupAssignments)
-                    .WithOne(obj => obj.RaidDayTemplate)
-                    .HasForeignKey(obj => obj.TemplateId);
-
-        modelBuilder.Entity<RaidRoleLineupHeaderEntity>()
-                    .HasMany(obj => obj.RaidRoleLineupAssignments)
-                    .WithOne(obj => obj.RaidRoleLineupHeader)
-                    .HasForeignKey(obj => obj.LineupHeaderId);
-
-        modelBuilder.Entity<RaidRoleLineupHeaderEntity>()
-                    .HasMany(obj => obj.RaidRoleLineupEntries)
-                    .WithOne(obj => obj.RaidRoleLineupHeader)
-                    .HasForeignKey(obj => obj.LineupHeaderId);
 
         // Reminder
         modelBuilder.Entity<OneTimeReminderEntity>();
