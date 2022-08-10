@@ -1,4 +1,4 @@
-﻿using System.Net.Http;
+using System.Net.Http;
 
 using Newtonsoft.Json;
 
@@ -131,7 +131,7 @@ public class DpsReportConnector
     /// <returns>Raid wing description</returns>
     public string GetRaidWingDescription(int bossId)
     {
-        var description = "Other";
+        string description;
 
         switch (bossId)
         {
@@ -221,7 +221,22 @@ public class DpsReportConnector
             case 22521:
             case 22711:
                 {
-                    description = "Strike missions";
+                    description = "IBS strike missions";
+                }
+                break;
+
+            case 24033:
+            case 23957:
+            case 24485:
+            case 43488:
+                {
+                    description = "EoD strike missions";
+                }
+                break;
+
+            default:
+                {
+                    description = "Other";
                 }
                 break;
         }
