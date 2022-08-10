@@ -1,4 +1,4 @@
-﻿using System.Net.Http;
+using System.Net.Http;
 
 using Newtonsoft.Json;
 
@@ -152,14 +152,19 @@ public class DpsReportConnector
             case 22436:
             case 22521:
             case 22711:
+            case 22836:
                 {
                     description = "IBS strike missions";
                 }
                 break;
 
             case 24033:
+            case 24768:
             case 23957:
             case 24485:
+            case 24266:
+            case 24375:
+            case 1378:
             case 43488:
                 {
                     description = "EoD strike missions";
