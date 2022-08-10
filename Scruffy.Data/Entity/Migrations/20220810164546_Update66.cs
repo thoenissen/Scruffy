@@ -82,10 +82,10 @@ namespace Scruffy.Data.Entity.Migrations
                                    INSERT INTO [RaidRoles] ([Id], [DiscordEmojiId], [IsTank], [IsDamageDealer], [IsHealer], [IsProvidingAlacrity], [IsProvidingQuickness]) VALUES (3, 994543518972391475, 0, 1, 0, 0, 1)
                                    INSERT INTO [RaidRoles] ([Id], [DiscordEmojiId], [IsTank], [IsDamageDealer], [IsHealer], [IsProvidingAlacrity], [IsProvidingQuickness]) VALUES (4, 994543591525462036, 0, 0, 1, 1, 0)
                                    INSERT INTO [RaidRoles] ([Id], [DiscordEmojiId], [IsTank], [IsDamageDealer], [IsHealer], [IsProvidingAlacrity], [IsProvidingQuickness]) VALUES (5, 994543468758171708, 0, 0, 1, 0, 1)
-                                   INSERT INTO [RaidRoles] ([Id], [DiscordEmojiId], [IsTank], [IsDamageDealer], [IsHealer], [IsProvidingAlacrity], [IsProvidingQuickness]) VALUES (6, 982005717017968660, 1, 1, 0, 1, 0)
-                                   INSERT INTO [RaidRoles] ([Id], [DiscordEmojiId], [IsTank], [IsDamageDealer], [IsHealer], [IsProvidingAlacrity], [IsProvidingQuickness]) VALUES (7, 982005717017968660, 1, 1, 0, 0, 1)
-                                   INSERT INTO [RaidRoles] ([Id], [DiscordEmojiId], [IsTank], [IsDamageDealer], [IsHealer], [IsProvidingAlacrity], [IsProvidingQuickness]) VALUES (8, 982005717017968660, 1, 0, 1, 1, 0)
-                                   INSERT INTO [RaidRoles] ([Id], [DiscordEmojiId], [IsTank], [IsDamageDealer], [IsHealer], [IsProvidingAlacrity], [IsProvidingQuickness]) VALUES (9, 982005717017968660, 1, 0, 1, 0, 1)
+                                   INSERT INTO [RaidRoles] ([Id], [DiscordEmojiId], [IsTank], [IsDamageDealer], [IsHealer], [IsProvidingAlacrity], [IsProvidingQuickness]) VALUES (6, 1006997115395915806, 1, 1, 0, 1, 0)
+                                   INSERT INTO [RaidRoles] ([Id], [DiscordEmojiId], [IsTank], [IsDamageDealer], [IsHealer], [IsProvidingAlacrity], [IsProvidingQuickness]) VALUES (7, 1006997118411620392, 1, 1, 0, 0, 1)
+                                   INSERT INTO [RaidRoles] ([Id], [DiscordEmojiId], [IsTank], [IsDamageDealer], [IsHealer], [IsProvidingAlacrity], [IsProvidingQuickness]) VALUES (8, 1006997117086216233, 1, 0, 1, 1, 0)
+                                   INSERT INTO [RaidRoles] ([Id], [DiscordEmojiId], [IsTank], [IsDamageDealer], [IsHealer], [IsProvidingAlacrity], [IsProvidingQuickness]) VALUES (9, 1006997252415426762, 1, 0, 1, 0, 1)
                                    SET IDENTITY_INSERT [RaidRoles] OFF;
                                    DBCC CHECKIDENT ('[RaidRoles]', RESEED, 0);");
         }

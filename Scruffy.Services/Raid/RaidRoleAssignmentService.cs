@@ -1,5 +1,6 @@
 ﻿using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
+using Scruffy.Data.Entity.Tables.Raid;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Exceptions;
 using Scruffy.Services.Core.Localization;
@@ -64,29 +65,21 @@ public class RaidRoleAssignmentService : LocatedServiceBase
                     dbFactory.GetRepository<RaidRegistrationRoleAssignmentRepository>()
                              .RemoveRange(obj => obj.RegistrationId == registrationId);
 
-                    do
-                    {
-                        var roleId = await dialogHandler.Run<RaidRoleSelectionDialogElement, long?>(new RaidRoleSelectionDialogElement(_localizationService, _raidRolesService))
-                                                          .ConfigureAwait(false);
+                    var roleIds = await dialogHandler.Run<RaidRoleSelectionDialogElement, List<long>>(new RaidRoleSelectionDialogElement(_localizationService, _raidRolesService))
+                                                     .ConfigureAwait(false);
 
-                        if (roleId != null)
+                    if (roleIds?.Count > 0)
+                    {
+                        foreach (var roleId in roleIds)
                         {
                             dbFactory.GetRepository<RaidRegistrationRoleAssignmentRepository>()
-                                     .AddOrRefresh(obj => obj.RegistrationId == registrationId
-                                                       && obj.RoleId == roleId.Value,
-                                                   obj =>
-                                                   {
-                                                       obj.RegistrationId = registrationId;
-                                                       obj.RoleId = roleId.Value;
-                                                   });
-                        }
-                        else
-                        {
-                            break;
+                                     .Add(new RaidRegistrationRoleAssignmentEntity
+                                          {
+                                              RegistrationId = registrationId,
+                                              RoleId = roleId
+                                          });
                         }
                     }
-                    while (await dialogHandler.Run<RaidRoleSelectionNextDialogElement, bool>(new RaidRoleSelectionNextDialogElement(_localizationService, false))
-                                              .ConfigureAwait(false));
                 }
                 catch (ScruffyTimeoutException)
                 {

@@ -780,7 +780,7 @@
          "RequiredExperienceLevelMissing": "Du hast noch nicht das erforderlichen Erfahrungslevel für diesen Termin."
       },
       "RaidRoleSelectionDialogElement": {
-         "ChooseMainRoleDescription": "Wähle eine der folgenden Rollen...",
+         "ChooseMainRoleDescription": "Wähle bis zu zwei der folgenden Rollen...",
          "ChooseMainRoleTitle": "Rollenauswahl",
          "ChooseSubRoleDescription": "Wähle eine der folgenden Klassen...",
          "ChooseSubRoleTitle": "Klassenauswahl",

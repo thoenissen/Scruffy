@@ -8,7 +8,7 @@ namespace Scruffy.Services.Raid.DialogElements;
 /// <summary>
 /// Selection of a role
 /// </summary>
-public class RaidRoleSelectionDialogElement : DialogSelectMenuElementBase<long?>
+public class RaidRoleSelectionDialogElement : DialogMultiSelectSelectMenuElementBase<long>
 {
     #region Fields
 
@@ -20,7 +20,7 @@ public class RaidRoleSelectionDialogElement : DialogSelectMenuElementBase<long?>
     /// <summary>
     /// Roles
     /// </summary>
-    private List<SelectMenuEntryData<long?>> _entries;
+    private List<SelectMenuOptionData> _entries;
 
     #endregion // Fields
 
@@ -39,29 +39,39 @@ public class RaidRoleSelectionDialogElement : DialogSelectMenuElementBase<long?>
 
     #endregion // Constructor
 
-    #region DialogEmbedMessageElementBase<long?>
+    #region DialogMultiSelectSelectMenuElementBase<long>
+
+    /// <summary>
+    /// Min values
+    /// </summary>
+    protected override int MinValues => 1;
+
+    /// <summary>
+    /// Max values
+    /// </summary>
+    protected override int MaxValues => 2;
 
     /// <summary>
     /// Returning the message
     /// </summary>
     /// <returns>Message</returns>
-    public override string GetMessage() => CommandContext.User.Mention + " " + LocalizationGroup.GetText("ChooseMainRoleTitle", "Role selection");
+    public override Task<string> GetMessage() => Task.FromResult(CommandContext.User.Mention + " " + LocalizationGroup.GetText("ChooseMainRoleTitle", "Role selection"));
 
     /// <summary>
     /// Returning the placeholder
     /// </summary>
     /// <returns>Placeholder</returns>
-    public override string GetPlaceholder() => LocalizationGroup.GetText("ChooseMainRoleDescription", "Please choose one of the following roles...");
+    public override string GetPlaceholder() => LocalizationGroup.GetText("ChooseMainRoleDescription", "Choose up to two of the following roles...");
 
     /// <summary>
     /// Returns the select menu entries which should be added to the message
     /// </summary>
     /// <returns>Reactions</returns>
-    public override IReadOnlyList<SelectMenuEntryData<long?>> GetEntries()
+    public override IReadOnlyList<SelectMenuOptionData> GetEntries()
     {
         if (_entries == null)
         {
-            _entries = new List<SelectMenuEntryData<long?>>();
+            _entries = new List<SelectMenuOptionData>();
 
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
@@ -70,20 +80,13 @@ public class RaidRoleSelectionDialogElement : DialogSelectMenuElementBase<long?>
                                      .OrderBy(obj => obj.Id)
                                      .ToList();
 
-                _entries.Add(new SelectMenuEntryData<long?>
-                             {
-                                 CommandText = LocalizationGroup.GetText("NoRole", "No role specification"),
-                                 Emote = null,
-                                 Response = () => Task.FromResult<long?>(null)
-                             });
-
                 foreach (var role in roles)
                 {
-                    _entries.Add(new SelectMenuEntryData<long?>
+                    _entries.Add(new SelectMenuOptionData
                                  {
-                                     CommandText = _raidRoleService.GetDescriptionAsText(role),
+                                     Label = _raidRoleService.GetDescriptionAsText(role),
                                      Emote = DiscordEmoteService.GetGuildEmote(CommandContext.Client, role.DiscordEmojiId),
-                                     Response = () => Task.FromResult<long?>(role.Id)
+                                     Value = role.Id.ToString(),
                                  });
                 }
             }
@@ -92,11 +95,5 @@ public class RaidRoleSelectionDialogElement : DialogSelectMenuElementBase<long?>
         return _entries;
     }
 
-    /// <summary>
-    /// Default case if none of the given buttons is used
-    /// </summary>
-    /// <returns>Result</returns>
-    protected override long? DefaultFunc() => throw new InvalidOperationException();
-
-    #endregion // DialogEmbedMessageElementBase<long?>
+    #endregion // DialogMultiSelectSelectMenuElementBase<long?>
 }

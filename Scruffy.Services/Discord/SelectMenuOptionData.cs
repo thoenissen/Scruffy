@@ -1,4 +1,6 @@
-﻿namespace Scruffy.Services.Discord;
+﻿using Discord;
+
+namespace Scruffy.Services.Discord;
 
 /// <summary>
 /// Select menu option
@@ -19,4 +21,9 @@ public class SelectMenuOptionData
     /// Description
     /// </summary>
     public string Description { get; set; }
+
+    /// <summary>
+    /// Emote
+    /// </summary>
+    public IEmote Emote { get; set; }
 }
