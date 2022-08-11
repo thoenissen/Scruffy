@@ -24,6 +24,10 @@ function getEnvironmentString(name) {
 }
 `;
 
+if (fs.existsSync("./src/assets/js") == false) {
+  fs.mkdirSync("./src/assets/js/");
+}
+
 fs.writeFile("./src/assets/js/environment.js", environmentContent, (err) => {
   if (err) {
     console.error(err);
