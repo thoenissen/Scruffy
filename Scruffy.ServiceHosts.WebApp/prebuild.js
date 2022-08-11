@@ -1,4 +1,10 @@
+console.log("prebuild start");
+
 const fs = require("fs");
+
+if (fs.existsSync("./src/assets/js") == false) {
+  fs.mkdirSync("./src/assets/js/");
+}
 
 var environmentContent = `
 function getEnvironmentString(name) {
@@ -34,3 +40,5 @@ fs.writeFile(
     }
   }
 );
+
+console.log("prebuild end");
