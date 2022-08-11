@@ -4,6 +4,7 @@ using Duende.IdentityServer.Models;
 using Microsoft.AspNetCore.HttpOverrides;
 
 using Scruffy.Data.Entity;
+using Scruffy.ServiceHosts.IdentityServer.Services;
 
 using Serilog;
 
@@ -81,6 +82,7 @@ public class Program
                                         });
 
             builder.Services.AddScoped<RepositoryFactory>();
+            builder.Services.AddSingleton<ProfileService>();
 
             var app = builder.Build();
 
