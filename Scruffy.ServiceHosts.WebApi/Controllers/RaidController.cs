@@ -127,7 +127,10 @@ public class RaidController : ControllerBase
                                  {
                                      Id = participant.Id,
                                      Name = name,
-                                     Roles = participant.Roles,
+                                     Roles = participant.Roles
+                                                        .Concat(participant.PreferredRoles)
+                                                        .Distinct()
+                                                        .ToList(),
                                      PreferredRoles = participant.PreferredRoles
                                  });
             }
