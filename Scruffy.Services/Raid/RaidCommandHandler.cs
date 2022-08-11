@@ -541,13 +541,16 @@ public class RaidCommandHandler : LocatedServiceBase
                         foreach (var upload in page.Uploads)
                         {
                             var uploadTime = DateTimeOffset.FromUnixTimeSeconds(upload.UploadTime).ToLocalTime();
+
                             if (uploadTime.Date < day)
                             {
                                 continueLoop = false;
                                 break;
                             }
 
-                            if (uploadTime.Date == day)
+                            var encounterTime = DateTimeOffset.FromUnixTimeSeconds(upload.EncounterTime).ToLocalTime();
+
+                            if (encounterTime.Date == day)
                             {
                                 uploads.Add(upload);
                             }
@@ -575,7 +578,7 @@ public class RaidCommandHandler : LocatedServiceBase
 
                     foreach (var upload in wing)
                     {
-                        var line = $"{DiscordEmoteService.GetGuildEmote(context.Client, _dpsReportConnector.GetRaidBossIconId(upload.Encounter.BossId))} {upload.Permalink}";
+                        var line = $"{DiscordEmoteService.GetGuildEmote(context.Client, _dpsReportConnector.GetRaidBossIconId(upload.Encounter.BossId))} {upload.Encounter.Boss} - {Format.Url("Report", upload.Permalink)})";
                         if (line.Length + reports.Length > 1000)
                         {
                             embedBuilder.AddField(wing.Key, reports.ToString());
