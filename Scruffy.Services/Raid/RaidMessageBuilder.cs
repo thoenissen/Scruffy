@@ -17,6 +17,11 @@ public class RaidMessageBuilder : LocatedServiceBase
     #region Fields
 
     /// <summary>
+    /// Raid roles
+    /// </summary>
+    private static List<SelectMenuOptionBuilder> _entries;
+
+    /// <summary>
     /// Discord client
     /// </summary>
     private readonly DiscordSocketClient _client;
@@ -283,15 +288,17 @@ public class RaidMessageBuilder : LocatedServiceBase
                                                      null,
                                                      (appointment.Deadline <= DateTime.Now && areSlotsAvailable == false)
                                                   || appointment.TimeStamp <= DateTime.Now);
-                        componentsBuilder.WithButton(LocalizationGroup.GetText("Roles", "Roles"),
-                                                     InteractivityService.GetPermanentCustomerId("raid",
-                                                                                                 "roleSelection",
-                                                                                                 appointment.AliasName),
-                                                     ButtonStyle.Secondary,
-                                                     DiscordEmoteService.GetEditEmote(_client),
-                                                     null,
-                                                     appointment.Deadline <= DateTime.Now
-                                                  || appointment.TimeStamp <= DateTime.Now);
+
+                        if (appointment.Deadline > DateTime.Now
+                         && appointment.TimeStamp > DateTime.Now)
+                        {
+                            componentsBuilder.WithSelectMenu($"raid;select_roles;{configurationId}",
+                                                             GetRaidRoleOptions(),
+                                                             LocalizationGroup.GetText("ChooseRoleDescription", "Chose your roles..."),
+                                                             1,
+                                                             9);
+                        }
+
                         componentsBuilder.WithButton(LocalizationGroup.GetText("Leave", "Leave"),
                                                      InteractivityService.GetPermanentCustomerId("raid",
                                                                                                  "leave",
@@ -312,6 +319,35 @@ public class RaidMessageBuilder : LocatedServiceBase
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// Raid role selection options
+    /// </summary>
+    /// <returns>List of options</returns>
+    private List<SelectMenuOptionBuilder> GetRaidRoleOptions()
+    {
+        if (_entries == null)
+        {
+            _entries = new List<SelectMenuOptionBuilder>();
+
+            using (var dbFactory = RepositoryFactory.CreateInstance())
+            {
+                var roles = dbFactory.GetRepository<RaidRoleRepository>()
+                                     .GetQuery()
+                                     .OrderBy(obj => obj.Id)
+                                     .ToList();
+
+                foreach (var role in roles)
+                {
+                    _entries.Add(new SelectMenuOptionBuilder().WithLabel(_raidRolesService.GetDescriptionAsText(role))
+                                                              .WithEmote(DiscordEmoteService.GetGuildEmote(_client, role.DiscordEmojiId))
+                                                              .WithValue(role.Id.ToString()));
+                }
+            }
+        }
+
+        return _entries;
     }
 
     #endregion // Methods

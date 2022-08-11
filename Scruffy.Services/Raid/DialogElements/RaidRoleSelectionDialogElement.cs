@@ -49,7 +49,7 @@ public class RaidRoleSelectionDialogElement : DialogMultiSelectSelectMenuElement
     /// <summary>
     /// Max values
     /// </summary>
-    protected override int MaxValues => 2;
+    protected override int MaxValues => 9;
 
     /// <summary>
     /// Returning the message
@@ -61,7 +61,7 @@ public class RaidRoleSelectionDialogElement : DialogMultiSelectSelectMenuElement
     /// Returning the placeholder
     /// </summary>
     /// <returns>Placeholder</returns>
-    public override string GetPlaceholder() => LocalizationGroup.GetText("ChooseMainRoleDescription", "Choose up to two of the following roles...");
+    public override string GetPlaceholder() => LocalizationGroup.GetText("ChooseRoleDescription", "Choose your roles...");
 
     /// <summary>
     /// Returns the select menu entries which should be added to the message

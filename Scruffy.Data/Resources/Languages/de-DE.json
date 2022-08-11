@@ -770,7 +770,8 @@
          "Join": "Anmelden",
          "Leave": "Abmelden",
          "Roles": "Rollen",
-         "SubstitutesBench": "Ersatzbank"
+         "SubstitutesBench": "Ersatzbank",
+         "ChooseRoleDescription": "Wähle deine Rollen..."
       },
       "RaidOverviewService": {
          "ParticipationOverview": "Übersicht der Teilnahmepunkte"
@@ -780,7 +781,7 @@
          "RequiredExperienceLevelMissing": "Du hast noch nicht das erforderlichen Erfahrungslevel für diesen Termin."
       },
       "RaidRoleSelectionDialogElement": {
-         "ChooseMainRoleDescription": "Wähle bis zu zwei der folgenden Rollen...",
+         "ChooseRoleDescription": "Wähle deine Rollen...",
          "ChooseMainRoleTitle": "Rollenauswahl",
          "ChooseSubRoleDescription": "Wähle eine der folgenden Klassen...",
          "ChooseSubRoleTitle": "Klassenauswahl",

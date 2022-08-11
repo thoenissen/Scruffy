@@ -266,6 +266,74 @@ public class RaidCommandHandler : LocatedServiceBase
     }
 
     /// <summary>
+    /// Role selection
+    /// </summary>
+    /// <param name="container">Context container</param>
+    /// <param name="configurationId">Configuration id</param>
+    /// <param name="values">Roles</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task SelectRoles(InteractionContextContainer container, long configurationId, string[] values)
+    {
+        using (var dbFactory = RepositoryFactory.CreateInstance())
+        {
+            var appointment = await dbFactory.GetRepository<RaidAppointmentRepository>()
+                                             .GetQuery()
+                                             .Where(obj => obj.TimeStamp > DateTime.Now
+                                                        && obj.ConfigurationId == configurationId)
+                                             .Select(obj => new
+                                                            {
+                                                                obj.Id,
+                                                                obj.ConfigurationId,
+                                                                obj.Deadline
+                                                            })
+                                             .FirstOrDefaultAsync()
+                                             .ConfigureAwait(false);
+
+            if (appointment != null)
+            {
+                var registrationId = await _registrationService.Join(container, appointment.Id, container.User.Id)
+                                                               .ConfigureAwait(false);
+
+                if (registrationId != null)
+                {
+                    if (DateTime.Now < appointment.Deadline)
+                    {
+                        dbFactory.GetRepository<RaidRegistrationRoleAssignmentRepository>()
+                                 .RemoveRange(obj => obj.RegistrationId == registrationId);
+
+                        if (values?.Length > 0
+                         && values.Length < 8)
+                        {
+                            foreach (var roleId in values.Select(obj => Convert.ToInt64(obj)))
+                            {
+                                dbFactory.GetRepository<RaidRegistrationRoleAssignmentRepository>()
+                                         .Add(new RaidRegistrationRoleAssignmentEntity
+                                              {
+                                                  RegistrationId = registrationId.Value,
+                                                  RoleId = roleId
+                                              });
+                            }
+                        }
+                    }
+                    else
+                    {
+                        await container.ReplyAsync(LocalizationGroup.GetText("NoRoleSelectionAfterDeadline", "It is not possible to edit your preferred roles after the registration deadline."), ephemeral: true)
+                                       .ConfigureAwait(false);
+                    }
+
+                    await _messageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
+                                         .ConfigureAwait(false);
+                }
+            }
+            else
+            {
+                await container.ReplyAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."), ephemeral: true)
+                               .ConfigureAwait(false);
+            }
+        }
+    }
+
+    /// <summary>
     /// Joining an appointment
     /// </summary>
     /// <param name="container">Context container</param>
@@ -578,7 +646,7 @@ public class RaidCommandHandler : LocatedServiceBase
 
                     foreach (var upload in wing)
                     {
-                        var line = $"{DiscordEmoteService.GetGuildEmote(context.Client, _dpsReportConnector.GetRaidBossIconId(upload.Encounter.BossId))} {upload.Encounter.Boss} - {Format.Url("Report", upload.Permalink)})";
+                        var line = $"{DiscordEmoteService.GetGuildEmote(context.Client, _dpsReportConnector.GetRaidBossIconId(upload.Encounter.BossId))} {Format.Code(DateTimeOffset.FromUnixTimeSeconds(upload.EncounterTime).ToLocalTime().ToString("HH:mm"))} {upload.Encounter.Boss} {Format.Url("⧉", upload.Permalink)}";
                         if (line.Length + reports.Length > 1000)
                         {
                             embedBuilder.AddField(wing.Key, reports.ToString());

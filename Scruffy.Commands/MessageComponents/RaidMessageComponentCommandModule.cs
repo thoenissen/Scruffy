@@ -32,6 +32,11 @@ public class RaidMessageComponentCommandModule : LocatedInteractionModuleBase
     /// </summary>
     public const string CommandLeave = "leave";
 
+    /// <summary>
+    /// Command select roles
+    /// </summary>
+    public const string CommandSelectRoles = "select_roles";
+
     #endregion // Constants
 
     #region Properties
@@ -87,6 +92,22 @@ public class RaidMessageComponentCommandModule : LocatedInteractionModuleBase
                      .ConfigureAwait(false);
 
         await CommandHandler.Leave(Context, name)
+                            .ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Select roles
+    /// </summary>
+    /// <param name="configurationId">Id of the configuration</param>
+    /// <param name="values">Values</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ComponentInteraction($"{Group};{CommandSelectRoles};*")]
+    public async Task SelectRoles(long configurationId, string[] values)
+    {
+        await Context.DeferAsync()
+                     .ConfigureAwait(false);
+
+        await CommandHandler.SelectRoles(Context, configurationId, values)
                             .ConfigureAwait(false);
     }
 
