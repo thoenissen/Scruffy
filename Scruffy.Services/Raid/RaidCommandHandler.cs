@@ -578,7 +578,7 @@ public class RaidCommandHandler : LocatedServiceBase
 
                     foreach (var upload in wing)
                     {
-                        var line = $"{DiscordEmoteService.GetGuildEmote(context.Client, _dpsReportConnector.GetRaidBossIconId(upload.Encounter.BossId))} {upload.Encounter.Boss} - [Report]({upload.Permalink})";
+                        var line = $"{DiscordEmoteService.GetGuildEmote(context.Client, _dpsReportConnector.GetRaidBossIconId(upload.Encounter.BossId))} {upload.Encounter.Boss} - {Format.Url("Report", upload.Permalink)})";
                         if (line.Length + reports.Length > 1000)
                         {
                             embedBuilder.AddField(wing.Key, reports.ToString());
