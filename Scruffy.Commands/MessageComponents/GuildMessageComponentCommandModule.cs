@@ -70,7 +70,7 @@ public class GuildMessageComponentCommandModule : LocatedInteractionModuleBase
     /// </summary>
     /// <param name="type">Type</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    [ComponentInteraction($"{Group};{CommandNavigateToPageGuildRanking};*")]
+    [ComponentInteraction($"{Group};{CommandNavigateToPageGuildRanking};")]
     public async Task ChangeTypeOfGuildRanking(string type)
     {
         await Context.DeferAsync()
