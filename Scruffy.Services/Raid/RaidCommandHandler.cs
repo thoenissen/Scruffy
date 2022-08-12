@@ -13,6 +13,7 @@ using Scruffy.Data.Entity.Tables.CoreData;
 using Scruffy.Data.Entity.Tables.Discord;
 using Scruffy.Data.Entity.Tables.Raid;
 using Scruffy.Data.Enumerations.CoreData;
+using Scruffy.Data.Enumerations.DpsReport;
 using Scruffy.Data.Json.DpsReport;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
@@ -568,7 +569,7 @@ public class RaidCommandHandler : LocatedServiceBase
     /// <param name="context">Context</param>
     /// <param name="dayString">Day</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task Logs(IContextContainer context, string dayString)
+    public async Task Logs(IContextContainer context, DpsReportType type, string dayString)
     {
         var user = await _userManagementService.GetUserByDiscordAccountId(context.User.Id)
                                                .ConfigureAwait(false);
@@ -593,45 +594,18 @@ public class RaidCommandHandler : LocatedServiceBase
 
             foreach (var token in tokens)
             {
-                var continueLoop = true;
-                var currentPageId = 0;
-
-                var uploads = new List<Upload>();
-
-                do
-                {
-                    currentPageId++;
-
-                    var page = await _dpsReportConnector.GetUploads(token, currentPageId)
-                                                        .ConfigureAwait(false);
-                    if (page != null)
+                var uploads = await _dpsReportConnector.GetUploads(token,
+                    filter: (Upload upload) =>
                     {
-                        foreach (var upload in page.Uploads)
-                        {
-                            var uploadTime = DateTimeOffset.FromUnixTimeSeconds(upload.UploadTime).ToLocalTime();
-
-                            if (uploadTime.Date < day)
-                            {
-                                continueLoop = false;
-                                break;
-                            }
-
-                            var encounterTime = DateTimeOffset.FromUnixTimeSeconds(upload.EncounterTime).ToLocalTime();
-
-                            if (encounterTime.Date == day)
-                            {
-                                uploads.Add(upload);
-                            }
-                        }
-
-                        continueLoop = continueLoop && page.Pages < currentPageId;
-                    }
-                    else
+                        var encounterTime = DateTimeOffset.FromUnixTimeSeconds(upload.EncounterTime).ToLocalTime();
+                        return encounterTime.Date == day && (type == DpsReportType.All || type == _dpsReportConnector.GetReportType(upload.Encounter.BossId));
+                    },
+                    shouldAbort: (Upload upload) =>
                     {
-                        continueLoop = false;
+                        var uploadTime = DateTimeOffset.FromUnixTimeSeconds(upload.UploadTime).ToLocalTime();
+                        return uploadTime.Date < day;
                     }
-                }
-                while (continueLoop);
+                ).ConfigureAwait(false);
 
                 var embedBuilder = new EmbedBuilder()
                                    .WithTitle($"DPS-Reports {day.ToString("d", LocalizationGroup.CultureInfo)}")
@@ -639,8 +613,8 @@ public class RaidCommandHandler : LocatedServiceBase
                                    .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
                                    .WithTimestamp(DateTime.Now);
 
-                foreach (var wing in uploads.OrderBy(obj => _dpsReportConnector.GetRaidSortNumber(obj.Encounter.BossId))
-                                            .GroupBy(obj => _dpsReportConnector.GetRaidWingDescription(obj.Encounter.BossId)))
+                foreach (var wing in uploads.OrderBy(obj => _dpsReportConnector.GetSortValue(obj.Encounter.BossId))
+                                            .GroupBy(obj => _dpsReportConnector.GetReportGroup(obj.Encounter.BossId)))
                 {
                     var reports = new StringBuilder();
 
@@ -649,7 +623,7 @@ public class RaidCommandHandler : LocatedServiceBase
                         var line = $"{DiscordEmoteService.GetGuildEmote(context.Client, _dpsReportConnector.GetRaidBossIconId(upload.Encounter.BossId))} {Format.Code(DateTimeOffset.FromUnixTimeSeconds(upload.EncounterTime).ToLocalTime().ToString("HH:mm"))} {upload.Encounter.Boss} {Format.Url("⧉", upload.Permalink)}";
                         if (line.Length + reports.Length > 1000)
                         {
-                            embedBuilder.AddField(wing.Key, reports.ToString());
+                            embedBuilder.AddField(wing.Key.AsText(), reports.ToString());
 
                             reports = new StringBuilder();
                         }
@@ -657,7 +631,7 @@ public class RaidCommandHandler : LocatedServiceBase
                         reports.AppendLine(line);
                     }
 
-                    embedBuilder.AddField(wing.Key, reports.ToString());
+                    embedBuilder.AddField(wing.Key.AsText(), reports.ToString());
                 }
 
                 if (isFirstMessage)

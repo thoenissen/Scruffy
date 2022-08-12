@@ -1,7 +1,8 @@
-using System.Net.Http;
+﻿using System.Net.Http;
 
 using Newtonsoft.Json;
 
+using Scruffy.Data.Enumerations.DpsReport;
 using Scruffy.Data.Json.DpsReport;
 
 namespace Scruffy.Services.WebApi;
@@ -36,12 +37,12 @@ public class DpsReportConnector
     #region Methods
 
     /// <summary>
-    /// Request  dps reports
+    /// Request DPS reports
     /// </summary>
     /// <param name="userToken">User token</param>
     /// <param name="page">Page</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task<Page> GetUploads(string userToken, int page)
+    private async Task<Page> GetUploads(string userToken, int page)
     {
         var client = _clientFactory.CreateClient();
 
@@ -57,52 +58,130 @@ public class DpsReportConnector
     }
 
     /// <summary>
-    /// Get raid wing description
+    /// Requests a filtered list of DPS reports
     /// </summary>
-    /// <param name="bossId">Boss ID</param>
-    /// <returns>Raid wing description</returns>
-    public string GetRaidWingDescription(int bossId)
+    /// <param name="userToken">User token</param>
+    /// <param name="filter">Function to filter reports</param>
+    /// <param name="shouldAbort">Function to abort searching further</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public async Task<List<Upload>> GetUploads(string userToken, Func<Upload, bool> filter, Func<Upload, bool> shouldAbort = null)
     {
-        string description;
+        var uploads = new List<Upload>();
+        var currentPage = 0;
+        Page page;
 
+        do
+        {
+            currentPage++;
+            page = await GetUploads(userToken, currentPage).ConfigureAwait(false);
+
+            if (page != null)
+            {
+                foreach (var upload in page.Uploads)
+                {
+                    if (shouldAbort != null && shouldAbort(upload))
+                    {
+                        break;
+                    }
+
+                    if (filter(upload))
+                    {
+                        uploads.Add(upload);
+                    }
+                }
+            }
+        }
+        while (page != null && page.Pages < currentPage);
+
+        return uploads;
+    }
+
+    /// <summary>
+    /// Determines the report type of a given boss
+    /// </summary>
+    /// <param name="bossId">The ID of the boss to determine the type</param>
+    /// <returns>Report type of the boss</returns>
+    public DpsReportType GetReportType(int bossId)
+    {
+        return GetReportGroup(bossId).GetReportType();
+    }
+
+    /// <summary>
+    /// Determines the report group of a given boss
+    /// </summary>
+    /// <param name="bossId">The ID of the boss to determine the group</param>
+    /// <returns>report group of the boss</returns>
+    public DpsReportGroup GetReportGroup(int bossId)
+    {
         switch (bossId)
         {
+            case 17021:
+            case 17028:
+            case 16948:
+                return DpsReportGroup.Nightmare;
+            case 17632:
+            case 17949:
+            case 17759:
+                return DpsReportGroup.ShatteredObservatory;
+            case 23254:
+                return DpsReportGroup.SunquaPeak;
+            case 22154:
+                return DpsReportGroup.ShiverpeaksPass;
+            case 22343:
+            case 22481:
+                return DpsReportGroup.VoiceAndClaw;
+            case 22492:
+            case 22436:
+                return DpsReportGroup.Fraenir;
+            case 22711:
+                return DpsReportGroup.WhisperOfJormag;
+            case 22836:
+                return DpsReportGroup.ColdWar;
+            case 22521:
+                return DpsReportGroup.Boneskinner;
+            case 24033:
+            case 24768:
+            case 25247:
+                return DpsReportGroup.AetherbladeHideout;
+            case 23957:
+                return DpsReportGroup.XunlaiJadeJunkyard;
+            case 24485:
+            case 24266:
+                return DpsReportGroup.KainengOverlook;
+            case 43488:
+            case 1378:
+            case 24375:
+                return DpsReportGroup.HarvestTemple;
+            case 16169:
+            case 16202:
+            case 16178:
+            case 16198:
+            case 16177:
+            case 16199:
+            case 19676:
+            case 19645:
+            case 16174:
+            case 16176:
+                return DpsReportGroup.TrainingArea;
             case 15438:
             case 15429:
             case 15375:
-                {
-                    description = "Spirit Vale";
-                }
-                break;
-
+                return DpsReportGroup.SpritVale;
             case 16123:
             case 16088:
             case 16137:
             case 16125:
             case 16115:
-                {
-                    description = "Salvation Pass";
-                }
-                break;
-
-            case 16235:
-            case 16247:
+                return DpsReportGroup.SalvationPass;
             case 16253:
+            case 16235:
             case 16246:
-                {
-                    description = "Stronghold of the Faithful";
-                }
-                break;
-
+                return DpsReportGroup.StrongholdOfTheFaithful;
             case 17194:
             case 17172:
             case 17188:
             case 17154:
-                {
-                    description = "Bastion of the Penitent";
-                }
-                break;
-
+                return DpsReportGroup.BastionOfThePenitent;
             case 19767:
             case 19828:
             case 19691:
@@ -110,120 +189,129 @@ public class DpsReportConnector
             case 19651:
             case 19844:
             case 19450:
-                {
-                    description = "Hall of Chains";
-                }
-                break;
-
+                return DpsReportGroup.HallOfChains;
             case 43974:
+            case 10142: // Gadget
+            case 37464: // Gadget
             case 21105:
             case 21089:
             case 20934:
-                {
-                    description = "Mythwright Gambit";
-                }
-                break;
-
+                return DpsReportGroup.MythwrightGambit;
             case 22006:
             case 21964:
             case 22000:
-                {
-                    description = "Key of Ahdashim ";
-                }
-                break;
-
-            case 17021:
-            case 17028:
-            case 16948:
-            case 17632:
-            case 17949:
-            case 17759:
-            case 23254:
-                {
-                    description = "Fractals";
-                }
-                break;
-
-            case 22154:
-            case 22343:
-            case 22481:
-            case 22315:
-            case 22492:
-            case 22436:
-            case 22521:
-            case 22711:
-            case 22836:
-                {
-                    description = "IBS strike missions";
-                }
-                break;
-
-            case 24033:
-            case 24768:
-            case 23957:
-            case 24485:
-            case 24266:
-            case 24375:
-            case 1378:
-            case 43488:
-                {
-                    description = "EoD strike missions";
-                }
-                break;
-
+                return DpsReportGroup.TheKeyOfAhdashim;
             default:
                 {
-                    description = "Other";
+                    return DpsReportGroup.Unknown;
                 }
-                break;
         }
-
-        return description;
     }
 
     /// <summary>
-    /// Get sort number
+    /// Determines the sort value for a given boss
     /// </summary>
-    /// <param name="bossId">Boss ID</param>
-    /// <returns>Sort number</returns>
-    public int GetRaidSortNumber(int bossId)
+    /// <param name="bossId">The ID of the boss to determine the sort value</param>
+    /// <returns>The sort value for the given boss</returns>
+    public int GetSortValue(int bossId)
     {
-        var number = bossId switch
-        {
-            15438 => 101,
-            15429 => 102,
-            15375 => 103,
-            16123 => 201,
-            16088 => 202,
-            16137 => 202,
-            16125 => 202,
-            16115 => 203,
-            16253 => 301,
-            16235 => 302,
-            16247 => 303,
-            16246 => 304,
-            17194 => 401,
-            17172 => 402,
-            17188 => 403,
-            17154 => 404,
-            19767 => 501,
-            19828 => 502,
-            19651 => 503,
-            19844 => 503,
-            19536 => 504,
-            19691 => 505,
-            19450 => 506,
-            43974 => 601,
-            21105 => 602,
-            21089 => 602,
-            20934 => 603,
-            22006 => 701,
-            21964 => 702,
-            22000 => 703,
-            _ => 0
-        };
+        int bossSortValue;
 
-        return number;
+        switch (bossId)
+        {
+            case 17021:
+            case 17632:
+            case 23254:
+            case 22154:
+            case 22343:
+            case 22492:
+            case 22711:
+            case 22836:
+            case 24033:
+            case 23957:
+            case 24485:
+            case 43488:
+            case 16169:
+            case 15438:
+            case 16123:
+            case 16253:
+            case 17194:
+            case 19767:
+            case 43974:
+            case 22006:
+                bossSortValue = 1;
+                break;
+            case 17028:
+            case 17949:
+            case 22481:
+            case 22436:
+            case 22521:
+            case 24768:
+            case 24266:
+            case 1378:
+            case 16202:
+            case 15429:
+            case 16088:
+            case 16235:
+            case 16246:
+            case 17172:
+            case 17188:
+            case 19828:
+            case 10142:
+            case 21964:
+                bossSortValue = 2;
+                break;
+            case 16948:
+            case 17759:
+            case 25247:
+            case 24375:
+            case 16178:
+            case 15375:
+            case 16137:
+            case 17154:
+            case 19691:
+            case 37464:
+            case 22000:
+                bossSortValue = 3;
+                break;
+            case 16198:
+            case 16125:
+            case 19536:
+            case 21105:
+                bossSortValue = 4;
+                break;
+            case 16177:
+            case 16115:
+            case 19651:
+            case 21089:
+                bossSortValue = 5;
+                break;
+            case 16199:
+            case 19844:
+            case 20934:
+                bossSortValue = 6;
+                break;
+            case 19676:
+            case 19450:
+                bossSortValue = 7;
+                break;
+            case 19645:
+                bossSortValue = 8;
+                break;
+            case 16174:
+                bossSortValue = 9;
+                break;
+            case 16176:
+                bossSortValue = 10;
+                break;
+            default:
+                {
+                    bossSortValue = 0;
+                    break;
+                }
+        }
+
+        return GetReportGroup(bossId).GetSortValue() + bossSortValue;
     }
 
     /// <summary>

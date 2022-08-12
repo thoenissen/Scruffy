@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
+using Scruffy.Data.Enumerations.DpsReport;
 using Scruffy.Services.Discord;
 using Scruffy.Services.Raid;
 
@@ -57,15 +58,16 @@ public class RaidSlashCommandModule : SlashCommandModuleBase
     /// <summary>
     /// Daily logs
     /// </summary>
+    /// <param name="type">Log type</param>
     /// <param name="day">Day</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("logs", "Creates a listing of all logs of the given day")]
-    public async Task Logs([Summary("day", "Day of the logs (yyyy-MM-dd)")]string day = null)
+    public async Task Logs([Summary("type", "Which type of logs should be used?")] DpsReportType type = DpsReportType.All, [Summary("day", "Day of the logs (yyyy-MM-dd)")] string day = null)
     {
         await Context.DeferAsync()
                      .ConfigureAwait(false);
 
-        await CommandHandler.Logs(Context, day)
+        await CommandHandler.Logs(Context, type, day)
                             .ConfigureAwait(false);
     }
 
