@@ -13,21 +13,10 @@ public enum DpsReportGroup
     ShatteredObservatory,
     SunquaPeak,
 
-    // IBS strikes
+    // Strikes
 
-    ShiverpeaksPass,
-    VoiceAndClaw,
-    Fraenir,
-    WhisperOfJormag,
-    ColdWar,
-    Boneskinner,
-
-    // EoD strikes
-
-    AetherbladeHideout,
-    XunlaiJadeJunkyard,
-    KainengOverlook,
-    HarvestTemple,
+    IBSStrikes,
+    EoDStrikes,
 
     // Raids
 
@@ -69,16 +58,8 @@ public static class DpsReportGroupExtensions
             case DpsReportGroup.ShatteredObservatory:
             case DpsReportGroup.SunquaPeak:
                 return DpsReportType.Fractal;
-            case DpsReportGroup.ShiverpeaksPass:
-            case DpsReportGroup.VoiceAndClaw:
-            case DpsReportGroup.Fraenir:
-            case DpsReportGroup.WhisperOfJormag:
-            case DpsReportGroup.ColdWar:
-            case DpsReportGroup.Boneskinner:
-            case DpsReportGroup.AetherbladeHideout:
-            case DpsReportGroup.XunlaiJadeJunkyard:
-            case DpsReportGroup.KainengOverlook:
-            case DpsReportGroup.HarvestTemple:
+            case DpsReportGroup.IBSStrikes:
+            case DpsReportGroup.EoDStrikes:
                 return DpsReportType.Strike;
             case DpsReportGroup.SpritVale:
             case DpsReportGroup.SalvationPass:
@@ -111,26 +92,10 @@ public static class DpsReportGroupExtensions
                 return "Shattered Observatory (99)";
             case DpsReportGroup.SunquaPeak:
                 return "Sunqua Peak (100)";
-            case DpsReportGroup.ShiverpeaksPass:
-                return "Shiverpeaks Pass";
-            case DpsReportGroup.VoiceAndClaw:
-                return "Voice and Claw of the Fallen";
-            case DpsReportGroup.Fraenir:
-                return "Fraenir of Jormag";
-            case DpsReportGroup.WhisperOfJormag:
-                return "Whisper of Jormag";
-            case DpsReportGroup.ColdWar:
-                return "Cold War";
-            case DpsReportGroup.Boneskinner:
-                return "Boneskinner";
-            case DpsReportGroup.AetherbladeHideout:
-                return "Aetherblade Hideout";
-            case DpsReportGroup.XunlaiJadeJunkyard:
-                return "Xunlai Jade Junkyard";
-            case DpsReportGroup.KainengOverlook:
-                return "Kaineng Overlook";
-            case DpsReportGroup.HarvestTemple:
-                return "Harvest Temple";
+            case DpsReportGroup.IBSStrikes:
+                return "IBS Strikes";
+            case DpsReportGroup.EoDStrikes:
+                return "EoD Strikes";
             case DpsReportGroup.TrainingArea:
                 return "Special Forces Training Area";
             case DpsReportGroup.SpritVale:

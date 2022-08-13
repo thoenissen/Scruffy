@@ -146,32 +146,24 @@ public class DpsReportConnector
             case 23254:
                 return DpsReportGroup.SunquaPeak;
             case 22154:
-                return DpsReportGroup.ShiverpeaksPass;
             case 22343:
             case 22481:
-                return DpsReportGroup.VoiceAndClaw;
             case 22492:
             case 22436:
-                return DpsReportGroup.Fraenir;
             case 22711:
-                return DpsReportGroup.WhisperOfJormag;
             case 22836:
-                return DpsReportGroup.ColdWar;
             case 22521:
-                return DpsReportGroup.Boneskinner;
+                return DpsReportGroup.IBSStrikes;
             case 24033:
             case 24768:
             case 25247:
-                return DpsReportGroup.AetherbladeHideout;
             case 23957:
-                return DpsReportGroup.XunlaiJadeJunkyard;
             case 24485:
             case 24266:
-                return DpsReportGroup.KainengOverlook;
             case 43488:
             case 1378:
             case 24375:
-                return DpsReportGroup.HarvestTemple;
+                return DpsReportGroup.EoDStrikes;
             case 16169:
             case 16202:
             case 16178:

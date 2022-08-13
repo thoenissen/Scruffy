@@ -80,7 +80,6 @@ public class RaidCommandHandler : LocatedServiceBase
     /// <param name="overviewService">Overview service</param>
     /// <param name="experienceLevelsService">Experience levels service</param>
     /// <param name="userManagementService">User management service</param>
-    /// <param name="repositoryFactory">Repository factory</param>
     /// <param name="dpsReportConnector">DPS-Report connector</param>
     public RaidCommandHandler(LocalizationService localizationService,
                               RaidMessageBuilder messageBuilder,
