@@ -191,52 +191,60 @@ public class LogCommandHandler : LocatedServiceBase
 
             foreach (var group in typeGroup.GroupBy(obj => _dpsReportConnector.GetReportGroup(obj.Encounter.BossId)))
             {
+                var isFractal = group.Key.GetReportType() == DpsReportType.Fractal;
                 var reports = new StringBuilder();
 
-                foreach (var boss in group.GroupBy(obj => new { obj.Encounter.BossId, obj.Encounter.Boss }))
+                foreach (var bossGroup in group.GroupBy(obj => new { obj.Encounter.BossId, obj.Encounter.Boss }))
                 {
-                    if (reports.Length > 900)
+                    var hasChallengeTries = !isFractal && bossGroup.Any(obj => obj.Encounter.IsChallengeMode);
+
+                    foreach (var boss in bossGroup.GroupBy(obj => obj.Encounter.IsChallengeMode).OrderBy(obj => obj.Key))
                     {
-                        embedBuilder.AddReportGroup(group.Key, reports.ToString());
-                        reports = new StringBuilder();
-                    }
-
-                    var tries = boss.Count();
-                    var title = $"{DiscordEmoteService.GetGuildEmote(_client, _dpsReportConnector.GetRaidBossIconId(boss.Key.BossId))} {boss.Key.Boss} ({(tries > 1 ? $"{tries} tries" : "First Try")})";
-
-                    reports.AppendLine(title);
-
-                    foreach (var upload in boss)
-                    {
-                        var duration = string.Empty;
-                        var result = upload.Encounter.Success ? "Success!" : "Failure";
-
-                        if (upload.Encounter.JsonAvailable)
-                        {
-                            var log = await _dpsReportConnector.GetLog(upload.Id).ConfigureAwait(false);
-                            duration = $"{log.Duration?.ToString(@"mm\:ss")} - ";
-
-                            if (!upload.Encounter.Success)
-                            {
-                                var remainingHealth = log.RemainingTotalHealth;
-
-                                if (remainingHealth != null)
-                                {
-                                    result = $"{Math.Floor(remainingHealth.Value)}%";
-                                }
-                            }
-                        }
-
-                        var line = $"└ {Format.Url($"{duration}{result}", upload.Permalink)}";
-
-                        if (reports.Length + line.Length > 1000)
+                        if (reports.Length > 900)
                         {
                             embedBuilder.AddReportGroup(group.Key, reports.ToString());
                             reports = new StringBuilder();
-                            reports.AppendLine(title);
                         }
 
-                        reports.AppendLine(line);
+                        var tries = boss.Count();
+                        var title = isFractal || !boss.Key
+                            ? $"{DiscordEmoteService.GetGuildEmote(_client, _dpsReportConnector.GetRaidBossIconId(bossGroup.Key.BossId))} {bossGroup.Key.Boss} ({(tries > 1 ? $"{tries} tries" : "First Try")})"
+                            : $" └ CM ({(tries > 1 ? $"{tries} tries" : "First Try")})";
+
+                        reports.AppendLine(title);
+
+                        foreach (var upload in boss)
+                        {
+                            var duration = string.Empty;
+                            var result = upload.Encounter.Success ? "Success!" : "Failure";
+
+                            if (upload.Encounter.JsonAvailable)
+                            {
+                                var log = await _dpsReportConnector.GetLog(upload.Id).ConfigureAwait(false);
+                                duration = $"{log.Duration?.ToString(@"mm\:ss")} - ";
+
+                                if (!upload.Encounter.Success)
+                                {
+                                    var remainingHealth = log.RemainingTotalHealth;
+
+                                    if (remainingHealth != null)
+                                    {
+                                        result = $"{Math.Floor(remainingHealth.Value)}%";
+                                    }
+                                }
+                            }
+
+                            var line = $"{(hasChallengeTries ? " " : String.Empty)} └ {Format.Url($"{duration}{result}", upload.Permalink)}";
+
+                            if (reports.Length + line.Length > 1000)
+                            {
+                                embedBuilder.AddReportGroup(group.Key, reports.ToString());
+                                reports = new StringBuilder();
+                                reports.AppendLine(title);
+                            }
+
+                            reports.AppendLine(line);
+                        }
                     }
                 }
 
