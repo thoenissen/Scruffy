@@ -201,6 +201,16 @@ namespace Scruffy.Data.Entity.Migrations
             migrationBuilder.CreateIndex(name: "IX_UserClaims_UserId", table: "UserClaims", column: "UserId");
             migrationBuilder.CreateIndex(name: "IX_UserLogins_UserId", table: "UserLogins", column: "UserId");
             migrationBuilder.CreateIndex(name: "IX_UserRoles_RoleId", table: "UserRoles", column: "RoleId");
+
+            migrationBuilder.Sql(@"SET IDENTITY_INSERT [ROLES] ON
+                                   
+                                   INSERT INTO [Roles] ([Id], [Name], [NormalizedName], [ConcurrencyStamp])
+                                                VALUES (1, 'Developer', 'DEVELOPER', NEWID());
+                                   
+                                   INSERT INTO [Roles] ([Id], [Name], [NormalizedName], [ConcurrencyStamp])
+                                                VALUES (2, 'Administrator', 'ADMINISTRATOR', NEWID());
+                                   
+                                   SET IDENTITY_INSERT [ROLES] ON");
         }
 
         /// <summary>
