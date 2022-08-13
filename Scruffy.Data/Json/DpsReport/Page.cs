@@ -14,18 +14,6 @@ public class Page
     public int Pages { get; set; }
 
     /// <summary>
-    /// Total uploads
-    /// </summary>
-    [JsonProperty("totalUploads")]
-    public string TotalUploads { get; set; }
-
-    /// <summary>
-    /// User token
-    /// </summary>
-    [JsonProperty("userToken")]
-    public string UserToken { get; set; }
-
-    /// <summary>
     /// Uploads
     /// </summary>
     [JsonProperty("uploads")]

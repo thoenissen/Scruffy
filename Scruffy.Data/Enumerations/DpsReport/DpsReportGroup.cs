@@ -8,18 +8,15 @@ public enum DpsReportGroup
     Unknown,
 
     // Fractals
-
     Nightmare,
     ShatteredObservatory,
     SunquaPeak,
 
     // Strikes
-
     IBSStrikes,
     EoDStrikes,
 
     // Raids
-
     TrainingArea,
     SpritVale,
     SalvationPass,
