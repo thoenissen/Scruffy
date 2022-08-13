@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+
 using Scruffy.Data.Entity.Tables.CoreData;
 
 namespace Scruffy.Data.Entity.Tables.Guild;
@@ -41,6 +42,11 @@ public class GuildEntity
     /// Role of new users
     /// </summary>
     public ulong? NewUserDiscordRoleId { get; set; }
+
+    /// <summary>
+    /// Role of members
+    /// </summary>
+    public ulong? MemberDiscordRoleId { get; set; }
 
     #region Navigation - Properties
 

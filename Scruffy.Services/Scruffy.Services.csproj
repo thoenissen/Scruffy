@@ -55,4 +55,8 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Web\" />
+  </ItemGroup>
+
 </Project>
