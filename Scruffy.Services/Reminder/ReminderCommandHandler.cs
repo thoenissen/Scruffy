@@ -63,7 +63,7 @@ public class ReminderCommandHandler : LocatedServiceBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task ReminderIn(IContextContainer context, string message, string timeSpan)
     {
-        var checkUser = _userManagementService.CheckDiscordAccountAsync(context.User.Id);
+        var checkUser = _userManagementService.CheckDiscordAccountAsync(context.User);
 
         var timeSpanValidation = new Regex(@"\d+(h|m|s)");
         if (timeSpanValidation.IsMatch(timeSpan))
@@ -119,7 +119,7 @@ public class ReminderCommandHandler : LocatedServiceBase
     [Command("at")]
     public async Task ReminderAt(IContextContainer context, string message, string date, string time)
     {
-        var checkUser = _userManagementService.CheckDiscordAccountAsync(context.User.Id);
+        var checkUser = _userManagementService.CheckDiscordAccountAsync(context.User);
 
         DateTime? timeStamp = null;
 

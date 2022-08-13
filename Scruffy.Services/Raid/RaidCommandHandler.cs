@@ -218,7 +218,7 @@ public class RaidCommandHandler : LocatedServiceBase
 
             if (appointment != null)
             {
-                var registrationId = await _registrationService.Join(container, appointment.Id, container.User.Id)
+                var registrationId = await _registrationService.Join(container, appointment.Id, container.User)
                                                                .ConfigureAwait(false);
 
                 if (registrationId != null)
@@ -275,7 +275,7 @@ public class RaidCommandHandler : LocatedServiceBase
 
             if (appointment != null)
             {
-                var registrationId = await _registrationService.Join(container, appointment.Id, container.User.Id)
+                var registrationId = await _registrationService.Join(container, appointment.Id, container.User)
                                                                .ConfigureAwait(false);
 
                 if (registrationId != null)
@@ -342,7 +342,7 @@ public class RaidCommandHandler : LocatedServiceBase
 
             if (appointment != null)
             {
-                var registrationId = await _registrationService.Join(container, appointment.Id, user.Id)
+                var registrationId = await _registrationService.Join(container, appointment.Id, user)
                                                                .ConfigureAwait(false);
 
                 if (registrationId != null)
@@ -386,7 +386,7 @@ public class RaidCommandHandler : LocatedServiceBase
 
             if (appointment != null)
             {
-                var user = await _userManagementService.GetUserByDiscordAccountId(container.User.Id)
+                var user = await _userManagementService.GetUserByDiscordAccountId(container.User)
                                                        .ConfigureAwait(false);
 
                 if (await _registrationService.Leave(appointment.Id, user.Id)
@@ -431,7 +431,7 @@ public class RaidCommandHandler : LocatedServiceBase
 
             if (appointment != null)
             {
-                var internalUser = await _userManagementService.GetUserByDiscordAccountId(user.Id)
+                var internalUser = await _userManagementService.GetUserByDiscordAccountId(user)
                                                                .ConfigureAwait(false);
 
                 if (await _registrationService.Leave(appointment.Id, internalUser.Id)
@@ -665,11 +665,13 @@ public class RaidCommandHandler : LocatedServiceBase
                      == false)
                     {
                         var user = new UserEntity
-                        {
-                            CreationTimeStamp = DateTime.Now,
-                            Type = UserType.DiscordUser,
-                            RaidExperienceLevelId = experienceLevelId
-                        };
+                                       {
+                                           CreationTimeStamp = DateTime.Now,
+                                           Type = UserType.DiscordUser,
+                                           RaidExperienceLevelId = experienceLevelId,
+                                           UserName = $"{discordUser.Username}#{discordUser.Discriminator}",
+                                           SecurityStamp = Guid.NewGuid().ToString()
+                                       };
 
                         if (dbFactory.GetRepository<UserRepository>()
                                      .Add(user))

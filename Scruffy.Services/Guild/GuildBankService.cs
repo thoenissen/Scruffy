@@ -176,7 +176,7 @@ public class GuildBankService : LocatedServiceBase
 
             if (string.IsNullOrWhiteSpace(guild?.ApiKey) == false)
             {
-                var user = await _userManagementService.GetUserByDiscordAccountId(commandContext.User.Id)
+                var user = await _userManagementService.GetUserByDiscordAccountId(commandContext.User)
                                                        .ConfigureAwait(false);
 
                 var apiKeys = dbFactory.GetRepository<AccountRepository>()

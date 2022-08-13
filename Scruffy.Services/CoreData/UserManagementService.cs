@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Discord;
+
+using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.CoreData;
@@ -21,21 +23,23 @@ public class UserManagementService
     /// <summary>
     /// Checks the given user and creates a new entry of the user doesn't exists
     /// </summary>
-    /// <param name="discordUserId">Id of the discord user</param>
+    /// <param name="discordUser">Discord user</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task CheckDiscordAccountAsync(ulong discordUserId)
+    public async Task CheckDiscordAccountAsync(IUser discordUser)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
             if (await dbFactory.GetRepository<DiscordAccountRepository>()
                                .GetQuery()
-                               .AnyAsync(obj => obj.Id == discordUserId)
+                               .AnyAsync(obj => obj.Id == discordUser.Id)
                                .ConfigureAwait(false) == false)
             {
                 var user = new UserEntity
                            {
                                CreationTimeStamp = DateTime.Now,
-                               Type = UserType.DiscordUser
+                               Type = UserType.DiscordUser,
+                               UserName = $"{discordUser.Username}#{discordUser.Discriminator}",
+                               SecurityStamp = Guid.NewGuid().ToString()
                            };
 
                 if (dbFactory.GetRepository<UserRepository>()
@@ -44,7 +48,7 @@ public class UserManagementService
                     dbFactory.GetRepository<DiscordAccountRepository>()
                              .Add(new DiscordAccountEntity
                                   {
-                                      Id = discordUserId,
+                                      Id = discordUser.Id,
                                       UserId = user.Id
                                   });
                 }
@@ -55,15 +59,15 @@ public class UserManagementService
     /// <summary>
     /// Get user raid experience rank
     /// </summary>
-    /// <param name="discordAccountId">Id of the discord account</param>
+    /// <param name="discordUser">Discord user</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task<int> GetRaidExperienceLevelRankByDiscordUserId(ulong discordAccountId)
+    public async Task<int> GetRaidExperienceLevelRankByDiscordUserId(IUser discordUser)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
             var rank = await dbFactory.GetRepository<DiscordAccountRepository>()
                                       .GetQuery()
-                                      .Where(obj => obj.Id == discordAccountId)
+                                      .Where(obj => obj.Id == discordUser.Id)
                                       .Select(obj => obj.User.RaidExperienceLevel != null ? obj.User.RaidExperienceLevel.Rank : 0)
                                       .FirstOrDefaultAsync()
                                       .ConfigureAwait(false);
@@ -79,14 +83,16 @@ public class UserManagementService
                 rank = defaultRank.Rank;
 
                 if (dbFactory.GetRepository<UserRepository>()
-                             .Refresh(obj => obj.DiscordAccounts.Any(obj2 => obj2.Id == discordAccountId),
+                             .Refresh(obj => obj.DiscordAccounts.Any(obj2 => obj2.Id == discordUser.Id),
                                       obj => obj.RaidExperienceLevelId = defaultRank.Id) == false)
                 {
                     var user = new UserEntity
                                {
                                    CreationTimeStamp = DateTime.Now,
                                    Type = UserType.DiscordUser,
-                                   RaidExperienceLevelId = defaultRank.Id
+                                   RaidExperienceLevelId = defaultRank.Id,
+                                   UserName = $"{discordUser.Username}#{discordUser.Discriminator}",
+                                   SecurityStamp = Guid.NewGuid().ToString()
                                };
 
                     if (dbFactory.GetRepository<UserRepository>()
@@ -95,7 +101,7 @@ public class UserManagementService
                         dbFactory.GetRepository<DiscordAccountRepository>()
                                  .Add(new DiscordAccountEntity
                                       {
-                                          Id = discordAccountId,
+                                          Id = discordUser.Id,
                                           UserId = user.Id
                                       });
                     }
@@ -109,17 +115,17 @@ public class UserManagementService
     /// <summary>
     /// Get user data
     /// </summary>
-    /// <param name="discordAccountId">Id of the discord account</param>
+    /// <param name="discordUser">Discord user</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task<UserData> GetUserByDiscordAccountId(ulong discordAccountId)
+    public async Task<UserData> GetUserByDiscordAccountId(IUser discordUser)
     {
-        await CheckDiscordAccountAsync(discordAccountId).ConfigureAwait(false);
+        await CheckDiscordAccountAsync(discordUser).ConfigureAwait(false);
 
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
             var userData =  await dbFactory.GetRepository<DiscordAccountRepository>()
                                            .GetQuery()
-                                           .Where(obj => obj.Id == discordAccountId)
+                                           .Where(obj => obj.Id == discordUser.Id)
                                            .Select(obj => new UserData
                                                           {
                                                               Id = obj.UserId,
@@ -133,7 +139,7 @@ public class UserManagementService
 
             if (userData.ExperienceLevelRank == 0)
             {
-                userData.ExperienceLevelRank = await GetRaidExperienceLevelRankByDiscordUserId(discordAccountId).ConfigureAwait(false);
+                userData.ExperienceLevelRank = await GetRaidExperienceLevelRankByDiscordUserId(discordUser).ConfigureAwait(false);
             }
 
             return userData;

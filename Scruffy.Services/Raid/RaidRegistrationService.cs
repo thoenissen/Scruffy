@@ -1,6 +1,8 @@
 ﻿using System.Data;
 using System.Net.Http;
 
+using Discord;
+
 using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;
@@ -52,9 +54,9 @@ public class RaidRegistrationService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <param name="appointmentId">Id of the appointment</param>
-    /// <param name="discordUserId">User id</param>
+    /// <param name="discordUser">User</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task<long?> Join(IContextContainer commandContext, long appointmentId, ulong discordUserId)
+    public async Task<long?> Join(IContextContainer commandContext, long appointmentId, IUser discordUser)
     {
         long? registrationId = null;
 
@@ -62,7 +64,7 @@ public class RaidRegistrationService : LocatedServiceBase
         {
             var isAlreadyRegistered = false;
 
-            var user = await _userManagementService.GetUserByDiscordAccountId(discordUserId)
+            var user = await _userManagementService.GetUserByDiscordAccountId(discordUser)
                                                    .ConfigureAwait(false);
 
             if (dbFactory.GetRepository<RaidAppointmentRepository>()

@@ -63,8 +63,9 @@ public class GuildUserConfigurationService : LocatedServiceBase
         var member = await DialogHandler.Run<GuildUserConfigurationUserDialogElement, IGuildUser>(context)
                                         .ConfigureAwait(false);
 
-        var user = await _userManagementService.GetUserByDiscordAccountId(member.Id)
+        var user = await _userManagementService.GetUserByDiscordAccountId(member)
                                                .ConfigureAwait(false);
+
         var guildId = _repositoryFactory.GetRepository<GuildRepository>()
                                         .GetQuery()
                                         .Where(obj => obj.DiscordServerId == member.GuildId)

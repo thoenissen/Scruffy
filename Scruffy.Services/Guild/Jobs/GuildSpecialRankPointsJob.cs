@@ -22,6 +22,28 @@ namespace Scruffy.Services.Guild.Jobs;
 /// </summary>
 public class GuildSpecialRankPointsJob : LocatedAsyncJob
 {
+    #region Fields
+
+    /// <summary>
+    /// Discord client
+    /// </summary>
+    private readonly DiscordSocketClient _discordClient;
+
+    #endregion // Fields
+
+    #region Constructor
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="discordClient">Discord client</param>
+    public GuildSpecialRankPointsJob(DiscordSocketClient discordClient)
+    {
+        _discordClient = discordClient;
+    }
+
+    #endregion // Constructor
+
     #region LocatedAsyncJob
 
     /// <summary>
@@ -88,7 +110,10 @@ public class GuildSpecialRankPointsJob : LocatedAsyncJob
 
                     foreach (var pointsPerUser in points.GroupBy(obj => obj.UserId))
                     {
-                        await userManagementService.CheckDiscordAccountAsync(pointsPerUser.Key)
+                        var user = await _discordClient.GetUserAsync(pointsPerUser.Key)
+                                                       .ConfigureAwait(false);
+
+                        await userManagementService.CheckDiscordAccountAsync(user)
                                                    .ConfigureAwait(false);
 
                         var transaction = dbFactory.BeginTransaction(IsolationLevel.RepeatableRead);

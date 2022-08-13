@@ -142,7 +142,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
         await context.DeferProcessing()
                      .ConfigureAwait(false);
 
-        var user = await _userManagementService.GetUserByDiscordAccountId(guildUser.Id)
+        var user = await _userManagementService.GetUserByDiscordAccountId(guildUser)
                                                .ConfigureAwait(false);
 
         var limit = DateTime.Today.AddDays(-63);
@@ -331,10 +331,10 @@ public class GuildRankVisualizationService : LocatedServiceBase
         await context.DeferProcessing()
                      .ConfigureAwait(false);
 
-        var user = await _userManagementService.GetUserByDiscordAccountId(guildUser.Id)
+        var user = await _userManagementService.GetUserByDiscordAccountId(guildUser)
                                                .ConfigureAwait(false);
 
-        var compareUser = await _userManagementService.GetUserByDiscordAccountId(compareGuildUser.Id)
+        var compareUser = await _userManagementService.GetUserByDiscordAccountId(compareGuildUser)
                                                       .ConfigureAwait(false);
 
         var limit = DateTime.Today.AddDays(-63);
@@ -528,7 +528,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
         await context.DeferProcessing()
                      .ConfigureAwait(false);
 
-        var user = await _userManagementService.GetUserByDiscordAccountId(guildUser.Id)
+        var user = await _userManagementService.GetUserByDiscordAccountId(guildUser)
                                                .ConfigureAwait(false);
 
         var from = DateTime.Today.AddDays(-63);

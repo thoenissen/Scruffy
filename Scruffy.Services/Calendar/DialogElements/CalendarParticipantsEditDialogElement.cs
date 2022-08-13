@@ -274,10 +274,10 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedReactionElementB
 
                                                      foreach (var entry in _data.Participants)
                                                      {
-                                                         await _userManagementService.CheckDiscordAccountAsync(entry.Member.Id)
+                                                         await _userManagementService.CheckDiscordAccountAsync(entry.Member)
                                                                                      .ConfigureAwait(false);
 
-                                                         var user = await _userManagementService.GetUserByDiscordAccountId(entry.Member.Id)
+                                                         var user = await _userManagementService.GetUserByDiscordAccountId(entry.Member)
                                                                                                 .ConfigureAwait(false);
 
                                                          if (dbFactory.GetRepository<CalendarAppointmentParticipantRepository>()
