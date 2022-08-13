@@ -643,6 +643,11 @@
          "InvalidItem": "Es konnte kein Gegenstand mit der angegebenen ID gefunden werden.",
          "ValueAssigned": "Der Wert wurde zugewiesen."
       },
+      "LogCommandHandler": {
+          "DpsReportTitle": "Deine Reports vom {0}",
+          "NoDpsReportUploads": "Keine DPS-Reports gefunden!",
+          "NoDpsReportToken": "Deinem Account sind keine DPS-Report-User-Tokens zugeordnet."
+      },
       "LocatedTextCommandModuleBase": {
          "SlashCommandMigrationHint": "Textbasierte Befehle stehen nicht mehr zur Verfügung. Du kannst diesen Befehl über den Slash Command `/{0}` ausführen."
       },
@@ -669,7 +674,6 @@
          "GroupCountChanged": "Die Anzahl der Gruppen wurde angepasst.",
          "NewRankFormat": "Neue Wertung für {0}: {1} {2} {3}",
          "NoActiveAppointment": "Es besteht kein aktiver Termin.",
-         "NoDpsReportToken": "Deinem Account sind keine DPS-Report-User-Tokens zugeordnet.",
          "NoRoleSelectionAfterDeadline": "Die Bearbeitung deiner präferierten Rollen ist nach dem Anmeldeschluss nicht mehr möglich.",
          "TemplateChanged": "Die Schablone wurde angepasst.",
          "UnknownExperienceLevel": "Das angegebene Erfahrungslevel existiert nicht."

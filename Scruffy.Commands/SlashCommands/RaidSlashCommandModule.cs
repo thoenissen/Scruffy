@@ -5,7 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
+using Scruffy.Data.Enumerations.DpsReport;
 using Scruffy.Services.Discord;
+using Scruffy.Services.GuildWars2;
 using Scruffy.Services.Raid;
 
 namespace Scruffy.Commands.SlashCommands;
@@ -22,6 +24,11 @@ public class RaidSlashCommandModule : SlashCommandModuleBase
     /// Command handler
     /// </summary>
     public RaidCommandHandler CommandHandler { get; set; }
+
+    /// <summary>
+    /// Log command handler
+    /// </summary>
+    public LogCommandHandler LogCommandHandler { get; set; }
 
     #endregion // Properties
 
@@ -65,7 +72,7 @@ public class RaidSlashCommandModule : SlashCommandModuleBase
         await Context.DeferAsync()
                      .ConfigureAwait(false);
 
-        await CommandHandler.Logs(Context, day)
+        await LogCommandHandler.Logs(Context, DpsReportType.Raid, day)
                             .ConfigureAwait(false);
     }
 

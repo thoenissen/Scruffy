@@ -1,5 +1,4 @@
-﻿using System.Data;
-using System.Globalization;
+using System.Data;
 
 using Discord;
 
@@ -13,7 +12,6 @@ using Scruffy.Data.Entity.Tables.CoreData;
 using Scruffy.Data.Entity.Tables.Discord;
 using Scruffy.Data.Entity.Tables.Raid;
 using Scruffy.Data.Enumerations.CoreData;
-using Scruffy.Data.Json.DpsReport;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
@@ -67,16 +65,6 @@ public class RaidCommandHandler : LocatedServiceBase
     /// </summary>
     private readonly UserManagementService _userManagementService;
 
-    /// <summary>
-    /// Repository factory
-    /// </summary>
-    private readonly RepositoryFactory _repositoryFactory;
-
-    /// <summary>
-    /// DPS-Report connector
-    /// </summary>
-    private readonly DpsReportConnector _dpsReportConnector;
-
     #endregion // Fields
 
     #region Constructor
@@ -92,7 +80,6 @@ public class RaidCommandHandler : LocatedServiceBase
     /// <param name="overviewService">Overview service</param>
     /// <param name="experienceLevelsService">Experience levels service</param>
     /// <param name="userManagementService">User management service</param>
-    /// <param name="repositoryFactory">Repository factory</param>
     /// <param name="dpsReportConnector">DPS-Report connector</param>
     public RaidCommandHandler(LocalizationService localizationService,
                               RaidMessageBuilder messageBuilder,
@@ -102,7 +89,6 @@ public class RaidCommandHandler : LocatedServiceBase
                               RaidOverviewService overviewService,
                               RaidExperienceLevelsService experienceLevelsService,
                               UserManagementService userManagementService,
-                              RepositoryFactory repositoryFactory,
                               DpsReportConnector dpsReportConnector)
         : base(localizationService)
     {
@@ -113,8 +99,6 @@ public class RaidCommandHandler : LocatedServiceBase
         _overviewService = overviewService;
         _experienceLevelsService = experienceLevelsService;
         _userManagementService = userManagementService;
-        _repositoryFactory = repositoryFactory;
-        _dpsReportConnector = dpsReportConnector;
     }
 
     #endregion // Constructor
@@ -560,125 +544,6 @@ public class RaidCommandHandler : LocatedServiceBase
     {
         await _commitService.CommitRaidAppointment(container, aliasName)
                             .ConfigureAwait(false);
-    }
-
-    /// <summary>
-    /// Logs of the given day
-    /// </summary>
-    /// <param name="context">Context</param>
-    /// <param name="dayString">Day</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task Logs(IContextContainer context, string dayString)
-    {
-        var user = await _userManagementService.GetUserByDiscordAccountId(context.User.Id)
-                                               .ConfigureAwait(false);
-
-        var tokens = _repositoryFactory.GetRepository<UserRepository>()
-                                       .GetQuery()
-                                       .Where(obj => obj.Id == user.Id
-                                                  && obj.DpsReportUserToken != null)
-                                       .Select(obj => obj.DpsReportUserToken)
-                                       .Distinct()
-                                       .ToList();
-
-        if (string.IsNullOrWhiteSpace(dayString)
-            || DateTime.TryParseExact(dayString, "yyyy-MM-dd", null, DateTimeStyles.None, out var day) == false)
-        {
-            day = DateTime.Today;
-        }
-
-        if (tokens.Count > 0)
-        {
-            var isFirstMessage = true;
-
-            foreach (var token in tokens)
-            {
-                var continueLoop = true;
-                var currentPageId = 0;
-
-                var uploads = new List<Upload>();
-
-                do
-                {
-                    currentPageId++;
-
-                    var page = await _dpsReportConnector.GetUploads(token, currentPageId)
-                                                        .ConfigureAwait(false);
-                    if (page != null)
-                    {
-                        foreach (var upload in page.Uploads)
-                        {
-                            var uploadTime = DateTimeOffset.FromUnixTimeSeconds(upload.UploadTime).ToLocalTime();
-
-                            if (uploadTime.Date < day)
-                            {
-                                continueLoop = false;
-                                break;
-                            }
-
-                            var encounterTime = DateTimeOffset.FromUnixTimeSeconds(upload.EncounterTime).ToLocalTime();
-
-                            if (encounterTime.Date == day)
-                            {
-                                uploads.Add(upload);
-                            }
-                        }
-
-                        continueLoop = continueLoop && page.Pages < currentPageId;
-                    }
-                    else
-                    {
-                        continueLoop = false;
-                    }
-                }
-                while (continueLoop);
-
-                var embedBuilder = new EmbedBuilder()
-                                   .WithTitle($"DPS-Reports {day.ToString("d", LocalizationGroup.CultureInfo)}")
-                                   .WithColor(Color.Green)
-                                   .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
-                                   .WithTimestamp(DateTime.Now);
-
-                foreach (var wing in uploads.OrderBy(obj => _dpsReportConnector.GetRaidSortNumber(obj.Encounter.BossId))
-                                            .GroupBy(obj => _dpsReportConnector.GetRaidWingDescription(obj.Encounter.BossId)))
-                {
-                    var reports = new StringBuilder();
-
-                    foreach (var upload in wing)
-                    {
-                        var line = $"{DiscordEmoteService.GetGuildEmote(context.Client, _dpsReportConnector.GetRaidBossIconId(upload.Encounter.BossId))} {Format.Code(DateTimeOffset.FromUnixTimeSeconds(upload.EncounterTime).ToLocalTime().ToString("HH:mm"))} {upload.Encounter.Boss} {Format.Url("⧉", upload.Permalink)}";
-                        if (line.Length + reports.Length > 1000)
-                        {
-                            embedBuilder.AddField(wing.Key, reports.ToString());
-
-                            reports = new StringBuilder();
-                        }
-
-                        reports.AppendLine(line);
-                    }
-
-                    embedBuilder.AddField(wing.Key, reports.ToString());
-                }
-
-                if (isFirstMessage)
-                {
-                    await context.ReplyAsync(embed: embedBuilder.Build())
-                                 .ConfigureAwait(false);
-
-                    isFirstMessage = false;
-                }
-                else
-                {
-                    await context.SendMessageAsync(embed: embedBuilder.Build())
-                                 .ConfigureAwait(false);
-                }
-            }
-        }
-        else
-        {
-            await context.ReplyAsync(LocalizationGroup.GetText("NoDpsReportToken", "The are no DPS-Report user tokens assigned to your account."))
-                         .ConfigureAwait(false);
-        }
     }
 
     /// <summary>
