@@ -1,4 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+
+using Microsoft.AspNetCore.Identity;
+
 using Scruffy.Data.Entity.Tables.Discord;
 using Scruffy.Data.Entity.Tables.GuildWars2.Account;
 using Scruffy.Data.Entity.Tables.Raid;
@@ -10,7 +13,7 @@ namespace Scruffy.Data.Entity.Tables.CoreData;
 /// Discord user
 /// </summary>
 [Table("Users")]
-public class UserEntity
+public class UserEntity : IdentityUser<long>
 {
     #region Properties
 
@@ -18,7 +21,7 @@ public class UserEntity
     /// Id
     /// </summary>
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public long Id { get; set; }
+    public override long Id { get; set; }
 
     /// <summary>
     /// Creation of the user

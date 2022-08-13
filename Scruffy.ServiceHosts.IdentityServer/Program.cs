@@ -2,9 +2,11 @@
 using Duende.IdentityServer.Models;
 
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity;
 
 using Scruffy.Data.Entity;
-using Scruffy.ServiceHosts.IdentityServer.Services;
+using Scruffy.Data.Entity.Tables.CoreData;
+using Scruffy.Data.Entity.Tables.Web;
 
 using Serilog;
 
@@ -33,7 +35,14 @@ public class Program
             builder.Host.UseSerilog();
 
             builder.Services.Configure<ForwardedHeadersOptions>(options => options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedHost);
+
             builder.Services.AddRazorPages();
+
+            builder.Services.AddDbContext<ScruffyDbContext>();
+            builder.Services.AddIdentity<UserEntity, RoleEntity>()
+                            .AddEntityFrameworkStores<ScruffyDbContext>()
+                            .AddDefaultTokenProviders();
+
             builder.Services.AddIdentityServer(options =>
                                                {
                                                    options.Events.RaiseErrorEvents = true;
@@ -71,7 +80,8 @@ public class Program
                                                         AllowedScopes = { "openid", "profile", "api_v1" },
                                                         AllowedCorsOrigins = new[] { Environment.GetEnvironmentVariable("SCRUFFY_WEBAPP_CORS_ORIGINS") }
                                                     }
-                                                });
+                                                })
+                            .AddAspNetIdentity<UserEntity>();
 
             builder.Services.AddAuthentication()
                             .AddDiscord(options =>
@@ -82,7 +92,6 @@ public class Program
                                         });
 
             builder.Services.AddScoped<RepositoryFactory>();
-            builder.Services.AddSingleton<ProfileService>();
 
             var app = builder.Build();
 

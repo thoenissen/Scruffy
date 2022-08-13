@@ -1,22 +1,21 @@
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Scruffy.ServiceHosts.IdentityServer.Pages;
-
-/// <summary>
-/// Lading page
-/// </summary>
-[AllowAnonymous]
-public class Index : PageModel
+namespace Scruffy.ServiceHosts.IdentityServer.Pages
 {
-    #region Methods
-
     /// <summary>
-    /// Get method
+    /// Main page
     /// </summary>
-    /// <returns>Action result</returns>
-    public IActionResult OnGet() => RedirectToPage("/Home/Index");
+    [AllowAnonymous]
+    public class Index : PageModel
+    {
+        #region Properties
 
-    #endregion // Methods
+        /// <summary>
+        /// Is developer?
+        /// </summary>
+        public bool IsDeveloper => User?.IsInRole("Developer") == true;
+
+        #endregion // Properties
+    }
 }

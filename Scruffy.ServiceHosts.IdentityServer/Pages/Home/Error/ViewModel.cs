@@ -1,18 +1,39 @@
 ﻿using Duende.IdentityServer.Models;
 
-namespace Scruffy.ServiceHosts.IdentityServer.Pages.Home.Error;
-
-/// <summary>
-/// Error view model
-/// </summary>
-public class ViewModel
+namespace Scruffy.ServiceHosts.IdentityServer.Pages.Home.Error
 {
-    #region Properties
-
     /// <summary>
-    /// Error message
+    /// View model
     /// </summary>
-    public ErrorMessage Error { get; set; }
+    public class ViewModel
+    {
+        #region Constructor
 
-    #endregion // Properties
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public ViewModel()
+        {
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="error">Error</param>
+        public ViewModel(string error)
+        {
+            Error = new ErrorMessage { Error = error };
+        }
+
+        #endregion // Constructor
+
+        #region Properties
+
+        /// <summary>
+        /// Error
+        /// </summary>
+        public ErrorMessage Error { get; set; }
+
+        #endregion // Properties
+    }
 }

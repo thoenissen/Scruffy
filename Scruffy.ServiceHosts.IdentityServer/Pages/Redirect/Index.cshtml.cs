@@ -2,41 +2,42 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Scruffy.ServiceHosts.IdentityServer.Pages.Redirect;
-
-/// <summary>
-/// Redirect page
-/// </summary>
-[AllowAnonymous]
-public class IndexModel : PageModel
+namespace Scruffy.ServiceHosts.IdentityServer.Pages.Redirect
 {
-    #region Properties
-
     /// <summary>
-    /// Redirect uri
+    /// Redirect page
     /// </summary>
-    public string RedirectUri { get; set; }
-
-    #endregion // Properties
-
-    #region Methods
-
-    /// <summary>
-    /// Get method
-    /// </summary>
-    /// <param name="redirectUri">Redirect uri</param>
-    /// <returns>Action result</returns>
-    public IActionResult OnGet(string redirectUri)
+    [AllowAnonymous]
+    public class IndexModel : PageModel
     {
-        if (!Url.IsLocalUrl(redirectUri))
+        #region Properties
+
+        /// <summary>
+        /// Redirect url
+        /// </summary>
+        public string RedirectUri { get; set; }
+
+        #endregion // Properties
+
+        #region Properties
+
+        /// <summary>
+        /// Get route
+        /// </summary>
+        /// <param name="redirectUri">Redirect url</param>
+        /// <returns>Action result</returns>
+        public IActionResult OnGet(string redirectUri)
         {
-            return RedirectToPage("/Error/Index");
+            if (Url.IsLocalUrl(redirectUri) == false)
+            {
+                return RedirectToPage("/Error/Index");
+            }
+
+            RedirectUri = redirectUri;
+
+            return Page();
         }
 
-        RedirectUri = redirectUri;
-
-        return Page();
+        #endregion // Properties
     }
-
-    #endregion // Methods
 }
