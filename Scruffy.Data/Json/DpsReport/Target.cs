@@ -32,7 +32,7 @@ public class Target
     public int FirstAware { get; set; }
 
     /// <summary>
-    /// Time at which target became inactive 
+    /// Time at which target became inactive
     /// </summary>
     [JsonProperty("lastAware")]
     public int LastAware { get; set; }
