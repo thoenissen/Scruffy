@@ -26,7 +26,7 @@ public class Encounter
     public double Duration { get; set; }
 
     /// <summary>
-    /// Comp DPS
+    /// Computed overall DPS of the group.
     /// </summary>
     [JsonProperty("compDps")]
     public int CompDps { get; set; }

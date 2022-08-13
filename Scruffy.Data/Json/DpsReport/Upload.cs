@@ -32,24 +32,6 @@ public class Upload
     public int EncounterTime { get; set; }
 
     /// <summary>
-    /// Generator
-    /// </summary>
-    [JsonProperty("generator")]
-    public string Generator { get; set; }
-
-    /// <summary>
-    /// Generator ID
-    /// </summary>
-    [JsonProperty("generatorId")]
-    public int GeneratorId { get; set; }
-
-    /// <summary>
-    /// Generator version
-    /// </summary>
-    [JsonProperty("generatorVersion")]
-    public int GeneratorVersion { get; set; }
-
-    /// <summary>
     /// Language
     /// </summary>
     [JsonProperty("language")]
@@ -60,12 +42,6 @@ public class Upload
     /// </summary>
     [JsonProperty("languageId")]
     public int LanguageId { get; set; }
-
-    /// <summary>
-    /// EVTC
-    /// </summary>
-    [JsonProperty("evtc")]
-    public Evtc Evtc { get; set; }
 
     /// <summary>
     /// Players
@@ -84,10 +60,4 @@ public class Upload
     /// </summary>
     [JsonProperty("report")]
     public Report Report { get; set; }
-
-    /// <summary>
-    /// Temp Api ID
-    /// </summary>
-    [JsonProperty("tempApiId")]
-    public int TempApiId { get; set; }
 }
