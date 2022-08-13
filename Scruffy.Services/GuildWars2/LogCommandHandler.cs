@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 
 using Discord;
 using Discord.WebSocket;
@@ -107,8 +107,9 @@ public class LogCommandHandler : LocatedServiceBase
     /// <param name="context">Context</param>
     /// <param name="type">Type</param>
     /// <param name="dayString">Day</param>
+    /// <param name="summarize">Whether to summarize or output all logs</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task Logs(IContextContainer context, DpsReportType type, string dayString)
+    public async Task Logs(IContextContainer context, DpsReportType type, string dayString, bool summarize)
     {
         var pairs = _repositoryFactory.GetRepository<DiscordAccountRepository>()
                                             .GetQuery()
@@ -129,21 +130,19 @@ public class LogCommandHandler : LocatedServiceBase
         {
             var uploads = new List<Upload>();
 
-            foreach (var token in tokens)
-            {
-                uploads.AddRange(await _dpsReportConnector.GetUploads(token,
-                    filter: (Upload upload) =>
-                    {
-                        var encounterDay = DateOnly.FromDateTime(DateTimeOffset.FromUnixTimeSeconds(upload.EncounterTime).UtcDateTime);
-                        return encounterDay == day && (type == DpsReportType.All || type == _dpsReportConnector.GetReportType(upload.Encounter.BossId));
-                    },
-                    shouldAbort: (Upload upload) =>
-                    {
-                        var uploadDay = DateOnly.FromDateTime(DateTimeOffset.FromUnixTimeSeconds(upload.UploadTime).UtcDateTime);
-                        return uploadDay < day;
-                    }
-                ).ConfigureAwait(false));
-            }
+            uploads.AddRange(await _dpsReportConnector.GetUploads(
+                        filter: (Upload upload) =>
+                        {
+                            var encounterDay = DateOnly.FromDateTime(DateTimeOffset.FromUnixTimeSeconds(upload.EncounterTime).UtcDateTime);
+                            return encounterDay == day && ((type == DpsReportType.All && _dpsReportConnector.GetReportType(upload.Encounter.BossId) != DpsReportType.Other) || type == _dpsReportConnector.GetReportType(upload.Encounter.BossId));
+                        },
+                        shouldAbort: (Upload upload) =>
+                        {
+                            var uploadDay = DateOnly.FromDateTime(DateTimeOffset.FromUnixTimeSeconds(upload.UploadTime).UtcDateTime);
+                            return uploadDay < day;
+                        },
+                        tokens.ToArray()
+                    ).ConfigureAwait(false));
 
             if (uploads.Count > 0)
             {
@@ -153,15 +152,15 @@ public class LogCommandHandler : LocatedServiceBase
                             .WithAuthor($"{context.User.Username} - {userName}", context.User.GetAvatarUrl())
                             .WithTitle(LocalizationGroup.GetFormattedText("DpsReportTitle", "Your reports from {0}", day.ToString("d", LocalizationGroup.CultureInfo)));
 
-                await AddReports(embedBuilder, uploads, type == DpsReportType.All).ConfigureAwait(false);
+                await AddReports(embedBuilder, uploads, summarize, type == DpsReportType.All).ConfigureAwait(false);
 
                 await context.ReplyAsync(embed: embedBuilder.Build())
-                                     .ConfigureAwait(false);
+                             .ConfigureAwait(false);
             }
             else
             {
                 await context.ReplyAsync(LocalizationGroup.GetText("NoDpsReportUploads", "No DPS-Reports found!"))
-                         .ConfigureAwait(false);
+                             .ConfigureAwait(false);
             }
         }
         else
@@ -176,9 +175,10 @@ public class LogCommandHandler : LocatedServiceBase
     /// </summary>
     /// <param name="embedBuilder">Embed Builder</param>
     /// <param name="uploads">DPS report uploads</param>
+    /// <param name="summarize">Whether to summarize or output all logs</param>
     /// <param name="addSubTitles">Whether sub titles should be added</param>
-    /// <returns>A Task representing the async operation</returns>
-    private async Task AddReports(DpsReportEmbedBuilder embedBuilder, List<Upload> uploads, bool addSubTitles)
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    private async Task AddReports(DpsReportEmbedBuilder embedBuilder, IEnumerable<Upload> uploads, bool summarize, bool addSubTitles)
     {
         var successIcon = DiscordEmoteService.GetCheckEmote(_client).ToString();
         var failureIcon = DiscordEmoteService.GetCrossEmote(_client).ToString();
@@ -206,51 +206,59 @@ public class LogCommandHandler : LocatedServiceBase
 
                     foreach (var boss in bossGroup.GroupBy(obj => obj.Encounter.IsChallengeMode).OrderBy(obj => obj.Key))
                     {
+                        var hasSuccessTry = summarize && boss.Any(obj => obj.Encounter.Success);
+
+                        // Start a new field, when we don't have enough space for some logs
                         if (reports.Length > 896)
                         {
                             embedBuilder.AddReportGroup(group.Key, reports.ToString());
                             reports = new StringBuilder();
                         }
 
-                        var tries = boss.Count();
-                        var title = isFractal || !boss.Key
-                            ? $"{bossIcon} {bossGroup.Key.Boss} ({(tries > 1 ? $"{tries} tries" : "First Try")})"
-                            : $" └ CM ({(tries > 1 ? $"{tries} tries" : "First Try")})";
+                        // Build a fancy title
+                        var tryCount = boss.Count();
+                        var tries = $"({(tryCount > 1 ? LocalizationGroup.GetFormattedText("DpsReportTries", "{0} tries", tryCount) : LocalizationGroup.GetText("DpsReportFirstTry", "First Try"))})";
 
-                        if (hasChallengeTries && !hasNormalTries)
-                        {
-                            title = $"{bossIcon} {bossGroup.Key.Boss}\n{title}";
-                        }
+                        var title = isFractal || !boss.Key
+                            ? $"{bossIcon} {bossGroup.Key.Boss} {tries}"
+                            : $" └ CM {tries}";
 
                         reports.AppendLine(title);
 
-                        foreach (var upload in boss)
+                        // Enrich the logs with the remaining health
+                        var fullLogs = await LoadRemainingHealths(boss, (Upload upload) => summarize && hasSuccessTry && !upload.Encounter.Success).ConfigureAwait(false);
+
+                        // Optionally filter the logs
+                        IEnumerable<Tuple<Upload, double?>> filteredLogs = fullLogs.Count > 0 && summarize && !hasSuccessTry
+                            ? fullLogs.OrderBy(obj => obj.Item2).Take(3).OrderByDescending(obj => obj.Item2)
+                            : fullLogs;
+
+                        foreach (var upload in filteredLogs)
                         {
-                            var duration = string.Empty;
+                            var duration = TimeSpan.FromSeconds(upload.Item1.Encounter.Duration).ToString(@"mm\:ss");
                             var percentage = string.Empty;
 
-                            if (upload.Encounter.JsonAvailable)
+                            if (upload.Item2 != null)
                             {
-                                var log = await _dpsReportConnector.GetLog(upload.Id).ConfigureAwait(false);
-                                duration = $"{log.Duration?.ToString(@"mm\:ss")}";
-
-                                if (!upload.Encounter.Success)
-                                {
-                                    var remainingHealth = log.RemainingTotalHealth;
-
-                                    if (remainingHealth != null)
-                                    {
-                                        percentage = $" {Math.Floor(remainingHealth.Value)}% {(!string.IsNullOrEmpty(duration) ? "-" : string.Empty)}";
-                                    }
-                                }
+                                percentage = $" {Math.Floor(upload.Item2.Value)}% -";
                             }
 
-                            var line = $"{(hasChallengeTries ? " " : String.Empty)} └ {(upload.Encounter.Success ? successIcon : failureIcon)}{percentage} {Format.Url($"{duration} ⧉", upload.Permalink)}";
+                            var line = $"{(hasChallengeTries ? " " : String.Empty)} └ {(upload.Item1.Encounter.Success ? successIcon : failureIcon)}{percentage} {Format.Url($"{duration} ⧉", upload.Item1.Permalink)}";
 
+                            // Start a new field, when we would reach the character limit
                             if (reports.Length + line.Length > 1024)
                             {
                                 embedBuilder.AddReportGroup(group.Key, reports.ToString());
                                 reports = new StringBuilder();
+
+                                if (boss.Key || !hasNormalTries)
+                                {
+                                    reports.Append(bossIcon);
+                                    reports.Append(' ');
+                                    reports.Append(bossGroup.Key.Boss);
+                                    reports.AppendLine();
+                                }
+
                                 reports.AppendLine(title);
                             }
 
@@ -262,6 +270,45 @@ public class LogCommandHandler : LocatedServiceBase
                 embedBuilder.AddReportGroup(group.Key, reports.ToString());
             }
         }
+    }
+
+    /// <summary>
+    /// Loads remaining healths in parallel for given uploads
+    /// </summary>
+    /// <param name="uploads">The uploads to get the logs for</param>
+    /// <param name="shouldSkip">A function to detemine whether a upload should be skipped</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public async Task<List<Tuple<Upload, double?>>> LoadRemainingHealths(IEnumerable<Upload> uploads, Func<Upload, bool> shouldSkip)
+    {
+        var logs = new Dictionary<string, Task<Log>>();
+
+        foreach (var upload in uploads)
+        {
+            if (!shouldSkip(upload) && !upload.Encounter.Success && upload.Encounter.JsonAvailable)
+            {
+                logs.Add(upload.Id, _dpsReportConnector.GetLog(upload.Id));
+            }
+        }
+
+        var result = new List<Tuple<Upload, double?>>();
+
+        foreach (var upload in uploads)
+        {
+            if (!shouldSkip(upload))
+            {
+                if (!upload.Encounter.Success && upload.Encounter.JsonAvailable)
+                {
+                    var log = await logs[upload.Id].ConfigureAwait(false);
+                    result.Add(new Tuple<Upload, double?>(upload, log.RemainingTotalHealth));
+                }
+                else
+                {
+                    result.Add(new Tuple<Upload, double?>(upload, null));
+                }
+            }
+        }
+
+        return result;
     }
 
     #endregion // Methods

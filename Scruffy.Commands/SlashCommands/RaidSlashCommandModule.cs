@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using Discord.Interactions;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -72,7 +72,7 @@ public class RaidSlashCommandModule : SlashCommandModuleBase
         await Context.DeferAsync()
                      .ConfigureAwait(false);
 
-        await LogCommandHandler.Logs(Context, DpsReportType.Raid, day)
+        await LogCommandHandler.Logs(Context, DpsReportType.Raid, day, true)
                             .ConfigureAwait(false);
     }
 

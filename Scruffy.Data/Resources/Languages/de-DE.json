@@ -645,6 +645,8 @@
       },
       "LogCommandHandler": {
           "DpsReportTitle": "Deine Reports vom {0}",
+          "DpsReportFirstTry": "Erster Versuch",
+          "DpsReportTries": "{0} Versuche",
           "NoDpsReportUploads": "Keine DPS-Reports gefunden!",
           "NoDpsReportToken": "Deinem Account sind keine DPS-Report-User-Tokens zugeordnet."
       },
