@@ -1,4 +1,4 @@
-using Discord.Interactions;
+﻿using Discord.Interactions;
 
 using Scruffy.Data.Enumerations.DpsReport;
 using Scruffy.Services.Discord;
@@ -30,7 +30,7 @@ public class LogSlashCommandModule : SlashCommandModuleBase
     /// <param name="day">Day</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("all", "Shows all fractal/strike/raid logs of a given day")]
-    public async Task FullLogs([Summary("type", "Which type of logs should be used?")] DpsReportType type = DpsReportType.All, [Summary("day", "Day of the logs (yyyy-MM-dd)")] string day = null)
+    public async Task FullLogs([Summary("type", "Which type of logs should be used?")] DpsReportType type = DpsReportType.All, [Summary("day", "Day of the logs (dd.MM)")] string day = null)
     {
         await Context.DeferAsync()
                      .ConfigureAwait(false);
@@ -46,7 +46,7 @@ public class LogSlashCommandModule : SlashCommandModuleBase
     /// <param name="day">Day</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("summary", "Shows the best fractal/strike/raid logs of a given day")]
-    public async Task SummarizeLogs([Summary("type", "Which type of logs should be used?")] DpsReportType type = DpsReportType.All, [Summary("day", "Day of the logs (yyyy-MM-dd)")] string day = null)
+    public async Task SummarizeLogs([Summary("type", "Which type of logs should be used?")] DpsReportType type = DpsReportType.All, [Summary("day", "Day of the logs (dd.MM)")] string day = null)
     {
         await Context.DeferAsync()
                      .ConfigureAwait(false);

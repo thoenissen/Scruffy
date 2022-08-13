@@ -1,4 +1,4 @@
-using Discord;
+﻿using Discord;
 using Discord.Interactions;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -67,7 +67,7 @@ public class RaidSlashCommandModule : SlashCommandModuleBase
     /// <param name="day">Day</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("logs", "Creates a listing of all logs of the given day")]
-    public async Task Logs([Summary("day", "Day of the logs (yyyy-MM-dd)")]string day = null)
+    public async Task Logs([Summary("day", "Day of the logs (dd.MM)")]string day = null)
     {
         await Context.DeferAsync()
                      .ConfigureAwait(false);

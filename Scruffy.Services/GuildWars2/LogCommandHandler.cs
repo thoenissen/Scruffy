@@ -61,6 +61,11 @@ public class LogCommandHandler : LocatedServiceBase
     #region Fields
 
     /// <summary>
+    /// Formats for parsing an input date
+    /// </summary>
+    private static readonly string[] _dateFormats = { "dd.MM", "dd.MM.yyyy", "MM-dd", "yyyy-MM-dd" };
+
+    /// <summary>
     /// Discord socket client
     /// </summary>
     private readonly DiscordSocketClient _client;
@@ -121,7 +126,7 @@ public class LogCommandHandler : LocatedServiceBase
         var userName = pairs.Select(obj => obj.Name).Distinct().FirstOrDefault();
 
         if (string.IsNullOrWhiteSpace(dayString)
-            || DateOnly.TryParseExact(dayString, "yyyy-MM-dd", null, DateTimeStyles.None, out var day) == false)
+            || DateOnly.TryParseExact(dayString, _dateFormats, null, DateTimeStyles.None, out var day) == false)
         {
             day = DateOnly.FromDateTime(DateTime.UtcNow);
         }
