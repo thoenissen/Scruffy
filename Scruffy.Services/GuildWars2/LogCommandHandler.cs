@@ -180,6 +180,9 @@ public class LogCommandHandler : LocatedServiceBase
     /// <returns>A Task representing the async operation</returns>
     private async Task AddReports(DpsReportEmbedBuilder embedBuilder, List<Upload> uploads, bool addSubTitles)
     {
+        var successIcon = DiscordEmoteService.GetCheckEmote(_client).ToString();
+        var failureIcon = DiscordEmoteService.GetCrossEmote(_client).ToString();
+
         foreach (var typeGroup in uploads.OrderBy(obj => _dpsReportConnector.GetSortValue(obj.Encounter.BossId))
                                         .ThenBy(obj => obj.EncounterTime)
                                         .GroupBy(obj => _dpsReportConnector.GetReportGroup(obj.Encounter.BossId).GetReportType()))
@@ -196,11 +199,14 @@ public class LogCommandHandler : LocatedServiceBase
 
                 foreach (var bossGroup in group.GroupBy(obj => new { obj.Encounter.BossId, obj.Encounter.Boss }))
                 {
+                    var bossIcon = DiscordEmoteService.GetGuildEmote(_client, _dpsReportConnector.GetRaidBossIconId(bossGroup.Key.BossId)).ToString();
+
+                    var hasNormalTries = isFractal || bossGroup.Any(obj => !obj.Encounter.IsChallengeMode);
                     var hasChallengeTries = !isFractal && bossGroup.Any(obj => obj.Encounter.IsChallengeMode);
 
                     foreach (var boss in bossGroup.GroupBy(obj => obj.Encounter.IsChallengeMode).OrderBy(obj => obj.Key))
                     {
-                        if (reports.Length > 900)
+                        if (reports.Length > 896)
                         {
                             embedBuilder.AddReportGroup(group.Key, reports.ToString());
                             reports = new StringBuilder();
@@ -208,20 +214,25 @@ public class LogCommandHandler : LocatedServiceBase
 
                         var tries = boss.Count();
                         var title = isFractal || !boss.Key
-                            ? $"{DiscordEmoteService.GetGuildEmote(_client, _dpsReportConnector.GetRaidBossIconId(bossGroup.Key.BossId))} {bossGroup.Key.Boss} ({(tries > 1 ? $"{tries} tries" : "First Try")})"
+                            ? $"{bossIcon} {bossGroup.Key.Boss} ({(tries > 1 ? $"{tries} tries" : "First Try")})"
                             : $" └ CM ({(tries > 1 ? $"{tries} tries" : "First Try")})";
+
+                        if (hasChallengeTries && !hasNormalTries)
+                        {
+                            title = $"{bossIcon} {bossGroup.Key.Boss}\n{title}";
+                        }
 
                         reports.AppendLine(title);
 
                         foreach (var upload in boss)
                         {
                             var duration = string.Empty;
-                            var result = upload.Encounter.Success ? "Success!" : "Failure";
+                            var percentage = string.Empty;
 
                             if (upload.Encounter.JsonAvailable)
                             {
                                 var log = await _dpsReportConnector.GetLog(upload.Id).ConfigureAwait(false);
-                                duration = $"{log.Duration?.ToString(@"mm\:ss")} - ";
+                                duration = $"{log.Duration?.ToString(@"mm\:ss")}";
 
                                 if (!upload.Encounter.Success)
                                 {
@@ -229,14 +240,14 @@ public class LogCommandHandler : LocatedServiceBase
 
                                     if (remainingHealth != null)
                                     {
-                                        result = $"{Math.Floor(remainingHealth.Value)}%";
+                                        percentage = $" {Math.Floor(remainingHealth.Value)}% {(!string.IsNullOrEmpty(duration) ? "-" : string.Empty)}";
                                     }
                                 }
                             }
 
-                            var line = $"{(hasChallengeTries ? " " : String.Empty)} └ {Format.Url($"{duration}{result}", upload.Permalink)}";
+                            var line = $"{(hasChallengeTries ? " " : String.Empty)} └ {(upload.Encounter.Success ? successIcon : failureIcon)}{percentage} {Format.Url($"{duration} ⧉", upload.Permalink)}";
 
-                            if (reports.Length + line.Length > 1000)
+                            if (reports.Length + line.Length > 1024)
                             {
                                 embedBuilder.AddReportGroup(group.Key, reports.ToString());
                                 reports = new StringBuilder();

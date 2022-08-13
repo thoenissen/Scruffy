@@ -55,9 +55,19 @@ public class Log
 
             foreach (var target in Targets)
             {
-                if (!target.IsFake)
+                // Ignore fake targets & CC targets in Aetherblade Hideout & Hearts in Dragonvoid
+
+                if (!target.IsFake && !target.EnemyPlayer && target.Id != 23656 && target.Id != -23)
                 {
                     remainingHealth += 100.0 - target.HealthPercentBurned;
+
+                    // The last 10% of Captain Mai Trin never gets removed
+
+                    if (target.Id == 24033 && remainingHealth < 10.0)
+                    {
+                        remainingHealth = 0;
+                    }
+
                     ++validTargets;
                 }
             }
