@@ -107,34 +107,55 @@ namespace Scruffy.Services.Raid
         /// Returns description
         /// </summary>
         /// <param name="raidRole">Raid role</param>
+        /// <param name="isFillWithSpace">Append filler emoji to align the roles</param>
         /// <returns>Description</returns>
-        public string GetDescriptionAsEmoji(RaidRoleEntity raidRole)
+        public string GetDescriptionAsEmoji(RaidRoleEntity raidRole, bool isFillWithSpace = false)
         {
             var description = string.Empty;
+
+            var count = 0;
 
             if (raidRole.IsTank)
             {
                 description = DiscordEmoteService.GetTankEmote(_discordClient).ToString();
+
+                ++count;
             }
 
             if (raidRole.IsProvidingAlacrity)
             {
                 description += DiscordEmoteService.GetAlacrityEmote(_discordClient).ToString();
+
+                ++count;
             }
 
             if (raidRole.IsProvidingQuickness)
             {
                 description += DiscordEmoteService.GetQuicknessEmote(_discordClient).ToString();
+
+                ++count;
             }
 
             if (raidRole.IsHealer)
             {
                 description += DiscordEmoteService.GetHealerEmote(_discordClient).ToString();
+
+                ++count;
             }
 
             if (raidRole.IsDamageDealer)
             {
                 description += DiscordEmoteService.GetDamageDealerEmote(_discordClient).ToString();
+
+                ++count;
+            }
+
+            if (isFillWithSpace)
+            {
+                for (; count < 3; count++)
+                {
+                    description = DiscordEmoteService.GetEmptyEmote(_discordClient) + description;
+                }
             }
 
             return description;

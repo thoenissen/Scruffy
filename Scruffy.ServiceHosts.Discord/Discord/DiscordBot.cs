@@ -128,6 +128,7 @@ public sealed class DiscordBot : IAsyncDisposable
         _serviceProviderContainer.Initialize(obj =>
                                              {
                                                  obj.AddSingleton(_discordClient);
+                                                 obj.AddSingleton<IDiscordClient>(_discordClient);
                                                  obj.AddSingleton(_interaction);
                                              });
 

@@ -90,7 +90,7 @@ public class LocalizationGroup
     /// <returns>The determined text</returns>
     public string GetFormattedText(string key, string fallback, params object[] args)
     {
-        return string.Format(GetText(key, fallback), args);
+        return string.Format(CultureInfo, GetText(key, fallback), args);
     }
 
     #endregion // Methods

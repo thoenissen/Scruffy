@@ -1,6 +1,7 @@
 using System.Data;
 
 using Discord;
+using Discord.WebSocket;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -19,7 +20,6 @@ using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Interfaces;
 using Scruffy.Services.Raid.DialogElements;
 using Scruffy.Services.Raid.DialogElements.Forms;
-using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.Raid;
 
@@ -75,6 +75,11 @@ public class RaidCommandHandler : LocatedServiceBase
     /// </summary>
     private readonly LocalizationService _localizationService;
 
+    /// <summary>
+    /// Raid line up service
+    /// </summary>
+    private readonly RaidLineUpService _lineUpService;
+
     #endregion // Fields
 
     #region Constructor
@@ -91,6 +96,7 @@ public class RaidCommandHandler : LocatedServiceBase
     /// <param name="experienceLevelsService">Experience levels service</param>
     /// <param name="userManagementService">User management service</param>
     /// <param name="rolesService">Roles Service connector</param>
+    /// <param name="lineUpService">Line up service</param>
     public RaidCommandHandler(LocalizationService localizationService,
                               RaidMessageBuilder messageBuilder,
                               RaidCommitService commitService,
@@ -99,7 +105,8 @@ public class RaidCommandHandler : LocatedServiceBase
                               RaidOverviewService overviewService,
                               RaidExperienceLevelsService experienceLevelsService,
                               UserManagementService userManagementService,
-                              RaidRolesService rolesService)
+                              RaidRolesService rolesService,
+                              RaidLineUpService lineUpService)
         : base(localizationService)
     {
         _localizationService = localizationService;
@@ -111,6 +118,7 @@ public class RaidCommandHandler : LocatedServiceBase
         _experienceLevelsService = experienceLevelsService;
         _userManagementService = userManagementService;
         _raidRolesService = rolesService;
+        _lineUpService = lineUpService;
     }
 
     #endregion // Constructor
@@ -890,6 +898,46 @@ public class RaidCommandHandler : LocatedServiceBase
             }
             await dialogHandler.DeleteMessages()
                                .ConfigureAwait(false);
+        }
+    }
+
+    /// <summary>
+    /// Post current line up
+    /// </summary>
+    /// <param name="context">Command context</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task PostCurrentLineUp(InteractionContextContainer context)
+    {
+        var success = false;
+
+        var message = await context.DeferProcessing()
+                                   .ConfigureAwait(false);
+
+        using (var dbFactory = RepositoryFactory.CreateInstance())
+        {
+            var appointmentId = dbFactory.GetRepository<RaidAppointmentRepository>()
+                                         .GetQuery()
+                                         .Where(obj => obj.IsCommitted == false)
+                                         .OrderBy(obj => obj.TimeStamp)
+                                         .Select(obj => obj.Id)
+                                         .FirstOrDefault();
+
+            if (appointmentId > 0)
+            {
+                success = await _lineUpService.PostLineUp(appointmentId)
+                                              .ConfigureAwait(false);
+            }
+        }
+
+        if (success)
+        {
+            await message.DeleteAsync()
+                         .ConfigureAwait(false);
+        }
+        else
+        {
+            await context.ReplyAsync(LocalizationGroup.GetText("NoLineUpFound", "Current there is no line up to post."))
+                         .ConfigureAwait(false);
         }
     }
 

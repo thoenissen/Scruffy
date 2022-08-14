@@ -38,9 +38,17 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
     /// </summary>
     public enum OverviewType
     {
+        [ChoiceDisplay("Participation")]
         Participation,
+
+        [ChoiceDisplay("Levels")]
         Levels,
-        Logs
+
+        [ChoiceDisplay("Logs")]
+        Logs,
+
+        [ChoiceDisplay("Current line up")]
+        CurrentLineUp,
     }
 
     #endregion // Enumerations
@@ -196,6 +204,12 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
                 {
                     await LogCommandHandler.PostGuildRaidSummary(Context)
                                            .ConfigureAwait(false);
+                }
+                break;
+            case OverviewType.CurrentLineUp:
+                {
+                    await CommandHandler.PostCurrentLineUp(Context)
+                                        .ConfigureAwait(false);
                 }
                 break;
             default:

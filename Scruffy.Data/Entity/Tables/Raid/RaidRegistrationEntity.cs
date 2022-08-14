@@ -77,7 +77,7 @@ public class RaidRegistrationEntity
     /// Line up role
     /// </summary>
     [ForeignKey(nameof(LineUpRoleId))]
-    public virtual RaidRoleEntity RaidRoleEntity { get; set; }
+    public virtual RaidRoleEntity LineUpRole { get; set; }
 
     /// <summary>
     /// Registrations
