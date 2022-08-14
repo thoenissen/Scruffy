@@ -83,6 +83,13 @@ public class RaidSlashCommandModule : SlashCommandModuleBase
     [SlashCommand("guides", "Show raid guides")]
     public Task Guides() => CommandHandler.Guides(Context);
 
+    /// <summary>
+    /// Configure your Raid Ready Roles
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [SlashCommand("roles", "Manage your Raid-Ready Roles")]
+    public Task Roles() => CommandHandler.Roles(Context);
+
     #endregion // Commands
 
     #region SlashCommandModuleBase
