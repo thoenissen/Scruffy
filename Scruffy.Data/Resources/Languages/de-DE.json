@@ -645,8 +645,12 @@
       },
       "LogCommandHandler": {
           "DpsReportTitle": "Deine Reports vom {0}",
-          "DpsReportFirstTry": "Erster Versuch",
-          "DpsReportTries": "{0} Versuche",
+          "DpsReportGuildRaidSummaryTitle": "Gilden-Raid Zusammenfassung ({0})",
+          "DpsReportGuildRaidStatsTitle": "Gilden-Raid Statistiken ({0})",
+          "DpsReportPlayerGroup": "Gruppe {0}",
+          "DpsReportPlayerGroupStats": "Statistiken",
+          "DpsReportEncounterStat": "{0} Gefechte",
+          "DpsReportFightDurationStat": "{0} in {1} Kämpfen",
           "NoDpsReportUploads": "Keine DPS-Reports gefunden!",
           "NoDpsReportToken": "Deinem Account sind keine DPS-Report-User-Tokens zugeordnet."
       },

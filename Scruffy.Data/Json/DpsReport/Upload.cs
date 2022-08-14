@@ -1,4 +1,5 @@
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Scruffy.Data.Json.DpsReport;
 
@@ -23,13 +24,15 @@ public class Upload
     /// Upload time
     /// </summary>
     [JsonProperty("uploadTime")]
-    public int UploadTime { get; set; }
+    [JsonConverter(typeof(UnixDateTimeConverter))]
+    public DateTime UploadTime { get; set; }
 
     /// <summary>
     /// Encounter time
     /// </summary>
     [JsonProperty("encounterTime")]
-    public int EncounterTime { get; set; }
+    [JsonConverter(typeof(UnixDateTimeConverter))]
+    public DateTime EncounterTime { get; set; }
 
 #nullable enable
     /// <summary>
@@ -62,4 +65,31 @@ public class Upload
     /// </summary>
     [JsonProperty("report")]
     public Report Report { get; set; }
+
+    /// <summary>
+    /// HashSet of all player's unique names
+    /// </summary>
+    public HashSet<string> Group => Players.Select(obj => obj.Value.DisplayName).Distinct().ToHashSet();
+
+    /// <inheritdoc/>
+    public override bool Equals(object otherObj)
+    {
+        if (otherObj is Upload other)
+        {
+            if (Encounter.BossId == other.Encounter.BossId && Math.Abs((EncounterTime - other.EncounterTime).TotalSeconds) < 5.0)
+            {
+                var group = Group;
+                group.ExceptWith(other.Group);
+                return !group.Any();
+            }
+        }
+
+        return false;
+    }
+
+    /// <inheritdoc/>
+    public override int GetHashCode()
+    {
+        return Encounter.BossId.GetHashCode();
+    }
 }

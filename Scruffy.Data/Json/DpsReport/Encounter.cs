@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
 
+using Scruffy.Data.Converter;
+
 namespace Scruffy.Data.Json.DpsReport;
 
 /// <summary>
@@ -23,7 +25,8 @@ public class Encounter
     /// Duration
     /// </summary>
     [JsonProperty("duration")]
-    public double Duration { get; set; }
+    [JsonConverter(typeof(SecondsTimeSpanConverter))]
+    public TimeSpan Duration { get; set; }
 
     /// <summary>
     /// Computed overall DPS of the group.
