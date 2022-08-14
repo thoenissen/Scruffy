@@ -224,11 +224,12 @@ public class LogCommandHandler : LocatedServiceBase
 
             if (uploads.Count > 0)
             {
+                var successIcon = DiscordEmoteService.GetCheckEmote(_client).ToString();
                 var embedBuilder = new DpsReportEmbedBuilder();
 
                 embedBuilder.WithColor(Color.Green)
                             .WithAuthor($"{context.User.Username} - {account.Name}", context.User.GetAvatarUrl())
-                            .WithTitle(LocalizationGroup.GetFormattedText("DpsReportHistory", "Your last {0} successful {1} tries.", count, group.AsText()));
+                            .WithTitle(LocalizationGroup.GetFormattedText("DpsReportHistory", "Your last {0} {1} {2} tries", count, successIcon, group.AsText()));
 
                 foreach (var bossGroup in uploads.OrderBy(obj => _dpsReportConnector.GetSortValue(obj.Encounter.BossId))
                                         .ThenBy(obj => obj.EncounterTime)
