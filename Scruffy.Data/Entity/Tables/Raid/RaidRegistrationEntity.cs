@@ -43,6 +43,16 @@ public class RaidRegistrationEntity
     /// </summary>
     public long? LineupExperienceLevelId { get; set; }
 
+    /// <summary>
+    /// Group number
+    /// </summary>
+    public int Group { get; set; }
+
+    /// <summary>
+    /// Line up role id
+    /// </summary>
+    public long? LineUpRoleId { get; set; }
+
     #region Navigation properties
 
     /// <summary>
@@ -62,6 +72,12 @@ public class RaidRegistrationEntity
     /// </summary>
     [ForeignKey(nameof(LineupExperienceLevelId))]
     public virtual RaidExperienceLevelEntity LineupExperienceLevel { get; set; }
+
+    /// <summary>
+    /// Line up role
+    /// </summary>
+    [ForeignKey(nameof(LineUpRoleId))]
+    public virtual RaidRoleEntity RaidRoleEntity { get; set; }
 
     /// <summary>
     /// Registrations
