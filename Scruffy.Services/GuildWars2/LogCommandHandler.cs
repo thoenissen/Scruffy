@@ -110,7 +110,7 @@ public class LogCommandHandler : LocatedServiceBase
     #region Methods
 
     /// <summary>
-    /// Prints the logs of the given type + day
+    /// Posts the logs of the given type + day
     /// </summary>
     /// <param name="context">Command context</param>
     /// <param name="type">Type</param>
@@ -119,14 +119,11 @@ public class LogCommandHandler : LocatedServiceBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task PostLogs(IContextContainer context, DpsReportType type, string dayString, bool summarize)
     {
-        var pairs = _repositoryFactory.GetRepository<DiscordAccountRepository>()
-                                            .GetQuery()
-                                            .Where(obj => obj.Id == context.User.Id)
-                                            .Select(obj => new { obj.User.GuildWarsAccounts.FirstOrDefault().Name, obj.User.DpsReportUserToken })
-                                            .ToList();
-
-        var tokens = pairs.Select(obj => obj.DpsReportUserToken).Distinct().ToList();
-        var userName = pairs.Select(obj => obj.Name).Distinct().FirstOrDefault();
+        var account = _repositoryFactory.GetRepository<DiscordAccountRepository>()
+                                        .GetQuery()
+                                        .Where(obj => obj.Id == context.User.Id)
+                                        .Select(obj => new { obj.User.GuildWarsAccounts.FirstOrDefault().Name, obj.User.DpsReportUserToken })
+                                        .FirstOrDefault();
 
         if (string.IsNullOrWhiteSpace(dayString)
             || DateOnly.TryParseExact(dayString, _dateFormats, null, DateTimeStyles.None, out var day) == false)
@@ -134,7 +131,7 @@ public class LogCommandHandler : LocatedServiceBase
             day = DateOnly.FromDateTime(DateTime.UtcNow);
         }
 
-        if (tokens.Count > 0)
+        if (!string.IsNullOrEmpty(account.DpsReportUserToken))
         {
             var uploads = await _dpsReportConnector.GetUploads(
                 filter: (Upload upload) =>
@@ -147,7 +144,7 @@ public class LogCommandHandler : LocatedServiceBase
                     var uploadDay = DateOnly.FromDateTime(upload.UploadTime);
                     return uploadDay < day;
                 },
-                tokens.ToArray()
+                account.DpsReportUserToken
             ).ConfigureAwait(false);
 
             if (uploads.Count > 0)
@@ -155,7 +152,7 @@ public class LogCommandHandler : LocatedServiceBase
                 var embedBuilder = new DpsReportEmbedBuilder();
 
                 embedBuilder.WithColor(Color.Green)
-                            .WithAuthor($"{context.User.Username} - {userName}", context.User.GetAvatarUrl())
+                            .WithAuthor($"{context.User.Username} - {account.Name}", context.User.GetAvatarUrl())
                             .WithTitle(LocalizationGroup.GetFormattedText("DpsReportTitle", "Your reports from {0}", day.ToString("d", LocalizationGroup.CultureInfo)));
 
                 await AddReports(embedBuilder, uploads, summarize, type == DpsReportType.All, false).ConfigureAwait(false);
@@ -354,7 +351,7 @@ public class LogCommandHandler : LocatedServiceBase
                             title.Append(" └ CM");
                         }
 
-                        if (!hasMultipleGroups)
+                        if (summarize && !hasMultipleGroups)
                         {
                             var fails = GetFailsText(boss);
 
@@ -382,13 +379,16 @@ public class LogCommandHandler : LocatedServiceBase
                                 reports.Append(" └ ");
                                 reports.Append(LocalizationGroup.GetFormattedText("DpsReportPlayerGroup", "Group {0}", groupUploads.Key.ID));
 
-                                var fails = GetFailsText(groupUploads.Value);
-
-                                if (!string.IsNullOrEmpty(fails))
+                                if (summarize)
                                 {
-                                    reports.AppendLine();
-                                    reports.Append(' ');
-                                    reports.Append(fails);
+                                    var fails = GetFailsText(groupUploads.Value);
+
+                                    if (!string.IsNullOrEmpty(fails))
+                                    {
+                                        reports.AppendLine();
+                                        reports.Append(' ');
+                                        reports.Append(fails);
+                                    }
                                 }
 
                                 reports.AppendLine();
