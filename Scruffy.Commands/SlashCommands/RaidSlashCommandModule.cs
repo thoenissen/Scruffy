@@ -72,7 +72,7 @@ public class RaidSlashCommandModule : SlashCommandModuleBase
         await Context.DeferAsync()
                      .ConfigureAwait(false);
 
-        await LogCommandHandler.Logs(Context, DpsReportType.Raid, day, true)
+        await LogCommandHandler.PostLogs(Context, DpsReportType.Raid, day, true)
                             .ConfigureAwait(false);
     }
 

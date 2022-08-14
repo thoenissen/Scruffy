@@ -1,4 +1,4 @@
-﻿using Discord.Interactions;
+using Discord.Interactions;
 
 using Scruffy.Data.Enumerations.DpsReport;
 using Scruffy.Services.Discord;
@@ -35,7 +35,7 @@ public class LogSlashCommandModule : SlashCommandModuleBase
         await Context.DeferAsync()
                      .ConfigureAwait(false);
 
-        await CommandHandler.Logs(Context, type, day, false)
+        await CommandHandler.PostLogs(Context, type, day, false)
                             .ConfigureAwait(false);
     }
 
@@ -51,7 +51,7 @@ public class LogSlashCommandModule : SlashCommandModuleBase
         await Context.DeferAsync()
                      .ConfigureAwait(false);
 
-        await CommandHandler.Logs(Context, type, day, true)
+        await CommandHandler.PostLogs(Context, type, day, true)
                             .ConfigureAwait(false);
     }
 

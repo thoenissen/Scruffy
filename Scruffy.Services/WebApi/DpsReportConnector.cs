@@ -78,12 +78,13 @@ public class DpsReportConnector
                 currentPage++;
                 page = await GetUploads(token, currentPage).ConfigureAwait(false);
 
-                if (page != null)
+                if (page != null && page.Uploads != null)
                 {
                     foreach (var upload in page.Uploads)
                     {
                         if (shouldAbort(upload))
                         {
+                            currentPage = page.Pages;
                             break;
                         }
 
@@ -94,7 +95,7 @@ public class DpsReportConnector
                     }
                 }
             }
-            while (page != null && currentPage < page.Pages);
+            while (page != null && page.Uploads != null && currentPage < page.Pages);
         }
 
         return uploads;
@@ -191,6 +192,7 @@ public class DpsReportConnector
                 return DpsReportGroup.SalvationPass;
             case 16253:
             case 16235:
+            case 16247:
             case 16246:
                 return DpsReportGroup.StrongholdOfTheFaithful;
             case 17194:
@@ -269,7 +271,6 @@ public class DpsReportConnector
             case 15429:
             case 16088:
             case 16235:
-            case 16246:
             case 17172:
             case 17188:
             case 19828:
@@ -284,6 +285,7 @@ public class DpsReportConnector
             case 16178:
             case 15375:
             case 16137:
+            case 16247:
             case 17154:
             case 19691:
             case 37464:
@@ -292,6 +294,7 @@ public class DpsReportConnector
                 break;
             case 16198:
             case 16125:
+            case 16246:
             case 19536:
             case 21105:
                 bossSortValue = 4;

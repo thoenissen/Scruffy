@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace Scruffy.Data.Json.DpsReport;
 
@@ -31,17 +31,19 @@ public class Upload
     [JsonProperty("encounterTime")]
     public int EncounterTime { get; set; }
 
+#nullable enable
     /// <summary>
     /// Language
     /// </summary>
     [JsonProperty("language")]
-    public string Language { get; set; }
+    public string? Language { get; set; }
 
     /// <summary>
     /// Language id
     /// </summary>
     [JsonProperty("languageId")]
-    public int LanguageId { get; set; }
+    public int? LanguageId { get; set; }
+#nullable disable
 
     /// <summary>
     /// Players

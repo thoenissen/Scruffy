@@ -16,7 +16,7 @@ using Scruffy.Services.WebApi;
 namespace Scruffy.Services.GuildWars2;
 
 /// <summary>
-/// Embed Builder Extensions for DPS-Reports
+/// Embed Builder extension for DPS reports
 /// </summary>
 public class DpsReportEmbedBuilder : EmbedBuilder
 {
@@ -107,14 +107,14 @@ public class LogCommandHandler : LocatedServiceBase
     #region Methods
 
     /// <summary>
-    /// Logs of the given day
+    /// Prints the logs of the given type + day
     /// </summary>
-    /// <param name="context">Context</param>
+    /// <param name="context">Command context</param>
     /// <param name="type">Type</param>
     /// <param name="dayString">Day</param>
     /// <param name="summarize">Whether to summarize or output all logs</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task Logs(IContextContainer context, DpsReportType type, string dayString, bool summarize)
+    public async Task PostLogs(IContextContainer context, DpsReportType type, string dayString, bool summarize)
     {
         var pairs = _repositoryFactory.GetRepository<DiscordAccountRepository>()
                                             .GetQuery()
@@ -133,21 +133,19 @@ public class LogCommandHandler : LocatedServiceBase
 
         if (tokens.Count > 0)
         {
-            var uploads = new List<Upload>();
-
-            uploads.AddRange(await _dpsReportConnector.GetUploads(
-                        filter: (Upload upload) =>
-                        {
-                            var encounterDay = DateOnly.FromDateTime(DateTimeOffset.FromUnixTimeSeconds(upload.EncounterTime).UtcDateTime);
-                            return encounterDay == day && ((type == DpsReportType.All && _dpsReportConnector.GetReportType(upload.Encounter.BossId) != DpsReportType.Other) || type == _dpsReportConnector.GetReportType(upload.Encounter.BossId));
-                        },
-                        shouldAbort: (Upload upload) =>
-                        {
-                            var uploadDay = DateOnly.FromDateTime(DateTimeOffset.FromUnixTimeSeconds(upload.UploadTime).UtcDateTime);
-                            return uploadDay < day;
-                        },
-                        tokens.ToArray()
-                    ).ConfigureAwait(false));
+            var uploads = await _dpsReportConnector.GetUploads(
+                filter: (Upload upload) =>
+                {
+                    var encounterDay = DateOnly.FromDateTime(DateTimeOffset.FromUnixTimeSeconds(upload.EncounterTime).UtcDateTime);
+                    return encounterDay == day && ((type == DpsReportType.All && _dpsReportConnector.GetReportType(upload.Encounter.BossId) != DpsReportType.Other) || type == _dpsReportConnector.GetReportType(upload.Encounter.BossId));
+                },
+                shouldAbort: (Upload upload) =>
+                {
+                    var uploadDay = DateOnly.FromDateTime(DateTimeOffset.FromUnixTimeSeconds(upload.UploadTime).UtcDateTime);
+                    return uploadDay < day;
+                },
+                tokens.ToArray()
+            ).ConfigureAwait(false);
 
             if (uploads.Count > 0)
             {
@@ -283,7 +281,7 @@ public class LogCommandHandler : LocatedServiceBase
     /// <param name="uploads">The uploads to get the logs for</param>
     /// <param name="shouldSkip">A function to detemine whether a upload should be skipped</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task<List<Tuple<Upload, double?>>> LoadRemainingHealths(IEnumerable<Upload> uploads, Func<Upload, bool> shouldSkip)
+    private async Task<List<Tuple<Upload, double?>>> LoadRemainingHealths(IEnumerable<Upload> uploads, Func<Upload, bool> shouldSkip)
     {
         var logs = new Dictionary<string, Task<Log>>();
 
@@ -304,11 +302,11 @@ public class LogCommandHandler : LocatedServiceBase
                 if (!upload.Encounter.Success && upload.Encounter.JsonAvailable)
                 {
                     var log = await logs[upload.Id].ConfigureAwait(false);
-                    result.Add(new Tuple<Upload, double?>(upload, log.RemainingTotalHealth));
+                    result.Add(new(upload, log.RemainingTotalHealth));
                 }
                 else
                 {
-                    result.Add(new Tuple<Upload, double?>(upload, null));
+                    result.Add(new(upload, null));
                 }
             }
         }
