@@ -1,4 +1,6 @@
-﻿using Discord.Rest;
+﻿using System.Data;
+
+using Discord.Rest;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +20,7 @@ namespace Scruffy.ServiceHosts.WebApi.Controllers;
 [ApiController]
 [Route("raid")]
 #if !DEBUG
-[Microsoft.AspNetCore.Authorization.Authorize]
+[Microsoft.AspNetCore.Authorization.Authorize(Roles = "Administrator")]
 #endif
 public class RaidController : ControllerBase
 {
@@ -49,7 +51,9 @@ public class RaidController : ControllerBase
     /// <param name="discordClient">Discord client</param>
     /// <param name="repositoryFactory">Repository factory</param>
     /// <param name="raidRolesService">Raid roles service</param>
-    public RaidController(DiscordRestClient discordClient, RepositoryFactory repositoryFactory, RaidRolesService raidRolesService)
+    public RaidController(DiscordRestClient discordClient,
+                          RepositoryFactory repositoryFactory,
+                          RaidRolesService raidRolesService)
     {
         _discordClient = discordClient;
         _repositoryFactory = repositoryFactory;
@@ -219,6 +223,54 @@ public class RaidController : ControllerBase
         }
 
         return Ok(users);
+    }
+
+    /// <summary>
+    /// Post the line up of the given appointment
+    /// </summary>
+    /// <param name="lineUp">Line up</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [HttpPost]
+    [Route("lineUp")]
+    public async Task<IActionResult> PostLineUp(LineUpDTO lineUp)
+    {
+        var success = true;
+
+        var transaction = _repositoryFactory.BeginTransaction(IsolationLevel.RepeatableRead);
+        await using (transaction.ConfigureAwait(false))
+        {
+            foreach (var group in lineUp.Groups)
+            {
+                foreach (var user in group.Value)
+                {
+                    if (_repositoryFactory.GetRepository<RaidRegistrationRepository>()
+                                      .Refresh(obj => obj.AppointmentId == lineUp.AppointmentId
+                                                      && obj.UserId == user.UserId,
+                                               obj =>
+                                               {
+                                                   obj.Group = group.Key;
+                                                   obj.LineUpRoleId = user.RoleId;
+                                               }) == false)
+                    {
+                        success = false;
+                        break;
+                    }
+                }
+
+                if (success == false)
+                {
+                    break;
+                }
+            }
+
+            if (success)
+            {
+                await transaction.CommitAsync()
+                                 .ConfigureAwait(false);
+            }
+        }
+
+        return success ? Ok() : BadRequest();
     }
 
     #endregion // Methods
