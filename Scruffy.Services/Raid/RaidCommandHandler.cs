@@ -65,6 +65,16 @@ public class RaidCommandHandler : LocatedServiceBase
     /// </summary>
     private readonly UserManagementService _userManagementService;
 
+    /// <summary>
+    /// Raid Roles Service
+    /// </summary>
+    private readonly RaidRolesService _raidRolesService;
+
+    /// <summary>
+    /// LocalizationService
+    /// </summary>
+    private readonly LocalizationService _localizationService;
+
     #endregion // Fields
 
     #region Constructor
@@ -81,6 +91,7 @@ public class RaidCommandHandler : LocatedServiceBase
     /// <param name="experienceLevelsService">Experience levels service</param>
     /// <param name="userManagementService">User management service</param>
     /// <param name="dpsReportConnector">DPS-Report connector</param>
+    /// <param name="rolesService">Roles Service connector</param>
     public RaidCommandHandler(LocalizationService localizationService,
                               RaidMessageBuilder messageBuilder,
                               RaidCommitService commitService,
@@ -89,7 +100,8 @@ public class RaidCommandHandler : LocatedServiceBase
                               RaidOverviewService overviewService,
                               RaidExperienceLevelsService experienceLevelsService,
                               UserManagementService userManagementService,
-                              DpsReportConnector dpsReportConnector)
+                              DpsReportConnector dpsReportConnector,
+                              RaidRolesService rolesService)
         : base(localizationService)
     {
         _messageBuilder = messageBuilder;
@@ -99,6 +111,8 @@ public class RaidCommandHandler : LocatedServiceBase
         _overviewService = overviewService;
         _experienceLevelsService = experienceLevelsService;
         _userManagementService = userManagementService;
+        _raidRolesService = rolesService;
+        _localizationService = localizationService;
     }
 
     #endregion // Constructor
@@ -208,11 +222,11 @@ public class RaidCommandHandler : LocatedServiceBase
                                              .Where(obj => obj.TimeStamp > DateTime.Now
                                                         && obj.RaidDayConfiguration.AliasName == name)
                                              .Select(obj => new
-                                                            {
-                                                                obj.Id,
-                                                                obj.ConfigurationId,
-                                                                obj.Deadline
-                                                            })
+                                             {
+                                                 obj.Id,
+                                                 obj.ConfigurationId,
+                                                 obj.Deadline
+                                             })
                                              .FirstOrDefaultAsync()
                                              .ConfigureAwait(false);
 
@@ -265,11 +279,11 @@ public class RaidCommandHandler : LocatedServiceBase
                                              .Where(obj => obj.TimeStamp > DateTime.Now
                                                         && obj.ConfigurationId == configurationId)
                                              .Select(obj => new
-                                                            {
-                                                                obj.Id,
-                                                                obj.ConfigurationId,
-                                                                obj.Deadline
-                                                            })
+                                             {
+                                                 obj.Id,
+                                                 obj.ConfigurationId,
+                                                 obj.Deadline
+                                             })
                                              .FirstOrDefaultAsync()
                                              .ConfigureAwait(false);
 
@@ -292,10 +306,10 @@ public class RaidCommandHandler : LocatedServiceBase
                             {
                                 dbFactory.GetRepository<RaidRegistrationRoleAssignmentRepository>()
                                          .Add(new RaidRegistrationRoleAssignmentEntity
-                                              {
-                                                  RegistrationId = registrationId.Value,
-                                                  RoleId = roleId
-                                              });
+                                         {
+                                             RegistrationId = registrationId.Value,
+                                             RoleId = roleId
+                                         });
                             }
                         }
                     }
@@ -377,10 +391,10 @@ public class RaidCommandHandler : LocatedServiceBase
                                              .Where(obj => obj.TimeStamp > DateTime.Now
                                                         && obj.RaidDayConfiguration.AliasName == name)
                                              .Select(obj => new
-                                                            {
-                                                                obj.Id,
-                                                                obj.ConfigurationId
-                                                            })
+                                             {
+                                                 obj.Id,
+                                                 obj.ConfigurationId
+                                             })
                                              .FirstOrDefaultAsync()
                                              .ConfigureAwait(false);
 
@@ -782,5 +796,40 @@ public class RaidCommandHandler : LocatedServiceBase
                                       .ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Set Raid Ready Roles
+    /// </summary>
+    /// <param name="context">Command context</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task Roles(IContextContainer context)
+    {
+        var dialogHandler = new DialogHandler(context);
+        await using (dialogHandler.ConfigureAwait(false))
+        {
+            var user = await _userManagementService.GetUserByDiscordAccountId(context.User)
+                                                   .ConfigureAwait(false);
+
+            var userRoles = await dialogHandler.Run<RaidReadyRolesMultiSelectDialogElement, List<long>>(new RaidReadyRolesMultiSelectDialogElement(_localizationService, _raidRolesService, _userManagementService))
+                .ConfigureAwait(false);
+
+            using (var dbFactory = RepositoryFactory.CreateInstance())
+            {
+                dbFactory.GetRepository<RaidUserRoleRepository>()
+                .RemoveRange(obj => obj.UserId == user.Id);
+
+                foreach (var role in userRoles)
+                {
+                    dbFactory.GetRepository<RaidUserRoleRepository>()
+                    .Add(new RaidUserRoleEntity
+                    {
+                        UserId = user.Id,
+                        RoleId = role
+                    });
+                }
+            }
+            await dialogHandler.DeleteMessages()
+                .ConfigureAwait(false);
+        }
+    }
     #endregion // Methods
 }
