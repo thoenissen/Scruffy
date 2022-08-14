@@ -1,4 +1,4 @@
-using Discord.Interactions;
+﻿using Discord.Interactions;
 
 using Scruffy.Data.Enumerations.DpsReport;
 using Scruffy.Services.Discord;
@@ -52,6 +52,22 @@ public class LogSlashCommandModule : SlashCommandModuleBase
                      .ConfigureAwait(false);
 
         await CommandHandler.PostLogs(Context, type, day, true)
+                            .ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// History of last <paramref name="count"/> of <paramref name="type"/> tries
+    /// </summary>
+    /// <param name="type">Type to get the logs for</param>
+    /// <param name="count">Max count logs to search</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [SlashCommand("history", "Shows the last (count) successful tries of (type)")]
+    public async Task LogHistory(DpsReportGroup type, int count = 5)
+    {
+        await Context.DeferAsync()
+                     .ConfigureAwait(false);
+
+        await CommandHandler.PostHistory(Context, type, count)
                             .ConfigureAwait(false);
     }
 

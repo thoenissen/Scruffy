@@ -45,13 +45,23 @@ public class DpsReportEmbedBuilder : EmbedBuilder
     /// <param name="content">The content of the report group</param>
     public void AddReportGroup(DpsReportGroup group, string content)
     {
+        AddReportGroup(group, content);
+    }
+
+    /// <summary>
+    /// Add a group of DPS reports
+    /// </summary>
+    /// <param name="group">The DPS report group</param>
+    /// <param name="content">The content of the report group</param>
+    public void AddReportGroup(string group, string content)
+    {
         if (_reportGroupsInRow > 1)
         {
             AddField("\u200b", "\u200b", false);
             _reportGroupsInRow = 0;
         }
 
-        AddField(group.AsText(), content, true);
+        AddField(group, content, true);
         ++_reportGroupsInRow;
     }
 }
@@ -174,7 +184,87 @@ public class LogCommandHandler : LocatedServiceBase
     }
 
     /// <summary>
-    /// Prints the guild raid summary of the raid appointments in a week
+    /// Posts the last <paramref name="count"/> of <paramref name="group"/> tries
+    /// </summary>
+    /// <param name="context">Command context</param>
+    /// <param name="group">Group to search for</param>
+    /// <param name="count">Max count logs to search</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task PostHistory(IContextContainer context, DpsReportGroup group, int count)
+    {
+        var account = _repositoryFactory.GetRepository<DiscordAccountRepository>()
+                                        .GetQuery()
+                                        .Where(obj => obj.Id == context.User.Id)
+                                        .Select(obj => new { obj.User.GuildWarsAccounts.FirstOrDefault().Name, obj.User.DpsReportUserToken })
+                                        .FirstOrDefault();
+
+        if (!string.IsNullOrEmpty(account.DpsReportUserToken))
+        {
+            var counts = new Dictionary<int, int>();
+
+            var uploads = await _dpsReportConnector.GetUploads(
+                filter: (Upload upload) =>
+                {
+                    if (upload.Encounter.Success && _dpsReportConnector.GetReportGroup(upload.Encounter.BossId) == group)
+                    {
+                        if (!counts.ContainsKey(upload.Encounter.BossId))
+                        {
+                            counts.Add(upload.Encounter.BossId, 0);
+                        }
+
+                        ++counts[upload.Encounter.BossId];
+                        return true;
+                    }
+
+                    return false;
+                },
+                shouldAbort: (Upload upload) => counts.TryGetValue(upload.Encounter.BossId, out var value) && value > count,
+                account.DpsReportUserToken
+            ).ConfigureAwait(false);
+
+            if (uploads.Count > 0)
+            {
+                var embedBuilder = new DpsReportEmbedBuilder();
+
+                embedBuilder.WithColor(Color.Green)
+                            .WithAuthor($"{context.User.Username} - {account.Name}", context.User.GetAvatarUrl())
+                            .WithTitle(LocalizationGroup.GetFormattedText("DpsReportHistory", "Your last {0} successful {1} tries.", count, group.AsText()));
+
+                foreach (var bossGroup in uploads.OrderBy(obj => _dpsReportConnector.GetSortValue(obj.Encounter.BossId))
+                                        .ThenBy(obj => obj.EncounterTime)
+                                        .GroupBy(obj => new { obj.Encounter.BossId, obj.Encounter.Boss }))
+                {
+                    var title = $"{DiscordEmoteService.GetGuildEmote(_client, _dpsReportConnector.GetRaidBossIconId(bossGroup.Key.BossId))} {bossGroup.Key.Boss}";
+                    var reports = new StringBuilder();
+
+                    foreach (var upload in bossGroup.Take(count))
+                    {
+                        reports.Append(" └ ");
+                        reports.Append(Format.Url($"{upload.EncounterTime:dd.MM} - {upload.Encounter.Duration:mm\\:ss} ⧉", upload.Permalink));
+                        reports.AppendLine();
+                    }
+
+                    embedBuilder.AddReportGroup(title, reports.ToString());
+                }
+
+                await context.ReplyAsync(embed: embedBuilder.Build())
+                             .ConfigureAwait(false);
+            }
+            else
+            {
+                await context.ReplyAsync(LocalizationGroup.GetText("NoDpsReportUploads", "No DPS-Reports found!"))
+                             .ConfigureAwait(false);
+            }
+        }
+        else
+        {
+            await context.ReplyAsync(LocalizationGroup.GetText("NoDpsReportToken", "The are no DPS-Report user tokens assigned to your account."))
+                         .ConfigureAwait(false);
+        }
+    }
+
+    /// <summary>
+    /// Posts the guild raid summary of the raid appointments in a week
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>

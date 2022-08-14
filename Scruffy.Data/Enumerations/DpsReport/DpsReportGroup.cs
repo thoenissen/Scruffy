@@ -1,29 +1,45 @@
-﻿namespace Scruffy.Data.Enumerations.DpsReport;
+﻿using Discord.Interactions;
+
+namespace Scruffy.Data.Enumerations.DpsReport;
 
 /// <summary>
 /// DPS report group
 /// </summary>
 public enum DpsReportGroup
 {
+    [Hide]
     Unknown,
 
     // Fractals
+    [ChoiceDisplay("Nightmare (98)")]
     Nightmare,
+    [ChoiceDisplay("Shattered Observatory (99)")]
     ShatteredObservatory,
+    [ChoiceDisplay("Sunqua Peak (100)")]
     SunquaPeak,
 
     // Strikes
+    [ChoiceDisplay("IBS Strikes")]
     IBSStrikes,
+    [ChoiceDisplay("EoD Strikes")]
     EoDStrikes,
 
     // Raids
+    [ChoiceDisplay("Special Forces Training Area")]
     TrainingArea,
+    [ChoiceDisplay("W1 - Spirit Vale")]
     SpritVale,
+    [ChoiceDisplay("W2 - Salvation Pass")]
     SalvationPass,
+    [ChoiceDisplay("W3 - Stronghold of the Faithful")]
     StrongholdOfTheFaithful,
+    [ChoiceDisplay("W4 - Bastion of the Penitent")]
     BastionOfThePenitent,
+    [ChoiceDisplay("W5 - Hall of Chains")]
     HallOfChains,
+    [ChoiceDisplay("W6 - Mythwright Gambit")]
     MythwrightGambit,
+    [ChoiceDisplay("W7 - The Key of Ahdashim")]
     TheKeyOfAhdashim,
 }
 
