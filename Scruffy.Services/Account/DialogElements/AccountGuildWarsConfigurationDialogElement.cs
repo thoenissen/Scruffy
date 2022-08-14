@@ -117,7 +117,7 @@ public class AccountGuildWarsConfigurationDialogElement : DialogEmbedSelectMenuE
                                     {
                                         if (await RunSubElement<AccountWantToDeleteDialogElement, bool>(new AccountWantToDeleteDialogElement(_localizationService, guildWarsAccount)).ConfigureAwait(false))
                                         {
-                                            var userData = await _userManagementService.GetUserByDiscordAccountId(CommandContext.User.Id)
+                                            var userData = await _userManagementService.GetUserByDiscordAccountId(CommandContext.User)
                                                                                        .ConfigureAwait(false);
 
                                             if (_repositoryFactory.GetRepository<GuildWarsAccountDailyLoginCheckRepository>()

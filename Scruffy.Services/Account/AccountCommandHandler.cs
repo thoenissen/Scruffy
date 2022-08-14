@@ -77,7 +77,7 @@ public class AccountCommandHandler : LocatedServiceBase
                          .ConfigureAwait(false);
         }
 
-        var userData = await _userManagementService.GetUserByDiscordAccountId(context.User.Id)
+        var userData = await _userManagementService.GetUserByDiscordAccountId(context.User)
                                                    .ConfigureAwait(false);
 
         if (userData.IsDataStorageAccepted != true)
@@ -131,7 +131,7 @@ public class AccountCommandHandler : LocatedServiceBase
 
                     using (var dbFactory = RepositoryFactory.CreateInstance())
                     {
-                        var user = await _userManagementService.GetUserByDiscordAccountId(context.User.Id)
+                        var user = await _userManagementService.GetUserByDiscordAccountId(context.User)
                                                                .ConfigureAwait(false);
 
                         if (dbFactory.GetRepository<AccountRepository>()

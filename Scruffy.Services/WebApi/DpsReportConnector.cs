@@ -1,4 +1,4 @@
-﻿using System.Net.Http;
+using System.Net.Http;
 
 using Newtonsoft.Json;
 
@@ -60,38 +60,42 @@ public class DpsReportConnector
     /// <summary>
     /// Requests a filtered list of DPS reports
     /// </summary>
-    /// <param name="userToken">User token</param>
     /// <param name="filter">Function to filter reports</param>
     /// <param name="shouldAbort">Function to abort searching further</param>
+    /// <param name="tokens">DPS-report user tokens</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task<List<Upload>> GetUploads(string userToken, Func<Upload, bool> filter, Func<Upload, bool> shouldAbort = null)
+    public async Task<List<Upload>> GetUploads(Func<Upload, bool> filter, Func<Upload, bool> shouldAbort, params string[] tokens)
     {
         var uploads = new List<Upload>();
-        var currentPage = 0;
-        Page page;
 
-        do
+        foreach (var token in tokens)
         {
-            currentPage++;
-            page = await GetUploads(userToken, currentPage).ConfigureAwait(false);
+            var currentPage = 0;
+            Page page;
 
-            if (page != null)
+            do
             {
-                foreach (var upload in page.Uploads)
-                {
-                    if (shouldAbort != null && shouldAbort(upload))
-                    {
-                        break;
-                    }
+                currentPage++;
+                page = await GetUploads(token, currentPage).ConfigureAwait(false);
 
-                    if (filter(upload))
+                if (page != null)
+                {
+                    foreach (var upload in page.Uploads)
                     {
-                        uploads.Add(upload);
+                        if (shouldAbort(upload))
+                        {
+                            break;
+                        }
+
+                        if (filter(upload))
+                        {
+                            uploads.Add(upload);
+                        }
                     }
                 }
             }
+            while (page != null && currentPage < page.Pages);
         }
-        while (page != null && currentPage < page.Pages);
 
         return uploads;
     }

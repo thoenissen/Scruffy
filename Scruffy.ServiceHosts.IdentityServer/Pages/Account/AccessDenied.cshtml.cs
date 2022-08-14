@@ -1,12 +1,17 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Scruffy.ServiceHosts.IdentityServer.Pages.Account;
-
-/// <summary>
-/// Access Denied page
-/// </summary>
-[AllowAnonymous]
-public class AccessDeniedModel : PageModel
+namespace Scruffy.ServiceHosts.IdentityServer.Pages.Account
 {
+    /// <summary>
+    /// Access denied page
+    /// </summary>
+    public class AccessDeniedModel : PageModel
+    {
+        /// <summary>
+        /// Get route
+        /// </summary>
+        public void OnGet()
+        {
+        }
+    }
 }

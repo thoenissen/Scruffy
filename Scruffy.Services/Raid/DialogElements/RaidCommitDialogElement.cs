@@ -200,7 +200,11 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
                                                  {
                                                      foreach (var commitUser in _commitData.Users)
                                                      {
-                                                         var user = await _userManagementService.GetUserByDiscordAccountId(commitUser.DiscordUserId)
+                                                         var discordUser = await CommandContext.Client
+                                                                                               .GetUserAsync(commitUser.DiscordUserId)
+                                                                                               .ConfigureAwait(false);
+
+                                                         var user = await _userManagementService.GetUserByDiscordAccountId(discordUser)
                                                                                                 .ConfigureAwait(false);
 
                                                          dbFactory.GetRepository<RaidRegistrationRepository>()

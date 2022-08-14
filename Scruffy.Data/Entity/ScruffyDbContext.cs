@@ -1,4 +1,6 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity.Keyless;
@@ -15,13 +17,14 @@ using Scruffy.Data.Entity.Tables.GuildWars2.Guild;
 using Scruffy.Data.Entity.Tables.Raid;
 using Scruffy.Data.Entity.Tables.Reminder;
 using Scruffy.Data.Entity.Tables.Statistics;
+using Scruffy.Data.Entity.Tables.Web;
 
 namespace Scruffy.Data.Entity;
 
 /// <summary>
 /// Accessing the database of the discord bot
 /// </summary>
-public class ScruffyDbContext : DbContext
+public class ScruffyDbContext : IdentityDbContext<UserEntity, RoleEntity, long, UserClaimEntity, UserRoleEntity, UserLoginEntity, RoleClaimEntity, UserTokenEntity>
 {
     #region Fields
 
@@ -67,17 +70,20 @@ public class ScruffyDbContext : DbContext
     /// </param>
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        var connectionStringBuilder = new SqlConnectionStringBuilder
-                                      {
-                                          ApplicationName = "Scruffy.Bot",
-                                          DataSource = Environment.GetEnvironmentVariable("SCRUFFY_DB_DATA_SOURCE"),
-                                          InitialCatalog = Environment.GetEnvironmentVariable("SCRUFFY_DB_CATALOG"),
-                                          MultipleActiveResultSets = false,
-                                          IntegratedSecurity = false,
-                                          UserID = Environment.GetEnvironmentVariable("SCRUFFY_DB_USER"),
-                                          Password = Environment.GetEnvironmentVariable("SCRUFFY_DB_PASSWORD")
-                                      };
-        _connectionString = connectionStringBuilder.ConnectionString;
+        if (_connectionString == null)
+        {
+            var connectionStringBuilder = new SqlConnectionStringBuilder
+                                          {
+                                              ApplicationName = "Scruffy.Bot",
+                                              DataSource = Environment.GetEnvironmentVariable("SCRUFFY_DB_DATA_SOURCE"),
+                                              InitialCatalog = Environment.GetEnvironmentVariable("SCRUFFY_DB_CATALOG"),
+                                              MultipleActiveResultSets = false,
+                                              IntegratedSecurity = false,
+                                              UserID = Environment.GetEnvironmentVariable("SCRUFFY_DB_USER"),
+                                              Password = Environment.GetEnvironmentVariable("SCRUFFY_DB_PASSWORD")
+                                          };
+            _connectionString = connectionStringBuilder.ConnectionString;
+        }
 
         optionsBuilder.UseSqlServer(ConnectionString);
 #if DEBUG
@@ -102,8 +108,11 @@ public class ScruffyDbContext : DbContext
     /// </param>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         // CoreData
-        modelBuilder.Entity<UserEntity>();
+        modelBuilder.Entity<UserEntity>()
+                    .ToTable("Users");
         modelBuilder.Entity<ServerConfigurationEntity>();
 
         modelBuilder.Entity<UserEntity>()
@@ -555,6 +564,20 @@ public class ScruffyDbContext : DbContext
         modelBuilder.Entity<GitHubCommitEntity>()
                     .HasKey(obj => obj.Sha);
 
+        // Web
+        modelBuilder.Entity<RoleClaimEntity>()
+                    .ToTable("RoleClaims");
+        modelBuilder.Entity<RoleEntity>()
+                    .ToTable("Roles");
+        modelBuilder.Entity<UserClaimEntity>()
+                    .ToTable("UserClaims");
+        modelBuilder.Entity<UserLoginEntity>()
+                    .ToTable("UserLogins");
+        modelBuilder.Entity<UserRoleEntity>()
+                    .ToTable("UserRoles");
+        modelBuilder.Entity<UserTokenEntity>()
+                    .ToTable("UserTokens");
+
         // Keyless
         modelBuilder.Entity<DateValue>(eb =>
                                        {
@@ -570,8 +593,6 @@ public class ScruffyDbContext : DbContext
         {
             foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
         }
-
-        base.OnModelCreating(modelBuilder);
     }
 
     #endregion // DbContext

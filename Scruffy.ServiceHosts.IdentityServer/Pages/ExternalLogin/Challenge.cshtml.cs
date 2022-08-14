@@ -5,69 +5,68 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Scruffy.ServiceHosts.IdentityServer.Pages.ExternalLogin;
-
-/// <summary>
-/// Challenge page
-/// </summary>
-[AllowAnonymous]
-public class Challenge : PageModel
+namespace Scruffy.ServiceHosts.IdentityServer.Pages.ExternalLogin
 {
-    #region Fields
-
     /// <summary>
-    /// Fields
+    /// External login challenge
     /// </summary>
-    private readonly IIdentityServerInteractionService _interactionService;
-
-    #endregion // Fields
-
-    #region Constructor
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="interactionService">Interaction service</param>
-    public Challenge(IIdentityServerInteractionService interactionService)
+    [AllowAnonymous]
+    [SecurityHeaders]
+    public class Challenge : PageModel
     {
-        _interactionService = interactionService;
-    }
+        #region Fields
 
-    #endregion // Constructor
+        private readonly IIdentityServerInteractionService _interactionService;
 
-    #region Methods
+        #endregion // Fields
 
-    /// <summary>
-    /// Get method
-    /// </summary>
-    /// <param name="scheme">Scheme</param>
-    /// <param name="returnUrl">Return url</param>
-    /// <returns>Action result</returns>
-    public IActionResult OnGet(string scheme, string returnUrl)
-    {
-        if (string.IsNullOrEmpty(returnUrl))
+        #region Constructor
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="interactionService">Identity server interaction</param>
+        public Challenge(IIdentityServerInteractionService interactionService)
         {
-            returnUrl = "~/";
+            _interactionService = interactionService;
         }
 
-        if (Url.IsLocalUrl(returnUrl) == false
-         && _interactionService.IsValidReturnUrl(returnUrl) == false)
-        {
-            throw new InvalidOperationException("invalid return URL");
-        }
+        #endregion // Constructor
 
-        var props = new AuthenticationProperties
+        #region Methods
+
+        /// <summary>
+        /// Get method
+        /// </summary>
+        /// <param name="scheme">Scheme</param>
+        /// <param name="returnUrl">Return url</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+        public IActionResult OnGet(string scheme, string returnUrl)
         {
-            RedirectUri = Url.Page("/ExternalLogin/callback"),
-            Items =
+            if (string.IsNullOrEmpty(returnUrl))
             {
-                { "returnUrl", returnUrl },
-                { "scheme", scheme },
+                returnUrl = "~/";
             }
-        };
 
-        return Challenge(props, scheme);
+            if (Url.IsLocalUrl(returnUrl) == false
+             && _interactionService.IsValidReturnUrl(returnUrl) == false)
+            {
+                throw new Exception("invalid return URL");
+            }
+
+            var props = new AuthenticationProperties
+                        {
+                            RedirectUri = Url.Page("/externallogin/callback"),
+                            Items =
+                            {
+                                { "returnUrl", returnUrl },
+                                { "scheme", scheme },
+                            }
+                        };
+
+            return Challenge(props, scheme);
+        }
+
+        #endregion // Methods
     }
-
-    #endregion // Methods
 }

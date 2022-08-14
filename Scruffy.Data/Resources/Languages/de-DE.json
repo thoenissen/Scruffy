@@ -645,6 +645,8 @@
     },
     "LogCommandHandler": {
       "DpsReportTitle": "Deine Reports vom {0}",
+      "DpsReportFirstTry": "Erster Versuch",
+      "DpsReportTries": "{0} Versuche",
       "NoDpsReportUploads": "Keine DPS-Reports gefunden!",
       "NoDpsReportToken": "Deinem Account sind keine DPS-Report-User-Tokens zugeordnet."
     },
@@ -784,11 +786,6 @@
       "DeadlineReached": "Die Anmeldung ist nach Anmeldeschluss nicht mehr möglich, wenn keine freien Plätze zur Verfügung stehen.",
       "RequiredExperienceLevelMissing": "Du hast noch nicht das erforderlichen Erfahrungslevel für diesen Termin."
     },
-    "RaidReadyRolesMultiSelectDialogElement": {
-      "RaidReadyRolesTitle": "Raid-Fertige Rollen",
-      "RaidReadyRolesField1": "Deine Raid-Fertigen Rollen sind:",
-      "ChooseReadyRoleDescription":  "Wähle deine Rollen..."
-    },
     "RaidRoleSelectionDialogElement": {
       "ChooseRoleDescription": "Wähle deine Rollen...",
       "ChooseMainRoleTitle": "Rollenauswahl",
@@ -826,6 +823,11 @@
       "RoleEditEditEmojiCommand": "{0} Emoji bearbeiten",
       "RoleEditEditSubRoleCommand": "{0} Untergeordnete Rolle bearbeiten",
       "RoleEditTitle": "Rollenbearbeitung"
+    },
+    "RaidReadyRolesMultiSelectDialogElement": {
+      "RaidReadyRolesTitle": "Raid-Fertige Rollen",
+      "RaidReadyRolesField1": "Deine Raid-Fertigen Rollen sind:",
+      "ChooseReadyRoleDescription": "Wähle deine Rollen..."
     },
     "RaidTemplateAliasNameDialogElement": {
       "Message": "Gib bitte den zu verwendenden Aliasnamen ein."
