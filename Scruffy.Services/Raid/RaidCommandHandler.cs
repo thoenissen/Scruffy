@@ -806,7 +806,7 @@ public class RaidCommandHandler : LocatedServiceBase
         var dialogHandler = new DialogHandler(context);
         await using (dialogHandler.ConfigureAwait(false))
         {
-            var user = await _userManagementService.GetUserByDiscordAccountId(context.User.Id)
+            var user = await _userManagementService.GetUserByDiscordAccountId(context.User)
                                                    .ConfigureAwait(false);
 
             var userRoles = await dialogHandler.Run<RaidReadyRolesMultiSelectDialogElement, List<long>>(new RaidReadyRolesMultiSelectDialogElement(_localizationService, _raidRolesService, _userManagementService))

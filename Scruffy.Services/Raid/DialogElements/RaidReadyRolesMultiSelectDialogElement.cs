@@ -69,7 +69,7 @@ namespace Scruffy.Services.Raid.DialogElements
         {
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
-                var user = await _userManagememtService.GetUserByDiscordAccountId(CommandContext.User.Id)
+                var user = await _userManagememtService.GetUserByDiscordAccountId(CommandContext.User)
                                           .ConfigureAwait(false);
 
                 var raidUserRoles = dbFactory.GetRepository<RaidUserRoleRepository>()
