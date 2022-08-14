@@ -41,6 +41,11 @@ public class RaidController : ControllerBase
     /// </summary>
     private readonly RaidRolesService _raidRolesService;
 
+    /// <summary>
+    /// Raid line up service
+    /// </summary>
+    private readonly RaidLineUpService _raidLineUpService;
+
     #endregion // Fields
 
     #region Constructor
@@ -51,13 +56,16 @@ public class RaidController : ControllerBase
     /// <param name="discordClient">Discord client</param>
     /// <param name="repositoryFactory">Repository factory</param>
     /// <param name="raidRolesService">Raid roles service</param>
+    /// <param name="raidLineUpService">Raid line up service</param>
     public RaidController(DiscordRestClient discordClient,
                           RepositoryFactory repositoryFactory,
-                          RaidRolesService raidRolesService)
+                          RaidRolesService raidRolesService,
+                          RaidLineUpService raidLineUpService)
     {
         _discordClient = discordClient;
         _repositoryFactory = repositoryFactory;
         _raidRolesService = raidRolesService;
+        _raidLineUpService = raidLineUpService;
     }
 
     #endregion // Constructor
@@ -239,18 +247,26 @@ public class RaidController : ControllerBase
         var transaction = _repositoryFactory.BeginTransaction(IsolationLevel.RepeatableRead);
         await using (transaction.ConfigureAwait(false))
         {
+            _repositoryFactory.GetRepository<RaidRegistrationRepository>()
+                              .RefreshRange(obj => obj.AppointmentId == lineUp.AppointmentId,
+                                            obj =>
+                                            {
+                                                obj.Group = 0;
+                                                obj.LineUpRoleId = null;
+                                            });
+
             foreach (var group in lineUp.Groups)
             {
                 foreach (var user in group.Value)
                 {
                     if (_repositoryFactory.GetRepository<RaidRegistrationRepository>()
-                                      .Refresh(obj => obj.AppointmentId == lineUp.AppointmentId
-                                                      && obj.UserId == user.UserId,
-                                               obj =>
-                                               {
-                                                   obj.Group = group.Key;
-                                                   obj.LineUpRoleId = user.RoleId;
-                                               }) == false)
+                                          .Refresh(obj => obj.AppointmentId == lineUp.AppointmentId
+                                                       && obj.UserId == user.UserId,
+                                                   obj =>
+                                                   {
+                                                       obj.Group = group.Key;
+                                                       obj.LineUpRoleId = user.RoleId;
+                                                   }) == false)
                     {
                         success = false;
                         break;
@@ -268,6 +284,12 @@ public class RaidController : ControllerBase
                 await transaction.CommitAsync()
                                  .ConfigureAwait(false);
             }
+        }
+
+        if (success)
+        {
+            await _raidLineUpService.PostLineUp(lineUp.AppointmentId)
+                                    .ConfigureAwait(false);
         }
 
         return success ? Ok() : BadRequest();

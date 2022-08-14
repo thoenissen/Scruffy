@@ -6,6 +6,8 @@ using Microsoft.OpenApi.Models;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Enumerations.General;
 using Scruffy.Services.Core;
+using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 using Scruffy.Services.Raid;
 
 using Serilog;
@@ -84,9 +86,15 @@ public class Program
             await discordClient.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_TOKEN"))
                                .ConfigureAwait(false);
 
+            var localizationService = new LocalizationService();
+
             builder.Services.AddSingleton(discordClient);
+            builder.Services.AddSingleton<IDiscordClient>(discordClient);
+            builder.Services.AddSingleton(localizationService);
+
             builder.Services.AddSingleton<RepositoryFactory>();
             builder.Services.AddTransient<RaidRolesService>();
+            builder.Services.AddTransient<RaidLineUpService>();
 
             var app = builder.Build();
             app.UseSwagger();
@@ -99,6 +107,12 @@ public class Program
 #else
             app.MapControllers().RequireAuthorization("ApiScope");
 #endif
+
+            await localizationService.Initialize(app.Services)
+                                     .ConfigureAwait(false);
+
+            await DiscordEmoteService.BuildEmoteCache(discordClient)
+                                     .ConfigureAwait(false);
 
             await app.RunAsync()
                      .ConfigureAwait(false);

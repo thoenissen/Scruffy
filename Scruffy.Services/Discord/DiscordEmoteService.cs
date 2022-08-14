@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 
 using Discord;
+using Discord.Rest;
 using Discord.WebSocket;
 
 using Newtonsoft.Json;
@@ -21,6 +22,11 @@ public static class DiscordEmoteService
     /// </summary>
     private static readonly ConcurrentDictionary<string, ulong> _emotes;
 
+    /// <summary>
+    /// Emote cache
+    /// </summary>
+    private static readonly ConcurrentDictionary<ulong, IEmote> _emoteCache;
+
     #endregion // Fields
 
     #region Constructor
@@ -31,11 +37,29 @@ public static class DiscordEmoteService
     static DiscordEmoteService()
     {
         _emotes = new ConcurrentDictionary<string, ulong>(JsonConvert.DeserializeObject<Dictionary<string, ulong>>(new StreamReader(Assembly.Load("Scruffy.Data").GetManifestResourceStream("Scruffy.Data.Resources.Emotes.json")).ReadToEnd()));
+        _emoteCache = new ConcurrentDictionary<ulong, IEmote>();
     }
 
     #endregion // Constructor
 
     #region Methods
+
+    /// <summary>
+    /// Build emote cache
+    /// </summary>
+    /// <param name="client">Client</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public static async Task BuildEmoteCache(DiscordRestClient client)
+    {
+        foreach (var guild in await client.GetGuildsAsync()
+                                          .ConfigureAwait(false))
+        {
+            foreach (var emote in guild.Emotes)
+            {
+                _emoteCache.TryAdd(emote.Id, emote);
+            }
+        }
+    }
 
     /// <summary>
     /// Get 'Add'-Emote
@@ -319,7 +343,14 @@ public static class DiscordEmoteService
         {
             if (_emotes.TryGetValue(key, out var emojiId))
             {
-                emote = client.Guilds.SelectMany(obj => obj.Emotes).FirstOrDefault(obj => obj.Id == emojiId);
+                if (client != null)
+                {
+                    emote = client.Guilds.SelectMany(obj => obj.Emotes).FirstOrDefault(obj => obj.Id == emojiId);
+                }
+                else
+                {
+                    _emoteCache.TryGetValue(emojiId, out emote);
+                }
             }
         }
         catch
