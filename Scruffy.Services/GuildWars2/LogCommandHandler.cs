@@ -283,10 +283,10 @@ public class LogCommandHandler : LocatedServiceBase
 
         // Search for appointments this week
         var appointments = _repositoryFactory.GetRepository<RaidAppointmentRepository>()
-                            .GetQuery()
-                            .Where(obj => obj.TimeStamp > startOfWeek && obj.TimeStamp < now)
-                            .Select(obj => new { obj.Id, obj.TimeStamp })
-                            .ToList();
+                                             .GetQuery()
+                                             .Where(obj => obj.TimeStamp > startOfWeek && obj.TimeStamp < now)
+                                             .Select(obj => new { obj.Id, obj.TimeStamp })
+                                             .ToList();
 
         // Search for appointments of last week
         if (appointments.Count == 0)
@@ -295,10 +295,10 @@ public class LogCommandHandler : LocatedServiceBase
             startOfWeek = startOfWeek.AddDays(-7);
 
             appointments = _repositoryFactory.GetRepository<RaidAppointmentRepository>()
-                            .GetQuery()
-                            .Where(obj => obj.TimeStamp > startOfWeek && obj.TimeStamp < endOfWeek)
-                            .Select(obj => new { obj.Id, obj.TimeStamp })
-                            .ToList();
+                                             .GetQuery()
+                                             .Where(obj => obj.TimeStamp > startOfWeek && obj.TimeStamp < endOfWeek)
+                                             .Select(obj => new { obj.Id, obj.TimeStamp })
+                                             .ToList();
         }
 
         var tasks = new List<Task<IEnumerable<Upload>>>();
@@ -354,16 +354,16 @@ public class LogCommandHandler : LocatedServiceBase
     private async Task<IEnumerable<Upload>> GetLogsForGuildRaidDay(long appointmentId)
     {
         var appointment = _repositoryFactory.GetRepository<RaidAppointmentRepository>()
-                            .GetQuery()
-                            .Where(obj => obj.Id == appointmentId)
-                            .Select(obj => new
-                            {
-                                StartTime = obj.TimeStamp,
-                                Tokens = obj.RaidRegistrations
-                                                            .Where(obj2 => obj2.LineupExperienceLevelId != null && obj2.User.DpsReportUserToken != null)
-                                                            .Select(obj2 => obj2.User.DpsReportUserToken)
-                            })
-                            .FirstOrDefault();
+                                            .GetQuery()
+                                            .Where(obj => obj.Id == appointmentId)
+                                            .Select(obj => new
+                                            {
+                                                StartTime = obj.TimeStamp,
+                                                Tokens = obj.RaidRegistrations
+                                                                            .Where(obj2 => obj2.LineupExperienceLevelId != null && obj2.User.DpsReportUserToken != null)
+                                                                            .Select(obj2 => obj2.User.DpsReportUserToken)
+                                            })
+                                            .FirstOrDefault();
 
         var startDate = new DateTimeOffset(appointment.StartTime, TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow)).AddMinutes(-15);
         var endDate = startDate.AddHours(3).AddMinutes(30);
@@ -395,8 +395,8 @@ public class LogCommandHandler : LocatedServiceBase
         var failureIcon = DiscordEmoteService.GetCrossEmote(_client).ToString();
 
         foreach (var typeGroup in uploads.OrderBy(obj => _dpsReportConnector.GetSortValue(obj.Encounter.BossId))
-                                        .ThenBy(obj => obj.EncounterTime)
-                                        .GroupBy(obj => _dpsReportConnector.GetReportGroup(obj.Encounter.BossId).GetReportType()))
+                                         .ThenBy(obj => obj.EncounterTime)
+                                         .GroupBy(obj => _dpsReportConnector.GetReportGroup(obj.Encounter.BossId).GetReportType()))
         {
             if (addSubTitles)
             {
