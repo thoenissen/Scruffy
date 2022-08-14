@@ -644,11 +644,15 @@
          "ValueAssigned": "Der Wert wurde zugewiesen."
       },
       "LogCommandHandler": {
-         "DpsReportTitle": "Deine Reports vom {0}",
-         "DpsReportFirstTry": "Erster Versuch",
-         "DpsReportTries": "{0} Versuche",
-         "NoDpsReportUploads": "Keine DPS-Reports gefunden!",
-         "NoDpsReportToken": "Deinem Account sind keine DPS-Report-User-Tokens zugeordnet."
+          "DpsReportTitle": "Deine Reports vom {0}",
+          "DpsReportGuildRaidSummaryTitle": "Gilden-Raid {0}",
+          "DpsReportGuildRaidBossesTitle": "Bosse",
+          "DpsReportGuildRaidStatsTitle": "Statistiken",
+          "DpsReportPlayerGroup": "Gruppe {0}",
+          "DpsReportEncounterStat": "{0} Gefechte",
+          "DpsReportFightDurationStat": "{0} in {1} Kämpfen",
+          "NoDpsReportUploads": "Keine DPS-Reports gefunden!",
+          "NoDpsReportToken": "Deinem Account sind keine DPS-Report-User-Tokens zugeordnet."
       },
       "LocatedTextCommandModuleBase": {
          "SlashCommandMigrationHint": "Textbasierte Befehle stehen nicht mehr zur Verfügung. Du kannst diesen Befehl über den Slash Command `/{0}` ausführen."

@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Services.Discord;
+using Scruffy.Services.GuildWars2;
 using Scruffy.Services.Raid;
 
 namespace Scruffy.Commands.SlashCommands;
@@ -38,7 +39,8 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
     public enum OverviewType
     {
         Participation,
-        Levels
+        Levels,
+        Logs
     }
 
     #endregion // Enumerations
@@ -49,6 +51,11 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
     /// Command handler
     /// </summary>
     public RaidCommandHandler CommandHandler { get; set; }
+
+    /// <summary>
+    /// Log command handler
+    /// </summary>
+    public LogCommandHandler LogCommandHandler { get; set; }
 
     #endregion // Properties
 
@@ -183,6 +190,12 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
                 {
                     await CommandHandler.PostExperienceLevelOverview(Context)
                                         .ConfigureAwait(false);
+                }
+                break;
+            case OverviewType.Logs:
+                {
+                    await LogCommandHandler.PostGuildRaidSummary(Context)
+                                           .ConfigureAwait(false);
                 }
                 break;
             default:
