@@ -236,16 +236,16 @@ public class LogCommandHandler : LocatedServiceBase
             var statsBuilder = new DpsReportEmbedBuilder();
 
             summaryBuilder.WithColor(Color.DarkPurple)
-                        .WithTitle(LocalizationGroup.GetFormattedText("DpsReportGuildRaidSummaryTitle", "Guild raid summary ({0})", week));
+                          .WithTitle(LocalizationGroup.GetText("DpsReportGuildRaidBossesTitle", "Bosses"));
 
             var knownGroups = await AddReports(summaryBuilder, uploads, true, false, true).ConfigureAwait(false);
 
             statsBuilder.WithColor(new Color(160, 132, 23))
-                        .WithTitle(LocalizationGroup.GetFormattedText("DpsReportGuildRaidStatsTitle", "Guild raid stats ({0})", week));
+                        .WithTitle(LocalizationGroup.GetText("DpsReportGuildRaidStatsTitle", "Stats"));
 
             AddGroupStats(statsBuilder, knownGroups);
 
-            await context.ReplyAsync(embeds: new Embed[]
+            await context.ReplyAsync(text: Format.Bold(LocalizationGroup.GetFormattedText("DpsReportGuildRaidSummaryTitle", "Guild Raid {0}", week)), embeds: new Embed[]
             {
                 statsBuilder.Build(),
                 summaryBuilder.Build(),

@@ -645,10 +645,10 @@
       },
       "LogCommandHandler": {
           "DpsReportTitle": "Deine Reports vom {0}",
-          "DpsReportGuildRaidSummaryTitle": "Gilden-Raid Zusammenfassung ({0})",
-          "DpsReportGuildRaidStatsTitle": "Gilden-Raid Statistiken ({0})",
+          "DpsReportGuildRaidSummaryTitle": "Gilden-Raid {0}",
+          "DpsReportGuildRaidBossesTitle": "Bosse",
+          "DpsReportGuildRaidStatsTitle": "Statistiken",
           "DpsReportPlayerGroup": "Gruppe {0}",
-          "DpsReportPlayerGroupStats": "Statistiken",
           "DpsReportEncounterStat": "{0} Gefechte",
           "DpsReportFightDurationStat": "{0} in {1} Kämpfen",
           "NoDpsReportUploads": "Keine DPS-Reports gefunden!",
