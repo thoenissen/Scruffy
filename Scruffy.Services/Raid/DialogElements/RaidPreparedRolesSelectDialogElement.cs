@@ -9,9 +9,9 @@ using Scruffy.Services.Discord;
 namespace Scruffy.Services.Raid.DialogElements
 {
     /// <summary>
-    /// RaidReadyRolesMultiSelectDialogElement
+    /// RaidPreparedRolesSelectDialogElement
     /// </summary>
-    public class RaidReadyRolesMultiSelectDialogElement : DialogEmbedMultiSelectSelectMenuElementBase<long>
+    public class RaidPreparedRolesSelectDialogElement : DialogEmbedMultiSelectSelectMenuElementBase<long>
     {
         #region Fields
 
@@ -23,7 +23,7 @@ namespace Scruffy.Services.Raid.DialogElements
         /// <summary>
         /// UserManagementService
         /// </summary>
-        private readonly UserManagementService _userManagememtService;
+        private readonly UserManagementService _userManagementService;
 
         /// <summary>
         /// Roles
@@ -39,17 +39,17 @@ namespace Scruffy.Services.Raid.DialogElements
         /// </summary>
         /// <param name="localizationService">Localization service</param>
         /// <param name="raidRolesService">Raid roles service</param>
-        /// <param name="userManagemantService">UserManagementService</param>
-        public RaidReadyRolesMultiSelectDialogElement(LocalizationService localizationService, RaidRolesService raidRolesService, UserManagementService userManagemantService)
+        /// <param name="userManagementService">UserManagementService</param>
+        public RaidPreparedRolesSelectDialogElement(LocalizationService localizationService, RaidRolesService raidRolesService, UserManagementService userManagementService)
             : base(localizationService)
         {
             _raidRoleService = raidRolesService;
-            _userManagememtService = userManagemantService;
+            _userManagementService = userManagementService;
         }
 
         #endregion // Constructor
 
-        #region DialogMultiSelectSelectMenuElementBase<long>
+        #region DialogEmbedMultiSelectSelectMenuElementBase<long>
 
         /// <summary>
         /// Min values
@@ -69,27 +69,29 @@ namespace Scruffy.Services.Raid.DialogElements
         {
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
-                var user = await _userManagememtService.GetUserByDiscordAccountId(CommandContext.User)
-                                          .ConfigureAwait(false);
+                var user = await _userManagementService.GetUserByDiscordAccountId(CommandContext.User)
+                                                       .ConfigureAwait(false);
 
                 var raidUserRoles = dbFactory.GetRepository<RaidUserRoleRepository>()
-                                           .GetQuery()
-                                           .Where(obj => obj.UserId == user.Id)
-                                           .Select(obj => obj.RaidRole)
-                                           .ToList();
+                                             .GetQuery()
+                                             .Where(obj => obj.UserId == user.Id)
+                                             .OrderBy(obj => obj.RoleId)
+                                             .Select(obj => obj.RaidRole)
+                                             .ToList();
 
                 var userRolesMsg = new StringBuilder();
 
                 foreach (var role in raidUserRoles)
                 {
-                    userRolesMsg.AppendLine(_raidRoleService.GetDescriptionAsText(role));
+                    userRolesMsg.AppendLine(DiscordEmoteService.GetGuildEmote(CommandContext.Client, role.DiscordEmojiId) + " " + _raidRoleService.GetDescriptionAsText(role));
                 }
-                var embedBuilder = new EmbedBuilder()
-                    .WithTitle(LocalizationGroup.GetText("RaidReadyRolesTitle", "Raid-Ready Roles"))
-                    .AddField(LocalizationGroup.GetText("RaidReadyRolesField1", "Your Raid-Ready Roles are:"), value: userRolesMsg.ToString())
-                    .WithColor(Color.Green)
-                    .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
-                    .WithTimestamp(DateTime.Now);
+
+                var embedBuilder = new EmbedBuilder().WithTitle(LocalizationGroup.GetText("EmbedTitle", "Raid role selection"))
+                                                     .WithDescription(LocalizationGroup.GetText("EmbedDescription", "With the this assistant you are able to select all roles which you have prepared for raiding. The following roles are already selected."))
+                                                     .AddField(LocalizationGroup.GetText("RolesTitle", "Roles"), userRolesMsg.ToString())
+                                                     .WithColor(Color.Green)
+                                                     .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
+                                                     .WithTimestamp(DateTime.Now);
 
                 return embedBuilder;
             }
@@ -99,7 +101,7 @@ namespace Scruffy.Services.Raid.DialogElements
         /// Returning the placeholder
         /// </summary>
         /// <returns>Placeholder</returns>
-        public override string GetPlaceholder() => LocalizationGroup.GetText("ChooseReadyRoleDescription", "Choose your roles...");
+        public override string GetPlaceholder() => LocalizationGroup.GetText("RoleSelectionPlaceHolder", "Choose your roles...");
 
         /// <summary>
         /// Returns the select menu entries which should be added to the message
@@ -121,11 +123,11 @@ namespace Scruffy.Services.Raid.DialogElements
                     foreach (var role in roles)
                     {
                         _entries.Add(new SelectMenuOptionData
-                        {
-                            Label = _raidRoleService.GetDescriptionAsText(role),
-                            Emote = DiscordEmoteService.GetGuildEmote(CommandContext.Client, role.DiscordEmojiId),
-                            Value = role.Id.ToString(),
-                        });
+                                     {
+                                         Label = _raidRoleService.GetDescriptionAsText(role),
+                                         Emote = DiscordEmoteService.GetGuildEmote(CommandContext.Client, role.DiscordEmojiId),
+                                         Value = role.Id.ToString(),
+                                     });
                     }
                 }
             }
@@ -134,5 +136,5 @@ namespace Scruffy.Services.Raid.DialogElements
         }
     }
 
-    #endregion
+    #endregion // DialogEmbedMultiSelectSelectMenuElementBase<long>
 }

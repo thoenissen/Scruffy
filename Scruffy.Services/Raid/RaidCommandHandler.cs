@@ -90,7 +90,6 @@ public class RaidCommandHandler : LocatedServiceBase
     /// <param name="overviewService">Overview service</param>
     /// <param name="experienceLevelsService">Experience levels service</param>
     /// <param name="userManagementService">User management service</param>
-    /// <param name="dpsReportConnector">DPS-Report connector</param>
     /// <param name="rolesService">Roles Service connector</param>
     public RaidCommandHandler(LocalizationService localizationService,
                               RaidMessageBuilder messageBuilder,
@@ -100,10 +99,10 @@ public class RaidCommandHandler : LocatedServiceBase
                               RaidOverviewService overviewService,
                               RaidExperienceLevelsService experienceLevelsService,
                               UserManagementService userManagementService,
-                              DpsReportConnector dpsReportConnector,
                               RaidRolesService rolesService)
         : base(localizationService)
     {
+        _localizationService = localizationService;
         _messageBuilder = messageBuilder;
         _commitService = commitService;
         _registrationService = registrationService;
@@ -112,7 +111,6 @@ public class RaidCommandHandler : LocatedServiceBase
         _experienceLevelsService = experienceLevelsService;
         _userManagementService = userManagementService;
         _raidRolesService = rolesService;
-        _localizationService = localizationService;
     }
 
     #endregion // Constructor
@@ -136,14 +134,14 @@ public class RaidCommandHandler : LocatedServiceBase
                                        .ConfigureAwait(false);
 
             var configuration = new RaidDayConfigurationEntity
-            {
-                AliasName = data.AliasName,
-                Day = data.Day,
-                RegistrationDeadline = data.RegistrationDeadline,
-                StartTime = data.StartTime,
-                DiscordChannelId = container.Channel.Id,
-                DiscordMessageId = message.Id
-            };
+                                {
+                                    AliasName = data.AliasName,
+                                    Day = data.Day,
+                                    RegistrationDeadline = data.RegistrationDeadline,
+                                    StartTime = data.StartTime,
+                                    DiscordChannelId = container.Channel.Id,
+                                    DiscordMessageId = message.Id
+                                };
 
             dbFactory.GetRepository<RaidDayConfigurationRepository>()
                      .Add(configuration);
@@ -158,17 +156,17 @@ public class RaidCommandHandler : LocatedServiceBase
 
             dbFactory.GetRepository<RaidAppointmentRepository>()
                      .Add(new RaidAppointmentEntity
-                     {
-                         ConfigurationId = configuration.Id,
-                         TemplateId = data.TemplateId,
-                         TimeStamp = appointmentTimeStamp,
-                         Deadline = appointmentTimeStamp.Date
-                                                             .Add(data.RegistrationDeadline),
-                         GroupCount = 1
-                     });
+                              {
+                                  ConfigurationId = configuration.Id,
+                                  TemplateId = data.TemplateId,
+                                  TimeStamp = appointmentTimeStamp,
+                                  Deadline = appointmentTimeStamp.Date
+                                                                      .Add(data.RegistrationDeadline),
+                                  GroupCount = 1
+                              });
 
             await _messageBuilder.RefreshMessageAsync(configuration.Id)
-                                .ConfigureAwait(false);
+                                 .ConfigureAwait(false);
         }
     }
 
@@ -217,48 +215,62 @@ public class RaidCommandHandler : LocatedServiceBase
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
-            var appointment = await dbFactory.GetRepository<RaidAppointmentRepository>()
-                                             .GetQuery()
-                                             .Where(obj => obj.TimeStamp > DateTime.Now
-                                                        && obj.RaidDayConfiguration.AliasName == name)
-                                             .Select(obj => new
-                                             {
-                                                 obj.Id,
-                                                 obj.ConfigurationId,
-                                                 obj.Deadline
-                                             })
-                                             .FirstOrDefaultAsync()
-                                             .ConfigureAwait(false);
+            var discordAccountQuery = dbFactory.GetRepository<DiscordAccountRepository>()
+                                               .GetQuery()
+                                               .Select(obj => obj);
 
-            if (appointment != null)
+            if (dbFactory.GetRepository<RaidUserRoleRepository>()
+                         .GetQuery()
+                         .Any(obj => discordAccountQuery.Any(obj2 => obj2.UserId == obj.UserId
+                                                                  && obj2.Id == container.User.Id)))
             {
-                var registrationId = await _registrationService.Join(container, appointment.Id, container.User)
-                                                               .ConfigureAwait(false);
+                var appointment = await dbFactory.GetRepository<RaidAppointmentRepository>()
+                                                 .GetQuery()
+                                                 .Where(obj => obj.TimeStamp > DateTime.Now
+                                                            && obj.RaidDayConfiguration.AliasName == name)
+                                                 .Select(obj => new
+                                                 {
+                                                     obj.Id,
+                                                     obj.ConfigurationId,
+                                                     obj.Deadline
+                                                 })
+                                                 .FirstOrDefaultAsync()
+                                                 .ConfigureAwait(false);
 
-                if (registrationId != null)
+                if (appointment != null)
                 {
-                    if (isDisplayRoleSelection)
-                    {
-                        if (DateTime.Now < appointment.Deadline)
-                        {
-                            await _roleAssignmentService.AssignRoles(container, registrationId.Value)
-                                                        .ConfigureAwait(false);
-                        }
-                        else
-                        {
-                            await container.ReplyAsync(LocalizationGroup.GetText("NoRoleSelectionAfterDeadline", "It is not possible to edit your preferred roles after the registration deadline."), ephemeral: true)
-                                           .ConfigureAwait(false);
-                        }
-                    }
+                    var registrationId = await _registrationService.Join(container, appointment.Id, container.User)
+                                                                   .ConfigureAwait(false);
 
-                    await _messageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
-                                         .ConfigureAwait(false);
+                    if (registrationId != null)
+                    {
+                        if (isDisplayRoleSelection)
+                        {
+                            if (DateTime.Now < appointment.Deadline)
+                            {
+                                await _roleAssignmentService.AssignRoles(container, registrationId.Value)
+                                                            .ConfigureAwait(false);
+                            }
+                            else
+                            {
+                                await container.ReplyAsync(LocalizationGroup.GetText("NoRoleSelectionAfterDeadline", "It is not possible to edit your preferred roles after the registration deadline."), ephemeral: true)
+                                               .ConfigureAwait(false);
+                            }
+                        }
+
+                        await _messageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
+                                             .ConfigureAwait(false);
+                    }
+                }
+                else
+                {
+                    await container.ReplyAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."), ephemeral: true)
+                                   .ConfigureAwait(false);
                 }
             }
             else
             {
-                await container.ReplyAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."), ephemeral: true)
-                               .ConfigureAwait(false);
+                await ConfigureRolesFirstTime(container).ConfigureAwait(false);
             }
         }
     }
@@ -274,7 +286,16 @@ public class RaidCommandHandler : LocatedServiceBase
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
-            var appointment = await dbFactory.GetRepository<RaidAppointmentRepository>()
+            var discordAccountQuery = dbFactory.GetRepository<DiscordAccountRepository>()
+                                               .GetQuery()
+                                               .Select(obj => obj);
+
+            if (dbFactory.GetRepository<RaidUserRoleRepository>()
+                         .GetQuery()
+                         .Any(obj => discordAccountQuery.Any(obj2 => obj2.UserId == obj.UserId
+                                                                  && obj2.Id == container.User.Id)))
+            {
+                var appointment = await dbFactory.GetRepository<RaidAppointmentRepository>()
                                              .GetQuery()
                                              .Where(obj => obj.TimeStamp > DateTime.Now
                                                         && obj.ConfigurationId == configurationId)
@@ -287,46 +308,51 @@ public class RaidCommandHandler : LocatedServiceBase
                                              .FirstOrDefaultAsync()
                                              .ConfigureAwait(false);
 
-            if (appointment != null)
-            {
-                var registrationId = await _registrationService.Join(container, appointment.Id, container.User)
-                                                               .ConfigureAwait(false);
-
-                if (registrationId != null)
+                if (appointment != null)
                 {
-                    if (DateTime.Now < appointment.Deadline)
-                    {
-                        dbFactory.GetRepository<RaidRegistrationRoleAssignmentRepository>()
-                                 .RemoveRange(obj => obj.RegistrationId == registrationId);
+                    var registrationId = await _registrationService.Join(container, appointment.Id, container.User)
+                                                                   .ConfigureAwait(false);
 
-                        if (values?.Length > 0
-                         && values.Length < 8)
+                    if (registrationId != null)
+                    {
+                        if (DateTime.Now < appointment.Deadline)
                         {
-                            foreach (var roleId in values.Select(obj => Convert.ToInt64(obj)))
+                            dbFactory.GetRepository<RaidRegistrationRoleAssignmentRepository>()
+                                     .RemoveRange(obj => obj.RegistrationId == registrationId);
+
+                            if (values?.Length > 0
+                             && values.Length < 8)
                             {
-                                dbFactory.GetRepository<RaidRegistrationRoleAssignmentRepository>()
-                                         .Add(new RaidRegistrationRoleAssignmentEntity
-                                         {
-                                             RegistrationId = registrationId.Value,
-                                             RoleId = roleId
-                                         });
+                                foreach (var roleId in values.Select(obj => Convert.ToInt64(obj)))
+                                {
+                                    dbFactory.GetRepository<RaidRegistrationRoleAssignmentRepository>()
+                                             .Add(new RaidRegistrationRoleAssignmentEntity
+                                             {
+                                                 RegistrationId = registrationId.Value,
+                                                 RoleId = roleId
+                                             });
+                                }
                             }
                         }
-                    }
-                    else
-                    {
-                        await container.ReplyAsync(LocalizationGroup.GetText("NoRoleSelectionAfterDeadline", "It is not possible to edit your preferred roles after the registration deadline."), ephemeral: true)
-                                       .ConfigureAwait(false);
-                    }
+                        else
+                        {
+                            await container.ReplyAsync(LocalizationGroup.GetText("NoRoleSelectionAfterDeadline", "It is not possible to edit your preferred roles after the registration deadline."), ephemeral: true)
+                                           .ConfigureAwait(false);
+                        }
 
-                    await _messageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
-                                         .ConfigureAwait(false);
+                        await _messageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
+                                             .ConfigureAwait(false);
+                    }
+                }
+                else
+                {
+                    await container.ReplyAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."), ephemeral: true)
+                                   .ConfigureAwait(false);
                 }
             }
             else
             {
-                await container.ReplyAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."), ephemeral: true)
-                               .ConfigureAwait(false);
+                await ConfigureRolesFirstTime(container).ConfigureAwait(false);
             }
         }
     }
@@ -347,10 +373,10 @@ public class RaidCommandHandler : LocatedServiceBase
                                              .Where(obj => obj.TimeStamp > DateTime.Now
                                                         && obj.RaidDayConfiguration.AliasName == name)
                                              .Select(obj => new
-                                             {
-                                                 obj.Id,
-                                                 obj.ConfigurationId
-                                             })
+                                                            {
+                                                                obj.Id,
+                                                                obj.ConfigurationId
+                                                            })
                                              .FirstOrDefaultAsync()
                                              .ConfigureAwait(false);
 
@@ -362,10 +388,10 @@ public class RaidCommandHandler : LocatedServiceBase
                 if (registrationId != null)
                 {
                     await _roleAssignmentService.AssignRoles(container, registrationId.Value)
-                                               .ConfigureAwait(false);
+                                                .ConfigureAwait(false);
 
                     await _messageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
-                                        .ConfigureAwait(false);
+                                         .ConfigureAwait(false);
                 }
             }
             else
@@ -391,10 +417,10 @@ public class RaidCommandHandler : LocatedServiceBase
                                              .Where(obj => obj.TimeStamp > DateTime.Now
                                                         && obj.RaidDayConfiguration.AliasName == name)
                                              .Select(obj => new
-                                             {
-                                                 obj.Id,
-                                                 obj.ConfigurationId
-                                             })
+                                                            {
+                                                                obj.Id,
+                                                                obj.ConfigurationId
+                                                            })
                                              .FirstOrDefaultAsync()
                                              .ConfigureAwait(false);
 
@@ -404,10 +430,10 @@ public class RaidCommandHandler : LocatedServiceBase
                                                        .ConfigureAwait(false);
 
                 if (await _registrationService.Leave(appointment.Id, user.Id)
-                                             .ConfigureAwait(false))
+                                              .ConfigureAwait(false))
                 {
                     await _messageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
-                                        .ConfigureAwait(false);
+                                         .ConfigureAwait(false);
                 }
 
                 return true;
@@ -436,10 +462,10 @@ public class RaidCommandHandler : LocatedServiceBase
                                              .Where(obj => obj.TimeStamp > DateTime.Now
                                                         && obj.RaidDayConfiguration.AliasName == name)
                                              .Select(obj => new
-                                             {
-                                                 obj.Id,
-                                                 obj.ConfigurationId
-                                             })
+                                                            {
+                                                                obj.Id,
+                                                                obj.ConfigurationId
+                                                            })
                                              .FirstOrDefaultAsync()
                                              .ConfigureAwait(false);
 
@@ -449,10 +475,10 @@ public class RaidCommandHandler : LocatedServiceBase
                                                                .ConfigureAwait(false);
 
                 if (await _registrationService.Leave(appointment.Id, internalUser.Id)
-                                             .ConfigureAwait(false))
+                                              .ConfigureAwait(false))
                 {
                     await _messageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
-                                        .ConfigureAwait(false);
+                                         .ConfigureAwait(false);
                 }
             }
             else
@@ -478,10 +504,10 @@ public class RaidCommandHandler : LocatedServiceBase
                                              .Where(obj => obj.TimeStamp > DateTime.Now
                                                         && obj.RaidDayConfiguration.AliasName == name)
                                              .Select(obj => new
-                                             {
-                                                 obj.Id,
-                                                 obj.ConfigurationId
-                                             })
+                                                            {
+                                                                obj.Id,
+                                                                obj.ConfigurationId
+                                                            })
                                              .FirstOrDefaultAsync()
                                              .ConfigureAwait(false);
 
@@ -521,10 +547,10 @@ public class RaidCommandHandler : LocatedServiceBase
                                              .Where(obj => obj.TimeStamp > DateTime.Now
                                                         && obj.RaidDayConfiguration.AliasName == name)
                                              .Select(obj => new
-                                             {
-                                                 obj.Id,
-                                                 obj.ConfigurationId
-                                             })
+                                                            {
+                                                                obj.Id,
+                                                                obj.ConfigurationId
+                                                            })
                                              .FirstOrDefaultAsync()
                                              .ConfigureAwait(false);
 
@@ -534,7 +560,7 @@ public class RaidCommandHandler : LocatedServiceBase
                                               .ConfigureAwait(false))
                 {
                     await _messageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
-                                        .ConfigureAwait(false);
+                                         .ConfigureAwait(false);
 
                     await container.ReplyAsync(LocalizationGroup.GetText("GroupCountChanged", "The group count has been changed."))
                                    .ConfigureAwait(false);
@@ -567,11 +593,10 @@ public class RaidCommandHandler : LocatedServiceBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task Guides(IContextContainer container)
     {
-        var builder = new EmbedBuilder()
-                      .WithTitle(LocalizationGroup.GetText("RaidGuides", "Raid guides"))
-                      .WithColor(Color.Green)
-                      .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
-                      .WithTimestamp(DateTime.Now);
+        var builder = new EmbedBuilder().WithTitle(LocalizationGroup.GetText("RaidGuides", "Raid guides"))
+                                        .WithColor(Color.Green)
+                                        .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
+                                        .WithTimestamp(DateTime.Now);
 
         var stringBuilder = new StringBuilder();
         stringBuilder.AppendLine($"{DiscordEmoteService.GetGuildEmote(container.Client, 848910035747864576)} {Format.Url("Vale Guardian", "https://wiki.guildwars2.com/wiki/Vale_Guardian")} ({Format.Url("Mukluk", "https://www.youtube.com/watch?v=qtzMDCVHlLg")} - {Format.Url("Tekkit", "https://www.youtube.com/watch?v=IiSsq85T23Q")})");
@@ -713,10 +738,10 @@ public class RaidCommandHandler : LocatedServiceBase
                                                        && obj.TimeStamp > now
                                                        && obj.RaidRegistrations.Any(obj2 => obj2.User.DiscordAccounts.Any(obj3 => discordUserIds.Contains(obj3.Id))))
                                             .Select(obj => new
-                                            {
-                                                obj.Id,
-                                                obj.ConfigurationId
-                                            })
+                                                           {
+                                                               obj.Id,
+                                                               obj.ConfigurationId
+                                                           })
                                             .ToList();
 
                 foreach (var appointment in appointments)
@@ -746,15 +771,15 @@ public class RaidCommandHandler : LocatedServiceBase
                                                 })
                                                 .ToList();
 
-                foreach (var changedRank in changedRanks.Where(obj => obj.NewExperienceLevelId != obj.OldExperienceLevelId))
+                foreach (var (user, oldExperienceLevelId, newExperienceLevelId) in changedRanks.Where(obj => obj.NewExperienceLevelId != obj.OldExperienceLevelId))
                 {
-                    var oldRank = experienceLevels.FirstOrDefault(obj => obj.Id == changedRank.OldExperienceLevelId);
-                    var newRank = experienceLevels.FirstOrDefault(obj => obj.Id == changedRank.NewExperienceLevelId);
+                    var oldRank = experienceLevels.FirstOrDefault(obj => obj.Id == oldExperienceLevelId);
+                    var newRank = experienceLevels.FirstOrDefault(obj => obj.Id == newExperienceLevelId);
 
                     await context.Channel
                                  .SendMessageAsync(LocalizationGroup.GetFormattedText("NewRankFormat",
                                                                                       "Level changed for {0}: {1} {2} {3}",
-                                                                                      changedRank.User.Mention,
+                                                                                      user.Mention,
                                                                                       oldRank?.Description,
                                                                                       oldRank == null || oldRank.Rank > newRank?.Rank
                                                                                           ? DiscordEmoteService.GetArrowUpEmote(context.Client)
@@ -801,7 +826,7 @@ public class RaidCommandHandler : LocatedServiceBase
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task Roles(IContextContainer context)
+    public async Task ConfigureRoles(IContextContainer context)
     {
         var dialogHandler = new DialogHandler(context);
         await using (dialogHandler.ConfigureAwait(false))
@@ -809,27 +834,64 @@ public class RaidCommandHandler : LocatedServiceBase
             var user = await _userManagementService.GetUserByDiscordAccountId(context.User)
                                                    .ConfigureAwait(false);
 
-            var userRoles = await dialogHandler.Run<RaidReadyRolesMultiSelectDialogElement, List<long>>(new RaidReadyRolesMultiSelectDialogElement(_localizationService, _raidRolesService, _userManagementService))
-                .ConfigureAwait(false);
+            var selectedRoles = await dialogHandler.Run<RaidPreparedRolesSelectDialogElement, List<long>>(new RaidPreparedRolesSelectDialogElement(_localizationService, _raidRolesService, _userManagementService))
+                                                   .ConfigureAwait(false);
 
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
                 dbFactory.GetRepository<RaidUserRoleRepository>()
-                .RemoveRange(obj => obj.UserId == user.Id);
+                         .RemoveRange(obj => obj.UserId == user.Id);
 
-                foreach (var role in userRoles)
+                foreach (var roleId in selectedRoles)
                 {
                     dbFactory.GetRepository<RaidUserRoleRepository>()
-                    .Add(new RaidUserRoleEntity
-                    {
-                        UserId = user.Id,
-                        RoleId = role
-                    });
+                             .Add(new RaidUserRoleEntity
+                                  {
+                                      UserId = user.Id,
+                                      RoleId = roleId
+                                  });
                 }
             }
             await dialogHandler.DeleteMessages()
-                .ConfigureAwait(false);
+                               .ConfigureAwait(false);
         }
     }
+
+    /// <summary>
+    /// First time role selection
+    /// </summary>
+    /// <param name="context">Command context</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    private async Task ConfigureRolesFirstTime(IContextContainer context)
+    {
+        var dialogHandler = new DialogHandler(context);
+        await using (dialogHandler.ConfigureAwait(false))
+        {
+            var user = await _userManagementService.GetUserByDiscordAccountId(context.User)
+                                                   .ConfigureAwait(false);
+
+            var selectedRoles = await dialogHandler.Run<RaidPreparedRolesFirstTimeSelectDialogElement, List<long>>(new RaidPreparedRolesFirstTimeSelectDialogElement(_localizationService, _raidRolesService))
+                                                   .ConfigureAwait(false);
+
+            using (var dbFactory = RepositoryFactory.CreateInstance())
+            {
+                dbFactory.GetRepository<RaidUserRoleRepository>()
+                         .RemoveRange(obj => obj.UserId == user.Id);
+
+                foreach (var roleId in selectedRoles)
+                {
+                    dbFactory.GetRepository<RaidUserRoleRepository>()
+                             .Add(new RaidUserRoleEntity
+                                  {
+                                      UserId = user.Id,
+                                      RoleId = roleId
+                                  });
+                }
+            }
+            await dialogHandler.DeleteMessages()
+                               .ConfigureAwait(false);
+        }
+    }
+
     #endregion // Methods
 }
