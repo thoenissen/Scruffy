@@ -129,7 +129,7 @@ namespace Scruffy.Services.Core
                         }
                     }
 
-                    var actionRowBuilder = componentsBuilder.ActionRows.LastOrDefault();
+                    var actionRowBuilder = componentsBuilder.ActionRows?.LastOrDefault();
                     if (actionRowBuilder == null)
                     {
                         actionRowBuilder = new ActionRowBuilder();
