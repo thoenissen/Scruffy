@@ -25,9 +25,9 @@ namespace Scruffy.Commands.Modals.Utility
         /// <summary>
         /// Add link
         /// </summary>
-        /// <param name="modal">Modal input</param>
         /// <param name="channelId">Channel id</param>
         /// <param name="messageId">Message id</param>
+        /// <param name="modal">Modal input</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         [ModalInteraction($"{AddLinkModalData.CustomIdPrefix};*;*")]
         public async Task AddLink(ulong channelId, ulong messageId, AddLinkModalData modal)

@@ -92,6 +92,27 @@ namespace Scruffy.Commands.MessageCommands
             }
         }
 
+        /// <summary>
+        /// Remove components
+        /// </summary>
+        /// <param name="message">Message</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        [MessageCommand("Remove components")]
+        public async Task RemoveComponents(IUserMessage message)
+        {
+            if (message.Author.Id == Context.Client.CurrentUser.Id)
+            {
+                var processingMessage = await Context.DeferProcessing()
+                                                     .ConfigureAwait(false);
+
+                await CommandHandler.RemoveComponents(message)
+                                    .ConfigureAwait(false);
+
+                await processingMessage.DeleteAsync()
+                                       .ConfigureAwait(false);
+            }
+        }
+
         #endregion // Commands
     }
 }

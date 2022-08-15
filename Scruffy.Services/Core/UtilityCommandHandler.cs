@@ -144,6 +144,17 @@ namespace Scruffy.Services.Core
             }
         }
 
+        /// <summary>
+        /// Remove components
+        /// </summary>
+        /// <param name="message">Message</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task RemoveComponents(IUserMessage message)
+        {
+            await message.ModifyAsync(obj => obj.Components = new ComponentBuilder().Build())
+                         .ConfigureAwait(false);
+        }
+
         #endregion // Methods
     }
 }
