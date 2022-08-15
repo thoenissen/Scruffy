@@ -45,13 +45,23 @@ public class DpsReportEmbedBuilder : EmbedBuilder
     /// <param name="content">The content of the report group</param>
     public void AddReportGroup(DpsReportGroup group, string content)
     {
+        AddReportGroup(group, content);
+    }
+
+    /// <summary>
+    /// Add a group of DPS reports
+    /// </summary>
+    /// <param name="group">The DPS report group</param>
+    /// <param name="content">The content of the report group</param>
+    public void AddReportGroup(string group, string content)
+    {
         if (_reportGroupsInRow > 1)
         {
             AddField("\u200b", "\u200b", false);
             _reportGroupsInRow = 0;
         }
 
-        AddField(group.AsText(), content, true);
+        AddField(group, content, true);
         ++_reportGroupsInRow;
     }
 }
@@ -110,7 +120,7 @@ public class LogCommandHandler : LocatedServiceBase
     #region Methods
 
     /// <summary>
-    /// Prints the logs of the given type + day
+    /// Posts the logs of the given type + day
     /// </summary>
     /// <param name="context">Command context</param>
     /// <param name="type">Type</param>
@@ -119,14 +129,11 @@ public class LogCommandHandler : LocatedServiceBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task PostLogs(IContextContainer context, DpsReportType type, string dayString, bool summarize)
     {
-        var pairs = _repositoryFactory.GetRepository<DiscordAccountRepository>()
-                                            .GetQuery()
-                                            .Where(obj => obj.Id == context.User.Id)
-                                            .Select(obj => new { obj.User.GuildWarsAccounts.FirstOrDefault().Name, obj.User.DpsReportUserToken })
-                                            .ToList();
-
-        var tokens = pairs.Select(obj => obj.DpsReportUserToken).Distinct().ToList();
-        var userName = pairs.Select(obj => obj.Name).Distinct().FirstOrDefault();
+        var account = _repositoryFactory.GetRepository<DiscordAccountRepository>()
+                                        .GetQuery()
+                                        .Where(obj => obj.Id == context.User.Id)
+                                        .Select(obj => new { obj.User.GuildWarsAccounts.FirstOrDefault().Name, obj.User.DpsReportUserToken })
+                                        .FirstOrDefault();
 
         if (string.IsNullOrWhiteSpace(dayString)
             || DateOnly.TryParseExact(dayString, _dateFormats, null, DateTimeStyles.None, out var day) == false)
@@ -134,7 +141,7 @@ public class LogCommandHandler : LocatedServiceBase
             day = DateOnly.FromDateTime(DateTime.UtcNow);
         }
 
-        if (tokens.Count > 0)
+        if (!string.IsNullOrEmpty(account.DpsReportUserToken))
         {
             var uploads = await _dpsReportConnector.GetUploads(
                 filter: (Upload upload) =>
@@ -147,7 +154,7 @@ public class LogCommandHandler : LocatedServiceBase
                     var uploadDay = DateOnly.FromDateTime(upload.UploadTime);
                     return uploadDay < day;
                 },
-                tokens.ToArray()
+                account.DpsReportUserToken
             ).ConfigureAwait(false);
 
             if (uploads.Count > 0)
@@ -155,7 +162,7 @@ public class LogCommandHandler : LocatedServiceBase
                 var embedBuilder = new DpsReportEmbedBuilder();
 
                 embedBuilder.WithColor(Color.Green)
-                            .WithAuthor($"{context.User.Username} - {userName}", context.User.GetAvatarUrl())
+                            .WithAuthor($"{context.User.Username} - {account.Name}", context.User.GetAvatarUrl())
                             .WithTitle(LocalizationGroup.GetFormattedText("DpsReportTitle", "Your reports from {0}", day.ToString("d", LocalizationGroup.CultureInfo)));
 
                 await AddReports(embedBuilder, uploads, summarize, type == DpsReportType.All, false).ConfigureAwait(false);
@@ -177,7 +184,88 @@ public class LogCommandHandler : LocatedServiceBase
     }
 
     /// <summary>
-    /// Prints the guild raid summary of the raid appointments in a week
+    /// Posts the last <paramref name="count"/> of <paramref name="group"/> tries
+    /// </summary>
+    /// <param name="context">Command context</param>
+    /// <param name="group">Group to search for</param>
+    /// <param name="count">Max count logs to search</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task PostHistory(IContextContainer context, DpsReportGroup group, int count)
+    {
+        var account = _repositoryFactory.GetRepository<DiscordAccountRepository>()
+                                        .GetQuery()
+                                        .Where(obj => obj.Id == context.User.Id)
+                                        .Select(obj => new { obj.User.GuildWarsAccounts.FirstOrDefault().Name, obj.User.DpsReportUserToken })
+                                        .FirstOrDefault();
+
+        if (!string.IsNullOrEmpty(account.DpsReportUserToken))
+        {
+            var counts = new Dictionary<int, int>();
+
+            var uploads = await _dpsReportConnector.GetUploads(
+                filter: (Upload upload) =>
+                {
+                    if (upload.Encounter.Success && _dpsReportConnector.GetReportGroup(upload.Encounter.BossId) == group)
+                    {
+                        if (!counts.ContainsKey(upload.Encounter.BossId))
+                        {
+                            counts.Add(upload.Encounter.BossId, 0);
+                        }
+
+                        ++counts[upload.Encounter.BossId];
+                        return true;
+                    }
+
+                    return false;
+                },
+                shouldAbort: (Upload upload) => counts.TryGetValue(upload.Encounter.BossId, out var value) && value > count,
+                account.DpsReportUserToken
+            ).ConfigureAwait(false);
+
+            if (uploads.Count > 0)
+            {
+                var successIcon = DiscordEmoteService.GetCheckEmote(_client).ToString();
+                var embedBuilder = new DpsReportEmbedBuilder();
+
+                embedBuilder.WithColor(Color.Green)
+                            .WithAuthor($"{context.User.Username} - {account.Name}", context.User.GetAvatarUrl())
+                            .WithTitle(LocalizationGroup.GetFormattedText("DpsReportHistory", "Your last {0} {1} {2} tries", count, successIcon, group.AsText()));
+
+                foreach (var bossGroup in uploads.OrderBy(obj => _dpsReportConnector.GetSortValue(obj.Encounter.BossId))
+                                        .ThenBy(obj => obj.EncounterTime)
+                                        .GroupBy(obj => new { obj.Encounter.BossId, obj.Encounter.Boss }))
+                {
+                    var title = $"{DiscordEmoteService.GetGuildEmote(_client, _dpsReportConnector.GetRaidBossIconId(bossGroup.Key.BossId))} {bossGroup.Key.Boss}";
+                    var reports = new StringBuilder();
+
+                    foreach (var upload in bossGroup.Take(count))
+                    {
+                        reports.Append(" └ ");
+                        reports.Append(Format.Url($"{upload.EncounterTime:dd.MM} - {upload.Encounter.Duration:mm\\:ss} ⧉", upload.Permalink));
+                        reports.AppendLine();
+                    }
+
+                    embedBuilder.AddReportGroup(title, reports.ToString());
+                }
+
+                await context.ReplyAsync(embed: embedBuilder.Build())
+                             .ConfigureAwait(false);
+            }
+            else
+            {
+                await context.ReplyAsync(LocalizationGroup.GetText("NoDpsReportUploads", "No DPS-Reports found!"))
+                             .ConfigureAwait(false);
+            }
+        }
+        else
+        {
+            await context.ReplyAsync(LocalizationGroup.GetText("NoDpsReportToken", "The are no DPS-Report user tokens assigned to your account."))
+                         .ConfigureAwait(false);
+        }
+    }
+
+    /// <summary>
+    /// Posts the guild raid summary of the raid appointments in a week
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
@@ -196,10 +284,10 @@ public class LogCommandHandler : LocatedServiceBase
 
         // Search for appointments this week
         var appointments = _repositoryFactory.GetRepository<RaidAppointmentRepository>()
-                            .GetQuery()
-                            .Where(obj => obj.TimeStamp > startOfWeek && obj.TimeStamp < now)
-                            .Select(obj => new { obj.Id, obj.TimeStamp })
-                            .ToList();
+                                             .GetQuery()
+                                             .Where(obj => obj.TimeStamp > startOfWeek && obj.TimeStamp < now)
+                                             .Select(obj => new { obj.Id, obj.TimeStamp })
+                                             .ToList();
 
         // Search for appointments of last week
         if (appointments.Count == 0)
@@ -208,10 +296,10 @@ public class LogCommandHandler : LocatedServiceBase
             startOfWeek = startOfWeek.AddDays(-7);
 
             appointments = _repositoryFactory.GetRepository<RaidAppointmentRepository>()
-                            .GetQuery()
-                            .Where(obj => obj.TimeStamp > startOfWeek && obj.TimeStamp < endOfWeek)
-                            .Select(obj => new { obj.Id, obj.TimeStamp })
-                            .ToList();
+                                             .GetQuery()
+                                             .Where(obj => obj.TimeStamp > startOfWeek && obj.TimeStamp < endOfWeek)
+                                             .Select(obj => new { obj.Id, obj.TimeStamp })
+                                             .ToList();
         }
 
         var tasks = new List<Task<IEnumerable<Upload>>>();
@@ -267,16 +355,16 @@ public class LogCommandHandler : LocatedServiceBase
     private async Task<IEnumerable<Upload>> GetLogsForGuildRaidDay(long appointmentId)
     {
         var appointment = _repositoryFactory.GetRepository<RaidAppointmentRepository>()
-                            .GetQuery()
-                            .Where(obj => obj.Id == appointmentId)
-                            .Select(obj => new
-                            {
-                                StartTime = obj.TimeStamp,
-                                Tokens = obj.RaidRegistrations
-                                                            .Where(obj2 => obj2.LineupExperienceLevelId != null && obj2.User.DpsReportUserToken != null)
-                                                            .Select(obj2 => obj2.User.DpsReportUserToken)
-                            })
-                            .FirstOrDefault();
+                                            .GetQuery()
+                                            .Where(obj => obj.Id == appointmentId)
+                                            .Select(obj => new
+                                            {
+                                                StartTime = obj.TimeStamp,
+                                                Tokens = obj.RaidRegistrations
+                                                                            .Where(obj2 => obj2.LineupExperienceLevelId != null && obj2.User.DpsReportUserToken != null)
+                                                                            .Select(obj2 => obj2.User.DpsReportUserToken)
+                                            })
+                                            .FirstOrDefault();
 
         var startDate = new DateTimeOffset(appointment.StartTime, TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow)).AddMinutes(-15);
         var endDate = startDate.AddHours(3).AddMinutes(30);
@@ -308,8 +396,8 @@ public class LogCommandHandler : LocatedServiceBase
         var failureIcon = DiscordEmoteService.GetCrossEmote(_client).ToString();
 
         foreach (var typeGroup in uploads.OrderBy(obj => _dpsReportConnector.GetSortValue(obj.Encounter.BossId))
-                                        .ThenBy(obj => obj.EncounterTime)
-                                        .GroupBy(obj => _dpsReportConnector.GetReportGroup(obj.Encounter.BossId).GetReportType()))
+                                         .ThenBy(obj => obj.EncounterTime)
+                                         .GroupBy(obj => _dpsReportConnector.GetReportGroup(obj.Encounter.BossId).GetReportType()))
         {
             if (addSubTitles)
             {
@@ -354,7 +442,7 @@ public class LogCommandHandler : LocatedServiceBase
                             title.Append(" └ CM");
                         }
 
-                        if (!hasMultipleGroups)
+                        if (summarize && !hasMultipleGroups)
                         {
                             var fails = GetFailsText(boss);
 
@@ -382,13 +470,16 @@ public class LogCommandHandler : LocatedServiceBase
                                 reports.Append(" └ ");
                                 reports.Append(LocalizationGroup.GetFormattedText("DpsReportPlayerGroup", "Group {0}", groupUploads.Key.ID));
 
-                                var fails = GetFailsText(groupUploads.Value);
-
-                                if (!string.IsNullOrEmpty(fails))
+                                if (summarize)
                                 {
-                                    reports.AppendLine();
-                                    reports.Append(' ');
-                                    reports.Append(fails);
+                                    var fails = GetFailsText(groupUploads.Value);
+
+                                    if (!string.IsNullOrEmpty(fails))
+                                    {
+                                        reports.AppendLine();
+                                        reports.Append(' ');
+                                        reports.Append(fails);
+                                    }
                                 }
 
                                 reports.AppendLine();

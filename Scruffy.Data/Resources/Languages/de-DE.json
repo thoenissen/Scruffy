@@ -666,6 +666,7 @@
         },
         "LogCommandHandler": {
             "DpsReportTitle": "Deine Reports vom {0}",
+            "DpsReportHistory": "Deine letzten {0} {1} {2} Versuche",
             "DpsReportGuildRaidSummaryTitle": "Gilden-Raid {0}",
             "DpsReportGuildRaidBossesTitle": "Bosse",
             "DpsReportGuildRaidStatsTitle": "Statistiken",
