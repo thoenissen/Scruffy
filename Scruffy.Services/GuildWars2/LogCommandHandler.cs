@@ -412,6 +412,13 @@ public class LogCommandHandler : LocatedServiceBase
 
                 foreach (var bossGroup in reportGroup.GroupBy(obj => new { obj.Encounter.BossId, obj.Encounter.Boss }))
                 {
+                    // Start a new field, when we don't have enough space for some logs
+                    if (reports.Length > 896)
+                    {
+                        embedBuilder.AddReportGroup(reportGroup.Key, reports.ToString());
+                        reports = new StringBuilder();
+                    }
+
                     var bossIcon = DiscordEmoteService.GetGuildEmote(_client, _dpsReportConnector.GetRaidBossIconId(bossGroup.Key.BossId)).ToString();
 
                     var hasNormalTries = isFractal || bossGroup.Any(obj => !obj.Encounter.IsChallengeMode);
@@ -421,24 +428,30 @@ public class LogCommandHandler : LocatedServiceBase
                     {
                         var groupedUploads = GroupUploads(ref knownGroups, boss, withStats);
 
-                        // Start a new field, when we don't have enough space for some logs
-                        if (reports.Length > 896)
-                        {
-                            embedBuilder.AddReportGroup(reportGroup.Key, reports.ToString());
-                            reports = new StringBuilder();
-                        }
-
                         var title = new StringBuilder();
 
-                        if (isFractal || !boss.Key)
+                        if (!boss.Key || !hasNormalTries)
                         {
                             title.Append(bossIcon);
                             title.Append(' ');
                             title.Append(bossGroup.Key.Boss);
                         }
-                        else
+
+                        if (!isFractal && boss.Key)
                         {
-                            title.Append(" └ CM");
+                            if (!hasNormalTries)
+                            {
+                                title.Append(" CM");
+                            }
+                            else
+                            {
+                                if (!boss.Key || !hasNormalTries)
+                                {
+                                    title.AppendLine();
+                                }
+
+                                title.Append(" └ CM");
+                            }
                         }
 
                         if (summarize && !hasMultipleGroups)
@@ -477,6 +490,12 @@ public class LogCommandHandler : LocatedServiceBase
                                     {
                                         reports.AppendLine();
                                         reports.Append(' ');
+
+                                        if (hasChallengeTries)
+                                        {
+                                            reports.Append(' ');
+                                        }
+
                                         reports.Append(fails);
                                     }
                                 }
@@ -590,7 +609,7 @@ public class LogCommandHandler : LocatedServiceBase
         var fails = uploads.Where(obj => !obj.Encounter.Success);
         var failCount = fails.Count();
 
-        if (failCount > 1)
+        if (failCount > 0 && uploads.Any(obj => obj.Encounter.Success))
         {
             var totalDuration = TimeSpan.FromSeconds(fails.Select(obj => obj.Encounter.Duration.TotalSeconds).Sum());
             var result = new StringBuilder();
