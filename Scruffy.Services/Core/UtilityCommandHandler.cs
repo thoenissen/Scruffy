@@ -2,6 +2,7 @@
 using Discord.WebSocket;
 
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Core
 {
@@ -91,6 +92,55 @@ namespace Scruffy.Services.Core
             {
                 await repostMessage.AddReactionAsync(reaction.Key)
                                    .ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Add link to message
+        /// </summary>
+        /// <param name="context">Context</param>
+        /// <param name="channelId">Channel id</param>
+        /// <param name="messageId">Message id</param>
+        /// <param name="name">Name</param>
+        /// <param name="link">Link</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task AddLink(InteractionContextContainer context, ulong channelId, ulong messageId, string name, string link)
+        {
+            if (await context.Client.GetChannelAsync(channelId)
+                             .ConfigureAwait(false) is ITextChannel channel)
+            {
+                if (await channel.GetMessageAsync(messageId)
+                                 .ConfigureAwait(false) is IUserMessage message)
+                {
+                    var componentsBuilder = new ComponentBuilder();
+
+                    foreach (var component in message.Components)
+                    {
+                        if (component is ActionRowComponent actionRow)
+                        {
+                            var rowBuilder = new ActionRowBuilder();
+
+                            foreach (var innerComponent in actionRow.Components)
+                            {
+                                rowBuilder.AddComponent(innerComponent);
+                            }
+
+                            componentsBuilder.AddRow(rowBuilder);
+                        }
+                    }
+
+                    var actionRowBuilder = componentsBuilder.ActionRows.LastOrDefault();
+                    if (actionRowBuilder == null)
+                    {
+                        actionRowBuilder = new ActionRowBuilder();
+                        componentsBuilder.AddRow(actionRowBuilder);
+                    }
+
+                    actionRowBuilder.WithButton(name, null, ButtonStyle.Link, null, link);
+
+                    await message.ModifyAsync(obj => obj.Components = componentsBuilder.Build())
+                                 .ConfigureAwait(false);
+                }
             }
         }
 

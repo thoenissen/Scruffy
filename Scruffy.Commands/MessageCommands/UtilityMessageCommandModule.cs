@@ -2,6 +2,7 @@
 using Discord.Interactions;
 
 using Scruffy.Services.Core;
+using Scruffy.Services.Core.Modals;
 using Scruffy.Services.Discord;
 
 namespace Scruffy.Commands.MessageCommands
@@ -74,6 +75,21 @@ namespace Scruffy.Commands.MessageCommands
 
             await processingMessage.DeleteAsync()
                                    .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Add link
+        /// </summary>
+        /// <param name="message">Message</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        [MessageCommand("Add link")]
+        public async Task AddLink(IUserMessage message)
+        {
+            if (message.Author.Id == Context.Client.CurrentUser.Id)
+            {
+                await Context.RespondWithModalAsync<AddLinkModalData>(AddLinkModalData.GetCustomId(message.Channel.Id, message.Id))
+                             .ConfigureAwait(false);
+            }
         }
 
         #endregion // Commands
