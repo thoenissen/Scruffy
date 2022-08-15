@@ -58,6 +58,24 @@ namespace Scruffy.Commands.MessageCommands
                                    .ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Repost message
+        /// </summary>
+        /// <param name="message">Message</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        [MessageCommand("Repost message")]
+        public async Task RepostMessage(IUserMessage message)
+        {
+            var processingMessage = await Context.DeferProcessing()
+                                                 .ConfigureAwait(false);
+
+            await CommandHandler.RepostMessage(message)
+                                .ConfigureAwait(false);
+
+            await processingMessage.DeleteAsync()
+                                   .ConfigureAwait(false);
+        }
+
         #endregion // Commands
     }
 }

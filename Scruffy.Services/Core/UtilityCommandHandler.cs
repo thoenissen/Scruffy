@@ -76,6 +76,24 @@ namespace Scruffy.Services.Core
             }
         }
 
+        /// <summary>
+        /// Repost message
+        /// </summary>
+        /// <param name="message">Message</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task RepostMessage(IUserMessage message)
+        {
+            var repostMessage = await message.Channel
+                                             .SendMessageAsync(message.Content)
+                                             .ConfigureAwait(false);
+
+            foreach (var reaction in message.Reactions)
+            {
+                await repostMessage.AddReactionAsync(reaction.Key)
+                                   .ConfigureAwait(false);
+            }
+        }
+
         #endregion // Methods
     }
 }
