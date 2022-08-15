@@ -93,6 +93,16 @@ public class LogCommandHandler : LocatedServiceBase
     /// </summary>
     private readonly DpsReportConnector _dpsReportConnector;
 
+    /// <summary>
+    /// String to display the success icon
+    /// </summary>
+    private string SuccessIcon => DiscordEmoteService.GetCheckEmote(_client).ToString();
+
+    /// <summary>
+    /// String to display the failure icon
+    /// </summary>
+    private string FailureIcon => "\u274C";
+
     #endregion // Fields
 
     #region Constructor
@@ -393,9 +403,6 @@ public class LogCommandHandler : LocatedServiceBase
     {
         var knownGroups = new HashSet<PlayerGroup>();
 
-        var successIcon = DiscordEmoteService.GetCheckEmote(_client).ToString();
-        var failureIcon = DiscordEmoteService.GetCrossEmote(_client).ToString();
-
         foreach (var typeGroup in uploads.OrderBy(obj => _dpsReportConnector.GetSortValue(obj.Encounter.BossId))
                                          .ThenBy(obj => obj.EncounterTime)
                                          .GroupBy(obj => _dpsReportConnector.GetReportGroup(obj.Encounter.BossId).GetReportType()))
@@ -531,7 +538,7 @@ public class LogCommandHandler : LocatedServiceBase
                                     percentage = $" {Math.Floor(upload.Item2.Value)}% -";
                                 }
 
-                                var line = $"{(hasMultipleGroups ? " " : string.Empty)}{(hasChallengeTries ? " " : string.Empty)} └ {(upload.Item1.Encounter.Success ? successIcon : failureIcon)}{percentage} {Format.Url($"{duration} ⧉", upload.Item1.Permalink)}";
+                                var line = $"{(hasMultipleGroups ? " " : string.Empty)}{(hasChallengeTries ? " " : string.Empty)} └ {(upload.Item1.Encounter.Success ? SuccessIcon : FailureIcon)}{percentage} {Format.Url($"{duration} ⧉", upload.Item1.Permalink)}";
 
                                 // Start a new field, when we would reach the character limit
                                 if (reports.Length + line.Length > 1024)
@@ -617,7 +624,7 @@ public class LogCommandHandler : LocatedServiceBase
             var result = new StringBuilder();
 
             result.Append(" │ ");
-            result.Append(DiscordEmoteService.GetCrossEmote(_client).ToString());
+            result.Append(FailureIcon);
             result.Append(" (");
             result.Append(failCount);
             result.Append("x)");
@@ -676,8 +683,6 @@ public class LogCommandHandler : LocatedServiceBase
     /// <param name="knownGroups">All known groups</param>
     private void AddGroupStats(DpsReportEmbedBuilder embedBuilder, HashSet<PlayerGroup> knownGroups)
     {
-        var successIcon = DiscordEmoteService.GetCheckEmote(_client).ToString();
-        var failureIcon = DiscordEmoteService.GetCrossEmote(_client).ToString();
         var dpsIcon = DiscordEmoteService.GetDamageDealerEmote(_client).ToString();
 
         foreach (var groups in knownGroups.GroupBy(obj => obj.Date))
@@ -721,7 +726,7 @@ public class LogCommandHandler : LocatedServiceBase
                 }
 
                 content.Append("└ ");
-                content.Append(LocalizationGroup.GetFormattedText("DpsReportFightDurationStat", "{0} in {1} fights", group.Stats.FailedEncounterTotalTime.ToString(group.Stats.FailedEncounterTotalTime.TotalHours > 1.0 ? @"hh\:mm\:ss" : @"mm\:ss"), failureIcon));
+                content.Append(LocalizationGroup.GetFormattedText("DpsReportFightDurationStat", "{0} in {1} fights", group.Stats.FailedEncounterTotalTime.ToString(group.Stats.FailedEncounterTotalTime.TotalHours > 1.0 ? @"hh\:mm\:ss" : @"mm\:ss"), FailureIcon));
                 content.AppendLine();
 
                 if (hasMultipleGroups)
@@ -730,7 +735,7 @@ public class LogCommandHandler : LocatedServiceBase
                 }
 
                 content.Append("└ ");
-                content.Append(LocalizationGroup.GetFormattedText("DpsReportFightDurationStat", "{0} in {1} fights", group.Stats.SuccessfulEncounterTotalTime.ToString(group.Stats.SuccessfulEncounterTotalTime.TotalHours > 1.0 ? @"hh\:mm\:ss" : @"mm\:ss"), successIcon));
+                content.Append(LocalizationGroup.GetFormattedText("DpsReportFightDurationStat", "{0} in {1} fights", group.Stats.SuccessfulEncounterTotalTime.ToString(group.Stats.SuccessfulEncounterTotalTime.TotalHours > 1.0 ? @"hh\:mm\:ss" : @"mm\:ss"), SuccessIcon));
                 content.AppendLine();
 
                 if (hasMultipleGroups)
