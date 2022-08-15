@@ -45,7 +45,7 @@ public class DpsReportEmbedBuilder : EmbedBuilder
     /// <param name="content">The content of the report group</param>
     public void AddReportGroup(DpsReportGroup group, string content)
     {
-        AddReportGroup(group, content);
+        AddReportGroup(group.AsText(), content);
     }
 
     /// <summary>
