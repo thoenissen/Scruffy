@@ -315,7 +315,9 @@ public class LogCommandHandler : LocatedServiceBase
             uploads.AddRange(await task.ConfigureAwait(false));
         }
 
-        if (uploads.Count > 0)
+        var validUploads = uploads.Where(obj => obj.Encounter.Success || obj.Encounter.Duration.TotalSeconds > 30.0);
+
+        if (validUploads.Any())
         {
             var week = $"{startOfWeek:dd.} - {startOfWeek.AddDays(7):dd.MM.yy}";
 
@@ -325,7 +327,7 @@ public class LogCommandHandler : LocatedServiceBase
             summaryBuilder.WithColor(Color.DarkPurple)
                           .WithTitle(LocalizationGroup.GetText("DpsReportGuildRaidBossesTitle", "Bosses"));
 
-            var knownGroups = await AddReports(summaryBuilder, uploads, true, false, true).ConfigureAwait(false);
+            var knownGroups = await AddReports(summaryBuilder, validUploads, true, false, true).ConfigureAwait(false);
 
             statsBuilder.WithColor(new Color(160, 132, 23))
                         .WithTitle(LocalizationGroup.GetText("DpsReportGuildRaidStatsTitle", "Stats"));
