@@ -439,7 +439,7 @@ public class LogCommandHandler : LocatedServiceBase
 
                         var title = new StringBuilder();
 
-                        if (!boss.Key || !hasNormalTries)
+                        if (!boss.Key || isFractal || !hasNormalTries)
                         {
                             title.Append(bossIcon);
                             title.Append(' ');
