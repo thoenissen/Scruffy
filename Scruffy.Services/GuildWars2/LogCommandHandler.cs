@@ -232,13 +232,12 @@ public class LogCommandHandler : LocatedServiceBase
                             .WithTitle(LocalizationGroup.GetFormattedText("DpsReportHistory", "Your last {0} {1} {2} tries", count, successIcon, group.AsText()));
 
                 foreach (var bossGroup in uploads.OrderBy(obj => _dpsReportConnector.GetSortValue(obj.Encounter.BossId))
-                                        .ThenBy(obj => obj.EncounterTime)
-                                        .GroupBy(obj => new { obj.Encounter.BossId, obj.Encounter.Boss }))
+                                                 .GroupBy(obj => new { obj.Encounter.BossId, obj.Encounter.Boss }))
                 {
                     var title = $"{DiscordEmoteService.GetGuildEmote(_client, _dpsReportConnector.GetRaidBossIconId(bossGroup.Key.BossId))} {bossGroup.Key.Boss}";
                     var reports = new StringBuilder();
 
-                    foreach (var upload in bossGroup.Take(count))
+                    foreach (var upload in bossGroup.OrderByDescending(obj => obj.EncounterTime).Take(count).OrderBy(obj => obj.EncounterTime))
                     {
                         reports.Append(" └ ");
                         reports.Append(Format.Url($"{upload.EncounterTime:dd.MM} - {upload.Encounter.Duration:mm\\:ss} ⧉", upload.Permalink));
