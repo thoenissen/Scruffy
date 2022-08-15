@@ -93,6 +93,16 @@ public class LogCommandHandler : LocatedServiceBase
     /// </summary>
     private readonly DpsReportConnector _dpsReportConnector;
 
+    /// <summary>
+    /// String to display the success icon
+    /// </summary>
+    private string SuccessIcon => DiscordEmoteService.GetCheckEmote(_client).ToString();
+
+    /// <summary>
+    /// String to display the failure icon
+    /// </summary>
+    private string FailureIcon => "\u274C";
+
     #endregion // Fields
 
     #region Constructor
@@ -315,7 +325,9 @@ public class LogCommandHandler : LocatedServiceBase
             uploads.AddRange(await task.ConfigureAwait(false));
         }
 
-        if (uploads.Count > 0)
+        var validUploads = uploads.Where(obj => obj.Encounter.Success || obj.Encounter.Duration.TotalSeconds > 30.0);
+
+        if (validUploads.Any())
         {
             var week = $"{startOfWeek:dd.} - {startOfWeek.AddDays(7):dd.MM.yy}";
 
@@ -325,7 +337,7 @@ public class LogCommandHandler : LocatedServiceBase
             summaryBuilder.WithColor(Color.DarkPurple)
                           .WithTitle(LocalizationGroup.GetText("DpsReportGuildRaidBossesTitle", "Bosses"));
 
-            var knownGroups = await AddReports(summaryBuilder, uploads, true, false, true).ConfigureAwait(false);
+            var knownGroups = await AddReports(summaryBuilder, validUploads, true, false, true).ConfigureAwait(false);
 
             statsBuilder.WithColor(new Color(160, 132, 23))
                         .WithTitle(LocalizationGroup.GetText("DpsReportGuildRaidStatsTitle", "Stats"));
@@ -391,9 +403,6 @@ public class LogCommandHandler : LocatedServiceBase
     {
         var knownGroups = new HashSet<PlayerGroup>();
 
-        var successIcon = DiscordEmoteService.GetCheckEmote(_client).ToString();
-        var failureIcon = DiscordEmoteService.GetCrossEmote(_client).ToString();
-
         foreach (var typeGroup in uploads.OrderBy(obj => _dpsReportConnector.GetSortValue(obj.Encounter.BossId))
                                          .ThenBy(obj => obj.EncounterTime)
                                          .GroupBy(obj => _dpsReportConnector.GetReportGroup(obj.Encounter.BossId).GetReportType()))
@@ -412,6 +421,13 @@ public class LogCommandHandler : LocatedServiceBase
 
                 foreach (var bossGroup in reportGroup.GroupBy(obj => new { obj.Encounter.BossId, obj.Encounter.Boss }))
                 {
+                    // Start a new field, when we don't have enough space for some logs
+                    if (reports.Length > 896)
+                    {
+                        embedBuilder.AddReportGroup(reportGroup.Key, reports.ToString());
+                        reports = new StringBuilder();
+                    }
+
                     var bossIcon = DiscordEmoteService.GetGuildEmote(_client, _dpsReportConnector.GetRaidBossIconId(bossGroup.Key.BossId)).ToString();
 
                     var hasNormalTries = isFractal || bossGroup.Any(obj => !obj.Encounter.IsChallengeMode);
@@ -421,24 +437,30 @@ public class LogCommandHandler : LocatedServiceBase
                     {
                         var groupedUploads = GroupUploads(ref knownGroups, boss, withStats);
 
-                        // Start a new field, when we don't have enough space for some logs
-                        if (reports.Length > 896)
-                        {
-                            embedBuilder.AddReportGroup(reportGroup.Key, reports.ToString());
-                            reports = new StringBuilder();
-                        }
-
                         var title = new StringBuilder();
 
-                        if (isFractal || !boss.Key)
+                        if (!boss.Key || isFractal || !hasNormalTries)
                         {
                             title.Append(bossIcon);
                             title.Append(' ');
                             title.Append(bossGroup.Key.Boss);
                         }
-                        else
+
+                        if (!isFractal && boss.Key)
                         {
-                            title.Append(" └ CM");
+                            if (!hasNormalTries)
+                            {
+                                title.Append(" CM");
+                            }
+                            else
+                            {
+                                if (!boss.Key || !hasNormalTries)
+                                {
+                                    title.AppendLine();
+                                }
+
+                                title.Append(" └ CM");
+                            }
                         }
 
                         if (summarize && !hasMultipleGroups)
@@ -477,6 +499,12 @@ public class LogCommandHandler : LocatedServiceBase
                                     {
                                         reports.AppendLine();
                                         reports.Append(' ');
+
+                                        if (hasChallengeTries)
+                                        {
+                                            reports.Append(' ');
+                                        }
+
                                         reports.Append(fails);
                                     }
                                 }
@@ -510,7 +538,7 @@ public class LogCommandHandler : LocatedServiceBase
                                     percentage = $" {Math.Floor(upload.Item2.Value)}% -";
                                 }
 
-                                var line = $"{(hasMultipleGroups ? " " : string.Empty)}{(hasChallengeTries ? " " : string.Empty)} └ {(upload.Item1.Encounter.Success ? successIcon : failureIcon)}{percentage} {Format.Url($"{duration} ⧉", upload.Item1.Permalink)}";
+                                var line = $"{(hasMultipleGroups ? " " : string.Empty)}{(hasChallengeTries ? " " : string.Empty)} └ {(upload.Item1.Encounter.Success ? SuccessIcon : FailureIcon)}{percentage} {Format.Url($"{duration} ⧉", upload.Item1.Permalink)}";
 
                                 // Start a new field, when we would reach the character limit
                                 if (reports.Length + line.Length > 1024)
@@ -590,13 +618,13 @@ public class LogCommandHandler : LocatedServiceBase
         var fails = uploads.Where(obj => !obj.Encounter.Success);
         var failCount = fails.Count();
 
-        if (failCount > 1)
+        if (failCount > 0 && uploads.Any(obj => obj.Encounter.Success))
         {
             var totalDuration = TimeSpan.FromSeconds(fails.Select(obj => obj.Encounter.Duration.TotalSeconds).Sum());
             var result = new StringBuilder();
 
             result.Append(" │ ");
-            result.Append(DiscordEmoteService.GetCrossEmote(_client).ToString());
+            result.Append(FailureIcon);
             result.Append(" (");
             result.Append(failCount);
             result.Append("x)");
@@ -655,8 +683,6 @@ public class LogCommandHandler : LocatedServiceBase
     /// <param name="knownGroups">All known groups</param>
     private void AddGroupStats(DpsReportEmbedBuilder embedBuilder, HashSet<PlayerGroup> knownGroups)
     {
-        var successIcon = DiscordEmoteService.GetCheckEmote(_client).ToString();
-        var failureIcon = DiscordEmoteService.GetCrossEmote(_client).ToString();
         var dpsIcon = DiscordEmoteService.GetDamageDealerEmote(_client).ToString();
 
         foreach (var groups in knownGroups.GroupBy(obj => obj.Date))
@@ -700,7 +726,7 @@ public class LogCommandHandler : LocatedServiceBase
                 }
 
                 content.Append("└ ");
-                content.Append(LocalizationGroup.GetFormattedText("DpsReportFightDurationStat", "{0} in {1} fights", group.Stats.FailedEncounterTotalTime.ToString(group.Stats.FailedEncounterTotalTime.TotalHours > 1.0 ? @"hh\:mm\:ss" : @"mm\:ss"), failureIcon));
+                content.Append(LocalizationGroup.GetFormattedText("DpsReportFightDurationStat", "{0} in {1} fights", group.Stats.FailedEncounterTotalTime.ToString(group.Stats.FailedEncounterTotalTime.TotalHours > 1.0 ? @"hh\:mm\:ss" : @"mm\:ss"), FailureIcon));
                 content.AppendLine();
 
                 if (hasMultipleGroups)
@@ -709,7 +735,7 @@ public class LogCommandHandler : LocatedServiceBase
                 }
 
                 content.Append("└ ");
-                content.Append(LocalizationGroup.GetFormattedText("DpsReportFightDurationStat", "{0} in {1} fights", group.Stats.SuccessfulEncounterTotalTime.ToString(group.Stats.SuccessfulEncounterTotalTime.TotalHours > 1.0 ? @"hh\:mm\:ss" : @"mm\:ss"), successIcon));
+                content.Append(LocalizationGroup.GetFormattedText("DpsReportFightDurationStat", "{0} in {1} fights", group.Stats.SuccessfulEncounterTotalTime.ToString(group.Stats.SuccessfulEncounterTotalTime.TotalHours > 1.0 ? @"hh\:mm\:ss" : @"mm\:ss"), SuccessIcon));
                 content.AppendLine();
 
                 if (hasMultipleGroups)
