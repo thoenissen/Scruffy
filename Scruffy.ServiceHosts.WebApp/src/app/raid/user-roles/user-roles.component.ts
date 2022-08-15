@@ -1,14 +1,17 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { ChartConfiguration } from 'chart.js';
+import { R3BoundTarget } from '@angular/compiler';
 
 @Component({
   selector: 'app-user-roles',
   templateUrl: './user-roles.component.html',
   styleUrls: ['./user-roles.component.scss'],
 })
-export class UserRolesComponent implements OnInit {
-  rows: RaidUserTableRow[] = [];
-  displayedColumns: string[] = [
+export class UserRolesComponent {
+  // Table
+  public rows: RaidUserTableRow[] = [];
+  public displayedColumns: string[] = [
     'name',
     'dps',
     'dps-alacrity',
@@ -21,6 +24,13 @@ export class UserRolesComponent implements OnInit {
     'tank-healer-quickness',
   ];
 
+  // Chart
+  public barChartLegend: boolean = false;
+  public barChartData: ChartConfiguration<'bar'>['data'] | undefined;
+  public barChartOptions: ChartConfiguration<'bar'>['options'] = {
+    responsive: false,
+  };
+
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
     http.get<RaidUser[]>('api/raid/users').subscribe(
       (result) => {
@@ -29,8 +39,6 @@ export class UserRolesComponent implements OnInit {
       (error) => console.error(error)
     );
   }
-
-  ngOnInit(): void {}
 
   prepareResults(result: RaidUser[]) {
     var rows: RaidUserTableRow[] = [];
@@ -51,6 +59,36 @@ export class UserRolesComponent implements OnInit {
 
       rows.push(currentRow);
     });
+
+    this.barChartData = {
+      labels: [
+        'DPS',
+        'Alacrity | DPS',
+        'Quickness | DPS',
+        'Alacrity | Heal',
+        'Quickness | Heal',
+        'Tank | Alacrity | DPS',
+        'Tank | Quickness | DPS',
+        'Tank | Alacrity | Heal',
+        'Tank | Quickness | Heal',
+      ],
+      datasets: [
+        {
+          data: [
+            rows.filter((r) => r.isDamageDealer).length,
+            rows.filter((r) => r.isDamageDealerAlacrity).length,
+            rows.filter((r) => r.isDamageDealerQuickness).length,
+            rows.filter((r) => r.isHealerAlacrity).length,
+            rows.filter((r) => r.isHealerQuickness).length,
+            rows.filter((r) => r.isTankDamageDealerAlacrity).length,
+            rows.filter((r) => r.isTankDamageDealerQuickness).length,
+            rows.filter((r) => r.isTankHealerAlacrity).length,
+            rows.filter((r) => r.isTankHealerQuickness).length,
+          ],
+          backgroundColor: 'rgba(12, 12, 88, 1)',
+        },
+      ],
+    };
 
     this.rows = rows;
   }

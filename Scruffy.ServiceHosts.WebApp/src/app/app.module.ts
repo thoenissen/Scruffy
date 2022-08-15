@@ -7,14 +7,17 @@ import { BrowserModule } from '@angular/platform-browser';
 import { environment } from './environment';
 import { UserRolesComponent } from './raid/user-roles/user-roles.component';
 import { MatTableModule } from '@angular/material/table';
-
+import { MatGridListModule } from '@angular/material/grid-list';
+import { NgChartsModule } from 'ng2-charts';
 @NgModule({
   declarations: [AppComponent, UserRolesComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
+    NgChartsModule,
     MatTableModule,
+    MatGridListModule,
     OAuthModule.forRoot({
       resourceServer: {
         sendAccessToken: true,
