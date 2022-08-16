@@ -1,15 +1,10 @@
-<div class="box">
-  <div class="row header">
+<mat-sidenav-container class="main-sidenav-container">
+  <mat-sidenav class="main-sidenav" mode="side" opened>
     <img width="60" alt="Scruffy Logo" src="/assets/Scruffy_Portrait.png" />
     <button *ngIf="isLoggedIn == false" (click)="login()">Login</button>
-    <button *ngIf="isLoggedIn" (click)="logout()">Logout</button>
-  </div>
-  <div class="row content">
-    <!-- TODO -->
-  </div>
-  <div class="row footer">
-    <!-- TODO -->
-  </div>
-</div>
+    <button *ngIf="isLoggedIn" (click)="logout()">Logout</button></mat-sidenav
+  >
+  <mat-sidenav-content><app-user-roles></app-user-roles></mat-sidenav-content>
+</mat-sidenav-container>
 
 <router-outlet></router-outlet>

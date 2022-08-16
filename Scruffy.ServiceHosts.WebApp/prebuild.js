@@ -10,6 +10,10 @@ var environmentContent = `
 function getEnvironmentString(name) {
   throw "Invalid configuration";
 }
+
+function isProduction() {
+  return true;
+}
 `;
 
 fs.writeFile("./src/assets/js/environment.js", environmentContent, (err) => {
@@ -28,6 +32,10 @@ var variables = {
 
 function getEnvironmentString(name) {
   return variables[name];
+}
+
+function isProduction() {
+  return true;
 }
 `;
 

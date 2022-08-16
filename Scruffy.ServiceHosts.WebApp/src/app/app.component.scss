@@ -27,11 +27,22 @@ body {
 }
 
 .box .row.content {
-  background-color: lightgrey;
+  background-color: whitesmoke;
   flex: 1 1 auto;
 }
 
 .box .row.footer {
   background-color: #343a40;
   flex: 0 1 40px;
+}
+
+.main-sidenav {
+  width: 100px;
+  background-color: darkgray;
+  height: 100%;
+  align-content: center;
+}
+
+.main-sidenav-container {
+  height: 100%;
 }

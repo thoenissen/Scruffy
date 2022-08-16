@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { authConfig } from './authConfig';
+import { environment } from './environment';
 
 @Component({
   selector: 'app-root',
@@ -14,21 +15,28 @@ export class AppComponent {
   constructor(private oauthService: OAuthService) {
     this.oauthService = oauthService;
 
-    oauthService.configure(authConfig);
-    oauthService.loadDiscoveryDocumentAndTryLogin();
-    oauthService.setupAutomaticSilentRefresh();
+    if (environment.production) {
+      oauthService.configure(authConfig);
+      oauthService.loadDiscoveryDocumentAndTryLogin();
+      oauthService.setupAutomaticSilentRefresh();
+    } else {
+      this.isLoggedIn = true;
+    }
   }
 
   login() {
-    if (this.oauthService.hasValidAccessToken() == false) {
-      this.oauthService.initLoginFlow();
+    if (environment.production) {
+      if (this.oauthService.hasValidAccessToken() == false) {
+        this.oauthService.initLoginFlow();
+      }
+      this.isLoggedIn = true;
     }
-
-    this.isLoggedIn = true;
   }
 
   logout() {
-    this.oauthService.logOut();
-    this.isLoggedIn = false;
+    if (environment.production) {
+      this.oauthService.logOut();
+      this.isLoggedIn = false;
+    }
   }
 }

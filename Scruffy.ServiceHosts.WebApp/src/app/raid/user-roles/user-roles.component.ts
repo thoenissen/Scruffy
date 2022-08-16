@@ -31,8 +31,8 @@ export class UserRolesComponent {
     responsive: false,
   };
 
-  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
-    http.get<RaidUser[]>('api/raid/users').subscribe(
+  constructor(http: HttpClient, @Inject('WEBAPI_BASE_URL') baseUrl: string) {
+    http.get<RaidUser[]>(baseUrl + 'raid/users').subscribe(
       (result) => {
         this.prepareResults(result);
       },
@@ -85,7 +85,10 @@ export class UserRolesComponent {
             rows.filter((r) => r.isTankHealerAlacrity).length,
             rows.filter((r) => r.isTankHealerQuickness).length,
           ],
-          backgroundColor: 'rgba(12, 12, 88, 1)',
+          backgroundColor: 'darkgrey',
+          hoverBackgroundColor: 'grey',
+          borderColor: 'transparent',
+          hoverBorderColor: 'transparent',
         },
       ],
     };

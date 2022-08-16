@@ -8,16 +8,22 @@ import { environment } from './environment';
 import { UserRolesComponent } from './raid/user-roles/user-roles.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { NgChartsModule } from 'ng2-charts';
 @NgModule({
   declarations: [AppComponent, UserRolesComponent],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
     NgChartsModule,
     MatTableModule,
     MatGridListModule,
+    MatExpansionModule,
+    MatSidenavModule,
     OAuthModule.forRoot({
       resourceServer: {
         sendAccessToken: true,

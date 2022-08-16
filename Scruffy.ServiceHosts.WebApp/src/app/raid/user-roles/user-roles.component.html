@@ -1,67 +1,71 @@
-<mat-grid-list cols="10" rowHeight="100%">
-  <mat-grid-tile colspan="6">
-    <table mat-table [dataSource]="rows" class="mat-elevation-z8">
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef>Name</th>
-        <td mat-cell *matCellDef="let element">{{ element.name }}</td>
-      </ng-container>
-      <ng-container matColumnDef="dps">
-        <th mat-header-cell *matHeaderCellDef>DPS</th>
-        <td mat-cell *matCellDef="let element">{{ element.isDamageDealer }}</td>
-      </ng-container>
-      <ng-container matColumnDef="dps-alacrity">
-        <th mat-header-cell *matHeaderCellDef>Alacrity | DPS</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.isDamageDealerAlacrity }}
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="dps-quickness">
-        <th mat-header-cell *matHeaderCellDef>Quickness | DPS</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.isDamageDealerQuickness }}
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="healer-alacrity">
-        <th mat-header-cell *matHeaderCellDef>Alacrity | Heal</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.isHealerAlacrity }}
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="healer-quickness">
-        <th mat-header-cell *matHeaderCellDef>Quickness | Heal</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.isHealerQuickness }}
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="tank-dps-alacrity">
-        <th mat-header-cell *matHeaderCellDef>Tank | Alacrity | DPS</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.isTankDamageDealerAlacrity }}
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="tank-dps-quickness">
-        <th mat-header-cell *matHeaderCellDef>Tank | Alacrity | DPS</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.isTankDamageDealerQuickness }}
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="tank-healer-alacrity">
-        <th mat-header-cell *matHeaderCellDef>Tank | Alacrity | Heal</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.isTankHealerAlacrity }}
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="tank-healer-quickness">
-        <th mat-header-cell *matHeaderCellDef>Tank | Alacrity | Heal</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.isTankHealerQuickness }}
-        </td>
-      </ng-container>
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    </table>
-  </mat-grid-tile>
-  <mat-grid-tile colspan="4">
+<table mat-table [dataSource]="rows" class="mat-elevation-z8">
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef>Name</th>
+    <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+  </ng-container>
+  <ng-container matColumnDef="dps">
+    <th mat-header-cell *matHeaderCellDef>DPS</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.isDamageDealer ? "✔️" : "" }}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="dps-alacrity">
+    <th mat-header-cell *matHeaderCellDef>Alacrity | DPS</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.isDamageDealerAlacrity ? "✔️" : "" }}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="dps-quickness">
+    <th mat-header-cell *matHeaderCellDef>Quickness | DPS</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.isDamageDealerQuickness ? "✔️" : "" }}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="healer-alacrity">
+    <th mat-header-cell *matHeaderCellDef>Alacrity | Heal</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.isHealerAlacrity ? "✔️" : "" }}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="healer-quickness">
+    <th mat-header-cell *matHeaderCellDef>Quickness | Heal</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.isHealerQuickness ? "✔️" : "" }}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="tank-dps-alacrity">
+    <th mat-header-cell *matHeaderCellDef>Tank | Alacrity | DPS</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.isTankDamageDealerAlacrity ? "✔️" : "" }}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="tank-dps-quickness">
+    <th mat-header-cell *matHeaderCellDef>Tank | Alacrity | DPS</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.isTankDamageDealerQuickness ? "✔️" : "" }}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="tank-healer-alacrity">
+    <th mat-header-cell *matHeaderCellDef>Tank | Alacrity | Heal</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.isTankHealerAlacrity ? "✔️" : "" }}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="tank-healer-quickness">
+    <th mat-header-cell *matHeaderCellDef>Tank | Alacrity | Heal</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.isTankHealerQuickness ? "✔️" : "" }}
+    </td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
+
+<mat-accordion class="chart-mat-accordion">
+  <mat-expansion-panel hideToggle>
+    <mat-expansion-panel-header>
+      <mat-panel-title> Role distribution chart</mat-panel-title>
+    </mat-expansion-panel-header>
     <canvas
       baseChart
       [data]="barChartData"
@@ -70,5 +74,5 @@
       [type]="'bar'"
     >
     </canvas>
-  </mat-grid-tile>
-</mat-grid-list>
+  </mat-expansion-panel>
+</mat-accordion>

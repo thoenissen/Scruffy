@@ -22,6 +22,10 @@ var variables = {
 function getEnvironmentString(name) {
   return variables[name];
 }
+
+function isProduction() {
+  return false;
+}
 `;
 
 if (fs.existsSync("./src/assets/js") == false) {

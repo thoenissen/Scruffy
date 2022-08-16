@@ -1,5 +1,6 @@
 export const environment = {
-  production: false,
+  //@ts-ignore
+  production: isProduction(),
   //@ts-ignore
   oauthIssuer: getEnvironmentString('oauthIssuer'),
   //@ts-ignore

@@ -97,14 +97,20 @@ public class Program
             builder.Services.AddTransient<RaidLineUpService>();
 
             var app = builder.Build();
+
             app.UseSwagger();
             app.UseSwaggerUI();
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseCors(obj => obj.AllowAnyOrigin()
+                                  .AllowAnyMethod()
+                                  .AllowAnyHeader());
+
 #if DEBUG
             app.MapControllers();
 #else
+
             app.MapControllers().RequireAuthorization("ApiScope");
 #endif
 
