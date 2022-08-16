@@ -74,13 +74,31 @@ public class RaidOverviewService : LocatedServiceBase
                 embedBuilder.WithImageUrl("attachment://chart.png");
 
                 var userNames = new List<string>();
-                foreach (var user in users.Where(obj => obj.UserId > 0))
+                foreach (var raidUser in users.Where(obj => obj.UserId > 0))
                 {
+                    var name = "unknown user";
+
                     var member = await commandContext.Guild
-                                                     .GetUserAsync(user.UserId)
+                                                     .GetUserAsync(raidUser.UserId)
                                                      .ConfigureAwait(false);
 
-                    userNames.Add($"{member.TryGetDisplayName()} [{user.Points:0.00}]");
+                    if (member != null)
+                    {
+                        name = member.TryGetDisplayName();
+                    }
+                    else
+                    {
+                        var user = await commandContext.Client
+                                                       .GetUserAsync(raidUser.UserId)
+                                                       .ConfigureAwait(false);
+
+                        if (user != null)
+                        {
+                            name = $"{user.Username}#{user.Discriminator}";
+                        }
+                    }
+
+                    userNames.Add($"{name} [{raidUser.Points:0.00}]");
                 }
 
                 var chartConfiguration = new ChartConfigurationData

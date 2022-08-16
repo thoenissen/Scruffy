@@ -132,7 +132,20 @@ public class RaidController : ControllerBase
                     var member = await _discordClient.GetGuildUserAsync(WebApiConfiguration.DiscordServerId, participant.DiscordAccountId.Value)
                                                      .ConfigureAwait(false);
 
-                    name = member.TryGetDisplayName();
+                    if (member != null)
+                    {
+                        name = member.TryGetDisplayName();
+                    }
+                    else
+                    {
+                        var user = await _discordClient.GetUserAsync(participant.DiscordAccountId.Value)
+                                                       .ConfigureAwait(false);
+
+                        if (user != null)
+                        {
+                            name = $"{user.Username}#{user.Discriminator}";
+                        }
+                    }
                 }
 
                 participants.Add(new RaidParticipantDTO
@@ -197,7 +210,7 @@ public class RaidController : ControllerBase
 
         var users = new List<RaidUserDTO>();
 
-        foreach (var user in await _repositoryFactory.GetRepository<RaidUserRoleRepository>()
+        foreach (var raidUser in await _repositoryFactory.GetRepository<RaidUserRoleRepository>()
                                                      .GetQuery()
                                                      .GroupBy(obj => obj.UserId)
                                                      .Select(obj => new
@@ -214,19 +227,32 @@ public class RaidController : ControllerBase
         {
             string name = null;
 
-            if (user.DiscordAccountId != null)
+            if (raidUser.DiscordAccountId != null)
             {
-                var member = await _discordClient.GetGuildUserAsync(WebApiConfiguration.DiscordServerId, user.DiscordAccountId.Value)
+                var member = await _discordClient.GetGuildUserAsync(WebApiConfiguration.DiscordServerId, raidUser.DiscordAccountId.Value)
                                                  .ConfigureAwait(false);
 
-                name = member.TryGetDisplayName();
+                if (member != null)
+                {
+                    name = member.TryGetDisplayName();
+                }
+                else
+                {
+                    var user = await _discordClient.GetUserAsync(raidUser.DiscordAccountId.Value)
+                                                   .ConfigureAwait(false);
+
+                    if (user != null)
+                    {
+                        name = $"{user.Username}#{user.Discriminator}";
+                    }
+                }
             }
 
             users.Add(new RaidUserDTO
                       {
-                          Id = user.Id,
+                          Id = raidUser.Id,
                           Name = name,
-                          AssignedRoles = user.AssignedRoles
+                          AssignedRoles = raidUser.AssignedRoles
                       });
         }
 
