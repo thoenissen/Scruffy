@@ -8,12 +8,17 @@ import { environment } from './environment';
 import { UserRolesComponent } from './raid/user-roles/user-roles.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatToolbarModule } from '@angular/material/toolbar'
+import { MatSelectModule } from '@angular/material/select';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { NgChartsModule } from 'ng2-charts';
+import { LoginComponent } from './login/login.component';
+import { RaidSetupComponent } from './raid/raid-setup/raid-setup.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 @NgModule({
-  declarations: [AppComponent, UserRolesComponent],
+  declarations: [AppComponent, UserRolesComponent, LoginComponent, RaidSetupComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -24,6 +29,10 @@ import { NgChartsModule } from 'ng2-charts';
     MatGridListModule,
     MatExpansionModule,
     MatSidenavModule,
+    MatToolbarModule,
+    MatSelectModule,
+    FormsModule,
+    ReactiveFormsModule,
     OAuthModule.forRoot({
       resourceServer: {
         sendAccessToken: true,

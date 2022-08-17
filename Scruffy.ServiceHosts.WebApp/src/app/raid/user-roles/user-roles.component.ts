@@ -1,7 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ChartConfiguration } from 'chart.js';
-import { R3BoundTarget } from '@angular/compiler';
 
 @Component({
   selector: 'app-user-roles',
