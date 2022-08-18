@@ -1,8 +1,8 @@
-import { participant } from "./participant"
+import { participant } from './participant';
 
 export interface appointment {
-    id: number,
-    timestamp: Date,
-    name: string,
-    participants: participant[]
+  id: number;
+  timestamp: Date;
+  title: string;
+  participants: participant[];
 }
