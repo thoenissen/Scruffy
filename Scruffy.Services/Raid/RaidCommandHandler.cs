@@ -1,7 +1,6 @@
 using System.Data;
 
 using Discord;
-using Discord.WebSocket;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -875,29 +874,35 @@ public class RaidCommandHandler : LocatedServiceBase
         var dialogHandler = new DialogHandler(context);
         await using (dialogHandler.ConfigureAwait(false))
         {
-            var user = await _userManagementService.GetUserByDiscordAccountId(context.User)
-                                                   .ConfigureAwait(false);
-
-            var selectedRoles = await dialogHandler.Run<RaidPreparedRolesFirstTimeSelectDialogElement, List<long>>(new RaidPreparedRolesFirstTimeSelectDialogElement(_localizationService, _raidRolesService))
-                                                   .ConfigureAwait(false);
-
-            using (var dbFactory = RepositoryFactory.CreateInstance())
+            try
             {
-                dbFactory.GetRepository<RaidUserRoleRepository>()
-                         .RemoveRange(obj => obj.UserId == user.Id);
+                var user = await _userManagementService.GetUserByDiscordAccountId(context.User)
+                                                       .ConfigureAwait(false);
 
-                foreach (var roleId in selectedRoles)
+                var selectedRoles = await dialogHandler.Run<RaidPreparedRolesFirstTimeSelectDialogElement, List<long>>(new RaidPreparedRolesFirstTimeSelectDialogElement(_localizationService, _raidRolesService))
+                                                       .ConfigureAwait(false);
+
+                using (var dbFactory = RepositoryFactory.CreateInstance())
                 {
                     dbFactory.GetRepository<RaidUserRoleRepository>()
-                             .Add(new RaidUserRoleEntity
-                                  {
-                                      UserId = user.Id,
-                                      RoleId = roleId
-                                  });
+                             .RemoveRange(obj => obj.UserId == user.Id);
+
+                    foreach (var roleId in selectedRoles)
+                    {
+                        dbFactory.GetRepository<RaidUserRoleRepository>()
+                                 .Add(new RaidUserRoleEntity
+                                      {
+                                          UserId = user.Id,
+                                          RoleId = roleId
+                                      });
+                    }
                 }
             }
-            await dialogHandler.DeleteMessages()
-                               .ConfigureAwait(false);
+            finally
+            {
+                await dialogHandler.DeleteMessages()
+                                   .ConfigureAwait(false);
+            }
         }
     }
 
