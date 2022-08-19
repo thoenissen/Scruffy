@@ -1,4 +1,4 @@
-﻿namespace Scruffy.Data.Services.DpsReport;
+namespace Scruffy.Data.Services.DpsReport;
 
 /// <summary>
 /// A grouping of players in a DPS report
@@ -6,9 +6,9 @@
 public class PlayerGroup
 {
     /// <summary>
-    /// ID of this group
+    /// Id of this group
     /// </summary>
-    public int ID { get; private set; }
+    public int Id { get; private set; }
 
     /// <summary>
     /// Day of the week this group exists
@@ -36,7 +36,7 @@ public class PlayerGroup
     /// <param name="withStats">Whether to add stats</param>
     public PlayerGroup(int id, DateOnly date, HashSet<string> players, bool withStats)
     {
-        ID = id;
+        Id = id;
         Date = date;
         Players = players;
 
