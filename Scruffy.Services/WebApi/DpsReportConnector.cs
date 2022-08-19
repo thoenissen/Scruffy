@@ -88,7 +88,7 @@ public class DpsReportConnector
                             break;
                         }
 
-                        if (filter(upload))
+                        if ((upload.Encounter.Success || upload.Encounter.Duration.TotalSeconds > 30) && filter(upload))
                         {
                             uploads.Add(upload);
                         }

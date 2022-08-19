@@ -35,7 +35,7 @@ public class PlayerGroupStats
     /// <summary>
     /// Average DPS across all encounters
     /// </summary>
-    public long AverageDPS => CumulatedDPS / DPSEncounter;
+    public long AverageDPS => DPSEncounter > 0 ? CumulatedDPS / DPSEncounter : 0;
 
     #region PrivateFields
 
