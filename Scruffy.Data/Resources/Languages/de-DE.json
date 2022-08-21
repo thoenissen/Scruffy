@@ -391,7 +391,11 @@
         },
         "GuildCheckUnknownUsersJob": {
             "UnknownUsers": "Unbekannte Mitglieder",
-            "NoUnknownUsers": "Es existieren keine unbekannten Mitglieder.",
+            "Days": "Tage",
+            "Day": "Tag"
+        },
+        "GuildCheckInactiveUsersJob": {
+            "UnknownUsers": "Inaktive Mitglieder",
             "Days": "Tage",
             "Day": "Tag"
         },

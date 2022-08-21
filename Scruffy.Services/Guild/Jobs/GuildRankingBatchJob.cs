@@ -31,7 +31,8 @@ internal class GuildRankingBatchJob : BatchJob
                    typeof(GuildRankChangeNotificationJob),
                    typeof(GuildSpecialRankPointsJob),
                    typeof(GuildVisualizationRefreshJob),
-                   typeof(GuildCheckUnknownUsersJob)
+                   typeof(GuildCheckUnknownUsersJob),
+                   typeof(GuildCheckInactiveUsersJob)
                })
     {
     }
