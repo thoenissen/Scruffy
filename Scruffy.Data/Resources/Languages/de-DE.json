@@ -395,7 +395,7 @@
             "Day": "Tag"
         },
         "GuildCheckInactiveUsersJob": {
-            "UnknownUsers": "Inaktive Mitglieder",
+            "InactiveUsers": "Inaktive Mitglieder",
             "Days": "Tage",
             "Day": "Tag"
         },
