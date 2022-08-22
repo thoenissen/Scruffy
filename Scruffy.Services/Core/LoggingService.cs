@@ -109,7 +109,7 @@ public class LoggingService
     public static long? AddTextCommandLogEntry(LogEntryLevel level, string qualifiedCommandName, string lastUserCommand, string message, string additionalInformation = null, Exception ex = null)
     {
         // TODO No direct logging to this method. Implementation of logging in IContextContainer.
-        return _logger.WriteLine<object>(LogEntryType.Command, level, qualifiedCommandName, lastUserCommand, message, additionalInformation, ex, null);
+        return _logger?.WriteLine<object>(LogEntryType.Command, level, qualifiedCommandName, lastUserCommand, message, additionalInformation, ex, null);
     }
 
     /// <summary>
@@ -123,7 +123,7 @@ public class LoggingService
     /// <returns>Log entry id</returns>
     public static long? AddInteractionLogEntry(LogEntryLevel level, string customId, string message, string additionalInformation, Exception ex = null)
     {
-        return _logger.WriteLine<object>(LogEntryType.ComponentInteraction, level, customId, null, message, additionalInformation, ex, null);
+        return _logger?.WriteLine<object>(LogEntryType.ComponentInteraction, level, customId, null, message, additionalInformation, ex, null);
     }
 
     /// <summary>
@@ -138,7 +138,7 @@ public class LoggingService
     /// <returns>Log entry id</returns>
     public static long? AddMessageComponentCommandLogEntry(LogEntryLevel level, string group, string command, string message, string additionalInformation = null, Exception ex = null)
     {
-        return _logger.WriteLine<object>(LogEntryType.Command, level, group, command, message, additionalInformation, ex, null);
+        return _logger?.WriteLine<object>(LogEntryType.Command, level, group, command, message, additionalInformation, ex, null);
     }
 
     /// <summary>
@@ -152,7 +152,7 @@ public class LoggingService
     /// <returns>Log entry id</returns>
     public static long? AddJobLogEntry(LogEntryLevel level, string className, string message, string additionalInformation = null, Exception ex = null)
     {
-        return _logger.WriteLine<object>(LogEntryType.Job, level, className, null, message, additionalInformation, ex, null);
+        return _logger?.WriteLine<object>(LogEntryType.Job, level, className, null, message, additionalInformation, ex, null);
     }
 
     /// <summary>
@@ -167,7 +167,7 @@ public class LoggingService
     /// <returns>Log entry id</returns>
     public static long? AddJobLogEntry(LogEntryLevel level, string className, string action, string message, string additionalInformation = null, Exception ex = null)
     {
-        return _logger.WriteLine<object>(LogEntryType.Job, level, className, action, message, additionalInformation, ex, null);
+        return _logger?.WriteLine<object>(LogEntryType.Job, level, className, action, message, additionalInformation, ex, null);
     }
 
     /// <summary>
@@ -181,7 +181,7 @@ public class LoggingService
     /// <returns>Log entry id</returns>
     public static long? AddServiceLogEntry(LogEntryLevel level, string className, string message, string additionalInformation, Exception ex = null)
     {
-        return _logger.WriteLine<object>(LogEntryType.Service, level, className, null, message, additionalInformation, ex, null);
+        return _logger?.WriteLine<object>(LogEntryType.Service, level, className, null, message, additionalInformation, ex, null);
     }
 
     /// <summary>
@@ -196,7 +196,7 @@ public class LoggingService
     /// <returns>Log entry id</returns>
     public static long? AddServiceLogEntry<T>(LogEntryLevel level, string className, string message, string additionalInformation, T customData)
     {
-        return _logger.WriteLine(LogEntryType.Service, level, className, null, message, additionalInformation, null, customData);
+        return _logger?.WriteLine(LogEntryType.Service, level, className, null, message, additionalInformation, null, customData);
     }
 
     /// <summary>
@@ -211,7 +211,7 @@ public class LoggingService
     /// <returns>Log entry id</returns>
     public static long? AddServiceLogEntry(LogEntryLevel level, string className, string action, string message, string additionalInformation, Exception ex = null)
     {
-        return _logger.WriteLine<object>(LogEntryType.Service, level, className, action, message, additionalInformation, ex, null);
+        return _logger?.WriteLine<object>(LogEntryType.Service, level, className, action, message, additionalInformation, ex, null);
     }
 
     /// <summary>
@@ -220,7 +220,7 @@ public class LoggingService
     /// <param name="logMessage">Log message</param>
     public static void AddInteractionServiceLog(LogMessage logMessage)
     {
-        _logger.WriteLine<object>(LogEntryType.InteractionService, logMessage.Severity.ToLogEntryLevel(), logMessage.Source, null, logMessage.Message, null, logMessage.Exception, null);
+        _logger?.WriteLine<object>(LogEntryType.InteractionService, logMessage.Severity.ToLogEntryLevel(), logMessage.Source, null, logMessage.Message, null, logMessage.Exception, null);
     }
 
     /// <summary>
@@ -229,7 +229,7 @@ public class LoggingService
     /// <param name="logMessage">Log message</param>
     public static void AddDiscordClientLog(LogMessage logMessage)
     {
-        _logger.WriteLine<object>(LogEntryType.DiscordClient, logMessage.Severity.ToLogEntryLevel(), logMessage.Source, null, logMessage.Message, null, logMessage.Exception, null);
+        _logger?.WriteLine<object>(LogEntryType.DiscordClient, logMessage.Severity.ToLogEntryLevel(), logMessage.Source, null, logMessage.Message, null, logMessage.Exception, null);
     }
 
     /// <summary>

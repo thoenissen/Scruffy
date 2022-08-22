@@ -435,13 +435,20 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
         return Invoke(GuildWars2ApiPermission.None,
                       async () =>
                       {
-                          using (var response = await CreateRequest($"https://api.guildwars2.com/v2/items/{itemId}").ConfigureAwait(false))
+                          try
                           {
-                              var jsonResult = await response.Content
-                                                             .ReadAsStringAsync()
-                                                             .ConfigureAwait(false);
+                              using (var response = await CreateRequest($"https://api.guildwars2.com/v2/items/{itemId}").ConfigureAwait(false))
+                              {
+                                  var jsonResult = await response.Content
+                                                                 .ReadAsStringAsync()
+                                                                 .ConfigureAwait(false);
 
-                              return JsonConvert.DeserializeObject<Item>(jsonResult);
+                                  return JsonConvert.DeserializeObject<Item>(jsonResult);
+                              }
+                          }
+                          catch (HttpRequestException ex) when (ex.StatusCode is HttpStatusCode.NotFound)
+                          {
+                              return null;
                           }
                       });
     }
@@ -464,13 +471,19 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
                           {
                               var ids = string.Join(",", itemIds.Skip(i * 200).Take(200).Select(obj => obj.ToString()));
 
-                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/items?ids=" + ids).ConfigureAwait(false))
+                              try
                               {
-                                  var jsonResult = await response.Content
-                                                                 .ReadAsStringAsync()
-                                                                 .ConfigureAwait(false);
+                                  using (var response = await CreateRequest("https://api.guildwars2.com/v2/items?ids=" + ids).ConfigureAwait(false))
+                                  {
+                                      var jsonResult = await response.Content
+                                                                     .ReadAsStringAsync()
+                                                                     .ConfigureAwait(false);
 
-                                  items.AddRange(JsonConvert.DeserializeObject<List<Item>>(jsonResult));
+                                      items.AddRange(JsonConvert.DeserializeObject<List<Item>>(jsonResult));
+                                  }
+                              }
+                              catch (HttpRequestException ex) when (ex.StatusCode is HttpStatusCode.NotFound)
+                              {
                               }
                           }
 

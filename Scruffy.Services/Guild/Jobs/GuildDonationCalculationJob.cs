@@ -308,13 +308,32 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
                 {
                     if (items.TryGetValue(itemId, out var item) == false)
                     {
-                        item = items[itemId] = await connector.GetItem(itemId)
-                                                              .ConfigureAwait(false);
+                        item = await connector.GetItem(itemId)
+                                              .ConfigureAwait(false);
+
+                        if (item == null)
+                        {
+                            var itemEntity = _dbFactory
+                                             .GetRepository<GuildWarsItemRepository>()
+                                             .GetQuery()
+                                             .FirstOrDefault(obj => obj.ItemId == itemId);
+
+                            if (itemEntity != null)
+                            {
+                                item = new Item
+                                       {
+                                           Id = itemId,
+                                           VendorValue = itemEntity.VendorValue
+                                       };
+                            }
+                        }
+
+                        items[itemId] = item;
                     }
 
                     if (item != null)
                     {
-                        if (item.Flags.Any(obj => obj is "SoulbindOnAcquire" or "AccountBound") == false)
+                        if (item.Flags?.Any(obj => obj is "SoulbindOnAcquire" or "AccountBound") != true)
                         {
                             if (tradingsPostValues.TryGetValue(itemId, out var tradingPostValue) == false)
                             {
