@@ -60,7 +60,7 @@ namespace Scruffy.Services.Guild
                 }
             }
 
-            _discordClient.LoggedIn -= OnConnected;
+            _discordClient.Connected -= OnConnected;
 
             return Task.CompletedTask;
         }
