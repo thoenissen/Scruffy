@@ -895,7 +895,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                              .WithDescription(description)
                                              .WithColor(Color.DarkBlue)
                                              .WithFooter(LocalizationGroup.GetFormattedText("PageFooter", "Page {0} of {1}", pageNumber + 1, data.Pages.Count), "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
-                                             .WithTimestamp(DateTime.Now)
+                                             .WithTimestamp(data.TimeStamp)
                                              .WithImageUrl("attachment://chart.png");
 
         var page = data.Pages[pageNumber];

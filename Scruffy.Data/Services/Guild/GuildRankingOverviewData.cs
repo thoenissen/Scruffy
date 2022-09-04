@@ -6,6 +6,11 @@
 public class GuildRankingOverviewData
 {
     /// <summary>
+    /// Creation time stamp
+    /// </summary>
+    public DateTime TimeStamp { get; } = DateTime.Now;
+
+    /// <summary>
     /// User count
     /// </summary>
     public int UserCount { get; set; }
