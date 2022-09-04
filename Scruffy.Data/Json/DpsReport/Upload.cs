@@ -76,11 +76,17 @@ public class Upload
     {
         if (otherObj is Upload other)
         {
-            if (Encounter.BossId == other.Encounter.BossId && Math.Abs((EncounterTime - other.EncounterTime).TotalSeconds) < 5.0)
+            if (Math.Abs((EncounterTime - other.EncounterTime).TotalSeconds) < 5.0)
             {
-                var group = Group;
-                group.ExceptWith(other.Group);
-                return !group.Any();
+                // Voice & Claw + Statues of Darkness special treatment
+                if (Encounter.BossId == other.Encounter.BossId
+                    || (Math.Min(Encounter.BossId, other.Encounter.BossId) == 22343 && Math.Max(Encounter.BossId, other.Encounter.BossId) == 22481)
+                    || (Math.Min(Encounter.BossId, other.Encounter.BossId) == 19651 && Math.Max(Encounter.BossId, other.Encounter.BossId) == 19844))
+                {
+                    var group = Group;
+                    group.ExceptWith(other.Group);
+                    return !group.Any();
+                }
             }
         }
 
