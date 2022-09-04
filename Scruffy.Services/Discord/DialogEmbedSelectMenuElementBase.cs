@@ -97,7 +97,8 @@ public abstract class DialogEmbedSelectMenuElementBase<TData> : InteractionDialo
                                                                                                                .Select(obj => new SelectMenuOptionBuilder().WithLabel(obj.Label)
                                                                                                                                                            .WithValue(obj.Value)
                                                                                                                                                            .WithEmote(obj.Emote)
-                                                                                                                                                           .WithDefault(true))
+                                                                                                                                                           .WithDefault(obj.Value == selectedValue
+                                                                                                                                                                     && selectedValue != null))
                                                                                                                .ToList())
                                                                                .WithDisabled(true));
                 }
@@ -108,45 +109,51 @@ public abstract class DialogEmbedSelectMenuElementBase<TData> : InteractionDialo
 
             components.StartTimeout();
 
-            var (component, _) = await components.Task
-                                                 .ConfigureAwait(false);
-
-            selectedValue = component.Data.Values.FirstOrDefault();
-
-            var executedButton = entries?.Take(Convert.ToInt32(selectedValue))
-                                        .LastOrDefault();
-
-            if (executedButton != null)
+            try
             {
-                if (executedButton.InteractionResponse != null)
+                var (component, _) = await components.Task
+                                                     .ConfigureAwait(false);
+
+                selectedValue = component.Data.Values.FirstOrDefault();
+
+                var executedButton = entries?.Take(Convert.ToInt32(selectedValue))
+                                            .LastOrDefault();
+
+                if (executedButton != null)
                 {
-                    var interaction = executedButton.InteractionResponse(component)
-                                                    .ConfigureAwait(false);
+                    if (executedButton.InteractionResponse != null)
+                    {
+                        var interaction = executedButton.InteractionResponse(component)
+                                                        .ConfigureAwait(false);
 
-                    await DisableComponents().ConfigureAwait(false);
+                        await DisableComponents().ConfigureAwait(false);
 
-                    return await interaction;
+                        return await interaction;
+                    }
+
+                    await component.DeferAsync()
+                                   .ConfigureAwait(false);
+
+                    if (executedButton.Response != null)
+                    {
+                        await DisableComponents().ConfigureAwait(false);
+
+                        return await executedButton.Response()
+                                                   .ConfigureAwait(false);
+                    }
                 }
 
                 await component.DeferAsync()
                                .ConfigureAwait(false);
 
-                if (executedButton.Response != null)
-                {
-                    await DisableComponents().ConfigureAwait(false);
-
-                    return await executedButton.Response()
-                                               .ConfigureAwait(false);
-                }
+                return DefaultFunc();
             }
+            catch
+            {
+                await DisableComponents().ConfigureAwait(false);
 
-            await DisableComponents()
-                .ConfigureAwait(false);
-
-            await component.DeferAsync()
-                           .ConfigureAwait(false);
-
-            return DefaultFunc();
+                throw;
+            }
         }
     }
 

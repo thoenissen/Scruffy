@@ -70,7 +70,7 @@ public class AccountCommandHandler : LocatedServiceBase
     {
         if (context.Channel is not IDMChannel)
         {
-            await context.ReplyAsync(LocalizationGroup.GetText("SwitchToPrivate", "I answered your command as a private message."))
+            await context.ReplyAsync(LocalizationGroup.GetText("SwitchToPrivate", "I answered your command as a private message."), ephemeral: true)
                          .ConfigureAwait(false);
 
             await context.SwitchToDirectMessageContext()
