@@ -16,18 +16,16 @@ public class Log
     public ulong GW2Build { get; set; }
 
     /// <summary>
-    /// The time at which the fight started in "yyyy-mm-dd hh:mm:ss zzz" format \n
-    /// The value will be <see cref="LogData.DefaultTimeValue"/> if the event does not exist
+    /// The time at which the fight started in "yyyy-mm-dd hh:mm:ss zzz" format
     /// </summary>
     [JsonProperty("timeStartStd")]
-    public DateTimeOffset TimeStart;
+    public DateTimeOffset TimeStart { get; set; }
 
     /// <summary>
-    /// The time at which the fight ended in "yyyy-mm-dd hh:mm:ss zzz" format \n
-    /// The value will be <see cref="LogData.DefaultTimeValue"/> if the event does not exist
+    /// The time at which the fight ended in "yyyy-mm-dd hh:mm:ss zzz" format
     /// </summary>
     [JsonProperty("timeEndStd")]
-    public DateTimeOffset TimeEnd;
+    public DateTimeOffset TimeEnd { get; set; }
 
     /// <summary>
     /// The total duration of the fight

@@ -78,7 +78,6 @@ public class Upload
         {
             if (Math.Abs((EncounterTime - other.EncounterTime).TotalSeconds) < 5.0)
             {
-
                 // Voice & Claw + Statues of Darkness special treatment
                 if (Encounter.BossId == other.Encounter.BossId
                     || (Math.Min(Encounter.BossId, other.Encounter.BossId) == 22343 && Math.Max(Encounter.BossId, other.Encounter.BossId) == 22481)
