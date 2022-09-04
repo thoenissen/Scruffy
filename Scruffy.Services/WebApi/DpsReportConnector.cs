@@ -90,6 +90,12 @@ public class DpsReportConnector
 
                         if ((upload.Encounter.Success || upload.Encounter.Duration.TotalSeconds > 30) && filter(upload))
                         {
+                            // This seems to be a bug with dps.report
+                            if (upload.Encounter.UniqueId == null && upload.Encounter.JsonAvailable)
+                            {
+                                upload.Encounter = await EnrichEncounter(upload.Id, upload.Encounter).ConfigureAwait(false);
+                            }
+
                             uploads.Add(upload);
                         }
                     }
@@ -99,6 +105,24 @@ public class DpsReportConnector
         }
 
         return uploads;
+    }
+
+    /// <summary>
+    /// Enriches the given encounter information with additional information from the JSON log
+    /// </summary>
+    /// <param name="id">Id of the upload to retrieve the log for</param>
+    /// <param name="encounter">Available encounter data</param>
+    /// <returns>The enriched encounter</returns>
+    private async Task<Encounter> EnrichEncounter(string id, Encounter encounter)
+    {
+        var log = await GetLog(id).ConfigureAwait(false);
+
+        encounter.Gw2Build = log.GW2Build;
+        encounter.Success = log.Success;
+        encounter.Duration = log.Duration;
+        encounter.IsChallengeMode = log.IsCM;
+
+        return encounter;
     }
 
     /// <summary>
