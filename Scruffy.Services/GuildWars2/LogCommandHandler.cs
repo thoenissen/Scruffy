@@ -436,6 +436,7 @@ public class LogCommandHandler : LocatedServiceBase
     private async Task<HashSet<PlayerGroup>> WriteRaidSummary(DpsReportEmbedBuilder builder, IEnumerable<Upload> uploads)
     {
         var knownGroups = new HashSet<PlayerGroup>();
+        var hasMultipleGroups = false;
 
         foreach (var typeGroup in uploads.OrderBy(obj => _dpsReportConnector.GetSortValue(obj.Encounter.BossId))
                                          .ThenBy(obj => obj.EncounterTime)
@@ -445,7 +446,11 @@ public class LogCommandHandler : LocatedServiceBase
             {
                 var isFractal = reportGroup.Key.GetReportType() == DpsReportType.Fractal;
                 var groupedUploads = GroupUploads(ref knownGroups, reportGroup, true);
-                var hasMultipleGroups = groupedUploads.Count() > 1;
+
+                if (!hasMultipleGroups)
+                {
+                    hasMultipleGroups = groupedUploads.Count() > 1;
+                }
 
                 Parallel.ForEach(groupedUploads, groupedUploads =>
                 {
