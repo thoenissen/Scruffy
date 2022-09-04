@@ -742,6 +742,18 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                             .ToListAsync()
                                             .ConfigureAwait(false);
 
+                if (pointType is GuildRankPointType.Representation
+                              or GuildRankPointType.AchievementPoints
+                              or GuildRankPointType.Membership
+                              or GuildRankPointType.DiscordVoiceActivity
+                              or GuildRankPointType.DiscordMessageActivity
+                              or GuildRankPointType.Events
+                              or GuildRankPointType.Development)
+                {
+                    users = users.Where(obj => obj.Points > 0)
+                                 .ToList();
+                }
+
                 var guild = _discordClient.GetGuild(discordServerId);
                 if (guild != null)
                 {
