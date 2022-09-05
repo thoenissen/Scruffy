@@ -78,10 +78,16 @@ public class DpsReportConnector
                 currentPage++;
                 page = await GetUploads(token, currentPage).ConfigureAwait(false);
 
-                if (page != null && page.Uploads != null)
+                if (page?.Uploads != null)
                 {
                     foreach (var upload in page.Uploads)
                     {
+                        // HACK Sometimes the encounter data is not provider by dps.report
+                        if (upload.Encounter.UniqueId == null && upload.Encounter.JsonAvailable)
+                        {
+                            await RefreshEncounterData(upload).ConfigureAwait(false);
+                        }
+
                         if (shouldAbort(upload))
                         {
                             currentPage = page.Pages;
@@ -90,39 +96,31 @@ public class DpsReportConnector
 
                         if ((upload.Encounter.Success || upload.Encounter.Duration.TotalSeconds > 30) && filter(upload))
                         {
-                            // This seems to be a bug with dps.report
-                            if (upload.Encounter.UniqueId == null && upload.Encounter.JsonAvailable)
-                            {
-                                upload.Encounter = await EnrichEncounter(upload.Id, upload.Encounter).ConfigureAwait(false);
-                            }
-
                             uploads.Add(upload);
                         }
                     }
                 }
             }
-            while (page != null && page.Uploads != null && currentPage < page.Pages);
+            while (page?.Uploads != null && currentPage < page.Pages);
         }
 
         return uploads;
     }
 
     /// <summary>
-    /// Enriches the given encounter information with additional information from the JSON log
+    /// Refresh the encounter data from the specific
     /// </summary>
-    /// <param name="id">Id of the upload to retrieve the log for</param>
-    /// <param name="encounter">Available encounter data</param>
+    /// <param name="upload">Upload to be refreshed</param>
     /// <returns>The enriched encounter</returns>
-    private async Task<Encounter> EnrichEncounter(string id, Encounter encounter)
+    private async Task RefreshEncounterData(Upload upload)
     {
-        var log = await GetLog(id).ConfigureAwait(false);
+        var log = await GetLog(upload.Id).ConfigureAwait(false);
 
-        encounter.Gw2Build = log.GW2Build;
-        encounter.Success = log.Success;
-        encounter.Duration = log.Duration;
-        encounter.IsChallengeMode = log.IsCM;
-
-        return encounter;
+        upload.EncounterTime = DateTime.SpecifyKind(log.TimeStart.ToUniversalTime().DateTime, DateTimeKind.Utc);
+        upload.Encounter.Gw2Build = log.GW2Build;
+        upload.Encounter.Success = log.Success;
+        upload.Encounter.Duration = log.Duration;
+        upload.Encounter.IsChallengeMode = log.IsCM;
     }
 
     /// <summary>
@@ -168,12 +166,15 @@ public class DpsReportConnector
             case 17028:
             case 16948:
                 return DpsReportGroup.Nightmare;
+
             case 17632:
             case 17949:
             case 17759:
                 return DpsReportGroup.ShatteredObservatory;
+
             case 23254:
                 return DpsReportGroup.SunquaPeak;
+
             case 22154:
             case 22343:
             case 22481:
@@ -183,6 +184,7 @@ public class DpsReportConnector
             case 22836:
             case 22521:
                 return DpsReportGroup.IBSStrikes;
+
             case 24033:
             case 24768:
             case 25247:
@@ -193,6 +195,7 @@ public class DpsReportConnector
             case 1378:
             case 24375:
                 return DpsReportGroup.EoDStrikes;
+
             case 16169:
             case 16202:
             case 16178:
@@ -204,26 +207,31 @@ public class DpsReportConnector
             case 16174:
             case 16176:
                 return DpsReportGroup.TrainingArea;
+
             case 15438:
             case 15429:
             case 15375:
                 return DpsReportGroup.SpritVale;
+
             case 16123:
             case 16088:
             case 16137:
             case 16125:
             case 16115:
                 return DpsReportGroup.SalvationPass;
+
             case 16253:
             case 16235:
             case 16247:
             case 16246:
                 return DpsReportGroup.StrongholdOfTheFaithful;
+
             case 17194:
             case 17172:
             case 17188:
             case 17154:
                 return DpsReportGroup.BastionOfThePenitent;
+
             case 19767:
             case 19828:
             case 19691:
@@ -232,6 +240,7 @@ public class DpsReportConnector
             case 19844:
             case 19450:
                 return DpsReportGroup.HallOfChains;
+
             case 43974:
             case 10142: // Gadget
             case 37464: // Gadget
@@ -239,14 +248,14 @@ public class DpsReportConnector
             case 21089:
             case 20934:
                 return DpsReportGroup.MythwrightGambit;
+
             case 22006:
             case 21964:
             case 22000:
                 return DpsReportGroup.TheKeyOfAhdashim;
+
             default:
-                {
-                    return DpsReportGroup.Unknown;
-                }
+                return DpsReportGroup.Unknown;
         }
     }
 
@@ -283,6 +292,7 @@ public class DpsReportConnector
             case 22006:
                 bossSortValue = 1;
                 break;
+
             case 17028:
             case 17949:
             case 22481:
@@ -302,6 +312,7 @@ public class DpsReportConnector
             case 21964:
                 bossSortValue = 2;
                 break;
+
             case 16948:
             case 17759:
             case 25247:
@@ -316,6 +327,7 @@ public class DpsReportConnector
             case 22000:
                 bossSortValue = 3;
                 break;
+
             case 16198:
             case 16125:
             case 16246:
@@ -323,35 +335,40 @@ public class DpsReportConnector
             case 21105:
                 bossSortValue = 4;
                 break;
+
             case 16177:
             case 16115:
             case 19651:
             case 21089:
                 bossSortValue = 5;
                 break;
+
             case 16199:
             case 19844:
             case 20934:
                 bossSortValue = 6;
                 break;
+
             case 19676:
             case 19450:
                 bossSortValue = 7;
                 break;
+
             case 19645:
                 bossSortValue = 8;
                 break;
+
             case 16174:
                 bossSortValue = 9;
                 break;
+
             case 16176:
                 bossSortValue = 10;
                 break;
+
             default:
-                {
-                    bossSortValue = 0;
-                    break;
-                }
+                bossSortValue = 0;
+                break;
         }
 
         return GetReportGroup(bossId).GetSortValue() + bossSortValue;
@@ -365,39 +382,39 @@ public class DpsReportConnector
     public ulong GetRaidBossIconId(int bossId)
     {
         ulong iconId = bossId switch
-        {
-            15438 => 848910035747864576,
-            15429 => 848908993538949131,
-            15375 => 848909543915651072,
-            16123 => 848909627982610482,
-            16088 => 848909882115358720,
-            16137 => 848909882115358720,
-            16125 => 848909882115358720,
-            16115 => 848909162821845043,
-            16253 => 743938372195844117,
-            16235 => 848909049599885322,
-            16247 => 848909953112473622,
-            16246 => 848910090370940949,
-            17194 => 848908521680142359,
-            17172 => 848909340827713557,
-            17188 => 848909587938803762,
-            17154 => 848908773996101642,
-            19767 => 848911345964679188,
-            19828 => 743940484455596064,
-            19651 => 848909739509547058,
-            19844 => 848909739509547058,
-            19536 => 848908876039585822,
-            19691 => 848908317832773692,
-            19450 => 848908828866379777,
-            43974 => 848908712692547614,
-            21105 => 848909098619895808,
-            21089 => 848909098619895808,
-            20934 => 848909410691973140,
-            22006 => 848908580749049866,
-            21964 => 848908653637533736,
-            22000 => 848909465553207296,
-            _ => 0ul
-        };
+                              {
+                                  15438 => 848910035747864576,
+                                  15429 => 848908993538949131,
+                                  15375 => 848909543915651072,
+                                  16123 => 848909627982610482,
+                                  16088 => 848909882115358720,
+                                  16137 => 848909882115358720,
+                                  16125 => 848909882115358720,
+                                  16115 => 848909162821845043,
+                                  16253 => 743938372195844117,
+                                  16235 => 848909049599885322,
+                                  16247 => 848909953112473622,
+                                  16246 => 848910090370940949,
+                                  17194 => 848908521680142359,
+                                  17172 => 848909340827713557,
+                                  17188 => 848909587938803762,
+                                  17154 => 848908773996101642,
+                                  19767 => 848911345964679188,
+                                  19828 => 743940484455596064,
+                                  19651 => 848909739509547058,
+                                  19844 => 848909739509547058,
+                                  19536 => 848908876039585822,
+                                  19691 => 848908317832773692,
+                                  19450 => 848908828866379777,
+                                  43974 => 848908712692547614,
+                                  21105 => 848909098619895808,
+                                  21089 => 848909098619895808,
+                                  20934 => 848909410691973140,
+                                  22006 => 848908580749049866,
+                                  21964 => 848908653637533736,
+                                  22000 => 848909465553207296,
+                                  _ => 0ul
+                              };
 
         return iconId;
     }
