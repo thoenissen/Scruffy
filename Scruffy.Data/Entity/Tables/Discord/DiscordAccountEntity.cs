@@ -38,6 +38,11 @@ public class DiscordAccountEntity
     /// </summary>
     public virtual ICollection<OneTimeReminderEntity> OneTimeReminders { get; set; }
 
+    /// <summary>
+    /// Members
+    /// </summary>
+    public virtual ICollection<DiscordServerMemberEntity> Members { get; set; }
+
     #endregion // Navigation properties
 
     #endregion // Properties

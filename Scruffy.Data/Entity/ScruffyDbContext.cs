@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
@@ -143,6 +142,13 @@ public class ScruffyDbContext : IdentityDbContext<UserEntity, RoleEntity, long, 
         modelBuilder.Entity<DiscordAccountEntity>();
         modelBuilder.Entity<BlockedDiscordChannelEntity>();
         modelBuilder.Entity<DiscordHistoricAccountRoleAssignmentEntity>();
+        modelBuilder.Entity<DiscordServerMemberEntity>();
+
+        modelBuilder.Entity<DiscordAccountEntity>()
+                    .HasMany(obj => obj.Members)
+                    .WithOne(obj => obj.Account)
+                    .HasForeignKey(obj => obj.AccountId)
+                    .IsRequired();
 
         modelBuilder.Entity<DiscordAccountEntity>()
                     .HasMany(obj => obj.OneTimeReminders)
@@ -163,6 +169,13 @@ public class ScruffyDbContext : IdentityDbContext<UserEntity, RoleEntity, long, 
                                        obj.Date,
                                        obj.ServerId,
                                        obj.RoleId,
+                                       obj.AccountId
+                                   });
+
+        modelBuilder.Entity<DiscordServerMemberEntity>()
+                    .HasKey(obj => new
+                                   {
+                                       obj.ServerId,
                                        obj.AccountId
                                    });
 
