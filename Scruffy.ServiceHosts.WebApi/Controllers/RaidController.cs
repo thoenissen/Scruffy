@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;
+using Scruffy.Data.Entity.Repositories.CoreData;
 using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.ServiceHosts.WebApi.DTO.Raid;
@@ -85,6 +86,10 @@ public class RaidController : ControllerBase
                                                 .GetQuery()
                                                 .Select(obj => obj);
 
+        var discordMembers = _repositoryFactory.GetRepository<DiscordServerMemberRepository>()
+                                               .GetQuery()
+                                               .Select(obj => obj);
+
         var userRoles = _repositoryFactory.GetRepository<RaidUserRoleRepository>()
                                           .GetQuery()
                                           .Select(obj => obj);
@@ -93,81 +98,37 @@ public class RaidController : ControllerBase
                                                   .GetQuery()
                                                   .Select(obj => obj);
 
-        var appointments = new List<ActiveRaidAppointmentDTO>();
-
-        foreach (var appointment in _repositoryFactory.GetRepository<RaidAppointmentRepository>()
-                                                      .GetQuery()
-                                                      .Where(obj => obj.IsCommitted == false)
-                                                      .Select(obj => new
-                                                                     {
-                                                                         obj.Id,
-                                                                         obj.TimeStamp,
-                                                                         obj.RaidDayTemplate.Title,
-                                                                         Participants = obj.RaidRegistrations
-                                                                                           .Where(obj2 => obj2.LineupExperienceLevelId != null)
-                                                                                           .Select(obj2 => new
-                                                                                                           {
-                                                                                                               Id = obj2.UserId,
-                                                                                                               DiscordAccountId = discordAccounts.Where(obj3 => obj3.UserId == obj2.UserId)
-                                                                                                                                                 .Select(obj3 => (ulong?)obj3.Id)
-                                                                                                                                                 .FirstOrDefault(),
-                                                                                                               Roles = userRoles.Where(obj3 => obj3.UserId == obj2.UserId)
-                                                                                                                                .Select(obj3 => obj3.RoleId)
-                                                                                                                                .ToList(),
-                                                                                                               PreferredRoles = registrationRoles.Where(obj3 => obj3.RegistrationId == obj2.Id)
-                                                                                                                                                 .Select(obj3 => obj3.RoleId)
-                                                                                                                                                 .ToList()
-                                                                                                           })
-                                                                                           .ToList()
-                                                                     }))
-        {
-            var participants = new List<RaidParticipantDTO>();
-
-            foreach (var participant in appointment.Participants)
-            {
-                string name = null;
-
-                if (participant.DiscordAccountId != null)
-                {
-                    var member = await _discordClient.GetGuildUserAsync(WebApiConfiguration.DiscordServerId, participant.DiscordAccountId.Value)
-                                                     .ConfigureAwait(false);
-
-                    if (member != null)
-                    {
-                        name = member.TryGetDisplayName();
-                    }
-                    else
-                    {
-                        var user = await _discordClient.GetUserAsync(participant.DiscordAccountId.Value)
-                                                       .ConfigureAwait(false);
-
-                        if (user != null)
-                        {
-                            name = $"{user.Username}#{user.Discriminator}";
-                        }
-                    }
-                }
-
-                participants.Add(new RaidParticipantDTO
-                                 {
-                                     Id = participant.Id,
-                                     Name = name,
-                                     Roles = participant.Roles
-                                                        .Concat(participant.PreferredRoles)
-                                                        .Distinct()
-                                                        .ToList(),
-                                     PreferredRoles = participant.PreferredRoles
-                                 });
-            }
-
-            appointments.Add(new ActiveRaidAppointmentDTO
-                             {
-                                 Id = appointment.Id,
-                                 TimeStamp = appointment.TimeStamp,
-                                 Title = appointment.Title,
-                                 Participants = participants
-                             });
-        }
+        var appointments = await _repositoryFactory.GetRepository<RaidAppointmentRepository>()
+                                                   .GetQuery()
+                                                   .Where(obj => obj.IsCommitted == false)
+                                                   .Select(obj => new ActiveRaidAppointmentDTO
+                                                                  {
+                                                                      Id = obj.Id,
+                                                                      TimeStamp = obj.TimeStamp,
+                                                                      Title = obj.RaidDayTemplate.Title,
+                                                                      Participants = obj.RaidRegistrations
+                                                                                                       .Where(obj2 => obj2.LineupExperienceLevelId != null)
+                                                                                                       .Select(obj2 => new RaidParticipantDTO
+                                                                                                       {
+                                                                                                           Id = obj2.UserId,
+                                                                                                           Name = discordMembers.Where(obj3 => obj3.ServerId == WebApiConfiguration.DiscordServerId
+                                                                                                                                            && obj3.AccountId == discordAccounts.Where(obj4 => obj4.UserId == obj2.UserId)
+                                                                                                                                                                                .Select(obj4 => (ulong?)obj4.Id)
+                                                                                                                                                                                .FirstOrDefault())
+                                                                                                                                                .Select(obj3 => obj3.Name)
+                                                                                                                                                .FirstOrDefault()
+                                                                                                                              ?? obj2.User.Name,
+                                                                                                           Roles = userRoles.Where(obj3 => obj3.UserId == obj2.UserId)
+                                                                                                                                            .Select(obj3 => obj3.RoleId)
+                                                                                                                                            .ToList(),
+                                                                                                           PreferredRoles = registrationRoles.Where(obj3 => obj3.RegistrationId == obj2.Id)
+                                                                                                                                                             .Select(obj3 => obj3.RoleId)
+                                                                                                                                                             .ToList()
+                                                                                                       })
+                                                                                                       .ToList()
+                                                                  })
+                                                   .ToListAsync()
+                                                   .ConfigureAwait(false);
 
         return Ok(appointments);
     }
@@ -208,55 +169,36 @@ public class RaidController : ControllerBase
                                                 .GetQuery()
                                                 .Select(obj => obj);
 
-        var users = new List<RaidUserDTO>();
+        var discordMembers = _repositoryFactory.GetRepository<DiscordServerMemberRepository>()
+                                               .GetQuery()
+                                               .Select(obj => obj);
 
-        foreach (var raidUser in await _repositoryFactory.GetRepository<RaidUserRoleRepository>()
-                                                     .GetQuery()
-                                                     .GroupBy(obj => obj.UserId)
-                                                     .Select(obj => new
-                                                                    {
-                                                                        Id = obj.Key,
-                                                                        DiscordAccountId = discordAccounts.Where(obj2 => obj2.UserId == obj.Key)
-                                                                                                          .Select(obj2 => (ulong?)obj2.Id)
-                                                                                                          .FirstOrDefault(),
-                                                                        AssignedRoles = obj.Select(obj2 => obj2.RoleId)
-                                                                                           .ToList()
-                                                                    })
-                                                     .ToListAsync()
-                                                     .ConfigureAwait(false))
-        {
-            string name = null;
+        var users = _repositoryFactory.GetRepository<UserRepository>()
+                                      .GetQuery()
+                                      .Select(obj => obj);
 
-            if (raidUser.DiscordAccountId != null)
-            {
-                var member = await _discordClient.GetGuildUserAsync(WebApiConfiguration.DiscordServerId, raidUser.DiscordAccountId.Value)
-                                                 .ConfigureAwait(false);
+        var raidUsers = await _repositoryFactory.GetRepository<RaidUserRoleRepository>()
+                                                .GetQuery()
+                                                .GroupBy(obj => obj.UserId)
+                                                .Select(obj => new RaidUserDTO
+                                                               {
+                                                                   Id = obj.Key,
+                                                                   Name = discordMembers.Where(obj2 => obj2.ServerId == WebApiConfiguration.DiscordServerId
+                                                                                                    && obj2.AccountId == discordAccounts.Where(obj3 => obj3.UserId == obj.Key)
+                                                                                                                                        .Select(obj3 => (ulong?)obj3.Id)
+                                                                                                                                        .FirstOrDefault())
+                                                                                        .Select(obj2 => obj2.Name)
+                                                                                        .FirstOrDefault()
+                                                                       ?? users.Where(obj2 => obj2.Id == obj.Key)
+                                                                               .Select(obj2 => obj2.Name)
+                                                                               .FirstOrDefault(),
+                                                                   AssignedRoles = obj.Select(obj2 => obj2.RoleId)
+                                                                                      .ToList()
+                                                               })
+                                                .ToListAsync()
+                                                .ConfigureAwait(false);
 
-                if (member != null)
-                {
-                    name = member.TryGetDisplayName();
-                }
-                else
-                {
-                    var user = await _discordClient.GetUserAsync(raidUser.DiscordAccountId.Value)
-                                                   .ConfigureAwait(false);
-
-                    if (user != null)
-                    {
-                        name = $"{user.Username}#{user.Discriminator}";
-                    }
-                }
-            }
-
-            users.Add(new RaidUserDTO
-                      {
-                          Id = raidUser.Id,
-                          Name = name,
-                          AssignedRoles = raidUser.AssignedRoles
-                      });
-        }
-
-        return Ok(users);
+        return Ok(raidUsers);
     }
 
     /// <summary>
