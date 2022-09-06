@@ -23,9 +23,7 @@ public class PlayerGroup
     /// <summary>
     /// Stats of this group
     /// </summary>
-#nullable enable
-    public PlayerGroupStats? Stats { get; private set; }
-#nullable disable
+    public PlayerGroupStats Stats { get; private set; }
 
     /// <summary>
     /// Constructor
