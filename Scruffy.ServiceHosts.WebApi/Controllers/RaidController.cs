@@ -1,7 +1,5 @@
 ﻿using System.Data;
 
-using Discord.Rest;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,7 +8,6 @@ using Scruffy.Data.Entity.Repositories.CoreData;
 using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.ServiceHosts.WebApi.DTO.Raid;
-using Scruffy.Services.Core.Extensions;
 using Scruffy.Services.Raid;
 
 namespace Scruffy.ServiceHosts.WebApi.Controllers;
@@ -26,11 +23,6 @@ namespace Scruffy.ServiceHosts.WebApi.Controllers;
 public class RaidController : ControllerBase
 {
     #region Fields
-
-    /// <summary>
-    /// Discord client
-    /// </summary>
-    private readonly DiscordRestClient _discordClient;
 
     /// <summary>
     /// Repository factory
@@ -54,16 +46,13 @@ public class RaidController : ControllerBase
     /// <summary>
     /// Constructor
     /// </summary>
-    /// <param name="discordClient">Discord client</param>
     /// <param name="repositoryFactory">Repository factory</param>
     /// <param name="raidRolesService">Raid roles service</param>
     /// <param name="raidLineUpService">Raid line up service</param>
-    public RaidController(DiscordRestClient discordClient,
-                          RepositoryFactory repositoryFactory,
+    public RaidController(RepositoryFactory repositoryFactory,
                           RaidRolesService raidRolesService,
                           RaidLineUpService raidLineUpService)
     {
-        _discordClient = discordClient;
         _repositoryFactory = repositoryFactory;
         _raidRolesService = raidRolesService;
         _raidLineUpService = raidLineUpService;
@@ -117,7 +106,7 @@ public class RaidController : ControllerBase
                                                                                                                                                                                 .FirstOrDefault())
                                                                                                                                                 .Select(obj3 => obj3.Name)
                                                                                                                                                 .FirstOrDefault()
-                                                                                                                              ?? obj2.User.Name,
+                                                                                                                              ?? obj2.User.UserName,
                                                                                                            Roles = userRoles.Where(obj3 => obj3.UserId == obj2.UserId)
                                                                                                                                             .Select(obj3 => obj3.RoleId)
                                                                                                                                             .ToList(),
@@ -190,7 +179,7 @@ public class RaidController : ControllerBase
                                                                                         .Select(obj2 => obj2.Name)
                                                                                         .FirstOrDefault()
                                                                        ?? users.Where(obj2 => obj2.Id == obj.Key)
-                                                                               .Select(obj2 => obj2.Name)
+                                                                               .Select(obj2 => obj2.UserName)
                                                                                .FirstOrDefault(),
                                                                    AssignedRoles = obj.Select(obj2 => obj2.RoleId)
                                                                                       .ToList()

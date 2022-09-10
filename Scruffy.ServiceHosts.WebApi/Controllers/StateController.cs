@@ -9,8 +9,10 @@ namespace Scruffy.ServiceHosts.WebApi.Controllers;
 /// State controller
 /// </summary>
 [ApiController]
-[Route("[controller]")]
-[Authorize]
+[Route("state")]
+#if !DEBUG
+[Microsoft.AspNetCore.Authorization.Authorize]
+#endif
 public class StateController : ControllerBase
 {
     /// <summary>
