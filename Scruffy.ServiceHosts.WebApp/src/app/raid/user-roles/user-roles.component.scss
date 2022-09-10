@@ -7,28 +7,26 @@ canvas {
   height: 600px;
 }
 
-td.mat-cell {
+.mat-cell {
   border-bottom: 1px solid black;
   border-right: 1px solid black;
-  padding: 10px;
-  text-align: center;
 }
 
-th.mat-header-cell {
+.mat-header-cell {
   border-bottom: 1px solid black;
   border-right: 1px solid black;
-  padding: 10px;
-  min-width: 110px;
-  font-weight: bold;
-  color: black;
-  text-align: center;
 }
 
-td.mat-cell:first-child {
+.mat-footer-cell {
+  border-bottom: 1px solid black;
+  border-right: 1px solid black;
+}
+
+.mat-cell:first-child {
   text-align: left;
 }
 
-th.mat-header-cell {
+.mat-header-cell {
   text-align: left;
 }
 

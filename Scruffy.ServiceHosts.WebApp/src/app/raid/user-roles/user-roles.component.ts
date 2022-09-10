@@ -8,6 +8,8 @@ import { ChartConfiguration } from 'chart.js';
   styleUrls: ['./user-roles.component.scss'],
 })
 export class UserRolesComponent {
+  public constants: Constants = Constants.current;
+
   // Table
   public rows: RaidUserTableRow[] = [];
   public displayedColumns: string[] = [
@@ -94,6 +96,75 @@ export class UserRolesComponent {
 
     this.rows = rows;
   }
+
+  getPercentage(roldeId: number) {
+    var percentage: number = 0.0;
+
+    if (this.rows.length > 0) {
+      switch (roldeId) {
+        case this.constants.RaidRoleDamageDealer:
+          {
+            percentage = this.rows.filter((r) => r.isDamageDealer).length / this.rows.length;
+          }
+          break;
+        case this.constants.RaidRoleDamageDealerAlacrity:
+          {
+            percentage = this.rows.filter((r) => r.isDamageDealerAlacrity).length / this.rows.length;
+          }
+          break;
+        case this.constants.RaidRoleDamageDealerQuickness:
+          {
+            percentage = this.rows.filter((r) => r.isDamageDealerQuickness).length / this.rows.length;
+          }
+          break;
+        case this.constants.RaidRoleHealerAlacrity:
+          {
+            percentage = this.rows.filter((r) => r.isHealerAlacrity).length / this.rows.length;
+          }
+          break;
+        case this.constants.RaidRoleHealerQuickness:
+          {
+            percentage = this.rows.filter((r) => r.isHealerQuickness).length / this.rows.length;
+          }
+          break;
+        case this.constants.RaidRoleTankDamageDealerAlacrity:
+          {
+            percentage = this.rows.filter((r) => r.isTankDamageDealerAlacrity).length / this.rows.length;
+          }
+          break;
+        case this.constants.RaidRoleTankDamageDealerQuickness:
+          {
+            percentage = this.rows.filter((r) => r.isTankDamageDealerQuickness).length / this.rows.length;
+          }
+          break;
+        case this.constants.RaidRoleTankHealerAlacrity:
+          {
+            percentage = this.rows.filter((r) => r.isTankHealerAlacrity).length / this.rows.length;
+          }
+          break;
+        case this.constants.RaidRoleTankHealerQuickness:
+          {
+            percentage = this.rows.filter((r) => r.isTankHealerQuickness).length / this.rows.length;
+          }
+          break;
+      }
+    }
+    return percentage;
+  }
+}
+
+export class Constants {
+  static readonly current: Constants = new Constants();
+
+  readonly RaidRoleDamageDealer: number = 1;
+  readonly RaidRoleDamageDealerAlacrity: number = 2;
+  readonly RaidRoleDamageDealerQuickness: number = 3;
+  readonly RaidRoleHealerAlacrity: number = 4;
+  readonly RaidRoleHealerQuickness: number = 5;
+  readonly RaidRoleTankDamageDealerAlacrity: number = 6;
+  readonly RaidRoleTankDamageDealerQuickness: number = 7;
+  readonly RaidRoleTankHealerAlacrity: number = 8;
+  readonly RaidRoleTankHealerQuickness: number = 9;
 }
 
 export interface RaidUser {
