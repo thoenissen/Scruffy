@@ -719,7 +719,7 @@ public class LogCommandHandler : LocatedServiceBase
 
             if (remainingHealth != null)
             {
-                percentage = $" {Math.Floor(remainingHealth.Value)}% -";
+                percentage = $" {Math.Round(remainingHealth.Value)}% -";
             }
 
             var line = $"{(hasNormalTries && hasChallengeTries ? " " : string.Empty)} └ {(upload.Encounter.Success ? SuccessIcon : FailureIcon)}{percentage} {Format.Url($"{duration} ⧉", upload.Permalink)}";

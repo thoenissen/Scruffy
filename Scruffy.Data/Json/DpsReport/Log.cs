@@ -62,8 +62,8 @@ public class Log
 
             foreach (var target in Targets)
             {
-                // Ignore fake targets & CC targets in Aetherblade Hideout & Hearts in Dragonvoid
-                if (!target.IsFake && !target.EnemyPlayer && target.Id != 23656 && target.Id != -23)
+                // Ignore fake targets & CC targets in Aetherblade Hideout & Hearts in Dragonvoid & Dhuum Reaper
+                if (!target.IsFake && !target.EnemyPlayer && target.Id != 23656 && target.Id != -23 && target.Id != 19831)
                 {
                     remainingHealth += 100.0 - target.HealthPercentBurned;
 
