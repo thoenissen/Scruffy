@@ -350,7 +350,7 @@ public class LogCommandHandler : LocatedServiceBase
         }
 
         var bAnyUploads = false;
-        var embeds = new List<Embed>();
+        var reportEmbeds = new List<Embed>();
         var knownGroups = new HashSet<PlayerGroup>();
 
         // Wait for the tasks in reverse, as more logs are on the first raid appointment
@@ -374,7 +374,7 @@ public class LogCommandHandler : LocatedServiceBase
                     knownGroups.Add(group);
                 }
 
-                embeds.Insert(0, summaryBuilder.Build());
+                reportEmbeds.Insert(0, summaryBuilder.Build());
             }
         }
 
@@ -383,10 +383,42 @@ public class LogCommandHandler : LocatedServiceBase
             var week = $"{startOfWeek:dd.} - {startOfWeek.AddDays(6):dd.MM.yy}";
             var title = Format.Bold(LocalizationGroup.GetFormattedText("DpsReportGuildRaidSummaryTitle", "Guild Raid {0}", week));
 
-            embeds.Insert(0, BuildStats(knownGroups));
-
-            await context.ReplyAsync(text: title, embeds: embeds.ToArray())
+            await context.ReplyAsync(text: title, embed: BuildStats(knownGroups))
                          .ConfigureAwait(false);
+
+            foreach (var reportEmbed in reportEmbeds)
+            {
+                if (reportEmbed.Length >= 6000)
+                {
+                    var currentEmbed = new EmbedBuilder().WithTitle(reportEmbed.Title)
+                                                         .WithColor(reportEmbed.Color ?? Color.Green);
+
+                    foreach (var field in reportEmbed.Fields)
+                    {
+                        if (field.Name.Length + field.Value.Length + currentEmbed.Length >= 6000)
+                        {
+                            await context.Channel
+                                         .SendMessageAsync(embed: currentEmbed.Build())
+                                         .ConfigureAwait(false);
+
+                            currentEmbed = new EmbedBuilder().WithTitle(reportEmbed.Title)
+                                                             .WithColor(reportEmbed.Color ?? Color.Green);
+                        }
+
+                        currentEmbed.AddField(field.Name, field.Value, field.Inline);
+                    }
+
+                    await context.Channel
+                                 .SendMessageAsync(embed: currentEmbed.Build())
+                                 .ConfigureAwait(false);
+                }
+                else
+                {
+                    await context.Channel
+                                 .SendMessageAsync(embed: reportEmbed)
+                                 .ConfigureAwait(false);
+                }
+            }
         }
         else
         {
