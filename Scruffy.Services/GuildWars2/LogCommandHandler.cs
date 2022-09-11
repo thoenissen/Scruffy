@@ -214,7 +214,7 @@ public class LogCommandHandler : LocatedServiceBase
                             var hasSuccessTry = summarize && groupUploads.Value.Any(obj => obj.Encounter.Success);
                             var fullLogs = await LoadRemainingHealths(groupUploads.Value, (Upload upload) => hasSuccessTry && !upload.Encounter.Success).ConfigureAwait(false);
 
-                            WriteLogs(builder, ref reports, title, fullLogs, summarize, hasNormalTries, hasChallengeTries);
+                            WriteLogs(builder, ref reports, reportGroup.Key.AsText(), title, fullLogs, summarize, hasNormalTries, hasChallengeTries);
                         }
                     }
                 }
@@ -495,7 +495,7 @@ public class LogCommandHandler : LocatedServiceBase
                             var hasSuccessTry = boss.Any(obj => obj.Encounter.Success);
                             var fullLogs = await LoadRemainingHealths(boss, (Upload upload) => hasSuccessTry && !upload.Encounter.Success).ConfigureAwait(false);
 
-                            WriteLogs(builder, ref reports, title, fullLogs, true, hasNormalTries, hasChallengeTries);
+                            WriteLogs(builder, ref reports, fieldTitle.ToString(), title, fullLogs, true, hasNormalTries, hasChallengeTries);
                         }
                     }
 
@@ -699,12 +699,13 @@ public class LogCommandHandler : LocatedServiceBase
     /// </summary>
     /// <param name="builder">Embed builder</param>
     /// <param name="reports">Field string builder</param>
-    /// <param name="title">Title of the current field</param>
+    /// <param name="fieldTitle">Title of the current field</param>
+    /// <param name="title">Title of the current boss</param>
     /// <param name="uploads">Uploads</param>
     /// <param name="summarize">Whether to summarize the reports</param>
     /// <param name="hasNormalTries">Whether there are normal tries</param>
     /// <param name="hasChallengeTries">Whether there are challenge mode tries</param>
-    private void WriteLogs(DpsReportEmbedBuilder builder, ref StringBuilder reports, string title, List<Tuple<Upload, double?>> uploads, bool summarize, bool hasNormalTries, bool hasChallengeTries)
+    private void WriteLogs(DpsReportEmbedBuilder builder, ref StringBuilder reports, string fieldTitle, string title, List<Tuple<Upload, double?>> uploads, bool summarize, bool hasNormalTries, bool hasChallengeTries)
     {
         // Optionally filter all uploads
         IEnumerable<Tuple<Upload, double?>> filteredUploads = uploads.Count > 0 && summarize && !uploads.Any(obj => obj.Item1.Encounter.Success)
@@ -726,7 +727,7 @@ public class LogCommandHandler : LocatedServiceBase
             // Start a new field, when we would reach the character limit
             if (reports.Length + line.Length > 1024)
             {
-                builder.AddReportGroup(title.ToString(), reports.ToString());
+                builder.AddReportGroup(fieldTitle, reports.ToString());
                 reports = new StringBuilder();
 
                 if (upload.Encounter.IsChallengeMode || !hasNormalTries)
