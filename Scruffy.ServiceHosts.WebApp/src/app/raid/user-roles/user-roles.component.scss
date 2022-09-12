@@ -1,6 +1,9 @@
+@import 'src/utilities/variables';
+
 table {
   width: 100%;
   vertical-align: top;
+  overflow: hidden;
 }
 canvas {
   width: 600px;
@@ -10,12 +13,41 @@ canvas {
 .mat-cell {
   border-bottom: 1px solid black;
   border-right: 1px solid black;
+  text-align: middle;
+  max-height: 48px; 
+}
+
+.mat-cell:not(.mat-column-name) {
+  justify-content: center;
+}
+
+.mat-column-name {
+  min-width: 100px;
+}
+
+.mat-column-name:not(.mat-header-cell) {
+  background-color: $light-yellow;
 }
 
 .mat-header-cell {
   border-bottom: 1px solid black;
   border-right: 1px solid black;
+  align-content: center;
+  background-color: $dark-blue;
+  color: #FFFFFF;
 }
+
+.mat-header-cell:not(.mat-column-name) {
+  /* die folgenden Eigenschaften werden beide benötigt. Nach Zeilenumbruch zieht justify-content nicht mehr für den Text*/
+  justify-content: center;
+  text-align: center;
+}
+
+@media only screen and (max-width: 1373px) {
+  .mat-header-cell-text {
+    display: none;
+  }
+} 
 
 .mat-footer-cell {
   border-bottom: 1px solid black;
@@ -26,9 +58,6 @@ canvas {
   text-align: left;
 }
 
-.mat-header-cell {
-  text-align: left;
-}
 
 .chart-mat-accordion {
   width: 100%;
