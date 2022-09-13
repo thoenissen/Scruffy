@@ -955,6 +955,21 @@
         },
         "WorldsService": {
             "Overview": "Weltenübersicht"
+        },
+        "LookingForGroupCommandHandler": {
+            "AppointmentCreation": "Der Termin wird erstellt.",
+            "ConfigurationTitle": "Bearbeitungsassistent",
+            "ConfigurationDescription":
+                "Mit diesem Assistenten kannst du den Termin bearbeiten. Falls du keine Änderungen mehr durchführen möchtest, kannst du diese Nachricht ausblenden.",
+            "ConfigurationMenuEdit": "Termin bearbeiten",
+            "ConfigurationMenuDelete": "Termin löschen",
+            "ConfigurationPermissionsDenied": "Du bist nicht berechtigt diesen Termin zu bearbeiten."
+        },
+        "LookingForGroupMessageService": {
+            "Participants": "Teilnehmer",
+            "Join": "Anmelden",
+            "Leave": "Abmelden",
+            "Thread": "Thread"
         }
     }
 }
