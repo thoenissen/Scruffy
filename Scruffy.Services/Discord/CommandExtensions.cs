@@ -46,13 +46,13 @@ internal static class CommandExtensions
     /// <returns>Converter object</returns>
     public static SlashCommandProperties ToApplicationCommandProps(this SlashCommandInfo commandInfo)
     {
-        var props = new SlashCommandBuilder
-                    {
-                        Name = commandInfo.Name,
-                        Description = commandInfo.Description,
-                        IsDMEnabled = commandInfo.IsEnabledInDm,
-                        DefaultMemberPermissions = (commandInfo.DefaultMemberPermissions ?? 0) | (commandInfo.Module.DefaultMemberPermissions ?? 0)
-                    }.Build();
+        var props = new SlashCommandBuilder().WithName(commandInfo.Name)
+                                             .WithDescription(commandInfo.Description)
+                                             .WithDMPermission(commandInfo.IsEnabledInDm)
+                                             .WithDefaultMemberPermissions((commandInfo.DefaultMemberPermissions ?? 0) | (commandInfo.Module.DefaultMemberPermissions ?? 0))
+                                             .WithNameLocalizations(new Dictionary<string, string>())
+                                             .WithDescriptionLocalizations(new Dictionary<string, string>())
+                                             .Build();
 
         if (commandInfo.Parameters.Count > SlashCommandBuilder.MaxOptionsCount)
         {
@@ -159,13 +159,13 @@ internal static class CommandExtensions
 
                 options.AddRange(moduleInfo.SubModules?.SelectMany(x => x.ParseSubModule(args)));
 
-                var props = new SlashCommandBuilder
-                            {
-                                Name = moduleInfo.SlashGroupName,
-                                Description = moduleInfo.Description,
-                                IsDMEnabled = moduleInfo.IsEnabledInDm,
-                                DefaultMemberPermissions = moduleInfo.DefaultMemberPermissions
-                            }.Build();
+                var props = new SlashCommandBuilder().WithName(moduleInfo.SlashGroupName)
+                                                     .WithDescription(moduleInfo.Description)
+                                                     .WithDMPermission(moduleInfo.IsEnabledInDm)
+                                                     .WithDefaultMemberPermissions(moduleInfo.DefaultMemberPermissions)
+                                                     .WithNameLocalizations(new Dictionary<string, string>())
+                                                     .WithDescriptionLocalizations(new Dictionary<string, string>())
+                                                     .Build();
 
                 if (options.Count > SlashCommandBuilder.MaxOptionsCount)
                 {
