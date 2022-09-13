@@ -280,7 +280,7 @@ public class RaidMessageBuilder : LocatedServiceBase
                         var componentsBuilder = new ComponentBuilder();
 
                         componentsBuilder.WithButton(LocalizationGroup.GetText("Join", "Join"),
-                                                     InteractivityService.GetPermanentCustomerId("raid",
+                                                     InteractivityService.GetPermanentCustomId("raid",
                                                                                                  "join",
                                                                                                  appointment.AliasName),
                                                      ButtonStyle.Secondary,
@@ -300,7 +300,7 @@ public class RaidMessageBuilder : LocatedServiceBase
                         }
 
                         componentsBuilder.WithButton(LocalizationGroup.GetText("Leave", "Leave"),
-                                                     InteractivityService.GetPermanentCustomerId("raid",
+                                                     InteractivityService.GetPermanentCustomId("raid",
                                                                                                  "leave",
                                                                                                  appointment.AliasName),
                                                      ButtonStyle.Secondary,

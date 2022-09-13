@@ -80,7 +80,7 @@ public sealed class InteractivityService : SingletonLocatedServiceBase, IDisposa
     /// <param name="command">Command</param>
     /// <param name="additionalData">Additional data</param>
     /// <returns>Custom id</returns>
-    public static string GetPermanentCustomerId(string group, string command, params string[] additionalData)
+    public static string GetPermanentCustomId(string group, string command, params string[] additionalData)
     {
         return $"{group};{command};{string.Join(';', additionalData)}";
     }
