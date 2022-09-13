@@ -12,4 +12,10 @@ public class GitAuthor
     /// </summary>
     [JsonProperty("date")]
     public DateTime Date { get; set; }
+
+    /// <summary>
+    /// Name
+    /// </summary>
+    [JsonProperty("name")]
+    public string Name { get; set; }
 }

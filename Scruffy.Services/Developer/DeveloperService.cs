@@ -72,7 +72,21 @@ public class DeveloperService : LocatedServiceBase
 
                     foreach (var commit in currentCommits)
                     {
-                        commits[commit.Sha] = (commit.Sha, commit.Author?.Login, commit.Committer?.Login, commit.GitCommit.Committer.Date.ToLocalTime());
+                        var author = commit.Author?.Login ?? commit.GitCommit.Author.Name;
+
+                        if (author == "web-flow")
+                        {
+                            author = "thoenissen";
+                        }
+
+                        var committer = commit.Committer?.Login ?? commit.GitCommit.Committer.Name;
+
+                        if (committer == "web-flow")
+                        {
+                            committer = "thoenissen";
+                        }
+
+                        commits[commit.Sha] = (commit.Sha, author, committer, commit.GitCommit.Committer.Date.ToLocalTime());
                     }
 
                     var lastSha = currentCommits.LastOrDefault()?.Sha;

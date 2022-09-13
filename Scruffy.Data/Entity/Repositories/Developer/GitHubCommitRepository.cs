@@ -82,6 +82,10 @@ public class GitHubCommitRepository : RepositoryBase<GitHubCommitQueryable, GitH
                 sqlCommand = new SqlCommand(@"MERGE INTO [GitHubCommits] AS [TARGET]
                                                    USING #GitHubCommits AS [Source]
                                                       ON [Target].[Sha] = [Source].[Sha]
+                                          WHEN MATCHED THEN
+                                               UPDATE SET [Target].[Author] = [Source].[Author],
+                                                          [Target].[Committer] = [Source].[Committer],
+                                                          [Target].[TimeStamp] = [Source].[TimeStamp]
                                           WHEN NOT MATCHED THEN
                                                INSERT ( [Sha], [Author], [Committer], [TimeStamp] )
                                                VALUES ( [Source].[Sha], [Source].[Author], [Source].[Committer], [Source].[TimeStamp] )
