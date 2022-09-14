@@ -1,17 +1,11 @@
 <div style="margin: 5%">
-  <p>{{ currentAppointment?.title || "Kein Raidtermin vorhanden" }}</p>
+  <p>{{ currentAppointment?.title || "Currently no appointment is available." }}</p>
   <div>
     <mat-form-field appearance="fill">
       <mat-label>{{ healSelect1?.group || "Boon Healer" }}</mat-label>
-      <mat-select
-        (selectionChange)="onSelect($event)"
-        [(ngModel)]="healSelect1"
-      >
+      <mat-select (selectionChange)="onSelect($event)" [(ngModel)]="healSelect1">
         <mat-option>None</mat-option>
-        <mat-optgroup
-          label="Heal Quick"
-          [disabled]="boonSelect1?.group === 'DpsQuick'"
-        >
+        <mat-optgroup label="Heal Quick" [disabled]="boonSelect1?.group === 'DpsQuick'">
           <mat-option
             *ngFor="let participant of quickHealPlayers"
             [value]="{ group: 'HealQuick', user: participant }"
@@ -19,10 +13,7 @@
             >{{ participant.name }}</mat-option
           >
         </mat-optgroup>
-        <mat-optgroup
-          label="Heal Alac"
-          [disabled]="boonSelect1?.group === 'DpsAlac'"
-        >
+        <mat-optgroup label="Heal Alac" [disabled]="boonSelect1?.group === 'DpsAlac'">
           <mat-option
             *ngFor="let participant of alacHealPlayers"
             [value]="{ group: 'HealAlac', user: participant }"
@@ -35,15 +26,9 @@
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>{{ boonSelect1?.group || "Boon Dps" }}</mat-label>
-      <mat-select
-        (selectionChange)="onSelect($event)"
-        [(ngModel)]="boonSelect1"
-      >
+      <mat-select (selectionChange)="onSelect($event)" [(ngModel)]="boonSelect1">
         <mat-option>None</mat-option>
-        <mat-optgroup
-          label="Dps Quick"
-          [disabled]="healSelect1?.group === 'HealQuick'"
-        >
+        <mat-optgroup label="Dps Quick" [disabled]="healSelect1?.group === 'HealQuick'">
           <mat-option
             *ngFor="let participant of quickPlayers"
             [value]="{ group: 'DpsQuick', user: participant }"
@@ -51,10 +36,7 @@
             >{{ participant.name }}</mat-option
           >
         </mat-optgroup>
-        <mat-optgroup
-          label="Dps Alac"
-          [disabled]="healSelect1?.group === 'HealAlac'"
-        >
+        <mat-optgroup label="Dps Alac" [disabled]="healSelect1?.group === 'HealAlac'">
           <mat-option
             *ngFor="let participant of alacPlayers"
             [value]="{ group: 'DpsAlac', user: participant }"
@@ -67,10 +49,7 @@
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>DPS</mat-label>
-      <mat-select
-        (selectionChange)="onSelect($event)"
-        [(ngModel)]="dpsSelect11"
-      >
+      <mat-select (selectionChange)="onSelect($event)" [(ngModel)]="dpsSelect11">
         <mat-option>None</mat-option>
         <mat-option
           *ngFor="let participant of dpsPlayers"
@@ -82,10 +61,7 @@
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>DPS</mat-label>
-      <mat-select
-        (selectionChange)="onSelect($event)"
-        [(ngModel)]="dpsSelect12"
-      >
+      <mat-select (selectionChange)="onSelect($event)" [(ngModel)]="dpsSelect12">
         <mat-option>None</mat-option>
         <mat-option
           *ngFor="let participant of dpsPlayers"
@@ -97,10 +73,7 @@
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>DPS</mat-label>
-      <mat-select
-        (selectionChange)="onSelect($event)"
-        [(ngModel)]="dpsSelect13"
-      >
+      <mat-select (selectionChange)="onSelect($event)" [(ngModel)]="dpsSelect13">
         <mat-option>None</mat-option>
         <mat-option
           *ngFor="let participant of dpsPlayers"
@@ -114,15 +87,9 @@
   <div>
     <mat-form-field appearance="fill">
       <mat-label>{{ healSelect2?.group || "Boon Healer" }}</mat-label>
-      <mat-select
-        (selectionChange)="onSelect($event)"
-        [(ngModel)]="healSelect2"
-      >
+      <mat-select (selectionChange)="onSelect($event)" [(ngModel)]="healSelect2">
         <mat-option>None</mat-option>
-        <mat-optgroup
-          label="Heal Quick"
-          [disabled]="boonSelect2?.group === 'DpsQuick'"
-        >
+        <mat-optgroup label="Heal Quick" [disabled]="boonSelect2?.group === 'DpsQuick'">
           <mat-option
             *ngFor="let participant of quickHealPlayers"
             [value]="{ group: 'HealQuick', user: participant }"
@@ -130,10 +97,7 @@
             >{{ participant.name }}</mat-option
           >
         </mat-optgroup>
-        <mat-optgroup
-          label="Heal Alac"
-          [disabled]="boonSelect2?.group === 'DpsAlac'"
-        >
+        <mat-optgroup label="Heal Alac" [disabled]="boonSelect2?.group === 'DpsAlac'">
           <mat-option
             *ngFor="let participant of alacHealPlayers"
             [value]="{ group: 'HealAlac', user: participant }"
@@ -146,15 +110,9 @@
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>{{ boonSelect2?.group || "Boon Dps" }}</mat-label>
-      <mat-select
-        (selectionChange)="onSelect($event)"
-        [(ngModel)]="boonSelect2"
-      >
+      <mat-select (selectionChange)="onSelect($event)" [(ngModel)]="boonSelect2">
         <mat-option>None</mat-option>
-        <mat-optgroup
-          label="Dps Quick"
-          [disabled]="healSelect2?.group === 'HealQuick'"
-        >
+        <mat-optgroup label="Dps Quick" [disabled]="healSelect2?.group === 'HealQuick'">
           <mat-option
             *ngFor="let participant of quickPlayers"
             [value]="{ group: 'DpsQuick', user: participant }"
@@ -162,10 +120,7 @@
             >{{ participant.name }}</mat-option
           >
         </mat-optgroup>
-        <mat-optgroup
-          label="Dps Alac"
-          [disabled]="healSelect2?.group === 'HealAlac'"
-        >
+        <mat-optgroup label="Dps Alac" [disabled]="healSelect2?.group === 'HealAlac'">
           <mat-option
             *ngFor="let participant of alacPlayers"
             [value]="{ group: 'DpsAlac', user: participant }"
@@ -178,10 +133,7 @@
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>DPS</mat-label>
-      <mat-select
-        (selectionChange)="onSelect($event)"
-        [(ngModel)]="dpsSelect21"
-      >
+      <mat-select (selectionChange)="onSelect($event)" [(ngModel)]="dpsSelect21">
         <mat-option>None</mat-option>
         <mat-option
           *ngFor="let participant of dpsPlayers"
@@ -193,10 +145,7 @@
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>DPS</mat-label>
-      <mat-select
-        (selectionChange)="onSelect($event)"
-        [(ngModel)]="dpsSelect22"
-      >
+      <mat-select (selectionChange)="onSelect($event)" [(ngModel)]="dpsSelect22">
         <mat-option>None</mat-option>
         <mat-option
           *ngFor="let participant of dpsPlayers"
@@ -208,10 +157,7 @@
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>DPS</mat-label>
-      <mat-select
-        (selectionChange)="onSelect($event)"
-        [(ngModel)]="dpsSelect23"
-      >
+      <mat-select (selectionChange)="onSelect($event)" [(ngModel)]="dpsSelect23">
         <mat-option>None</mat-option>
         <mat-option
           *ngFor="let participant of dpsPlayers"
@@ -223,6 +169,6 @@
     </mat-form-field>
   </div>
   <div>
-    <button (click)="postLineUp()">Post</button>
+    <button (click)="postLineUp()" i18n>Post line up</button>
   </div>
 </div>

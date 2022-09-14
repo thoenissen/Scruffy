@@ -1,26 +1,25 @@
-
 <mat-table #table [dataSource]="rows" id="role_table">
   <ng-container matColumnDef="name">
     <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
     <mat-cell *matCellDef="let element" class="overflow-auto">{{ element.name }}</mat-cell>
-    <mat-footer-cell *matFooterCellDef="">Percentage of players</mat-footer-cell>
+    <mat-footer-cell *matFooterCellDef="" i18n>Percentage of players</mat-footer-cell>
   </ng-container>
   <ng-container matColumnDef="dps">
     <mat-header-cell *matHeaderCellDef>
-      <div class="mat-header-cell-text">
-        DPS
-      </div>
-      <img src="https://cdn.discordapp.com/emojis/744104683081171004.png" alt="DPS" class="mat-header-cell-img">
+      <div class="mat-header-cell-text">DPS</div>
+      <img src="https://cdn.discordapp.com/emojis/744104683081171004.png" alt="DPS" class="mat-header-cell-img" />
     </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{ element.isDamageDealer ? "✔️" : "" }} </mat-cell>>
     <mat-footer-cell *matFooterCellDef="">{{ getPercentage(constants.RaidRoleDamageDealer) * 100 }} %</mat-footer-cell>
   </ng-container>
   <ng-container matColumnDef="dps-alacrity">
     <mat-header-cell *matHeaderCellDef>
-      <div class="mat-header-cell-text">
-        Alacrity | DPS
-      </div>
-      <img src="https://cdn.discordapp.com/emojis/994543559027986442.png" alt="Alacrity + DPS" class="mat-header-cell-img">
+      <div class="mat-header-cell-text">Alacrity | DPS</div>
+      <img
+        src="https://cdn.discordapp.com/emojis/994543559027986442.png"
+        alt="Alacrity + DPS"
+        class="mat-header-cell-img"
+      />
     </mat-header-cell>
     <mat-cell *matCellDef="let element">
       {{ element.isDamageDealerAlacrity ? "✔️" : "" }}
@@ -31,10 +30,12 @@
   </ng-container>
   <ng-container matColumnDef="dps-quickness">
     <mat-header-cell *matHeaderCellDef>
-      <div class="mat-header-cell-text">
-        Quickness | DPS
-      </div>
-      <img src="https://cdn.discordapp.com/emojis/994543518972391475.png" alt="Quickness + DPS" class="mat-header-cell-img">
+      <div class="mat-header-cell-text">Quickness | DPS</div>
+      <img
+        src="https://cdn.discordapp.com/emojis/994543518972391475.png"
+        alt="Quickness + DPS"
+        class="mat-header-cell-img"
+      />
     </mat-header-cell>
     <mat-cell *matCellDef="let element">
       {{ element.isDamageDealerQuickness ? "✔️" : "" }}
@@ -45,10 +46,12 @@
   </ng-container>
   <ng-container matColumnDef="healer-alacrity">
     <mat-header-cell *matHeaderCellDef>
-      <div class="mat-header-cell-text">
-        Alacrity | Heal
-      </div>
-      <img src="https://cdn.discordapp.com/emojis/994543591525462036.png" alt="Alacrity + Heal" class="mat-header-cell-img">
+      <div class="mat-header-cell-text">Alacrity | Heal</div>
+      <img
+        src="https://cdn.discordapp.com/emojis/994543591525462036.png"
+        alt="Alacrity + Heal"
+        class="mat-header-cell-img"
+      />
     </mat-header-cell>
     <mat-cell *matCellDef="let element">
       {{ element.isHealerAlacrity ? "✔️" : "" }}
@@ -59,10 +62,12 @@
   </ng-container>
   <ng-container matColumnDef="healer-quickness">
     <mat-header-cell *matHeaderCellDef>
-      <div class="mat-header-cell-text">
-        Quickness | Heal
-      </div>
-      <img src="https://cdn.discordapp.com/emojis/994543468758171708.png" alt="Quickness + Heal" class="mat-header-cell-img">
+      <div class="mat-header-cell-text">Quickness | Heal</div>
+      <img
+        src="https://cdn.discordapp.com/emojis/994543468758171708.png"
+        alt="Quickness + Heal"
+        class="mat-header-cell-img"
+      />
     </mat-header-cell>
     <mat-cell *matCellDef="let element">
       {{ element.isHealerQuickness ? "✔️" : "" }}
@@ -73,10 +78,12 @@
   </ng-container>
   <ng-container matColumnDef="tank-dps-alacrity">
     <mat-header-cell *matHeaderCellDef>
-      <div class="mat-header-cell-text">
-        Tank | Alacrity | DPS
-      </div>
-      <img src="https://cdn.discordapp.com/emojis/1006997115395915806.png" alt="Tank + Alacrity + DPS" class="mat-header-cell-img">
+      <div class="mat-header-cell-text">Tank | Alacrity | DPS</div>
+      <img
+        src="https://cdn.discordapp.com/emojis/1006997115395915806.png"
+        alt="Tank + Alacrity + DPS"
+        class="mat-header-cell-img"
+      />
     </mat-header-cell>
     <mat-cell *matCellDef="let element">
       {{ element.isTankDamageDealerAlacrity ? "✔️" : "" }}
@@ -87,10 +94,12 @@
   </ng-container>
   <ng-container matColumnDef="tank-dps-quickness">
     <mat-header-cell *matHeaderCellDef>
-      <div class="mat-header-cell-text">
-        Tank | Quickness | DPS
-      </div>
-      <img src="https://cdn.discordapp.com/emojis/1006997118411620392.png" alt="Tank + Quickness + DPS" class="mat-header-cell-img">
+      <div class="mat-header-cell-text">Tank | Quickness | DPS</div>
+      <img
+        src="https://cdn.discordapp.com/emojis/1006997118411620392.png"
+        alt="Tank + Quickness + DPS"
+        class="mat-header-cell-img"
+      />
     </mat-header-cell>
     <mat-cell *matCellDef="let element">
       {{ element.isTankDamageDealerQuickness ? "✔️" : "" }}
@@ -101,10 +110,12 @@
   </ng-container>
   <ng-container matColumnDef="tank-healer-alacrity">
     <mat-header-cell *matHeaderCellDef>
-      <div class="mat-header-cell-text">
-        Tank | Alacrity | Heal
-      </div>
-      <img src="https://cdn.discordapp.com/emojis/1006997117086216233.png" alt="Tank + Alacrity + Heal" class="mat-header-cell-img">
+      <div class="mat-header-cell-text">Tank | Alacrity | Heal</div>
+      <img
+        src="https://cdn.discordapp.com/emojis/1006997117086216233.png"
+        alt="Tank + Alacrity + Heal"
+        class="mat-header-cell-img"
+      />
     </mat-header-cell>
     <mat-cell *matCellDef="let element">
       {{ element.isTankHealerAlacrity ? "✔️" : "" }}
@@ -115,10 +126,12 @@
   </ng-container>
   <ng-container matColumnDef="tank-healer-quickness">
     <mat-header-cell *matHeaderCellDef>
-      <div class="mat-header-cell-text">
-        Tank | Quickness | Heal
-      </div>
-      <img src="https://cdn.discordapp.com/emojis/1006997252415426762.png" alt="Tank + Quickness + Heal" class="mat-header-cell-img">
+      <div class="mat-header-cell-text">Tank | Quickness | Heal</div>
+      <img
+        src="https://cdn.discordapp.com/emojis/1006997252415426762.png"
+        alt="Tank + Quickness + Heal"
+        class="mat-header-cell-img"
+      />
     </mat-header-cell>
     <mat-cell *matCellDef="let element">
       {{ element.isTankHealerQuickness ? "✔️" : "" }}
@@ -131,12 +144,11 @@
   <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
   <mat-footer-row *matFooterRowDef="displayedColumns"></mat-footer-row>
 </mat-table>
-<button >Export der Tabelle als Bild</button>
-
+<button i18n>Export table as picture</button>
 <mat-accordion class="chart-mat-accordion">
   <mat-expansion-panel hideToggle>
     <mat-expansion-panel-header>
-      <mat-panel-title> Role distribution chart</mat-panel-title>
+      <mat-panel-title i18n>Role distribution chart</mat-panel-title>
     </mat-expansion-panel-header>
     <canvas baseChart [data]="barChartData" [options]="barChartOptions" [legend]="barChartLegend" [type]="'bar'">
     </canvas>

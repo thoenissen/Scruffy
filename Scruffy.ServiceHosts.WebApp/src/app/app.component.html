@@ -1,8 +1,8 @@
 <mat-sidenav-container class="main-sidenav-container">
   <mat-sidenav class="main-sidenav" mode="side" opened>
     <img width="60" alt="Scruffy Logo" src="/assets/Scruffy_Portrait.png" routerLink="/" />
-    <button *ngIf="isLoggedIn == false" (click)="login()">Login</button>
-    <button *ngIf="isLoggedIn" (click)="logout()">Logout</button>
+    <button *ngIf="isLoggedIn == false" (click)="login()" i18n>Login</button>
+    <button *ngIf="isLoggedIn" (click)="logout()" i18n>Logout</button>
   </mat-sidenav>
   <mat-sidenav-content>
     <router-outlet></router-outlet>
