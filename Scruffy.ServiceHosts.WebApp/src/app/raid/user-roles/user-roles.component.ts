@@ -149,7 +149,7 @@ export class UserRolesComponent {
           break;
       }
     }
-    return percentage;
+    return (Math.round(percentage * 10000) / 10000);
   }
 }
 

@@ -1,5 +1,5 @@
 
-<mat-table #table [dataSource]="rows">
+<mat-table #table [dataSource]="rows" id="role_table">
   <ng-container matColumnDef="name">
     <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
     <mat-cell *matCellDef="let element" class="overflow-auto">{{ element.name }}</mat-cell>
@@ -131,6 +131,7 @@
   <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
   <mat-footer-row *matFooterRowDef="displayedColumns"></mat-footer-row>
 </mat-table>
+<button >Export der Tabelle als Bild</button>
 
 <mat-accordion class="chart-mat-accordion">
   <mat-expansion-panel hideToggle>

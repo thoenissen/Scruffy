@@ -54,8 +54,32 @@ canvas {
   border-right: 1px solid black;
 }
 
+.mat-footer-cell:not(.mat-column-name) {
+  /* die folgenden Eigenschaften werden beide benötigt. Nach Zeilenumbruch zieht justify-content nicht mehr für den Text*/
+  justify-content: center;
+  text-align: center;
+}
+
 .mat-cell:first-child {
   text-align: left;
+}
+
+/**
+    die folgenden Änderungen für die 3 verschiedenen last childs sind weder optimal, noch schon, aber funktionieren
+    Angualar setzt vermutlich auf jedes letzte Element in einer Tabellenzeile ein padding nach links drauf
+
+    @TODO checken, ob das auch anders direkt über Angular geht
+*/
+mat-header-cell:last-child {
+    padding-right: 0px;
+}
+
+mat-cell:last-child {
+  padding-right: 0px;
+}
+
+mat-footer-cell:last-child {
+  padding-right: 0px;
 }
 
 
