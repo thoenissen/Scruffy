@@ -18,10 +18,13 @@ RUN npm ci && npm run build
 FROM nginx:alpine
 
 # copy the distribution files of the web app
-COPY --from=build-stage /app/dist/WebApp /usr/share/nginx/html
+COPY --from=build-stage /app/dist/WebApp/de /usr/share/nginx/html/de
+COPY --from=build-stage /app/dist/WebApp/de/favicon.ico /usr/share/nginx/html/favicon.ico
+COPY --from=build-stage /app/dist/WebApp/de/index.html /usr/share/nginx/html/index.html
+COPY --from=build-stage /app/dist/WebApp/de/assets/*.* /usr/share/nginx/html/assets/
 
 # exposing port 80
 EXPOSE 80
 
 # Replacing the environment variables and then starting the nginx server
-CMD ["/bin/sh",  "-c",  "envsubst < /usr/share/nginx/html/assets/js/environment.template.js > /usr/share/nginx/html/assets/js/environment.js && exec nginx -g 'daemon off;'"]
+CMD ["/bin/sh",  "-c",  "envsubst < /usr/share/nginx/html/de/assets/js/environment.template.js > /usr/share/nginx/html/de/assets/js/environment.js && exec nginx -g 'daemon off;'"]
