@@ -23,6 +23,7 @@
     "angular-oauth2-oidc": "^13.0.1",
     "chart.js": "^3.9.1",
     "dotenv": "^16.0.2",
+    "html-to-image": "^1.10.8",
     "ng2-charts": "^4.0.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.3.0",

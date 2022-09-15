@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ChartConfiguration } from 'chart.js';
-
+import * as htmlToImage from 'html-to-image';
 @Component({
   selector: 'app-user-roles',
   templateUrl: './user-roles.component.html',
@@ -149,7 +149,33 @@ export class UserRolesComponent {
           break;
       }
     }
-    return (Math.round(percentage * 10000) / 10000);
+    return Math.round(percentage * 10000) / 10000;
+  }
+
+  download(url: string, filename: string) {
+    fetch(url)
+      .then((response) => response.blob())
+      .then((blob) => {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = filename;
+        link.click();
+      });
+  }
+
+  exportImage() {
+    const component = this;
+
+    var node: any = document.getElementById('role_table');
+
+    htmlToImage
+      .toPng(node)
+      .then(function (dataUrl) {
+        component.download(dataUrl, 'UserRoles.png');
+      })
+      .catch(function (error) {
+        console.error('Export failed.', error);
+      });
   }
 }
 
