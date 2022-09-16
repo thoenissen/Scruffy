@@ -18,6 +18,11 @@ namespace Scruffy.Commands.MessageComponents
         public const string Group = "lfg";
 
         /// <summary>
+        /// Command create
+        /// </summary>
+        public const string CommandCreate = "create";
+
+        /// <summary>
         /// Command join
         /// </summary>
         public const string CommandJoin = "join";
@@ -49,6 +54,17 @@ namespace Scruffy.Commands.MessageComponents
         #endregion // Properties
 
         #region Commands
+
+        /// <summary>
+        /// Joining an appointment
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        [ComponentInteraction($"{Group};{CommandCreate};")]
+        public async Task Create()
+        {
+            await CommandHandler.StartCreation(Context)
+                                .ConfigureAwait(false);
+        }
 
         /// <summary>
         /// Joining an appointment
