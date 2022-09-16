@@ -149,7 +149,7 @@ export class UserRolesComponent {
           break;
       }
     }
-    return Math.round(percentage * 10000) / 10000;
+    return (Math.round(percentage * 100)).toString();
   }
 
   download(url: string, filename: string) {

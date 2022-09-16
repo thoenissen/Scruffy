@@ -10,7 +10,7 @@
       <img src="https://cdn.discordapp.com/emojis/744104683081171004.png" alt="DPS" class="mat-header-cell-img" />
     </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{ element.isDamageDealer ? "✔️" : "" }} </mat-cell>>
-    <mat-footer-cell *matFooterCellDef="">{{ getPercentage(constants.RaidRoleDamageDealer) * 100 }} %</mat-footer-cell>
+    <mat-footer-cell *matFooterCellDef="">{{ getPercentage(constants.RaidRoleDamageDealer) }} %</mat-footer-cell>
   </ng-container>
   <ng-container matColumnDef="dps-alacrity">
     <mat-header-cell *matHeaderCellDef>
@@ -25,7 +25,7 @@
       {{ element.isDamageDealerAlacrity ? "✔️" : "" }}
     </mat-cell>
     <mat-footer-cell *matFooterCellDef=""
-      >{{ getPercentage(constants.RaidRoleDamageDealerAlacrity) * 100 }} %</mat-footer-cell
+      >{{ getPercentage(constants.RaidRoleDamageDealerAlacrity) }} %</mat-footer-cell
     >
   </ng-container>
   <ng-container matColumnDef="dps-quickness">
@@ -41,7 +41,7 @@
       {{ element.isDamageDealerQuickness ? "✔️" : "" }}
     </mat-cell>
     <mat-footer-cell *matFooterCellDef=""
-      >{{ getPercentage(constants.RaidRoleDamageDealerQuickness) * 100 }} %</mat-footer-cell
+      >{{ getPercentage(constants.RaidRoleDamageDealerQuickness) }} %</mat-footer-cell
     >
   </ng-container>
   <ng-container matColumnDef="healer-alacrity">
@@ -57,7 +57,7 @@
       {{ element.isHealerAlacrity ? "✔️" : "" }}
     </mat-cell>
     <mat-footer-cell *matFooterCellDef=""
-      >{{ getPercentage(constants.RaidRoleHealerAlacrity) * 100 }} %</mat-footer-cell
+      >{{ getPercentage(constants.RaidRoleHealerAlacrity) }} %</mat-footer-cell
     >
   </ng-container>
   <ng-container matColumnDef="healer-quickness">
@@ -73,7 +73,7 @@
       {{ element.isHealerQuickness ? "✔️" : "" }}
     </mat-cell>
     <mat-footer-cell *matFooterCellDef=""
-      >{{ getPercentage(constants.RaidRoleHealerQuickness) * 100 }} %</mat-footer-cell
+      >{{ getPercentage(constants.RaidRoleHealerQuickness) }} %</mat-footer-cell
     >
   </ng-container>
   <ng-container matColumnDef="tank-dps-alacrity">
@@ -89,7 +89,7 @@
       {{ element.isTankDamageDealerAlacrity ? "✔️" : "" }}
     </mat-cell>
     <mat-footer-cell *matFooterCellDef=""
-      >{{ getPercentage(constants.RaidRoleTankDamageDealerAlacrity) * 100 }} %</mat-footer-cell
+      >{{ getPercentage(constants.RaidRoleTankDamageDealerAlacrity) }} %</mat-footer-cell
     >
   </ng-container>
   <ng-container matColumnDef="tank-dps-quickness">
@@ -105,7 +105,7 @@
       {{ element.isTankDamageDealerQuickness ? "✔️" : "" }}
     </mat-cell>
     <mat-footer-cell *matFooterCellDef=""
-      >{{ getPercentage(constants.RaidRoleTankDamageDealerQuickness) * 100 }} %</mat-footer-cell
+      >{{ getPercentage(constants.RaidRoleTankDamageDealerQuickness) }} %</mat-footer-cell
     >
   </ng-container>
   <ng-container matColumnDef="tank-healer-alacrity">
@@ -121,7 +121,7 @@
       {{ element.isTankHealerAlacrity ? "✔️" : "" }}
     </mat-cell>
     <mat-footer-cell *matFooterCellDef=""
-      >{{ getPercentage(constants.RaidRoleTankHealerAlacrity) * 100 }} %</mat-footer-cell
+      >{{ getPercentage(constants.RaidRoleTankHealerAlacrity) }} %</mat-footer-cell
     >
   </ng-container>
   <ng-container matColumnDef="tank-healer-quickness">
@@ -137,7 +137,7 @@
       {{ element.isTankHealerQuickness ? "✔️" : "" }}
     </mat-cell>
     <mat-footer-cell *matFooterCellDef=""
-      >{{ getPercentage(constants.RaidRoleTankHealerQuickness) * 100 }} %</mat-footer-cell
+      >{{ getPercentage(constants.RaidRoleTankHealerQuickness) }} %</mat-footer-cell
     >
   </ng-container>
   <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
