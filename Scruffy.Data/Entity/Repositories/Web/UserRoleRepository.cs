@@ -30,6 +30,13 @@ namespace Scruffy.Data.Entity.Repositories.Web
         #region Methods
 
         /// <summary>
+        /// Bulk insert developers
+        /// </summary>
+        /// <param name="developers">Developers</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task<bool> BulkInsertDevelopers(List<long> developers) => BulkInsertRoles(developers, 1);
+
+        /// <summary>
         /// Bulk insert administrators
         /// </summary>
         /// <param name="administrators">Administrators</param>
@@ -90,11 +97,12 @@ namespace Scruffy.Data.Entity.Repositories.Web
                                                   WHEN NOT MATCHED THEN
                                                        INSERT ( [UserId], [RoleId] )
                                                        VALUES ( [Source].[UserId], [Source].[RoleId] )
-                                                  WHEN NOT MATCHED BY SOURCE THEN DELETE;",
+                                                  WHEN NOT MATCHED BY SOURCE AND [Target].[RoleId] = @roleId THEN DELETE;",
                                                 connection);
 
                     await using (sqlCommand.ConfigureAwait(false))
                     {
+                        sqlCommand.Parameters.AddWithValue("@roleId", roleId);
                         sqlCommand.ExecuteNonQuery();
                     }
                 }

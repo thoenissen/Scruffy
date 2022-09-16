@@ -109,6 +109,36 @@ namespace Scruffy.Services.Web
             }
         }
 
+        /// <summary>
+        /// Import discord users
+        /// </summary>
+        /// <param name="discordServer">Discord server</param>
+        /// <param name="roleId">Role id</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task ImportDevelopers(IGuild discordServer, ulong roleId)
+        {
+            var developers = new List<long>();
+
+            foreach (var user in await discordServer.GetUsersAsync()
+                                                    .ConfigureAwait(false))
+            {
+                if (user.RoleIds.Contains(roleId))
+                {
+                    var internalUser = await _userManagementService.GetUserByDiscordAccountId(user)
+                                                                   .ConfigureAwait(false);
+
+                    if (internalUser != null)
+                    {
+                        developers.Add(internalUser.Id);
+                    }
+                }
+            }
+
+            await _dbFactory.GetRepository<UserRoleRepository>()
+                            .BulkInsertDevelopers(developers)
+                            .ConfigureAwait(false);
+        }
+
         #endregion // Methods
     }
 }
