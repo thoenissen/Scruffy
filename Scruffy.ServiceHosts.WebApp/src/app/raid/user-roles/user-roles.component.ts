@@ -105,6 +105,7 @@ export class UserRolesComponent {
         case this.constants.RaidRoleDamageDealer:
           {
             percentage = this.rows.filter((r) => r.isDamageDealer).length / this.rows.length;
+            percentage = 10 / 23;
           }
           break;
         case this.constants.RaidRoleDamageDealerAlacrity:
@@ -149,7 +150,7 @@ export class UserRolesComponent {
           break;
       }
     }
-    return Math.round(percentage * 10000) / 10000;
+    return (Math.round(percentage * 100)).toString();
   }
 
   download(url: string, filename: string) {
