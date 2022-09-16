@@ -18,7 +18,7 @@ namespace Scruffy.ServiceHosts.WebApi.Controllers;
 [ApiController]
 [Route("raid")]
 #if !DEBUG
-[Microsoft.AspNetCore.Authorization.Authorize(Roles = "Administrator")]
+[Microsoft.AspNetCore.Authorization.Authorize(Roles = "Administrator,Developer")]
 #endif
 public class RaidController : ControllerBase
 {
