@@ -105,11 +105,22 @@ namespace Scruffy.Services.LookingForGroup
                             embedBuilder.WithDescription(appointmentData.Description);
                         }
 
+                        var participantCount = 0;
                         var participantsBuilder = new StringBuilder();
 
                         foreach (var participant in appointmentData.Participants.OrderBy(obj => obj.RegistrationTimeStamp))
                         {
-                            participantsBuilder.AppendLine("> " + _discordClient.GetUser(participant.UserId).Mention);
+                            var line = "> " + _discordClient.GetUser(participant.UserId).Mention;
+
+                            if (participantCount > 0
+                             && participantCount % 10 == 0)
+                            {
+                                embedBuilder.AddField(embedBuilder.Fields.Count == 0 ? LocalizationGroup.GetText("Participants", "Participants") : "\u200b", participantsBuilder.ToString(), true);
+                                participantsBuilder = new StringBuilder();
+                            }
+
+                            participantsBuilder.AppendLine(line);
+                            participantCount++;
                         }
 
                         if (participantsBuilder.Length == 0)
@@ -117,7 +128,7 @@ namespace Scruffy.Services.LookingForGroup
                             participantsBuilder.Append(">  \u200b");
                         }
 
-                        embedBuilder.AddField(LocalizationGroup.GetText("Participants", "Participants"), participantsBuilder.ToString());
+                        embedBuilder.AddField(embedBuilder.Fields.Count == 0 ? LocalizationGroup.GetText("Participants", "Participants") : "\u200b", participantsBuilder.ToString(), true);
 
                         var componentsBuilder = new ComponentBuilder();
 
