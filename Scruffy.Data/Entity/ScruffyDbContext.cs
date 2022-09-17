@@ -194,6 +194,8 @@ public class ScruffyDbContext : IdentityDbContext<UserEntity, RoleEntity, long, 
         modelBuilder.Entity<RaidUserRoleEntity>();
         modelBuilder.Entity<RaidDayTemplateEntity>();
         modelBuilder.Entity<RaidCurrentUserPointsEntity>();
+        modelBuilder.Entity<RaidSpecialRoleEntity>();
+        modelBuilder.Entity<RaidUserSpecialRoleEntity>();
 
         modelBuilder.Entity<RaidExperienceAssignmentEntity>()
                     .HasKey(obj => new
@@ -206,7 +208,14 @@ public class ScruffyDbContext : IdentityDbContext<UserEntity, RoleEntity, long, 
                     .HasKey(obj => new
                                    {
                                        obj.UserId,
-                                       MainRoleId = obj.RoleId
+                                       obj.RoleId
+                                   });
+
+        modelBuilder.Entity<RaidUserSpecialRoleEntity>()
+                    .HasKey(obj => new
+                                   {
+                                       obj.UserId,
+                                       obj.SpecialRoleId
                                    });
 
         modelBuilder.Entity<RaidAppointmentEntity>()
