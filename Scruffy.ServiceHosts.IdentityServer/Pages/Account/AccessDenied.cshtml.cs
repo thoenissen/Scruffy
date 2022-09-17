@@ -1,17 +1,16 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Scruffy.ServiceHosts.IdentityServer.Pages.Account
+namespace Scruffy.ServiceHosts.IdentityServer.Pages.Account;
+
+/// <summary>
+/// Access denied page
+/// </summary>
+public class AccessDeniedModel : PageModel
 {
     /// <summary>
-    /// Access denied page
+    /// Get route
     /// </summary>
-    public class AccessDeniedModel : PageModel
+    public void OnGet()
     {
-        /// <summary>
-        /// Get route
-        /// </summary>
-        public void OnGet()
-        {
-        }
     }
 }

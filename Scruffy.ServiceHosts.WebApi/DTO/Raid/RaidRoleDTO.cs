@@ -1,18 +1,17 @@
-﻿namespace Scruffy.ServiceHosts.WebApi.DTO.Raid
+﻿namespace Scruffy.ServiceHosts.WebApi.DTO.Raid;
+
+/// <summary>
+/// Raid role
+/// </summary>
+public class RaidRoleDTO
 {
     /// <summary>
-    /// Raid role
+    /// ID of the role
     /// </summary>
-    public class RaidRoleDTO
-    {
-        /// <summary>
-        /// ID of the role
-        /// </summary>
-        public long Id { get; set; }
+    public long Id { get; set; }
 
-        /// <summary>
-        /// Description
-        /// </summary>
-        public string Description { get; set; }
-    }
+    /// <summary>
+    /// Description
+    /// </summary>
+    public string Description { get; set; }
 }

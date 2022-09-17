@@ -1,29 +1,28 @@
-namespace Scruffy.ServiceHosts.IdentityServer.Pages.Account.Login
+namespace Scruffy.ServiceHosts.IdentityServer.Pages.Account.Login;
+
+/// <summary>
+/// Login view model
+/// </summary>
+public class ViewModel
 {
     /// <summary>
-    /// Login view model
+    /// External login providers
     /// </summary>
-    public class ViewModel
+    public IEnumerable<ExternalProvider> ExternalProviders { get; set; } = Enumerable.Empty<ExternalProvider>();
+
+    /// <summary>
+    /// External provider
+    /// </summary>
+    public class ExternalProvider
     {
         /// <summary>
-        /// External login providers
+        /// Display name
         /// </summary>
-        public IEnumerable<ExternalProvider> ExternalProviders { get; set; } = Enumerable.Empty<ExternalProvider>();
+        public string DisplayName { get; set; }
 
         /// <summary>
-        /// External provider
+        /// Authentication scheme
         /// </summary>
-        public class ExternalProvider
-        {
-            /// <summary>
-            /// Display name
-            /// </summary>
-            public string DisplayName { get; set; }
-
-            /// <summary>
-            /// Authentication scheme
-            /// </summary>
-            public string AuthenticationScheme { get; set; }
-        }
+        public string AuthenticationScheme { get; set; }
     }
 }

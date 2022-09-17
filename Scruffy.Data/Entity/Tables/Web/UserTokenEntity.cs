@@ -2,13 +2,12 @@
 
 using Microsoft.AspNetCore.Identity;
 
-namespace Scruffy.Data.Entity.Tables.Web
+namespace Scruffy.Data.Entity.Tables.Web;
+
+/// <summary>
+/// User tokens
+/// </summary>
+[Table("UserTokens")]
+public class UserTokenEntity : IdentityUserToken<long>
 {
-    /// <summary>
-    /// User tokens
-    /// </summary>
-    [Table("UserTokens")]
-    public class UserTokenEntity : IdentityUserToken<long>
-    {
-    }
 }

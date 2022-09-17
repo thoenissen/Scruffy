@@ -1,22 +1,21 @@
-﻿namespace Scruffy.ServiceHosts.WebApi.DTO.Raid
+﻿namespace Scruffy.ServiceHosts.WebApi.DTO.Raid;
+
+/// <summary>
+/// Line up
+/// </summary>
+public class LineUpDTO
 {
+    #region Properties
+
     /// <summary>
-    /// Line up
+    /// Id of the appointment
     /// </summary>
-    public class LineUpDTO
-    {
-        #region Properties
+    public long AppointmentId { get; set; }
 
-        /// <summary>
-        /// Id of the appointment
-        /// </summary>
-        public long AppointmentId { get; set; }
+    /// <summary>
+    /// Groups
+    /// </summary>
+    public Dictionary<int, List<LineUpEntryDTO>> Groups { get; set; }
 
-        /// <summary>
-        /// Groups
-        /// </summary>
-        public Dictionary<int, List<LineUpEntryDTO>> Groups { get; set; }
-
-        #endregion // Properties
-    }
+    #endregion // Properties
 }

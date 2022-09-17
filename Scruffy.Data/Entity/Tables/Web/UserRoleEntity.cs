@@ -2,13 +2,12 @@
 
 using Microsoft.AspNetCore.Identity;
 
-namespace Scruffy.Data.Entity.Tables.Web
+namespace Scruffy.Data.Entity.Tables.Web;
+
+/// <summary>
+/// User roles
+/// </summary>
+[Table("UserRoles")]
+public class UserRoleEntity : IdentityUserRole<long>
 {
-    /// <summary>
-    /// User roles
-    /// </summary>
-    [Table("UserRoles")]
-    public class UserRoleEntity : IdentityUserRole<long>
-    {
-    }
 }

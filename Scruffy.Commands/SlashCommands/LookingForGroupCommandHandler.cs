@@ -3,32 +3,31 @@
 using Scruffy.Services.Discord;
 using Scruffy.Services.LookingForGroup;
 
-namespace Scruffy.Commands.SlashCommands
+namespace Scruffy.Commands.SlashCommands;
+
+/// <summary>
+/// Looking for group command handler
+/// </summary>
+[Group("lfg", "Looking for group commands")]
+public class LookingForGroupCommandModule : SlashCommandModuleBase
 {
+    #region Properties
+
     /// <summary>
-    /// Looking for group command handler
+    /// Command handler
     /// </summary>
-    [Group("lfg", "Looking for group commands")]
-    public class LookingForGroupCommandModule : SlashCommandModuleBase
-    {
-        #region Properties
+    public LookingForGroupCommandHandler CommandHandler { get; set; }
 
-        /// <summary>
-        /// Command handler
-        /// </summary>
-        public LookingForGroupCommandHandler CommandHandler { get; set; }
+    #endregion // Properties
 
-        #endregion // Properties
+    #region Methods
 
-        #region Methods
+    /// <summary>
+    /// Creation of an new lfg appointment
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [SlashCommand("create", "Creation of an new lfg appointment")]
+    public Task Create() => CommandHandler.StartCreation(Context);
 
-        /// <summary>
-        /// Creation of an new lfg appointment
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-        [SlashCommand("create", "Creation of an new lfg appointment")]
-        public Task Create() => CommandHandler.StartCreation(Context);
-
-        #endregion // Methods
-    }
+    #endregion // Methods
 }

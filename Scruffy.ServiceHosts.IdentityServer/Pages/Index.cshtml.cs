@@ -1,21 +1,20 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Scruffy.ServiceHosts.IdentityServer.Pages
+namespace Scruffy.ServiceHosts.IdentityServer.Pages;
+
+/// <summary>
+/// Main page
+/// </summary>
+[AllowAnonymous]
+public class Index : PageModel
 {
+    #region Properties
+
     /// <summary>
-    /// Main page
+    /// Is developer?
     /// </summary>
-    [AllowAnonymous]
-    public class Index : PageModel
-    {
-        #region Properties
+    public bool IsDeveloper => User?.IsInRole("Developer") == true;
 
-        /// <summary>
-        /// Is developer?
-        /// </summary>
-        public bool IsDeveloper => User?.IsInRole("Developer") == true;
-
-        #endregion // Properties
-    }
+    #endregion // Properties
 }
