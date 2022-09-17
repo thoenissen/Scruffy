@@ -90,6 +90,13 @@ public class RaidSlashCommandModule : SlashCommandModuleBase
     [SlashCommand("roles", "Manage your prepared raid roles")]
     public Task Roles() => CommandHandler.ConfigureRoles(Context);
 
+    /// <summary>
+    /// Configure your prepared special raid roles
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [SlashCommand("special-roles", "Manage your prepared special raid roles")]
+    public Task SpecialRoles() => CommandHandler.ConfigureSpecialRoles(Context);
+
     #endregion // Commands
 
     #region SlashCommandModuleBase

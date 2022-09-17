@@ -6,7 +6,7 @@ using Scruffy.Services.Discord;
 namespace Scruffy.Services.Raid.DialogElements
 {
     /// <summary>
-    /// RaidPreparedRolesSelectDialogElement
+    /// First prepared raid role selection
     /// </summary>
     public class RaidPreparedRolesFirstTimeSelectDialogElement : DialogMultiSelectSelectMenuElementBase<long>
     {

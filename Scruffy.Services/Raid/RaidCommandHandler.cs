@@ -829,7 +829,7 @@ public class RaidCommandHandler : LocatedServiceBase
     }
 
     /// <summary>
-    /// Set Raid Ready Roles
+    /// Configure prepared raid roles
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
@@ -856,6 +856,42 @@ public class RaidCommandHandler : LocatedServiceBase
                                   {
                                       UserId = user.Id,
                                       RoleId = roleId
+                                  });
+                }
+            }
+            await dialogHandler.DeleteMessages()
+                               .ConfigureAwait(false);
+        }
+    }
+
+    /// <summary>
+    /// Configure prepared special raid roles
+    /// </summary>
+    /// <param name="context">Command context</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task ConfigureSpecialRoles(IContextContainer context)
+    {
+        var dialogHandler = new DialogHandler(context);
+        await using (dialogHandler.ConfigureAwait(false))
+        {
+            var user = await _userManagementService.GetUserByDiscordAccountId(context.User)
+                                                   .ConfigureAwait(false);
+
+            var selectedRoles = await dialogHandler.Run<RaidPreparedSpecialRolesSelectDialogElement, List<long>>(new RaidPreparedSpecialRolesSelectDialogElement(_localizationService, _raidRolesService, _userManagementService))
+                                                   .ConfigureAwait(false);
+
+            using (var dbFactory = RepositoryFactory.CreateInstance())
+            {
+                dbFactory.GetRepository<RaidUserSpecialRoleRepository>()
+                         .RemoveRange(obj => obj.UserId == user.Id);
+
+                foreach (var roleId in selectedRoles)
+                {
+                    dbFactory.GetRepository<RaidUserSpecialRoleRepository>()
+                             .Add(new RaidUserSpecialRoleEntity
+                                  {
+                                      UserId = user.Id,
+                                      SpecialRoleId = roleId
                                   });
                 }
             }

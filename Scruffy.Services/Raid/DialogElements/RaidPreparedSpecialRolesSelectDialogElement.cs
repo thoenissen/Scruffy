@@ -9,9 +9,9 @@ using Scruffy.Services.Discord;
 namespace Scruffy.Services.Raid.DialogElements
 {
     /// <summary>
-    /// Prepared special raid role selection
+    /// Selection of prepare special raid roles
     /// </summary>
-    public class RaidPreparedRolesSelectDialogElement : DialogEmbedMultiSelectSelectMenuElementBase<long>
+    public class RaidPreparedSpecialRolesSelectDialogElement : DialogEmbedMultiSelectSelectMenuElementBase<long>
     {
         #region Fields
 
@@ -40,7 +40,7 @@ namespace Scruffy.Services.Raid.DialogElements
         /// <param name="localizationService">Localization service</param>
         /// <param name="raidRolesService">Raid roles service</param>
         /// <param name="userManagementService">UserManagementService</param>
-        public RaidPreparedRolesSelectDialogElement(LocalizationService localizationService, RaidRolesService raidRolesService, UserManagementService userManagementService)
+        public RaidPreparedSpecialRolesSelectDialogElement(LocalizationService localizationService, RaidRolesService raidRolesService, UserManagementService userManagementService)
             : base(localizationService)
         {
             _raidRoleService = raidRolesService;
@@ -59,7 +59,7 @@ namespace Scruffy.Services.Raid.DialogElements
         /// <summary>
         /// Max values
         /// </summary>
-        protected override int MaxValues => 9;
+        protected override int MaxValues => 4;
 
         /// <summary>
         /// Embed
@@ -72,18 +72,18 @@ namespace Scruffy.Services.Raid.DialogElements
                 var user = await _userManagementService.GetUserByDiscordAccountId(CommandContext.User)
                                                        .ConfigureAwait(false);
 
-                var raidUserRoles = dbFactory.GetRepository<RaidUserRoleRepository>()
+                var raidUserRoles = dbFactory.GetRepository<RaidUserSpecialRoleRepository>()
                                              .GetQuery()
                                              .Where(obj => obj.UserId == user.Id)
-                                             .OrderBy(obj => obj.RoleId)
-                                             .Select(obj => obj.RaidRole)
+                                             .OrderBy(obj => obj.SpecialRoleId)
+                                             .Select(obj => obj.RaidSpecialRole)
                                              .ToList();
 
                 var userRolesMsg = new StringBuilder();
 
                 foreach (var role in raidUserRoles)
                 {
-                    userRolesMsg.AppendLine(DiscordEmoteService.GetGuildEmote(CommandContext.Client, role.DiscordEmojiId) + " " + _raidRoleService.GetDescriptionAsText(role));
+                    userRolesMsg.AppendLine(DiscordEmoteService.GetGuildEmote(CommandContext.Client, role.DiscordEmojiId) + " " + role.Description);
                 }
 
                 if (userRolesMsg.Length == 0)
@@ -120,7 +120,7 @@ namespace Scruffy.Services.Raid.DialogElements
 
                 using (var dbFactory = RepositoryFactory.CreateInstance())
                 {
-                    var roles = dbFactory.GetRepository<RaidRoleRepository>()
+                    var roles = dbFactory.GetRepository<RaidSpecialRoleRepository>()
                                          .GetQuery()
                                          .OrderBy(obj => obj.Id)
                                          .ToList();
@@ -129,7 +129,7 @@ namespace Scruffy.Services.Raid.DialogElements
                     {
                         _entries.Add(new SelectMenuOptionData
                                      {
-                                         Label = _raidRoleService.GetDescriptionAsText(role),
+                                         Label = role.Description,
                                          Emote = DiscordEmoteService.GetGuildEmote(CommandContext.Client, role.DiscordEmojiId),
                                          Value = role.Id.ToString(),
                                      });

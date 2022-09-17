@@ -875,6 +875,13 @@
             "RolesTitle": "Rollen",
             "RoleSelectionPlaceHolder": "Wähle deine Rollen..."
         },
+        "RaidPreparedSpecialRolesSelectDialogElement": {
+            "EmbedTitle": "Rollenauswahl",
+            "EmbedDescription":
+                "Mit diesem Assistenten kannst du alle Rollen, die du für den Raid vorbereitet hast hinterlegen. Die folgenden Rollen wurden bereits hinterlegt.",
+            "RolesTitle": "Rollen",
+            "RoleSelectionPlaceHolder": "Wähle deine Rollen..."
+        },
         "RaidPreparedRolesFirstTimeSelectDialogElement": {
             "Message":
                 "{0},  für die Teilnahme an einem Raid musst du zunächst die Rollen auswählen, die du dafür vorbereitet hast. Über den Befehl `/raid roles` kannst du jederzeit deine Rollen anpassen. Bitte wähle in der folgenden Auswahl deine Rollen aus: ",
