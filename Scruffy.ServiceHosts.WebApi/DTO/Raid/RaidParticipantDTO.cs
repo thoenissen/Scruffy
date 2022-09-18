@@ -24,4 +24,9 @@ public class RaidParticipantDTO
     /// Preferred roles
     /// </summary>
     public List<long> PreferredRoles { get; set; }
+
+    /// <summary>
+    /// Special roles of the user
+    /// </summary>
+    public List<long> SpecialRoles { get; set; }
 }

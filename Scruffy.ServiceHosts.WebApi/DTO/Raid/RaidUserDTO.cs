@@ -19,4 +19,9 @@ public class RaidUserDTO
     /// Roles which are assigned to the user
     /// </summary>
     public List<long> AssignedRoles { get; set; }
+
+    /// <summary>
+    /// Special roles which are assigned to the user
+    /// </summary>
+    public List<long> AssignedSpecialRoles { get; set; }
 }

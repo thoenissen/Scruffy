@@ -1,5 +1,7 @@
 ﻿using System.Data;
 
+using Discord;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +10,7 @@ using Scruffy.Data.Entity.Repositories.CoreData;
 using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.ServiceHosts.WebApi.DTO.Raid;
+using Scruffy.Services.Discord;
 using Scruffy.Services.Raid;
 
 namespace Scruffy.ServiceHosts.WebApi.Controllers;
@@ -39,6 +42,11 @@ public class RaidController : ControllerBase
     /// </summary>
     private readonly RaidLineUpService _raidLineUpService;
 
+    /// <summary>
+    /// Discord client
+    /// </summary>
+    private readonly IDiscordClient _discordClient;
+
     #endregion // Fields
 
     #region Constructor
@@ -49,13 +57,16 @@ public class RaidController : ControllerBase
     /// <param name="repositoryFactory">Repository factory</param>
     /// <param name="raidRolesService">Raid roles service</param>
     /// <param name="raidLineUpService">Raid line up service</param>
+    /// <param name="discordClient">Discord client</param>
     public RaidController(RepositoryFactory repositoryFactory,
                           RaidRolesService raidRolesService,
-                          RaidLineUpService raidLineUpService)
+                          RaidLineUpService raidLineUpService,
+                          IDiscordClient discordClient)
     {
         _repositoryFactory = repositoryFactory;
         _raidRolesService = raidRolesService;
         _raidLineUpService = raidLineUpService;
+        _discordClient = discordClient;
     }
 
     #endregion // Constructor
@@ -82,6 +93,10 @@ public class RaidController : ControllerBase
         var userRoles = _repositoryFactory.GetRepository<RaidUserRoleRepository>()
                                           .GetQuery()
                                           .Select(obj => obj);
+
+        var specialRoles = _repositoryFactory.GetRepository<RaidUserSpecialRoleRepository>()
+                                             .GetQuery()
+                                             .Select(obj => obj);
 
         var registrationRoles = _repositoryFactory.GetRepository<RaidRegistrationRoleAssignmentRepository>()
                                                   .GetQuery()
@@ -112,7 +127,10 @@ public class RaidController : ControllerBase
                                                                                                                                             .ToList(),
                                                                                                            PreferredRoles = registrationRoles.Where(obj3 => obj3.RegistrationId == obj2.Id)
                                                                                                                                                              .Select(obj3 => obj3.RoleId)
-                                                                                                                                                             .ToList()
+                                                                                                                                                             .ToList(),
+                                                                                                           SpecialRoles = specialRoles.Where(obj3 => obj3.UserId == obj2.UserId)
+                                                                                                                                      .Select(obj3 => obj3.SpecialRoleId)
+                                                                                                                                      .ToList(),
                                                                                                        })
                                                                                                        .ToList()
                                                                   })
@@ -146,6 +164,35 @@ public class RaidController : ControllerBase
     }
 
     /// <summary>
+    /// Get a list of all special roles
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [HttpGet]
+    [Route("specialRoles")]
+    [Produces(typeof(List<RaidRoleDTO>))]
+    public async Task<IActionResult> GetSpecialRoles()
+    {
+        var roles = await _repositoryFactory.GetRepository<RaidSpecialRoleRepository>()
+                                            .GetQuery()
+                                            .Select(obj => new
+                                                           {
+                                                               obj.Id,
+                                                               obj.Description,
+                                                               obj.DiscordEmojiId
+                                                           })
+                                            .ToListAsync()
+                                            .ConfigureAwait(false);
+
+        return Ok(roles.Select(obj => new RaidSpecialRoleDTO
+                                      {
+                                          Id = obj.Id,
+                                          Description = obj.Description,
+                                          Emoji = (DiscordEmoteService.GetGuildEmote(_discordClient, obj.DiscordEmojiId) as GuildEmote)?.Url
+                                      })
+                       .ToList());
+    }
+
+    /// <summary>
     /// Get all raid relevant users
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
@@ -161,6 +208,10 @@ public class RaidController : ControllerBase
         var discordMembers = _repositoryFactory.GetRepository<DiscordServerMemberRepository>()
                                                .GetQuery()
                                                .Select(obj => obj);
+
+        var specialRoles = _repositoryFactory.GetRepository<RaidUserSpecialRoleRepository>()
+                                             .GetQuery()
+                                             .Select(obj => obj);
 
         var users = _repositoryFactory.GetRepository<UserRepository>()
                                       .GetQuery()
@@ -182,7 +233,10 @@ public class RaidController : ControllerBase
                                                                                .Select(obj2 => obj2.UserName)
                                                                                .FirstOrDefault(),
                                                                    AssignedRoles = obj.Select(obj2 => obj2.RoleId)
-                                                                                      .ToList()
+                                                                                      .ToList(),
+                                                                   AssignedSpecialRoles = specialRoles.Where(obj3 => obj3.UserId == obj.Key)
+                                                                                                      .Select(obj3 => obj3.SpecialRoleId)
+                                                                                                      .ToList()
                                                                })
                                                 .ToListAsync()
                                                 .ConfigureAwait(false);
