@@ -2,12 +2,14 @@ import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ChartConfiguration } from 'chart.js';
 import * as htmlToImage from 'html-to-image';
+
 @Component({
   selector: 'app-user-roles',
   templateUrl: './user-roles.component.html',
   styleUrls: ['./user-roles.component.scss'],
 })
 export class UserRolesComponent {
+  // Constants
   public constants: Constants = Constants.current;
 
   // Table
@@ -23,6 +25,7 @@ export class UserRolesComponent {
     'tank-dps-quickness',
     'tank-healer-alacrity',
     'tank-healer-quickness',
+    'special',
   ];
 
   // Chart
@@ -32,16 +35,43 @@ export class UserRolesComponent {
     responsive: false,
   };
 
+  // Data
+  private specialRoles?: RaidSpecialRole[];
+
   constructor(http: HttpClient, @Inject('WEBAPI_BASE_URL') baseUrl: string) {
     http.get<RaidUser[]>(baseUrl + 'raid/users').subscribe(
       (result) => {
-        this.prepareResults(result);
+        this.prepareUsers(result);
+      },
+      (error) => console.error(error)
+    );
+
+    http.get<RaidSpecialRole[]>(baseUrl + 'raid/specialRoles').subscribe(
+      (result) => {
+        this.prepareSpecialRoles(result);
       },
       (error) => console.error(error)
     );
   }
+  prepareSpecialRoles(result: RaidSpecialRole[]) {
+    this.specialRoles = result;
+    this.TryAddSpecialRoles();
+  }
+  TryAddSpecialRoles() {
+    var s = this.specialRoles;
+    if (this.specialRoles != undefined && this.rows != undefined) {
+      this.rows.forEach(function (user) {
+        user.specialRoleIds.forEach(function (roldeId) {
+          let i = s?.findIndex((r) => r.id == roldeId);
+          if (i != undefined) {
+            user.specialRoles?.push(s![i]);
+          }
+        });
+      });
+    }
+  }
 
-  prepareResults(result: RaidUser[]) {
+  prepareUsers(result: RaidUser[]) {
     var rows: RaidUserTableRow[] = [];
 
     result.forEach(function (user) {
@@ -56,6 +86,8 @@ export class UserRolesComponent {
         isTankDamageDealerQuickness: user.assignedRoles.includes(7),
         isTankHealerAlacrity: user.assignedRoles.includes(8),
         isTankHealerQuickness: user.assignedRoles.includes(9),
+        specialRoleIds: user.assignedSpecialRoles,
+        specialRoles: [],
       };
 
       rows.push(currentRow);
@@ -95,6 +127,8 @@ export class UserRolesComponent {
     };
 
     this.rows = rows;
+
+    this.TryAddSpecialRoles();
   }
 
   getPercentage(roldeId: number) {
@@ -149,7 +183,7 @@ export class UserRolesComponent {
           break;
       }
     }
-    return (Math.round(percentage * 100)).toString();
+    return Math.round(percentage * 100).toString();
   }
 
   download(url: string, filename: string) {
@@ -197,6 +231,7 @@ export interface RaidUser {
   id: number;
   name: string;
   assignedRoles: number[];
+  assignedSpecialRoles: number[];
 }
 
 export interface RaidUserTableRow {
@@ -210,4 +245,12 @@ export interface RaidUserTableRow {
   isTankDamageDealerQuickness: boolean;
   isTankHealerAlacrity: boolean;
   isTankHealerQuickness: boolean;
+  specialRoleIds: number[];
+  specialRoles: RaidSpecialRole[];
+}
+
+export interface RaidSpecialRole {
+  id: number;
+  description: string;
+  emoji: string;
 }

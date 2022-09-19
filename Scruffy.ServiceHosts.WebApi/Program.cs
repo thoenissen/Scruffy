@@ -92,7 +92,7 @@ public class Program
             builder.Services.AddSingleton<IDiscordClient>(discordClient);
             builder.Services.AddSingleton(localizationService);
 
-            builder.Services.AddSingleton<RepositoryFactory>();
+            builder.Services.AddTransient<RepositoryFactory>();
             builder.Services.AddTransient<RaidRolesService>();
             builder.Services.AddTransient<RaidLineUpService>();
 

@@ -6,20 +6,26 @@
   </ng-container>
   <ng-container matColumnDef="dps">
     <mat-header-cell *matHeaderCellDef>
+      <img
+        src="https://cdn.discordapp.com/emojis/744104683081171004.png"
+        title="DPS"
+        alt="DPS"
+        class="mat-header-cell-img"
+      />
       <div class="mat-header-cell-text">DPS</div>
-      <img src="https://cdn.discordapp.com/emojis/744104683081171004.png" alt="DPS" class="mat-header-cell-img" />
     </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{ element.isDamageDealer ? "✔️" : "" }} </mat-cell>>
     <mat-footer-cell *matFooterCellDef="">{{ getPercentage(constants.RaidRoleDamageDealer) }} %</mat-footer-cell>
   </ng-container>
   <ng-container matColumnDef="dps-alacrity">
     <mat-header-cell *matHeaderCellDef>
-      <div class="mat-header-cell-text">Alacrity | DPS</div>
       <img
         src="https://cdn.discordapp.com/emojis/994543559027986442.png"
+        title="Alacrity + DPS"
         alt="Alacrity + DPS"
         class="mat-header-cell-img"
       />
+      <div class="mat-header-cell-text">Alacrity | DPS</div>
     </mat-header-cell>
     <mat-cell *matCellDef="let element">
       {{ element.isDamageDealerAlacrity ? "✔️" : "" }}
@@ -30,12 +36,13 @@
   </ng-container>
   <ng-container matColumnDef="dps-quickness">
     <mat-header-cell *matHeaderCellDef>
-      <div class="mat-header-cell-text">Quickness | DPS</div>
       <img
         src="https://cdn.discordapp.com/emojis/994543518972391475.png"
+        title="Quickness + DPS"
         alt="Quickness + DPS"
         class="mat-header-cell-img"
       />
+      <div class="mat-header-cell-text">Quickness | DPS</div>
     </mat-header-cell>
     <mat-cell *matCellDef="let element">
       {{ element.isDamageDealerQuickness ? "✔️" : "" }}
@@ -46,44 +53,43 @@
   </ng-container>
   <ng-container matColumnDef="healer-alacrity">
     <mat-header-cell *matHeaderCellDef>
-      <div class="mat-header-cell-text">Alacrity | Heal</div>
       <img
         src="https://cdn.discordapp.com/emojis/994543591525462036.png"
+        title="Alacrity + Heal"
         alt="Alacrity + Heal"
         class="mat-header-cell-img"
       />
+      <div class="mat-header-cell-text">Alacrity | Heal</div>
     </mat-header-cell>
     <mat-cell *matCellDef="let element">
       {{ element.isHealerAlacrity ? "✔️" : "" }}
     </mat-cell>
-    <mat-footer-cell *matFooterCellDef=""
-      >{{ getPercentage(constants.RaidRoleHealerAlacrity) }} %</mat-footer-cell
-    >
+    <mat-footer-cell *matFooterCellDef="">{{ getPercentage(constants.RaidRoleHealerAlacrity) }} %</mat-footer-cell>
   </ng-container>
   <ng-container matColumnDef="healer-quickness">
     <mat-header-cell *matHeaderCellDef>
-      <div class="mat-header-cell-text">Quickness | Heal</div>
       <img
         src="https://cdn.discordapp.com/emojis/994543468758171708.png"
+        title="Quickness + Heal"
         alt="Quickness + Heal"
         class="mat-header-cell-img"
       />
+      <div class="mat-header-cell-text">Quickness | Heal</div>
     </mat-header-cell>
     <mat-cell *matCellDef="let element">
       {{ element.isHealerQuickness ? "✔️" : "" }}
     </mat-cell>
-    <mat-footer-cell *matFooterCellDef=""
-      >{{ getPercentage(constants.RaidRoleHealerQuickness) }} %</mat-footer-cell
-    >
+    <mat-footer-cell *matFooterCellDef="">{{ getPercentage(constants.RaidRoleHealerQuickness) }} %</mat-footer-cell>
   </ng-container>
   <ng-container matColumnDef="tank-dps-alacrity">
     <mat-header-cell *matHeaderCellDef>
-      <div class="mat-header-cell-text">Tank | Alacrity | DPS</div>
       <img
         src="https://cdn.discordapp.com/emojis/1006997115395915806.png"
+        title="Tank + Alacrity + DPS"
         alt="Tank + Alacrity + DPS"
         class="mat-header-cell-img"
       />
+      <div class="mat-header-cell-text">Tank | Alacrity | DPS</div>
     </mat-header-cell>
     <mat-cell *matCellDef="let element">
       {{ element.isTankDamageDealerAlacrity ? "✔️" : "" }}
@@ -94,12 +100,13 @@
   </ng-container>
   <ng-container matColumnDef="tank-dps-quickness">
     <mat-header-cell *matHeaderCellDef>
-      <div class="mat-header-cell-text">Tank | Quickness | DPS</div>
       <img
         src="https://cdn.discordapp.com/emojis/1006997118411620392.png"
+        title="Tank + Quickness + DPS"
         alt="Tank + Quickness + DPS"
         class="mat-header-cell-img"
       />
+      <div class="mat-header-cell-text">Tank | Quickness | DPS</div>
     </mat-header-cell>
     <mat-cell *matCellDef="let element">
       {{ element.isTankDamageDealerQuickness ? "✔️" : "" }}
@@ -110,35 +117,50 @@
   </ng-container>
   <ng-container matColumnDef="tank-healer-alacrity">
     <mat-header-cell *matHeaderCellDef>
-      <div class="mat-header-cell-text">Tank | Alacrity | Heal</div>
       <img
         src="https://cdn.discordapp.com/emojis/1006997117086216233.png"
+        title="Tank + Alacrity + Heal"
         alt="Tank + Alacrity + Heal"
         class="mat-header-cell-img"
       />
+      <div class="mat-header-cell-text">Tank | Alacrity | Heal</div>
     </mat-header-cell>
     <mat-cell *matCellDef="let element">
       {{ element.isTankHealerAlacrity ? "✔️" : "" }}
     </mat-cell>
-    <mat-footer-cell *matFooterCellDef=""
-      >{{ getPercentage(constants.RaidRoleTankHealerAlacrity) }} %</mat-footer-cell
-    >
+    <mat-footer-cell *matFooterCellDef="">{{ getPercentage(constants.RaidRoleTankHealerAlacrity) }} %</mat-footer-cell>
   </ng-container>
   <ng-container matColumnDef="tank-healer-quickness">
     <mat-header-cell *matHeaderCellDef>
-      <div class="mat-header-cell-text">Tank | Quickness | Heal</div>
       <img
         src="https://cdn.discordapp.com/emojis/1006997252415426762.png"
+        title="Tank + Quickness + Heal"
         alt="Tank + Quickness + Heal"
         class="mat-header-cell-img"
       />
+      <div class="mat-header-cell-text">Tank | Quickness | Heal</div>
     </mat-header-cell>
     <mat-cell *matCellDef="let element">
       {{ element.isTankHealerQuickness ? "✔️" : "" }}
     </mat-cell>
-    <mat-footer-cell *matFooterCellDef=""
-      >{{ getPercentage(constants.RaidRoleTankHealerQuickness) }} %</mat-footer-cell
-    >
+    <mat-footer-cell *matFooterCellDef="">{{ getPercentage(constants.RaidRoleTankHealerQuickness) }} %</mat-footer-cell>
+  </ng-container>
+  <ng-container matColumnDef="special">
+    <mat-header-cell *matHeaderCellDef>
+      <div class="mat-header-cell-text">Special</div>
+    </mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <div class="mat-header-cell-special-role-box">
+        <img
+          *ngFor="let specialRole of element.specialRoles"
+          src="{{ specialRole.emoji }}"
+          title="{{ specialRole.description }}"
+          alt="{{ specialRole.description }}"
+          class="mat-header-cell-special-role-img"
+        />
+      </div>
+    </mat-cell>
+    <mat-footer-cell *matFooterCellDef=""></mat-footer-cell>
   </ng-container>
   <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
   <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
