@@ -9,6 +9,7 @@ using Scruffy.Data.Entity.Repositories.Guild;
 using Scruffy.Data.Entity.Repositories.GuildWars2.Account;
 using Scruffy.Data.Entity.Repositories.GuildWars2.Guild;
 using Scruffy.Data.Enumerations.General;
+using Scruffy.Data.Json.GuildWars2.Guild;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.WebApi;
@@ -77,8 +78,31 @@ public class GuildRankService : LocatedServiceBase
                 var connector = new GuildWars2ApiConnector(guild.ApiKey);
                 await using (connector.ConfigureAwait(false))
                 {
-                    var members = await connector.GetGuildMembers(guild.GuildId)
+                    List<GuildMember> members;
+
+                    try
+                    {
+                        members = await connector.GetGuildMembers(guild.GuildId)
                                                  .ConfigureAwait(false);
+                    }
+                    catch (Exception ex)
+                    {
+                        LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(GuildRankService), "Determination of guild members failed", null, ex);
+
+                        var yesterday = DateTime.Today.AddDays(-1);
+
+                        members = dbFactory.GetRepository<GuildWarsGuildHistoricMemberRepository>()
+                                           .GetQuery()
+                                           .Where(obj => obj.Date == yesterday
+                                                      && obj.GuildId == guild.Id)
+                                           .Select(obj => new GuildMember
+                                                          {
+                                                              Name = obj.Name,
+                                                              Rank = obj.Rank,
+                                                              Joined = obj.JoinedAt
+                                                          })
+                                           .ToList();
+                    }
 
                     await dbFactory.GetRepository<GuildWarsGuildHistoricMemberRepository>()
                                    .BulkInsert(guild.Id, members.Select(obj => (obj.Name, obj.Rank, obj.Joined)))

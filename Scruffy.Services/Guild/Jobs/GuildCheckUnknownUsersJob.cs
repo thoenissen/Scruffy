@@ -13,7 +13,7 @@ namespace Scruffy.Services.Guild.Jobs;
 /// <summary>
 /// Check unknown users
 /// </summary>
-internal class GuildCheckUnknownUsersJob : LocatedAsyncJob
+public class GuildCheckUnknownUsersJob : LocatedAsyncJob
 {
     #region Fields
 
