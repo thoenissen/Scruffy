@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using System.Diagnostics;
+
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,14 +28,10 @@ namespace Scruffy.Data.Entity;
 /// </summary>
 public class ScruffyDbContext : IdentityDbContext<UserEntity, RoleEntity, long, UserClaimEntity, UserRoleEntity, UserLoginEntity, RoleClaimEntity, UserTokenEntity>
 {
-    #region Fields
-
     /// <summary>
     /// Connection string
     /// </summary>
     private static string _connectionString;
-
-    #endregion // Fields
 
     #region Properties
 
@@ -87,7 +85,7 @@ public class ScruffyDbContext : IdentityDbContext<UserEntity, RoleEntity, long, 
 
         optionsBuilder.UseSqlServer(ConnectionString);
 #if DEBUG
-        optionsBuilder.LogTo(s => System.Diagnostics.Debug.WriteLine(s));
+        optionsBuilder.LogTo(s => Debug.WriteLine(s));
 #endif
         base.OnConfiguring(optionsBuilder);
     }
@@ -309,6 +307,7 @@ public class ScruffyDbContext : IdentityDbContext<UserEntity, RoleEntity, long, 
         modelBuilder.Entity<GuildDonationEntity>();
         modelBuilder.Entity<GuildUserConfigurationEntity>();
         modelBuilder.Entity<GuildDiscordRoleEntity>();
+        modelBuilder.Entity<GuildRankNotificationEntity>();
 
         modelBuilder.Entity<GuildLogEntryEntity>()
                     .HasKey(obj => new
@@ -322,8 +321,15 @@ public class ScruffyDbContext : IdentityDbContext<UserEntity, RoleEntity, long, 
                                    {
                                        obj.GuildId,
                                        obj.Type
-                                   }
-                           );
+                                   });
+
+        modelBuilder.Entity<GuildRankNotificationEntity>()
+                    .HasKey(obj => new
+                                   {
+                                       obj.GuildId,
+                                       obj.UserId,
+                                       obj.Type
+                                   });
 
         modelBuilder.Entity<GuildEntity>()
                     .HasMany(obj => obj.GuildLogEntries)
@@ -450,7 +456,11 @@ public class ScruffyDbContext : IdentityDbContext<UserEntity, RoleEntity, long, 
         modelBuilder.Entity<GuildWarsAccountAchievementEntity>()
                     .HasMany(obj => obj.GuildWarsAccountAchievementBits)
                     .WithOne(obj => obj.GuildWarsAccountAchievement)
-                    .HasForeignKey(obj => new { obj.AccountName, obj.AchievementId });
+                    .HasForeignKey(obj => new
+                                          {
+                                              obj.AccountName,
+                                              obj.AchievementId
+                                          });
 
         modelBuilder.Entity<GuildWarsAccountAchievementBitEntity>()
                     .HasKey(obj => new
@@ -463,7 +473,11 @@ public class ScruffyDbContext : IdentityDbContext<UserEntity, RoleEntity, long, 
         modelBuilder.Entity<GuildWarsAccountAchievementBitEntity>()
                     .HasOne(obj => obj.GuildWarsAccountAchievement)
                     .WithMany(obj => obj.GuildWarsAccountAchievementBits)
-                    .HasForeignKey(obj => new { obj.AccountName, obj.AchievementId });
+                    .HasForeignKey(obj => new
+                                          {
+                                              obj.AccountName,
+                                              obj.AchievementId
+                                          });
 
         modelBuilder.Entity<GuildWarsItemGuildUpgradeConversionEntity>()
                     .HasKey(obj => new
@@ -535,7 +549,7 @@ public class ScruffyDbContext : IdentityDbContext<UserEntity, RoleEntity, long, 
                                    {
                                        obj.Date,
                                        obj.AccountName,
-                                       obj.CharacterName,
+                                       obj.CharacterName
                                    });
 
         modelBuilder.Entity<GuildWarsCustomRecipeEntryEntity>()
@@ -590,14 +604,19 @@ public class ScruffyDbContext : IdentityDbContext<UserEntity, RoleEntity, long, 
         // Web
         modelBuilder.Entity<RoleClaimEntity>()
                     .ToTable("RoleClaims");
+
         modelBuilder.Entity<RoleEntity>()
                     .ToTable("Roles");
+
         modelBuilder.Entity<UserClaimEntity>()
                     .ToTable("UserClaims");
+
         modelBuilder.Entity<UserLoginEntity>()
                     .ToTable("UserLogins");
+
         modelBuilder.Entity<UserRoleEntity>()
                     .ToTable("UserRoles");
+
         modelBuilder.Entity<UserTokenEntity>()
                     .ToTable("UserTokens");
 
@@ -622,8 +641,7 @@ public class ScruffyDbContext : IdentityDbContext<UserEntity, RoleEntity, long, 
         modelBuilder.Entity<DateValue>(eb =>
                                        {
                                            eb.HasNoKey();
-                                           eb.ToTable("__Unmapped_Query_Type_DateValue__",
-                                                      t => t.ExcludeFromMigrations());
+                                           eb.ToTable("__Unmapped_Query_Type_DateValue__", t => t.ExcludeFromMigrations());
                                        });
 
         // Disabling cascade on delete

@@ -11,8 +11,8 @@ public class SecondsTimeSpanConverter : JsonConverter<TimeSpan>
     public override TimeSpan ReadJson(JsonReader reader, Type objectType, TimeSpan existingValue, bool hasExistingValue, JsonSerializer serializer)
     {
         return reader.Value != null
-            ? reader.ValueType == typeof(Int64)
-                ? TimeSpan.FromSeconds((Int64)reader.Value)
+            ? reader.ValueType == typeof(long)
+                ? TimeSpan.FromSeconds((long)reader.Value)
                 : TimeSpan.FromSeconds((double)reader.Value)
             : TimeSpan.Zero;
     }

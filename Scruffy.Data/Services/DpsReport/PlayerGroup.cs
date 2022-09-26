@@ -5,25 +5,7 @@ namespace Scruffy.Data.Services.DpsReport;
 /// </summary>
 public class PlayerGroup
 {
-    /// <summary>
-    /// Id of this group
-    /// </summary>
-    public int Id { get; private set; }
-
-    /// <summary>
-    /// Day of the week this group exists
-    /// </summary>
-    public DateOnly Date { get; private set; }
-
-    /// <summary>
-    /// Players in this group
-    /// </summary>
-    public HashSet<string> Players { get; private set; }
-
-    /// <summary>
-    /// Stats of this group
-    /// </summary>
-    public PlayerGroupStats Stats { get; private set; }
+    #region Constructor
 
     /// <summary>
     /// Constructor
@@ -44,26 +26,66 @@ public class PlayerGroup
         }
     }
 
-    /// <inheritdoc/>
-    public override bool Equals(object otherObj)
+    #endregion // Constructor
+
+    #region Properties
+
+    /// <summary>
+    /// Id of this group
+    /// </summary>
+    public int Id { get; private set; }
+
+    /// <summary>
+    /// Day of the week this group exists
+    /// </summary>
+    public DateOnly Date { get; private set; }
+
+    /// <summary>
+    /// Players in this group
+    /// </summary>
+    public HashSet<string> Players { get; private set; }
+
+    /// <summary>
+    /// Stats of this group
+    /// </summary>
+    public PlayerGroupStats Stats { get; private set; }
+
+    #endregion // Properties
+
+    #region Object
+
+    /// <summary>
+    /// Determines whether the specified object is equal to the current object.
+    /// </summary>
+    /// <param name="obj">The object to compare with the current object.</param>
+    /// <returns>
+    /// <see langword="true" /> if the specified object  is equal to the current object; otherwise, <see langword="false" />.</returns>
+    public override bool Equals(object obj)
     {
-        if (otherObj is PlayerGroup other)
+        if (obj is PlayerGroup other)
         {
             if (Date == other.Date)
             {
                 var group = new HashSet<string>(Players);
+
                 group.ExceptWith(other.Players);
-                return group.Count() < Players.Count * 0.4;
+
+                return group.Count < Players.Count * 0.4;
             }
         }
 
         return false;
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Serves as the default hash function.
+    /// </summary>
+    /// <returns>A hash code for the current object.</returns>
     public override int GetHashCode()
     {
         // Always use equals
         return Date.GetHashCode();
     }
+
+    #endregion // Object
 }
