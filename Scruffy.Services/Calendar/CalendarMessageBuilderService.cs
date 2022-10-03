@@ -156,6 +156,7 @@ public class CalendarMessageBuilderService : LocatedServiceBase
                                               .Where(obj => serverId == null || obj.DiscordServerId == serverId)
                                               .Select(obj => new
                                                              {
+                                                                 obj.DiscordServerId,
                                                                  Channel = channels.Where(obj2 => obj2.GuildId == obj.Id
                                                                                                && obj2.Type == GuildChannelConfigurationType.CalendarOverview)
                                                                                    .Select(obj2 => new
@@ -170,10 +171,20 @@ public class CalendarMessageBuilderService : LocatedServiceBase
                                                                                                             {
                                                                                                                 obj2.TimeStamp,
                                                                                                                 obj2.CalendarAppointmentTemplate.Description,
-                                                                                                                obj2.CalendarAppointmentTemplate.Uri
+                                                                                                                obj2.DiscordEventId
                                                                                                             })
                                                                                             .OrderBy(obj2 => obj2.TimeStamp)
-                                                                                            .ToList()
+                                                                                            .ToList(),
+                                                                 Templates = appointments.Where(obj2 => obj2.CalendarAppointmentTemplate.DiscordServerId == obj.DiscordServerId
+                                                                                                        && obj2.CalendarAppointmentTemplate.Uri != null)
+                                                                                         .Select(obj2 => new
+                                                                                                         {
+                                                                                                             obj2.CalendarAppointmentTemplate.Description,
+                                                                                                             obj2.CalendarAppointmentTemplate.Uri
+                                                                                                         })
+                                                                                         .OrderBy(obj2 => obj2.Description)
+                                                                                         .Distinct()
+                                                                                         .ToList()
                                                              })
                                               .Where(obj => obj.Channel.ChannelId > 0)
                                               .ToList())
@@ -202,7 +213,7 @@ public class CalendarMessageBuilderService : LocatedServiceBase
 
                     foreach (var appointment in calendar.Appointments)
                     {
-                        var currentLine = $@"`({LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(appointment.TimeStamp.DayOfWeek)[..2]}) {appointment.TimeStamp.ToString("g", LocalizationGroup.CultureInfo)}` {(string.IsNullOrWhiteSpace(appointment.Uri) ? appointment.Description : Format.Url(appointment.Description, appointment.Uri))}";
+                        var currentLine = $@"`({LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(appointment.TimeStamp.DayOfWeek)[..2]}) {appointment.TimeStamp.ToString("g", LocalizationGroup.CultureInfo)}` {(appointment.DiscordEventId == null ? appointment.Description : Format.Url(appointment.Description, $"https://discord.com/events/{calendar.DiscordServerId}/{appointment.DiscordEventId}"))}";
 
                         if (currentMonth != appointment.TimeStamp.Month
                          || currentWeekOfYear != appointment.TimeStamp.GetIso8601WeekOfYear()
@@ -240,6 +251,19 @@ public class CalendarMessageBuilderService : LocatedServiceBase
                     {
                         builder.AddField(currentFieldTitle, stringBuilder.ToString());
                     }
+                }
+
+                if (calendar.Templates.Count > 0)
+                {
+                    var appointmentLinks = new StringBuilder();
+
+                    foreach (var template in calendar.Templates)
+                    {
+                        appointmentLinks.AppendLine(" > " + Format.Url(template.Description, template.Uri));
+                    }
+
+                    builder.AddField(LocalizationGroup.GetText("Appointments", "Appointments"),
+                                     appointmentLinks.ToString());
                 }
 
                 var channel = await _discordClient.GetChannelAsync(calendar.Channel.ChannelId)

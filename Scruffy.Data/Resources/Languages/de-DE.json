@@ -115,7 +115,8 @@
         "CalendarMessageBuilderService": {
             "Motd": "Nachricht des Tages:",
             "MotdFormat": "{0} - {1}, {2:dd.MM.} um {2:HH:mm} Uhr",
-            "WeekNumber": "KW"
+            "WeekNumber": "KW",
+            "Appointments": "Veranstaltungen"
         },
         "CalendarOneTimeDayDialogElement": {
             "Message": "Gbt bitte den Tag ein. (yyyy-MM-dd)"
