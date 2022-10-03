@@ -1,13 +1,18 @@
 ﻿using System.Diagnostics;
 
+using Discord;
+using Discord.WebSocket;
+
 using Microsoft.EntityFrameworkCore;
 
 using Newtonsoft.Json;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Calendar;
+using Scruffy.Data.Entity.Repositories.Guild;
 using Scruffy.Data.Entity.Tables.Calendar;
 using Scruffy.Data.Enumerations.Calendar;
+using Scruffy.Data.Enumerations.Guild;
 using Scruffy.Data.Services.Calendar;
 using Scruffy.Services.Calendar.DialogElements;
 using Scruffy.Services.Calendar.DialogElements.Forms;
@@ -30,6 +35,11 @@ public class CalendarScheduleService : LocatedServiceBase
     /// </summary>
     private readonly CalendarMessageBuilderService _messageBuilder;
 
+    /// <summary>
+    /// Discord client
+    /// </summary>
+    private readonly DiscordSocketClient _discordClient;
+
     #endregion // Fields
 
     #region Constructor
@@ -39,10 +49,14 @@ public class CalendarScheduleService : LocatedServiceBase
     /// </summary>
     /// <param name="localizationService">Localization service</param>
     /// <param name="messageBuilder">Message builder</param>
-    public CalendarScheduleService(LocalizationService localizationService, CalendarMessageBuilderService messageBuilder)
+    /// <param name="discordClient">Discord client</param>
+    public CalendarScheduleService(LocalizationService localizationService,
+                                   CalendarMessageBuilderService messageBuilder,
+                                   DiscordSocketClient discordClient)
         : base(localizationService)
     {
         _messageBuilder = messageBuilder;
+        _discordClient = discordClient;
     }
 
     #endregion // Constructor
@@ -191,6 +205,71 @@ public class CalendarScheduleService : LocatedServiceBase
                             Trace.WriteLine($"Invalid schedule: {schedule.Type}");
                         }
                         break;
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Create events
+    /// </summary>
+    /// <param name="serverId">Id of the discord server</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public async Task CreateEvents(ulong? serverId)
+    {
+        using (var dbFactory = RepositoryFactory.CreateInstance())
+        {
+            var now = DateTime.Now;
+
+            var templates = dbFactory.GetRepository<CalendarAppointmentTemplateRepository>()
+                                     .GetQuery()
+                                     .Select(obj => obj);
+
+            foreach (var calendar in dbFactory.GetRepository<GuildRepository>()
+                                              .GetQuery()
+                                              .Where(obj => serverId == null || obj.DiscordServerId == serverId)
+                                              .Select(obj => new
+                                                             {
+                                                                 ServerId = obj.DiscordServerId,
+                                                                 Appointments = templates.Where(obj2 => obj2.DiscordServerId == obj.DiscordServerId
+                                                                                                     && obj2.DiscordVoiceChannel != null)
+                                                                                         .SelectMany(obj2 => obj2.CalendarAppointments
+                                                                                                                 .Where(obj3 => obj3.TimeStamp > now
+                                                                                                                             && obj2.CalendarAppointments.Any(obj4 => obj4.TimeStamp > now
+                                                                                                                                                                   && obj4.TimeStamp < obj3.TimeStamp) == false)
+                                                                                                                 .Select(obj3 => new
+                                                                                                                 {
+                                                                                                                     obj3.Id,
+                                                                                                                     obj3.TimeStamp,
+                                                                                                                     obj3.DiscordEventId,
+                                                                                                                     obj2.Description,
+                                                                                                                     obj2.DiscordVoiceChannel,
+                                                                                                                     obj2.DiscordEventDescription,
+                                                                                                                 }))
+                                                                                         .Where(obj3 => obj3.DiscordEventId == null)
+                                                                                         .OrderBy(obj2 => obj2.TimeStamp)
+                                                                                         .ToList()
+                                                             })
+                                              .ToList())
+            {
+                var server = _discordClient.GetGuild(calendar.ServerId);
+                if (server != null)
+                {
+                    foreach (var appointment in calendar.Appointments)
+                    {
+                        var guildEvent = await server.CreateEventAsync(appointment.Description,
+                                                                       appointment.TimeStamp.ToUniversalTime(),
+                                                                       GuildScheduledEventType.Voice,
+                                                                       GuildScheduledEventPrivacyLevel.Private,
+                                                                       appointment.DiscordEventDescription,
+                                                                       null,
+                                                                       appointment.DiscordVoiceChannel)
+                                                     .ConfigureAwait(false);
+
+                        dbFactory.GetRepository<CalendarAppointmentRepository>()
+                                 .Refresh(obj => obj.Id == appointment.Id,
+                                          obj => obj.DiscordEventId = guildEvent.Id);
+                    }
                 }
             }
         }

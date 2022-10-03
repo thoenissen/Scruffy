@@ -10,7 +10,7 @@ namespace Scruffy.Services.Core;
 /// <summary>
 /// Batch of jobs
 /// </summary>
-internal abstract class BatchJob : LocatedAsyncJob
+public abstract class BatchJob : LocatedAsyncJob
 {
     #region Fields
 

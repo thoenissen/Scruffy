@@ -10,7 +10,7 @@ namespace Scruffy.Services.Guild.Jobs;
 /// <summary>
 /// Executing guild ranking relevant jobs
 /// </summary>
-internal class GuildRankingBatchJob : BatchJob
+public class GuildRankingBatchJob : BatchJob
 {
     #region Constructor
 

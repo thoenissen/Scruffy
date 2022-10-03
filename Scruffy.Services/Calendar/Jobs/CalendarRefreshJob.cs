@@ -23,15 +23,19 @@ public class CalendarRefreshJob : LocatedAsyncJob
         var serviceProvider = ServiceProviderContainer.Current.GetServiceProvider();
         await using (serviceProvider.ConfigureAwait(false))
         {
-            await serviceProvider.GetService<CalendarScheduleService>()
+            await serviceProvider.GetRequiredService<CalendarScheduleService>()
                                  .CreateAppointments(null)
                                  .ConfigureAwait(false);
 
-            await serviceProvider.GetService<CalendarMessageBuilderService>()
+            await serviceProvider.GetRequiredService<CalendarScheduleService>()
+                                 .CreateEvents(null)
+                                 .ConfigureAwait(false);
+
+            await serviceProvider.GetRequiredService<CalendarMessageBuilderService>()
                                  .RefreshMessages(null)
                                  .ConfigureAwait(false);
 
-            await serviceProvider.GetService<CalendarMessageBuilderService>()
+            await serviceProvider.GetRequiredService<CalendarMessageBuilderService>()
                                  .RefreshMotds(null)
                                  .ConfigureAwait(false);
 
@@ -40,7 +44,7 @@ public class CalendarRefreshJob : LocatedAsyncJob
                 var from = DateTime.Today;
                 var to = DateTime.Today.AddDays(1);
 
-                var jobScheduler = serviceProvider.GetService<JobScheduler>();
+                var jobScheduler = serviceProvider.GetRequiredService<JobScheduler>();
 
                 foreach (var entry in dbFactory.GetRepository<CalendarAppointmentRepository>()
                                                .GetQuery()
