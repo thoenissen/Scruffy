@@ -41,6 +41,11 @@ public class CalendarAppointmentEntity
     /// </summary>
     public ulong? DiscordMessageId { get; set; }
 
+    /// <summary>
+    /// Id of the event
+    /// </summary>
+    public ulong? DiscordEventId { get; set; }
+
     #region Navigation properties
 
     /// <summary>

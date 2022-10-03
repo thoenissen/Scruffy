@@ -49,6 +49,16 @@ public class CalendarAppointmentTemplateEntity
     public TimeSpan? ReminderTime { get; set; }
 
     /// <summary>
+    /// Explanation
+    /// </summary>
+    public string DiscordEventDescription { get; set; }
+
+    /// <summary>
+    /// Voice channel
+    /// </summary>
+    public ulong? DiscordVoiceChannel { get; set; }
+
+    /// <summary>
     /// Guild points
     /// </summary>
     public double? GuildPoints { get; set;  }
