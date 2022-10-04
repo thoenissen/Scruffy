@@ -31,7 +31,7 @@ public class DpsReportEmbedBuilder : EmbedBuilder
     /// <param name="content">The content of the report group</param>
     public void AddReportGroup(DpsReportGroup group, string content)
     {
-        AddReportGroup(group.AsText(), content);
+        AddReportGroup(group.AsText(), content, true);
     }
 
     /// <summary>
@@ -39,11 +39,16 @@ public class DpsReportEmbedBuilder : EmbedBuilder
     /// </summary>
     /// <param name="group">The DPS report group</param>
     /// <param name="content">The content of the report group</param>
-    public void AddReportGroup(string group, string content)
+    /// <param name="isInsertEmptyColumn">Should a empty row inserted if needed?</param>
+    public void AddReportGroup(string group, string content, bool isInsertEmptyColumn)
     {
         if (_reportGroupsInRow > 1)
         {
-            AddField("\u200b", "\u200b", false);
+            if (isInsertEmptyColumn)
+            {
+                AddField("\u200b", "\u200b", false);
+            }
+
             _reportGroupsInRow = 0;
         }
 
