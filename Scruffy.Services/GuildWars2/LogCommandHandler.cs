@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Globalization;
+using System.IO;
 
 using Discord;
 using Discord.WebSocket;
@@ -83,7 +84,7 @@ public class LogCommandHandler : LocatedServiceBase
 
     #endregion // Properties
 
-    #region Methods
+    #region Public methods
 
     /// <summary>
     /// Posts the logs of the given type + day
@@ -152,94 +153,6 @@ public class LogCommandHandler : LocatedServiceBase
     }
 
     /// <summary>
-    /// Adds the given DPS reports to the given embed builder
-    /// </summary>
-    /// <param name="builder">Embed builder</param>
-    /// <param name="uploads">DPS report uploads</param>
-    /// <param name="summarize">Whether to summarize or output all logs</param>
-    /// <param name="addSubTitles">Whether sub titles should be added</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    private async Task WriteReports(DpsReportEmbedBuilder builder, IEnumerable<Upload> uploads, bool summarize, bool addSubTitles)
-    {
-        var knownGroups = new HashSet<PlayerGroup>();
-
-        var typeGroups = uploads.OrderBy(obj => _dpsReportConnector.GetSortValue(obj.Encounter.BossId))
-                                .ThenBy(obj => obj.EncounterTime)
-                                .GroupBy(obj => _dpsReportConnector.GetReportGroup(obj.Encounter.BossId).GetReportType())
-                                .ToList();
-
-        addSubTitles &= typeGroups.Count > 1;
-
-        foreach (var typeGroup in typeGroups)
-        {
-            if (addSubTitles)
-            {
-                builder.AddSubTitle($"> {Format.Bold($"{typeGroup.Key}s")}");
-            }
-
-            foreach (var reportGroup in typeGroup.GroupBy(obj => _dpsReportConnector.GetReportGroup(obj.Encounter.BossId)))
-            {
-                var isFractal = reportGroup.Key.GetReportType() == DpsReportType.Fractal;
-                var hasMultipleGroups = GroupUploads(ref knownGroups, reportGroup, false).Count() > 1;
-
-                var reports = new StringBuilder();
-
-                foreach (var bossGroup in reportGroup.GroupBy(obj => new { obj.Encounter.BossId, obj.Encounter.Boss }))
-                {
-                    // Start a new field, when we don't have enough space for some logs
-                    if (reports.Length > 896)
-                    {
-                        builder.AddReportGroup(reportGroup.Key, reports.ToString());
-                        reports = new StringBuilder();
-                    }
-
-                    var hasNormalTries = isFractal
-                                      || bossGroup.Any(obj => !obj.Encounter.IsChallengeMode);
-                    var hasChallengeTries = isFractal == false
-                                         && bossGroup.Any(obj => obj.Encounter.IsChallengeMode);
-
-                    foreach (var boss in bossGroup.GroupBy(obj => obj.Encounter.IsChallengeMode)
-                                                  .OrderBy(obj => obj.Key)
-                                                  .Select(obj => obj.ToList()))
-                    {
-                        var title = BuildTitle(boss, summarize, hasNormalTries, hasChallengeTries);
-                        reports.AppendLine(title);
-
-                        foreach (var groupUploads in GroupUploads(ref knownGroups, boss, false))
-                        {
-                            // Write the group as a sub title
-                            if (hasMultipleGroups)
-                            {
-                                if (hasChallengeTries)
-                                {
-                                    reports.Append(' ');
-                                }
-
-                                reports.Append(" └ ");
-                                reports.Append(LocalizationGroup.GetFormattedText("DpsReportPlayerGroup", "Group {0}", groupUploads.Key.Id));
-
-                                WriteFails(reports, groupUploads.Value, summarize, hasNormalTries, hasChallengeTries);
-
-                                reports.AppendLine();
-                            }
-
-                            // Enrich the logs with the remaining health
-                            var hasSuccessTry = summarize
-                                             && groupUploads.Value.Any(obj => obj.Encounter.Success);
-
-                            var fullLogs = await LoadRemainingHealths(groupUploads.Value, upload => hasSuccessTry && !upload.Encounter.Success).ConfigureAwait(false);
-
-                            WriteLogs(builder, ref reports, reportGroup.Key.AsText(), title, fullLogs, summarize, hasNormalTries, hasChallengeTries);
-                        }
-                    }
-                }
-
-                builder.AddReportGroup(reportGroup.Key, reports.ToString());
-            }
-        }
-    }
-
-    /// <summary>
     /// Posts the last <paramref name="count"/> of <paramref name="group"/> tries
     /// </summary>
     /// <param name="context">Command context</param>
@@ -263,21 +176,21 @@ public class LogCommandHandler : LocatedServiceBase
             var counts = new Dictionary<int, int>();
 
             var uploads = await _dpsReportConnector.GetUploads(upload =>
+                                                               {
+                                                                   if (upload.Encounter.Success && _dpsReportConnector.GetReportGroup(upload.Encounter.BossId) == group)
+                                                                   {
+                                                                       if (counts.ContainsKey(upload.Encounter.BossId) == false)
                                                                        {
-                                                                           if (upload.Encounter.Success && _dpsReportConnector.GetReportGroup(upload.Encounter.BossId) == group)
-                                                                           {
-                                                                               if (counts.ContainsKey(upload.Encounter.BossId) == false)
-                                                                               {
-                                                                                   counts.Add(upload.Encounter.BossId, 0);
-                                                                               }
+                                                                           counts.Add(upload.Encounter.BossId, 0);
+                                                                       }
 
-                                                                               ++counts[upload.Encounter.BossId];
+                                                                       ++counts[upload.Encounter.BossId];
 
-                                                                               return true;
-                                                                           }
+                                                                       return true;
+                                                                   }
 
-                                                                           return false;
-                                                                       },
+                                                                   return false;
+                                                               },
                                                                upload => counts.TryGetValue(upload.Encounter.BossId, out var value) && value > count,
                                                                account.DpsReportUserToken)
                                                    .ConfigureAwait(false);
@@ -474,6 +387,167 @@ public class LogCommandHandler : LocatedServiceBase
         {
             await context.ReplyAsync(LocalizationGroup.GetText("NoDpsReportUploads", "No DPS-Reports found!"))
                          .ConfigureAwait(false);
+        }
+    }
+
+    /// <summary>
+    /// Export all logs since the given day
+    /// </summary>
+    /// <param name="context">Command context</param>
+    /// <param name="daySinceString">Day</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task ExportLogs(IContextContainer context, string daySinceString)
+    {
+        await context.DeferProcessing()
+                     .ConfigureAwait(false);
+
+        var account = _repositoryFactory.GetRepository<DiscordAccountRepository>()
+                                        .GetQuery()
+                                        .Where(obj => obj.Id == context.User.Id)
+                                        .Select(obj => new { obj.User.GuildWarsAccounts.FirstOrDefault().Name, obj.User.DpsReportUserToken })
+                                        .FirstOrDefault();
+
+        if (string.IsNullOrWhiteSpace(daySinceString)
+         || DateOnly.TryParseExact(daySinceString, _dateFormats, null, DateTimeStyles.None, out var day) == false)
+        {
+            day = DateOnly.FromDateTime(DateTime.UtcNow);
+        }
+
+        if (string.IsNullOrEmpty(account?.DpsReportUserToken) == false)
+        {
+            var uploads = await _dpsReportConnector.GetUploads(upload => DateOnly.FromDateTime(upload.EncounterTime) >= day,
+                                                               upload => DateOnly.FromDateTime(upload.UploadTime) < day,
+                                                               account.DpsReportUserToken)
+                                                   .ConfigureAwait(false);
+
+            if (uploads.Count > 0)
+            {
+                var reports = string.Join(Environment.NewLine, uploads.Select(obj => obj.Permalink));
+
+                var memoryStream = new MemoryStream();
+                await using (memoryStream.ConfigureAwait(false))
+                {
+                    var writer = new StreamWriter(memoryStream);
+                    await using (writer.ConfigureAwait(false))
+                    {
+                        foreach (var upload in uploads)
+                        {
+                            await writer.WriteLineAsync(upload.Permalink)
+                                        .ConfigureAwait(false);
+                        }
+
+                        await writer.FlushAsync()
+                                    .ConfigureAwait(false);
+
+                        memoryStream.Position = 0;
+
+                        await context.ReplyAsync(attachments: new[] { new FileAttachment(memoryStream, "logs.txt") })
+                                            .ConfigureAwait(false);
+                    }
+                }
+            }
+            else
+            {
+                await context.ReplyAsync(LocalizationGroup.GetText("NoDpsReportUploads", "No DPS-Reports found!"))
+                             .ConfigureAwait(false);
+            }
+        }
+        else
+        {
+            await context.ReplyAsync(LocalizationGroup.GetText("NoDpsReportToken", "The are no DPS-Report user tokens assigned to your account."))
+                         .ConfigureAwait(false);
+        }
+    }
+
+    #endregion // Public methods
+
+    #region Private methods
+
+    /// <summary>
+    /// Adds the given DPS reports to the given embed builder
+    /// </summary>
+    /// <param name="builder">Embed builder</param>
+    /// <param name="uploads">DPS report uploads</param>
+    /// <param name="summarize">Whether to summarize or output all logs</param>
+    /// <param name="addSubTitles">Whether sub titles should be added</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    private async Task WriteReports(DpsReportEmbedBuilder builder, IEnumerable<Upload> uploads, bool summarize, bool addSubTitles)
+    {
+        var knownGroups = new HashSet<PlayerGroup>();
+
+        var typeGroups = uploads.OrderBy(obj => _dpsReportConnector.GetSortValue(obj.Encounter.BossId))
+                                .ThenBy(obj => obj.EncounterTime)
+                                .GroupBy(obj => _dpsReportConnector.GetReportGroup(obj.Encounter.BossId).GetReportType())
+                                .ToList();
+
+        addSubTitles &= typeGroups.Count > 1;
+
+        foreach (var typeGroup in typeGroups)
+        {
+            if (addSubTitles)
+            {
+                builder.AddSubTitle($"> {Format.Bold($"{typeGroup.Key}s")}");
+            }
+
+            foreach (var reportGroup in typeGroup.GroupBy(obj => _dpsReportConnector.GetReportGroup(obj.Encounter.BossId)))
+            {
+                var isFractal = reportGroup.Key.GetReportType() == DpsReportType.Fractal;
+                var hasMultipleGroups = GroupUploads(ref knownGroups, reportGroup, false).Count() > 1;
+
+                var reports = new StringBuilder();
+
+                foreach (var bossGroup in reportGroup.GroupBy(obj => new { obj.Encounter.BossId, obj.Encounter.Boss }))
+                {
+                    // Start a new field, when we don't have enough space for some logs
+                    if (reports.Length > 896)
+                    {
+                        builder.AddReportGroup(reportGroup.Key, reports.ToString());
+                        reports = new StringBuilder();
+                    }
+
+                    var hasNormalTries = isFractal
+                                      || bossGroup.Any(obj => !obj.Encounter.IsChallengeMode);
+                    var hasChallengeTries = isFractal == false
+                                         && bossGroup.Any(obj => obj.Encounter.IsChallengeMode);
+
+                    foreach (var boss in bossGroup.GroupBy(obj => obj.Encounter.IsChallengeMode)
+                                                  .OrderBy(obj => obj.Key)
+                                                  .Select(obj => obj.ToList()))
+                    {
+                        var title = BuildTitle(boss, summarize, hasNormalTries, hasChallengeTries);
+                        reports.AppendLine(title);
+
+                        foreach (var groupUploads in GroupUploads(ref knownGroups, boss, false))
+                        {
+                            // Write the group as a sub title
+                            if (hasMultipleGroups)
+                            {
+                                if (hasChallengeTries)
+                                {
+                                    reports.Append(' ');
+                                }
+
+                                reports.Append(" └ ");
+                                reports.Append(LocalizationGroup.GetFormattedText("DpsReportPlayerGroup", "Group {0}", groupUploads.Key.Id));
+
+                                WriteFails(reports, groupUploads.Value, summarize, hasNormalTries, hasChallengeTries);
+
+                                reports.AppendLine();
+                            }
+
+                            // Enrich the logs with the remaining health
+                            var hasSuccessTry = summarize
+                                             && groupUploads.Value.Any(obj => obj.Encounter.Success);
+
+                            var fullLogs = await LoadRemainingHealths(groupUploads.Value, upload => hasSuccessTry && !upload.Encounter.Success).ConfigureAwait(false);
+
+                            WriteLogs(builder, ref reports, reportGroup.Key.AsText(), title, fullLogs, summarize, hasNormalTries, hasChallengeTries);
+                        }
+                    }
+                }
+
+                builder.AddReportGroup(reportGroup.Key, reports.ToString());
+            }
         }
     }
 
@@ -906,5 +980,5 @@ public class LogCommandHandler : LocatedServiceBase
         return builder.Build();
     }
 
-    #endregion // Methods
+    #endregion // Private methods
 }

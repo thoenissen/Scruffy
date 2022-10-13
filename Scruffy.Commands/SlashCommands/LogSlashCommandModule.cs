@@ -71,5 +71,13 @@ public class LogSlashCommandModule : SlashCommandModuleBase
                             .ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Exporting urls of all logs since the given date
+    /// </summary>
+    /// <param name="since">Since day</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [SlashCommand("export", "Export of log urls")]
+    public Task Export([Summary("since-day", "Logs since the given day. (dd.MM.yyyy)")] string since) => CommandHandler.ExportLogs(Context, since);
+
     #endregion // Commands
 }
