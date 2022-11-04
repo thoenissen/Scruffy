@@ -5,11 +5,14 @@ using System.IO;
 using Discord;
 using Discord.WebSocket;
 
+using Newtonsoft.Json;
+
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Data.Enumerations.DpsReport;
 using Scruffy.Data.Json.DpsReport;
+using Scruffy.Data.Json.QuickChart;
 using Scruffy.Data.Services.DpsReport;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
@@ -46,6 +49,11 @@ public class LogCommandHandler : LocatedServiceBase
     /// </summary>
     private readonly DpsReportConnector _dpsReportConnector;
 
+    /// <summary>
+    /// QuickChart.io connector
+    /// </summary>
+    private readonly QuickChartConnector _quickChartConnector;
+
     #endregion // Fields
 
     #region Constructor
@@ -57,15 +65,18 @@ public class LogCommandHandler : LocatedServiceBase
     /// <param name="client">The Discord client</param>
     /// <param name="repositoryFactory">Repository factory</param>
     /// <param name="dpsReportConnector">DPS-Report connector</param>
+    /// <param name="quickChartConnector">QuickChart.io connector</param>
     public LogCommandHandler(LocalizationService localizationService,
                               DiscordSocketClient client,
                               RepositoryFactory repositoryFactory,
-                              DpsReportConnector dpsReportConnector)
+                              DpsReportConnector dpsReportConnector,
+                              QuickChartConnector quickChartConnector)
         : base(localizationService)
     {
         _client = client;
         _repositoryFactory = repositoryFactory;
         _dpsReportConnector = dpsReportConnector;
+        _quickChartConnector = quickChartConnector;
     }
 
     #endregion // Constructor
@@ -257,6 +268,163 @@ public class LogCommandHandler : LocatedServiceBase
 
                 await context.SendMessageAsync(embed: builder.Build())
                              .ConfigureAwait(false);
+            }
+            else
+            {
+                await context.ReplyAsync(LocalizationGroup.GetText("NoDpsReportUploads", "No DPS-Reports found!"))
+                             .ConfigureAwait(false);
+            }
+        }
+        else
+        {
+            await context.ReplyAsync(LocalizationGroup.GetText("NoDpsReportToken", "The are no DPS-Report user tokens assigned to your account."))
+                         .ConfigureAwait(false);
+        }
+    }
+
+    /// <summary>
+    /// Posts the last <paramref name="count"/> of <paramref name="group"/> tries as a chart
+    /// </summary>
+    /// <param name="context">Command context</param>
+    /// <param name="group">Group to search for</param>
+    /// <param name="count">Max count logs to search</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task PostChart(IContextContainer context, DpsReportGroup group, int count)
+    {
+        var account = _repositoryFactory.GetRepository<DiscordAccountRepository>()
+                                .GetQuery()
+                                .Where(obj => obj.Id == context.User.Id)
+                                .Select(obj => new
+                                               {
+                                                   obj.User.GuildWarsAccounts.FirstOrDefault().Name,
+                                                   obj.User.DpsReportUserToken
+                                               })
+                                .FirstOrDefault();
+
+        if (string.IsNullOrEmpty(account?.DpsReportUserToken) == false)
+        {
+            var counts = new Dictionary<string, int>();
+
+            var uploads = await _dpsReportConnector.GetUploads(upload =>
+                                                               {
+                                                                   if (upload.Encounter.Success
+                                                                    && _dpsReportConnector.GetReportGroup(upload.Encounter.BossId) == group)
+                                                                   {
+                                                                       if (counts.TryGetValue(upload.FightName, out var fightCount))
+                                                                       {
+                                                                           if (fightCount < count)
+                                                                           {
+                                                                               ++counts[upload.FightName];
+                                                                               return true;
+                                                                           }
+
+                                                                           return false;
+                                                                       }
+
+                                                                       counts.Add(upload.FightName, 1);
+
+                                                                       return true;
+                                                                   }
+
+                                                                   return false;
+                                                               },
+                                                               upload => counts.Count > 0
+                                                                      && counts.All(obj => obj.Value == count),
+                                                               account.DpsReportUserToken)
+                                                   .ConfigureAwait(false);
+
+            if (uploads.Count > 0)
+            {
+                foreach (var bossGroup in uploads.GroupBy(obj => obj.FightName))
+                {
+                    var builder = new EmbedBuilder().WithAuthor($"{context.User.Username} - {account.Name}", context.User.GetAvatarUrl())
+                                                    .WithTitle(bossGroup.First().FightName)
+                                                    .WithColor(Color.Green)
+                                                    .WithImageUrl("attachment://chart.png");
+
+                    var chartConfiguration = new ChartConfigurationData
+                                             {
+                                                 Type = "line",
+                                                 Data = new Data.Json.QuickChart.Data
+                                                        {
+                                                            DataSets = new List<DataSet>
+                                                                       {
+                                                                           new DataSet<int>
+                                                                           {
+                                                                               BackgroundColor = new List<string>
+                                                                                                 {
+                                                                                                     "#316ed5"
+                                                                                                 },
+                                                                               BorderColor = "#274d85",
+                                                                               Data = bossGroup.OrderBy(obj => obj.EncounterTime)
+                                                                                               .Select(obj => obj.Encounter.CompDps)
+                                                                                               .ToList()
+                                                                           }
+                                                                       },
+                                                            Labels = bossGroup.OrderBy(obj => obj.EncounterTime)
+                                                                              .Select(obj => obj.EncounterTime.ToString("d"))
+                                                                              .ToList()
+                                                        },
+                                                 Options = new OptionsCollection
+                                                           {
+                                                               Title = new TitleConfiguration
+                                                                       {
+                                                                           Display = true,
+                                                                           FontColor = "white",
+                                                                           FontSize = 18,
+                                                                           Text = LocalizationGroup.GetText("GroupDPS", "Group DPS")
+                                                                       },
+                                                               Scales = new ScalesCollection
+                                                               {
+                                                                   XAxes = new List<XAxis>
+                                                                           {
+                                                                               new()
+                                                                               {
+                                                                                   Ticks = new AxisTicks
+                                                                                           {
+                                                                                               FontColor = "#b3b3b3"
+                                                                                           }
+                                                                               }
+                                                                           },
+                                                                   YAxes = new List<YAxis>
+                                                                           {
+                                                                               new()
+                                                                               {
+                                                                                   Ticks = new AxisTicks
+                                                                                           {
+                                                                                               FontColor = "#b3b3b3"
+                                                                                           }
+                                                                               }
+                                                                           }
+                                                               },
+                                                               Plugins = new PluginsCollection
+                                                               {
+                                                                   Legend = false
+                                                               }
+                                                           }
+                                             };
+
+                    var chartStream = await _quickChartConnector.GetChartAsStream(new ChartData
+                                                                                  {
+                                                                                      Width = 500,
+                                                                                      Height = 300,
+                                                                                      DevicePixelRatio = 1,
+                                                                                      BackgroundColor = "#262626",
+                                                                                      Format = "png",
+                                                                                      Config = JsonConvert.SerializeObject(chartConfiguration,
+                                                                                                                           new JsonSerializerSettings
+                                                                                                                           {
+                                                                                                                               NullValueHandling = NullValueHandling.Ignore
+                                                                                                                           })
+                                                                                  })
+                                                                .ConfigureAwait(false);
+
+                    await using (chartStream.ConfigureAwait(false))
+                    {
+                        await context.SendMessageAsync(embed: builder.Build(), attachments: new[] { new FileAttachment(chartStream, "chart.png") })
+                                     .ConfigureAwait(false);
+                    }
+                }
             }
             else
             {

@@ -679,7 +679,8 @@
             "DpsReportEncounterStat": "{0} Gefechte",
             "DpsReportFightDurationStat": "{0} in {1} Kämpfen",
             "NoDpsReportUploads": "Keine DPS-Reports gefunden!",
-            "NoDpsReportToken": "Deinem Account sind keine DPS-Report-User-Tokens zugeordnet."
+            "NoDpsReportToken": "Deinem Account sind keine DPS-Report-User-Tokens zugeordnet.",
+            "GroupDPS": "Gruppen DPS" 
         },
         "LocatedTextCommandModuleBase": {
             "SlashCommandMigrationHint":

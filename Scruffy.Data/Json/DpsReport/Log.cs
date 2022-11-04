@@ -10,6 +10,12 @@ namespace Scruffy.Data.Json.DpsReport;
 public class Log
 {
     /// <summary>
+    /// Fight name
+    /// </summary>
+    [JsonProperty("fightName")]
+    public string FightName { get; set; }
+
+    /// <summary>
     /// GW2 build
     /// </summary>
     [JsonProperty("gW2Build")]

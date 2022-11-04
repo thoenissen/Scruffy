@@ -82,10 +82,15 @@ public class DpsReportConnector
                 {
                     foreach (var upload in page.Uploads)
                     {
+                        var isRefreshed = false;
+
                         // HACK Sometimes the encounter data is not provider by dps.report
-                        if (upload.Encounter.UniqueId == null && upload.Encounter.JsonAvailable)
+                        if (upload.Encounter.UniqueId == null
+                         && upload.Encounter.JsonAvailable)
                         {
                             await RefreshEncounterData(upload).ConfigureAwait(false);
+
+                            isRefreshed = true;
                         }
 
                         if (shouldAbort(upload))
@@ -94,8 +99,17 @@ public class DpsReportConnector
                             break;
                         }
 
-                        if ((upload.Encounter.Success || upload.Encounter.Duration.TotalSeconds > 30) && filter(upload))
+                        if ((upload.Encounter.Success
+                          || upload.Encounter.Duration.TotalSeconds > 30)
+                         && filter(upload))
                         {
+                            // HACK We need to get the fight name to differentiate the different Ai phases.
+                            if (isRefreshed == false
+                            && upload.Encounter.BossId == 23254)
+                            {
+                                await RefreshEncounterData(upload).ConfigureAwait(false);
+                            }
+
                             uploads.Add(upload);
                         }
                     }
@@ -121,6 +135,7 @@ public class DpsReportConnector
         upload.Encounter.Success = log.Success;
         upload.Encounter.Duration = log.Duration;
         upload.Encounter.IsChallengeMode = log.IsCM;
+        upload.FightName = log.FightName;
     }
 
     /// <summary>

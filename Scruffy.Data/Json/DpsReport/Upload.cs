@@ -8,6 +8,17 @@ namespace Scruffy.Data.Json.DpsReport;
 /// </summary>
 public class Upload
 {
+    #region Fields
+
+    /// <summary>
+    /// Fight name
+    /// </summary>
+    private string _fightName;
+
+    #endregion // Fields
+
+    #region Properties
+
     /// <summary>
     /// Id
     /// </summary>
@@ -65,9 +76,22 @@ public class Upload
     public Report Report { get; set; }
 
     /// <summary>
+    /// Fight name
+    /// </summary>
+    public string FightName
+    {
+        get => _fightName ?? Encounter?.Boss;
+        set => _fightName = value;
+    }
+
+    /// <summary>
     /// HashSet of all player's unique names
     /// </summary>
     public HashSet<string> Group => Players.Select(obj => obj.Value.DisplayName).Distinct().ToHashSet();
+
+    #endregion // Properties
+
+    #region Object
 
     /// <inheritdoc/>
     public override bool Equals(object otherObj)
@@ -78,8 +102,8 @@ public class Upload
             {
                 // Voice & Claw + Statues of Darkness special treatment
                 if (Encounter.BossId == other.Encounter.BossId
-                    || (Math.Min(Encounter.BossId, other.Encounter.BossId) == 22343 && Math.Max(Encounter.BossId, other.Encounter.BossId) == 22481)
-                    || (Math.Min(Encounter.BossId, other.Encounter.BossId) == 19651 && Math.Max(Encounter.BossId, other.Encounter.BossId) == 19844))
+                 || (Math.Min(Encounter.BossId, other.Encounter.BossId) == 22343 && Math.Max(Encounter.BossId, other.Encounter.BossId) == 22481)
+                 || (Math.Min(Encounter.BossId, other.Encounter.BossId) == 19651 && Math.Max(Encounter.BossId, other.Encounter.BossId) == 19844))
                 {
                     var group = Group;
                     group.ExceptWith(other.Group);
@@ -96,4 +120,6 @@ public class Upload
     {
         return Encounter.BossId.GetHashCode();
     }
+
+    #endregion // Object
 }

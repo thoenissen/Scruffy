@@ -72,6 +72,22 @@ public class LogSlashCommandModule : SlashCommandModuleBase
     }
 
     /// <summary>
+    /// History of last <paramref name="count"/> of <paramref name="type"/> tries
+    /// </summary>
+    /// <param name="type">Type to get the logs for</param>
+    /// <param name="count">Max count logs to search</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [SlashCommand("chart", "Post a chart showing the last (count) of successful tries of (type)")]
+    public async Task LogChart(DpsReportGroup type, int count = 10)
+    {
+        await Context.DeferAsync()
+                     .ConfigureAwait(false);
+
+        await CommandHandler.PostChart(Context, type, count)
+                            .ConfigureAwait(false);
+    }
+
+    /// <summary>
     /// Exporting urls of all logs since the given date
     /// </summary>
     /// <param name="since">Since day</param>
