@@ -362,7 +362,7 @@ public class LogCommandHandler : LocatedServiceBase
                                                                            }
                                                                        },
                                                             Labels = bossGroup.OrderBy(obj => obj.EncounterTime)
-                                                                              .Select(obj => obj.EncounterTime.ToString("d"))
+                                                                              .Select(obj => obj.EncounterTime.ToString("d", LocalizationGroup.CultureInfo))
                                                                               .ToList()
                                                         },
                                                  Options = new OptionsCollection
