@@ -20,6 +20,9 @@ jobs:
         
     - name: Build ServiceHosts Discord
       run: docker build . --file ./Scruffy.ServiceHosts.Discord/Dockerfile --tag thoenissen/scruffy.servicehosts.discord:latest
+
+    - name: Build ServiceHosts DpsReportAnalyzer
+      run: docker build . --file ./Scruffy.ServiceHosts.DpsReportAnalyzer/Dockerfile --tag thoenissen/scruffy.servicehosts.dpsreportanalyzer:latest
       
     - name: Build ServiceHosts IdentityServer
       run: docker build . --file ./Scruffy.ServiceHosts.IdentityServer/Dockerfile --tag thoenissen/scruffy.servicehosts.identityserver:latest
@@ -32,6 +35,9 @@ jobs:
 
     - name: Push ServiceHosts Discord
       run: docker push thoenissen/scruffy.servicehosts.discord
+
+    - name: Push ServiceHosts DpsReportAnalyzer
+      run: docker push thoenissen/scruffy.servicehosts.dpsreportanalyzer
       
     - name: Push ServiceHosts IdentityServer
       run: docker push thoenissen/scruffy.servicehosts.identityserver
