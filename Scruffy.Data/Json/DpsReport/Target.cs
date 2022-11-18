@@ -44,9 +44,9 @@ public class Target
     public bool EnemyPlayer { get; set; }
 
     /// <summary>
-    /// Array of double[2] that represents the breakbar percent of the actor \n
-    /// Value[i][0] will be the time, value[i][1] will be breakbar % \n
-    /// If i corresponds to the last element that means the breakbar did not change for the remainder of the fight \n
+    /// Array of double[2] that represents the breakbar percent of the actor
+    /// Value[i][0] will be the time, value[i][1] will be breakbar %
+    /// If i corresponds to the last element that means the breakbar did not change for the remainder of the fight
     /// </summary>
     [JsonProperty("breakbarPercents")]
     public IReadOnlyList<IReadOnlyList<double>> BreakbarPercents { get; set; }

@@ -5,7 +5,7 @@ namespace Scruffy.Services.Core.JobScheduler;
 /// <summary>
 /// <see cref="IServiceScope"/> support
 /// </summary>
-internal interface IServiceScopeSupport
+public interface IServiceScopeSupport
 {
     /// <summary>
     /// Set the current scope
