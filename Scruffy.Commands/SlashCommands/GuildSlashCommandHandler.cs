@@ -64,18 +64,6 @@ public class GuildSlashCommandHandler : SlashCommandModuleBase
     }
 
     /// <summary>
-    /// Posting of random guild emblems
-    /// </summary>
-    /// <param name="count">Count</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    [SlashCommand("random-emblem", "Posting of random guild emblems")]
-    public Task RandomEmblems([Summary("Count", "Count of emblems")]
-                              [MinValue(1)]
-                              [MaxValue(10)]
-                              int count)
-        => CommandHandler.RandomEmblems(Context, count);
-
-    /// <summary>
     /// Personal ranking data
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>

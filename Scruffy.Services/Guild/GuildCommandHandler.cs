@@ -28,11 +28,6 @@ public class GuildCommandHandler : LocatedServiceBase
     private readonly GuildBankService _bankService;
 
     /// <summary>
-    /// Guild emblem service
-    /// </summary>
-    private readonly GuildEmblemService _emblemService;
-
-    /// <summary>
     /// Guild ranking visualization service
     /// </summary>
     private readonly GuildRankVisualizationService _rankVisualizationService;
@@ -96,7 +91,6 @@ public class GuildCommandHandler : LocatedServiceBase
     /// </summary>
     /// <param name="localizationService">Localization service</param>
     /// <param name="bankService">Guild bank service</param>
-    /// <param name="emblemService">Guild emblem service</param>
     /// <param name="rankVisualizationService">Guild ranking visualization service</param>
     /// <param name="configurationService">Guild configuration service</param>
     /// <param name="specialRankService">Special rank service</param>
@@ -110,7 +104,6 @@ public class GuildCommandHandler : LocatedServiceBase
     /// <param name="guildUserService">Guild user service</param>
     public GuildCommandHandler(LocalizationService localizationService,
                                GuildBankService bankService,
-                               GuildEmblemService emblemService,
                                GuildRankVisualizationService rankVisualizationService,
                                GuildConfigurationService configurationService,
                                GuildSpecialRankService specialRankService,
@@ -125,7 +118,6 @@ public class GuildCommandHandler : LocatedServiceBase
         : base(localizationService)
     {
         _bankService = bankService;
-        _emblemService = emblemService;
         _rankVisualizationService = rankVisualizationService;
         _configurationService = configurationService;
         _specialRankService = specialRankService;
@@ -156,14 +148,6 @@ public class GuildCommandHandler : LocatedServiceBase
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task GuildBankUnlocksDyes(InteractionContextContainer context) => _bankService.CheckUnlocksDyes(context);
-
-    /// <summary>
-    /// Check of all dyes which are stored in the guild bank are unlocked
-    /// </summary>
-    /// <param name="context">Command context</param>
-    /// <param name="count">Count</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task RandomEmblems(InteractionContextContainer context, int count) => _emblemService.PostRandomGuildEmblems(context, count);
 
     /// <summary>
     /// Post a guild ranking overview
