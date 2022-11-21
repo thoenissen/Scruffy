@@ -165,6 +165,33 @@ public class GuildUserConfigurationService : LocatedServiceBase
                                                                    obj.IsInactive = userConfiguration.IsInactive;
                                                                    obj.IsFixedRank = userConfiguration.IsFixedRank;
                                                                });
+
+                if (continueEdit
+                 && userConfiguration.IsInactive)
+                {
+                    var ranks = _repositoryFactory.GetRepository<GuildRankRepository>()
+                                                  .GetQuery()
+                                                  .OrderByDescending(obj => obj.Order)
+                                                  .Select(obj => obj.Id)
+                                                  .Take(2)
+                                                  .ToList();
+
+                    if (ranks.Count == 2)
+                    {
+                        var inactiveRankId = ranks[0];
+                        var lastRankId = ranks[1];
+
+                        _repositoryFactory.GetRepository<GuildRankAssignmentRepository>()
+                                          .Refresh(obj => obj.UserId == userConfiguration.UserId
+                                                          && obj.GuildId == userConfiguration.GuildId
+                                                          && obj.RankId == inactiveRankId,
+                                                   obj =>
+                                                   {
+                                                       obj.RankId = lastRankId;
+                                                       obj.TimeStamp = DateTime.Now;
+                                                   });
+                    }
+                }
             }
             catch (ScruffyTimeoutException)
             {
