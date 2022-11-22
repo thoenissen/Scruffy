@@ -295,7 +295,7 @@ public class LoggingService
                                           logEntry.AdditionalInformation,
                                           Environment = _environment,
                                           Application = Assembly.GetEntryAssembly()?.GetName().Name ?? "Unknown Application",
-                                          Exception = ex,
+                                          Exception = ex?.ToString(),
                                           Custom = customData
                                       };
 

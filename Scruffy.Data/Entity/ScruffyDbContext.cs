@@ -78,7 +78,8 @@ public class ScruffyDbContext : IdentityDbContext<UserEntity, RoleEntity, long, 
                                               MultipleActiveResultSets = false,
                                               IntegratedSecurity = false,
                                               UserID = Environment.GetEnvironmentVariable("SCRUFFY_DB_USER"),
-                                              Password = Environment.GetEnvironmentVariable("SCRUFFY_DB_PASSWORD")
+                                              Password = Environment.GetEnvironmentVariable("SCRUFFY_DB_PASSWORD"),
+                                              TrustServerCertificate = true
                                           };
             _connectionString = connectionStringBuilder.ConnectionString;
         }
