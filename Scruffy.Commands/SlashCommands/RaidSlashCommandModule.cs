@@ -30,6 +30,11 @@ public class RaidSlashCommandModule : SlashCommandModuleBase
     /// </summary>
     public LogCommandHandler LogCommandHandler { get; set; }
 
+    /// <summary>
+    /// Command handler
+    /// </summary>
+    public GuildWars2CommandHandler GuildWars2CommandHandler { get; set; }
+
     #endregion // Properties
 
     #region Commands
@@ -81,7 +86,7 @@ public class RaidSlashCommandModule : SlashCommandModuleBase
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("guides", "Show raid guides")]
-    public Task Guides() => CommandHandler.Guides(Context);
+    public Task Guides() => GuildWars2CommandHandler.PostRaidGuides(Context);
 
     /// <summary>
     /// Configure your prepared raid roles
