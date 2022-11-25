@@ -111,7 +111,10 @@ public class GuildRankingNotificationService : SingletonLocatedServiceBase
                             }
                         }
 
-                        lastLogId = logs.Max(obj => obj.Id);
+                        if (logs.Count> 0)
+                        {
+                            lastLogId = logs.Max(obj => obj.Id);
+                        }
                     }
                 }
                 catch (Exception ex)

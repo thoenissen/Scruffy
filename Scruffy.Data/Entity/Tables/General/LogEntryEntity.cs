@@ -58,5 +58,10 @@ public class LogEntryEntity
     /// </summary>
     public string AdditionalInformation { get; set; }
 
+    /// <summary>
+    /// Exception
+    /// </summary>
+    public string Exception { get; set; }
+
     #endregion // Properties
 }
