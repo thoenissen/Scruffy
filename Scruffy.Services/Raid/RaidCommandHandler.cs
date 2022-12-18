@@ -226,7 +226,8 @@ public class RaidCommandHandler : LocatedServiceBase
                                                .GetQuery()
                                                .Select(obj => obj);
 
-            if (dbFactory.GetRepository<RaidUserRoleRepository>()
+            if (true // TODO Implementation of line up configuration
+             || dbFactory.GetRepository<RaidUserRoleRepository>()
                          .GetQuery()
                          .Any(obj => discordAccountQuery.Any(obj2 => obj2.UserId == obj.UserId
                                                                   && obj2.Id == container.User.Id)))
@@ -297,7 +298,8 @@ public class RaidCommandHandler : LocatedServiceBase
                                                .GetQuery()
                                                .Select(obj => obj);
 
-            if (dbFactory.GetRepository<RaidUserRoleRepository>()
+            if (true // TODO Implementation of line up configuration
+             || dbFactory.GetRepository<RaidUserRoleRepository>()
                          .GetQuery()
                          .Any(obj => discordAccountQuery.Any(obj2 => obj2.UserId == obj.UserId
                                                                   && obj2.Id == container.User.Id)))
