@@ -160,6 +160,10 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                       .GetQuery()
                                       .Select(obj => obj);
 
+        var userConfiguration = _dbFactory.GetRepository<GuildUserConfigurationRepository>()
+                                          .GetQuery()
+                                          .Select(obj => obj);
+
         var userPoints = _dbFactory.GetRepository<GuildRankCurrentPointsRepository>()
                                    .GetQuery()
                                    .Where(obj => obj.Date >= limit
@@ -168,7 +172,10 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                               && obj.UserId == user.Id
                                               && accountsQuery.Any(obj2 => obj2.UserId == obj.UserId
                                                                         && guildMemberQuery.Any(obj3 => obj3.Name == obj2.Name
-                                                                                                     && obj3.GuildId == obj.GuildId)))
+                                                                                                     && obj3.GuildId == obj.GuildId))
+                                              && userConfiguration.Any(obj2 => obj2.UserId == obj.UserId
+                                                                            && obj2.GuildId == obj.GuildId
+                                                                            && obj2.IsInactive) == false)
                                    .GroupBy(obj => obj.Type)
                                    .Select(obj => new GuildRankUserPointsData
                                                   {
@@ -352,6 +359,10 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                       .GetQuery()
                                       .Select(obj => obj);
 
+        var userConfiguration = _dbFactory.GetRepository<GuildUserConfigurationRepository>()
+                                          .GetQuery()
+                                          .Select(obj => obj);
+
         var userPoints = _dbFactory.GetRepository<GuildRankCurrentPointsRepository>()
                                    .GetQuery()
                                    .Where(obj => obj.Date >= limit
@@ -360,7 +371,10 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                               && obj.UserId == user.Id
                                               && accountsQuery.Any(obj2 => obj2.UserId == obj.UserId
                                                                         && guildMemberQuery.Any(obj3 => obj3.Name == obj2.Name
-                                                                                                     && obj3.GuildId == obj.GuildId)))
+                                                                                                     && obj3.GuildId == obj.GuildId))
+                                              && userConfiguration.Any(obj2 => obj2.UserId == obj.UserId
+                                                                            && obj2.GuildId == obj.GuildId
+                                                                            && obj2.IsInactive) == false)
                                    .GroupBy(obj => obj.Type)
                                    .Select(obj => new GuildRankUserPointsData
                                                   {
@@ -379,7 +393,10 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                                      && obj.UserId == compareUser.Id
                                                      && accountsQuery.Any(obj2 => obj2.UserId == obj.UserId
                                                                                && guildMemberQuery.Any(obj3 => obj3.Name == obj2.Name
-                                                                                                            && obj3.GuildId == obj.GuildId)))
+                                                                                                            && obj3.GuildId == obj.GuildId))
+                                                     && userConfiguration.Any(obj2 => obj2.UserId == obj.UserId
+                                                                                   && obj2.GuildId == obj.GuildId
+                                                                                   && obj2.IsInactive) == false)
                                           .GroupBy(obj => obj.Type)
                                           .Select(obj => new GuildRankUserPointsData
                                                          {
@@ -391,7 +408,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                           .ToList();
 
         if (userPoints.Count > 0
-         || compareUserPoints.Count > 0)
+         && compareUserPoints.Count > 0)
         {
             foreach (var entry in userPoints.Where(obj1 => compareUserPoints.Any(obj2 => obj2.Type == obj1.Type) == false))
             {
@@ -534,13 +551,20 @@ public class GuildRankVisualizationService : LocatedServiceBase
         var from = DateTime.Today.AddDays(-63);
         var to = DateTime.Today.AddDays(-1);
 
+        var userConfiguration = _dbFactory.GetRepository<GuildUserConfigurationRepository>()
+                                          .GetQuery()
+                                          .Select(obj => obj);
+
         var currentPoints = _dbFactory.GetRepository<GuildRankCurrentPointsRepository>()
                                           .GetQuery()
                                           .Where(obj => obj.UserId == user.Id
                                                      && obj.Date >= from
                                                      && obj.Date <= to
                                                      && obj.Points != 0
-                                                     && obj.Guild.DiscordServerId == context.Guild.Id)
+                                                     && obj.Guild.DiscordServerId == context.Guild.Id
+                                                     && userConfiguration.Any(obj2 => obj2.UserId == obj.UserId
+                                                                                   && obj2.GuildId == obj.GuildId
+                                                                                   && obj2.IsInactive) == false)
                                           .Select(obj => new
                                                          {
                                                              obj.Date,
@@ -717,6 +741,10 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                                 .GetQuery()
                                                 .Select(obj => obj);
 
+                var userConfiguration = _dbFactory.GetRepository<GuildUserConfigurationRepository>()
+                                                  .GetQuery()
+                                                  .Select(obj => obj);
+
                 var users = await _dbFactory.GetRepository<GuildRankCurrentPointsRepository>()
                                             .GetQuery()
                                             .Where(obj => obj.Date >= limit
@@ -725,7 +753,10 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                                        && obj.Guild.DiscordServerId == discordServerId
                                                        && accountsQuery.Any(obj2 => obj2.UserId == obj.UserId
                                                                                  && guildMemberQuery.Any(obj3 => obj3.Name == obj2.Name
-                                                                                                              && obj3.GuildId == obj.GuildId)))
+                                                                                                              && obj3.GuildId == obj.GuildId))
+                                                       && userConfiguration.Any(obj2 => obj2.UserId == obj.UserId
+                                                                                     && obj2.GuildId == obj.GuildId
+                                                                                     && obj2.IsInactive) == false)
                                             .GroupBy(obj => obj.UserId)
                                             .Select(obj => new OverviewUserPointsData
                                                            {
