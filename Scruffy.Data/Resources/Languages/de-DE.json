@@ -9,6 +9,7 @@
             "ListOfInvalidAccountsPermissions":
                 "Die folgenden Accounts sind ungültig oder haben nicht ausreichende Berechtigungen:",
             "ListOfInvalidAccountsNewNames": "Die folgenden Accounts wurden umbenannt:",
+            "ListOfUnknownErrors": "Die folgenden Accounts konnten nicht geprüft werden:",
             "NoAccountExisting": "Du hast noch keine hinterlegten Accounts.",
             "NoAccounts": "Du hast aktuell keine konfigurierten Acccounts.",
             "NoInvalidAccounts": "Es konnten keine ungültigen Accounts gefunden werden",

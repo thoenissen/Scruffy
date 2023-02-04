@@ -31,6 +31,11 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
                                             IDisposable
 {
     /// <summary>
+    /// Maximum count of retries cause of network errors
+    /// </summary>
+    private const int MaximumRetryCount = 3;
+
+    /// <summary>
     /// Lock
     /// </summary>
     private static object _lock = new();
@@ -795,45 +800,63 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <returns>The created request</returns>
     private async Task<HttpResponseMessage> CreateRequest(string uri)
     {
-        var message = new HttpRequestMessage(HttpMethod.Get, uri);
+        HttpResponseMessage response = null;
 
-        if (_apiKey != null)
+        var retryCounter = 0;
+
+        while (retryCounter++ < MaximumRetryCount)
         {
-            message.Headers.Add("Authorization", "Bearer " + _apiKey);
-        }
+            var message = new HttpRequestMessage(HttpMethod.Get, uri);
 
-        var response = await HttpClient.SendAsync(message)
+            if (_apiKey != null)
+            {
+                message.Headers.Add("Authorization", "Bearer " + _apiKey);
+            }
+
+            response = await HttpClient.SendAsync(message)
                                        .ConfigureAwait(false);
 
-        if (response.IsSuccessStatusCode == false)
-        {
-            string content = null;
-
-            try
+            if (response.IsSuccessStatusCode == false)
             {
-                content = await response.Content
-                                        .ReadAsStringAsync()
-                                        .ConfigureAwait(false);
-            }
-            catch
-            {
+                string content = null;
+
+                try
+                {
+                    content = await response.Content
+                                            .ReadAsStringAsync()
+                                            .ConfigureAwait(false);
+                }
+                catch
+                {
+                }
+
+                LoggingService.AddServiceLogEntry(LogEntryLevel.Warning,
+                                                  nameof(GuildWars2ApiConnector),
+                                                  "Unsuccessful Request",
+                                                  null,
+                                                  new
+                                                  {
+                                                      Url = uri,
+                                                      ApiKey = _apiKey,
+                                                      response.StatusCode,
+                                                      response.ReasonPhrase,
+                                                      Content = content
+                                                  });
             }
 
-            LoggingService.AddServiceLogEntry(LogEntryLevel.Warning,
-                                              nameof(GuildWars2ApiConnector),
-                                              "Unsuccessful Request",
-                                              null,
-                                              new
-                                              {
-                                                  Url = uri,
-                                                  ApiKey = _apiKey,
-                                                  response.StatusCode,
-                                                  response.ReasonPhrase,
-                                                  Content = content
-                                              });
+            if (response.StatusCode is HttpStatusCode.GatewayTimeout
+                                    or HttpStatusCode.BadGateway)
+            {
+                await Task.Delay(2000)
+                          .ConfigureAwait(false);
+            }
+            else
+            {
+                break;
+            }
         }
 
-        response.EnsureSuccessStatusCode();
+        response?.EnsureSuccessStatusCode();
 
         return response;
     }

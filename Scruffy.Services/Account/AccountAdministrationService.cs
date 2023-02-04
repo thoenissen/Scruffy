@@ -48,6 +48,7 @@ public class AccountAdministrationService : LocatedServiceBase
         {
             var invalidPermissions = new List<(string Name, GuildWars2ApiPermission Permissions)>();
             var invalidNames = new List<(string Name, string NewName)>();
+            var unknownError = new List<(string Name, string Exception)>();
 
             var accounts = dbFactory.GetRepository<GuildWarsAccountRepository>()
                                     .GetQuery()
@@ -89,11 +90,16 @@ public class AccountAdministrationService : LocatedServiceBase
                     {
                         invalidPermissions.Add((account.Name, GuildWars2ApiPermission.None));
                     }
+                    catch (Exception ex)
+                    {
+                        unknownError.Add((account.Name, ex.Message));
+                    }
                 }
             }
 
             if (invalidPermissions.Count > 0
-             || invalidNames.Count > 0)
+             || invalidNames.Count > 0
+             || unknownError.Count > 0)
             {
                 if (invalidPermissions.Count > 0)
                 {
@@ -130,6 +136,26 @@ public class AccountAdministrationService : LocatedServiceBase
                         sb.Append(name);
                         sb.Append(" -> ");
                         sb.Append(newName);
+                    }
+
+                    sb.Append("```");
+
+                    await context.SendMessageAsync(sb.ToString())
+                                 .ConfigureAwait(false);
+                }
+
+                if (unknownError.Count > 0)
+                {
+                    var sb = new StringBuilder();
+                    sb.AppendLine(LocalizationGroup.GetText("ListOfUnknownErrors", "The following accounts could be checked"));
+                    sb.Append("```");
+
+                    foreach (var (name, exception) in unknownError)
+                    {
+                        sb.Append(name);
+                        sb.Append(" (");
+                        sb.Append(exception);
+                        sb.Append(")");
                     }
 
                     sb.Append("```");
