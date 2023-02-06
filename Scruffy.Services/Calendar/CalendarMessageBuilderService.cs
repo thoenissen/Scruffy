@@ -289,10 +289,15 @@ public class CalendarMessageBuilderService : LocatedServiceBase
 
                     if (message is IUserMessage userMessage)
                     {
+                        var componentsBuilder = new ComponentBuilder();
+
+                        componentsBuilder.WithButton(LocalizationGroup.GetText("ButtonAppointmentLead", "Leading"), "calendar;lead;configuration;");
+
                         await userMessage.ModifyAsync(obj =>
                                                       {
                                                           obj.Content = string.Empty;
                                                           obj.Embed = builder.Build();
+                                                          obj.Components = componentsBuilder.Build();
                                                       })
                                          .ConfigureAwait(false);
                     }

@@ -152,6 +152,23 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
         }
     }
 
+    /// <summary>
+    /// Delete original response
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public async Task DeleteOriginalResponse()
+    {
+        try
+        {
+            await _interaction.DeleteOriginalResponseAsync()
+                              .ConfigureAwait(false);
+        }
+        catch (TimeoutException)
+        {
+            throw new ScruffyAbortedException();
+        }
+    }
+
     #endregion // Methods
 
     #region IContextContainer

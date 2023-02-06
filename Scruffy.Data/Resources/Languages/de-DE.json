@@ -113,11 +113,15 @@
             "ChooseTitle": "Terminauswahl",
             "Field": "Teilnehmer"
         },
+        "CalendarCommandHandler": {
+           "LeadAppointmentSelection": "Wähle alle Termine aus, an denen du die Leitung übernehmen möchtest:" 
+        }, 
         "CalendarMessageBuilderService": {
             "Motd": "Nachricht des Tages:",
             "MotdFormat": "{0} - {1}, {2:dd.MM.} um {2:HH:mm} Uhr",
             "WeekNumber": "KW",
-            "Appointments": "Veranstaltungen"
+            "Appointments": "Veranstaltungen",
+            "ButtonAppointmentLead": "Terminleitung" 
         },
         "CalendarOneTimeDayDialogElement": {
             "Message": "Gbt bitte den Tag ein. (yyyy-MM-dd)"

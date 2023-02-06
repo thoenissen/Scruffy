@@ -41,9 +41,9 @@ public sealed class JobScheduler : SingletonLocatedServiceBase,
 #endif
     }
 
-#endregion // Methods
+    #endregion // Methods
 
-#region SingletonLocatedServiceBase
+    #region SingletonLocatedServiceBase
 
     /// <summary>
     /// Initialize
@@ -62,9 +62,9 @@ public sealed class JobScheduler : SingletonLocatedServiceBase,
         JobManager.Initialize();
     }
 
-#endregion // SingletonLocatedServiceBase
+    #endregion // SingletonLocatedServiceBase
 
-#region IJobFactory
+    #region IJobFactory
 
     /// <summary>
     /// Instantiate a job of the given type.
@@ -85,9 +85,9 @@ public sealed class JobScheduler : SingletonLocatedServiceBase,
         return job;
     }
 
-#endregion //IJobFactory
+    #endregion //IJobFactory
 
-#region IAsyncDisposable
+    #region IAsyncDisposable
 
     /// <summary>
     /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously.
@@ -98,5 +98,5 @@ public sealed class JobScheduler : SingletonLocatedServiceBase,
         await Task.Run(JobManager.StopAndBlock).ConfigureAwait(false);
     }
 
-#endregion // IAsyncDisposable
+    #endregion // IAsyncDisposable
 }
