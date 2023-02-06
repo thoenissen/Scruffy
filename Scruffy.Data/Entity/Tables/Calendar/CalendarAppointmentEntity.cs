@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
+using Scruffy.Data.Entity.Tables.CoreData;
+
 namespace Scruffy.Data.Entity.Tables.Calendar;
 
 /// <summary>
@@ -46,6 +48,11 @@ public class CalendarAppointmentEntity
     /// </summary>
     public ulong? DiscordEventId { get; set; }
 
+    /// <summary>
+    /// Id of the leader
+    /// </summary>
+    public long? LeaderId { get; set; }
+
     #region Navigation properties
 
     /// <summary>
@@ -59,6 +66,12 @@ public class CalendarAppointmentEntity
     /// </summary>
     [ForeignKey(nameof(CalendarAppointmentScheduleId))]
     public virtual CalendarAppointmentScheduleEntity CalendarAppointmentSchedule { get; set; }
+
+    /// <summary>
+    /// Leader
+    /// </summary>
+    [ForeignKey(nameof(LeaderId))]
+    public virtual UserEntity Leader { get; set; }
 
     /// <summary>
     /// Participants
