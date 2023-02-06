@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Calendar;
+using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Entity.Repositories.Guild;
 using Scruffy.Data.Enumerations.Guild;
 using Scruffy.Data.Json.Calendar;
@@ -151,6 +152,10 @@ public class CalendarMessageBuilderService : LocatedServiceBase
                                     .GetQuery()
                                     .Select(obj => obj);
 
+            var discordAccounts = dbFactory.GetRepository<DiscordAccountRepository>()
+                                           .GetQuery()
+                                           .Select(obj => obj);
+
             foreach (var calendar in dbFactory.GetRepository<GuildRepository>()
                                               .GetQuery()
                                               .Where(obj => serverId == null || obj.DiscordServerId == serverId)
@@ -171,7 +176,10 @@ public class CalendarMessageBuilderService : LocatedServiceBase
                                                                                                             {
                                                                                                                 obj2.TimeStamp,
                                                                                                                 obj2.CalendarAppointmentTemplate.Description,
-                                                                                                                obj2.DiscordEventId
+                                                                                                                obj2.DiscordEventId,
+                                                                                                                LeaderId = discordAccounts.Where(obj3 => obj3.UserId == obj2.LeaderId)
+                                                                                                                                          .Select(obj3 => (ulong?)obj3.Id)
+                                                                                                                                          .FirstOrDefault()
                                                                                                             })
                                                                                             .OrderBy(obj2 => obj2.TimeStamp)
                                                                                             .ToList(),
@@ -214,6 +222,11 @@ public class CalendarMessageBuilderService : LocatedServiceBase
                     foreach (var appointment in calendar.Appointments)
                     {
                         var currentLine = $@"`({LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(appointment.TimeStamp.DayOfWeek)[..2]}) {appointment.TimeStamp.ToString("g", LocalizationGroup.CultureInfo)}` {(appointment.DiscordEventId == null ? appointment.Description : Format.Url(appointment.Description, $"https://discord.com/events/{calendar.DiscordServerId}/{appointment.DiscordEventId}"))}";
+
+                        if (appointment.LeaderId != null)
+                        {
+                            currentLine += $" ({_discordClient.GetUser(appointment.LeaderId.Value).Mention})";
+                        }
 
                         if (currentMonth != appointment.TimeStamp.Month
                          || currentWeekOfYear != appointment.TimeStamp.GetIso8601WeekOfYear()
@@ -276,7 +289,11 @@ public class CalendarMessageBuilderService : LocatedServiceBase
 
                     if (message is IUserMessage userMessage)
                     {
-                        await userMessage.ModifyAsync(obj => obj.Embed = builder.Build())
+                        await userMessage.ModifyAsync(obj =>
+                                                      {
+                                                          obj.Content = string.Empty;
+                                                          obj.Embed = builder.Build();
+                                                      })
                                          .ConfigureAwait(false);
                     }
                 }

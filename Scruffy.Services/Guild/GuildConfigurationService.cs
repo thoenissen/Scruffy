@@ -181,6 +181,8 @@ public class GuildConfigurationService : LocatedServiceBase
                                                    && obj.Type == GuildChannelConfigurationType.CalendarOverview,
                                                obj =>
                                                {
+                                                   obj.GuildId = guildId;
+                                                   obj.Type = GuildChannelConfigurationType.CalendarOverview;
                                                    obj.DiscordChannelId = commandContext.Channel.Id;
                                                    obj.DiscordMessageId = message.Id;
                                                    obj.AdditionalData = JsonConvert.SerializeObject(new AdditionalCalendarChannelData
