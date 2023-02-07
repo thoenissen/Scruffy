@@ -106,6 +106,8 @@ public sealed class DiscordBot : IAsyncDisposable
                                         | GatewayIntents.GuildMessageReactions
                                         | GatewayIntents.DirectMessages
                                         | GatewayIntents.DirectMessageReactions
+                                        | GatewayIntents.MessageContent
+                                        | GatewayIntents.GuildScheduledEvents
                      };
 
         _discordClient = new DiscordSocketClient(config);

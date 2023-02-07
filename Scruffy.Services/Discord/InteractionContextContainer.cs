@@ -1,4 +1,6 @@
-﻿using Discord;
+﻿using System.Collections.Immutable;
+
+using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
 
@@ -14,7 +16,7 @@ namespace Scruffy.Services.Discord;
 /// <summary>
 /// Interaction context
 /// </summary>
-public sealed class InteractionContextContainer : IInteractionContext, IContextContainer, IDisposable
+public sealed class InteractionContextContainer : IInteractionContext, IRouteMatchContainer, IContextContainer, IDisposable
 {
     #region Fields
 
@@ -32,6 +34,11 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
     /// Defer processing message
     /// </summary>
     private IUserMessage _deferMessage;
+
+    /// <summary>
+    /// Matches
+    /// </summary>
+    private ImmutableArray<IRouteSegmentMatch> _segmentMatches;
 
     #endregion // Fields
 
@@ -443,4 +450,20 @@ public sealed class InteractionContextContainer : IInteractionContext, IContextC
     }
 
     #endregion // IDisposable
+
+    #region IRouteMatchContainer
+
+    /// <summary>
+    /// Sets the <see cref="P:Discord.IRouteMatchContainer.SegmentMatches" /> property of this container.
+    /// </summary>
+    /// <param name="segmentMatches">The collection of captured route segments.</param>
+    void IRouteMatchContainer.SetSegmentMatches(IEnumerable<IRouteSegmentMatch> segmentMatches) => _segmentMatches = segmentMatches.ToImmutableArray();
+
+    /// <summary>
+    /// Gets the collection of captured route segments in this container.
+    /// </summary>
+    /// <returns>A collection of captured route segments.</returns>
+    IEnumerable<IRouteSegmentMatch> IRouteMatchContainer.SegmentMatches => _segmentMatches;
+
+    #endregion // IRouteMatchContainer
 }

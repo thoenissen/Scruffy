@@ -55,6 +55,8 @@ internal static class Preparation
                                         | GatewayIntents.GuildMessageReactions
                                         | GatewayIntents.DirectMessages
                                         | GatewayIntents.DirectMessageReactions
+                                        | GatewayIntents.MessageContent
+                                        | GatewayIntents.GuildScheduledEvents
                      };
 
         DiscordClient = new DiscordSocketClient(config);
