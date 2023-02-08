@@ -93,6 +93,29 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedReactionElementB
                                                IsLeader = entry.IsLeader
                                            });
                 }
+
+                if (_data.Participants.Count == 0)
+                {
+                    var userId = dbFactory.GetRepository<CalendarAppointmentRepository>()
+                                          .GetQuery()
+                                          .Where(obj => obj.Id == _data.AppointmentId)
+                                          .Select(obj => obj.Leader
+                                                            .DiscordAccounts
+                                                            .Select(obj2 => (ulong?)obj2.Id)
+                                                            .FirstOrDefault())
+                                          .FirstOrDefault();
+
+                    if (userId != null)
+                    {
+                        _data.Participants.Add(new CalendarAppointmentParticipantData
+                                               {
+                                                   Member = await CommandContext.Guild
+                                                                                .GetUserAsync(userId.Value)
+                                                                                .ConfigureAwait(false),
+                                                   IsLeader = true
+                                               });
+                    }
+                }
             }
         }
 

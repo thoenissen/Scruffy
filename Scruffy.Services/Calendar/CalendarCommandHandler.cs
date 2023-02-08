@@ -149,7 +149,7 @@ public class CalendarCommandHandler : LocatedServiceBase
 
             componentBuilder.WithSelectMenu(menu);
 
-            await context.ReplyAsync(LocalizationGroup.GetText("LeadAppointmentSelection", "Please select all appoint you want to lead."),
+            await context.ReplyAsync(LocalizationGroup.GetText("LeadAppointmentSelection", "Please select all appointments you want to lead."),
                                      components: componentBuilder.Build(),
                                      ephemeral: true)
                          .ConfigureAwait(false);
