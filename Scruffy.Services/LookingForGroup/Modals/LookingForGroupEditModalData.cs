@@ -23,7 +23,7 @@ public class LookingForGroupEditModalData : IModal
     /// </summary>
     [InputLabel("Title")]
     [RequiredInput]
-    [ModalTextInput(nameof(AppointmentTitle))]
+    [ModalTextInput(nameof(AppointmentTitle), maxLength: 95)]
     public string AppointmentTitle { get; set; }
 
     /// <summary>
