@@ -14,10 +14,16 @@ public class Target
     public int Id { get; set; }
 
     /// <summary>
-    /// Final health of the target
+    /// Remaining health of the target
     /// </summary>
     [JsonProperty("finalHealth")]
-    public int FinalHealth { get; set; }
+    public long FinalHealth { get; set; }
+
+    /// <summary>
+    /// Total health of the target
+    /// </summary>
+    [JsonProperty("totalHealth")]
+    public long TotalHealth { get; set; }
 
     /// <summary>
     /// % of health burned

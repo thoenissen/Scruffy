@@ -64,26 +64,27 @@ public class Log
         get
         {
             var remainingHealth = 0.0;
-            var validTargets = 0;
+            var totalHealth = 0.0;
+            var hasValidTargets = false;
 
             foreach (var target in Targets)
             {
                 // Ignore fake targets & CC targets in Aetherblade Hideout & Hearts in Dragonvoid & Dhuum Reaper
                 if (!target.IsFake && !target.EnemyPlayer && target.Id != 23656 && target.Id != -23 && target.Id != 19831)
                 {
-                    remainingHealth += 100.0 - target.HealthPercentBurned;
+                    totalHealth += target.TotalHealth;
 
                     // The last 10% of Captain Mai Trin never gets removed
-                    if (target.Id == 24033 && remainingHealth < 10.0)
+                    if (target.Id != 24033 || target.HealthPercentBurned < 90.0)
                     {
-                        remainingHealth = 0;
+                        remainingHealth += target.FinalHealth;
                     }
 
-                    ++validTargets;
+                    hasValidTargets = true;
                 }
             }
 
-            return validTargets > 0 ? remainingHealth / validTargets : null;
+            return hasValidTargets ? remainingHealth / totalHealth : null;
         }
     }
 }
