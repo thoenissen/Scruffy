@@ -59,7 +59,8 @@ public sealed class QuickChartConnector : IDisposable,
         {
             var memoryStream = new MemoryStream();
 
-            var stream = await response.Content.ReadAsStreamAsync()
+            var stream = await response.Content
+                                       .ReadAsStreamAsync()
                                        .ConfigureAwait(false);
 
             await using (stream.ConfigureAwait(false))

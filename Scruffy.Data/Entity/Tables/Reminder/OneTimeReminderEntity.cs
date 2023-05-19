@@ -39,7 +39,7 @@ public class OneTimeReminderEntity
     public string Message { get; set; }
 
     /// <summary>
-    /// Ist the reminder executed?
+    /// Is the reminder executed?
     /// </summary>
     public bool IsExecuted { get; set; }
 
