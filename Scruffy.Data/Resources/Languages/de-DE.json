@@ -143,6 +143,12 @@
         "CalendarRemoveParticipantsDialogElement": {
             "Message": "Gib bitte die Benutzer ein:"
         },
+        "CalendarReminderPostJob": {
+            "Leader": "Terminleitung: {0}",
+            "CalenderChannelRemark": "Falls du die Leitung des Termins übernehmen möchtest, kannst du dich in {0} eintragen.",
+            "CalendarLeadRemark": "Weitere Informationen zur Leitung findest du in {0}.",
+            "MissingLeader": "Hallo liebe Gilden-Anhänger.\n\nDer Termin **{0}** kann heute wegen fehlender Leitung leider nicht stattfinden." 
+        }, 
         "CalendarScheduleDayOfWeekDialogElement": {
             "Description": "Wähle bitte den Wochentag aus:",
             "Reactions": "Wochentage",

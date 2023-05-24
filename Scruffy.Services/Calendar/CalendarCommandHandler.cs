@@ -2,7 +2,9 @@
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Calendar;
+using Scruffy.Services.Calendar.Jobs;
 using Scruffy.Services.Core;
+using Scruffy.Services.Core.JobScheduler;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
 using Scruffy.Services.Discord;
@@ -42,6 +44,11 @@ public class CalendarCommandHandler : LocatedServiceBase
     /// </summary>
     private readonly UserManagementService _userManagementService;
 
+    /// <summary>
+    /// Job scheduler
+    /// </summary>
+    private readonly JobScheduler _jobScheduler;
+
     #endregion // Fields
 
     #region Constructor
@@ -55,12 +62,14 @@ public class CalendarCommandHandler : LocatedServiceBase
     /// <param name="calendarTemplateService">Templates service</param>
     /// <param name="calendarMessageBuilderService">Calendar message builder service</param>
     /// <param name="userManagementService">User management service</param>
+    /// <param name="jobScheduler">Job scheduler</param>
     public CalendarCommandHandler(LocalizationService localizationService,
                                   CalendarParticipantsService calendarParticipantsService,
                                   CalendarTemplateService calendarTemplateService,
                                   CalendarScheduleService calendarScheduleService,
                                   CalendarMessageBuilderService calendarMessageBuilderService,
-                                  UserManagementService userManagementService)
+                                  UserManagementService userManagementService,
+                                  JobScheduler jobScheduler)
         : base(localizationService)
     {
         _calendarParticipantsService = calendarParticipantsService;
@@ -68,6 +77,7 @@ public class CalendarCommandHandler : LocatedServiceBase
         _calendarScheduleService = calendarScheduleService;
         _calendarMessageBuilderService = calendarMessageBuilderService;
         _userManagementService = userManagementService;
+        _jobScheduler = jobScheduler;
     }
 
     #endregion // Constructor
@@ -167,7 +177,7 @@ public class CalendarCommandHandler : LocatedServiceBase
         await context.DeleteOriginalResponse()
                      .ConfigureAwait(false);
 
-        var appointmentIds = selection.Select(obj => Convert.ToInt64(obj)).ToList();
+        var selectedAppointments = selection.Select(obj => Convert.ToInt64(obj)).ToList();
 
         var user = await _userManagementService.GetUserByDiscordAccountId(context.User)
                                                .ConfigureAwait(false);
@@ -176,17 +186,40 @@ public class CalendarCommandHandler : LocatedServiceBase
         {
             var now = DateTime.Now;
 
+            var changedAppointments = new List<long>();
+
             dbFactory.GetRepository<CalendarAppointmentRepository>()
                      .RefreshRange(obj => obj.TimeStamp > now
                                        && obj.LeaderId == user.Id
-                                       && appointmentIds.Contains(obj.Id) == false,
-                                   obj => obj.LeaderId = null);
+                                       && selectedAppointments.Contains(obj.Id) == false,
+                                   obj =>
+                                   {
+                                       obj.LeaderId = null;
+
+                                       if (obj.TimeStamp.Date == DateTime.Today)
+                                       {
+                                           changedAppointments.Add(obj.Id);
+                                       }
+                                   });
 
             dbFactory.GetRepository<CalendarAppointmentRepository>()
                      .RefreshRange(obj => obj.TimeStamp > now
                                        && obj.LeaderId == null
-                                       && appointmentIds.Contains(obj.Id),
-                                   obj => obj.LeaderId = user.Id);
+                                       && selectedAppointments.Contains(obj.Id),
+                                   obj =>
+                                   {
+                                       obj.LeaderId = user.Id;
+
+                                       if (obj.TimeStamp.Date == DateTime.Today)
+                                       {
+                                           changedAppointments.Add(obj.Id);
+                                       }
+                                   });
+
+            foreach (var appointmentId in changedAppointments)
+            {
+                _jobScheduler.AddJob(new CalendarReminderPostJob(appointmentId), DateTime.Now);
+            }
         }
 
         await _calendarMessageBuilderService.RefreshMessages(context.Guild.Id)

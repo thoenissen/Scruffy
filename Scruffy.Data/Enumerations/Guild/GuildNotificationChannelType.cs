@@ -21,6 +21,11 @@ public enum GuildChannelConfigurationType
     CalendarMessageOfTheDay = 1_002,
 
     /// <summary>
+    /// Calender 'Lead explanations'
+    /// </summary>
+    CalendarLeadExplanation = 1_003,
+
+    /// <summary>
     /// Special rank changes
     /// </summary>
     SpecialRankRankChange = 2_000,
