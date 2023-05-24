@@ -659,7 +659,7 @@
                 "Alle Daten, die durch {0} gesammelt werden, dienen nur zur Verwaltung der Gilde. Im folgenden wird auf die einzelnen Bereiche, in denen Daten ermittelt werden, eingegangen.",
             "GeneralInformationTitle": "Allgemeine Informationen",
             "GuildWars2ApiDescription":
-                "Über den angegeben API-Key werden die folgenden Daten ermittelt:\n\n - Mit wie vielen Charakteren wird die Gilde repräsentiert?\n - Wann wurde sich das letzte Mal angemeldet?\n - Welchem Server ist der Account zugeordnet?\n - Wie viele Erfolgspunkte hat der Account?\n\nAlle anderen Daten, werden nur temporär ermittelt, wenn man {0} zur Ausführung eines Befehls auffordert. Dabei hat man auch immer nur Zugriff auf seinen eigenen API-Key.",
+                "Über den angegeben API-Key werden die folgenden Daten ermittelt:\n\n- Mit wie vielen Charakteren wird die Gilde repräsentiert?\n- Wann wurde sich das letzte Mal angemeldet?\n- Welchem Server ist der Account zugeordnet?\n- Wie viele Erfolgspunkte hat der Account?\n\nAlle anderen Daten, werden nur temporär ermittelt, wenn man {0} zur Ausführung eines Befehls auffordert. Dabei hat man auch immer nur Zugriff auf seinen eigenen API-Key.",
             "GuildWars2ApiTitle": "Guild Wars 2 - API-Key",
             "RefreshDescription": "Stand: {0}",
             "RefreshTitle": "Aktualisierung"

@@ -106,7 +106,7 @@ public class GuildBankService : LocatedServiceBase
                             foreach (var (x, y) in group.OrderBy(obj => obj.X)
                                                         .ThenBy(obj => obj.Y))
                             {
-                                stringBuilder.AppendLine($" - " + Format.Code($"({x}/{y})"));
+                                stringBuilder.AppendLine($"- {Format.Code($"({x}/{y})")}");
                             }
                         }
 
