@@ -47,7 +47,11 @@ public sealed class JobScheduler : SingletonLocatedServiceBase,
         JobManager.AddJob<CalendarRefreshJob>(obj => obj.ToRunEvery(1).Days().At(0, 0));
         JobManager.AddJob<LogOverviewJob>(obj => obj.ToRunEvery(1).Days().At(1, 0));
         JobManager.AddJob<GuildRankingBatchJob>(obj => obj.ToRunEvery(1).Days().At(0, 10));
-        JobManager.AddJob<BackupJob>(obj => obj.ToRunEvery(1).Days().At(2, 0));
+
+        if (string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("SCRUFFY_DB_BACKUP_DIRECTORY")) == false)
+        {
+            JobManager.AddJob<BackupJob>(obj => obj.ToRunEvery(1).Days().At(2, 0));
+        }
 
         // Guild
         JobManager.AddJob<GuildLogImportJob>(obj => obj.NonReentrant().ToRunEvery(20).Seconds());
