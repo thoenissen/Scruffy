@@ -400,7 +400,7 @@ public class RaidRegistrationService : LocatedServiceBase
                                    .ToList();
 
             // Assigning the users to the slots
-            var substitutesBench = new List<long>();
+            var remainingRegistrations = new List<long>();
 
             foreach (var registration in appointment.Registrations)
             {
@@ -413,7 +413,23 @@ public class RaidRegistrationService : LocatedServiceBase
                 }
                 else
                 {
-                    substitutesBench.Add(registration.Id);
+                    remainingRegistrations.Add(registration.Id);
+                }
+            }
+
+            var substitutesBench = new List<long>();
+
+            foreach (var registrationId in remainingRegistrations)
+            {
+                var slot = slots.FirstOrDefault(obj => obj.SlotCount > obj.Registrations.Count);
+
+                if (slot != null)
+                {
+                    slot.Registrations.Add(registrationId);
+                }
+                else
+                {
+                    substitutesBench.Add(registrationId);
                 }
             }
 
