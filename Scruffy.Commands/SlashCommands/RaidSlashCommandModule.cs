@@ -30,63 +30,9 @@ public class RaidSlashCommandModule : SlashCommandModuleBase
     /// </summary>
     public LogCommandHandler LogCommandHandler { get; set; }
 
-    /// <summary>
-    /// Command handler
-    /// </summary>
-    public GuildWars2CommandHandler GuildWars2CommandHandler { get; set; }
-
     #endregion // Properties
 
     #region Commands
-
-    /// <summary>
-    /// Joining an appointment
-    /// </summary>
-    /// <param name="name">Name</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    [SlashCommand("join", "Join an appointment")]
-    public Task Join([Summary("Name", "Name of the appointment")]string name) => CommandHandler.Join(Context, name, true);
-
-    /// <summary>
-    /// Leaving an appointment
-    /// </summary>
-    /// <param name="name">Name</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    [SlashCommand("leave", "Leave an appointment")]
-    public async Task Leave([Summary("Name", "Name of the appointment")]string name)
-    {
-        var message = await Context.DeferProcessing()
-                                   .ConfigureAwait(false);
-
-        if (await CommandHandler.Leave(Context, name)
-                                .ConfigureAwait(false))
-        {
-            await message.DeleteAsync()
-                         .ConfigureAwait(false);
-        }
-    }
-
-    /// <summary>
-    /// Daily logs
-    /// </summary>
-    /// <param name="day">Day</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    [SlashCommand("logs", "Creates a listing of all logs of the given day")]
-    public async Task Logs([Summary("day", "Day of the logs (dd.MM)")]string day = null)
-    {
-        await Context.DeferAsync()
-                     .ConfigureAwait(false);
-
-        await LogCommandHandler.PostLogs(Context, DpsReportType.Raid, day, true)
-                            .ConfigureAwait(false);
-    }
-
-    /// <summary>
-    /// Post guides overview
-    /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    [SlashCommand("guides", "Show raid guides")]
-    public Task Guides() => GuildWars2CommandHandler.PostRaidGuides(Context);
 
     /// <summary>
     /// Configure your prepared raid roles
