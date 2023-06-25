@@ -9,7 +9,6 @@ using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Data.Entity.Repositories.Reminder;
 using Scruffy.Services.Calendar.Jobs;
 using Scruffy.Services.Debug.Jobs;
-using Scruffy.Services.Games.Jobs;
 using Scruffy.Services.Guild.Jobs;
 using Scruffy.Services.Raid.Jobs;
 using Scruffy.Services.Reminder.Jobs;
@@ -55,10 +54,6 @@ public sealed class JobScheduler : SingletonLocatedServiceBase,
 
         // Guild
         JobManager.AddJob<GuildLogImportJob>(obj => obj.NonReentrant().ToRunEvery(20).Seconds());
-
-        // Games
-        JobManager.AddJob<CounterGameJob>(obj => obj.ToRunEvery(10).Minutes());
-        JobManager.AddJob<WordChainJob>(obj => obj.ToRunEvery(10).Minutes());
 
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
