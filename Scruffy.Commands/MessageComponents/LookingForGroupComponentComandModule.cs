@@ -58,17 +58,6 @@ public class LookingForGroupComponentCommandModule : LocatedInteractionModuleBas
     /// <summary>
     /// Joining an appointment
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    [ComponentInteraction($"{Group};{CommandCreate};")]
-    public async Task Create()
-    {
-        await CommandHandler.StartCreation(Context)
-                            .ConfigureAwait(false);
-    }
-
-    /// <summary>
-    /// Joining an appointment
-    /// </summary>
     /// <param name="appointmentId">Id of the appointment</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [ComponentInteraction($"{Group};{CommandJoin};*")]

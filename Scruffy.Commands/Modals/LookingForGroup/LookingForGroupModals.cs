@@ -23,14 +23,6 @@ public class LookingForGroupModals : LocatedInteractionModuleBase
     #region Methods
 
     /// <summary>
-    /// Creation
-    /// </summary>
-    /// <param name="modal">Modal input</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    [ModalInteraction(LookingForGroupCreationModalData.CustomId)]
-    public Task Creation(LookingForGroupCreationModalData modal) => CommandHandler.Create(Context, modal.AppointmentTitle, modal.AppointmentDescription);
-
-    /// <summary>
     /// Edit
     /// </summary>
     /// <param name="appointmentId">Appointment id</param>

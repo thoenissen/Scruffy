@@ -60,17 +60,6 @@ public class LookingForGroupCommandHandler : LocatedServiceBase
     #region Methods
 
     /// <summary>
-    /// Starting the creation of an new appointment
-    /// </summary>
-    /// <param name="context">Command context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task StartCreation(InteractionContextContainer context)
-    {
-        await context.RespondWithModalAsync<LookingForGroupCreationModalData>(LookingForGroupCreationModalData.CustomId)
-                     .ConfigureAwait(false);
-    }
-
-    /// <summary>
     /// Creation of an new appoint
     /// </summary>
     /// <param name="context">Command context</param>
