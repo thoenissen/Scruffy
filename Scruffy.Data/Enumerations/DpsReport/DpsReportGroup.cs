@@ -11,11 +11,11 @@ public enum DpsReportGroup
     Unknown,
 
     // Fractals
-    [ChoiceDisplay("Nightmare (98)")]
+    [ChoiceDisplay("Nightmare (97)")]
     Nightmare,
-    [ChoiceDisplay("Shattered Observatory (99)")]
+    [ChoiceDisplay("Shattered Observatory (98)")]
     ShatteredObservatory,
-    [ChoiceDisplay("Sunqua Peak (100)")]
+    [ChoiceDisplay("Sunqua Peak (99)")]
     SunquaPeak,
 
     // Strikes
@@ -100,11 +100,11 @@ public static class DpsReportGroupExtensions
         switch (value)
         {
             case DpsReportGroup.Nightmare:
-                return "Nightmare (98)";
+                return "Nightmare (97)";
             case DpsReportGroup.ShatteredObservatory:
-                return "Shattered Observatory (99)";
+                return "Shattered Observatory (98)";
             case DpsReportGroup.SunquaPeak:
-                return "Sunqua Peak (100)";
+                return "Sunqua Peak (99)";
             case DpsReportGroup.IBSStrikes:
                 return "IBS Strikes";
             case DpsReportGroup.EoDStrikes:
