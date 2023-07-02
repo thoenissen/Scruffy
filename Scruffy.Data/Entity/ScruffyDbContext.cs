@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,13 +7,11 @@ using Scruffy.Data.Entity.Tables.Calendar;
 using Scruffy.Data.Entity.Tables.CoreData;
 using Scruffy.Data.Entity.Tables.Developer;
 using Scruffy.Data.Entity.Tables.Discord;
-using Scruffy.Data.Entity.Tables.Games;
 using Scruffy.Data.Entity.Tables.General;
 using Scruffy.Data.Entity.Tables.Guild;
 using Scruffy.Data.Entity.Tables.GuildWars2.Account;
 using Scruffy.Data.Entity.Tables.GuildWars2.GameData;
 using Scruffy.Data.Entity.Tables.GuildWars2.Guild;
-using Scruffy.Data.Entity.Tables.LookingForGroup;
 using Scruffy.Data.Entity.Tables.Raid;
 using Scruffy.Data.Entity.Tables.Reminder;
 using Scruffy.Data.Entity.Tables.Statistics;
@@ -86,7 +82,7 @@ public class ScruffyDbContext : IdentityDbContext<UserEntity, RoleEntity, long, 
 
         optionsBuilder.UseSqlServer(ConnectionString);
 #if DEBUG
-        optionsBuilder.LogTo(s => Debug.WriteLine(s));
+        optionsBuilder.LogTo(s => System.Diagnostics.Debug.WriteLine(s));
 #endif
         base.OnConfiguring(optionsBuilder);
     }
@@ -416,9 +412,6 @@ public class ScruffyDbContext : IdentityDbContext<UserEntity, RoleEntity, long, 
                                        obj.RoleId
                                    });
 
-        // Games
-        modelBuilder.Entity<GameChannelEntity>();
-
         // Guild Wars 2
         modelBuilder.Entity<GuildWarsAccountEntity>();
         modelBuilder.Entity<GuildWarsAccountDailyLoginCheckEntity>();
@@ -620,23 +613,6 @@ public class ScruffyDbContext : IdentityDbContext<UserEntity, RoleEntity, long, 
 
         modelBuilder.Entity<UserTokenEntity>()
                     .ToTable("UserTokens");
-
-        // Looking for group
-        modelBuilder.Entity<LookingForGroupAppointmentEntity>();
-        modelBuilder.Entity<LookingForGroupParticipantEntity>();
-
-        modelBuilder.Entity<LookingForGroupParticipantEntity>()
-                    .HasKey(obj => new
-                                   {
-                                       obj.AppointmentId,
-                                       obj.UserId
-                                   });
-
-        modelBuilder.Entity<LookingForGroupAppointmentEntity>()
-                    .HasMany(obj => obj.Participants)
-                    .WithOne(obj => obj.Appointment)
-                    .HasForeignKey(obj => obj.AppointmentId)
-                    .IsRequired();
 
         // Keyless
         modelBuilder.Entity<DateValue>(eb =>
