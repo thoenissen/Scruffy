@@ -386,5 +386,17 @@ public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
         }
     }
 
+    /// <summary>
+    /// Calculate item
+    /// </summary>
+    /// <param name="itemId">Item</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [SlashCommand("calculate-item", "Calculate item value")]
+    public async Task CalculateItem(int itemId)
+    {
+        await CommandHandler.CalculateItem(Context, itemId)
+                            .ConfigureAwait(false);
+    }
+
     #endregion // Methods
 }

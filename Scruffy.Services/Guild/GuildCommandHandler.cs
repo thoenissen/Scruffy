@@ -82,6 +82,11 @@ public class GuildCommandHandler : LocatedServiceBase
     /// </summary>
     private readonly GuildUserService _guildUserService;
 
+    /// <summary>
+    /// Item calculation
+    /// </summary>
+    private readonly GuildWars2ItemValueCalculator _itemCalculator;
+
     #endregion // Fields
 
     #region Constructor
@@ -102,6 +107,7 @@ public class GuildCommandHandler : LocatedServiceBase
     /// <param name="userConfigurationService">User configuration service</param>
     /// <param name="accountAdministrationService">Account administration service</param>
     /// <param name="guildUserService">Guild user service</param>
+    /// <param name="itemCalculator">Item calculation</param>
     public GuildCommandHandler(LocalizationService localizationService,
                                GuildBankService bankService,
                                GuildRankVisualizationService rankVisualizationService,
@@ -114,7 +120,8 @@ public class GuildCommandHandler : LocatedServiceBase
                                GuildRankService rankService,
                                GuildUserConfigurationService userConfigurationService,
                                AccountAdministrationService accountAdministrationService,
-                               GuildUserService guildUserService)
+                               GuildUserService guildUserService,
+                               GuildWars2ItemValueCalculator itemCalculator)
         : base(localizationService)
     {
         _bankService = bankService;
@@ -129,6 +136,7 @@ public class GuildCommandHandler : LocatedServiceBase
         _userConfigurationService = userConfigurationService;
         _accountAdministrationService = accountAdministrationService;
         _guildUserService = guildUserService;
+        _itemCalculator = itemCalculator;
     }
 
     #endregion // Constructor
@@ -565,6 +573,48 @@ public class GuildCommandHandler : LocatedServiceBase
     /// <param name="pointType">Point type</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task NavigateToPageGuildRanking(InteractionContextContainer context, int page, GuildRankPointType? pointType) => _rankVisualizationService.RefreshOverview(context.Guild.Id, context.Channel.Id, context.Message.Id, page, pointType, false);
+
+    /// <summary>
+    /// Calculate item
+    /// </summary>
+    /// <param name="context">Context</param>
+    /// <param name="itemId">Item</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task CalculateItem(InteractionContextContainer context, int itemId)
+    {
+        var message = await context.DeferProcessing()
+                                   .ConfigureAwait(false);
+
+        var items = await _itemCalculator.GetItemValues(itemId)
+                                         .ConfigureAwait(false);
+
+        var builder = new StringBuilder();
+
+        builder.AppendLine($"API: [Link](https://api.guildwars2.com/v2/items/{itemId})");
+        builder.AppendLine("```");
+
+        foreach (var item in items)
+        {
+            builder.Append($"{item.Count} x {(item.IsUpgrade ? "Upgrade" : "Item")} {item.Id} - {item.Name}");
+
+            if (item.Value != null)
+            {
+                builder.Append($" Value: {item.Value}");
+            }
+
+            if (item.ErrorMessage != null)
+            {
+                builder.Append($" (Error: {item.ErrorMessage})");
+            }
+
+            builder.AppendLine();
+        }
+
+        builder.AppendLine("```");
+
+        await message.ModifyAsync(obj => obj.Content = builder.ToString())
+                     .ConfigureAwait(false);
+    }
 
     #endregion // Methods
 }
