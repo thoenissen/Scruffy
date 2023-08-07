@@ -181,8 +181,30 @@ namespace Scruffy.Services.Guild
                     {
                         if (_recipes.TryGetValue(itemId, out var recipe) == false)
                         {
-                            recipe = await _connector.GetRecipe(itemId)
-                                                     .ConfigureAwait(false);
+                            var ingredients = await _dbFactory.GetRepository<GuildWarsCustomRecipeEntryRepository>()
+                                                              .GetQuery()
+                                                              .Where(obj => obj.ItemId == itemId)
+                                                              .ToListAsync()
+                                                              .ConfigureAwait(false);
+
+                            if (ingredients.Count > 0)
+                            {
+                                recipe = new ItemRecipe
+                                         {
+                                             Ingredients = ingredients.Select(obj2 => new ItemIngredient
+                                                                                      {
+                                                                                          ItemId = obj2.IngredientItemId,
+                                                                                          Count = obj2.IngredientCount,
+                                                                                      })
+                                                                      .ToList(),
+                                             OutputItemCount = 1
+                                         };
+                            }
+                            else
+                            {
+                                recipe = await _connector.GetRecipe(itemId)
+                                                         .ConfigureAwait(false);
+                            }
 
                             _recipes[itemId] = recipe;
                         }
