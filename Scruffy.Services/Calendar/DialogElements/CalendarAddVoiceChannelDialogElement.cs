@@ -8,14 +8,14 @@ namespace Scruffy.Services.Calendar.DialogElements;
 /// <summary>
 /// Adding participants
 /// </summary>
-public class CalendarAddVoiceChannelDialogElement : DialogEmbedMessageElementBase<List<IGuildUser>>
+public class CalendarAddVoiceChannelDialogElement : DialogEmbedSelectMenuElementBase<List<IGuildUser>>
 {
     #region Fields
 
     /// <summary>
-    /// Appointments
+    /// Channels
     /// </summary>
-    private Dictionary<int, ulong> _channels;
+    private List<SelectMenuEntryData<List<IGuildUser>>> _channels;
 
     #endregion // Fields
 
@@ -38,57 +38,80 @@ public class CalendarAddVoiceChannelDialogElement : DialogEmbedMessageElementBas
     /// Return the message of element
     /// </summary>
     /// <returns>Message</returns>
-    public override EmbedBuilder GetMessage()
+    public override Task<EmbedBuilder> GetMessage()
     {
-        var builder = new EmbedBuilder();
-        builder.WithTitle(LocalizationGroup.GetText("ChooseTitle", "Voice channel selection"));
-        builder.WithDescription(LocalizationGroup.GetText("ChooseDescription", "Please choose one of the voice channels:"));
-
-        _channels = new Dictionary<int, ulong>();
-        var fieldText = new StringBuilder();
-
-        var i = 0;
-
-        // TODO Async
-        foreach (var channel in CommandContext.Guild.GetChannelsAsync().Result.OfType<IVoiceChannel>())
-        {
-            fieldText.Append('`');
-            fieldText.Append(i);
-            fieldText.Append("` - ");
-            fieldText.Append(' ');
-            fieldText.Append(channel.Mention);
-            fieldText.Append('\n');
-
-            _channels[i] = channel.Id;
-
-            i++;
-        }
-
-        builder.AddField(LocalizationGroup.GetText("Field", "Channels"), fieldText.ToString());
-
-        return builder;
+        return Task.FromResult(new EmbedBuilder().WithTitle(LocalizationGroup.GetText("ChooseTitle", "Voice channel selection"))
+                                                 .WithDescription(LocalizationGroup.GetText("ChooseDescription", "Please choose one of the voice channels:"))
+                                                 .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
+                                                 .WithColor(Color.Green)
+                                                 .WithTimestamp(DateTime.Now));
     }
 
     /// <summary>
-    /// Converting the response message
+    /// Default case if none of the given buttons is used
     /// </summary>
-    /// <param name="message">Message</param>
     /// <returns>Result</returns>
-    public override async Task<List<IGuildUser>> ConvertMessage(IUserMessage message)
+    protected override List<IGuildUser> DefaultFunc() => new();
+
+    /// <summary>
+    /// Returns the select menu entries which should be added to the message
+    /// </summary>
+    /// <returns>Reactions</returns>
+    public override IReadOnlyList<SelectMenuEntryData<List<IGuildUser>>> GetEntries()
+    {
+        if (_channels == null)
+        {
+            // TODO Async
+            var channels = CommandContext.Guild
+                                         .GetChannelsAsync()
+                                         .Result;
+
+            _channels = new List<SelectMenuEntryData<List<IGuildUser>>>();
+
+            foreach (var channel in channels)
+            {
+                if (channel is IVoiceChannel voiceChannel)
+                {
+                    var users = voiceChannel.GetUsersAsync()
+                                            .FlattenAsync()
+                                            .Result;
+
+                    if (users.Any(obj => obj.VoiceChannel?.Id == channel.Id))
+                    {
+                        _channels.Add(new SelectMenuEntryData<List<IGuildUser>>
+                                      {
+                                          CommandText = channel.Name,
+                                          Response = async () => await GetUsers(channel.Id).ConfigureAwait(false)
+                                      });
+                    }
+                }
+            }
+        }
+
+        return _channels;
+    }
+
+    /// <summary>
+    /// Get users of channel
+    /// </summary>
+    /// <param name="channelId">Channel ID</param>
+    /// <returns>Result</returns>
+    public async Task<List<IGuildUser>> GetUsers(ulong channelId)
     {
         var members = new List<IGuildUser>();
 
-        if (int.TryParse(message.Content, out var index)
-         && _channels.TryGetValue(index, out var selected))
+        if (await CommandContext.Guild
+                                .GetChannelAsync(channelId)
+                                .ConfigureAwait(false)
+            is IVoiceChannel voiceChannel)
         {
-            if (await CommandContext.Guild.GetChannelAsync(selected).ConfigureAwait(false) is IVoiceChannel voiceChannel)
+            foreach (var user in await voiceChannel.GetUsersAsync()
+                                                   .FlattenAsync()
+                                                   .ConfigureAwait(false))
             {
-                await foreach (var entry in voiceChannel.GetUsersAsync())
+                if (user.VoiceChannel?.Id == voiceChannel.Id)
                 {
-                    foreach (var user in entry.Where(obj => obj.VoiceChannel?.Id == voiceChannel.Id))
-                    {
-                        members.Add(user);
-                    }
+                    members.Add(user);
                 }
             }
         }

@@ -127,18 +127,18 @@
             "Message": "Gbt bitte den Tag ein. (yyyy-MM-dd)"
         },
         "CalendarParticipantsEditDialogElement": {
-            "AddUserCommand": "{0} Teilnehmer hinzufügen",
-            "AddVoiceChannelCommand": "{0} Sprachkanal hinzufügen",
-            "CancelCommand": "{0} Abbrechen",
+            "AddUserCommand": "Teilnehmer hinzufügen",
+            "AddVoiceChannelCommand": "Sprachkanal hinzufügen",
+            "CancelCommand": "Abbrechen",
             "Commands": "Befehle",
-            "CommitCommand": "{0} Bestätigen",
+            "CommitCommand": "Bestätigen",
             "CommitSuccess": "Die Teilnehmerliste wurde aktualisiert.",
             "CommitText": "Die folgenden Teilnehmer wurden erfasst:",
             "CommitCountText": "Die folgenden {0} Teilnehmer wurden erfasst:",
             "CommitTitle": "Teilnehmer",
             "Participants": "Teilnehmer",
-            "RemoveUserCommand": "{0} Teilnehmer entfernen",
-            "SetLeaderCommand": "{0} Terminleitung"
+            "RemoveUserCommand": "Teilnehmer entfernen",
+            "SetLeaderCommand": "Terminleitung"
         },
         "CalendarRemoveParticipantsDialogElement": {
             "Message": "Gib bitte die Benutzer ein:"

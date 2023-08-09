@@ -10,14 +10,14 @@ namespace Scruffy.Services.Calendar.DialogElements;
 /// <summary>
 /// Selection of an appointment
 /// </summary>
-public class CalendarAppointmentSelectionDialogElement : DialogEmbedMessageElementBase<long>
+public class CalendarAppointmentSelectionDialogElement : DialogEmbedSelectMenuElementBase<long>
 {
     #region Fields
 
     /// <summary>
     /// Appointments
     /// </summary>
-    private Dictionary<int, long> _appointments;
+    private List<SelectMenuEntryData<long>> _appointments;
 
     #endregion // Fields
 
@@ -40,65 +40,56 @@ public class CalendarAppointmentSelectionDialogElement : DialogEmbedMessageEleme
     /// Return the message of element
     /// </summary>
     /// <returns>Message</returns>
-    public override EmbedBuilder GetMessage()
+    public override Task<EmbedBuilder> GetMessage()
     {
-        var builder = new EmbedBuilder();
-        builder.WithTitle(LocalizationGroup.GetText("ChooseTitle", "Appointment selection"));
-        builder.WithDescription(LocalizationGroup.GetText("ChooseDescription", "Please choose one of the following appointments:"));
-
-        _appointments = new Dictionary<int, long>();
-        var fieldText = new StringBuilder();
-
-        using (var dbFactory = RepositoryFactory.CreateInstance())
-        {
-            var limit = DateTime.Now.AddMinutes(15);
-
-            var entries = dbFactory.GetRepository<CalendarAppointmentRepository>()
-                                   .GetQuery()
-                                   .Where(obj => obj.TimeStamp < limit)
-                                   .Select(obj => new
-                                                  {
-                                                      obj.Id,
-                                                      obj.TimeStamp,
-                                                      obj.CalendarAppointmentTemplate.Description
-                                                  })
-                                   .OrderByDescending(obj => obj.TimeStamp)
-                                   .Take(10)
-                                   .ToList();
-
-            var i = 0;
-            foreach (var entry in entries)
-            {
-                fieldText.Append('`');
-                fieldText.Append(i);
-                fieldText.Append("` - ");
-                fieldText.Append(' ');
-                fieldText.Append(Format.Bold(entry.Description));
-                fieldText.Append(' ');
-                fieldText.Append('(');
-                fieldText.Append(entry.TimeStamp.ToString("g", LocalizationGroup.CultureInfo));
-                fieldText.Append(')');
-                fieldText.Append('\n');
-
-                _appointments[i] = entry.Id;
-
-                i++;
-            }
-
-            builder.AddField(LocalizationGroup.GetText("Field", "Appointments"), fieldText.ToString());
-        }
-
-        return builder;
+        return Task.FromResult(new EmbedBuilder().WithTitle(LocalizationGroup.GetText("ChooseTitle", "Appointment selection"))
+                                                 .WithDescription(LocalizationGroup.GetText("ChooseDescription", "Please choose one of the following appointments:"))
+                                                 .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
+                                                 .WithColor(Color.Green)
+                                                 .WithTimestamp(DateTime.Now));
     }
 
     /// <summary>
-    /// Converting the response message
+    /// Default case if none of the given buttons is used
     /// </summary>
-    /// <param name="message">Message</param>
     /// <returns>Result</returns>
-    public override Task<long> ConvertMessage(IUserMessage message)
+    protected override long DefaultFunc() => 0;
+
+    /// <summary>
+    /// Returns the select menu entries which should be added to the message
+    /// </summary>
+    /// <returns>Reactions</returns>
+    public override IReadOnlyList<SelectMenuEntryData<long>> GetEntries()
     {
-        return Task.FromResult(int.TryParse(message.Content, out var index) && _appointments.TryGetValue(index, out var selected) ? selected : throw new InvalidOperationException());
+        if (_appointments == null)
+        {
+            using (var dbFactory = RepositoryFactory.CreateInstance())
+            {
+                var limit = DateTime.Now.AddMinutes(15);
+
+                var appointments = dbFactory.GetRepository<CalendarAppointmentRepository>()
+                                            .GetQuery()
+                                            .Where(obj => obj.TimeStamp < limit)
+                                            .Select(obj => new
+                                                           {
+                                                               obj.Id,
+                                                               obj.TimeStamp,
+                                                               obj.CalendarAppointmentTemplate.Description
+                                                           })
+                                            .OrderByDescending(obj => obj.TimeStamp)
+                                            .Take(10)
+                                            .ToList();
+
+                _appointments = appointments.Select(obj => new SelectMenuEntryData<long>
+                                                           {
+                                                               CommandText = $"{obj.Description} - {obj.TimeStamp.ToString("g", LocalizationGroup.CultureInfo)}",
+                                                               Response = () => Task.FromResult(obj.Id)
+                                                           })
+                                            .ToList();
+            }
+        }
+
+        return _appointments;
     }
 
     #endregion // DialogEmbedMessageElementBase<long>
