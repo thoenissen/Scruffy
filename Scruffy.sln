@@ -37,6 +37,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "05_Libraries", "05_Librarie
 		libs\Osc.dll = libs\Osc.dll
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scruffy.ServiceHosts.DpsReportAnalyzer", "Scruffy.ServiceHosts.DpsReportAnalyzer\Scruffy.ServiceHosts.DpsReportAnalyzer.csproj", "{4F73D19B-5156-407F-BDE8-82D2FE226FEA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{4D69B0A9-6300-4E4D-9FE5-EDAB430C97AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D69B0A9-6300-4E4D-9FE5-EDAB430C97AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D69B0A9-6300-4E4D-9FE5-EDAB430C97AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F73D19B-5156-407F-BDE8-82D2FE226FEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F73D19B-5156-407F-BDE8-82D2FE226FEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F73D19B-5156-407F-BDE8-82D2FE226FEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F73D19B-5156-407F-BDE8-82D2FE226FEA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -73,6 +79,7 @@ Global
 		{5E477133-D9BD-4325-9AE3-36E5714D9286} = {0A4BE441-DD39-4293-9FF8-B5C8E5E3BFA0}
 		{6CF70C6D-BBD6-4781-87B6-4793A78C6990} = {CAABFF59-13F9-4D7F-9C19-E0DCD7AA97D7}
 		{4D69B0A9-6300-4E4D-9FE5-EDAB430C97AB} = {6CF14D6E-04D8-4E78-A84A-697AF9E286B1}
+		{4F73D19B-5156-407F-BDE8-82D2FE226FEA} = {0A4BE441-DD39-4293-9FF8-B5C8E5E3BFA0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ADE571FA-90CA-4B6B-8634-0AE4F774B904}

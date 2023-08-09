@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "Scruffy.ServiceHosts.DpsReportAnalyzer": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "DockerfileRunArguments": "--env-file Docker.env"
+    }
+  }
+}
