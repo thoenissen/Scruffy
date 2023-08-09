@@ -1,0 +1,48 @@
+body {
+  height: 100%;
+  margin: 0;
+}
+
+.box {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+}
+
+.box .row {
+  border: 1px dotted grey;
+}
+
+.box .row.header {
+  flex: 0 1 60px;
+  display: flex;
+  background-color: #343a40;
+  align-items: center;
+  color: white;
+  font-weight: 600;
+}
+
+.box .row.header img {
+  margin: 0 16px;
+}
+
+.box .row.content {
+  background-color: whitesmoke;
+  flex: 1 1 auto;
+}
+
+.box .row.footer {
+  background-color: #343a40;
+  flex: 0 1 40px;
+}
+
+.main-sidenav {
+  width: 100px;
+  background-color: darkgray;
+  height: 100%;
+  text-align: center;
+}
+
+.main-sidenav-container {
+  height: 100%;
+}

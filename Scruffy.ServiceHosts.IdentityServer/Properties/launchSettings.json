@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "Docker": {
+      "commandName": "Docker",
+      "DockerfileRunArguments": "--env-file Docker.env",
+      "launchBrowser": false,
+      "launchUrl": "{Scheme}://{ServiceHost}:5001",
+      "publishAllPorts": true,
+      "useSSL": false,
+      "httpPort": 5001
+    }
+  }
+}

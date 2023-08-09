@@ -1,0 +1,23 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+button {
+    background-color: #3d73a9;
+    color: white;
+    border: 1px solid black;
+    margin: 5px;
+    padding: 12px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    transition: all 0.25s;
+}
+button:hover {
+    box-shadow: 0 8px 12px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+    background-color: #34618f
+}
+button:active {
+    background-color: #0e1b28;
+}
+
