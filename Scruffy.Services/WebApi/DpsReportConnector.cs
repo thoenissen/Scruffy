@@ -71,51 +71,61 @@ public class DpsReportConnector
         foreach (var token in tokens)
         {
             var currentPage = 0;
+            var pageCount = 0;
             Page page;
 
             do
             {
                 currentPage++;
+
                 page = await GetUploads(token, currentPage).ConfigureAwait(false);
 
-                if (page?.Uploads != null)
+                if (page != null)
                 {
-                    foreach (var upload in page.Uploads)
+                    if (currentPage == 1)
                     {
-                        var isRefreshed = false;
+                        pageCount = page.Pages;
+                    }
 
-                        // HACK Sometimes the encounter data is not provider by dps.report
-                        if (upload.Encounter.UniqueId == null
-                         && upload.Encounter.JsonAvailable)
+                    if (page.Uploads != null)
+                    {
+                        foreach (var upload in page.Uploads)
                         {
-                            await RefreshEncounterData(upload).ConfigureAwait(false);
+                            var isRefreshed = false;
 
-                            isRefreshed = true;
-                        }
-
-                        if (shouldAbort(upload))
-                        {
-                            currentPage = page.Pages;
-                            break;
-                        }
-
-                        if ((upload.Encounter.Success
-                          || upload.Encounter.Duration.TotalSeconds > 30)
-                         && filter(upload))
-                        {
-                            // HACK We need to get the fight name to differentiate the different Ai phases.
-                            if (isRefreshed == false
-                            && upload.Encounter.BossId == 23254)
+                            // HACK Sometimes the encounter data is not provider by dps.report
+                            if (upload.Encounter.UniqueId == null
+                             && upload.Encounter.JsonAvailable)
                             {
                                 await RefreshEncounterData(upload).ConfigureAwait(false);
+
+                                isRefreshed = true;
                             }
 
-                            uploads.Add(upload);
+                            if (shouldAbort(upload))
+                            {
+                                currentPage = pageCount;
+                                break;
+                            }
+
+                            if ((upload.Encounter.Success
+                              || upload.Encounter.Duration.TotalSeconds > 30)
+                             && filter(upload))
+                            {
+                                // HACK We need to get the fight name to differentiate the different Ai phases.
+                                if (isRefreshed == false
+                                 && upload.Encounter.BossId == 23254)
+                                {
+                                    await RefreshEncounterData(upload).ConfigureAwait(false);
+                                }
+
+                                uploads.Add(upload);
+                            }
                         }
                     }
                 }
             }
-            while (page?.Uploads != null && currentPage < page.Pages);
+            while (page?.Uploads != null && currentPage < pageCount);
         }
 
         return uploads;
