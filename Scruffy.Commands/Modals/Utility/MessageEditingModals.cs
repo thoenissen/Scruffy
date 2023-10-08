@@ -32,11 +32,14 @@ public class MessageEditingModals : LocatedInteractionModuleBase
     [ModalInteraction($"{AddLinkModalData.CustomIdPrefix};*;*")]
     public async Task AddLink(ulong channelId, ulong messageId, AddLinkModalData modal)
     {
-        await Context.DeferAsync()
-                     .ConfigureAwait(false);
+        var message = await Context.DeferProcessing()
+                                   .ConfigureAwait(false);
 
         await CommandHandler.AddLink(Context, channelId, messageId, modal.Name, modal.Link)
                             .ConfigureAwait(false);
+
+        await message.DeleteAsync()
+                     .ConfigureAwait(false);
     }
 
     #endregion // Methods
