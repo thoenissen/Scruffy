@@ -172,21 +172,26 @@ public class CalendarScheduleService : LocatedServiceBase
                             {
                                 while (currentDate < endDate)
                                 {
-                                    currentDate = currentDate.AddDays(7 * (additionalData.OccurenceCount - 1));
+                                    var appointmentTimeStamp = currentDate.AddDays(7 * (additionalData.OccurenceCount - 1));
 
-                                    var appointmentTimeStamp = currentDate.Add(schedule.AppointmentTime);
+                                    appointmentTimeStamp = appointmentTimeStamp.Add(schedule.AppointmentTime);
 
-                                    if (CheckOptions(appointmentTimeStamp))
+                                    if (appointmentTimeStamp.Month == currentDate.Month)
                                     {
-                                        dbFactory.GetRepository<CalendarAppointmentRepository>()
-                                                 .AddOrRefresh(obj => obj.TimeStamp == appointmentTimeStamp
-                                                                   && obj.CalendarAppointmentScheduleId == schedule.Id,
-                                                               obj =>
-                                                               {
-                                                                   obj.TimeStamp = appointmentTimeStamp;
-                                                                   obj.CalendarAppointmentTemplateId = schedule.CalendarAppointmentTemplateId;
-                                                                   obj.CalendarAppointmentScheduleId = schedule.Id;
-                                                               });
+                                        currentDate = appointmentTimeStamp;
+
+                                        if (CheckOptions(appointmentTimeStamp))
+                                        {
+                                            dbFactory.GetRepository<CalendarAppointmentRepository>()
+                                                     .AddOrRefresh(obj => obj.TimeStamp == appointmentTimeStamp
+                                                                       && obj.CalendarAppointmentScheduleId == schedule.Id,
+                                                                   obj =>
+                                                                   {
+                                                                       obj.TimeStamp = appointmentTimeStamp;
+                                                                       obj.CalendarAppointmentTemplateId = schedule.CalendarAppointmentTemplateId;
+                                                                       obj.CalendarAppointmentScheduleId = schedule.Id;
+                                                                   });
+                                        }
                                     }
 
                                     var nextDate = currentDate;
