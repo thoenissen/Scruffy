@@ -174,11 +174,11 @@ public class CalendarScheduleService : LocatedServiceBase
                                 {
                                     var appointmentTimeStamp = currentDate.AddDays(7 * (additionalData.OccurenceCount - 1));
 
-                                    appointmentTimeStamp = appointmentTimeStamp.Add(schedule.AppointmentTime);
-
                                     if (appointmentTimeStamp.Month == currentDate.Month)
                                     {
                                         currentDate = appointmentTimeStamp;
+
+                                        appointmentTimeStamp = appointmentTimeStamp.Add(schedule.AppointmentTime);
 
                                         if (CheckOptions(appointmentTimeStamp))
                                         {
