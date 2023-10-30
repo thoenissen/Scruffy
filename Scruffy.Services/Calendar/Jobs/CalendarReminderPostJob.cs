@@ -150,7 +150,7 @@ public class CalendarReminderPostJob : LocatedAsyncJob
 
                         if (sendMessage)
                         {
-                            var message = await messageChannel.SendMessageAsync(messageText)
+                            var message = await messageChannel.SendMessageAsync(messageText, flags: MessageFlags.SuppressEmbeds)
                                                               .ConfigureAwait(false);
 
                             dbFactory.GetRepository<CalendarAppointmentRepository>()
