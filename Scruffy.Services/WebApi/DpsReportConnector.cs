@@ -200,6 +200,9 @@ public class DpsReportConnector
             case 23254:
                 return DpsReportGroup.SunquaPeak;
 
+            case 25577:
+                return DpsReportGroup.SilentSurf;
+
             case 22154:
             case 22343:
             case 22481:

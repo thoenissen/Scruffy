@@ -17,6 +17,8 @@ public enum DpsReportGroup
     ShatteredObservatory,
     [ChoiceDisplay("Sunqua Peak (99)")]
     SunquaPeak,
+    [ChoiceDisplay("Silent Surf (100)")]
+    SilentSurf,
 
     // Strikes
     [ChoiceDisplay("IBS Strikes")]
@@ -70,6 +72,7 @@ public static class DpsReportGroupExtensions
             case DpsReportGroup.Nightmare:
             case DpsReportGroup.ShatteredObservatory:
             case DpsReportGroup.SunquaPeak:
+            case DpsReportGroup.SilentSurf:
                 return DpsReportType.Fractal;
             case DpsReportGroup.IBSStrikes:
             case DpsReportGroup.EoDStrikes:
@@ -105,6 +108,8 @@ public static class DpsReportGroupExtensions
                 return "Shattered Observatory (98)";
             case DpsReportGroup.SunquaPeak:
                 return "Sunqua Peak (99)";
+            case DpsReportGroup.SilentSurf:
+                return "Silent Surf (100)";
             case DpsReportGroup.IBSStrikes:
                 return "IBS Strikes";
             case DpsReportGroup.EoDStrikes:
