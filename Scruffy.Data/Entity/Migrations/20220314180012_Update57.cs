@@ -94,7 +94,8 @@ namespace Scruffy.Data.Entity.Migrations
                                                    INNER JOIN [GuildLogEntries] AS [LogEntry]
                                                            ON [LogEntry].[Id]  = [Donation].[LogEntryId]
                                                         WHERE [LogEntry].[Time] > @from
-                                                          AND [LogEntry].[Time] < @to ) AS [Raw]
+                                                          AND [LogEntry].[Time] < @to 
+                                                          AND [Donation].[Value] > 0 ) AS [Raw]
                                             GROUP BY [Week]");
 
             migrationBuilder.Sql(@"CREATE  FUNCTION [dbo].[ScruffyGetWeeklyCommits] (

@@ -224,6 +224,10 @@ public class DpsReportConnector
             case 24375:
                 return DpsReportGroup.EoDStrikes;
 
+            case 25705:
+            case 25989:
+                return DpsReportGroup.SotOStrikes;
+
             case 16169:
             case 16202:
             case 16178:
@@ -318,6 +322,7 @@ public class DpsReportConnector
             case 19767:
             case 43974:
             case 22006:
+            case 25705:
                 bossSortValue = 1;
                 break;
 
@@ -338,6 +343,7 @@ public class DpsReportConnector
             case 19828:
             case 10142:
             case 21964:
+            case 25989:
                 bossSortValue = 2;
                 break;
 

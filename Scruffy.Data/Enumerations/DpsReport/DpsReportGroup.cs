@@ -25,6 +25,8 @@ public enum DpsReportGroup
     IBSStrikes,
     [ChoiceDisplay("EoD Strikes")]
     EoDStrikes,
+    [ChoiceDisplay("SotO Strikes")]
+    SotOStrikes,
 
     // Raids
     [ChoiceDisplay("Special Forces Training Area")]
@@ -76,6 +78,7 @@ public static class DpsReportGroupExtensions
                 return DpsReportType.Fractal;
             case DpsReportGroup.IBSStrikes:
             case DpsReportGroup.EoDStrikes:
+            case DpsReportGroup.SotOStrikes:
                 return DpsReportType.Strike;
             case DpsReportGroup.SpritVale:
             case DpsReportGroup.SalvationPass:
@@ -114,6 +117,8 @@ public static class DpsReportGroupExtensions
                 return "IBS Strikes";
             case DpsReportGroup.EoDStrikes:
                 return "EoD Strikes";
+            case DpsReportGroup.SotOStrikes:
+                return "SotO Strikes";
             case DpsReportGroup.TrainingArea:
                 return "Special Forces Training Area";
             case DpsReportGroup.SpritVale:
