@@ -93,17 +93,6 @@ public class DpsReportConnector
                     {
                         foreach (var upload in page.Uploads)
                         {
-                            var isRefreshed = false;
-
-                            // HACK Sometimes the encounter data is not provider by dps.report
-                            if (upload.Encounter.UniqueId == null
-                             && upload.Encounter.JsonAvailable)
-                            {
-                                await RefreshEncounterData(upload).ConfigureAwait(false);
-
-                                isRefreshed = true;
-                            }
-
                             if (shouldAbort(upload))
                             {
                                 currentPage = pageCount;
@@ -115,8 +104,7 @@ public class DpsReportConnector
                              && filter(upload))
                             {
                                 // HACK We need to get the fight name to differentiate the different Ai phases.
-                                if (isRefreshed == false
-                                 && upload.Encounter.BossId == 23254)
+                                if (upload.Encounter.BossId == 23254)
                                 {
                                     await RefreshEncounterData(upload).ConfigureAwait(false);
                                 }
@@ -141,49 +129,6 @@ public class DpsReportConnector
     private async Task RefreshEncounterData(Upload upload)
     {
         var log = await GetLog(upload.Id).ConfigureAwait(false);
-
-        var encounterTime = DateTime.SpecifyKind(log.TimeStart.ToUniversalTime().DateTime, DateTimeKind.Utc);
-
-        if (encounterTime != upload.EncounterTime
-         || upload.Encounter.Gw2Build != log.GW2Build
-         || upload.Encounter.Success != log.Success
-         || upload.Encounter.Duration != log.Duration
-         || upload.Encounter.IsChallengeMode != log.IsCM)
-        {
-            LoggingService.AddServiceLogEntry(LogEntryLevel.Debug,
-                                              nameof(DpsReportConnector),
-                                              "RefreshEncounterData refreshed data.",
-                                              upload.Id,
-                                              new
-                                              {
-                                                  UploadData = new
-                                                               {
-                                                                   upload.EncounterTime,
-                                                                   upload.Encounter.Gw2Build,
-                                                                   upload.Encounter.Success,
-                                                                   upload.Encounter.Duration,
-                                                                   upload.Encounter.IsChallengeMode
-                                                               },
-                                                  LogData = new
-                                                            {
-                                                                EncounterTime = encounterTime,
-                                                                log.GW2Build,
-                                                                log.Success,
-                                                                log.Duration,
-                                                                log.IsCM
-                                                            }
-                                              });
-
-            upload.EncounterTime = encounterTime;
-            upload.Encounter.Gw2Build = log.GW2Build;
-            upload.Encounter.Success = log.Success;
-            upload.Encounter.Duration = log.Duration;
-            upload.Encounter.IsChallengeMode = log.IsCM;
-        }
-        else
-        {
-            LoggingService.AddServiceLogEntry(LogEntryLevel.Debug, nameof(DpsReportConnector), "RefreshEncounterData didn't refresh any data.", upload.Id);
-        }
 
         upload.FightName = log.FightName;
     }
