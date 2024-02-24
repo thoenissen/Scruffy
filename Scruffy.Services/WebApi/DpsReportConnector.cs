@@ -3,7 +3,9 @@ using System.Net.Http;
 using Newtonsoft.Json;
 
 using Scruffy.Data.Enumerations.DpsReport;
+using Scruffy.Data.Enumerations.General;
 using Scruffy.Data.Json.DpsReport;
+using Scruffy.Services.Core;
 
 namespace Scruffy.Services.WebApi;
 
@@ -140,11 +142,49 @@ public class DpsReportConnector
     {
         var log = await GetLog(upload.Id).ConfigureAwait(false);
 
-        upload.EncounterTime = DateTime.SpecifyKind(log.TimeStart.ToUniversalTime().DateTime, DateTimeKind.Utc);
-        upload.Encounter.Gw2Build = log.GW2Build;
-        upload.Encounter.Success = log.Success;
-        upload.Encounter.Duration = log.Duration;
-        upload.Encounter.IsChallengeMode = log.IsCM;
+        var encounterTime = DateTime.SpecifyKind(log.TimeStart.ToUniversalTime().DateTime, DateTimeKind.Utc);
+
+        if (encounterTime != upload.EncounterTime
+         || upload.Encounter.Gw2Build != log.GW2Build
+         || upload.Encounter.Success != log.Success
+         || upload.Encounter.Duration != log.Duration
+         || upload.Encounter.IsChallengeMode != log.IsCM)
+        {
+            LoggingService.AddServiceLogEntry(LogEntryLevel.Debug,
+                                              nameof(DpsReportConnector),
+                                              "RefreshEncounterData refreshed data.",
+                                              upload.Id,
+                                              new
+                                              {
+                                                  UploadData = new
+                                                               {
+                                                                   upload.EncounterTime,
+                                                                   upload.Encounter.Gw2Build,
+                                                                   upload.Encounter.Success,
+                                                                   upload.Encounter.Duration,
+                                                                   upload.Encounter.IsChallengeMode
+                                                               },
+                                                  LogData = new
+                                                            {
+                                                                EncounterTime = encounterTime,
+                                                                log.GW2Build,
+                                                                log.Success,
+                                                                log.Duration,
+                                                                log.IsCM
+                                                            }
+                                              });
+
+            upload.EncounterTime = encounterTime;
+            upload.Encounter.Gw2Build = log.GW2Build;
+            upload.Encounter.Success = log.Success;
+            upload.Encounter.Duration = log.Duration;
+            upload.Encounter.IsChallengeMode = log.IsCM;
+        }
+        else
+        {
+            LoggingService.AddServiceLogEntry(LogEntryLevel.Debug, nameof(DpsReportConnector), "RefreshEncounterData didn't refresh any data.", upload.Id);
+        }
+
         upload.FightName = log.FightName;
     }
 
