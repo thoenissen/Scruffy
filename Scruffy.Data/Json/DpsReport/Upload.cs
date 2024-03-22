@@ -1,5 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using System.Runtime.Serialization;
+
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 
 namespace Scruffy.Data.Json.DpsReport;
 
@@ -90,6 +93,27 @@ public class Upload
     public HashSet<string> Group => Players.Select(obj => obj.Value.DisplayName).Distinct().ToHashSet();
 
     #endregion // Properties
+
+    #region Json
+
+    /// <summary>
+    /// JSON error handles
+    /// </summary>
+    /// <param name="context">Streaming context</param>
+    /// <param name="errorContext">Error context</param>
+    [OnError]
+#pragma warning disable IDE0060
+    internal void OnError(StreamingContext context, ErrorContext errorContext)
+#pragma warning restore IDE0060
+    {
+        // If no players exist the players are represented as empty array and so the serialization into a dictionary fails
+        if (errorContext.Member?.Equals("players") == true)
+        {
+            errorContext.Handled = true;
+        }
+    }
+
+    #endregion // Json
 
     #region Object
 
