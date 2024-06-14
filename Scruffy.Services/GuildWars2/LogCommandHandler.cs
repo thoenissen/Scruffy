@@ -124,10 +124,12 @@ public class LogCommandHandler : LocatedServiceBase
             var uploads = await _dpsReportConnector.GetUploads(upload =>
                                                                {
                                                                    var encounterDay = DateOnly.FromDateTime(upload.EncounterTime);
+
                                                                    return encounterDay == day
                                                                        && ((type == DpsReportType.All
                                                                          && _dpsReportConnector.GetReportType(upload.Encounter.BossId) != DpsReportType.Other)
-                                                                        || type == _dpsReportConnector.GetReportType(upload.Encounter.BossId));
+                                                                        || type == _dpsReportConnector.GetReportType(upload.Encounter.BossId))
+                                                                       && upload.Players?.Count > 0;
                                                                },
                                                                upload =>
                                                                {
@@ -744,7 +746,10 @@ public class LogCommandHandler : LocatedServiceBase
             var endDate = startDate.AddHours(3).AddMinutes(30);
 
             // Find all raid logs for the raid period
-            var uploads = await _dpsReportConnector.GetUploads(upload => _dpsReportConnector.GetReportType(upload.Encounter.BossId) == DpsReportType.Raid && upload.EncounterTime >= startDate && upload.EncounterTime <= endDate,
+            var uploads = await _dpsReportConnector.GetUploads(upload => _dpsReportConnector.GetReportType(upload.Encounter.BossId) == DpsReportType.Raid
+                                                                      && upload.EncounterTime >= startDate
+                                                                      && upload.EncounterTime <= endDate
+                                                                      && upload.Players?.Count > 0,
                                                                upload => upload.UploadTime < startDate,
                                                                appointment.Tokens.ToArray())
                                                    .ConfigureAwait(false);
@@ -867,12 +872,14 @@ public class LogCommandHandler : LocatedServiceBase
                 knownGroups.Add(group);
             }
 
-            if (result.ContainsKey(group) == false)
+            if (result.TryGetValue(group, out var uploadsOfGroup) == false)
             {
-                result.Add(group, new());
+                uploadsOfGroup = new();
+
+                result.Add(group, uploadsOfGroup);
             }
 
-            result[group].Add(upload);
+            uploadsOfGroup.Add(upload);
         }
 
         return result.OrderBy(obj => obj.Key.Id);

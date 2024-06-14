@@ -188,6 +188,10 @@ public class DpsReportConnector
             case 25577:
                 return DpsReportGroup.SilentSurf;
 
+            case 26257:
+            case 26231:
+                return DpsReportGroup.LonelyTower;
+
             case 22154:
             case 22343:
             case 22481:
