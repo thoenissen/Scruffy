@@ -546,9 +546,10 @@ public class LogCommandHandler : LocatedServiceBase
     /// Export all logs since the given day
     /// </summary>
     /// <param name="context">Command context</param>
-    /// <param name="dayString">Day</param>
+    /// <param name="sinceDayString">Since day</param>
+    /// <param name="untilDayString">Until day</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task ExportLogs(IContextContainer context, string dayString)
+    public async Task ExportLogs(IContextContainer context, string sinceDayString, string untilDayString)
     {
         await context.DeferProcessing()
                      .ConfigureAwait(false);
@@ -559,8 +560,8 @@ public class LogCommandHandler : LocatedServiceBase
                                         .Select(obj => new { obj.User.GuildWarsAccounts.FirstOrDefault().Name, obj.User.DpsReportUserToken })
                                         .FirstOrDefault();
 
-        var startDate = ParseStartDate(dayString);
-        var endDate = new DateTimeOffset(DateTime.MinValue, TimeSpan.Zero);
+        var startDate = ParseStartDate(sinceDayString);
+        var endDate = ParseEndDate(untilDayString);
 
         if (string.IsNullOrEmpty(account?.DpsReportUserToken) == false)
         {
@@ -611,11 +612,11 @@ public class LogCommandHandler : LocatedServiceBase
     #region Private methods
 
     /// <summary>
-    /// Parses the day date time offset from the given dayString.
+    /// Parses the day from the given dayString.
     /// </summary>
     /// <param name="dayString">Day to parse</param>
-    /// <returns>Parsed date time offset</returns>
-    private DateTimeOffset ParseStartDate(string dayString)
+    /// <returns>Parsed day</returns>
+    private DateOnly ParseDay(string dayString)
     {
         if (string.IsNullOrWhiteSpace(dayString)
             || DateOnly.TryParseExact(dayString, _dateFormats, null, DateTimeStyles.None, out var day) == false)
@@ -623,7 +624,34 @@ public class LogCommandHandler : LocatedServiceBase
             day = DateOnly.FromDateTime(DateTime.UtcNow);
         }
 
+        return day;
+    }
+
+    /// <summary>
+    /// Parses the day date time offset from the given dayString as the first second of the day.
+    /// </summary>
+    /// <param name="dayString">Day to parse</param>
+    /// <returns>Parsed date time offset</returns>
+    private DateTimeOffset ParseStartDate(string dayString)
+    {
+        var day = ParseDay(dayString);
         return new DateTimeOffset(day.Year, day.Month, day.Day, 0, 0, 0, DateTimeOffset.Now - DateTimeOffset.UtcNow);
+    }
+
+    /// <summary>
+    /// Parses the day date time offset from the given dayString as the last second of the day.
+    /// </summary>
+    /// <param name="dayString">Day to parse</param>
+    /// <returns>Parsed date time offset</returns>
+    private DateTimeOffset ParseEndDate(string dayString)
+    {
+        if (!string.IsNullOrEmpty(dayString))
+        {
+            var day = ParseDay(dayString);
+            return new DateTimeOffset(day.Year, day.Month, day.Day, 23, 59, 59, DateTimeOffset.Now - DateTimeOffset.UtcNow);
+        }
+
+        return new DateTimeOffset(DateTime.MinValue, TimeSpan.Zero);
     }
 
     /// <summary>
