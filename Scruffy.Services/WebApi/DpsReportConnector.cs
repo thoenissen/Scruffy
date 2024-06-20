@@ -103,15 +103,19 @@ public class DpsReportConnector
                               || upload.Encounter.Duration.TotalSeconds > 30)
                              && filter(upload))
                             {
-                                // HACK Sometimes the API doesn't report all players, so we have to load the full report for correct data
+                                // HACK
+                                // Sometimes the API doesn't report all players, so we have to load the full report for correct data
+                                // We also need to get the fight name to differentiate the different Ai phases.
                                 if (upload.Players.Count != upload.Encounter.NumberOfPlayers
-                                    // HACK We need to get the fight name to differentiate the different Ai phases.
                                     || upload.Encounter.BossId == 23254)
                                 {
                                     await UpdateUploadData(upload).ConfigureAwait(false);
                                 }
 
-                                uploads.Add(upload);
+                                if (upload.Players.Count > 0)
+                                {
+                                    uploads.Add(upload);
+                                }
                             }
                         }
                     }
@@ -130,14 +134,17 @@ public class DpsReportConnector
     /// <returns>The enriched upload</returns>
     private async Task UpdateUploadData(Upload upload)
     {
-        var log = await GetLog(upload.Id).ConfigureAwait(false);
-
-        upload.FightName = log.FightName;
-        upload.Players = new Dictionary<string, Player>();
-
-        foreach (var player in log.Players)
+        if (upload.Encounter.JsonAvailable)
         {
-            upload.Players.Add(player.CharacterName, player);
+            var log = await GetLog(upload.Id).ConfigureAwait(false);
+
+            upload.FightName = log.FightName;
+            upload.Players = new Dictionary<string, Player>();
+
+            foreach (var player in log.Players)
+            {
+                upload.Players.Add(player.CharacterName, player);
+            }
         }
     }
 

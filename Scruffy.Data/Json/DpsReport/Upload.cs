@@ -64,7 +64,7 @@ public class Upload
     /// Players
     /// </summary>
     [JsonProperty("players")]
-    public Dictionary<string, Player> Players { get; set; }
+    public Dictionary<string, Player> Players { get; set; } = new();
 
     /// <summary>
     /// Encounter
