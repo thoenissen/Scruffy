@@ -70,11 +70,7 @@ public class CalendarScheduleSetupDialogElement : DialogEmbedReactionElementBase
 
     #region DialogReactionElementBase<bool>
 
-    /// <summary>
-    /// Editing the embedded message
-    /// </summary>
-    /// <param name="builder">Builder</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <inheritdoc/>
     public override Task EditMessage(EmbedBuilder builder)
     {
         builder.WithTitle(LocalizationGroup.GetText("ChooseCommandTitle", "Calendar schedule configuration"));
@@ -100,10 +96,7 @@ public class CalendarScheduleSetupDialogElement : DialogEmbedReactionElementBase
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Returns the reactions which should be added to the message
-    /// </summary>
-    /// <returns>Reactions</returns>
+    /// <inheritdoc/>
     public override IReadOnlyList<ReactionData<bool>> GetReactions()
     {
         if (_reactions == null)
@@ -189,16 +182,10 @@ public class CalendarScheduleSetupDialogElement : DialogEmbedReactionElementBase
         return _reactions;
     }
 
-    /// <summary>
-    /// Returns the title of the commands
-    /// </summary>
-    /// <returns>Commands</returns>
+    /// <inheritdoc/>
     protected override string GetCommandTitle() => LocalizationGroup.GetText("CommandTitle", "Commands");
 
-    /// <summary>
-    /// Default case if none of the given reactions is used
-    /// </summary>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     protected override bool DefaultFunc()
     {
         return false;

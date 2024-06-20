@@ -49,10 +49,7 @@ public abstract class DialogSelectMenuElementBase<TData> : DialogElementBase<TDa
     /// <returns>Result</returns>
     protected abstract TData DefaultFunc();
 
-    /// <summary>
-    /// Execute the dialog element
-    /// </summary>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     public override async Task<TData> Run()
     {
         var components = CommandContext.Interactivity.CreateTemporaryComponentContainer<int>(obj => obj.User.Id == CommandContext.User.Id);

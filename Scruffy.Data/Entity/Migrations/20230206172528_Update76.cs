@@ -7,10 +7,7 @@ namespace Scruffy.Data.Entity.Migrations;
 /// </summary>
 public partial class Update76 : Migration
 {
-    /// <summary>
-    /// Upgrade
-    /// </summary>
-    /// <param name="migrationBuilder">Builder</param>
+    /// <inheritdoc/>
     protected override void Up(MigrationBuilder migrationBuilder)
     {
         migrationBuilder.AddColumn<long>(name: "LeaderId",
@@ -29,10 +26,7 @@ public partial class Update76 : Migration
                                        principalColumn: "Id");
     }
 
-    /// <summary>
-    /// Downgrade
-    /// </summary>
-    /// <param name="migrationBuilder">Builder</param>
+    /// <inheritdoc/>
     protected override void Down(MigrationBuilder migrationBuilder)
     {
         migrationBuilder.DropForeignKey(name: "FK_CalendarAppointments_Users_LeaderId",

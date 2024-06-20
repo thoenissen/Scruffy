@@ -29,7 +29,7 @@ public class RaidRegistrationService : LocatedServiceBase
     /// </summary>
     private UserManagementService _userManagementService;
 
-    #endregion
+    #endregion // Fields
 
     #region Properties
 

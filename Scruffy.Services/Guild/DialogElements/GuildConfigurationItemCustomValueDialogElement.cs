@@ -27,17 +27,10 @@ public class GuildConfigurationItemCustomValueDialogElement : DialogMessageEleme
 
     #region DialogMessageElementBase<string>
 
-    /// <summary>
-    /// Return the message of element
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override string GetMessage() => LocalizationGroup.GetText("Message", "Please enter the custom value which can be assigned.");
 
-    /// <summary>
-    /// Converting the response message
-    /// </summary>
-    /// <param name="message">Message</param>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     public override long ConvertMessage(IUserMessage message)
     {
         return long.Parse(message.Content, NumberStyles.Any, LocalizationGroup.CultureInfo);

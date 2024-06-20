@@ -57,10 +57,7 @@ public abstract class DialogEmbedMultiSelectSelectMenuElementBase<TData> : Inter
     /// <returns>Placeholder</returns>
     public virtual string GetPlaceholder() => null;
 
-    /// <summary>
-    /// Execute the dialog element
-    /// </summary>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     public override async Task<List<TData>> Run()
     {
         var components = CommandContext.Interactivity.CreateTemporaryComponentContainer<int>(obj => obj.User.Id == CommandContext.User.Id);

@@ -25,17 +25,10 @@ public class CalendarScheduleOccurenceCountDialogElement : DialogMessageElementB
 
     #region DialogMessageElementBase<string>
 
-    /// <summary>
-    /// Return the message of element
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override string GetMessage() => LocalizationGroup.GetFormattedText("Message", "Please enter on which {0} of the month the appointment should be created or zero if it should be created every week.", LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DialogContext.GetValue<DayOfWeek>("DayOfWeek")));
 
-    /// <summary>
-    /// Converting the response message
-    /// </summary>
-    /// <param name="message">Message</param>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     public override int ConvertMessage(IUserMessage message)
     {
         return int.TryParse(message.Content, out var result) ? result : 0;

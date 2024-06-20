@@ -7,10 +7,7 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update66 : Migration
     {
-        /// <summary>
-        /// Upgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(name: "FK_RaidRegistrationRoleAssignments_RaidRoles_MainRoleId", table: "RaidRegistrationRoleAssignments");
@@ -90,10 +87,7 @@ namespace Scruffy.Data.Entity.Migrations
                                    DBCC CHECKIDENT ('[RaidRoles]', RESEED, 0);");
         }
 
-        /// <summary>
-        /// Downgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             throw new NotSupportedException();

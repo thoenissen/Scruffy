@@ -7,10 +7,7 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update29 : Migration
     {
-        /// <summary>
-        /// Upgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<long>("WordId", "Accounts", "bigint", nullable: true);
@@ -73,10 +70,7 @@ namespace Scruffy.Data.Entity.Migrations
             migrationBuilder.DropColumn("ReminderChannelId", "Guilds");
         }
 
-        /// <summary>
-        /// Downgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable("GuildChannelConfigurations");

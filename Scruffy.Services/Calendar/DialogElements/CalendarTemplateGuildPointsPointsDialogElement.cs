@@ -27,17 +27,10 @@ public class CalendarTemplateGuildPointsPointsDialogElement : DialogMessageEleme
 
     #region DialogMessageElementBase<string>
 
-    /// <summary>
-    /// Return the message of element
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override string GetMessage() => LocalizationGroup.GetText("Message", "Please enter the number of guild points which can be earned by this event.");
 
-    /// <summary>
-    /// Converting the response message
-    /// </summary>
-    /// <param name="message">Message</param>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     public override double ConvertMessage(IUserMessage message)
     {
         return double.TryParse(message.Content, NumberStyles.Any, LocalizationGroup.CultureInfo, out var value) ? value : 0;

@@ -123,7 +123,7 @@ public sealed class DialogHandler : IAsyncDisposable, IDisposable
         }
     }
 
-    #endregion // Methods
+    #endregion // Static - Methods
 
     #region Methods
 

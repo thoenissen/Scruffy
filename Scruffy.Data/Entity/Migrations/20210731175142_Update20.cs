@@ -7,10 +7,7 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update20 : Migration
     {
-        /// <summary>
-        /// Upgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<decimal>("MessageOfTheDayChannelId", "Guilds", "decimal(20,0)", nullable: true);
@@ -26,10 +23,7 @@ namespace Scruffy.Data.Entity.Migrations
             migrationBuilder.AddColumn<decimal>("ReminderMessageId", "CalendarAppointments", "decimal(20,0)", nullable: true);
         }
 
-        /// <summary>
-        /// Downgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn("MessageOfTheDayChannelId", "Guilds");

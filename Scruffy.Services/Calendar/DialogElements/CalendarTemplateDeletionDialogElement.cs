@@ -36,16 +36,10 @@ public class CalendarTemplateDeletionDialogElement : DialogReactionElementBase<b
 
     #region DialogReactionElementBase<bool>
 
-    /// <summary>
-    /// Editing the embedded message
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override string GetMessage() => LocalizationGroup.GetText("DeletePrompt", "Are you sure you want to delete the template?");
 
-    /// <summary>
-    /// Returns the reactions which should be added to the message
-    /// </summary>
-    /// <returns>Reactions</returns>
+    /// <inheritdoc/>
     public override IReadOnlyList<ReactionData<bool>> GetReactions()
     {
         return _reactions ??= new List<ReactionData<bool>>
@@ -81,11 +75,7 @@ public class CalendarTemplateDeletionDialogElement : DialogReactionElementBase<b
                               };
     }
 
-    /// <summary>
-    /// Default case if none of the given reactions is used
-    /// </summary>
-    /// <param name="reaction">Reaction</param>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     protected override bool DefaultFunc(IReaction reaction) => false;
 
     #endregion // DialogReactionElementBase<bool>

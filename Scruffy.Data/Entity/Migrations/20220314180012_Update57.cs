@@ -7,10 +7,7 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update57 : Migration
     {
-        /// <summary>
-        /// Upgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(name: "GuildDonations",
@@ -121,10 +118,7 @@ namespace Scruffy.Data.Entity.Migrations
                                             GROUP BY [Week]");
         }
 
-        /// <summary>
-        /// Downgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(name: "GuildDonations");

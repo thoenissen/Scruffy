@@ -7,10 +7,7 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update17 : Migration
     {
-        /// <summary>
-        /// Upgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>("CalendarDescription", "Guilds", "nvarchar(max)", nullable: true);
@@ -27,10 +24,7 @@ namespace Scruffy.Data.Entity.Migrations
             migrationBuilder.AddColumn<string>("Description", "CalendarAppointmentSchedules", "nvarchar(max)", nullable: true);
         }
 
-        /// <summary>
-        /// Downgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn("CalendarDescription", "Guilds");

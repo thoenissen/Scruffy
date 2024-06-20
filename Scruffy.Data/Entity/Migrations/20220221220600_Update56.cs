@@ -7,10 +7,7 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update56 : Migration
     {
-        /// <summary>
-        /// Upgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropPrimaryKey(name: "PK_GitHubCommitEntity", table: "GitHubCommitEntity");
@@ -25,10 +22,7 @@ namespace Scruffy.Data.Entity.Migrations
             migrationBuilder.AddPrimaryKey(name: "PK_GitHubCommits", table: "GitHubCommits", column: "Sha");
         }
 
-        /// <summary>
-        /// Downgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropPrimaryKey(name: "PK_GitHubCommits", table: "GitHubCommits");

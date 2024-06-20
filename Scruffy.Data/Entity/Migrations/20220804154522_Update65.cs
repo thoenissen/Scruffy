@@ -7,10 +7,7 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update65 : Migration
     {
-        /// <summary>
-        /// Upgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(name: "FK_RaidUserRoles_RaidRoles_MainRoleId", table: "RaidUserRoles");
@@ -39,10 +36,7 @@ namespace Scruffy.Data.Entity.Migrations
                                            onDelete: ReferentialAction.Restrict);
         }
 
-        /// <summary>
-        /// Downgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(name: "FK_RaidUserRoles_RaidRoles_RoleId", table: "RaidUserRoles");

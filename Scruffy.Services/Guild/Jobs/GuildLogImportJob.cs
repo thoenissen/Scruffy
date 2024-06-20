@@ -22,10 +22,7 @@ public class GuildLogImportJob : LocatedAsyncJob
 {
     #region LocatedAsyncJob
 
-    /// <summary>
-    /// Executes the job
-    /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <inheritdoc/>
     public override async Task ExecuteOverrideAsync()
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
@@ -72,29 +69,29 @@ public class GuildLogImportJob : LocatedAsyncJob
                             {
                                 if (dbFactory.GetRepository<GuildLogEntryRepository>()
                                              .Add(new GuildLogEntryEntity
-                                             {
-                                                 GuildId = guild.Id,
-                                                 Id = entry.Id,
-                                                 Time = entry.Time.ToLocalTime(),
-                                                 Type = entry.Type,
-                                                 User = entry.User,
-                                                 KickedBy = entry.KickedBy,
-                                                 InvitedBy = entry.InvitedBy,
-                                                 Operation = entry.Operation,
-                                                 ItemId = entry.ItemId,
-                                                 Count = entry.Count,
-                                                 Coins = entry.Coins,
-                                                 ChangedBy = entry.ChangedBy,
-                                                 OldRank = entry.OldRank,
-                                                 NewRank = entry.NewRank,
-                                                 UpgradeId = entry.UpgradeId,
-                                                 RecipeId = entry.RecipeId,
-                                                 Action = entry.Action,
-                                                 Activity = entry.Activity,
-                                                 TotalParticipants = entry.TotalParticipants,
-                                                 Participants = string.Join(';', entry.Participants?.Where(obj => string.IsNullOrWhiteSpace(obj) == false) ?? Array.Empty<string>()),
-                                                 MessageOfTheDay = entry.MessageOfTheDay
-                                             }))
+                                                  {
+                                                      GuildId = guild.Id,
+                                                      Id = entry.Id,
+                                                      Time = entry.Time.ToLocalTime(),
+                                                      Type = entry.Type,
+                                                      User = entry.User,
+                                                      KickedBy = entry.KickedBy,
+                                                      InvitedBy = entry.InvitedBy,
+                                                      Operation = entry.Operation,
+                                                      ItemId = entry.ItemId,
+                                                      Count = entry.Count,
+                                                      Coins = entry.Coins,
+                                                      ChangedBy = entry.ChangedBy,
+                                                      OldRank = entry.OldRank,
+                                                      NewRank = entry.NewRank,
+                                                      UpgradeId = entry.UpgradeId,
+                                                      RecipeId = entry.RecipeId,
+                                                      Action = entry.Action,
+                                                      Activity = entry.Activity,
+                                                      TotalParticipants = entry.TotalParticipants,
+                                                      Participants = string.Join(';', entry.Participants?.Where(obj => string.IsNullOrWhiteSpace(obj) == false) ?? Array.Empty<string>()),
+                                                      MessageOfTheDay = entry.MessageOfTheDay
+                                                  }))
                                 {
                                     var isProcessed = false;
 

@@ -35,10 +35,7 @@ public class GuildGuildDialogElement : DialogEmbedMessageElementBase<string>
 
     #region DialogEmbedMessageElementBase<long>
 
-    /// <summary>
-    /// Return the message of element
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override EmbedBuilder GetMessage()
     {
         var builder = new EmbedBuilder();
@@ -80,11 +77,7 @@ public class GuildGuildDialogElement : DialogEmbedMessageElementBase<string>
         return builder;
     }
 
-    /// <summary>
-    /// Converting the response message
-    /// </summary>
-    /// <param name="message">Message</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <inheritdoc/>
     public override Task<string> ConvertMessage(IUserMessage message)
     {
         return Task.FromResult(int.TryParse(message.Content, out var index) && _guilds.TryGetValue(index, out var selectedGuild) ? selectedGuild : throw new InvalidOperationException());

@@ -35,16 +35,10 @@ public class CalendarTemplateGuildPointsDialogElement : DialogReactionElementBas
 
     #region DialogReactionElementBase<bool>
 
-    /// <summary>
-    /// Editing the embedded message
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override string GetMessage() => LocalizationGroup.GetText("Prompt", "Do you want to add guild points to this event?");
 
-    /// <summary>
-    /// Returns the reactions which should be added to the message
-    /// </summary>
-    /// <returns>Reactions</returns>
+    /// <inheritdoc/>
     public override IReadOnlyList<ReactionData<CalenderTemplateGuildData>> GetReactions()
     {
         return _reactions ??= new List<ReactionData<CalenderTemplateGuildData>>
@@ -62,11 +56,7 @@ public class CalendarTemplateGuildPointsDialogElement : DialogReactionElementBas
                               };
     }
 
-    /// <summary>
-    /// Default case if none of the given reactions is used
-    /// </summary>
-    /// <param name="reaction">Reaction</param>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     protected override CalenderTemplateGuildData DefaultFunc(IReaction reaction) => null;
 
     #endregion // DialogReactionElementBase<bool>

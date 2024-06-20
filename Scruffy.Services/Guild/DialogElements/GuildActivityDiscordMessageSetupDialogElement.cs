@@ -85,17 +85,10 @@ public class GuildActivityDiscordMessageSetupDialogElement : DialogEmbedReaction
 
     #region DialogEmbedReactionElementBase<bool>
 
-    /// <summary>
-    /// Returns the title of the commands
-    /// </summary>
-    /// <returns>Commands</returns>
+    /// <inheritdoc/>
     protected override string GetCommandTitle() => LocalizationGroup.GetText("CommandTitle", "Commands");
 
-    /// <summary>
-    /// Editing the embedded message
-    /// </summary>
-    /// <param name="builder">Builder</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <inheritdoc/>
     public override Task EditMessage(EmbedBuilder builder)
     {
         builder.WithTitle(LocalizationGroup.GetText("ChooseCommandTitle", "Discord message activity configuration"));
@@ -121,10 +114,7 @@ public class GuildActivityDiscordMessageSetupDialogElement : DialogEmbedReaction
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Returns the reactions which should be added to the message
-    /// </summary>
-    /// <returns>Reactions</returns>
+    /// <inheritdoc/>
     public override IReadOnlyList<ReactionData<bool>> GetReactions()
     {
         if (_reactions == null)
@@ -179,92 +169,89 @@ public class GuildActivityDiscordMessageSetupDialogElement : DialogEmbedReaction
             if (GetRoles().Count > 0)
             {
                 _reactions.Add(new ReactionData<bool>
-                {
-                    Emote = DiscordEmoteService.GetEditEmote(CommandContext.Client),
-                    CommandText = LocalizationGroup.GetFormattedText("EditCommand", "{0} Edit role", DiscordEmoteService.GetEditEmote(CommandContext.Client)),
-                    Func = async () =>
-                    {
-                        var data = await DialogHandler.RunForm<GuildActivityDiscordMessageEditFormData>(CommandContext, false)
-                                                      .ConfigureAwait(false);
+                               {
+                                   Emote = DiscordEmoteService.GetEditEmote(CommandContext.Client),
+                                   CommandText = LocalizationGroup.GetFormattedText("EditCommand", "{0} Edit role", DiscordEmoteService.GetEditEmote(CommandContext.Client)),
+                                   Func = async () =>
+                                   {
+                                       var data = await DialogHandler.RunForm<GuildActivityDiscordMessageEditFormData>(CommandContext, false)
+                                                                     .ConfigureAwait(false);
 
-                        using (var dbFactory = RepositoryFactory.CreateInstance())
-                        {
-                            if (dbFactory.GetRepository<GuildDiscordActivityPointsAssignmentRepository>()
-                                         .AddOrRefresh(obj => obj.Guild.DiscordServerId == CommandContext.Guild.Id
-                                                           && obj.Type == DiscordActivityPointsType.Message
-                                                           && obj.RoleId == data.RoleId,
-                                                       obj =>
-                                                       {
-                                                           if (obj.GuildId == default)
-                                                           {
-                                                               obj.GuildId = dbFactory.GetRepository<GuildRepository>()
-                                                                                      .GetQuery()
-                                                                                      .Where(obj2 => obj2.DiscordServerId == CommandContext.Guild.Id)
-                                                                                      .Select(obj2 => obj2.Id)
-                                                                                      .First();
-                                                               obj.Type = DiscordActivityPointsType.Message;
-                                                               obj.RoleId = data.RoleId;
-                                                           }
+                                       using (var dbFactory = RepositoryFactory.CreateInstance())
+                                       {
+                                           if (dbFactory.GetRepository<GuildDiscordActivityPointsAssignmentRepository>()
+                                                        .AddOrRefresh(obj => obj.Guild.DiscordServerId == CommandContext.Guild.Id
+                                                                          && obj.Type == DiscordActivityPointsType.Message
+                                                                          && obj.RoleId == data.RoleId,
+                                                                      obj =>
+                                                                      {
+                                                                          if (obj.GuildId == default)
+                                                                          {
+                                                                              obj.GuildId = dbFactory.GetRepository<GuildRepository>()
+                                                                                                     .GetQuery()
+                                                                                                     .Where(obj2 => obj2.DiscordServerId == CommandContext.Guild.Id)
+                                                                                                     .Select(obj2 => obj2.Id)
+                                                                                                     .First();
+                                                                              obj.Type = DiscordActivityPointsType.Message;
+                                                                              obj.RoleId = data.RoleId;
+                                                                          }
 
-                                                           obj.Points = data.Points;
-                                                       })
-                             == false)
-                            {
-                                LoggingService.AddInteractionLogEntry(LogEntryLevel.Error,
-                                                                      CommandContext.CustomId,
-                                                                      nameof(GuildActivityDiscordMessageEditFormData),
-                                                                      null,
-                                                                      dbFactory.LastError);
-                            }
-                        }
+                                                                          obj.Points = data.Points;
+                                                                      })
+                                            == false)
+                                           {
+                                               LoggingService.AddInteractionLogEntry(LogEntryLevel.Error,
+                                                                                     CommandContext.CustomId,
+                                                                                     nameof(GuildActivityDiscordMessageEditFormData),
+                                                                                     null,
+                                                                                     dbFactory.LastError);
+                                           }
+                                       }
 
-                        return true;
-                    }
-                });
+                                       return true;
+                                   }
+                               });
 
                 _reactions.Add(new ReactionData<bool>
-                {
-                    Emote = DiscordEmoteService.GetTrashCanEmote(CommandContext.Client),
-                    CommandText = LocalizationGroup.GetFormattedText("DeleteCommand", "{0} Delete role", DiscordEmoteService.GetTrashCanEmote(CommandContext.Client)),
-                    Func = async () =>
-                    {
-                        var roleId = await RunSubElement<GuildActivityDiscordMessageRemoveDialogElement, ulong>()
-                                         .ConfigureAwait(false);
+                               {
+                                   Emote = DiscordEmoteService.GetTrashCanEmote(CommandContext.Client),
+                                   CommandText = LocalizationGroup.GetFormattedText("DeleteCommand", "{0} Delete role", DiscordEmoteService.GetTrashCanEmote(CommandContext.Client)),
+                                   Func = async () =>
+                                   {
+                                       var roleId = await RunSubElement<GuildActivityDiscordMessageRemoveDialogElement, ulong>()
+                                                        .ConfigureAwait(false);
 
-                        using (var dbFactory = RepositoryFactory.CreateInstance())
-                        {
-                            if (dbFactory.GetRepository<GuildDiscordActivityPointsAssignmentRepository>()
-                                         .Remove(obj => obj.Guild.DiscordServerId == CommandContext.Guild.Id && obj.Type == DiscordActivityPointsType.Message && obj.RoleId == roleId)
-                             == false)
-                            {
-                                LoggingService.AddInteractionLogEntry(LogEntryLevel.Error,
-                                                                      CommandContext.CustomId,
-                                                                      nameof(GuildActivityDiscordMessagePointsDialogElement),
-                                                                      null,
-                                                                      dbFactory.LastError);
-                            }
-                        }
+                                       using (var dbFactory = RepositoryFactory.CreateInstance())
+                                       {
+                                           if (dbFactory.GetRepository<GuildDiscordActivityPointsAssignmentRepository>()
+                                                        .Remove(obj => obj.Guild.DiscordServerId == CommandContext.Guild.Id && obj.Type == DiscordActivityPointsType.Message && obj.RoleId == roleId)
+                                            == false)
+                                           {
+                                               LoggingService.AddInteractionLogEntry(LogEntryLevel.Error,
+                                                                                     CommandContext.CustomId,
+                                                                                     nameof(GuildActivityDiscordMessagePointsDialogElement),
+                                                                                     null,
+                                                                                     dbFactory.LastError);
+                                           }
+                                       }
 
-                        return true;
-                    }
-                });
+                                       return true;
+                                   }
+                               });
             }
 
             _reactions.Add(new ReactionData<bool>
-            {
-                Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
-                CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmoteService.GetCrossEmote(CommandContext.Client)),
-                Func = () => Task.FromResult(false)
-            });
+                           {
+                               Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
+                               CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmoteService.GetCrossEmote(CommandContext.Client)),
+                               Func = () => Task.FromResult(false)
+                           });
         }
 
         return _reactions;
     }
 
-    /// <summary>
-    /// Default case if none of the given reactions is used
-    /// </summary>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     protected override bool DefaultFunc() => false;
 
     #endregion // DialogEmbedReactionElementBase<bool>

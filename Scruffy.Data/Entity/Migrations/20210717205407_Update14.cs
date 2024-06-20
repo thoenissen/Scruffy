@@ -7,19 +7,13 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update14 : Migration
     {
-        /// <summary>
-        /// Upgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>("AliasName", "RaidExperienceLevels", "nvarchar(max)", nullable: true);
         }
 
-        /// <summary>
-        /// Downgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn("AliasName", "RaidExperienceLevels");

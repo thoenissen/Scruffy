@@ -38,10 +38,7 @@ public abstract class DialogMessageElementBase<TData> : DialogElementBase<TData>
     /// <returns>Result</returns>
     public virtual TData ConvertMessage(IUserMessage message) => (TData)Convert.ChangeType(message.Content, typeof(TData));
 
-    /// <summary>
-    /// Execute the dialog element
-    /// </summary>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     public override async Task<TData> Run()
     {
         var currentBotMessage = await CommandContext.SendMessageAsync(GetMessage())

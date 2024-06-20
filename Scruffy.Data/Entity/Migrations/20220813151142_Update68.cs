@@ -9,19 +9,13 @@ namespace Scruffy.Data.Entity.Migrations
     {
         #region Methods
 
-        /// <summary>
-        /// Upgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<decimal>("MemberDiscordRoleId", "Guilds", "decimal(20,0)", true);
         }
 
-        /// <summary>
-        /// Downgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn("MemberDiscordRoleId", "Guilds");

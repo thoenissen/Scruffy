@@ -27,17 +27,10 @@ public class GuildUserConfigurationUserDialogElement : DialogMessageElementBase<
 
     #region DialogMessageElementBase
 
-    /// <summary>
-    /// Return the message of element
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override string GetMessage() => LocalizationGroup.GetText("Message", "Please enter the member:");
 
-    /// <summary>
-    /// Converting the response message
-    /// </summary>
-    /// <param name="message">Message</param>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     public override IGuildUser ConvertMessage(IUserMessage message)
     {
         var match = new Regex("<@\\!?(\\d+?)>").Matches(message.Content).FirstOrDefault();

@@ -7,10 +7,7 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update35 : Migration
     {
-        /// <summary>
-        /// Upgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.RenameColumn(name: "QualifiedCommandName", table: "LogEntries", newName: "Source");
@@ -19,10 +16,7 @@ namespace Scruffy.Data.Entity.Migrations
             migrationBuilder.AddColumn<int>(name: "Level", table: "LogEntries", type: "int", nullable: false, defaultValue: 0);
         }
 
-        /// <summary>
-        /// Downgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(name: "AdditionalInformation", table: "LogEntries");

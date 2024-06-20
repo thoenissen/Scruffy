@@ -36,10 +36,7 @@ public class CalendarAppointmentSelectionDialogElement : DialogEmbedSelectMenuEl
 
     #region DialogEmbedMessageElementBase<long>
 
-    /// <summary>
-    /// Return the message of element
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override Task<EmbedBuilder> GetMessage()
     {
         return Task.FromResult(new EmbedBuilder().WithTitle(LocalizationGroup.GetText("ChooseTitle", "Appointment selection"))
@@ -49,16 +46,10 @@ public class CalendarAppointmentSelectionDialogElement : DialogEmbedSelectMenuEl
                                                  .WithTimestamp(DateTime.Now));
     }
 
-    /// <summary>
-    /// Default case if none of the given buttons is used
-    /// </summary>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     protected override long DefaultFunc() => 0;
 
-    /// <summary>
-    /// Returns the select menu entries which should be added to the message
-    /// </summary>
-    /// <returns>Reactions</returns>
+    /// <inheritdoc/>
     public override IReadOnlyList<SelectMenuEntryData<long>> GetEntries()
     {
         if (_appointments == null)

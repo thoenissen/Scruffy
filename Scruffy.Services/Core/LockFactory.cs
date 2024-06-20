@@ -83,7 +83,7 @@ public sealed class LockFactory : IDisposable
             _semaphore.Release();
         }
 
-        #endregion
+        #endregion // IDisposable
 
         #region IAsyncDisposable
 
@@ -98,7 +98,7 @@ public sealed class LockFactory : IDisposable
             return ValueTask.CompletedTask;
         }
 
-        #endregion // AsyncDisposable
+        #endregion // IAsyncDisposable
     }
 
     #endregion // Nested classes

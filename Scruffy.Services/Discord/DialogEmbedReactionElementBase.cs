@@ -51,10 +51,7 @@ public abstract class DialogEmbedReactionElementBase<TData> : DialogElementBase<
     /// <returns>Result</returns>
     protected abstract TData DefaultFunc();
 
-    /// <summary>
-    /// Execute the dialog element
-    /// </summary>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     public override async Task<TData> Run()
     {
         var builder = new EmbedBuilder();

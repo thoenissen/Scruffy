@@ -24,7 +24,7 @@ public class CalendarReminderPostJob : LocatedAsyncJob
     /// </summary>
     private long _id;
 
-    #endregion
+    #endregion // Fields
 
     #region Constructor
 
@@ -39,12 +39,9 @@ public class CalendarReminderPostJob : LocatedAsyncJob
 
     #endregion // Constructor
 
-    #region  AsyncJob
+    #region AsyncJob
 
-    /// <summary>
-    /// Executes the job
-    /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <inheritdoc/>
     public override async Task ExecuteOverrideAsync()
     {
         var serviceProvider = ServiceProviderContainer.Current.GetServiceProvider();

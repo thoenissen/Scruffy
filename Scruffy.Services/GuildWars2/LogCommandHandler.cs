@@ -358,32 +358,32 @@ public class LogCommandHandler : LocatedServiceBase
                                                                            Text = LocalizationGroup.GetText("GroupDPS", "Group DPS")
                                                                        },
                                                                Scales = new ScalesCollection
-                                                               {
-                                                                   XAxes = new List<XAxis>
-                                                                           {
-                                                                               new()
-                                                                               {
-                                                                                   Ticks = new AxisTicks
-                                                                                           {
-                                                                                               FontColor = "#b3b3b3"
-                                                                                           }
-                                                                               }
-                                                                           },
-                                                                   YAxes = new List<YAxis>
-                                                                           {
-                                                                               new()
-                                                                               {
-                                                                                   Ticks = new AxisTicks
-                                                                                           {
-                                                                                               FontColor = "#b3b3b3"
-                                                                                           }
-                                                                               }
-                                                                           }
-                                                               },
+                                                                        {
+                                                                            XAxes = new List<XAxis>
+                                                                                    {
+                                                                                        new()
+                                                                                        {
+                                                                                            Ticks = new AxisTicks
+                                                                                                    {
+                                                                                                        FontColor = "#b3b3b3"
+                                                                                                    }
+                                                                                        }
+                                                                                    },
+                                                                            YAxes = new List<YAxis>
+                                                                                    {
+                                                                                        new()
+                                                                                        {
+                                                                                            Ticks = new AxisTicks
+                                                                                                    {
+                                                                                                        FontColor = "#b3b3b3"
+                                                                                                    }
+                                                                                        }
+                                                                                    }
+                                                                        },
                                                                Plugins = new PluginsCollection
-                                                               {
-                                                                   Legend = false
-                                                               }
+                                                                         {
+                                                                             Legend = false
+                                                                         }
                                                            }
                                              };
 
@@ -633,6 +633,7 @@ public class LogCommandHandler : LocatedServiceBase
     private DateTimeOffset ParseStartDate(string dayString)
     {
         var day = ParseDay(dayString);
+
         return new DateTimeOffset(day.Year, day.Month, day.Day, 0, 0, 0, DateTimeOffset.Now.Offset);
     }
 
@@ -643,9 +644,10 @@ public class LogCommandHandler : LocatedServiceBase
     /// <returns>Parsed date time offset</returns>
     private DateTimeOffset ParseEndDate(string dayString)
     {
-        if (!string.IsNullOrEmpty(dayString))
+        if (string.IsNullOrEmpty(dayString) == false)
         {
             var day = ParseDay(dayString);
+
             return new DateTimeOffset(day.Year, day.Month, day.Day, 23, 59, 59, DateTimeOffset.Now.Offset);
         }
 
@@ -682,7 +684,6 @@ public class LogCommandHandler : LocatedServiceBase
             {
                 var isFractal = reportGroup.Key.GetReportType() == DpsReportType.Fractal;
                 var hasMultipleGroups = GroupUploads(ref knownGroups, reportGroup, false).Count() > 1;
-
                 var reports = new StringBuilder();
 
                 foreach (var bossGroup in reportGroup.GroupBy(obj => new { obj.Encounter.BossId, obj.Encounter.Boss }))
@@ -695,7 +696,7 @@ public class LogCommandHandler : LocatedServiceBase
                     }
 
                     var hasNormalTries = isFractal
-                                      || bossGroup.Any(obj => !obj.Encounter.IsChallengeMode);
+                                      || bossGroup.Any(obj => obj.Encounter.IsChallengeMode == false);
                     var hasChallengeTries = isFractal == false
                                          && bossGroup.Any(obj => obj.Encounter.IsChallengeMode);
 
@@ -704,6 +705,7 @@ public class LogCommandHandler : LocatedServiceBase
                                                   .Select(obj => obj.ToList()))
                     {
                         var title = BuildTitle(boss, summarize, hasNormalTries, hasChallengeTries);
+
                         reports.AppendLine(title);
 
                         foreach (var groupUploads in GroupUploads(ref knownGroups, boss, false))
@@ -728,7 +730,7 @@ public class LogCommandHandler : LocatedServiceBase
                             var hasSuccessTry = summarize
                                              && groupUploads.Value.Any(obj => obj.Encounter.Success);
 
-                            var fullLogs = await LoadRemainingHealths(groupUploads.Value, upload => hasSuccessTry && !upload.Encounter.Success).ConfigureAwait(false);
+                            var fullLogs = await LoadRemainingHealths(groupUploads.Value, upload => hasSuccessTry && upload.Encounter.Success == false).ConfigureAwait(false);
 
                             WriteLogs(builder, ref reports, reportGroup.Key.AsText(), title, fullLogs, summarize, hasNormalTries, hasChallengeTries);
                         }
@@ -835,7 +837,7 @@ public class LogCommandHandler : LocatedServiceBase
                         }
 
                         var hasNormalTries = isFractal
-                                          || bossGroup.Any(obj => !obj.Encounter.IsChallengeMode);
+                                          || bossGroup.Any(obj => obj.Encounter.IsChallengeMode == false);
                         var hasChallengeTries = isFractal == false
                                              && bossGroup.Any(obj => obj.Encounter.IsChallengeMode);
 
@@ -848,7 +850,7 @@ public class LogCommandHandler : LocatedServiceBase
 
                             // Enrich the logs with the remaining health
                             var hasSuccessTry = boss.Any(obj => obj.Encounter.Success);
-                            var fullLogs = await LoadRemainingHealths(boss, upload => hasSuccessTry && !upload.Encounter.Success).ConfigureAwait(false);
+                            var fullLogs = await LoadRemainingHealths(boss, upload => hasSuccessTry && upload.Encounter.Success == false).ConfigureAwait(false);
 
                             WriteLogs(builder, ref reports, fieldTitle.ToString(), title, fullLogs, true, hasNormalTries, hasChallengeTries);
                         }
@@ -1008,7 +1010,7 @@ public class LogCommandHandler : LocatedServiceBase
         {
             var fails = BuildFailsText(uploads);
 
-            if (!string.IsNullOrEmpty(fails))
+            if (string.IsNullOrEmpty(fails) == false)
             {
                 builder.AppendLine();
 
@@ -1093,7 +1095,7 @@ public class LogCommandHandler : LocatedServiceBase
                 builder.AddReportGroup(fieldTitle, reports.ToString(), true);
                 reports = new StringBuilder();
 
-                if (upload.Encounter.IsChallengeMode || !hasNormalTries)
+                if (upload.Encounter.IsChallengeMode || hasNormalTries == false)
                 {
                     reports.Append(RetrieveBossIconEmote(upload.Encounter.BossId));
                     reports.Append(' ');

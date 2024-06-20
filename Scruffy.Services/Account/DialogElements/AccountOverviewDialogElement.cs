@@ -42,10 +42,7 @@ public class AccountOverviewDialogElement : DialogEmbedSelectMenuElementBase<boo
 
     #region DialogEmbedSelectMenuElementBase<bool>
 
-    /// <summary>
-    /// Return the message of element
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override Task<EmbedBuilder> GetMessage()
     {
         var builder = new EmbedBuilder().WithTitle(LocalizationGroup.GetText("AccountConfiguration", "Account configuration"))
@@ -132,16 +129,10 @@ public class AccountOverviewDialogElement : DialogEmbedSelectMenuElementBase<boo
         return Task.FromResult(builder);
     }
 
-    /// <summary>
-    /// Returning the placeholder
-    /// </summary>
-    /// <returns>Placeholder</returns>
+    /// <inheritdoc/>
     public override string GetPlaceholder() => LocalizationGroup.GetText("Placeholder", "Please choose which data do you like to edit...");
 
-    /// <summary>
-    /// Returns the select menu entries which should be added to the message
-    /// </summary>
-    /// <returns>Reactions</returns>
+    /// <inheritdoc/>
     public override IReadOnlyList<SelectMenuEntryData<bool>> GetEntries() => new List<SelectMenuEntryData<bool>>
                                                                              {
                                                                                  new()
@@ -228,10 +219,7 @@ public class AccountOverviewDialogElement : DialogEmbedSelectMenuElementBase<boo
                                                                                  },
                                                                              };
 
-    /// <summary>
-    /// Default case if none of the given buttons is used
-    /// </summary>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     protected override bool DefaultFunc() => false;
 
     #endregion // DialogEmbedSelectMenuElementBase<bool>

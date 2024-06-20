@@ -34,13 +34,7 @@ public class RequireDeveloperPermissionsAttribute : PreconditionAttribute
 
     #region PreconditionAttribute
 
-    /// <summary>
-    /// Checks if the <paramref name="command" /> has the sufficient permission to be executed.
-    /// </summary>
-    /// <param name="context">The context of the command.</param>
-    /// <param name="command">The command being executed.</param>
-    /// <param name="services">The service collection used for dependency injection.</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <inheritdoc/>
     public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
     {
         return Task.FromResult(_userIds.ContainsKey(context.User.Id)

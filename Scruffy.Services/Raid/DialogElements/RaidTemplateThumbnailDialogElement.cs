@@ -25,17 +25,10 @@ public class RaidTemplateThumbnailDialogElement : DialogMessageElementBase<strin
 
     #region DialogMessageElementBase<string>
 
-    /// <summary>
-    /// Return the message of element
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override string GetMessage() => LocalizationGroup.GetText("Message", "Please enter the link to the thumbnail which should be used.");
 
-    /// <summary>
-    /// Converting the response message
-    /// </summary>
-    /// <param name="message">Message</param>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     public override string ConvertMessage(IUserMessage message)
     {
         return message.Attachments?.Count > 0

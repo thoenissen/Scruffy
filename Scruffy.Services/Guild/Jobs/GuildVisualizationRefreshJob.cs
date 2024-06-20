@@ -41,10 +41,7 @@ public class GuildVisualizationRefreshJob : LocatedAsyncJob
 
     #region LocatedAsyncJob
 
-    /// <summary>
-    /// Executes the job
-    /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <inheritdoc/>
     public override async Task ExecuteOverrideAsync()
     {
         foreach (var entry in _repositoryFactory.GetRepository<GuildChannelConfigurationRepository>()

@@ -39,17 +39,11 @@ public class RaidRoleSelectionNextDialogElement : DialogButtonElementBase<bool>
 
     #region DialogReactionElementBase<bool>
 
-    /// <summary>
-    /// Editing the embedded message
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override string GetMessage() => _first ? LocalizationGroup.GetText("MessageFirst", "Do you want to add role preference?")
                                                : LocalizationGroup.GetText("MessageNext", "Do you want to add another role preference?");
 
-    /// <summary>
-    /// Returns the buttons which should be added to the message
-    /// </summary>
-    /// <returns>Reactions</returns>
+    /// <inheritdoc/>
     public override IReadOnlyList<ButtonData<bool>> GetButtons()
     {
         return _buttons ??= new List<ButtonData<bool>>
@@ -69,11 +63,8 @@ public class RaidRoleSelectionNextDialogElement : DialogButtonElementBase<bool>
                             };
     }
 
-    /// <summary>
-    /// Default case if none of the given reactions is used
-    /// </summary>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     protected override bool DefaultFunc() => false;
 
-    #endregion // DialogReactionElementBase
+    #endregion // DialogReactionElementBase<bool>
 }

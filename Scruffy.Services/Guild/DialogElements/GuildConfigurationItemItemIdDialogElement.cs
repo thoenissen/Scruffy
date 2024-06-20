@@ -27,17 +27,10 @@ public class GuildConfigurationItemItemIdDialogElement : DialogMessageElementBas
 
     #region DialogMessageElementBase<string>
 
-    /// <summary>
-    /// Return the message of element
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override string GetMessage() => LocalizationGroup.GetText("Message", "Please enter the item id of the item which should be configured.");
 
-    /// <summary>
-    /// Converting the response message
-    /// </summary>
-    /// <param name="message">Message</param>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     public override int ConvertMessage(IUserMessage message)
     {
         return int.Parse(message.Content, NumberStyles.Any, LocalizationGroup.CultureInfo);

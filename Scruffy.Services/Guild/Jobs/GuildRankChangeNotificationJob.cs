@@ -55,10 +55,7 @@ public class GuildRankChangeNotificationJob : LocatedAsyncJob
 
     #region LocatedAsyncJob
 
-    /// <summary>
-    /// Executes the job
-    /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <inheritdoc/>
     public override async Task ExecuteOverrideAsync()
     {
         foreach (var guild in await _repositoryFactory.GetRepository<GuildChannelConfigurationRepository>()

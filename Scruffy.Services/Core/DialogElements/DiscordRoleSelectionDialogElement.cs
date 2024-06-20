@@ -43,22 +43,13 @@ public class DiscordRoleSelectionDialogElement : DialogSelectMenuElementBase<ulo
 
     #region DialogEmbedMessageElementBase<long?>
 
-    /// <summary>
-    /// Returning the message
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override string GetMessage() => LocalizationGroup.GetText("ChooseRoleTitle", "Role selection");
 
-    /// <summary>
-    /// Returning the placeholder
-    /// </summary>
-    /// <returns>Placeholder</returns>
+    /// <inheritdoc/>
     public override string GetPlaceholder() => LocalizationGroup.GetText("ChooseRoleDescription", "Please choose one of the following roles...");
 
-    /// <summary>
-    /// Returns the select menu entries which should be added to the message
-    /// </summary>
-    /// <returns>Reactions</returns>
+    /// <inheritdoc/>
     public override IReadOnlyList<SelectMenuEntryData<ulong>> GetEntries()
     {
         if (_entries == null)
@@ -88,10 +79,7 @@ public class DiscordRoleSelectionDialogElement : DialogSelectMenuElementBase<ulo
         return _entries;
     }
 
-    /// <summary>
-    /// Default case if none of the given buttons is used
-    /// </summary>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     protected override ulong DefaultFunc() => throw new InvalidOperationException();
 
     #endregion // DialogEmbedMessageElementBase<long?>

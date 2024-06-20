@@ -25,17 +25,10 @@ public class GuildApiKeyDialogElement : DialogMessageElementBase<string>
 
     #region DialogMessageElementBase<string>
 
-    /// <summary>
-    /// Return the message of element
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override string GetMessage() => LocalizationGroup.GetText("Message", "Please enter the api key.");
 
-    /// <summary>
-    /// Converting the response message
-    /// </summary>
-    /// <param name="message">Message</param>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     public override string ConvertMessage(IUserMessage message)
     {
         DialogContext.SetValue("ApiKey", message.Content);

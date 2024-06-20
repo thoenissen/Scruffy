@@ -23,21 +23,13 @@ public class CalendarScheduleMonthSelectionDialogElement : DialogMultiSelectSele
 
     #region DialogEmbedMultiSelectSelectMenuElementBase<int>
 
-    /// <summary>
-    /// Max values
-    /// </summary>
+    /// <inheritdoc/>
     protected override int MaxValues => 12;
 
-    /// <summary>
-    /// Return the message of element
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override Task<string> GetMessage() => Task.FromResult(LocalizationGroup.GetText("Message", "Please select the months:"));
 
-    /// <summary>
-    /// Returns the select menu entries which should be added to the message
-    /// </summary>
-    /// <returns>Reactions</returns>
+    /// <inheritdoc/>
     public override IReadOnlyList<SelectMenuOptionData> GetEntries()
     {
         var entries = new List<SelectMenuOptionData>();

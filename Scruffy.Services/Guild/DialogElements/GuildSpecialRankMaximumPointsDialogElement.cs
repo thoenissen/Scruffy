@@ -27,17 +27,10 @@ public class GuildSpecialRankMaximumPointsDialogElement : DialogMessageElementBa
 
     #region DialogMessageElementBase<string>
 
-    /// <summary>
-    /// Return the message of element
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override string GetMessage() => LocalizationGroup.GetText("Message", "Please enter the maximum points which can be acquired.");
 
-    /// <summary>
-    /// Converting the response message
-    /// </summary>
-    /// <param name="message">Message</param>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     public override double ConvertMessage(IUserMessage message)
     {
         return double.Parse(message.Content, NumberStyles.Any, LocalizationGroup.CultureInfo);

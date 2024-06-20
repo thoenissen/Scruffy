@@ -7,10 +7,7 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update62 : Migration
     {
-        /// <summary>
-        /// Upgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(name: "FractalRegistrations");
@@ -19,10 +16,7 @@ namespace Scruffy.Data.Entity.Migrations
             migrationBuilder.AddColumn<string>(name: "WelcomeDirectMessage", table: "Guilds", type: "nvarchar(max)", nullable: true);
         }
 
-        /// <summary>
-        /// Downgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(name: "WelcomeDirectMessage", table: "Guilds");

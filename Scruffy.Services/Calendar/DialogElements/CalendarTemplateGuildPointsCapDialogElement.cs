@@ -34,16 +34,10 @@ public class CalendarTemplateGuildPointsCapDialogElement : DialogReactionElement
 
     #region DialogReactionElementBase<bool>
 
-    /// <summary>
-    /// Editing the embedded message
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override string GetMessage() => LocalizationGroup.GetText("Prompt", "Is the guild points cap raised by this event?");
 
-    /// <summary>
-    /// Returns the reactions which should be added to the message
-    /// </summary>
-    /// <returns>Reactions</returns>
+    /// <inheritdoc/>
     public override IReadOnlyList<ReactionData<bool>> GetReactions()
     {
         return _reactions ??= new List<ReactionData<bool>>
@@ -61,11 +55,7 @@ public class CalendarTemplateGuildPointsCapDialogElement : DialogReactionElement
                               };
     }
 
-    /// <summary>
-    /// Default case if none of the given reactions is used
-    /// </summary>
-    /// <param name="reaction">Reaction</param>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     protected override bool DefaultFunc(IReaction reaction) => false;
 
     #endregion // DialogReactionElementBase<bool>

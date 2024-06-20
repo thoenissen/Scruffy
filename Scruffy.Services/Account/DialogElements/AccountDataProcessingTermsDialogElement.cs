@@ -32,16 +32,10 @@ public class AccountDataProcessingTermsDialogElement : DialogButtonElementBase<b
 
     #region DialogButtonElementBase<bool>
 
-    /// <summary>
-    /// Editing the message
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override string GetMessage() => LocalizationGroup.GetText("AcceptStorage", "To use this feature, you must agree to the processing and storage of your data to provide the functionalities of this bot. The command `/info` can be used to display a detailed list of the data that will be stored and processed. Do you agree to this processing and storage?");
 
-    /// <summary>
-    /// Returns the buttons which should be added to the message
-    /// </summary>
-    /// <returns>Reactions</returns>
+    /// <inheritdoc/>
     public override IReadOnlyList<ButtonData<bool>> GetButtons()
     {
         return _buttons ??= new List<ButtonData<bool>>
@@ -61,10 +55,7 @@ public class AccountDataProcessingTermsDialogElement : DialogButtonElementBase<b
                             };
     }
 
-    /// <summary>
-    /// Default case if none of the given reactions is used
-    /// </summary>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     protected override bool DefaultFunc() => false;
 
     #endregion // DialogButtonElementBase<bool>

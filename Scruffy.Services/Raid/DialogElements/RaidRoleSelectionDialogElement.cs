@@ -41,32 +41,19 @@ public class RaidRoleSelectionDialogElement : DialogMultiSelectSelectMenuElement
 
     #region DialogMultiSelectSelectMenuElementBase<long>
 
-    /// <summary>
-    /// Min values
-    /// </summary>
+    /// <inheritdoc/>
     protected override int MinValues => 1;
 
-    /// <summary>
-    /// Max values
-    /// </summary>
+    /// <inheritdoc/>
     protected override int MaxValues => 9;
 
-    /// <summary>
-    /// Returning the message
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override Task<string> GetMessage() => Task.FromResult(CommandContext.User.Mention + " " + LocalizationGroup.GetText("ChooseMainRoleTitle", "Role selection"));
 
-    /// <summary>
-    /// Returning the placeholder
-    /// </summary>
-    /// <returns>Placeholder</returns>
+    /// <inheritdoc/>
     public override string GetPlaceholder() => LocalizationGroup.GetText("ChooseRoleDescription", "Choose your roles...");
 
-    /// <summary>
-    /// Returns the select menu entries which should be added to the message
-    /// </summary>
-    /// <returns>Reactions</returns>
+    /// <inheritdoc/>
     public override IReadOnlyList<SelectMenuOptionData> GetEntries()
     {
         if (_entries == null)
@@ -95,5 +82,5 @@ public class RaidRoleSelectionDialogElement : DialogMultiSelectSelectMenuElement
         return _entries;
     }
 
-    #endregion // DialogMultiSelectSelectMenuElementBase<long?>
+    #endregion // DialogMultiSelectSelectMenuElementBase<long>
 }

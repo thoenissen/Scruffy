@@ -133,7 +133,7 @@ public class Upload
                 {
                     var group = Group;
                     group.ExceptWith(other.Group);
-                    return !group.Any();
+                    return group.Any() == false;
                 }
             }
         }

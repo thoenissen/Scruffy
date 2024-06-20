@@ -41,32 +41,19 @@ public class RaidPreparedRolesFirstTimeSelectDialogElement : DialogMultiSelectSe
 
     #region DialogEmbedMultiSelectSelectMenuElementBase<long>
 
-    /// <summary>
-    /// Min values
-    /// </summary>
+    /// <inheritdoc/>
     protected override int MinValues => 1;
 
-    /// <summary>
-    /// Max values
-    /// </summary>
+    /// <inheritdoc/>
     protected override int MaxValues => 9;
 
-    /// <summary>
-    /// Embed
-    /// </summary>
-    /// <returns>Task Embed</returns>
+    /// <inheritdoc/>
     public override Task<string> GetMessage() => Task.FromResult(LocalizationGroup.GetFormattedText("Message", "{0}, to participate in a raid you must first select the roles you have prepared for it. You can customize your roles at any time using the `/raid roles` command. Please choose your roles in the following selection: ", CommandContext.User.Mention));
 
-    /// <summary>
-    /// Returning the placeholder
-    /// </summary>
-    /// <returns>Placeholder</returns>
+    /// <inheritdoc/>
     public override string GetPlaceholder() => LocalizationGroup.GetText("RoleSelectionPlaceHolder", "Choose your roles...");
 
-    /// <summary>
-    /// Returns the select menu entries which should be added to the message
-    /// </summary>
-    /// <returns>Reactions</returns>
+    /// <inheritdoc/>
     public override IReadOnlyList<SelectMenuOptionData> GetEntries()
     {
         if (_entries == null)

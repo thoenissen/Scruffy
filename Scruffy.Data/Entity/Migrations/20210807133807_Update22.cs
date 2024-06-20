@@ -7,10 +7,7 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update22 : Migration
     {
-        /// <summary>
-        /// Upgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<long>("LineupExperienceLevelId", "RaidRegistrations", "bigint", nullable: true);
@@ -152,10 +149,7 @@ namespace Scruffy.Data.Entity.Migrations
                                            onDelete: ReferentialAction.Restrict);
         }
 
-        /// <summary>
-        /// Downgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey("FK_RaidRegistrations_RaidExperienceLevels_LineupExperienceLevelId", "RaidRegistrations");

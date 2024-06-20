@@ -7,10 +7,7 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update51 : Migration
     {
-        /// <summary>
-        /// Upgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(name: "GuildWarsGuildMembers");
@@ -82,10 +79,7 @@ namespace Scruffy.Data.Entity.Migrations
             migrationBuilder.CreateIndex(name: "IX_GuildWarsGuildHistoricMembers_GuildId", table: "GuildWarsGuildHistoricMembers", column: "GuildId");
         }
 
-        /// <summary>
-        /// Downgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(name: "DiscordHistoryRoleAssignments");

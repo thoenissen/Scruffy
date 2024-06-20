@@ -23,10 +23,10 @@ internal static class CommandExtensions
                         IsRequired = parameterInfo.IsRequired,
                         Choices = parameterInfo.Choices?
                                                .Select(obj => new ApplicationCommandOptionChoiceProperties
-                                                            {
-                                                                Name = obj.Name,
-                                                                Value = obj.Value
-                                                            })
+                                                              {
+                                                                  Name = obj.Name,
+                                                                  Value = obj.Value
+                                                              })
                                                .ToList(),
                         ChannelTypes = parameterInfo.ChannelTypes?.ToList(),
                         IsAutocomplete = parameterInfo.IsAutocomplete,
@@ -132,7 +132,7 @@ internal static class CommandExtensions
         {
             args.AddRange(moduleInfo.ContextCommands?.Select(x => x.ToApplicationCommandProps()));
 
-            if (!moduleInfo.IsSlashGroup)
+            if (moduleInfo.IsSlashGroup == false)
             {
                 args.AddRange(moduleInfo.SlashCommands?.Select(x => x.ToApplicationCommandProps()));
 

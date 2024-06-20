@@ -36,10 +36,7 @@ public class RaidTemplateSelectionDialogElement : DialogEmbedMessageElementBase<
 
     #region DialogEmbedMessageElementBase<long>
 
-    /// <summary>
-    /// Return the message of element
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override EmbedBuilder GetMessage()
     {
         var builder = new EmbedBuilder();
@@ -83,11 +80,7 @@ public class RaidTemplateSelectionDialogElement : DialogEmbedMessageElementBase<
         return builder;
     }
 
-    /// <summary>
-    /// Converting the response message
-    /// </summary>
-    /// <param name="message">Message</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <inheritdoc/>
     public override Task<long> ConvertMessage(IUserMessage message)
     {
         return Task.FromResult(int.TryParse(message.Content, out var index) && _templates.TryGetValue(index, out var selectedRoleId) ? selectedRoleId : throw new InvalidOperationException());

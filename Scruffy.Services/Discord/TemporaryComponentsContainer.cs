@@ -185,12 +185,7 @@ public class TemporaryComponentsContainer<TIdentification> : TemporaryComponents
 
     #region TemporaryComponentsContainer
 
-    /// <summary>
-    /// Check active buttons
-    /// </summary>
-    /// <param name="identification">Identification</param>
-    /// <param name="component">Component</param>
-    /// <returns>Is the component processed?</returns>
+    /// <inheritdoc/>
     internal override bool CheckButtonComponent(string identification, SocketMessageComponent component)
     {
         if (_buttons.TryGetValue(identification, out var customerIdentification))
@@ -210,12 +205,7 @@ public class TemporaryComponentsContainer<TIdentification> : TemporaryComponents
         return false;
     }
 
-    /// <summary>
-    /// Check active select menus
-    /// </summary>
-    /// <param name="identification">Identification</param>
-    /// <param name="component">Component</param>
-    /// <returns>Is the component processed?</returns>
+    /// <inheritdoc/>
     internal override bool CheckSelectMenuComponent(string identification, SocketMessageComponent component)
     {
         if (_selectMenus.TryGetValue(identification, out var customerIdentification))
@@ -239,9 +229,7 @@ public class TemporaryComponentsContainer<TIdentification> : TemporaryComponents
 
     #region IDisposable
 
-    /// <summary>
-    /// Internal dispose method
-    /// </summary>
+    /// <inheritdoc/>
     protected override void Dispose()
     {
         _cancellationTokenSource.Cancel();

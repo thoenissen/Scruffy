@@ -35,16 +35,10 @@ public class CalendarTemplateReminderDialogElement : DialogReactionElementBase<C
 
     #region DialogReactionElementBase<bool>
 
-    /// <summary>
-    /// Editing the embedded message
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override string GetMessage() => LocalizationGroup.GetText("Prompt", "Do you want to add a reminder?");
 
-    /// <summary>
-    /// Returns the reactions which should be added to the message
-    /// </summary>
-    /// <returns>Reactions</returns>
+    /// <inheritdoc/>
     public override IReadOnlyList<ReactionData<CalenderTemplateReminderData>> GetReactions()
     {
         return _reactions ??= new List<ReactionData<CalenderTemplateReminderData>>
@@ -62,11 +56,7 @@ public class CalendarTemplateReminderDialogElement : DialogReactionElementBase<C
                               };
     }
 
-    /// <summary>
-    /// Default case if none of the given reactions is used
-    /// </summary>
-    /// <param name="reaction">Reaction</param>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     protected override CalenderTemplateReminderData DefaultFunc(IReaction reaction) => null;
 
     #endregion // DialogReactionElementBase<bool>

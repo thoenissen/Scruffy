@@ -7,10 +7,7 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update12 : Migration
     {
-        /// <summary>
-        /// Upgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable("CalendarAppointmentTemplates",
@@ -65,10 +62,7 @@ namespace Scruffy.Data.Entity.Migrations
             migrationBuilder.CreateIndex("IX_CalendarAppointmentSchedules_CalendarAppointmentTemplateId", "CalendarAppointmentSchedules", "CalendarAppointmentTemplateId");
         }
 
-        /// <summary>
-        /// Downgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable("CalendarAppointments");

@@ -7,10 +7,7 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update48 : Migration
     {
-        /// <summary>
-        /// Upgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(name: "FK_GuildRankCurrentPointsEntity_Guilds_GuildId", table: "GuildRankCurrentPointsEntity");
@@ -44,10 +41,7 @@ namespace Scruffy.Data.Entity.Migrations
                                            onDelete: ReferentialAction.Restrict);
         }
 
-        /// <summary>
-        /// Dowgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(name: "FK_GuildRankCurrentPoints_Guilds_GuildId", table: "GuildRankCurrentPoints");

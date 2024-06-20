@@ -41,16 +41,10 @@ internal class GuildNotificationChannelConfigurationSelectDialogElement : Dialog
 
     #region DialogSelectMenuElementBase
 
-    /// <summary>
-    /// Returning the message
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override string GetMessage() => LocalizationGroup.GetText("Message", "Please select of the following types:");
 
-    /// <summary>
-    /// Returns the select menu entries which should be added to the message
-    /// </summary>
-    /// <returns>Reactions</returns>
+    /// <inheritdoc/>
     public override IReadOnlyList<SelectMenuEntryData<ChannelType?>> GetEntries()
     {
         return Enum.GetValues(typeof(ChannelType))
@@ -63,10 +57,7 @@ internal class GuildNotificationChannelConfigurationSelectDialogElement : Dialog
                    .ToList();
     }
 
-    /// <summary>
-    /// Default case if none of the given buttons is used
-    /// </summary>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     protected override ChannelType? DefaultFunc() => null;
 
     #endregion // DialogSelectMenuElementBase

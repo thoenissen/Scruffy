@@ -7,10 +7,7 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update53 : Migration
     {
-        /// <summary>
-        /// Upgraade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropPrimaryKey("PK_GuildWarsAccountHistoricCharacters",
@@ -29,10 +26,7 @@ namespace Scruffy.Data.Entity.Migrations
                                            new string[] { "Date", "AccountName", "CharacterName" });
         }
 
-        /// <summary>
-        /// Downgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropPrimaryKey("PK_GuildWarsAccountHistoricCharacters",

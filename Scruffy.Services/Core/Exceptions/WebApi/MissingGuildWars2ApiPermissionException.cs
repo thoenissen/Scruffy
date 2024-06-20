@@ -33,10 +33,7 @@ public class MissingGuildWars2ApiPermissionException : ScruffyUserMessageExcepti
 
     #region ScruffyException
 
-    /// <summary>
-    /// Returns localized message
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override string GetLocalizedMessage()
     {
         using (var serviceProvider = ServiceProviderContainer.Current.GetServiceProvider())

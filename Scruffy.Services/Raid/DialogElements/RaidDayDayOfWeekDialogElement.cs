@@ -34,11 +34,7 @@ public class RaidDayDayOfWeekDialogElement : DialogEmbedReactionElementBase<DayO
 
     #region DialogReactionElementBase<bool>
 
-    /// <summary>
-    /// Editing the embedded message
-    /// </summary>
-    /// <param name="builder">Builder</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <inheritdoc/>
     public override Task EditMessage(EmbedBuilder builder)
     {
         builder.WithTitle(LocalizationGroup.GetText("Title", "Raid day selection"));
@@ -47,19 +43,13 @@ public class RaidDayDayOfWeekDialogElement : DialogEmbedReactionElementBase<DayO
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Returns the title of the commands
-    /// </summary>
-    /// <returns>Commands</returns>
+    /// <inheritdoc/>
     protected override string GetCommandTitle()
     {
         return LocalizationGroup.GetText("Reactions", "Days");
     }
 
-    /// <summary>
-    /// Returns the reactions which should be added to the message
-    /// </summary>
-    /// <returns>Reactions</returns>
+    /// <inheritdoc/>
     public override IReadOnlyList<ReactionData<DayOfWeek>> GetReactions()
     {
         return _reactions ??= new List<ReactionData<DayOfWeek>>
@@ -109,14 +99,11 @@ public class RaidDayDayOfWeekDialogElement : DialogEmbedReactionElementBase<DayO
                               };
     }
 
-    /// <summary>
-    /// Default case if none of the given reactions is used
-    /// </summary>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     protected override DayOfWeek DefaultFunc()
     {
         throw new InvalidOperationException();
     }
 
-    #endregion DialogReactionElementBase<bool>
+    #endregion // DialogReactionElementBase<bool>
 }

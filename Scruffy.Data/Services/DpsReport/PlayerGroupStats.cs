@@ -7,6 +7,35 @@ namespace Scruffy.Data.Services.DpsReport;
 /// </summary>
 public class PlayerGroupStats
 {
+    #region Fields
+
+    /// <summary>
+    /// Cumulated computed DPS
+    /// </summary>
+    private long _cumulatedDPS;
+
+    /// <summary>
+    /// How many encounter had a valid DPS value
+    /// </summary>
+    private int _dpsEncounter;
+
+    #endregion // Fields
+
+    #region Constructor
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public PlayerGroupStats()
+    {
+        FirstEncounterTime = DateTimeOffset.MaxValue;
+        LastEncounterTime = DateTimeOffset.MinValue;
+    }
+
+    #endregion // Constructor
+
+    #region Properties
+
     /// <summary>
     /// Total encounter time of all encounters
     /// </summary>
@@ -35,30 +64,11 @@ public class PlayerGroupStats
     /// <summary>
     /// Average DPS across all encounters
     /// </summary>
-    public long AverageDPS => DPSEncounter > 0 ? CumulatedDPS / DPSEncounter : 0;
+    public long AverageDPS => _dpsEncounter > 0 ? _cumulatedDPS / _dpsEncounter : 0;
 
-    #region PrivateFields
+    #endregion // Properties
 
-    /// <summary>
-    /// Cumulated computed DPS
-    /// </summary>
-    private long CumulatedDPS { get; set; }
-
-    /// <summary>
-    /// How many encounter had a valid DPS value
-    /// </summary>
-    private int DPSEncounter { get; set; }
-
-    #endregion // PrivateFields
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    public PlayerGroupStats()
-    {
-        FirstEncounterTime = DateTimeOffset.MaxValue;
-        LastEncounterTime = DateTimeOffset.MinValue;
-    }
+    #region Methods
 
     /// <summary>
     /// Adds an encounter to the group stats
@@ -80,8 +90,8 @@ public class PlayerGroupStats
 
         if (upload.Encounter.CompDps > 0)
         {
-            CumulatedDPS += upload.Encounter.CompDps;
-            ++DPSEncounter;
+            _cumulatedDPS += upload.Encounter.CompDps;
+            ++_dpsEncounter;
         }
 
         if (upload.Encounter.Success)
@@ -94,4 +104,6 @@ public class PlayerGroupStats
             FailedEncounterTotalTime += upload.Encounter.Duration;
         }
     }
+
+    #endregion // Methods
 }

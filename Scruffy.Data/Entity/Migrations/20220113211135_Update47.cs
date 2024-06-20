@@ -7,10 +7,7 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update47 : Migration
     {
-        /// <summary>
-        /// Upgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropPrimaryKey(name: "PK_GuildRankCurrentPointsEntity", table: "GuildRankCurrentPointsEntity");
@@ -39,10 +36,7 @@ namespace Scruffy.Data.Entity.Migrations
                                                     });
         }
 
-        /// <summary>
-        /// Downgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropPrimaryKey(name: "PK_GuildRankCurrentPointsEntity", table: "GuildRankCurrentPointsEntity");

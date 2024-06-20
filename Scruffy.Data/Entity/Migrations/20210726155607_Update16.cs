@@ -7,10 +7,7 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update16 : Migration
     {
-        /// <summary>
-        /// Upgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey("FK_Guilds_ServerConfigurationEntity_DiscordServerId", "Guilds");
@@ -56,10 +53,7 @@ namespace Scruffy.Data.Entity.Migrations
                                            onDelete: ReferentialAction.Restrict);
         }
 
-        /// <summary>
-        /// Downgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey("FK_CalendarAppointmentTemplates_ServerConfigurations_ServerId", "CalendarAppointmentTemplates");

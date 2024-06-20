@@ -7,19 +7,13 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update18 : Migration
     {
-        /// <summary>
-        /// Upgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<TimeSpan>("AppointmentTime", "CalendarAppointmentTemplates", "time", nullable: true);
         }
 
-        /// <summary>
-        /// Downgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn("AppointmentTime", "CalendarAppointmentTemplates");

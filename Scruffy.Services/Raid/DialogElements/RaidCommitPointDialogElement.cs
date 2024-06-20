@@ -23,10 +23,7 @@ public class RaidCommitPointDialogElement : DialogMessageElementBase<double>
 
     #region DialogMessageElementBase
 
-    /// <summary>
-    /// Return the message of element
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override string GetMessage() => LocalizationGroup.GetText("Message", "How many points should be assigned?");
 
     #endregion // DialogMessageElementBase

@@ -7,7 +7,7 @@ namespace Scruffy.Data.Services.Calendar;
 /// </summary>
 public class WeekDayOfMonthData
 {
-    #region Propertes
+    #region Properties
 
     /// <summary>
     /// Occurence count of the week day

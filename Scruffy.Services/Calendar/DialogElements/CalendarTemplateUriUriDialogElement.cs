@@ -23,10 +23,7 @@ public class CalendarTemplateUriUriDialogElement : DialogMessageElementBase<stri
 
     #region DialogMessageElementBase<string>
 
-    /// <summary>
-    /// Return the message of element
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override string GetMessage() => LocalizationGroup.GetText("Message", "Please enter the link which should be used.");
 
     #endregion // DialogMessageElementBase<string>

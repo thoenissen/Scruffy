@@ -51,7 +51,7 @@ public class OneTimeReminderEntity
     [ForeignKey(nameof(DiscordAccountId))]
     public virtual DiscordAccountEntity DiscordAccount { get; set; }
 
-    #endregion  // Navigation properties
+    #endregion // Navigation properties
 
     #endregion // Properties
 }

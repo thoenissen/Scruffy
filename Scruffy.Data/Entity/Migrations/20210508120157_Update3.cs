@@ -7,10 +7,7 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update3 : Migration
     {
-        /// <summary>
-        /// Upgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey("FK_FractalRegistrations_FractalLfgConfigurations_FractalLfgConfigurationId", "FractalRegistrations");
@@ -25,10 +22,7 @@ namespace Scruffy.Data.Entity.Migrations
                                            onDelete: ReferentialAction.Restrict);
         }
 
-        /// <summary>
-        /// Downgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey("FK_FractalRegistrations_FractalLfgConfigurations_ConfigurationId", "FractalRegistrations");

@@ -96,7 +96,7 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
     /// </summary>
     public bool HasResponded => _interaction?.HasResponded == true;
 
-    #endregion Propeties
+    #endregion // Properties
 
     #region Methods
 

@@ -39,11 +39,7 @@ public class CalendarScheduleEditDialogElement : DialogEmbedReactionElementBase<
 
     #region DialogReactionElementBase<bool>
 
-    /// <summary>
-    /// Editing the embedded message
-    /// </summary>
-    /// <param name="builder">Builder</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <inheritdoc/>
     public override async Task EditMessage(EmbedBuilder builder)
     {
         builder.WithTitle(LocalizationGroup.GetText("ChooseCommandTitle", "Calendar schedule configuration"));
@@ -67,19 +63,13 @@ public class CalendarScheduleEditDialogElement : DialogEmbedReactionElementBase<
         }
     }
 
-    /// <summary>
-    /// Returns the title of the commands
-    /// </summary>
-    /// <returns>Commands</returns>
+    /// <inheritdoc/>
     protected override string GetCommandTitle()
     {
         return LocalizationGroup.GetText("CommandTitle", "Commands");
     }
 
-    /// <summary>
-    /// Returns the reactions which should be added to the message
-    /// </summary>
-    /// <returns>Reactions</returns>
+    /// <inheritdoc/>
     public override IReadOnlyList<ReactionData<bool>> GetReactions()
     {
         return _reactions ??= new List<ReactionData<bool>>
@@ -157,14 +147,11 @@ public class CalendarScheduleEditDialogElement : DialogEmbedReactionElementBase<
                               };
     }
 
-    /// <summary>
-    /// Default case if none of the given reactions is used
-    /// </summary>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     protected override bool DefaultFunc()
     {
         return false;
     }
 
-    #endregion DialogReactionElementBase<bool>
+    #endregion // DialogReactionElementBase<bool>
 }

@@ -34,10 +34,7 @@ public class CalendarAddVoiceChannelDialogElement : DialogEmbedSelectMenuElement
 
     #region DialogEmbedMessageElementBase
 
-    /// <summary>
-    /// Return the message of element
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override Task<EmbedBuilder> GetMessage()
     {
         return Task.FromResult(new EmbedBuilder().WithTitle(LocalizationGroup.GetText("ChooseTitle", "Voice channel selection"))
@@ -47,16 +44,10 @@ public class CalendarAddVoiceChannelDialogElement : DialogEmbedSelectMenuElement
                                                  .WithTimestamp(DateTime.Now));
     }
 
-    /// <summary>
-    /// Default case if none of the given buttons is used
-    /// </summary>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     protected override List<IGuildUser> DefaultFunc() => new();
 
-    /// <summary>
-    /// Returns the select menu entries which should be added to the message
-    /// </summary>
-    /// <returns>Reactions</returns>
+    /// <inheritdoc/>
     public override IReadOnlyList<SelectMenuEntryData<List<IGuildUser>>> GetEntries()
     {
         if (_channels == null)

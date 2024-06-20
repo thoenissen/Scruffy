@@ -51,20 +51,13 @@ public class RaidPreparedRolesSelectDialogElement : DialogEmbedMultiSelectSelect
 
     #region DialogEmbedMultiSelectSelectMenuElementBase<long>
 
-    /// <summary>
-    /// Min values
-    /// </summary>
+    /// <inheritdoc/>
     protected override int MinValues => 1;
 
-    /// <summary>
-    /// Max values
-    /// </summary>
+    /// <inheritdoc/>
     protected override int MaxValues => 9;
 
-    /// <summary>
-    /// Embed
-    /// </summary>
-    /// <returns>Task Embed</returns>
+    /// <inheritdoc/>
     public override async Task<EmbedBuilder> GetMessage()
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
@@ -102,16 +95,10 @@ public class RaidPreparedRolesSelectDialogElement : DialogEmbedMultiSelectSelect
         }
     }
 
-    /// <summary>
-    /// Returning the placeholder
-    /// </summary>
-    /// <returns>Placeholder</returns>
+    /// <inheritdoc/>
     public override string GetPlaceholder() => LocalizationGroup.GetText("RoleSelectionPlaceHolder", "Choose your roles...");
 
-    /// <summary>
-    /// Returns the select menu entries which should be added to the message
-    /// </summary>
-    /// <returns>Reactions</returns>
+    /// <inheritdoc/>
     public override IReadOnlyList<SelectMenuOptionData> GetEntries()
     {
         if (_entries == null)

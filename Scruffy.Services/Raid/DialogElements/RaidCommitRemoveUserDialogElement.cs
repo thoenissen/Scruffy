@@ -25,17 +25,10 @@ public class RaidCommitRemoveUserDialogElement : DialogMessageElementBase<IUser>
 
     #region DialogMessageElementBase
 
-    /// <summary>
-    /// Return the message of element
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override string GetMessage() => LocalizationGroup.GetText("Message", "Which user should be removed?");
 
-    /// <summary>
-    /// Converting the response message
-    /// </summary>
-    /// <param name="message">Message</param>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     public override IUser ConvertMessage(IUserMessage message)
     {
         return CommandContext.Client.GetUser(MentionUtils.ParseUser(message.Content));

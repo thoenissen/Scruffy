@@ -7,10 +7,7 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update74 : Migration
     {
-        /// <summary>
-        /// Upgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(name: "DiscordEventDescription", table: "CalendarAppointmentTemplates", type: "nvarchar(max)", nullable: true);
@@ -18,10 +15,7 @@ namespace Scruffy.Data.Entity.Migrations
             migrationBuilder.AddColumn<decimal>(name: "DiscordEventId", table: "CalendarAppointments", type: "decimal(20,0)", nullable: true);
         }
 
-        /// <summary>
-        /// Downgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(name: "DiscordEventDescription", table: "CalendarAppointmentTemplates");

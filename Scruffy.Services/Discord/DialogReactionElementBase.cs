@@ -44,10 +44,7 @@ public abstract class DialogReactionElementBase<TData> : DialogElementBase<TData
     /// <returns>Result</returns>
     protected abstract TData DefaultFunc(IReaction reaction);
 
-    /// <summary>
-    /// Execute the dialog element
-    /// </summary>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     public override async Task<TData> Run()
     {
         var message = await CommandContext.SendMessageAsync(GetMessage())

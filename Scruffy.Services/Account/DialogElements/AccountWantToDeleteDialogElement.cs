@@ -39,16 +39,10 @@ public class AccountWantToDeleteDialogElement : DialogButtonElementBase<bool>
 
     #region DialogButtonElementBase<bool>
 
-    /// <summary>
-    /// Editing the message
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override string GetMessage() => LocalizationGroup.GetFormattedText("Prompt", "Are you sure you want to delete the account '{0}'?", _name);
 
-    /// <summary>
-    /// Returns the buttons which should be added to the message
-    /// </summary>
-    /// <returns>Reactions</returns>
+    /// <inheritdoc/>
     public override IReadOnlyList<ButtonData<bool>> GetButtons()
     {
         return _buttons ??= new List<ButtonData<bool>>
@@ -68,10 +62,7 @@ public class AccountWantToDeleteDialogElement : DialogButtonElementBase<bool>
                             };
     }
 
-    /// <summary>
-    /// Default case if none of the given reactions is used
-    /// </summary>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     protected override bool DefaultFunc() => false;
 
     #endregion // DialogButtonElementBase<bool>

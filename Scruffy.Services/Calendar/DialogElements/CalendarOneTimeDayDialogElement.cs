@@ -25,17 +25,10 @@ public class CalendarOneTimeDayDialogElement : DialogMessageElementBase<DateTime
 
     #region DialogMessageElementBase<string>
 
-    /// <summary>
-    /// Return the message of element
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override string GetMessage() => LocalizationGroup.GetText("Message", "Please enter the day. (yyyy-MM-dd)");
 
-    /// <summary>
-    /// Converting the response message
-    /// </summary>
-    /// <param name="message">Message</param>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     public override DateTime ConvertMessage(IUserMessage message)
     {
         return DateTime.TryParseExact(message.Content,

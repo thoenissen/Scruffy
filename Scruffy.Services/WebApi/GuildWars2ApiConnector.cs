@@ -30,6 +30,8 @@ namespace Scruffy.Services.WebApi;
 public sealed class GuildWars2ApiConnector : IAsyncDisposable,
                                             IDisposable
 {
+    #region Fields
+
     /// <summary>
     /// Maximum count of retries cause of network errors
     /// </summary>
@@ -50,8 +52,6 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// </summary>
     private static int _currentCount;
 
-    #region Fields
-
     /// <summary>
     /// Service provider
     /// </summary>
@@ -67,7 +67,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// </summary>
     private string _apiKey;
 
-    #endregion
+    #endregion // Fields
 
     #region Constructor
 

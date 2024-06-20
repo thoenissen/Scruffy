@@ -31,7 +31,7 @@ public class QueryableBase<TEntity> : IQueryable<TEntity>
 
     #endregion // Properties
 
-    #region Implementation of IEnumerable
+    #region IEnumerable
 
     /// <summary>
     /// Returns an enumerator that iterates through the collection.

@@ -49,10 +49,7 @@ public abstract class DialogEmbedMessageElementBase<TData> : DialogElementBase<T
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public virtual Task<TData> ConvertMessage(IUserMessage message) => Task.FromResult((TData)Convert.ChangeType(message.Content, typeof(TData)));
 
-    /// <summary>
-    /// Execute the dialog element
-    /// </summary>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     public override async Task<TData> Run()
     {
         var repeat = false;

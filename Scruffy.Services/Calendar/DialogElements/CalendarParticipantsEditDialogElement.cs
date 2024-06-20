@@ -53,10 +53,7 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedSelectMenuElemen
 
     #region DialogEmbedReactionElementBase<bool>
 
-    /// <summary>
-    /// Return the message of element
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override async Task<EmbedBuilder> GetMessage()
     {
         var builder = new EmbedBuilder().WithTitle(LocalizationGroup.GetText("CommitTitle", "Participants"))
@@ -169,16 +166,10 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedSelectMenuElemen
         return builder;
     }
 
-    /// <summary>
-    /// Default case if none of the given reactions is used
-    /// </summary>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     protected override bool DefaultFunc() => false;
 
-    /// <summary>
-    /// Returns the select menu entries which should be added to the message
-    /// </summary>
-    /// <returns>Reactions</returns>
+    /// <inheritdoc/>
     public override IReadOnlyList<SelectMenuEntryData<bool>> GetEntries()
     {
         return _entries ??= new List<SelectMenuEntryData<bool>>

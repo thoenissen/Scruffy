@@ -7,10 +7,7 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update1 : Migration
     {
-        /// <summary>
-        /// Upgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable("FractalLfgConfigurations",
@@ -54,10 +51,7 @@ namespace Scruffy.Data.Entity.Migrations
             migrationBuilder.CreateIndex("IX_FractalRegistrations_FractalLfgConfigurationId", "FractalRegistrations", "FractalLfgConfigurationId");
         }
 
-        /// <summary>
-        /// Downgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable("FractalRegistrations");

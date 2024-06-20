@@ -35,11 +35,7 @@ public class CalendarScheduleOptionsDialogElement : DialogEmbedReactionElementBa
 
     #region DialogReactionElementBase<WeekDayOfMonthSpecialOptions>
 
-    /// <summary>
-    /// Editing the embedded message
-    /// </summary>
-    /// <param name="builder">Builder</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <inheritdoc/>
     public override Task EditMessage(EmbedBuilder builder)
     {
         builder.WithTitle(LocalizationGroup.GetText("Title", "Schedule options selection"));
@@ -48,19 +44,13 @@ public class CalendarScheduleOptionsDialogElement : DialogEmbedReactionElementBa
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Returns the title of the commands
-    /// </summary>
-    /// <returns>Commands</returns>
+    /// <inheritdoc/>
     protected override string GetCommandTitle()
     {
         return LocalizationGroup.GetText("Reactions", "Days");
     }
 
-    /// <summary>
-    /// Returns the reactions which should be added to the message
-    /// </summary>
-    /// <returns>Reactions</returns>
+    /// <inheritdoc/>
     public override IReadOnlyList<ReactionData<WeekDayOfMonthSpecialOptions>> GetReactions()
     {
         return _reactions ??= new List<ReactionData<WeekDayOfMonthSpecialOptions>>
@@ -92,14 +82,11 @@ public class CalendarScheduleOptionsDialogElement : DialogEmbedReactionElementBa
                               };
     }
 
-    /// <summary>
-    /// Default case if none of the given reactions is used
-    /// </summary>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     protected override WeekDayOfMonthSpecialOptions DefaultFunc()
     {
         throw new InvalidOperationException();
     }
 
-    #endregion DialogReactionElementBase<WeekDayOfMonthSpecialOptions>
+    #endregion // DialogReactionElementBase<WeekDayOfMonthSpecialOptions>
 }

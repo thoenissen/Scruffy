@@ -39,10 +39,7 @@ public class CalendarScheduleScheduleDialogElement : DialogEmbedMessageElementBa
 
     #region DialogEmbedMessageElementBase<long>
 
-    /// <summary>
-    /// Return the message of element
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override EmbedBuilder GetMessage()
     {
         var builder = new EmbedBuilder();
@@ -74,11 +71,7 @@ public class CalendarScheduleScheduleDialogElement : DialogEmbedMessageElementBa
         return builder;
     }
 
-    /// <summary>
-    /// Converting the response message
-    /// </summary>
-    /// <param name="message">Message</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <inheritdoc/>
     public override async Task<CalenderScheduleData> ConvertMessage(IUserMessage message)
     {
         var data = new CalenderScheduleData();

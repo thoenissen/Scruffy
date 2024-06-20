@@ -8,7 +8,7 @@ namespace Scruffy.Services.Calendar.DialogElements.Forms;
 /// </summary>
 public class CreateWeekDayOfMonthForm
 {
-    #region Propertes
+    #region Properties
 
     /// <summary>
     /// Day of week

@@ -47,10 +47,7 @@ public class LocatedInteractionModuleBase : InteractionModuleBase<InteractionCon
 
     #region ModuleBase
 
-    /// <summary>
-    /// Before execution
-    /// </summary>
-    /// <param name="command">Command</param>
+    /// <inheritdoc/>
     public override void BeforeExecute(ICommandInfo command)
     {
         Context.Command = command;

@@ -221,12 +221,7 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
 
     #region SlashCommandModuleBase
 
-    /// <summary>
-    /// Creates a list of all commands
-    /// </summary>
-    /// <remarks>Only the <see cref="SlashCommandBuildContext"/> is available and not the command context during this method.</remarks>
-    /// <param name="buildContext">Build context</param>
-    /// <returns>List of commands</returns>
+    /// <inheritdoc/>
     public override IEnumerable<ApplicationCommandProperties> GetCommands(SlashCommandBuildContext buildContext)
     {
         var repositoryFactory = buildContext.ServiceProvider
@@ -242,10 +237,10 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
                                       .ToList();
 
         var levelChoices = levels.Select(obj => new ApplicationCommandOptionChoiceProperties
-                                          {
-                                              Value = obj.AliasName,
-                                              Name = obj.Description
-                                          })
+                                                {
+                                                    Value = obj.AliasName,
+                                                    Name = obj.Description
+                                                })
                                  .ToList();
 
         var appointments = repositoryFactory.GetRepository<RaidDayConfigurationRepository>()
@@ -258,10 +253,10 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
                                             .ToList();
 
         var appointmentChoices = appointments.Select(obj => new ApplicationCommandOptionChoiceProperties
-                                                      {
-                                                          Value = obj.AliasName,
-                                                          Name = buildContext.CultureInfo.DateTimeFormat.GetDayName(obj.Day)
-                                                      })
+                                                            {
+                                                                Value = obj.AliasName,
+                                                                Name = buildContext.CultureInfo.DateTimeFormat.GetDayName(obj.Day)
+                                                            })
                                        .ToList();
 
         return base.GetCommands(buildContext)

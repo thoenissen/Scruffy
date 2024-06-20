@@ -163,14 +163,13 @@ public class RaidCommandHandler : LocatedServiceBase
 
             dbFactory.GetRepository<RaidAppointmentRepository>()
                      .Add(new RaidAppointmentEntity
-                              {
-                                  ConfigurationId = configuration.Id,
-                                  TemplateId = data.TemplateId,
-                                  TimeStamp = appointmentTimeStamp,
-                                  Deadline = appointmentTimeStamp.Date
-                                                                      .Add(data.RegistrationDeadline),
-                                  GroupCount = 1
-                              });
+                          {
+                              ConfigurationId = configuration.Id,
+                              TemplateId = data.TemplateId,
+                              TimeStamp = appointmentTimeStamp,
+                              Deadline = appointmentTimeStamp.Date.Add(data.RegistrationDeadline),
+                              GroupCount = 1
+                          });
 
             await _messageBuilder.RefreshMessageAsync(configuration.Id)
                                  .ConfigureAwait(false);
@@ -336,10 +335,10 @@ public class RaidCommandHandler : LocatedServiceBase
                                 {
                                     dbFactory.GetRepository<RaidRegistrationRoleAssignmentRepository>()
                                              .Add(new RaidRegistrationRoleAssignmentEntity
-                                             {
-                                                 RegistrationId = registrationId.Value,
-                                                 RoleId = roleId
-                                             });
+                                                  {
+                                                      RegistrationId = registrationId.Value,
+                                                      RoleId = roleId
+                                                  });
                                 }
                             }
                         }
@@ -637,23 +636,23 @@ public class RaidCommandHandler : LocatedServiceBase
                      == false)
                     {
                         var user = new UserEntity
-                                       {
-                                           CreationTimeStamp = DateTime.Now,
-                                           Type = UserType.DiscordUser,
-                                           RaidExperienceLevelId = experienceLevelId,
-                                           UserName = $"{discordUser.Username}#{discordUser.Discriminator}",
-                                           SecurityStamp = Guid.NewGuid().ToString()
-                                       };
+                                   {
+                                       CreationTimeStamp = DateTime.Now,
+                                       Type = UserType.DiscordUser,
+                                       RaidExperienceLevelId = experienceLevelId,
+                                       UserName = $"{discordUser.Username}#{discordUser.Discriminator}",
+                                       SecurityStamp = Guid.NewGuid().ToString()
+                                   };
 
                         if (dbFactory.GetRepository<UserRepository>()
                                      .Add(user))
                         {
                             dbFactory.GetRepository<DiscordAccountRepository>()
                                      .Add(new DiscordAccountEntity
-                                     {
-                                         Id = discordUser.Id,
-                                         UserId = user.Id
-                                     });
+                                          {
+                                              Id = discordUser.Id,
+                                              UserId = user.Id
+                                          });
 
                             changedRanks.Add((discordUser, null, experienceLevelId));
                         }

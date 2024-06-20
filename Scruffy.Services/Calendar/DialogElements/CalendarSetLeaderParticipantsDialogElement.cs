@@ -27,17 +27,10 @@ public class CalendarSetLeaderParticipantsDialogElement : DialogMessageElementBa
 
     #region DialogMessageElementBase
 
-    /// <summary>
-    /// Return the message of element
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override string GetMessage() => LocalizationGroup.GetText("Message", "Please enter the members:");
 
-    /// <summary>
-    /// Converting the response message
-    /// </summary>
-    /// <param name="message">Message</param>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     public override List<IGuildUser> ConvertMessage(IUserMessage message)
     {
         var members = new List<IGuildUser>();

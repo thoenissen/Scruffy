@@ -28,9 +28,7 @@ public class GuildActivityDiscordMessageRemoveDialogElement : DiscordRoleSelecti
 
     #region DiscordRoleSelectionDialogElement
 
-    /// <summary>
-    /// Additional role filter
-    /// </summary>
+    /// <inheritdoc/>
     public override Func<IRole, bool> RoleFilter
     {
         get

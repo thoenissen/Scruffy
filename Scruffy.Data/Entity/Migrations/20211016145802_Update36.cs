@@ -9,10 +9,7 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update36 : Migration
     {
-        /// <summary>
-        /// Upgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(name: "FK_CalendarAppointmentTemplates_ServerConfigurations_ServerId", table: "CalendarAppointmentTemplates");
@@ -237,10 +234,7 @@ namespace Scruffy.Data.Entity.Migrations
             migrationBuilder.DropTable("Users_Temp");
         }
 
-        /// <summary>
-        /// Downgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             throw new NotSupportedException();

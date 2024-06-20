@@ -41,10 +41,7 @@ public class UsersImportJob : LocatedAsyncJob
 
     #region LocatedAsyncJob
 
-    /// <summary>
-    /// Executes the job
-    /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <inheritdoc/>
     public override async Task ExecuteOverrideAsync()
     {
         var guildServer = Environment.GetEnvironmentVariable("SCRUFFY_GUILD_SERVER");

@@ -7,10 +7,7 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update55 : Migration
     {
-        /// <summary>
-        /// Upgrrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(name: "DiscordHistoryRoleAssignments");
@@ -27,10 +24,7 @@ namespace Scruffy.Data.Entity.Migrations
                                          constraints: table => table.PrimaryKey("PK_GitHubCommitEntity", x => x.Sha));
         }
 
-        /// <summary>
-        /// Downgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(name: "GitHubCommitEntity");

@@ -17,7 +17,7 @@ public class CalendarTemplateUriDialogElement : DialogReactionElementBase<string
     /// </summary>
     private List<ReactionData<string>> _reactions;
 
-    #endregion
+    #endregion // Fields
 
     #region Constructor
 
@@ -34,16 +34,10 @@ public class CalendarTemplateUriDialogElement : DialogReactionElementBase<string
 
     #region DialogReactionElementBase<bool>
 
-    /// <summary>
-    /// Editing the embedded message
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override string GetMessage() => LocalizationGroup.GetText("Prompt", "Do you want to add link?");
 
-    /// <summary>
-    /// Returns the reactions which should be added to the message
-    /// </summary>
-    /// <returns>Reactions</returns>
+    /// <inheritdoc/>
     public override IReadOnlyList<ReactionData<string>> GetReactions()
     {
         return _reactions ??= new List<ReactionData<string>>
@@ -61,11 +55,7 @@ public class CalendarTemplateUriDialogElement : DialogReactionElementBase<string
                               };
     }
 
-    /// <summary>
-    /// Default case if none of the given reactions is used
-    /// </summary>
-    /// <param name="reaction">Reaction</param>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     protected override string DefaultFunc(IReaction reaction) => null;
 
     #endregion // DialogReactionElementBase<bool>

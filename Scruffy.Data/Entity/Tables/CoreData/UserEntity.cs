@@ -17,9 +17,7 @@ public class UserEntity : IdentityUser<long>
 {
     #region Properties
 
-    /// <summary>
-    /// Id
-    /// </summary>
+    /// <inheritdoc/>
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public override long Id { get; set; }
 

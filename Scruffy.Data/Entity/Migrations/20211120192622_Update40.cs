@@ -7,20 +7,14 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update40 : Migration
     {
-        /// <summary>
-        /// Upgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(name: "DailyAchievementPoints", table: "GuildWarsAccounts", type: "int", nullable: true);
             migrationBuilder.AddColumn<int>(name: "MonthlyAchievementPoints", table: "GuildWarsAccounts", type: "int", nullable: true);
         }
 
-        /// <summary>
-        /// Downgrade
-        /// </summary>
-        /// <param name="migrationBuilder">Builder</param>
+        /// <inheritdoc/>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(name: "DailyAchievementPoints", table: "GuildWarsAccounts");

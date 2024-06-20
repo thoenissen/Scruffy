@@ -38,12 +38,9 @@ public class ServerConfigurationDialogElement : DialogEmbedSelectMenuElementBase
 
     #endregion // Constructor
 
-    #region DialogSelectMenuElementBase
+    #region DialogSelectMenuElementBase<bool>
 
-    /// <summary>
-    /// Return the message of element
-    /// </summary>
-    /// <returns>Message</returns>
+    /// <inheritdoc/>
     public override Task<EmbedBuilder> GetMessage()
     {
         var builder = new EmbedBuilder().WithTitle(LocalizationGroup.GetText("Title", "Server configuration"))
@@ -55,16 +52,10 @@ public class ServerConfigurationDialogElement : DialogEmbedSelectMenuElementBase
         return Task.FromResult(builder);
     }
 
-    /// <summary>
-    /// Returning the placeholder
-    /// </summary>
-    /// <returns>Placeholder</returns>
+    /// <inheritdoc/>
     public override string GetPlaceholder() => LocalizationGroup.GetText("ChooseAction", "Choose one of the following options...");
 
-    /// <summary>
-    /// Returns the select menu entries which should be added to the message
-    /// </summary>
-    /// <returns>Reactions</returns>
+    /// <inheritdoc/>
     public override IReadOnlyList<SelectMenuEntryData<bool>> GetEntries()
     {
         return new List<SelectMenuEntryData<bool>>
@@ -136,10 +127,7 @@ public class ServerConfigurationDialogElement : DialogEmbedSelectMenuElementBase
                };
     }
 
-    /// <summary>
-    /// Default case if none of the given buttons is used
-    /// </summary>
-    /// <returns>Result</returns>
+    /// <inheritdoc/>
     protected override bool DefaultFunc() => false;
 
     #endregion // DialogSelectMenuElementBase<bool>

@@ -33,10 +33,7 @@ public class RaidMessageRefreshJob : LocatedAsyncJob
     #endregion // Constructor
     #region LocatedAsyncJob
 
-    /// <summary>
-    /// Executes the job
-    /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <inheritdoc/>
     public override async Task ExecuteOverrideAsync()
     {
         if (_configurationId > 0)
