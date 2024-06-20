@@ -88,12 +88,12 @@ public class LogSlashCommandModule : SlashCommandModuleBase
     }
 
     /// <summary>
-    /// Exporting urls of all logs of the given date
+    /// Exporting urls of all logs since the given date
     /// </summary>
-    /// <param name="dayString">Since day</param>
+    /// <param name="since">Since day</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("export", "Export of log urls")]
-    public Task Export([Summary("day", "Logs of the given day. (dd.MM.yyyy)")] string dayString) => CommandHandler.ExportLogs(Context, dayString);
+    public Task Export([Summary("since-day", "Logs since the given day. (dd.MM.yyyy)")] string since) => CommandHandler.ExportLogs(Context, since);
 
     #endregion // Commands
 }

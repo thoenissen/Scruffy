@@ -560,7 +560,7 @@ public class LogCommandHandler : LocatedServiceBase
                                         .FirstOrDefault();
 
         var startDate = ParseStartDate(dayString);
-        var endDate = startDate.AddDays(1);
+        var endDate = new DateTimeOffset(DateTime.MinValue, TimeSpan.Zero);
 
         if (string.IsNullOrEmpty(account?.DpsReportUserToken) == false)
         {
