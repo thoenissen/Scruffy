@@ -48,7 +48,9 @@ internal static class CommandExtensions
     {
         var props = new SlashCommandBuilder().WithName(commandInfo.Name)
                                              .WithDescription(commandInfo.Description)
-                                             .WithDMPermission(commandInfo.IsEnabledInDm)
+                                             .WithContextTypes(commandInfo.IsEnabledInDm
+                                                                   ? [InteractionContextType.Guild, InteractionContextType.PrivateChannel, InteractionContextType.BotDm]
+                                                                   : [InteractionContextType.Guild, InteractionContextType.PrivateChannel])
                                              .WithDefaultMemberPermissions((commandInfo.DefaultMemberPermissions ?? 0) | (commandInfo.Module.DefaultMemberPermissions ?? 0))
                                              .WithNameLocalizations(new Dictionary<string, string>())
                                              .WithDescriptionLocalizations(new Dictionary<string, string>())
@@ -95,14 +97,18 @@ internal static class CommandExtensions
                                                   Name = commandInfo.Name,
                                                   IsDefaultPermission = commandInfo.DefaultPermission,
                                                   DefaultMemberPermissions = (commandInfo.DefaultMemberPermissions ?? 0) | (commandInfo.Module.DefaultMemberPermissions ?? 0),
-                                                  IsDMEnabled = commandInfo.IsEnabledInDm
+                                                  ContextTypes = commandInfo.IsEnabledInDm
+                                                      ? [InteractionContextType.Guild, InteractionContextType.PrivateChannel, InteractionContextType.BotDm]
+                                                      : [InteractionContextType.Guild, InteractionContextType.PrivateChannel]
                                               }.Build(),
             ApplicationCommandType.User => new UserCommandBuilder
                                            {
                                                Name = commandInfo.Name,
                                                IsDefaultPermission = commandInfo.DefaultPermission,
                                                DefaultMemberPermissions = (commandInfo.DefaultMemberPermissions ?? 0) | (commandInfo.Module.DefaultMemberPermissions ?? 0),
-                                               IsDMEnabled = commandInfo.IsEnabledInDm
+                                               ContextTypes = commandInfo.IsEnabledInDm
+                                                   ? [InteractionContextType.Guild, InteractionContextType.PrivateChannel, InteractionContextType.BotDm]
+                                                   : [InteractionContextType.Guild, InteractionContextType.PrivateChannel]
                                            }.Build(),
             _ => throw new InvalidOperationException($"{commandInfo.CommandType} isn't a supported command type.")
         };
@@ -161,7 +167,9 @@ internal static class CommandExtensions
 
                 var props = new SlashCommandBuilder().WithName(moduleInfo.SlashGroupName)
                                                      .WithDescription(moduleInfo.Description)
-                                                     .WithDMPermission(moduleInfo.IsEnabledInDm)
+                                                     .WithContextTypes(moduleInfo.IsEnabledInDm
+                                                                           ? [InteractionContextType.Guild, InteractionContextType.PrivateChannel, InteractionContextType.BotDm]
+                                                                           : [InteractionContextType.Guild, InteractionContextType.PrivateChannel])
                                                      .WithDefaultMemberPermissions(moduleInfo.DefaultMemberPermissions)
                                                      .WithNameLocalizations(new Dictionary<string, string>())
                                                      .WithDescriptionLocalizations(new Dictionary<string, string>())

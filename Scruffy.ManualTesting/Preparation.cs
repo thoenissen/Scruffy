@@ -74,23 +74,20 @@ internal static class Preparation
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     internal static async Task InstallGlobalCommands()
     {
-        var config = new SlashCommandBuilder();
-        config.WithName("configuration");
-        config.WithDescription("Server configuration");
-        config.DefaultMemberPermissions = GuildPermission.Administrator;
-        config.IsDMEnabled = false;
+        var config = new SlashCommandBuilder().WithName("configuration")
+                                              .WithDescription("Server configuration")
+                                              .WithContextTypes(InteractionContextType.Guild, InteractionContextType.PrivateChannel)
+                                              .WithDefaultMemberPermissions(GuildPermission.Administrator);
 
-        var account = new SlashCommandBuilder();
-        account.WithName("account");
-        account.WithDescription("Account configuration");
-        account.IsDMEnabled = true;
+        var account = new SlashCommandBuilder().WithName("account")
+                                               .WithDescription("Account configuration")
+                                               .WithContextTypes(InteractionContextType.Guild, InteractionContextType.PrivateChannel, InteractionContextType.BotDm);
 
-        var info = new SlashCommandBuilder();
-        info.WithName("info");
-        info.WithDescription("Information about Scruffy");
-        info.IsDMEnabled = true;
+        var info = new SlashCommandBuilder().WithName("info")
+                                            .WithDescription("Information about Scruffy")
+                                            .WithContextTypes(InteractionContextType.Guild, InteractionContextType.PrivateChannel, InteractionContextType.BotDm);
 
-        await DiscordClient.BulkOverwriteGlobalApplicationCommandsAsync(new ApplicationCommandProperties[] { config.Build(), account.Build(), info.Build() })
+        await DiscordClient.BulkOverwriteGlobalApplicationCommandsAsync([config.Build(), account.Build(), info.Build()])
                            .ConfigureAwait(false);
     }
 }
