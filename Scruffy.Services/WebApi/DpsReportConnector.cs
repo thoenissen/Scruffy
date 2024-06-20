@@ -103,13 +103,19 @@ public class DpsReportConnector
                               || upload.Encounter.Duration.TotalSeconds > 30)
                              && filter(upload))
                             {
-                                // HACK We need to get the fight name to differentiate the different Ai phases.
-                                if (upload.Encounter.BossId == 23254)
+                                // HACK
+                                // Sometimes the API doesn't report all players, so we have to load the full report for correct data
+                                // We also need to get the fight name to differentiate the different Ai phases.
+                                if (upload.Players.Count != upload.Encounter.NumberOfPlayers
+                                    || upload.Encounter.BossId == 23254)
                                 {
-                                    await RefreshEncounterData(upload).ConfigureAwait(false);
+                                    await UpdateUploadData(upload).ConfigureAwait(false);
                                 }
 
-                                uploads.Add(upload);
+                                if (upload.Players.Count > 0)
+                                {
+                                    uploads.Add(upload);
+                                }
                             }
                         }
                     }
@@ -122,15 +128,24 @@ public class DpsReportConnector
     }
 
     /// <summary>
-    /// Refresh the encounter data from the specific
+    /// Refresh the player data from the specific upload
     /// </summary>
     /// <param name="upload">Upload to be refreshed</param>
-    /// <returns>The enriched encounter</returns>
-    private async Task RefreshEncounterData(Upload upload)
+    /// <returns>The enriched upload</returns>
+    private async Task UpdateUploadData(Upload upload)
     {
-        var log = await GetLog(upload.Id).ConfigureAwait(false);
+        if (upload.Encounter.JsonAvailable)
+        {
+            var log = await GetLog(upload.Id).ConfigureAwait(false);
 
-        upload.FightName = log.FightName;
+            upload.FightName = log.FightName;
+            upload.Players = new Dictionary<string, Player>();
+
+            foreach (var player in log.Players)
+            {
+                upload.Players.Add(player.CharacterName, player);
+            }
+        }
     }
 
     /// <summary>
