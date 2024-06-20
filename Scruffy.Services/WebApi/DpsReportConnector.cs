@@ -41,30 +41,15 @@ public class DpsReportConnector
     /// <summary>
     /// Requests a filtered list of DPS reports
     /// </summary>
-    /// <param name="tokens">DPS-report user tokens</param>
-    /// <param name="startTime">Date for the oldest report to get. Set to zero to omit this parameter.</param>
-    /// <param name="endTime">Date for the most recent reports to get. Set to zero to omit this parameter.</param>
-    /// <param name="filter">Function to filter reports</param>
-    /// <param name="shouldAbort">Function to abort searching further</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task<List<Upload>> GetUploads(IEnumerable<string> tokens, DateTimeOffset startTime, DateTimeOffset endTime, Func<Upload, bool> filter = null, Func<Upload, bool> shouldAbort = null)
-    {
-        var tasks = tokens.Select(token => GetUploads(token, startTime, endTime, filter, shouldAbort)).ToList();
-        await Task.WhenAll(tasks).ConfigureAwait(false);
-        return tasks.SelectMany(task => task.Result).ToList();
-    }
-
-    /// <summary>
-    /// Requests a filtered list of DPS reports
-    /// </summary>
     /// <param name="token">DPS-report user token</param>
     /// <param name="filter">Function to filter reports</param>
     /// <param name="shouldAbort">Function to abort searching further</param>
+    /// <param name="skipEnhancement">Whether to skip certain enhancements on the upload</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task<List<Upload>> GetUploads(string token, Func<Upload, bool> filter, Func<Upload, bool> shouldAbort)
+    public IAsyncEnumerable<Upload> GetUploads(string token, Func<Upload, bool> filter, Func<Upload, bool> shouldAbort, bool skipEnhancement = false)
     {
         var omitTime = new DateTimeOffset(DateTime.MinValue, TimeSpan.Zero);
-        return GetUploads(token, omitTime, omitTime, filter, shouldAbort);
+        return GetUploads(token, omitTime, omitTime, filter, shouldAbort, skipEnhancement);
     }
 
     /// <summary>
@@ -75,47 +60,84 @@ public class DpsReportConnector
     /// <param name="endTime">Date for the most recent reports to get. Set to zero to omit this parameter.</param>
     /// <param name="filter">Function to filter reports</param>
     /// <param name="shouldAbort">Function to abort searching further</param>
+    /// <param name="skipEnhancement">Whether to skip certain enhancements on the upload</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task<List<Upload>> GetUploads(string token, DateTimeOffset startTime, DateTimeOffset endTime, Func<Upload, bool> filter = null, Func<Upload, bool> shouldAbort = null)
+    public async IAsyncEnumerable<Upload> GetUploads(string token, DateTimeOffset startTime, DateTimeOffset endTime, Func<Upload, bool> filter = null, Func<Upload, bool> shouldAbort = null, bool skipEnhancement = false)
     {
-        var tasks = new List<Task<Upload>>();
+        var firstPage = await GetUploads(token, 0, startTime, endTime).ConfigureAwait(false);
 
-        var currentPage = 0;
-        var pageCount = 0;
-        Page page;
-
-        do
+        if (firstPage != null)
         {
-            currentPage++;
+            var uploadTasks = new List<Task<Upload>>();
 
-            page = await GetUploads(token, currentPage, startTime, endTime).ConfigureAwait(false);
-
-            if (page != null)
+            if (shouldAbort == null)
             {
-                if (currentPage == 1)
+                var pageTasks = new List<Task<Page>> { Task.FromResult(firstPage) };
+
+                for (var i = 1; i < firstPage.Pages; i++)
                 {
-                    pageCount = page.Pages;
+                    pageTasks.Add(GetUploads(token, i, startTime, endTime));
                 }
 
-                if (page.Uploads != null)
+                while (pageTasks.Count != 0)
                 {
-                    foreach (var upload in page.Uploads)
-                    {
-                        if (shouldAbort != null && shouldAbort(upload))
-                        {
-                            currentPage = pageCount;
-                            break;
-                        }
+                    var finishedTask = await Task.WhenAny(pageTasks).ConfigureAwait(false);
+                    pageTasks.Remove(finishedTask);
+                    var page = finishedTask.Result;
 
-                        tasks.Add(CheckUpload(upload, filter));
+                    if (page.Uploads != null)
+                    {
+                        uploadTasks.AddRange(page.Uploads.Where(upload => CouldBeValidUpload(filter, upload)).Select(upload => CheckUpload(upload, skipEnhancement)));
                     }
                 }
             }
-        }
-        while (page?.Uploads != null && currentPage < pageCount);
+            else
+            {
+                var currentPage = 1;
+                var pageCount = firstPage.Pages;
 
-        await Task.WhenAll(tasks).ConfigureAwait(false);
-        return tasks.Where(task => task.Result != null).Select(task => task.Result).ToList();
+                Page page;
+                var nextPage = Task.FromResult(firstPage);
+
+                do
+                {
+                    await nextPage.ConfigureAwait(false);
+                    page = nextPage.Result;
+
+                    nextPage = GetUploads(token, currentPage, startTime, endTime);
+                    ++currentPage;
+
+                    if (page?.Uploads != null)
+                    {
+                        foreach (var upload in page.Uploads)
+                        {
+                            if (shouldAbort(upload))
+                            {
+                                currentPage = pageCount;
+                                break;
+                            }
+
+                            if (CouldBeValidUpload(filter, upload))
+                            {
+                                uploadTasks.Add(CheckUpload(upload, skipEnhancement));
+                            }
+                        }
+                    }
+                }
+                while (page?.Uploads != null && currentPage < pageCount);
+            }
+
+            while (uploadTasks.Count != 0)
+            {
+                var finishedTask = await Task.WhenAny(uploadTasks).ConfigureAwait(false);
+                uploadTasks.Remove(finishedTask);
+
+                if (finishedTask.Result != null)
+                {
+                    yield return finishedTask.Result;
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -148,33 +170,34 @@ public class DpsReportConnector
     }
 
     /// <summary>
+    /// Returns whether a upload could be valid
+    /// </summary>
+    /// <param name="filter">Function to filter reports</param>
+    /// <param name="upload">Upload</param>
+    /// <returns>Whether the given upload could be valid</returns>
+    private bool CouldBeValidUpload(Func<Upload, bool> filter, Upload upload)
+    {
+        return (upload.Encounter.Success || upload.Encounter.Duration.TotalSeconds > 30) && (filter == null || filter(upload));
+    }
+
+    /// <summary>
     /// Checks the upload data whether it's complete or has to be updated with the full JSON data
     /// </summary>
     /// <param name="upload">Upload to check</param>
-    /// <param name="filter">Function to filter reports</param>
+    /// <param name="skipEnhancement">Whether to skip certain enhancements on the upload</param>
     /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-    private async Task<Upload> CheckUpload(Upload upload, Func<Upload, bool> filter)
+    private async Task<Upload> CheckUpload(Upload upload, bool skipEnhancement)
     {
-        if ((upload.Encounter.Success
-             || upload.Encounter.Duration.TotalSeconds > 30)
-            && (filter == null || filter(upload)))
+        // HACK
+        // Sometimes the API doesn't report all players, so we have to load the full report for correct data
+        // We also need to get the fight name to differentiate the different Ai phases.
+        if (skipEnhancement == false &&
+            (upload.Players.Count != upload.Encounter.NumberOfPlayers || upload.Encounter.BossId == 23254))
         {
-            // HACK
-            // Sometimes the API doesn't report all players, so we have to load the full report for correct data
-            // We also need to get the fight name to differentiate the different Ai phases.
-            if (upload.Players.Count != upload.Encounter.NumberOfPlayers
-                || upload.Encounter.BossId == 23254)
-            {
-                await UpdateUploadData(upload).ConfigureAwait(false);
-            }
-
-            if (upload.Players.Count > 0)
-            {
-                return upload;
-            }
+            await UpdateUploadData(upload).ConfigureAwait(false);
         }
 
-        return null;
+        return skipEnhancement || upload.Players.Count > 0 ? upload : null;
     }
 
     /// <summary>
