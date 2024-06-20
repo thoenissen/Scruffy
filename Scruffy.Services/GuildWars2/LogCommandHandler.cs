@@ -635,7 +635,7 @@ public class LogCommandHandler : LocatedServiceBase
     private DateTimeOffset ParseStartDate(string dayString)
     {
         var day = ParseDay(dayString);
-        return new DateTimeOffset(day.Year, day.Month, day.Day, 0, 0, 0, DateTimeOffset.Now - DateTimeOffset.UtcNow);
+        return new DateTimeOffset(day.Year, day.Month, day.Day, 0, 0, 0, DateTimeOffset.Now.Offset);
     }
 
     /// <summary>
@@ -648,7 +648,7 @@ public class LogCommandHandler : LocatedServiceBase
         if (!string.IsNullOrEmpty(dayString))
         {
             var day = ParseDay(dayString);
-            return new DateTimeOffset(day.Year, day.Month, day.Day, 23, 59, 59, DateTimeOffset.Now - DateTimeOffset.UtcNow);
+            return new DateTimeOffset(day.Year, day.Month, day.Day, 23, 59, 59, DateTimeOffset.Now.Offset);
         }
 
         return new DateTimeOffset(DateTime.MinValue, TimeSpan.Zero);
