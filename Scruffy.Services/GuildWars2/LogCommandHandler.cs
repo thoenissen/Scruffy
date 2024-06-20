@@ -123,6 +123,7 @@ public class LogCommandHandler : LocatedServiceBase
                                                                endDate,
                                                                filter: upload => (type == DpsReportType.All && _dpsReportConnector.GetReportType(upload.Encounter.BossId) != DpsReportType.Other)
                                                                               || type == _dpsReportConnector.GetReportType(upload.Encounter.BossId))
+                                                   .ToListAsync()
                                                    .ConfigureAwait(false);
 
             if (uploads.Count > 0)
@@ -188,6 +189,7 @@ public class LogCommandHandler : LocatedServiceBase
                                                                    return false;
                                                                },
                                                                upload => counts.TryGetValue(upload.Encounter.BossId, out var value) && value > count)
+                                                   .ToListAsync()
                                                    .ConfigureAwait(false);
 
             if (uploads.Count > 0)
@@ -314,6 +316,7 @@ public class LogCommandHandler : LocatedServiceBase
                                                                    return false;
                                                                },
                                                                upload => counts.Count > 0 && counts.All(obj => obj.Value == count))
+                                                   .ToListAsync()
                                                    .ConfigureAwait(false);
 
             if (uploads.Count > 0)
@@ -559,43 +562,37 @@ public class LogCommandHandler : LocatedServiceBase
                                         .Select(obj => new { obj.User.GuildWarsAccounts.FirstOrDefault().Name, obj.User.DpsReportUserToken })
                                         .FirstOrDefault();
 
-        var startDate = ParseStartDate(sinceDayString);
-        var endDate = ParseEndDate(untilDayString);
-
         if (string.IsNullOrEmpty(account?.DpsReportUserToken) == false)
         {
-            var uploads = await _dpsReportConnector.GetUploads(account.DpsReportUserToken, startDate, endDate).ConfigureAwait(false);
+            var startDate = ParseStartDate(sinceDayString);
+            var endDate = ParseEndDate(untilDayString);
 
-            if (uploads.Count > 0)
+            var memoryStream = new MemoryStream();
+            var writer = new StreamWriter(memoryStream);
+
+            await using (memoryStream.ConfigureAwait(false))
             {
-                var reports = string.Join(Environment.NewLine, uploads.Select(obj => obj.Permalink));
-
-                var memoryStream = new MemoryStream();
-                await using (memoryStream.ConfigureAwait(false))
+                await using (writer.ConfigureAwait(false))
                 {
-                    var writer = new StreamWriter(memoryStream);
-                    await using (writer.ConfigureAwait(false))
+                    await foreach (var upload in _dpsReportConnector.GetUploads(account.DpsReportUserToken, startDate, endDate, skipEnhancement: true))
                     {
-                        foreach (var upload in uploads)
-                        {
-                            await writer.WriteLineAsync(upload.Permalink)
-                                        .ConfigureAwait(false);
-                        }
+                        await writer.WriteLineAsync(upload.Permalink).ConfigureAwait(false);
+                    }
 
-                        await writer.FlushAsync()
-                                    .ConfigureAwait(false);
-
+                    if (memoryStream.Length > 0)
+                    {
+                        await writer.FlushAsync().ConfigureAwait(false);
                         memoryStream.Position = 0;
 
                         await context.ReplyAsync(attachments: new[] { new FileAttachment(memoryStream, "logs.txt") })
-                                            .ConfigureAwait(false);
+                            .ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        await context.ReplyAsync(LocalizationGroup.GetText("NoDpsReportUploads", "No DPS-Reports found!"))
+                            .ConfigureAwait(false);
                     }
                 }
-            }
-            else
-            {
-                await context.ReplyAsync(LocalizationGroup.GetText("NoDpsReportUploads", "No DPS-Reports found!"))
-                             .ConfigureAwait(false);
             }
         }
         else
@@ -763,17 +760,20 @@ public class LogCommandHandler : LocatedServiceBase
 
         if (appointment != null)
         {
-            var startDate = new DateTimeOffset(appointment.StartTime, TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow)).AddMinutes(-15);
+            var startDate = new DateTimeOffset(appointment.StartTime, DateTimeOffset.Now.Offset).AddMinutes(-15);
             var endDate = startDate.AddHours(3).AddMinutes(30);
 
-            // Find all raid logs for the raid period
-            var uploads = await _dpsReportConnector.GetUploads(appointment.Tokens,
-                                                                 startDate,
-                                                                 endDate,
-                                                                 filter: upload => _dpsReportConnector.GetReportType(upload.Encounter.BossId) == DpsReportType.Raid)
-                                                   .ConfigureAwait(false);
+            var result = new HashSet<Upload>();
 
-            return uploads.Distinct().ToList();
+            foreach (var token in appointment.Tokens)
+            {
+                await foreach (var upload in _dpsReportConnector.GetUploads(token, startDate, endDate,  filter: upload => _dpsReportConnector.GetReportType(upload.Encounter.BossId) == DpsReportType.Raid))
+                {
+                    result.Add(upload);
+                }
+            }
+
+            return result.ToList();
         }
 
         return new List<Upload>();
