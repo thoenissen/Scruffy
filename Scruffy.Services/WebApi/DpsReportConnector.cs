@@ -39,6 +39,86 @@ public class DpsReportConnector
     #region Methods
 
     /// <summary>
+    /// Requests a filtered list of DPS reports
+    /// </summary>
+    /// <param name="tokens">DPS-report user tokens</param>
+    /// <param name="startTime">Date for the oldest report to get. Set to zero to omit this parameter.</param>
+    /// <param name="endTime">Date for the most recent reports to get. Set to zero to omit this parameter.</param>
+    /// <param name="filter">Function to filter reports</param>
+    /// <param name="shouldAbort">Function to abort searching further</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public async Task<List<Upload>> GetUploads(IEnumerable<string> tokens, DateTimeOffset startTime, DateTimeOffset endTime, Func<Upload, bool> filter = null, Func<Upload, bool> shouldAbort = null)
+    {
+        var tasks = tokens.Select(token => GetUploads(token, startTime, endTime, filter, shouldAbort)).ToList();
+        await Task.WhenAll(tasks).ConfigureAwait(false);
+        return tasks.SelectMany(task => task.Result).ToList();
+    }
+
+    /// <summary>
+    /// Requests a filtered list of DPS reports
+    /// </summary>
+    /// <param name="token">DPS-report user token</param>
+    /// <param name="filter">Function to filter reports</param>
+    /// <param name="shouldAbort">Function to abort searching further</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public Task<List<Upload>> GetUploads(string token, Func<Upload, bool> filter, Func<Upload, bool> shouldAbort)
+    {
+        var omitTime = new DateTimeOffset(DateTime.MinValue, TimeSpan.Zero);
+        return GetUploads(token, omitTime, omitTime, filter, shouldAbort);
+    }
+
+    /// <summary>
+    /// Requests a filtered list of DPS reports
+    /// </summary>
+    /// <param name="token">DPS-report user token</param>
+    /// <param name="startTime">Date for the oldest report to get. Set to zero to omit this parameter.</param>
+    /// <param name="endTime">Date for the most recent reports to get. Set to zero to omit this parameter.</param>
+    /// <param name="filter">Function to filter reports</param>
+    /// <param name="shouldAbort">Function to abort searching further</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public async Task<List<Upload>> GetUploads(string token, DateTimeOffset startTime, DateTimeOffset endTime, Func<Upload, bool> filter = null, Func<Upload, bool> shouldAbort = null)
+    {
+        var tasks = new List<Task<Upload>>();
+
+        var currentPage = 0;
+        var pageCount = 0;
+        Page page;
+
+        do
+        {
+            currentPage++;
+
+            page = await GetUploads(token, currentPage, startTime, endTime).ConfigureAwait(false);
+
+            if (page != null)
+            {
+                if (currentPage == 1)
+                {
+                    pageCount = page.Pages;
+                }
+
+                if (page.Uploads != null)
+                {
+                    foreach (var upload in page.Uploads)
+                    {
+                        if (shouldAbort != null && shouldAbort(upload))
+                        {
+                            currentPage = pageCount;
+                            break;
+                        }
+
+                        tasks.Add(CheckUpload(upload, filter));
+                    }
+                }
+            }
+        }
+        while (page?.Uploads != null && currentPage < pageCount);
+
+        await Task.WhenAll(tasks).ConfigureAwait(false);
+        return tasks.Where(task => task.Result != null).Select(task => task.Result).ToList();
+    }
+
+    /// <summary>
     /// Request DPS reports
     /// </summary>
     /// <param name="userToken">User token</param>
@@ -62,98 +142,39 @@ public class DpsReportConnector
 
         var client = _clientFactory.CreateClient();
 
-        using (var response = await client.GetAsync(url)
-                                          .ConfigureAwait(false))
-        {
-            var jsonResult = await response.Content
-                                           .ReadAsStringAsync()
-                                           .ConfigureAwait(false);
-
-            return JsonConvert.DeserializeObject<Page>(jsonResult);
-        }
+        using var response = await client.GetAsync(url).ConfigureAwait(false);
+        var jsonResult = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        return JsonConvert.DeserializeObject<Page>(jsonResult);
     }
 
     /// <summary>
-    /// Requests a filtered list of DPS reports
+    /// Checks the upload data whether it's complete or has to be updated with the full JSON data
     /// </summary>
+    /// <param name="upload">Upload to check</param>
     /// <param name="filter">Function to filter reports</param>
-    /// <param name="shouldAbort">Function to abort searching further</param>
-    /// <param name="tokens">DPS-report user tokens</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task<List<Upload>> GetUploads(Func<Upload, bool> filter, Func<Upload, bool> shouldAbort, params string[] tokens)
+    /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+    private async Task<Upload> CheckUpload(Upload upload, Func<Upload, bool> filter)
     {
-        var omitTime = new DateTimeOffset(DateTime.MinValue, TimeSpan.Zero);
-        return GetUploads(omitTime, omitTime, filter, shouldAbort, tokens);
-    }
-
-    /// <summary>
-    /// Requests a filtered list of DPS reports
-    /// </summary>
-    /// <param name="startTime">Date for the oldest report to get. Set to zero to omit this parameter.</param>
-    /// <param name="endTime">Date for the most recent reports to get. Set to zero to omit this parameter.</param>
-    /// <param name="filter">Function to filter reports</param>
-    /// <param name="shouldAbort">Function to abort searching further</param>
-    /// <param name="tokens">DPS-report user tokens</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task<List<Upload>> GetUploads(DateTimeOffset startTime, DateTimeOffset endTime, Func<Upload, bool> filter = null, Func<Upload, bool> shouldAbort = null, params string[] tokens)
-    {
-        var uploads = new List<Upload>();
-
-        foreach (var token in tokens)
+        if ((upload.Encounter.Success
+             || upload.Encounter.Duration.TotalSeconds > 30)
+            && (filter == null || filter(upload)))
         {
-            var currentPage = 0;
-            var pageCount = 0;
-            Page page;
-
-            do
+            // HACK
+            // Sometimes the API doesn't report all players, so we have to load the full report for correct data
+            // We also need to get the fight name to differentiate the different Ai phases.
+            if (upload.Players.Count != upload.Encounter.NumberOfPlayers
+                || upload.Encounter.BossId == 23254)
             {
-                currentPage++;
-
-                page = await GetUploads(token, currentPage, startTime, endTime).ConfigureAwait(false);
-
-                if (page != null)
-                {
-                    if (currentPage == 1)
-                    {
-                        pageCount = page.Pages;
-                    }
-
-                    if (page.Uploads != null)
-                    {
-                        foreach (var upload in page.Uploads)
-                        {
-                            if (shouldAbort != null && shouldAbort(upload))
-                            {
-                                currentPage = pageCount;
-                                break;
-                            }
-
-                            if ((upload.Encounter.Success
-                              || upload.Encounter.Duration.TotalSeconds > 30)
-                             && (filter == null || filter(upload)))
-                            {
-                                // HACK
-                                // Sometimes the API doesn't report all players, so we have to load the full report for correct data
-                                // We also need to get the fight name to differentiate the different Ai phases.
-                                if (upload.Players.Count != upload.Encounter.NumberOfPlayers
-                                    || upload.Encounter.BossId == 23254)
-                                {
-                                    await UpdateUploadData(upload).ConfigureAwait(false);
-                                }
-
-                                if (upload.Players.Count > 0)
-                                {
-                                    uploads.Add(upload);
-                                }
-                            }
-                        }
-                    }
-                }
+                await UpdateUploadData(upload).ConfigureAwait(false);
             }
-            while (page?.Uploads != null && currentPage < pageCount);
+
+            if (upload.Players.Count > 0)
+            {
+                return upload;
+            }
         }
 
-        return uploads;
+        return null;
     }
 
     /// <summary>

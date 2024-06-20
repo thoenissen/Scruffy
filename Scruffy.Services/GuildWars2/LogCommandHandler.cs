@@ -118,11 +118,12 @@ public class LogCommandHandler : LocatedServiceBase
 
         if (string.IsNullOrEmpty(account?.DpsReportUserToken) == false)
         {
-            var uploads = await _dpsReportConnector.GetUploads(startDate,
+            var uploads = await _dpsReportConnector.GetUploads(
+                                                                account.DpsReportUserToken,
+                                                                startDate,
                                                                 endDate,
                                                                 filter: upload => (type == DpsReportType.All && _dpsReportConnector.GetReportType(upload.Encounter.BossId) != DpsReportType.Other)
-                                                                           || type == _dpsReportConnector.GetReportType(upload.Encounter.BossId),
-                                                                tokens: account.DpsReportUserToken)
+                                                                           || type == _dpsReportConnector.GetReportType(upload.Encounter.BossId))
                                                    .ConfigureAwait(false);
 
             if (uploads.Count > 0)
@@ -174,7 +175,8 @@ public class LogCommandHandler : LocatedServiceBase
         {
             var counts = new Dictionary<int, int>();
 
-            var uploads = await _dpsReportConnector.GetUploads(upload =>
+            var uploads = await _dpsReportConnector.GetUploads(account.DpsReportUserToken,
+                                                               upload =>
                                                                {
                                                                    if (upload.Encounter.Success && _dpsReportConnector.GetReportGroup(upload.Encounter.BossId) == group)
                                                                    {
@@ -186,8 +188,7 @@ public class LogCommandHandler : LocatedServiceBase
 
                                                                    return false;
                                                                },
-                                                               upload => counts.TryGetValue(upload.Encounter.BossId, out var value) && value > count,
-                                                               account.DpsReportUserToken)
+                                                               upload => counts.TryGetValue(upload.Encounter.BossId, out var value) && value > count)
                                                    .ConfigureAwait(false);
 
             if (uploads.Count > 0)
@@ -289,7 +290,8 @@ public class LogCommandHandler : LocatedServiceBase
         {
             var counts = new Dictionary<string, int>();
 
-            var uploads = await _dpsReportConnector.GetUploads(upload =>
+            var uploads = await _dpsReportConnector.GetUploads(account.DpsReportUserToken,
+                                                               upload =>
                                                                {
                                                                    if (upload.Encounter.Success
                                                                     && _dpsReportConnector.GetReportGroup(upload.Encounter.BossId) == group)
@@ -312,9 +314,7 @@ public class LogCommandHandler : LocatedServiceBase
 
                                                                    return false;
                                                                },
-                                                               upload => counts.Count > 0
-                                                                      && counts.All(obj => obj.Value == count),
-                                                               account.DpsReportUserToken)
+                                                               upload => counts.Count > 0 && counts.All(obj => obj.Value == count))
                                                    .ConfigureAwait(false);
 
             if (uploads.Count > 0)
@@ -565,8 +565,7 @@ public class LogCommandHandler : LocatedServiceBase
 
         if (string.IsNullOrEmpty(account?.DpsReportUserToken) == false)
         {
-            var uploads = await _dpsReportConnector.GetUploads(startDate, endDate, tokens: account.DpsReportUserToken)
-                                                   .ConfigureAwait(false);
+            var uploads = await _dpsReportConnector.GetUploads(account.DpsReportUserToken, startDate, endDate).ConfigureAwait(false);
 
             if (uploads.Count > 0)
             {
@@ -767,10 +766,10 @@ public class LogCommandHandler : LocatedServiceBase
             var endDate = startDate.AddHours(3).AddMinutes(30);
 
             // Find all raid logs for the raid period
-            var uploads = await _dpsReportConnector.GetUploads(startDate,
+            var uploads = await _dpsReportConnector.GetUploads(appointment.Tokens,
+                                                                 startDate,
                                                                  endDate,
-                                                                 filter: upload => _dpsReportConnector.GetReportType(upload.Encounter.BossId) == DpsReportType.Raid,
-                                                                 tokens: appointment.Tokens.ToArray())
+                                                                 filter: upload => _dpsReportConnector.GetReportType(upload.Encounter.BossId) == DpsReportType.Raid)
                                                    .ConfigureAwait(false);
 
             return uploads.Distinct().ToList();
