@@ -76,7 +76,6 @@ public class DpsReportConnector
     /// <summary>
     /// Requests a filtered list of DPS reports
     /// </summary>
-    /// <param name="date">The date to filter for, DateOnly.MinValue to omit this parameter</param>
     /// <param name="filter">Function to filter reports</param>
     /// <param name="shouldAbort">Function to abort searching further</param>
     /// <param name="tokens">DPS-report user tokens</param>
@@ -131,7 +130,6 @@ public class DpsReportConnector
 
                             if ((upload.Encounter.Success
                               || upload.Encounter.Duration.TotalSeconds > 30)
-                             && upload.Players?.Count > 0
                              && (filter == null || filter(upload)))
                             {
                                 // HACK We need to get the fight name to differentiate the different Ai phases.
