@@ -157,16 +157,25 @@ public class DpsReportConnector
             url += $"&sinceEncounter={startTime.ToUnixTimeSeconds()}";
         }
 
+        /* This doesn't work at the moment, see code below for work-around
         if (endTime.Ticks > 0)
         {
             url += $"&untilEncounter={endTime.ToUnixTimeSeconds()}";
         }
+        */
 
         var client = _clientFactory.CreateClient();
 
         using var response = await client.GetAsync(url).ConfigureAwait(false);
         var jsonResult = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-        return JsonConvert.DeserializeObject<Page>(jsonResult);
+        var parsedPage = JsonConvert.DeserializeObject<Page>(jsonResult);
+
+        if (parsedPage?.Uploads != null)
+        {
+            parsedPage.Uploads = parsedPage.Uploads.Where(upload => new DateTimeOffset(upload.EncounterTime, TimeSpan.Zero) <= endTime).ToList();
+        }
+
+        return parsedPage;
     }
 
     /// <summary>
