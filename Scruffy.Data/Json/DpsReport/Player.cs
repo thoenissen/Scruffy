@@ -14,20 +14,26 @@ public class Player
     public string DisplayName { get; set; }
 
     /// <summary>
+    /// Display name from detailed logs
+    /// </summary>
+    [JsonProperty("account")]
+    private string Account
+    {
+        set => DisplayName = value;
+    }
+
+    /// <summary>
     /// Character name
     /// </summary>
     [JsonProperty("character_name")]
     public string CharacterName { get; set; }
 
     /// <summary>
-    /// Profession
+    /// Character name from detailed logs
     /// </summary>
-    [JsonProperty("profession")]
-    public int Profession { get; set; }
-
-    /// <summary>
-    /// Elite Spec
-    /// </summary>
-    [JsonProperty("elite_spec")]
-    public int EliteSpec { get; set; }
+    [JsonProperty("name")]
+    private string Name
+    {
+        set => CharacterName = value;
+    }
 }

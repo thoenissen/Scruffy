@@ -57,6 +57,12 @@ public class Log
     public IReadOnlyList<Target> Targets { get; set; }
 
     /// <summary>
+    /// The list of players
+    /// </summary>
+    [JsonProperty("players")]
+    public IReadOnlyList<Player> Players { get; set; }
+
+    /// <summary>
     /// The remaining total health of all target combined
     /// </summary>
     public double? RemainingTotalHealth

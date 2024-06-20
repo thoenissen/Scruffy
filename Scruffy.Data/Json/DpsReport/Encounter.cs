@@ -35,6 +35,12 @@ public class Encounter
     public int CompDps { get; set; }
 
     /// <summary>
+    /// Number of players
+    /// </summary>
+    [JsonProperty("numberOfPlayers")]
+    public int NumberOfPlayers { get; set; }
+
+    /// <summary>
     /// Boss ID
     /// </summary>
     [JsonProperty("bossId")]
