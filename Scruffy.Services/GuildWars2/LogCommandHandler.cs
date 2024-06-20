@@ -118,12 +118,11 @@ public class LogCommandHandler : LocatedServiceBase
 
         if (string.IsNullOrEmpty(account?.DpsReportUserToken) == false)
         {
-            var uploads = await _dpsReportConnector.GetUploads(
-                                                                account.DpsReportUserToken,
-                                                                startDate,
-                                                                endDate,
-                                                                filter: upload => (type == DpsReportType.All && _dpsReportConnector.GetReportType(upload.Encounter.BossId) != DpsReportType.Other)
-                                                                           || type == _dpsReportConnector.GetReportType(upload.Encounter.BossId))
+            var uploads = await _dpsReportConnector.GetUploads(account.DpsReportUserToken,
+                                                               startDate,
+                                                               endDate,
+                                                               filter: upload => (type == DpsReportType.All && _dpsReportConnector.GetReportType(upload.Encounter.BossId) != DpsReportType.Other)
+                                                                              || type == _dpsReportConnector.GetReportType(upload.Encounter.BossId))
                                                    .ConfigureAwait(false);
 
             if (uploads.Count > 0)
