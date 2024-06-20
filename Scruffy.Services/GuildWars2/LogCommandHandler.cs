@@ -113,30 +113,16 @@ public class LogCommandHandler : LocatedServiceBase
                                         .Select(obj => new { obj.User.GuildWarsAccounts.FirstOrDefault().Name, obj.User.DpsReportUserToken })
                                         .FirstOrDefault();
 
-        if (string.IsNullOrWhiteSpace(dayString)
-         || DateOnly.TryParseExact(dayString, _dateFormats, null, DateTimeStyles.None, out var day) == false)
-        {
-            day = DateOnly.FromDateTime(DateTime.UtcNow);
-        }
+        var startDate = ParseStartDate(dayString);
+        var endDate = startDate.AddDays(1);
 
         if (string.IsNullOrEmpty(account?.DpsReportUserToken) == false)
         {
-            var uploads = await _dpsReportConnector.GetUploads(upload =>
-                                                               {
-                                                                   var encounterDay = DateOnly.FromDateTime(upload.EncounterTime);
-
-                                                                   return encounterDay == day
-                                                                       && ((type == DpsReportType.All
-                                                                         && _dpsReportConnector.GetReportType(upload.Encounter.BossId) != DpsReportType.Other)
-                                                                        || type == _dpsReportConnector.GetReportType(upload.Encounter.BossId))
-                                                                       && upload.Players?.Count > 0;
-                                                               },
-                                                               upload =>
-                                                               {
-                                                                   var uploadDay = DateOnly.FromDateTime(upload.UploadTime);
-                                                                   return uploadDay < day;
-                                                               },
-                                                               account.DpsReportUserToken)
+            var uploads = await _dpsReportConnector.GetUploads(startDate,
+                                                                endDate,
+                                                                filter: upload => (type == DpsReportType.All && _dpsReportConnector.GetReportType(upload.Encounter.BossId) != DpsReportType.Other)
+                                                                           || type == _dpsReportConnector.GetReportType(upload.Encounter.BossId),
+                                                                tokens: account.DpsReportUserToken)
                                                    .ConfigureAwait(false);
 
             if (uploads.Count > 0)
@@ -145,7 +131,7 @@ public class LogCommandHandler : LocatedServiceBase
 
                 builder.WithColor(Color.Green)
                        .WithAuthor($"{context.User.Username} - {account.Name}", context.User.GetAvatarUrl())
-                       .WithTitle(LocalizationGroup.GetFormattedText("DpsReportTitle", "Your reports from {0}", day.ToString("d", LocalizationGroup.CultureInfo)));
+                       .WithTitle(LocalizationGroup.GetFormattedText("DpsReportTitle", "Your reports from {0}", startDate.ToString("d", LocalizationGroup.CultureInfo)));
 
                 await WriteReports(builder, uploads, summarize, type == DpsReportType.All).ConfigureAwait(false);
 
@@ -192,11 +178,7 @@ public class LogCommandHandler : LocatedServiceBase
                                                                {
                                                                    if (upload.Encounter.Success && _dpsReportConnector.GetReportGroup(upload.Encounter.BossId) == group)
                                                                    {
-                                                                       if (counts.ContainsKey(upload.Encounter.BossId) == false)
-                                                                       {
-                                                                           counts.Add(upload.Encounter.BossId, 0);
-                                                                       }
-
+                                                                       counts.TryAdd(upload.Encounter.BossId, 0);
                                                                        ++counts[upload.Encounter.BossId];
 
                                                                        return true;
@@ -564,9 +546,10 @@ public class LogCommandHandler : LocatedServiceBase
     /// Export all logs since the given day
     /// </summary>
     /// <param name="context">Command context</param>
-    /// <param name="daySinceString">Day</param>
+    /// <param name="sinceDayString">Since day</param>
+    /// <param name="untilDayString">Until day</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task ExportLogs(IContextContainer context, string daySinceString)
+    public async Task ExportLogs(IContextContainer context, string sinceDayString, string untilDayString)
     {
         await context.DeferProcessing()
                      .ConfigureAwait(false);
@@ -577,17 +560,12 @@ public class LogCommandHandler : LocatedServiceBase
                                         .Select(obj => new { obj.User.GuildWarsAccounts.FirstOrDefault().Name, obj.User.DpsReportUserToken })
                                         .FirstOrDefault();
 
-        if (string.IsNullOrWhiteSpace(daySinceString)
-         || DateOnly.TryParseExact(daySinceString, _dateFormats, null, DateTimeStyles.None, out var day) == false)
-        {
-            day = DateOnly.FromDateTime(DateTime.UtcNow);
-        }
+        var startDate = ParseStartDate(sinceDayString);
+        var endDate = ParseEndDate(untilDayString);
 
         if (string.IsNullOrEmpty(account?.DpsReportUserToken) == false)
         {
-            var uploads = await _dpsReportConnector.GetUploads(upload => DateOnly.FromDateTime(upload.EncounterTime) >= day,
-                                                               upload => DateOnly.FromDateTime(upload.UploadTime) < day,
-                                                               account.DpsReportUserToken)
+            var uploads = await _dpsReportConnector.GetUploads(startDate, endDate, tokens: account.DpsReportUserToken)
                                                    .ConfigureAwait(false);
 
             if (uploads.Count > 0)
@@ -632,6 +610,49 @@ public class LogCommandHandler : LocatedServiceBase
     #endregion // Public methods
 
     #region Private methods
+
+    /// <summary>
+    /// Parses the day from the given dayString.
+    /// </summary>
+    /// <param name="dayString">Day to parse</param>
+    /// <returns>Parsed day</returns>
+    private DateOnly ParseDay(string dayString)
+    {
+        if (string.IsNullOrWhiteSpace(dayString)
+            || DateOnly.TryParseExact(dayString, _dateFormats, null, DateTimeStyles.None, out var day) == false)
+        {
+            day = DateOnly.FromDateTime(DateTime.UtcNow);
+        }
+
+        return day;
+    }
+
+    /// <summary>
+    /// Parses the day date time offset from the given dayString as the first second of the day.
+    /// </summary>
+    /// <param name="dayString">Day to parse</param>
+    /// <returns>Parsed date time offset</returns>
+    private DateTimeOffset ParseStartDate(string dayString)
+    {
+        var day = ParseDay(dayString);
+        return new DateTimeOffset(day.Year, day.Month, day.Day, 0, 0, 0, DateTimeOffset.Now - DateTimeOffset.UtcNow);
+    }
+
+    /// <summary>
+    /// Parses the day date time offset from the given dayString as the last second of the day.
+    /// </summary>
+    /// <param name="dayString">Day to parse</param>
+    /// <returns>Parsed date time offset</returns>
+    private DateTimeOffset ParseEndDate(string dayString)
+    {
+        if (!string.IsNullOrEmpty(dayString))
+        {
+            var day = ParseDay(dayString);
+            return new DateTimeOffset(day.Year, day.Month, day.Day, 23, 59, 59, DateTimeOffset.Now - DateTimeOffset.UtcNow);
+        }
+
+        return new DateTimeOffset(DateTime.MinValue, TimeSpan.Zero);
+    }
 
     /// <summary>
     /// Adds the given DPS reports to the given embed builder
@@ -746,12 +767,10 @@ public class LogCommandHandler : LocatedServiceBase
             var endDate = startDate.AddHours(3).AddMinutes(30);
 
             // Find all raid logs for the raid period
-            var uploads = await _dpsReportConnector.GetUploads(upload => _dpsReportConnector.GetReportType(upload.Encounter.BossId) == DpsReportType.Raid
-                                                                      && upload.EncounterTime >= startDate
-                                                                      && upload.EncounterTime <= endDate
-                                                                      && upload.Players?.Count > 0,
-                                                               upload => upload.UploadTime < startDate,
-                                                               appointment.Tokens.ToArray())
+            var uploads = await _dpsReportConnector.GetUploads(startDate,
+                                                                 endDate,
+                                                                 filter: upload => _dpsReportConnector.GetReportType(upload.Encounter.BossId) == DpsReportType.Raid,
+                                                                 tokens: appointment.Tokens.ToArray())
                                                    .ConfigureAwait(false);
 
             return uploads.Distinct().ToList();
