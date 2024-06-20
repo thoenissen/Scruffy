@@ -5,7 +5,7 @@
     },
     "Docker": {
       "commandName": "Docker",
-      "DockerfileRunArguments": "--env-file Docker.env"
+      "DockerfileRunArguments": "--env-file $(SolutionDir)\Docker.env"
     }
   }
 }
