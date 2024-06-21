@@ -179,9 +179,10 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
     /// Post a overview of the selected type
     /// </summary>
     /// <param name="type">Type of the configuration</param>
+    /// <param name="raidWeekDay">Day of the raid week</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("overview", "Overview of the given data type")]
-    public async Task Overview([Summary("Type", "Type of the data which should be visualized")]OverviewType type)
+    public async Task Overview([Summary("Type", "Type of the data which should be visualized")]OverviewType type, [Summary("Day of the raid week")]string raidWeekDay = null)
     {
         await Context.DeferProcessing()
                      .ConfigureAwait(false);
@@ -202,7 +203,7 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
                 break;
             case OverviewType.Logs:
                 {
-                    await LogCommandHandler.PostGuildRaidSummary(Context)
+                    await LogCommandHandler.PostGuildRaidSummary(Context, raidWeekDay)
                                            .ConfigureAwait(false);
                 }
                 break;

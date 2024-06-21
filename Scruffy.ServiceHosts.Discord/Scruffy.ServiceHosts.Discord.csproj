@@ -3,6 +3,7 @@
     <OutputType>Exe</OutputType>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileTag>scruffy.servicehosts.discord</DockerfileTag>
+     <DockerfileRunEnvironmentFiles>Docker.env</DockerfileRunEnvironmentFiles>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>bin\Debug\Scruffy.ServiceHosts.Discord.xml</DocumentationFile>

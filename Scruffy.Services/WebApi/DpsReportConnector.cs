@@ -64,7 +64,7 @@ public class DpsReportConnector
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public async IAsyncEnumerable<Upload> GetUploads(string token, DateTimeOffset startTime, DateTimeOffset endTime, Func<Upload, bool> filter = null, Func<Upload, bool> shouldAbort = null, bool skipEnhancement = false)
     {
-        var firstPage = await GetUploads(token, 0, startTime, endTime).ConfigureAwait(false);
+        var firstPage = await GetUploads(token, 1, startTime, endTime).ConfigureAwait(false);
 
         if (firstPage != null)
         {
@@ -74,7 +74,7 @@ public class DpsReportConnector
             {
                 var pageTasks = new List<Task<Page>> { Task.FromResult(firstPage) };
 
-                for (var i = 1; i < firstPage.Pages; i++)
+                for (var i = 2; i <= firstPage.Pages; i++)
                 {
                     pageTasks.Add(GetUploads(token, i, startTime, endTime));
                 }
@@ -93,7 +93,7 @@ public class DpsReportConnector
             }
             else
             {
-                var currentPage = 1;
+                var currentPage = 2;
                 var pageCount = firstPage.Pages;
 
                 Page page;
@@ -124,7 +124,7 @@ public class DpsReportConnector
                         }
                     }
                 }
-                while (page?.Uploads != null && currentPage < pageCount);
+                while (page?.Uploads != null && currentPage <= pageCount);
             }
 
             while (uploadTasks.Count != 0)

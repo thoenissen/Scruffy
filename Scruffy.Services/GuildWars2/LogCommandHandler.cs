@@ -429,11 +429,20 @@ public class LogCommandHandler : LocatedServiceBase
     /// Posts the guild raid summary of the raid appointments in a week
     /// </summary>
     /// <param name="context">Command context</param>
+    /// <param name="dateOfWeek">Day of the raid week</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task PostGuildRaidSummary(IContextContainer context)
+    public async Task PostGuildRaidSummary(IContextContainer context, string dateOfWeek)
     {
-        var now = DateTime.Now;
-        var startOfWeek = now;
+        DateTime startOfWeek;
+
+        if (ParseDay(dateOfWeek, out var startOfWeekDay))
+        {
+            startOfWeek = startOfWeekDay.ToDateTime(TimeOnly.MinValue);
+        }
+        else
+        {
+            startOfWeek = DateTime.Today;
+        }
 
         // Go back to monday, the start of the week
         while (startOfWeek.DayOfWeek != DayOfWeek.Monday)
@@ -443,17 +452,19 @@ public class LogCommandHandler : LocatedServiceBase
 
         startOfWeek = startOfWeek.Date;
 
+        var endOfWeek = startOfWeek.AddDays(7);
+
         // Search for appointments this week
         var appointments = _repositoryFactory.GetRepository<RaidAppointmentRepository>()
                                              .GetQuery()
-                                             .Where(obj => obj.TimeStamp > startOfWeek && obj.TimeStamp < now)
+                                             .Where(obj => obj.TimeStamp > startOfWeek && obj.TimeStamp < endOfWeek)
                                              .Select(obj => new { obj.Id, obj.TimeStamp })
                                              .ToList();
 
         // Search for appointments of last week
         if (appointments.Count == 0)
         {
-            var endOfWeek = startOfWeek.AddMinutes(-1);
+            endOfWeek = startOfWeek;
             startOfWeek = startOfWeek.AddDays(-7);
 
             appointments = _repositoryFactory.GetRepository<RaidAppointmentRepository>()
@@ -610,16 +621,18 @@ public class LogCommandHandler : LocatedServiceBase
     /// Parses the day from the given dayString.
     /// </summary>
     /// <param name="dayString">Day to parse</param>
+    /// <param name="day">Date</param>
     /// <returns>Parsed day</returns>
-    private DateOnly ParseDay(string dayString)
+    private bool ParseDay(string dayString, out DateOnly day)
     {
-        if (string.IsNullOrWhiteSpace(dayString)
-            || DateOnly.TryParseExact(dayString, _dateFormats, null, DateTimeStyles.None, out var day) == false)
+        if (string.IsNullOrWhiteSpace(dayString) == false)
         {
-            day = DateOnly.FromDateTime(DateTime.UtcNow);
+            return DateOnly.TryParseExact(dayString, _dateFormats, null, DateTimeStyles.None, out day);
         }
 
-        return day;
+        day = default;
+
+        return false;
     }
 
     /// <summary>
@@ -629,7 +642,10 @@ public class LogCommandHandler : LocatedServiceBase
     /// <returns>Parsed date time offset</returns>
     private DateTimeOffset ParseStartDate(string dayString)
     {
-        var day = ParseDay(dayString);
+        if (ParseDay(dayString, out var day) == false)
+        {
+            day = DateOnly.FromDateTime(DateTime.UtcNow);
+        }
 
         return new DateTimeOffset(day.Year, day.Month, day.Day, 0, 0, 0, DateTimeOffset.Now.Offset);
     }
@@ -643,7 +659,10 @@ public class LogCommandHandler : LocatedServiceBase
     {
         if (string.IsNullOrEmpty(dayString) == false)
         {
-            var day = ParseDay(dayString);
+            if (ParseDay(dayString, out var day) == false)
+            {
+                day = DateOnly.FromDateTime(DateTime.UtcNow);
+            }
 
             return new DateTimeOffset(day.Year, day.Month, day.Day, 23, 59, 59, DateTimeOffset.Now.Offset);
         }
