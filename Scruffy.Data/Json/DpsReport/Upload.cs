@@ -124,6 +124,11 @@ public class Upload
     {
         if (otherObj is Upload other)
         {
+            if (other.Id == Id)
+            {
+                return true;
+            }
+
             if (Math.Abs((EncounterTime - other.EncounterTime).TotalSeconds) < 5.0)
             {
                 // Voice & Claw + Statues of Darkness special treatment
@@ -133,7 +138,7 @@ public class Upload
                 {
                     var group = Group;
                     group.ExceptWith(other.Group);
-                    return group.Any() == false;
+                    return group.Count == 0;
                 }
             }
         }
