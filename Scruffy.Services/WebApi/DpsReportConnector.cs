@@ -225,7 +225,7 @@ public class DpsReportConnector
 
             foreach (var player in log.Players)
             {
-                upload.Players.Add(player.CharacterName, player);
+                upload.Players.Add(player.DisplayName, player);
             }
         }
     }
