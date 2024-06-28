@@ -225,7 +225,21 @@ public class DpsReportConnector
 
             foreach (var player in log.Players)
             {
-                upload.Players.Add(player.DisplayName, player);
+                if (upload.Players.TryAdd(player.DisplayName, player) == false)
+                {
+                    upload.Players.Add($"Unknown ({Guid.NewGuid()})", player);
+
+                    LoggingService.AddServiceLogEntry(LogEntryLevel.Error,
+                                                      nameof(DpsReportConnector),
+                                                      "Duplicate player display name",
+                                                      null,
+                                                      new
+                                                      {
+                                                          player.DisplayName,
+                                                          upload.Id,
+                                                          upload.Permalink,
+                                                      });
+                }
             }
         }
     }
