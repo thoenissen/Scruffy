@@ -655,7 +655,7 @@ public class LogCommandHandler : LocatedServiceBase
     /// </summary>
     /// <param name="dayString">Day to parse</param>
     /// <returns>Parsed date time offset</returns>
-    private DateTimeOffset ParseEndDate(string dayString)
+    private DateTimeOffset? ParseEndDate(string dayString)
     {
         if (string.IsNullOrEmpty(dayString) == false)
         {
@@ -667,7 +667,7 @@ public class LogCommandHandler : LocatedServiceBase
             return new DateTimeOffset(day.Year, day.Month, day.Day, 23, 59, 59, DateTimeOffset.Now.Offset);
         }
 
-        return new DateTimeOffset(DateTime.MinValue, TimeSpan.Zero);
+        return null;
     }
 
     /// <summary>

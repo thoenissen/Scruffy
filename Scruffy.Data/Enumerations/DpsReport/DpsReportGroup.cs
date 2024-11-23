@@ -47,6 +47,8 @@ public enum DpsReportGroup
     MythwrightGambit,
     [ChoiceDisplay("W7 - The Key of Ahdashim")]
     TheKeyOfAhdashim,
+    [ChoiceDisplay("W8 - Mount Balrior")]
+    MountBalrior
 }
 
 /// <summary>
@@ -90,6 +92,7 @@ public static class DpsReportGroupExtensions
             case DpsReportGroup.HallOfChains:
             case DpsReportGroup.MythwrightGambit:
             case DpsReportGroup.TheKeyOfAhdashim:
+            case DpsReportGroup.MountBalrior:
                 return DpsReportType.Raid;
             case DpsReportGroup.TrainingArea:
             default:
@@ -140,6 +143,8 @@ public static class DpsReportGroupExtensions
                 return "W6 - Mythwright Gambit";
             case DpsReportGroup.TheKeyOfAhdashim:
                 return "W7 - The Key of Ahdashim";
+            case DpsReportGroup.MountBalrior:
+                return "W8 - Mount Balrior";
             default:
                 {
                     return "Other";

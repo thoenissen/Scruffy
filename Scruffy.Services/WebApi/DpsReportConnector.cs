@@ -62,7 +62,7 @@ public class DpsReportConnector
     /// <param name="shouldAbort">Function to abort searching further</param>
     /// <param name="skipEnhancement">Whether to skip certain enhancements on the upload</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async IAsyncEnumerable<Upload> GetUploads(string token, DateTimeOffset startTime, DateTimeOffset endTime, Func<Upload, bool> filter = null, Func<Upload, bool> shouldAbort = null, bool skipEnhancement = false)
+    public async IAsyncEnumerable<Upload> GetUploads(string token, DateTimeOffset startTime, DateTimeOffset? endTime, Func<Upload, bool> filter = null, Func<Upload, bool> shouldAbort = null, bool skipEnhancement = false)
     {
         var firstPage = await GetUploads(token, 1, startTime, endTime).ConfigureAwait(false);
 
@@ -148,7 +148,7 @@ public class DpsReportConnector
     /// <param name="startTime">Date for the oldest report to get. Set to zero to omit this parameter.</param>
     /// <param name="endTime">Date for the most recent reports to get. Set to zero to omit this parameter.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private async Task<Page> GetUploads(string userToken, int page, DateTimeOffset startTime, DateTimeOffset endTime)
+    private async Task<Page> GetUploads(string userToken, int page, DateTimeOffset startTime, DateTimeOffset? endTime)
     {
         var url = $"https://dps.report/getUploads?userToken={userToken}&page={page}";
 
@@ -158,7 +158,7 @@ public class DpsReportConnector
         }
 
         /* This doesn't work at the moment, see code below for work-around
-        if (endTime.Ticks > 0)
+        if (endTime?.Ticks > 0)
         {
             url += $"&untilEncounter={endTime.ToUnixTimeSeconds()}";
         }
@@ -170,7 +170,7 @@ public class DpsReportConnector
         var jsonResult = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         var parsedPage = JsonConvert.DeserializeObject<Page>(jsonResult);
 
-        if (parsedPage?.Uploads != null)
+        if (endTime != null && parsedPage?.Uploads != null)
         {
             parsedPage.Uploads = parsedPage.Uploads.Where(upload => new DateTimeOffset(upload.EncounterTime, TimeSpan.Zero) <= endTime).ToList();
         }
@@ -387,6 +387,11 @@ public class DpsReportConnector
             case 22000:
                 return DpsReportGroup.TheKeyOfAhdashim;
 
+            case 26774:
+            case 26725:
+            case 26712:
+                return DpsReportGroup.MountBalrior;
+
             default:
                 return DpsReportGroup.Unknown;
         }
@@ -424,6 +429,7 @@ public class DpsReportConnector
             case 43974:
             case 22006:
             case 25705:
+            case 26774:
                 bossSortValue = 1;
                 break;
 
@@ -445,6 +451,7 @@ public class DpsReportConnector
             case 10142:
             case 21964:
             case 25989:
+            case 26725:
                 bossSortValue = 2;
                 break;
 
@@ -460,6 +467,7 @@ public class DpsReportConnector
             case 19691:
             case 37464:
             case 22000:
+            case 26712:
                 bossSortValue = 3;
                 break;
 
