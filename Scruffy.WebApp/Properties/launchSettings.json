@@ -1,0 +1,16 @@
+{
+   "$schema": "http://json.schemastore.org/launchsettings.json",
+   "profiles": {
+      "Docker": {
+         "commandName": "Docker",
+         "launchBrowser": true,
+         "httpPort": 5001,
+         "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+         "environmentVariables": {
+            "ASPNETCORE_HTTP_PORTS": "8080"
+         },
+         "publishAllPorts": true,
+         "useSSL": false
+      }
+   }
+}

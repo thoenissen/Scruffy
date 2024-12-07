@@ -1,0 +1,22 @@
+﻿<AuthorizeView>
+    <Authorized>
+        <div>
+            <form action="Account/Logout" method="post">
+                <AntiforgeryToken/>
+                <input type="hidden" name="ReturnUrl" value="@_currentUrl"/>
+                <Button type="submit" class="btn btn-primary">
+                    Logout
+                </Button>
+            </form>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <div>
+            <form action="Account/Login" method="get">
+                <Button type="submit" class="btn btn-primary">
+                    Login
+                </Button>
+            </form>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
