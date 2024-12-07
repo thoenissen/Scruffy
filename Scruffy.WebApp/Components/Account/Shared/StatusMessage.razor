@@ -1,0 +1,6 @@
+﻿@if (string.IsNullOrEmpty(DisplayMessage) == false)
+{
+    <div class="alert alert-@(DisplayMessage.StartsWith("Error") ? "danger" : "success")" role="alert">
+        @DisplayMessage
+    </div>
+}
