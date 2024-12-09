@@ -118,6 +118,7 @@ public class ExternalLogin : ComponentBase
         if (result.Succeeded)
         {
             Logger.LogInformation("{Name} logged in with {LoginProvider} provider.", externalLoginInfo.Principal.Identity?.Name, externalLoginInfo.LoginProvider);
+
             RedirectManager.RedirectTo(ReturnUrl);
         }
         else if (result.IsLockedOut)

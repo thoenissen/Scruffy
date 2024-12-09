@@ -1,0 +1,12 @@
+﻿@page "/Administration/Users"
+@rendermode InteractiveServer
+
+@using Microsoft.AspNetCore.Components.QuickGrid
+
+<PageTitle>Users</PageTitle>
+
+<div class="grid">
+    <QuickGrid Items="@_users">
+        <PropertyColumn Title="Name" Property="@(u => u.Name)" Sortable="true" InitialSortDirection="SortDirection.Ascending" />
+    </QuickGrid>
+</div>
