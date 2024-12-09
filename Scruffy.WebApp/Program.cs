@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Tables.CoreData;
+using Scruffy.Data.Entity.Tables.Web;
 using Scruffy.WebApp.Components;
 using Scruffy.WebApp.Components.Account;
 
@@ -42,8 +43,10 @@ public class Program
                                            })
                         .AddIdentityCookies();
         builder.Services.AddDbContext<ScruffyDbContext>();
+        builder.Services.AddQuickGridEntityFrameworkAdapter();
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
         builder.Services.AddIdentityCore<UserEntity>()
+                        .AddRoles<RoleEntity>()
                         .AddEntityFrameworkStores<ScruffyDbContext>()
                         .AddSignInManager()
                         .AddDefaultTokenProviders();
