@@ -1,0 +1,16 @@
+﻿.welcome-container {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   min-height: 100vh; /* Nimmt gesamte Viewport-Höhe ein */
+   padding: 20px;
+   box-sizing: border-box; /* Verhindert Overflow durch Padding */
+}
+
+.welcome-image {
+   width: auto;
+   height: auto;
+   max-width: 90%; /* Begrenzt die Breite */
+   max-height: calc(100vh - 150px); /* Subtrahiert h1-Höhe + Padding */
+   object-fit: contain; /* Bild bleibt vollständig sichtbar */
+}

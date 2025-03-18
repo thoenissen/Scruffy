@@ -11,6 +11,23 @@
     background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.55%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") no-repeat center/1.75rem rgba(255, 255, 255, 0.1);
 }
 
+.navbar-logo {
+   width: 40px;
+   height: 40px;
+}
+
+.navbar-brand {
+   font-size: 1rem;
+}
+
+.container-fluid.d-flex {
+   display: flex;
+   justify-content: flex-start;
+   align-items: center;
+   padding-left: 0px;
+   padding-right: 0px;
+}
+
 .navbar-toggler:checked {
     background-color: rgba(255, 255, 255, 0.5);
 }
@@ -18,10 +35,6 @@
 .top-row {
     height: 3.5rem;
     background-color: rgba(0,0,0,0.4);
-}
-
-.navbar-brand {
-    font-size: 1.1rem;
 }
 
 .bi {
@@ -102,7 +115,7 @@
 }
 
 .nav-scrollable {
-    display: none;
+   display: none;
 }
 
 .navbar-toggler:checked ~ .nav-scrollable {

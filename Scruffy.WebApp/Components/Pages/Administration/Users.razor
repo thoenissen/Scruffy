@@ -5,8 +5,12 @@
 
 <PageTitle>Users</PageTitle>
 
+<label>Filter:</label>
+<input @bind="_filter" @bind:event="oninput" @bind:after="OnFilterChanged" />
+
 <div class="grid">
-    <QuickGrid Items="@_users">
-        <PropertyColumn Title="Name" Property="@(u => u.Name)" Sortable="true" InitialSortDirection="SortDirection.Ascending" />
+    <QuickGrid Items="@_filteredUsers">
+        <PropertyColumn Title="Name" Property="@(u => u.Name)" Sortable="true" InitialSortDirection="SortDirection.Ascending"/>
+        <PropertyColumn Title="Account" Property="@(u => u.GuildWarsAccountName)" Sortable="true"/>
     </QuickGrid>
 </div>

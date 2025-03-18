@@ -14,4 +14,9 @@ public class UserDTO
     /// Name
     /// </summary>
     public string Name { get; set; }
+
+    /// <summary>
+    /// Guild Wars 2 Account name
+    /// </summary>
+    public string GuildWarsAccountName { get; set; }
 }

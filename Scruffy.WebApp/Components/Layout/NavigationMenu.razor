@@ -1,27 +1,28 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
-   <div class="container-fluid">
-      <a class="navbar-brand" href="">Forces of Imagination</a>
+   <div class="container-fluid d-flex align-items-center">
+      <img src="logo.png" alt="Logo" class="navbar-logo" />
+      <a class="navbar-brand ms-2" href="">Forces of Imagination</a>
    </div>
 </div>
 
 <input type="checkbox" title="Navigation menu" class="navbar-toggler" />
 
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-   <nav class="flex-column">
-      <div class="nav-item px-3">
-         <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-            <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-         </NavLink>
-      </div>
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
 
-      <AuthorizeView Roles="Administrator">
-         <Authorized>
-            <div class="nav-item px-3">
-               <NavLink class="nav-link" href="/Administration/Users" Match="NavLinkMatch.All">
-                  <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Users
-               </NavLink>
-            </div>
-         </Authorized>
-      </AuthorizeView>
-   </nav>
+        <AuthorizeView Roles="Administrator">
+            <Authorized>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="/Administration/Users" Match="NavLinkMatch.All">
+                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Users
+                    </NavLink>
+                </div>
+            </Authorized>
+        </AuthorizeView>
+    </nav>
 </div>
