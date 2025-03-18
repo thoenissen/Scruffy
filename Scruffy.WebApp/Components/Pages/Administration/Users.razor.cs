@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Microsoft.AspNetCore.Authorization;
@@ -26,7 +27,17 @@ public sealed partial class Users : IDisposable
     /// <summary>
     /// Users
     /// </summary>
-    private IQueryable<UserDTO> _users;
+    private List<UserDTO> _users;
+
+    /// <summary>
+    /// Filtered users
+    /// </summary>
+    private IQueryable<UserDTO> _filteredUsers;
+
+    /// <summary>
+    /// Filter
+    /// </summary>
+    private string _filter;
 
     #endregion // Fields
 
@@ -47,12 +58,32 @@ public sealed partial class Users : IDisposable
                                    .Select(obj => new UserDTO
                                                   {
                                                       Id = obj.Id,
-                                                      Name = obj.UserName
+                                                      Name = serverMembers.Where(member => member.AccountId == obj.DiscordAccounts.Select(account => account.Id).FirstOrDefault())
+                                                                          .Select(member => member.Name)
+                                                                          .FirstOrDefault(),
+                                                      GuildWarsAccountName = obj.GuildWarsAccounts.Select(account => account.Name).FirstOrDefault()
                                                   })
-                                   .OrderBy(obj => obj.Name);
+                                   .OrderBy(obj => obj.Name)
+                                   .ToList();
+
+        OnFilterChanged();
     }
 
     #endregion // ComponentsBase
+
+    #region Methods
+
+    /// <summary>
+    /// Filter changed
+    /// </summary>
+    private void OnFilterChanged()
+    {
+        _filter ??= string.Empty;
+
+        _filteredUsers = _users.Where(obj => obj.Name.Contains(_filter, StringComparison.OrdinalIgnoreCase)).AsQueryable();
+    }
+
+    #endregion // Methods
 
     #region IDisposable
 
