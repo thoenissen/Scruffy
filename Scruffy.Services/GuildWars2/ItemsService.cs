@@ -92,7 +92,8 @@ public class ItemsService : LocatedServiceBase
                                          .AddOrRefresh(obj => obj.ItemId == data.ItemId,
                                                        obj =>
                                                        {
-                                                           if (obj.ItemId == data.ItemId)
+                                                           if (obj.ItemId == 0
+                                                               || obj.ItemId == data.ItemId)
                                                            {
                                                                obj.ItemId = data.ItemId;
                                                                obj.Name = item.Name;
