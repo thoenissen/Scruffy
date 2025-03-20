@@ -256,7 +256,7 @@ public abstract class RepositoryBase<TQueryable, TEntity> : RepositoryBase
         {
             var dbSet = _dbContext.Set<TEntity>();
 
-            await foreach (var entry in dbSet.Where(expression).AsAsyncEnumerable())
+            await foreach (var entry in dbSet.Where(expression).AsAsyncEnumerable().ConfigureAwait(false))
             {
                 await refreshAction(entry).ConfigureAwait(false);
             }

@@ -585,7 +585,7 @@ public class LogCommandHandler : LocatedServiceBase
             {
                 await using (writer.ConfigureAwait(false))
                 {
-                    await foreach (var upload in _dpsReportConnector.GetUploads(account.DpsReportUserToken, startDate, endDate, skipEnhancement: true))
+                    await foreach (var upload in _dpsReportConnector.GetUploads(account.DpsReportUserToken, startDate, endDate, skipEnhancement: true).ConfigureAwait(false))
                     {
                         await writer.WriteLineAsync(upload.Permalink).ConfigureAwait(false);
                     }
@@ -786,7 +786,7 @@ public class LogCommandHandler : LocatedServiceBase
 
             foreach (var token in appointment.Tokens)
             {
-                await foreach (var upload in _dpsReportConnector.GetUploads(token, startDate, endDate,  filter: upload => _dpsReportConnector.GetReportType(upload.Encounter.BossId) == DpsReportType.Raid))
+                await foreach (var upload in _dpsReportConnector.GetUploads(token, startDate, endDate,  filter: upload => _dpsReportConnector.GetReportType(upload.Encounter.BossId) == DpsReportType.Raid).ConfigureAwait(false))
                 {
                     result.Add(upload);
                 }

@@ -100,7 +100,7 @@ public class AdministrationCommandHandler : LocatedServiceBase
 
         var moveTasks = new List<Task>();
 
-        await foreach (var users in source.GetUsersAsync())
+        await foreach (var users in source.GetUsersAsync().ConfigureAwait(false))
         {
             foreach (var user in users.Where(obj => obj.VoiceChannel?.Id == source.Id))
             {
