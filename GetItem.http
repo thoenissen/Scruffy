@@ -1,0 +1,18 @@
+// Base configuration
+@baseUrl = https://api.guildwars2.com/v2
+
+// Item ID
+@itemId = 89334
+
+# @name getItem
+GET {{baseUrl}}/items/{{itemId}}
+
+###
+
+// Get recipes
+GET {{baseUrl}}/recipes/search?output={{itemId}}
+
+###
+
+// Get upgrade deatils
+GET {{baseUrl}}/guild/upgrades/{{getItem.response.body.$.details.guild_upgrade_id}}

@@ -19,8 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04_Misc", "04_Misc", "{8BFF
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 		.github\workflows\build.yml = .github\workflows\build.yml
-		.github\workflows\docker-publish.yml = .github\workflows\docker-publish.yml
 		Directory.Build.props = Directory.Build.props
+		.github\workflows\docker-publish.yml = .github\workflows\docker-publish.yml
 		StyleCop.Debug.ruleset = StyleCop.Debug.ruleset
 		stylecop.json = stylecop.json
 		StyleCop.Release.ruleset = StyleCop.Release.ruleset
@@ -35,6 +35,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "05_Libraries", "05_Librarie
 		libs\OpenSearch.Net.dll = libs\OpenSearch.Net.dll
 		libs\OpenSearch_License.txt = libs\OpenSearch_License.txt
 		libs\Osc.dll = libs\Osc.dll
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "06_Http", "06_Http", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		GetItem.http = GetItem.http
 	EndProjectSection
 EndProject
 Global
