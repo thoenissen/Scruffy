@@ -4,18 +4,18 @@
             <form action="Account/Logout" method="post">
                 <AntiforgeryToken/>
                 <input type="hidden" name="ReturnUrl" value="@_currentUrl"/>
-                <Button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary">
                     Logout
-                </Button>
+                </button>
             </form>
         </div>
     </Authorized>
     <NotAuthorized>
         <div>
             <form action="Account/Login" method="get">
-                <Button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary">
                     Login
-                </Button>
+                </button>
             </form>
         </div>
     </NotAuthorized>

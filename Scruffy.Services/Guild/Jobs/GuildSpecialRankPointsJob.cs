@@ -80,7 +80,7 @@ public class GuildSpecialRankPointsJob : LocatedAsyncJob
 
                     var guild = client.GetGuild(configuration.DiscordServerId);
 
-                    await foreach (var users in guild.GetUsersAsync())
+                    await foreach (var users in guild.GetUsersAsync().ConfigureAwait(false))
                     {
                         foreach (var user in users)
                         {

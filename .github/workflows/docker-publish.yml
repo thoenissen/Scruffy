@@ -23,3 +23,9 @@ jobs:
 
     - name: Push ServiceHosts Discord
       run: docker push thoenissen/scruffy.servicehosts.discord
+
+    - name: Build WebApp
+      run: docker build . --file ./Scruffy.WebApp/Dockerfile --tag thoenissen/scruffy.webapp:latest
+
+    - name: Push WebApp
+      run: docker push thoenissen/scruffy.webapp
