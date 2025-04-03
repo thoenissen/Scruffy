@@ -2,6 +2,7 @@ using System;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -60,6 +61,11 @@ public class Program
         else
         {
             app.UseExceptionHandler("/Error");
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+                                    {
+                                        ForwardedHeaders = ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedHost
+                                    });
+            app.UseHttpsRedirection();
         }
 
         app.UseStaticFiles();
