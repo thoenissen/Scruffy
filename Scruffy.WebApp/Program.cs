@@ -1,7 +1,9 @@
 using System;
+using System.IO;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,6 +34,16 @@ public class Program
         builder.Services.AddCascadingAuthenticationState();
         builder.Services.AddScoped<IdentityRedirectManager>();
         builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
+
+        var persistenceDirectory = Environment.GetEnvironmentVariable("SCRUFFY_PERSISTENCE_DIRECTORY");
+
+        if (string.IsNullOrWhiteSpace(persistenceDirectory) == false)
+        {
+            builder.Services.AddDataProtection()
+                            .PersistKeysToFileSystem(new DirectoryInfo(persistenceDirectory))
+                            .SetApplicationName("Scruffy.WebApp");
+        }
+
         builder.Services.AddAuthentication(options =>
                                            {
                                                options.DefaultScheme = IdentityConstants.ApplicationScheme;
@@ -54,6 +66,19 @@ public class Program
 
         var app = builder.Build();
 
+        app.UseForwardedHeaders(new ForwardedHeadersOptions
+                                {
+                                    ForwardedHeaders = ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedHost
+                                });
+
+        if (app.Environment.IsDevelopment() == false)
+        {
+            app.UseHttpsRedirection();
+        }
+
+        app.UseRouting();
+        app.UseStaticFiles();
+
         if (app.Environment.IsDevelopment())
         {
             app.UseMigrationsEndPoint();
@@ -61,14 +86,10 @@ public class Program
         else
         {
             app.UseExceptionHandler("/Error");
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
-                                    {
-                                        ForwardedHeaders = ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedHost
-                                    });
-            app.UseHttpsRedirection();
         }
 
-        app.UseStaticFiles();
+        app.UseAuthentication();
+        app.UseAuthorization();
         app.UseAntiforgery();
         app.MapRazorComponents<App>()
            .AddInteractiveServerRenderMode();
