@@ -93,9 +93,13 @@ public sealed partial class Users : IDisposable
                                                (join, account) => new UserDTO
                                                                   {
                                                                       DiscordAccountName = join.Member.Name,
-                                                                      GuildWarsAccountName = account != null ? account.Name : string.Empty,
+                                                                      GuildWarsAccountName = account != null
+                                                                                                 ? account.Name
+                                                                                                 : string.Empty,
                                                                       IsGuildMember = account != null,
-                                                                      IsApiKeyValid = account != null && account.Permissions.HasFlag(GuildWars2ApiPermission.RequiredPermissions)
+                                                                      IsApiKeyValid = account != null
+                                                                                      && (account.Permissions.HasFlag(GuildWars2ApiPermission.RequiredPermissions)
+                                                                                          || account.ApiKey == "Free-To-Play")
                                                                   })
                                    .ToList();
 
@@ -115,19 +119,21 @@ public sealed partial class Users : IDisposable
         _users.AddRange(_repositoryFactory.GetRepository<GuildWarsGuildHistoricMemberRepository>()
                                           .GetQuery()
                                           .Where(member => member.Date == DateTime.Today
-                                                        && member.GuildId == guilds.Where(guild => guild.DiscordServerId == WebAppConfiguration.DiscordServerId)
-                                                                                   .Select(guild => guild.Id)
-                                                                                   .FirstOrDefault()
-                                                        && guildWarsAccounts.Any(guildWarsAccount => guildWarsAccount.Name == member.Name
-                                                                                 && discordAccounts.Any(discordAccount => discordAccount.UserId == guildWarsAccount.UserId
-                                                                                                                          && discordMembers.Any(discordMember => discordMember.AccountId == discordAccount.Id))) == false)
-                                          .Select(account => new UserDTO
-                                                             {
-                                                                 DiscordAccountName = string.Empty,
-                                                                 GuildWarsAccountName = account.Name,
-                                                                 IsGuildMember = true,
-                                                                 IsApiKeyValid = false
-                                                             })
+                                                           && member.GuildId == guilds.Where(guild => guild.DiscordServerId == WebAppConfiguration.DiscordServerId)
+                                                                                      .Select(guild => guild.Id)
+                                                                                      .FirstOrDefault()
+                                                           && guildWarsAccounts.Any(guildWarsAccount => guildWarsAccount.Name == member.Name
+                                                                                    && discordAccounts.Any(discordAccount => discordAccount.UserId == guildWarsAccount.UserId
+                                                                                                                             && discordMembers.Any(discordMember => discordMember.AccountId == discordAccount.Id))) == false)
+                                          .Select(member => new UserDTO
+                                                            {
+                                                                DiscordAccountName = string.Empty,
+                                                                GuildWarsAccountName = member.Name,
+                                                                IsGuildMember = true,
+                                                                IsApiKeyValid = guildWarsAccounts.Any(guildWarsAccount => guildWarsAccount.Name == member.Name
+                                                                                                                          && (guildWarsAccount.Permissions.HasFlag(GuildWars2ApiPermission.RequiredPermissions)
+                                                                                                                              || guildWarsAccount.ApiKey == "Free-To-Play"))
+                                                            })
                                           .ToList());
 
         OnFilterChanged();
