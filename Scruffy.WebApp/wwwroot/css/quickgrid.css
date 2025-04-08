@@ -1,0 +1,53 @@
+﻿.quickgrid-std {
+   background-color: #1a1a1a;
+   padding: 1rem;
+   border-radius: 8px;
+   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+   margin-top: 1rem;
+}
+
+   .quickgrid-std table {
+      min-width: 100%;
+      border-collapse: collapse;
+      color: #ffffff;
+   }
+
+   .quickgrid-std thead {
+      border-bottom: 2px solid #4a5568;
+   }
+
+   .quickgrid-std th {
+      padding: 1rem;
+      text-align: left;
+      background-color: #2d3748;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+   }
+
+   .quickgrid-std td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #4a5568;
+   }
+
+   .quickgrid-std tr:nth-child(odd) {
+      background-color: rgba(255, 255, 255, 0.05);
+   }
+
+   .quickgrid-std tr:nth-child(even) {
+      background-color: rgba(255, 255, 255, 0.1);
+   }
+
+   .quickgrid-std tr:hover {
+      background-color: rgba(66, 153, 225, 0.1);
+   }
+
+   .quickgrid-std .sort-indicator {
+      color: #63b3ed;
+   }
+
+   .quickgrid-std .col-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+   }

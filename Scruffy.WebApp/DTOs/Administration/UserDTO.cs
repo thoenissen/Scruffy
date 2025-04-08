@@ -6,17 +6,22 @@
 public class UserDTO
 {
     /// <summary>
-    /// Id
+    /// Discord account name
     /// </summary>
-    public long Id { get; set; }
-
-    /// <summary>
-    /// Name
-    /// </summary>
-    public string Name { get; set; }
+    public string DiscordAccountName { get; set; }
 
     /// <summary>
     /// Guild Wars 2 Account name
     /// </summary>
     public string GuildWarsAccountName { get; set; }
+
+    /// <summary>
+    /// Is the user a member of the guild?
+    /// </summary>
+    public bool IsGuildMember { get; set; }
+
+    /// <summary>
+    /// Is the api key valid?
+    /// </summary>
+    public bool IsApiKeyValid { get; set; }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -53,6 +54,13 @@ public class Program
                                            {
                                                options.ClientId = Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_OAUTH_CLIENT_ID")!;
                                                options.ClientSecret = Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_OAUTH_CLIENT_SECRET")!;
+                                               options.Events.OnRemoteFailure = context =>
+                                                                                {
+                                                                                    context.Response.Redirect("/");
+                                                                                    context.HandleResponse();
+
+                                                                                    return Task.CompletedTask;
+                                                                                };
                                            })
                         .AddIdentityCookies();
         builder.Services.AddDbContext<ScruffyDbContext>();
