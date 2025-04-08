@@ -2,15 +2,15 @@
    display: flex;
    flex-direction: column;
    align-items: center;
-   min-height: 100vh; /* Nimmt gesamte Viewport-Höhe ein */
+   min-height: 100vh;
    padding: 20px;
-   box-sizing: border-box; /* Verhindert Overflow durch Padding */
+   box-sizing: border-box;
 }
 
 .welcome-image {
    width: auto;
    height: auto;
-   max-width: 90%; /* Begrenzt die Breite */
-   max-height: calc(100vh - 150px); /* Subtrahiert h1-Höhe + Padding */
-   object-fit: contain; /* Bild bleibt vollständig sichtbar */
+   max-width: 90%;
+   max-height: calc(100vh - 150px);
+   object-fit: contain;
 }

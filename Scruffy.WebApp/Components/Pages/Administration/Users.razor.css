@@ -1,49 +1,4 @@
-﻿/* CSS */
-::deep .grid {
-   background-color: #1a1a1a;
-   padding: 1rem;
-   border-radius: 8px;
-   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-   margin-top: 1rem;
-}
-
-::deep table {
-   min-width: 100%;
-   border-collapse: collapse;
-   color: #ffffff;
-}
-
-::deep thead {
-   border-bottom: 2px solid #4a5568;
-}
-
-::deep th {
-   padding: 1rem;
-   text-align: left;
-   background-color: #2d3748;
-   font-weight: 600;
-   text-transform: uppercase;
-   letter-spacing: 0.05em;
-}
-
-::deep td {
-   padding: 0.75rem 1rem;
-   border-bottom: 1px solid #4a5568;
-}
-
-::deep tr:nth-child(odd) {
-   background-color: rgba(255, 255, 255, 0.05);
-}
-
-::deep tr:nth-child(even) {
-   background-color: rgba(255, 255, 255, 0.1);
-}
-
-::deep tr:hover {
-   background-color: rgba(66, 153, 225, 0.1);
-}
-
-::deep input {
+﻿::deep input {
    background-color: #2d3748;
    border: 1px solid #4a5568;
    color: white;
@@ -61,15 +16,4 @@
 label {
    color: #a0aec0;
    margin-right: 0.5rem;
-}
-
-/* Sort indicators */
-::deep .sort-indicator {
-   color: #63b3ed;
-}
-
-::deep .col-title {
-   display: flex;
-   align-items: center;
-   gap: 0.5rem;
 }

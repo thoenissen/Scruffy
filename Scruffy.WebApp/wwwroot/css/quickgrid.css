@@ -43,11 +43,15 @@
    }
 
    .quickgrid-std .sort-indicator {
-      color: #63b3ed;
+      filter: invert(100%) sepia(0%) saturate(7500%) hue-rotate(151deg) brightness(115%) contrast(102%);
    }
 
    .quickgrid-std .col-title {
       display: flex;
       align-items: center;
       gap: 0.5rem;
+   }
+
+   .quickgrid-std .col-title-text {
+      color: var(--bs-body-color);
    }
