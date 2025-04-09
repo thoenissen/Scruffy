@@ -44,6 +44,13 @@ public class UserRoleRepository : RepositoryBase<UserRoleQueryable, UserRoleEnti
     public Task<bool> BulkInsertAdministrators(List<long> administrators) => BulkInsertRoles(administrators, 2);
 
     /// <summary>
+    /// Bulk insert members
+    /// </summary>
+    /// <param name="members">Members</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public Task<bool> BulkInsertMembers(List<long> members) => BulkInsertRoles(members, 3);
+
+    /// <summary>
     /// Bulk insert role assignments
     /// </summary>
     /// <param name="users">Users</param>

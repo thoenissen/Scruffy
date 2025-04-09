@@ -106,6 +106,10 @@ public class UsersImportService : LocatedServiceBase
             await _dbFactory.GetRepository<UserRoleRepository>()
                             .BulkInsertAdministrators(administrators)
                             .ConfigureAwait(false);
+
+            await _dbFactory.GetRepository<UserRoleRepository>()
+                            .BulkInsertMembers(users.Select(user => user.UserId).ToList())
+                            .ConfigureAwait(false);
         }
     }
 

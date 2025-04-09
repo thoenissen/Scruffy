@@ -125,7 +125,7 @@ public class RaidCommandHandler : LocatedServiceBase
     #region Methods
 
     /// <summary>
-    /// Starts the appoint configuration assistant
+    /// Starts the appointment configuration assistant
     /// </summary>
     /// <param name="container">Context container</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
