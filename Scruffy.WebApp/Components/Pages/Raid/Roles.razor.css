@@ -30,6 +30,22 @@
    background-image: url('assets/icons/Alacrity.png');
 }
 
+.role-icon-hand-kiter {
+   background-image: url('assets/icons/HandKiter.png');
+}
+
+.role-icon-pusher {
+   background-image: url('assets/icons/Pusher.png');
+}
+
+.role-icon-q1-kiter {
+   background-image: url('assets/icons/Quadim1Kiter.png');
+}
+
+.role-icon-q2-kiter {
+   background-image: url('assets/icons/Quadim2Kiter.png');
+}
+
 ::deep .role-column .col-title {
    justify-content: center;
 }

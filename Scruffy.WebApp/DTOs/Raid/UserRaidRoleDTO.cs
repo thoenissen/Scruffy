@@ -14,4 +14,9 @@ public class UserRaidRoleDTO
     /// Roles
     /// </summary>
     public RaidRole Roles { get; init; }
+
+    /// <summary>
+    /// Special roles
+    /// </summary>
+    public RaidSpecialRole SpecialRoles { get; init; }
 }

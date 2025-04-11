@@ -40,6 +40,9 @@ public partial class Roles
         var raidRoles = _repositoryFactory.GetRepository<RaidUserRoleRepository>()
                                           .GetQuery();
 
+        var specialRoles = _repositoryFactory.GetRepository<RaidUserSpecialRoleRepository>()
+                                             .GetQuery();
+
         _userRaidRoles = _repositoryFactory.GetRepository<DiscordServerMemberRepository>()
                                            .GetQuery()
                                            .Where(member => member.ServerId == WebAppConfiguration.DiscordServerId)
@@ -48,7 +51,10 @@ public partial class Roles
                                                                  member.Name,
                                                                  Roles = raidRoles.Where(raidRole => raidRole.UserId == member.Account.UserId)
                                                                                   .Select(raidRole => raidRole.RoleId)
-                                                                                  .ToList()
+                                                                                  .ToList(),
+                                                                 SpecialRoles = specialRoles.Where(specialRole => specialRole.UserId == member.Account.UserId)
+                                                                                            .Select(specialRole => specialRole.SpecialRoleId)
+                                                                                            .ToList()
                                                              })
                                            .Where(member => member.Roles.Any())
                                            .AsEnumerable()
@@ -67,7 +73,17 @@ public partial class Roles
                                                                                                                          8 => RaidRole.AlacrityTankHealer,
                                                                                                                          9 => RaidRole.QuicknessTankHealer,
                                                                                                                          _ => current
-                                                                                                                     })
+                                                                                                                     }),
+                                                                 SpecialRoles = member.SpecialRoles.Aggregate(RaidSpecialRole.None,
+                                                                                                              (current, role) => current
+                                                                                                                                 | role switch
+                                                                                                                                   {
+                                                                                                                                       1 => RaidSpecialRole.HandKiter,
+                                                                                                                                       2 => RaidSpecialRole.SoullessHorrorPusher,
+                                                                                                                                       3 => RaidSpecialRole.Quadim1Kiter,
+                                                                                                                                       4 => RaidSpecialRole.Quadim2Kiter,
+                                                                                                                                       _ => current
+                                                                                                                                   })
                                                              })
                                            .ToList();
     }

@@ -5,55 +5,75 @@
 <PageTitle>Roles</PageTitle>
 
 <div class="scrollable-page">
-   <div class="quickgrod-container">
-      <div class="quickgrid-std mb-3">
-         <QuickGrid Items="@_userRaidRoles.AsQueryable()">
-            <PropertyColumn Title="Name" Property="@(u => u.Name)" Sortable="true" IsDefaultSortColumn="true" InitialSortDirection="SortDirection.Ascending"/>
-            <TemplateColumn Title="DPS" Context="u" Sortable="false" class="role-column">
-               <div class="roles-container">
-                   @if (u.Roles.HasFlag(RaidRole.DamageDealer))
-                   {
-                       <div class="role-icon role-icon-dps"></div>  
-                   }
-               </div>
-            </TemplateColumn>
-            <TemplateColumn Title="Support" Context="u" Sortable="false" class="role-column">
-                <div class="roles-container">
-                    @if (u.Roles.HasFlag(RaidRole.AlacrityDamageDealer))
-                    {
-                        <div class="role-icon role-icon-alacrity"></div>
-                    }
-                    @if (u.Roles.HasFlag(RaidRole.QuicknessDamageDealer))
-                    {
-                        <div class="role-icon role-icon-quickness"></div>
-                    }
-                </div>
-            </TemplateColumn>
-            <TemplateColumn Title="Healer" Context="u" Sortable="false" class="role-column">
-                <div class="roles-container">
-                    @if (u.Roles.HasFlag(RaidRole.AlacrityHealer))
-                    {
-                        <div class="role-icon role-icon-alacrity"></div>
-                    }
-                    @if (u.Roles.HasFlag(RaidRole.QuicknessHealer))
-                    {
-                        <div class="role-icon role-icon-quickness"></div>
-                    }
-                </div>
-            </TemplateColumn>
-            <TemplateColumn Title="Tank" Context="u" Sortable="false" class="role-column">
-                <div class="roles-container">
-                    @if (u.Roles.HasFlag(RaidRole.AlacrityTankHealer))
-                    {
-                        <div class="role-icon role-icon-alacrity"></div>
-                    }
-                    @if (u.Roles.HasFlag(RaidRole.QuicknessTankHealer))
-                    {
-                        <div class="role-icon role-icon-quickness"></div>
-                    }
-                </div>
-            </TemplateColumn>
-         </QuickGrid>
-      </div>
-   </div>
+    <div class="quickgrod-container">
+        <div class="quickgrid-std mb-3">
+            <QuickGrid Items="@_userRaidRoles.AsQueryable()">
+                <PropertyColumn Title="Name" Property="@(u => u.Name)" Sortable="true" IsDefaultSortColumn="true" InitialSortDirection="SortDirection.Ascending"/>
+                <TemplateColumn Title="DPS" Context="u" Sortable="false" class="role-column">
+                    <div class="roles-container">
+                        @if (u.Roles.HasFlag(RaidRole.DamageDealer))
+                        {
+                            <div class="role-icon role-icon-dps" title="DPS"></div>
+                        }
+                    </div>
+                </TemplateColumn>
+                <TemplateColumn Title="Support" Context="u" Sortable="false" class="role-column">
+                    <div class="roles-container">
+                        @if (u.Roles.HasFlag(RaidRole.AlacrityDamageDealer))
+                        {
+                            <div class="role-icon role-icon-alacrity" title="Alacrity - DPS"></div>
+                        }
+                        @if (u.Roles.HasFlag(RaidRole.QuicknessDamageDealer))
+                        {
+                            <div class="role-icon role-icon-quickness" title="Quickness - DPS"></div>
+                        }
+                    </div>
+                </TemplateColumn>
+                <TemplateColumn Title="Healer" Context="u" Sortable="false" class="role-column">
+                    <div class="roles-container">
+                        @if (u.Roles.HasFlag(RaidRole.AlacrityHealer))
+                        {
+                            <div class="role-icon role-icon-alacrity" title="Alacrity - Heal"></div>
+                        }
+                        @if (u.Roles.HasFlag(RaidRole.QuicknessHealer))
+                        {
+                            <div class="role-icon role-icon-quickness" title="Quickness - Heal"></div>
+                        }
+                    </div>
+                </TemplateColumn>
+                <TemplateColumn Title="Tank" Context="u" Sortable="false" class="role-column">
+                    <div class="roles-container">
+                        @if (u.Roles.HasFlag(RaidRole.AlacrityTankHealer))
+                        {
+                            <div class="role-icon role-icon-alacrity" title="Alacrity - Heal - Tank"></div>
+                        }
+                        @if (u.Roles.HasFlag(RaidRole.QuicknessTankHealer))
+                        {
+                            <div class="role-icon role-icon-quickness" title="Quickness - Heal - Tank"></div>
+                        }
+                    </div>
+                </TemplateColumn>
+                <TemplateColumn Title="Special" Context="u" Sortable="false" class="role-column">
+                    <div class="roles-container">
+                        @if (u.SpecialRoles.HasFlag(RaidSpecialRole.HandKiter))
+                        {
+                            <div class="role-icon role-icon-hand-kiter" title="Deimos - Hand kiter"></div>
+                        }
+                        @if (u.SpecialRoles.HasFlag(RaidSpecialRole.SoullessHorrorPusher))
+                        {
+                            <div class="role-icon role-icon-pusher" title="Soulless Horror - Pusher"></div>
+                        }
+                        @if (u.SpecialRoles.HasFlag(RaidSpecialRole.Quadim1Kiter))
+                        {
+                            <div class="role-icon role-icon-q1-kiter" title="Quadim 1 - Kiter"></div>
+                        }
+                        @if (u.SpecialRoles.HasFlag(RaidSpecialRole.Quadim2Kiter))
+                        {
+                            <div class="role-icon role-icon-q2-kiter" title="Quadim 2 - Pylon kiter"></div>
+                        }
+                    </div>
+                </TemplateColumn>
+            </QuickGrid>
+        </div>
+    </div>
 </div>
