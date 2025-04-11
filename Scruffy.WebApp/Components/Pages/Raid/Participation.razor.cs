@@ -70,7 +70,7 @@ public partial class Participation
         {
             var users = dbFactory.GetRepository<RaidCurrentUserPointsRepository>()
                                  .GetQuery()
-                                 .OrderByDescending(obj => obj.Points)
+                                 .Where(user => user.User.DiscordAccounts.Any(account => account.Members.Any(member => member.ServerId == WebAppConfiguration.DiscordServerId)))
                                  .Select(user => new
                                                  {
                                                      Name = user.User
@@ -81,6 +81,7 @@ public partial class Participation
                                                                 .FirstOrDefault(),
                                                      Points = user.Points * 100.0
                                                  })
+                                 .OrderByDescending(obj => obj.Points)
                                  .ToList();
 
             _chartData = new ChartData
