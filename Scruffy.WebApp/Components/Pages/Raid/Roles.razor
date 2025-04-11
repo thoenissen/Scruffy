@@ -1,0 +1,59 @@
+﻿@page "/Raid/Roles"
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using Scruffy.WebApp.DTOs.Raid
+
+<PageTitle>Roles</PageTitle>
+
+<div class="scrollable-page">
+   <div class="quickgrod-container">
+      <div class="quickgrid-std mb-3">
+         <QuickGrid Items="@_userRaidRoles.AsQueryable()">
+            <PropertyColumn Title="Name" Property="@(u => u.Name)" Sortable="true" IsDefaultSortColumn="true" InitialSortDirection="SortDirection.Ascending"/>
+            <TemplateColumn Title="DPS" Context="u" Sortable="false" class="role-column">
+               <div class="roles-container">
+                   @if (u.Roles.HasFlag(RaidRole.DamageDealer))
+                   {
+                       <div class="role-icon role-icon-dps"></div>  
+                   }
+               </div>
+            </TemplateColumn>
+            <TemplateColumn Title="Support" Context="u" Sortable="false" class="role-column">
+                <div class="roles-container">
+                    @if (u.Roles.HasFlag(RaidRole.AlacrityDamageDealer))
+                    {
+                        <div class="role-icon role-icon-alacrity"></div>
+                    }
+                    @if (u.Roles.HasFlag(RaidRole.QuicknessDamageDealer))
+                    {
+                        <div class="role-icon role-icon-quickness"></div>
+                    }
+                </div>
+            </TemplateColumn>
+            <TemplateColumn Title="Healer" Context="u" Sortable="false" class="role-column">
+                <div class="roles-container">
+                    @if (u.Roles.HasFlag(RaidRole.AlacrityHealer))
+                    {
+                        <div class="role-icon role-icon-alacrity"></div>
+                    }
+                    @if (u.Roles.HasFlag(RaidRole.QuicknessHealer))
+                    {
+                        <div class="role-icon role-icon-quickness"></div>
+                    }
+                </div>
+            </TemplateColumn>
+            <TemplateColumn Title="Tank" Context="u" Sortable="false" class="role-column">
+                <div class="roles-container">
+                    @if (u.Roles.HasFlag(RaidRole.AlacrityTankHealer))
+                    {
+                        <div class="role-icon role-icon-alacrity"></div>
+                    }
+                    @if (u.Roles.HasFlag(RaidRole.QuicknessTankHealer))
+                    {
+                        <div class="role-icon role-icon-quickness"></div>
+                    }
+                </div>
+            </TemplateColumn>
+         </QuickGrid>
+      </div>
+   </div>
+</div>

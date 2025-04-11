@@ -1,0 +1,35 @@
+﻿.quickgrod-container {
+   display: flex;
+   flex-direction: row;
+   align-items: flex-start
+}
+
+.roles-container {
+   display: flex;
+   flex-direction: row;
+   justify-content: center;
+   gap: 8px;
+}
+
+.role-icon {
+   width: 24px;
+   height: 24px;
+   background-repeat: no-repeat;
+   background-size: contain;
+}
+
+.role-icon-dps {
+   background-image: url('assets/icons/Power.png');
+}
+
+.role-icon-quickness {
+   background-image: url('assets/icons/Quickness.png');
+}
+
+.role-icon-alacrity {
+   background-image: url('assets/icons/Alacrity.png');
+}
+
+::deep .role-column .col-title {
+   justify-content: center;
+}

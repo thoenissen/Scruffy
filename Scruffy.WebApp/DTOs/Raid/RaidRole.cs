@@ -9,6 +9,11 @@ namespace Scruffy.WebApp.DTOs.Raid;
 public enum RaidRole
 {
     /// <summary>
+    /// None
+    /// </summary>
+    None = 0,
+
+    /// <summary>
     /// DPS
     /// </summary>
     DamageDealer = 1 << 1,

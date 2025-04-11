@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using Microsoft.AspNetCore.Authorization;
+
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.WebApp.DTOs.Raid;
@@ -11,6 +13,7 @@ namespace Scruffy.WebApp.Components.Pages.Raid;
 /// <summary>
 /// Line up
 /// </summary>
+[Authorize(Roles = "Developer")]
 public partial class LineUp
 {
     #region Fields
@@ -82,18 +85,21 @@ public partial class LineUp
                                                               {
                                                                   Id = registration.Id,
                                                                   Name = registration.Name,
-                                                                  Roles = registration.Roles.Aggregate(RaidRole.DamageDealer,
-                                                                                                       (current, role) => current | role switch
-                                                                                                                                    {
-                                                                                                                                        1 => RaidRole.DamageDealer,
-                                                                                                                                        2 => RaidRole.AlacrityDamageDealer,
-                                                                                                                                        3 => RaidRole.QuicknessDamageDealer,
-                                                                                                                                        4 => RaidRole.AlacrityHealer,
-                                                                                                                                        5 => RaidRole.QuicknessHealer,
-                                                                                                                                        8 => RaidRole.AlacrityTankHealer,
-                                                                                                                                        9 => RaidRole.QuicknessTankHealer,
-                                                                                                                                        _ => current
-                                                                                                                                    }),
+                                                                  Roles = registration.Roles.Count > 0
+                                                                              ? registration.Roles.Aggregate(RaidRole.None,
+                                                                                                             (current, role) => current
+                                                                                                                                | role switch
+                                                                                                                                  {
+                                                                                                                                      1 => RaidRole.DamageDealer,
+                                                                                                                                      2 => RaidRole.AlacrityDamageDealer,
+                                                                                                                                      3 => RaidRole.QuicknessDamageDealer,
+                                                                                                                                      4 => RaidRole.AlacrityHealer,
+                                                                                                                                      5 => RaidRole.QuicknessHealer,
+                                                                                                                                      8 => RaidRole.AlacrityTankHealer,
+                                                                                                                                      9 => RaidRole.QuicknessTankHealer,
+                                                                                                                                      _ => current
+                                                                                                                                  })
+                                                                              : RaidRole.DamageDealer
                                                               })
                     .ToList();
         }
