@@ -1,0 +1,18 @@
+﻿@page "/Raid/LineUp"
+
+@using Scruffy.WebApp.Components.Controls.Raid
+
+@rendermode InteractiveServer
+
+<h1>Line up @_timeStamp?.ToString("dd.MM.yyyy HH:mm")</h1>
+<div class="lineup-container">
+    <div class="squads-container">
+        @for (var index = 0; index < _groupCount; index++)
+        {
+            <Squad GroupNumber="@(index + 1)" Registrations="@_registrations" AssignmentChanged="OnSquadAssignmentChanged"/>
+        }
+    </div>
+    <button type="submit" class="btn btn-primary btn-commit">
+        Commit
+    </button>
+</div>

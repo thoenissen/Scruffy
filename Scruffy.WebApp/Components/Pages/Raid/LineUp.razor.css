@@ -1,0 +1,19 @@
+﻿.lineup-container {
+   display: grid;
+   grid-template-columns: auto 1fr;
+   align-items: start;
+}
+
+.squads-container {
+   display: flex;
+   flex-direction: row;
+   flex-wrap: wrap;
+   gap: 1rem;
+   grid-column: 1
+}
+
+.btn-commit {
+   width: 150px;
+   grid-column: 1;
+   margin-left: auto;
+}

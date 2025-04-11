@@ -1,0 +1,91 @@
+﻿.squad {
+   display: flex;
+   flex-direction: column;
+}
+
+.groups {
+   background-color: #1a1a1a;
+   padding: 1rem;
+   border-radius: 8px;
+   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+   margin: 1rem 0;
+   color: #ffffff;
+}
+
+.group {
+   margin-bottom: 1.5rem;
+}
+
+   .group:last-child {
+      margin-bottom: 0;
+   }
+
+.group-number {
+   padding: 1rem;
+   background-color: #2d3748;
+   font-weight: 600;
+   text-transform: uppercase;
+   letter-spacing: 0.05em;
+   border-radius: 4px;
+   margin-bottom: 0.5rem;
+}
+
+.group-member {
+   display: grid;
+   grid-template-columns: 24px 24px 24px 1fr;
+   gap: 0.5rem;
+   align-items: center;
+   padding: 0.75rem 1rem;
+   border-bottom: 1px solid #4a5568;
+}
+
+   .group-member:nth-child(odd) {
+      background-color: rgba(255, 255, 255, 0.05);
+   }
+
+   .group-member:nth-child(even) {
+      background-color: rgba(255, 255, 255, 0.1);
+   }
+
+.lineup-icon {
+   width: 24px;
+   height: 24px;
+   background-repeat: no-repeat;
+   background-size: contain;
+   filter: brightness(0.9);
+}
+
+.lineup-icon-tank {
+   grid-column: 1;
+   background-image: url('assets/icons/Toughness.png');
+}
+
+.lineup-icon-quickness_or_alacrity {
+   grid-column: 2;
+   background-image: url('assets/icons/Quickness_Or_Alacrity.png');
+}
+
+.lineup-icon-quickness {
+   grid-column: 2;
+   background-image: url('assets/icons/Quickness.png');
+}
+
+.lineup-icon-alacrity {
+   grid-column: 2;
+   background-image: url('assets/icons/Alacrity.png');
+}
+
+.lineup-icon-heal {
+   grid-column: 3;
+   background-image: url('assets/icons/Healing_Power.png');
+}
+
+.lineup-icon-dps {
+   grid-column: 3;
+   background-image: url('assets/icons/Power.png');
+}
+
+.lineup-member-selection {
+   width: 100%;
+   grid-column: 4;
+}

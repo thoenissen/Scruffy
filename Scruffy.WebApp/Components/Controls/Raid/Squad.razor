@@ -1,0 +1,142 @@
+﻿@using Scruffy.WebApp.DTOs.Raid
+
+<div class="squad">
+   <h3>Squad @GroupNumber</h3>
+   <div class="groups">
+      <div class="group">
+         <div class="group-number">Group 1</div>
+
+         <!-- Tank Heal Support-->
+         <div class="group-member">
+            <div class="lineup-icon lineup-icon-tank"></div>
+            @if (SelectedTankRole?.Role.HasFlag(RaidRole.AlacrityTankHealer) == true)
+            {
+               <div class="lineup-icon lineup-icon-alacrity"></div>
+            }
+            else if (SelectedTankRole?.Role.HasFlag(RaidRole.QuicknessTankHealer) == true)
+            {
+               <div class="lineup-icon lineup-icon-quickness"></div>
+            }
+            else
+            {
+               <div class="lineup-icon lineup-icon-quickness_or_alacrity"></div>
+            }
+            <div class="lineup-icon lineup-icon-heal"></div>
+            <div class="lineup-member-selection">
+               <ComboBox TItem="PlayerRoleDTO" Items="@_tankRoles" @bind-SelectedItem="@SelectedTankRole" Filter="@OnTankFilter" />
+            </div>
+         </div>
+
+         <!-- DPS Support  -->
+         <div class="group-member">
+            @if (SelectedDpsSupport1?.Role.HasFlag(RaidRole.AlacrityDamageDealer) == true)
+            {
+               <div class="lineup-icon lineup-icon-alacrity"></div>
+            }
+            else if (SelectedDpsSupport1?.Role.HasFlag(RaidRole.QuicknessDamageDealer) == true)
+            {
+               <div class="lineup-icon lineup-icon-quickness"></div>
+            }
+            else
+            {
+               <div class="lineup-icon lineup-icon-quickness_or_alacrity"></div>
+            }
+            <div class="lineup-icon lineup-icon-dps"></div>
+            <div class="lineup-member-selection">
+               <ComboBox TItem="PlayerRoleDTO" Items="@_dpsSupportRoles" @bind-SelectedItem="@SelectedDpsSupport1" Filter="@OnDpsSupport1Filter" />
+            </div>
+         </div>
+
+         <!-- DPS -->
+         <div class="group-member">
+            <div class="lineup-icon lineup-icon-dps"></div>
+            <div class="lineup-member-selection">
+               <ComboBox TItem="PlayerRoleDTO" Items="@_dpsRoles" @bind-SelectedItem="@SelectedDps1" />
+            </div>
+         </div>
+
+         <!-- DPS -->
+         <div class="group-member">
+            <div class="lineup-icon lineup-icon-dps"></div>
+            <div class="lineup-member-selection">
+               <ComboBox TItem="PlayerRoleDTO" Items="@_dpsRoles" @bind-SelectedItem="@SelectedDps2" />
+            </div>
+         </div>
+
+         <!-- DPS -->
+         <div class="group-member">
+            <div class="lineup-icon lineup-icon-dps"></div>
+            <div class="lineup-member-selection">
+               <ComboBox TItem="PlayerRoleDTO" Items="@_dpsRoles" @bind-SelectedItem="@SelectedDps3" />
+            </div>
+         </div>
+      </div>
+      <div>
+         <div class="group-number">Group 2</div>
+
+         <!-- Heal Support-->
+         <div class="group-member">
+            @if (SelectedHealerRole?.Role.HasFlag(RaidRole.AlacrityHealer) == true)
+            {
+               <div class="lineup-icon lineup-icon-alacrity"></div>
+            }
+            else if (SelectedHealerRole?.Role.HasFlag(RaidRole.QuicknessHealer) == true)
+            {
+               <div class="lineup-icon lineup-icon-quickness"></div>
+            }
+            else
+            {
+               <div class="lineup-icon lineup-icon-quickness_or_alacrity"></div>
+            }
+            <div class="lineup-icon lineup-icon-heal"></div>
+            <div class="lineup-member-selection">
+               <ComboBox TItem="PlayerRoleDTO" Items="@_healerRoles" @bind-SelectedItem="@SelectedHealerRole" Filter="@OnHealerFilter" />
+            </div>
+         </div>
+
+         <!-- DPS Support  -->
+         <div class="group-member">
+            @if (SelectedDpsSupport2?.Role.HasFlag(RaidRole.AlacrityDamageDealer) == true)
+            {
+               <div class="lineup-icon lineup-icon-alacrity"></div>
+            }
+            else if (SelectedDpsSupport2?.Role.HasFlag(RaidRole.QuicknessDamageDealer) == true)
+            {
+               <div class="lineup-icon lineup-icon-quickness"></div>
+            }
+            else
+            {
+               <div class="lineup-icon lineup-icon-quickness_or_alacrity"></div>
+            }
+            <div class="lineup-icon lineup-icon-dps"></div>
+            <div class="lineup-member-selection">
+               <ComboBox TItem="PlayerRoleDTO" Items="@_dpsSupportRoles" @bind-SelectedItem="@SelectedDpsSupport2" Filter="@OnDpsSupport2Filter" />
+            </div>
+         </div>
+
+         <!-- DPS -->
+         <div class="group-member">
+            <div class="lineup-icon lineup-icon-dps"></div>
+            <div class="lineup-member-selection">
+               <ComboBox TItem="PlayerRoleDTO" Items="@_dpsRoles" @bind-SelectedItem="@SelectedDps4" />
+            </div>
+         </div>
+
+         <!-- DPS -->
+         <div class="group-member">
+            <div class="lineup-icon lineup-icon-dps"></div>
+            <div class="lineup-member-selection">
+               <ComboBox TItem="PlayerRoleDTO" Items="@_dpsRoles" @bind-SelectedItem="@SelectedDps5" />
+            </div>
+         </div>
+
+         <!-- DPS -->
+         <div class="group-member">
+            <div class="lineup-icon lineup-icon-dps"></div>
+            <div class="lineup-member-selection">
+               <ComboBox TItem="PlayerRoleDTO" Items="@_dpsRoles" @bind-SelectedItem="@SelectedDps6" />
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

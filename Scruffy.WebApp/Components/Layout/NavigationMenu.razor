@@ -36,5 +36,17 @@
                 </div>
             </Authorized>
         </AuthorizeView>
+        <AuthorizeView Roles="Developer">
+            <Authorized>
+                <div class="nav-group">
+                    <div class="nav-group-header px-3">In Development</div>
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Raid/LineUp" Match="NavLinkMatch.Prefix">
+                            <span class="bi bi-nav-icon bi-nav-icon-users" aria-hidden="true"></span> Line up
+                        </NavLink>
+                    </div>
+                </div>
+            </Authorized>
+        </AuthorizeView>
     </nav>
 </div>

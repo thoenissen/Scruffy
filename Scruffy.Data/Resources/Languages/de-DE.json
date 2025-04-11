@@ -124,7 +124,7 @@
             "ButtonAppointmentLead": "Terminleitung" 
         },
         "CalendarOneTimeDayDialogElement": {
-            "Message": "Gbt bitte den Tag ein. (yyyy-MM-dd)"
+            "Message": "Gebe bitte den Tag ein. (yyyy-MM-dd)"
         },
         "CalendarParticipantsEditDialogElement": {
             "AddUserCommand": "Teilnehmer hinzufügen",

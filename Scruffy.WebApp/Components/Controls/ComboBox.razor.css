@@ -1,0 +1,45 @@
+﻿select {
+   width: 100%;
+   background-color: #2d3748;
+   border: 1px solid #4a5568;
+   border-radius: 4px;
+   padding: 0.5rem 2rem 0.5rem 0.75rem;
+   color: #ffffff;
+   font-family: inherit;
+   font-size: 0.875rem;
+   appearance: none;
+   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+   select:focus {
+      border-color: #4299e1;
+      outline: 0;
+      box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+   }
+
+   select option {
+      padding: 0.5rem;
+      background-color: #1a1a1a;
+      color: #ffffff;
+   }
+
+   select optgroup {
+      color: #a0aec0;
+      font-style: normal;
+      font-weight: 600;
+      padding: 0.5rem 0;
+      background-color: #2d3748;
+   }
+
+      select optgroup option {
+         padding-left: 1rem;
+      }
+
+   select option:hover {
+      background-color: rgba(66, 153, 225, 0.1) !important;
+   }
+
+   select option:disabled {
+      color: #718096;
+      cursor: not-allowed;
+   }
