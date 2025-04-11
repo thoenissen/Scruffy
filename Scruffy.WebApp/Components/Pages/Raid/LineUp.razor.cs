@@ -62,7 +62,6 @@ public partial class LineUp
 
             _timeStamp = appointment?.TimeStamp;
             _groupCount = appointment?.GroupCount ?? 0;
-            _groupCount = 2;
 
             _registrations = dbFactory.GetRepository<RaidRegistrationRepository>()
                                       .GetQuery()
