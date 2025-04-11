@@ -4,6 +4,7 @@
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <DockerfileRunEnvironmentFiles>Docker.env</DockerfileRunEnvironmentFiles>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
+        <BlazorEnableCssOptimization>false</BlazorEnableCssOptimization>
     </PropertyGroup>
 
     <ItemGroup>
