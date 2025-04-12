@@ -49,3 +49,54 @@
 ::deep .role-column .col-title {
    justify-content: center;
 }
+
+::deep .role-column {
+   width: 192px;
+}
+
+::deep .role-column:last-child {
+   width: 320px;
+}
+
+.table {
+   display: table;
+   width: 100%;
+}
+
+.table-row {
+   display: table-row;
+}
+
+.table-cell {
+   width: 192px;
+   padding: 0.1rem 1.4rem 0.1rem 0.4rem;
+   display: table-cell;
+   background-color: #2d3748;
+   font-weight: 600;
+   color: var(--bs-body-color);
+   text-align: center;
+}
+
+.table-cell:first-child {
+   width: auto;
+   text-align: left
+}
+
+.table-cell:last-child {
+   width: 320px;
+   text-align: left
+}
+
+.statistics-row {
+   display: table;
+   width: 100%;
+   border-top: 2px solid #4a5568;
+}
+
+.statistics-container {
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+   justify-content: center;
+   gap: 0.5rem;
+}

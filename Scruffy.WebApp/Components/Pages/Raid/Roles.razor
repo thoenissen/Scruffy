@@ -74,6 +74,56 @@
                     </div>
                 </TemplateColumn>
             </QuickGrid>
+            <div class="table statistics-row">
+                @foreach (var day in _days)
+                {
+                    <div class="table-row">
+                        <div class="table-cell">@day.Day.ToString()</div>
+                        <div class="table-cell">
+                            <div class="statistics-container">
+                                <div class="role-icon role-icon-dps" title="DPS"></div>
+                                <div class="statistics-playercount">@day.DamageDealer.ToString("0.00")</div>
+                            </div>
+                        </div>
+                        <div class="table-cell">
+                            <div class="statistics-container">
+                                <div class="role-icon role-icon-alacrity" title="Alacrity - DPS"></div>
+                                <div class="statistics-playercount">@day.AlacrityDamageDealer.ToString("0.00")</div>
+                                <div class="role-icon role-icon-quickness" title="Quickness - DPS"></div>
+                                <div class="statistics-playercount">@day.QuicknessDamageDealer.ToString("0.00")</div>
+                            </div>
+                        </div>
+                        <div class="table-cell">
+                            <div class="statistics-container">
+                                <div class="role-icon role-icon-alacrity" title="Alacrity - Heal"></div>
+                                <div class="statistics-playercount">@day.AlacrityHealer.ToString("0.00")</div>
+                                <div class="role-icon role-icon-quickness" title="Quickness - Heal"></div>
+                                <div class="statistics-playercount">@day.QuicknessHealer.ToString("0.00")</div>
+                            </div>
+                        </div>
+                        <div class="table-cell">
+                            <div class="statistics-container">
+                                <div class="role-icon role-icon-alacrity" title="Alacrity - Tank"></div>
+                                <div class="statistics-playercount">@day.AlacrityTankHealer.ToString("0.00")</div>
+                                <div class="role-icon role-icon-quickness" title="Quickness - Tank"></div>
+                                <div class="statistics-playercount">@day.QuicknessTankHealer.ToString("0.00")</div>
+                            </div>
+                        </div>
+                        <div class="table-cell">
+                            <div class="statistics-container">
+                                <div class="role-icon role-icon-hand-kiter" title="Deimos - Hand kiter"></div>
+                                <div class="statistics-playercount">@day.HandKiter.ToString("0.00")</div>
+                                <div class="role-icon role-icon-pusher" title="Soulless Horror - Pusher"></div>
+                                <div class="statistics-playercount">@day.SoullessHorrorPusher.ToString("0.00")</div>
+                                <div class="role-icon role-icon-q1-kiter" title="Quadim 1 - Kiter"></div>
+                                <div class="statistics-playercount">@day.Quadim1Kiter.ToString("0.00")</div>
+                                <div class="role-icon role-icon-q2-kiter" title="Quadim 2 - Pylon kiter"></div>
+                                <div class="statistics-playercount">@day.Quadim2Kiter.ToString("0.00")</div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
         </div>
     </div>
 </div>
