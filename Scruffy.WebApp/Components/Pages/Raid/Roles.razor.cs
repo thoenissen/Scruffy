@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Discord;
@@ -35,7 +39,22 @@ public partial class Roles
     /// </summary>
     private List<RaidDayStatisticsDTO> _days;
 
+    /// <summary>
+    /// Reference to the roles container
+    /// </summary>
+    private ElementReference _rolesElement;
+
     #endregion // Fields
+
+    #region Properties
+
+    /// <summary>
+    /// JavaScript runtime
+    /// </summary>
+    [Inject]
+    public IJSRuntime JsRuntime { get; set; }
+
+    #endregion // Properties
 
     #region Methods
 
@@ -53,6 +72,22 @@ public partial class Roles
                                                         .Sum(obj2 => Math.Pow(10, -(((DateTime.Today - obj2).Days / 7) - 15) / 14.6)));
 
         return points / 66.147532745646117;
+    }
+
+    /// <summary>
+    /// Export clicked
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    private async Task OnExport()
+    {
+        var module = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./js/html2canvasInterop.js")
+                                    .ConfigureAwait(false);
+
+        await using (module.ConfigureAwait(false))
+        {
+            await module.InvokeVoidAsync("exportDivToImage", _rolesElement, "roles.png")
+                        .ConfigureAwait(false);
+        }
     }
 
     #endregion // Methods
