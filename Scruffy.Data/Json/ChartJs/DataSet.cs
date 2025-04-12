@@ -6,12 +6,17 @@
 public class DataSet
 {
     /// <summary>
-    /// Background colors for the dataset
+    /// Color
+    /// </summary>
+    public string[] Color { get; set; }
+
+    /// <summary>
+    /// Background colors
     /// </summary>
     public string[] BackgroundColor { get; set; }
 
     /// <summary>
-    /// Data points for the dataset
+    /// Data points
     /// </summary>
     public double[] Data { get; set; }
 }

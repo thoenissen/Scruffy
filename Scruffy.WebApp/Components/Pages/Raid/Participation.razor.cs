@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Drawing;
+using System.Linq;
 
 using Microsoft.AspNetCore.Authorization;
 
@@ -51,7 +52,18 @@ public partial class Participation
                                                  Grid = new GridConfiguration
                                                         {
                                                             Color = "lightgrey"
-                                                        }
+                                                        },
+                                                 Ticks = new AxisTicks
+                                                         {
+                                                             Color = "#A0AEC0"
+                                                         }
+                                             },
+                                         Y = new Axes
+                                             {
+                                                 Ticks = new AxisTicks
+                                                         {
+                                                             Color = "#A0AEC0"
+                                                         }
                                              }
                                      }
                         };
@@ -89,6 +101,7 @@ public partial class Participation
                              Datasets = [
                                             new DataSet
                                             {
+                                                Color = users.Select(_ => "red").ToArray(),
                                                 BackgroundColor = users.Select(_ => "#316ed5").ToArray(),
                                                 Data = users.Select(user => user.Points).ToArray()
                                             }
