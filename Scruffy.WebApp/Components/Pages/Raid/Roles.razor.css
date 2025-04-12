@@ -79,7 +79,8 @@
 
 .table-cell:first-child {
    width: auto;
-   text-align: left
+   text-align: left;
+   align-content: center;
 }
 
 .table-cell:last-child {
