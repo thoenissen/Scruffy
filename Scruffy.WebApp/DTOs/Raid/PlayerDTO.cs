@@ -23,6 +23,11 @@ public class PlayerDTO
     public RaidRole Roles { get; init; }
 
     /// <summary>
+    /// Roles of the registration
+    /// </summary>
+    public RaidRole RegistrationRoles { get; init; }
+
+    /// <summary>
     /// Is the player assigned?
     /// </summary>
     public bool IsAssigned { get; set; }

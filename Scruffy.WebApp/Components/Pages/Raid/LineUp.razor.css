@@ -1,4 +1,64 @@
-﻿.lineup-container {
+﻿.lineup-page {
+   display: flex;
+   flex-direction: row;
+   flex-wrap: wrap;
+   gap: 1rem;
+}
+.registrations-container {
+   display: flex;
+   flex-direction: column;
+}
+
+.registration-roles-container {
+   display: flex;
+   flex-direction: row;
+   gap: 1rem;
+   justify-self: flex-start
+}
+
+.roles-container {
+   display: flex;
+   flex-direction: row;
+   position: relative;
+}
+
+   .roles-container:not(:last-child)::after {
+      content: "|";
+      position: absolute;
+      right: -0.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #A0AEC0
+   }
+
+.role-icon {
+   width: 24px;
+   height: 24px;
+   background-repeat: no-repeat;
+   background-size: contain;
+}
+
+.role-icon-dps {
+   background-image: url('assets/icons/Power.png');
+}
+
+.role-icon-quickness {
+   background-image: url('assets/icons/Quickness.png');
+}
+
+.role-icon-alacrity {
+   background-image: url('assets/icons/Alacrity.png');
+}
+
+.role-icon-healer {
+   background-image: url('assets/icons/Healing_Power.png');
+}
+
+.role-icon-tank {
+   background-image: url('assets/icons/Toughness.png');
+}
+
+.lineup-container {
    display: grid;
    grid-template-columns: auto 1fr;
    align-items: start;

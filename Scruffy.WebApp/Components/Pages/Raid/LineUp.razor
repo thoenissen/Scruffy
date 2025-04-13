@@ -1,18 +1,86 @@
 ﻿@page "/Raid/LineUp"
 
 @using Scruffy.WebApp.Components.Controls.Raid
+@using Scruffy.WebApp.DTOs.Raid
+@using Microsoft.AspNetCore.Components.QuickGrid
 
 @rendermode InteractiveServer
 
 <h1>Line up @_timeStamp?.ToString("dd.MM.yyyy HH:mm")</h1>
-<div class="lineup-container">
-    <div class="squads-container">
-        @for (var index = 0; index < _groupCount; index++)
-        {
-            <Squad GroupNumber="@(index + 1)" Registrations="@_registrations" AssignmentChanged="OnSquadAssignmentChanged"/>
-        }
+
+<div class="lineup-page">
+    <div class="registrations-container">
+        <h3>Registrations</h3>
+        <div class="quickgrid-std registrations-container mb-3">
+            <QuickGrid Items="@_registrations.AsQueryable()">
+                <PropertyColumn Title="Name" Property="@(u => u.Name)" Sortable="true" IsDefaultSortColumn="true" InitialSortDirection="SortDirection.Ascending"/>
+                <TemplateColumn Title="Role requests" Context="u" Sortable="false" class="role-column">
+                    <div class="registration-roles-container">
+                        @if (u.RegistrationRoles.HasFlag(RaidRole.DamageDealer))
+                        {
+                            <div class="roles-container">
+                                <div class="role-icon role-icon-dps"></div>
+                            </div>
+                        }
+                        @if (u.RegistrationRoles.HasFlag(RaidRole.AlacrityDamageDealer))
+                        {
+                            <div class="roles-container">
+                                <div class="role-icon role-icon-alacrity"></div>
+                                <div class="role-icon role-icon-dps"></div>
+                            </div>
+                        }
+                        @if (u.RegistrationRoles.HasFlag(RaidRole.QuicknessDamageDealer))
+                        {
+                            <div class="roles-container">
+                                <div class="role-icon role-icon-quickness"></div>
+                                <div class="role-icon role-icon-dps"></div>
+                            </div>
+                        }
+                        @if (u.RegistrationRoles.HasFlag(RaidRole.AlacrityHealer))
+                        {
+                            <div class="roles-container">
+                                <div class="role-icon role-icon-alacrity"></div>
+                                <div class="role-icon role-icon-heal"></div>
+                            </div>
+                        }
+                        @if (u.RegistrationRoles.HasFlag(RaidRole.QuicknessHealer))
+                        {
+                            <div class="roles-container">
+                                <div class="role-icon role-icon-quickness"></div>
+                                <div class="role-icon role-icon-heal"></div>
+                            </div>
+                        }
+                        @if (u.RegistrationRoles.HasFlag(RaidRole.AlacrityTankHealer))
+                        {
+                            <div class="roles-container">
+                                <div class="role-icon role-icon-tank"></div>
+                                <div class="role-icon role-icon-alacrity"></div>
+                                <div class="role-icon role-icon-heal"></div>
+                            </div>
+                        }
+                        @if (u.RegistrationRoles.HasFlag(RaidRole.QuicknessTankHealer))
+                        {
+                            <div class="roles-container">
+                                <div class="role-icon role-icon-tank"></div>
+                                <div class="role-icon role-icon-quickness"></div>
+                                <div class="role-icon role-icon-heal"></div>
+                            </div>
+                        }
+                    </div>
+                </TemplateColumn>
+            </QuickGrid>
+        </div>
     </div>
-    <button type="submit" class="btn btn-primary btn-commit">
-        Commit
-    </button>
+
+    <div class="lineup-container">
+        <div class="squads-container">
+            @for (var index = 0; index < _groupCount; index++)
+            {
+                <Squad GroupNumber="@(index + 1)" Registrations="@_registrations" AssignmentChanged="OnSquadAssignmentChanged"/>
+            }
+        </div>
+        <button type="submit" class="btn btn-primary btn-commit">
+            Commit
+        </button>
+    </div>
 </div>

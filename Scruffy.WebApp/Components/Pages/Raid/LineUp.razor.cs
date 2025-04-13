@@ -79,6 +79,9 @@ public partial class LineUp
                                                                                                           .FirstOrDefault(),
                                                                   Roles = registration.User.RaidUserRoles.Select(userRole => userRole.RoleId)
                                                                                                          .ToList(),
+                                                                  RegistrationRoles = registration.RaidRegistrationRoleAssignments
+                                                                                                  .Select(role => role.RoleId)
+                                                                                                  .ToList(),
                                                               })
                                       .AsEnumerable()
                                       .Select(registration => new PlayerDTO
@@ -86,22 +89,37 @@ public partial class LineUp
                                                                   Id = registration.Id,
                                                                   Name = registration.Name,
                                                                   Roles = registration.Roles.Count > 0
-                                                                              ? registration.Roles.Aggregate(RaidRole.None,
-                                                                                                             (current, role) => current
-                                                                                                                                | role switch
-                                                                                                                                  {
-                                                                                                                                      1 => RaidRole.DamageDealer,
-                                                                                                                                      2 => RaidRole.AlacrityDamageDealer,
-                                                                                                                                      3 => RaidRole.QuicknessDamageDealer,
-                                                                                                                                      4 => RaidRole.AlacrityHealer,
-                                                                                                                                      5 => RaidRole.QuicknessHealer,
-                                                                                                                                      8 => RaidRole.AlacrityTankHealer,
-                                                                                                                                      9 => RaidRole.QuicknessTankHealer,
-                                                                                                                                      _ => current
-                                                                                                                                  })
-                                                                              : RaidRole.DamageDealer
+                                                                          || registration.RegistrationRoles.Count > 0
+                                                                                 ? registration.Roles.Concat(registration.RegistrationRoles)
+                                                                                                     .Aggregate(RaidRole.None,
+                                                                                                                (current, role) => current
+                                                                                                                                   | role switch
+                                                                                                                                     {
+                                                                                                                                         1 => RaidRole.DamageDealer,
+                                                                                                                                         2 => RaidRole.AlacrityDamageDealer,
+                                                                                                                                         3 => RaidRole.QuicknessDamageDealer,
+                                                                                                                                         4 => RaidRole.AlacrityHealer,
+                                                                                                                                         5 => RaidRole.QuicknessHealer,
+                                                                                                                                         8 => RaidRole.AlacrityTankHealer,
+                                                                                                                                         9 => RaidRole.QuicknessTankHealer,
+                                                                                                                                         _ => current
+                                                                                                                                     })
+                                                                                 : RaidRole.DamageDealer,
+                                                                  RegistrationRoles = registration.RegistrationRoles.Aggregate(RaidRole.None,
+                                                                                                                               (current, role) => current
+                                                                                                                                                  | role switch
+                                                                                                                                                  {
+                                                                                                                                                      1 => RaidRole.DamageDealer,
+                                                                                                                                                      2 => RaidRole.AlacrityDamageDealer,
+                                                                                                                                                      3 => RaidRole.QuicknessDamageDealer,
+                                                                                                                                                      4 => RaidRole.AlacrityHealer,
+                                                                                                                                                      5 => RaidRole.QuicknessHealer,
+                                                                                                                                                      8 => RaidRole.AlacrityTankHealer,
+                                                                                                                                                      9 => RaidRole.QuicknessTankHealer,
+                                                                                                                                                      _ => current
+                                                                                                                                                  })
                                                               })
-                    .ToList();
+                                      .ToList();
         }
     }
 
