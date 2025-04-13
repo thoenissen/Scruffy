@@ -1,10 +1,10 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
-   <div class="container-fluid d-flex align-items-center">
-      <img src="logo.png" alt="Logo" class="navbar-logo" />
-      <a class="navbar-brand ms-2" href="">Forces of Imagination</a>
-   </div>
+    <div class="container-fluid d-flex align-items-center">
+        <img src="logo.png" alt="Logo" class="navbar-logo"/>
+        <a class="navbar-brand ms-2" href="">Forces of Imagination</a>
+    </div>
 </div>
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+<input type="checkbox" title="Navigation menu" class="navbar-toggler"/>
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="flex-column">
         <div class="nav-item px-3">
@@ -14,19 +14,27 @@
         </div>
         <AuthorizeView Roles="Member">
             <Authorized>
-               <div class="nav-group">
-                   <div class="nav-group-header px-3">Raid</div>
-                   <div class="nav-item px-3">
-                       <NavLink class="nav-link" href="/Raid/Participation" Match="NavLinkMatch.Prefix">
-                           <span class="bi bi-nav-icon bi-nav-icon-users" aria-hidden="true"></span> Participation
-                       </NavLink>
-                   </div>
-                   <div class="nav-item px-3">
-                       <NavLink class="nav-link" href="/Raid/Roles" Match="NavLinkMatch.Prefix">
-                           <span class="bi bi-nav-icon bi-nav-icon-users" aria-hidden="true"></span> Roles
-                       </NavLink>
-                   </div>
-               </div>
+                <div class="nav-group">
+                    <div class="nav-group-header px-3">Ranking</div>
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Ranking/Personal" Match="NavLinkMatch.Prefix">
+                            <span class="bi bi-nav-icon bi-nav-icon-users" aria-hidden="true"></span> Personal
+                        </NavLink>
+                    </div>
+                </div>
+                <div class="nav-group">
+                    <div class="nav-group-header px-3">Raid</div>
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Raid/Participation" Match="NavLinkMatch.Prefix">
+                            <span class="bi bi-nav-icon bi-nav-icon-users" aria-hidden="true"></span> Participation
+                        </NavLink>
+                    </div>
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Raid/Roles" Match="NavLinkMatch.Prefix">
+                            <span class="bi bi-nav-icon bi-nav-icon-users" aria-hidden="true"></span> Roles
+                        </NavLink>
+                    </div>
+                </div>
             </Authorized>
         </AuthorizeView>
         <AuthorizeView Roles="Administrator">
@@ -35,7 +43,7 @@
                     <div class="nav-group-header px-3">Administration</div>
                     <div class="nav-item px-3">
                         <NavLink class="nav-link" href="/Administration/Users" Match="NavLinkMatch.Prefix">
-                          <span class="bi bi-nav-icon bi-nav-icon-users" aria-hidden="true"></span> Users
+                            <span class="bi bi-nav-icon bi-nav-icon-users" aria-hidden="true"></span> Users
                         </NavLink>
                     </div>
                 </div>

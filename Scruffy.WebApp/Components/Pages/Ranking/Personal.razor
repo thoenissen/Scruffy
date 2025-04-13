@@ -1,0 +1,11 @@
+﻿@page "/Ranking/Personal"
+
+@rendermode InteractiveServer
+
+@using Scruffy.WebApp.Components.Controls
+
+<PageTitle>FooI - Ranking - Personal</PageTitle>
+
+<div class="full-size-page">
+   <Chart Type="bar" Data="@_chartData" Options="@_chartOptions" />
+</div>
