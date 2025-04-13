@@ -63,7 +63,23 @@
    --icon-name: "home";
 }
 
-.bi-nav-icon-users {
+.bi-nav-icon-ranking-personal {
+   --icon-name: "person";
+}
+
+.bi-nav-icon-raid-participation {
+   --icon-name: "bar_chart";
+}
+
+.bi-nav-icon-raid-roles {
+   --icon-name: "group";
+}
+
+.bi-nav-icon-raid-lineup {
+   --icon-name: "groups";
+}
+
+.bi-nav-icon-administration-users {
    --icon-name: "group";
 }
 
