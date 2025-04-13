@@ -20,41 +20,41 @@
                     <div class="registration-roles-container">
                         @if (u.RegistrationRoles.HasFlag(RaidRole.DamageDealer))
                         {
-                            <div class="roles-container">
+                            <div class="roles-container" title="DPS">
                                 <div class="role-icon role-icon-dps"></div>
                             </div>
                         }
                         @if (u.RegistrationRoles.HasFlag(RaidRole.AlacrityDamageDealer))
                         {
-                            <div class="roles-container">
+                            <div class="roles-container" title="Alacrity - DPS">
                                 <div class="role-icon role-icon-alacrity"></div>
                                 <div class="role-icon role-icon-dps"></div>
                             </div>
                         }
                         @if (u.RegistrationRoles.HasFlag(RaidRole.QuicknessDamageDealer))
                         {
-                            <div class="roles-container">
+                            <div class="roles-container" title="Quickness - DPS">
                                 <div class="role-icon role-icon-quickness"></div>
                                 <div class="role-icon role-icon-dps"></div>
                             </div>
                         }
                         @if (u.RegistrationRoles.HasFlag(RaidRole.AlacrityHealer))
                         {
-                            <div class="roles-container">
+                            <div class="roles-container" title="Alacrity - Heal">
                                 <div class="role-icon role-icon-alacrity"></div>
                                 <div class="role-icon role-icon-heal"></div>
                             </div>
                         }
                         @if (u.RegistrationRoles.HasFlag(RaidRole.QuicknessHealer))
                         {
-                            <div class="roles-container">
+                            <div class="roles-container" title="Quickness - Heal">
                                 <div class="role-icon role-icon-quickness"></div>
                                 <div class="role-icon role-icon-heal"></div>
                             </div>
                         }
                         @if (u.RegistrationRoles.HasFlag(RaidRole.AlacrityTankHealer))
                         {
-                            <div class="roles-container">
+                            <div class="roles-container" title="Alacrity - Tank">
                                 <div class="role-icon role-icon-tank"></div>
                                 <div class="role-icon role-icon-alacrity"></div>
                                 <div class="role-icon role-icon-heal"></div>
@@ -62,7 +62,7 @@
                         }
                         @if (u.RegistrationRoles.HasFlag(RaidRole.QuicknessTankHealer))
                         {
-                            <div class="roles-container">
+                            <div class="roles-container" title="Quickness - Heal">
                                 <div class="role-icon role-icon-tank"></div>
                                 <div class="role-icon role-icon-quickness"></div>
                                 <div class="role-icon role-icon-heal"></div>
