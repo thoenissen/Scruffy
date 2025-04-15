@@ -1,0 +1,35 @@
+﻿.charts-container {
+   display: grid;
+   grid-template-columns: 1fr 1fr;
+   grid-template-rows: 1fr;
+   gap: 1rem;
+   width: 100%;
+   height: 100%;
+}
+
+.chart-distribution {
+   grid-column: 1;
+   grid-row: 1;
+}
+
+.chart-history {
+   grid-column: 2;
+   grid-row: 1;
+}
+
+@media (max-width: 1024px) {
+   .charts-container {
+      grid-template-columns: 1fr;
+      grid-template-rows: 1fr 1fr;
+   }
+
+   .chart-distribution {
+      grid-column: 1;
+      grid-row: 1;
+   }
+
+   .chart-history {
+      grid-column: 1;
+      grid-row: 2;
+   }
+}

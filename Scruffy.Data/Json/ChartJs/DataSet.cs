@@ -6,6 +6,11 @@
 public class DataSet
 {
     /// <summary>
+    /// Label
+    /// </summary>
+    public string Label { get; set; }
+
+    /// <summary>
     /// Color
     /// </summary>
     public string[] Color { get; set; }
@@ -14,6 +19,11 @@ public class DataSet
     /// Background colors
     /// </summary>
     public string[] BackgroundColor { get; set; }
+
+    /// <summary>
+    /// Border colors
+    /// </summary>
+    public string[] BorderColor { get; set; }
 
     /// <summary>
     /// Data points

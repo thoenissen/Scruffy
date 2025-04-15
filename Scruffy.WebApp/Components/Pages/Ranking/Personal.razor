@@ -7,5 +7,12 @@
 <PageTitle>FooI - Ranking - Personal</PageTitle>
 
 <div class="full-size-page">
-   <Chart Type="bar" Data="@_chartData" Options="@_chartOptions" />
+   <div class="charts-container">
+      <div class="chart-distribution">
+         <Chart Type="bar" Data="@_distributionChartData" Options="@_distributionChartOptions"/>
+      </div>
+      <div class="chart-history">
+         <Chart Type="line" Data="@_historyChartData" Options="@_historyChartOptions"/>
+      </div>
+   </div>
 </div>
