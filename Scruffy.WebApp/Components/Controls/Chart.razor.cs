@@ -53,6 +53,12 @@ public partial class Chart : IAsyncDisposable
     public ChartOptions Options { get; set; }
 
     /// <summary>
+    /// Description of the chart
+    /// </summary>
+    [Parameter]
+    public string Description { get; set; }
+
+    /// <summary>
     /// JavaScript runtime
     /// </summary>
     [Inject]

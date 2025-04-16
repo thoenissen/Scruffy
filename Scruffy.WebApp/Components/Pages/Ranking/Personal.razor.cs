@@ -185,10 +185,12 @@ public partial class Personal
                                                             new DataSet
                                                             {
                                                                 Data = userPoints.Select(obj => obj.Points)
-                                                                                 .ToArray()
+                                                                                 .ToArray(),
+                                                                BackgroundColor = userPoints.Select(obj => GetColor(obj.Type))
+                                                                                            .ToArray()
                                                             }
                                                         ],
-                                             Labels = userPoints.Select(obj => $"{GetDescription(obj.Type)} ({obj.Points:0.##})").ToArray()
+                                             Labels = userPoints.Select(obj => $"{GetDescription(obj.Type)} ({obj.Points:0.##})").ToArray(),
                                          };
             }
         }
@@ -244,7 +246,9 @@ public partial class Personal
                                           Data = dates.Select(date => currentPoints.FirstOrDefault(rankPoint => rankPoint.Date == date
                                                                                                                 && rankPoint.Type == type)?.Points
                                                                           ?? 0.0)
-                                                      .ToArray()
+                                                      .ToArray(),
+                                          BackgroundColor = [GetColor(type)],
+                                          BorderColor = [GetColor(type)],
                                       };
                 }
 
@@ -277,6 +281,28 @@ public partial class Personal
                    GuildRankPointType.Events => "Events",
                    GuildRankPointType.Development => "Development",
                    _ => type.ToString()
+               };
+    }
+
+    /// <summary>
+    /// Get color
+    /// </summary>
+    /// <param name="type">Type</param>
+    /// <returns>Color</returns>
+    private string GetColor(GuildRankPointType type)
+    {
+        return type switch
+               {
+                   GuildRankPointType.Login => "#1E6FA3",
+                   GuildRankPointType.Representation => "#CC4F6A",
+                   GuildRankPointType.AchievementPoints => "#CC9E44",
+                   GuildRankPointType.Membership => "#2F7A7A",
+                   GuildRankPointType.Donation => "#6B46C1",
+                   GuildRankPointType.DiscordVoiceActivity => "#CC7F33",
+                   GuildRankPointType.DiscordMessageActivity => "#8C8F93",
+                   GuildRankPointType.Events => "#2B8FB5",
+                   GuildRankPointType.Development => "#AD4A86",
+                   _ => "#FFFFFF"
                };
     }
 

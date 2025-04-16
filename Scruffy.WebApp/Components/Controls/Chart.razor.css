@@ -1,17 +1,29 @@
 ﻿.chart-outer-container {
+   display: grid;
+   grid-template-rows: 1fr auto;
    width: 100%;
    height: 100%;
    max-width: 100%;
    max-height: 100%;
    box-sizing: border-box;
+   background-color: #1a1a1a;
+   border: 3px solid #4a5568;
+   border-radius: 20px;
+   padding: 30px;
 }
 
 .chart-innter-container {
+   grid-row: 1;
    position: relative;
    width: 100%;
    height: 100%;
    max-width: 100%;
    max-height: 100%;
+}
+
+.chart-description {
+   grid-row: 2;
+   padding-top: 30px;
 }
 
 canvas {
