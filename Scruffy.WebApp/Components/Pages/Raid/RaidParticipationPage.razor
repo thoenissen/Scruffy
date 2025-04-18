@@ -1,0 +1,11 @@
+﻿@using Scruffy.WebApp.Components.Controls
+
+@page "/Raid/Participation"
+@rendermode InteractiveServer
+@inherits Scruffy.WebApp.Components.Base.LocatedComponent
+
+<PageTitle>@LocalizationGroup.GetText("PageTitle", "FooI - Raid - Participation")</PageTitle>
+
+<div class="full-size-page">
+   <Chart Type="bar" Data="@_chartData" Options="@_chartOptions" />
+</div>

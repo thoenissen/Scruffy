@@ -13,7 +13,7 @@ namespace Scruffy.WebApp.Components.Pages.Raid;
 /// Participation chart
 /// </summary>
 [Authorize(Roles = "Member")]
-public partial class Participation
+public partial class RaidParticipationPage
 {
     #region Fields
 
@@ -34,7 +34,7 @@ public partial class Participation
     /// <summary>
     /// Constructor
     /// </summary>
-    public Participation()
+    public RaidParticipationPage()
     {
         _chartOptions = new ChartOptions
                         {

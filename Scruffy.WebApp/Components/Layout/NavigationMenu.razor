@@ -1,4 +1,6 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@inherits Scruffy.WebApp.Components.Base.LocatedComponent
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid d-flex align-items-center">
         <img src="logo.png" alt="Logo" class="navbar-logo"/>
         <a class="navbar-brand ms-2" href="">Forces of Imagination</a>
@@ -9,16 +11,16 @@
     <nav class="flex-column">
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-nav-icon bi-nav-icon-home" aria-hidden="true"></span> Home
+            <span class="bi bi-nav-icon bi-nav-icon-home" aria-hidden="true"></span>@LocalizationGroup.GetText("Home", "Home")
             </NavLink>
         </div>
         <AuthorizeView Roles="Member">
             <Authorized>
                 <div class="nav-group">
-                    <div class="nav-group-header px-3">Ranking</div>
+                    <div class="nav-group-header px-3">@LocalizationGroup.GetText("Ranking", "Ranking")</div>
                     <div class="nav-item px-3">
                         <NavLink class="nav-link" href="/Ranking/Personal" Match="NavLinkMatch.Prefix">
-                            <span class="bi bi-nav-icon bi-nav-icon-ranking-personal" aria-hidden="true"></span> Personal
+                     <span class="bi bi-nav-icon bi-nav-icon-ranking-personal" aria-hidden="true"></span>@LocalizationGroup.GetText("Personal", "Personal")
                         </NavLink>
                     </div>
                 </div>
@@ -26,12 +28,12 @@
                     <div class="nav-group-header px-3">Raid</div>
                     <div class="nav-item px-3">
                         <NavLink class="nav-link" href="/Raid/Participation" Match="NavLinkMatch.Prefix">
-                            <span class="bi bi-nav-icon bi-nav-icon-raid-participation" aria-hidden="true"></span> Participation
+                     <span class="bi bi-nav-icon bi-nav-icon-raid-participation" aria-hidden="true"></span>@LocalizationGroup.GetText("Participation", "Participation")
                         </NavLink>
                     </div>
                     <div class="nav-item px-3">
                         <NavLink class="nav-link" href="/Raid/Roles" Match="NavLinkMatch.Prefix">
-                            <span class="bi bi-nav-icon bi-nav-icon-raid-roles" aria-hidden="true"></span> Roles
+                     <span class="bi bi-nav-icon bi-nav-icon-raid-roles" aria-hidden="true"></span>@LocalizationGroup.GetText("Roles", "Roles")
                         </NavLink>
                     </div>
                 </div>
@@ -40,10 +42,10 @@
         <AuthorizeView Roles="Administrator">
             <Authorized>
                 <div class="nav-group">
-                    <div class="nav-group-header px-3">Administration</div>
+               <div class="nav-group-header px-3">@LocalizationGroup.GetText("Administration", "Administration")</div>
                     <div class="nav-item px-3">
                         <NavLink class="nav-link" href="/Administration/Users" Match="NavLinkMatch.Prefix">
-                            <span class="bi bi-nav-icon bi-nav-icon-administration-users" aria-hidden="true"></span> Users
+                     <span class="bi bi-nav-icon bi-nav-icon-administration-users" aria-hidden="true"></span>@LocalizationGroup.GetText("Users", "Users")
                         </NavLink>
                     </div>
                 </div>
@@ -52,10 +54,10 @@
         <AuthorizeView Roles="Developer">
             <Authorized>
                 <div class="nav-group">
-                    <div class="nav-group-header px-3">In Development</div>
+               <div class="nav-group-header px-3">@LocalizationGroup.GetText("Development", "In Development")</div>
                     <div class="nav-item px-3">
                         <NavLink class="nav-link" href="/Raid/LineUp" Match="NavLinkMatch.Prefix">
-                            <span class="bi bi-nav-icon bi-nav-icon-raid-lineup" aria-hidden="true"></span> Line up
+                     <span class="bi bi-nav-icon bi-nav-icon-raid-lineup" aria-hidden="true"></span>@LocalizationGroup.GetText("LineUp", "Line up")
                         </NavLink>
                     </div>
                 </div>

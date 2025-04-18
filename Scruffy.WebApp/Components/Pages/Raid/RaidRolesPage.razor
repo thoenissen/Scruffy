@@ -1,0 +1,136 @@
+﻿@page "/Raid/Roles"
+@inherits Scruffy.WebApp.Components.Base.LocatedComponent
+@rendermode InteractiveServer
+
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using Scruffy.WebApp.DTOs.Raid
+
+<PageTitle>@LocalizationGroup.GetText("PageTitle", "FooI - Raid - Roles")</PageTitle>
+
+<div class="scrollable-page">
+    <div class="quickgrid-container">
+        <div class="quickgrid-std">
+            <div @ref="_rolesElement">
+                <QuickGrid Items="@_userRaidRoles.AsQueryable()">
+                    <PropertyColumn Title="@LocalizationGroup.GetText("Name", "Name")" Property="@(u => u.Name)" Sortable="true" IsDefaultSortColumn="true" InitialSortDirection="SortDirection.Ascending"/>
+                    <TemplateColumn Title="@LocalizationGroup.GetText("DPS", "DPS")" Context="u" Sortable="false" class="role-column">
+                        <div class="roles-container">
+                            @if (u.Roles.HasFlag(RaidRole.DamageDealer))
+                            {
+                                <div class="role-icon role-icon-dps" title="@LocalizationGroup.GetText("DPS", "DPS")"></div>
+                            }
+                        </div>
+                    </TemplateColumn>
+                    <TemplateColumn Title="@LocalizationGroup.GetText("Support", "Support")" Context="u" Sortable="false" class="role-column">
+                        <div class="roles-container">
+                            @if (u.Roles.HasFlag(RaidRole.AlacrityDamageDealer))
+                            {
+                                <div class="role-icon role-icon-alacrity" title="@LocalizationGroup.GetText("AlacrityDPS", "Alacrity - DPS")"></div>
+                            }
+                            @if (u.Roles.HasFlag(RaidRole.QuicknessDamageDealer))
+                            {
+                                <div class="role-icon role-icon-quickness" title="@LocalizationGroup.GetText("QuicknessDPS", "Quickness - DPS")"></div>
+                            }
+                        </div>
+                    </TemplateColumn>
+                    <TemplateColumn Title="@LocalizationGroup.GetText("Healer", "Healer")" Context="u" Sortable="false" class="role-column">
+                        <div class="roles-container">
+                            @if (u.Roles.HasFlag(RaidRole.AlacrityHealer))
+                            {
+                                <div class="role-icon role-icon-alacrity" title="@LocalizationGroup.GetText("AlacrityHeal", "Alacrity - Heal")"></div>
+                            }
+                            @if (u.Roles.HasFlag(RaidRole.QuicknessHealer))
+                            {
+                                <div class="role-icon role-icon-quickness" title="@LocalizationGroup.GetText("QuicknessHeal", "Quickness - Heal")"></div>
+                            }
+                        </div>
+                    </TemplateColumn>
+                    <TemplateColumn Title="@LocalizationGroup.GetText("Tank", "Tank")" Context="u" Sortable="false" class="role-column">
+                        <div class="roles-container">
+                            @if (u.Roles.HasFlag(RaidRole.AlacrityTankHealer))
+                            {
+                                <div class="role-icon role-icon-alacrity" title="@LocalizationGroup.GetText("AlacrityTank", "Alacrity - Heal - Tank")"></div>
+                            }
+                            @if (u.Roles.HasFlag(RaidRole.QuicknessTankHealer))
+                            {
+                                <div class="role-icon role-icon-quickness" title="@LocalizationGroup.GetText("QuicknessTank", "Quickness - Heal - Tank")"></div>
+                            }
+                        </div>
+                    </TemplateColumn>
+                    <TemplateColumn Title="@LocalizationGroup.GetText("Special", "Special")" Context="u" Sortable="false" class="role-column">
+                        <div class="roles-container">
+                            @if (u.SpecialRoles.HasFlag(RaidSpecialRole.HandKiter))
+                            {
+                                <div class="role-icon role-icon-hand-kiter" title="@LocalizationGroup.GetText("DeimosHandKiter", "Deimos - Hand Kiter")"></div>
+                            }
+                            @if (u.SpecialRoles.HasFlag(RaidSpecialRole.SoullessHorrorPusher))
+                            {
+                                <div class="role-icon role-icon-pusher" title="@LocalizationGroup.GetText("SoullessHorrorPusher", "Soulless Horror - Pusher")"></div>
+                            }
+                            @if (u.SpecialRoles.HasFlag(RaidSpecialRole.Quadim1Kiter))
+                            {
+                                <div class="role-icon role-icon-q1-kiter" title="@LocalizationGroup.GetText("Quadim1Kiter", "Quadim 1 - Kiter")"></div>
+                            }
+                            @if (u.SpecialRoles.HasFlag(RaidSpecialRole.Quadim2Kiter))
+                            {
+                                <div class="role-icon role-icon-q2-kiter" title="@LocalizationGroup.GetText("Quadim2Kiter", "Quadim 2 - Pylon Kiter")"></div>
+                            }
+                        </div>
+                    </TemplateColumn>
+                </QuickGrid>
+                <div class="table statistics-row">
+                    @foreach (var day in _days)
+                    {
+                        <div class="table-row">
+                            <div class="table-cell">@LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(day.Day)</div>
+                            <div class="table-cell">
+                                <div class="statistics-container">
+                                    <div class="role-icon role-icon-dps" title="@LocalizationGroup.GetText("DPS", "DPS")"></div>
+                                    <div class="statistics-playercount">@day.DamageDealer.ToString("0.00", LocalizationGroup.CultureInfo)</div>
+                                </div>
+                            </div>
+                            <div class="table-cell">
+                                <div class="statistics-container">
+                                    <div class="role-icon role-icon-alacrity" title="@LocalizationGroup.GetText("AlacrityDPS", "Alacrity - DPS")"></div>
+                                    <div class="statistics-playercount">@day.AlacrityDamageDealer.ToString("0.00", LocalizationGroup.CultureInfo)</div>
+                                    <div class="role-icon role-icon-quickness" title="@LocalizationGroup.GetText("QuicknessDPS", "Quickness - DPS")"></div>
+                                    <div class="statistics-playercount">@day.QuicknessDamageDealer.ToString("0.00", LocalizationGroup.CultureInfo)</div>
+                                </div>
+                            </div>
+                            <div class="table-cell">
+                                <div class="statistics-container">
+                                    <div class="role-icon role-icon-alacrity" title="@LocalizationGroup.GetText("AlacrityHeal", "Alacrity - Heal")"></div>
+                                    <div class="statistics-playercount">@day.AlacrityHealer.ToString("0.00", LocalizationGroup.CultureInfo)</div>
+                                    <div class="role-icon role-icon-quickness" title="@LocalizationGroup.GetText("QuicknessHeal", "Quickness - Heal")"></div>
+                                    <div class="statistics-playercount">@day.QuicknessHealer.ToString("0.00", LocalizationGroup.CultureInfo)</div>
+                                </div>
+                            </div>
+                            <div class="table-cell">
+                                <div class="statistics-container">
+                                    <div class="role-icon role-icon-alacrity" title="@LocalizationGroup.GetText("AlacrityTank", "Alacrity - Heal - Tank")"></div>
+                                    <div class="statistics-playercount">@day.AlacrityTankHealer.ToString("0.00", LocalizationGroup.CultureInfo)</div>
+                                    <div class="role-icon role-icon-quickness" title="@LocalizationGroup.GetText("QuicknessTank", "Quickness - Heal - Tank")"></div>
+                                    <div class="statistics-playercount">@day.QuicknessTankHealer.ToString("0.00", LocalizationGroup.CultureInfo)</div>
+                                </div>
+                            </div>
+                            <div class="table-cell">
+                                <div class="statistics-container">
+                                    <div class="role-icon role-icon-hand-kiter" title="@LocalizationGroup.GetText("DeimosHandKiter", "Deimos - Hand Kiter")"></div>
+                                    <div class="statistics-playercount">@day.HandKiter.ToString("0.00", LocalizationGroup.CultureInfo)</div>
+                                    <div class="role-icon role-icon-pusher" title="@LocalizationGroup.GetText("SoullessHorrorPusher", "Soulless Horror - Pusher")"></div>
+                                    <div class="statistics-playercount">@day.SoullessHorrorPusher.ToString("0.00", LocalizationGroup.CultureInfo)</div>
+                                    <div class="role-icon role-icon-q1-kiter" title="@LocalizationGroup.GetText("Quadim1Kiter", "Quadim 1 - Kiter")"></div>
+                                    <div class="statistics-playercount">@day.Quadim1Kiter.ToString("0.00", LocalizationGroup.CultureInfo)</div>
+                                    <div class="role-icon role-icon-q2-kiter" title="@LocalizationGroup.GetText("Quadim2Kiter", "Quadim 2 - Pylon Kiter")"></div>
+                                    <div class="statistics-playercount">@day.Quadim2Kiter.ToString("0.00", LocalizationGroup.CultureInfo)</div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn btn-primary" @onclick="OnExport">@LocalizationGroup.GetText("Export", "Export")</button>
+</div>

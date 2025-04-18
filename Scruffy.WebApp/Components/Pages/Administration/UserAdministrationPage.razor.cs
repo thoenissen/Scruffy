@@ -19,7 +19,7 @@ namespace Scruffy.WebApp.Components.Pages.Administration;
 /// Users overview
 /// </summary>
 [Authorize(Roles = "Administrator")]
-public sealed partial class Users : IDisposable
+public sealed partial class UserAdministrationPage : IDisposable
 {
     #region Fields
 

@@ -5,6 +5,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Guild;
@@ -13,6 +14,7 @@ using Scruffy.Data.Entity.Repositories.GuildWars2.Guild;
 using Scruffy.Data.Enumerations.Guild;
 using Scruffy.Data.Json.ChartJs;
 using Scruffy.Data.Services.Guild;
+using Scruffy.Services.Core.Localization;
 
 namespace Scruffy.WebApp.Components.Pages.Ranking;
 
@@ -20,7 +22,7 @@ namespace Scruffy.WebApp.Components.Pages.Ranking;
 /// Personal ranking page
 /// </summary>
 [Authorize(Roles = "Member")]
-public partial class Personal
+public partial class PersonalRankingPage
 {
     #region Fields
 
@@ -44,6 +46,11 @@ public partial class Personal
     /// </summary>
     private ChartData _historyChartData;
 
+    /// <summary>
+    /// Type descriptions
+    /// </summary>
+    private LocalizationGroup _typeDescriptions;
+
     #endregion // Fields
 
     #region Constructor
@@ -51,7 +58,7 @@ public partial class Personal
     /// <summary>
     /// Constructor
     /// </summary>
-    public Personal()
+    public PersonalRankingPage()
     {
         _distributionChartOptions = new ChartOptions
                                     {
@@ -65,10 +72,7 @@ public partial class Personal
                                                  {
                                                      X = new Axes
                                                          {
-                                                             Grid = new GridConfiguration
-                                                                    {
-                                                                        Color = "lightgrey"
-                                                                    },
+                                                             Grid = new GridConfiguration(),
                                                              Ticks = new AxisTicks
                                                                      {
                                                                          Color = "#A0AEC0"
@@ -107,7 +111,11 @@ public partial class Personal
                                                     },
                                                 Y = new Axes
                                                     {
-                                                        Grid = new GridConfiguration(),
+                                                        Stacked = true,
+                                                        Grid = new GridConfiguration
+                                                               {
+                                                                   Color = "lightgrey"
+                                                               },
                                                         Ticks = new AxisTicks
                                                                 {
                                                                     Color = "#A0AEC0"
@@ -269,19 +277,9 @@ public partial class Personal
     /// <returns>Description</returns>
     private string GetDescription(GuildRankPointType type)
     {
-        return type switch
-               {
-                   GuildRankPointType.Login => "Login",
-                   GuildRankPointType.Representation => "Representation",
-                   GuildRankPointType.AchievementPoints => "Achievement points",
-                   GuildRankPointType.Membership => "Membership",
-                   GuildRankPointType.Donation => "Donations",
-                   GuildRankPointType.DiscordVoiceActivity => "Discord voice activity",
-                   GuildRankPointType.DiscordMessageActivity => "Discord message activity",
-                   GuildRankPointType.Events => "Events",
-                   GuildRankPointType.Development => "Development",
-                   _ => type.ToString()
-               };
+        _typeDescriptions ??= LocalizationService.GetGroup(nameof(GuildRankPointType));
+
+        return _typeDescriptions.GetText(type.ToString(), type.ToString());
     }
 
     /// <summary>

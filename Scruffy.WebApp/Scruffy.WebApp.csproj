@@ -23,6 +23,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Scruffy.Data\Scruffy.Data.csproj" />
+        <ProjectReference Include="..\Scruffy.Services\Scruffy.Services.csproj" />
     </ItemGroup>
 
 </Project>

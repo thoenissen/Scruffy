@@ -1,0 +1,11 @@
+﻿@inherits Scruffy.WebApp.Components.Base.LocatedComponent
+@page "/"
+
+<PageTitle>@LocalizationGroup.GetText("PageTitle", "FooI - Welcome")</PageTitle>
+
+<div class="full-size-page">
+    <div class="welcome-container">
+        <h1>@LocalizationGroup.GetText("Welcome", "Welcome")</h1>
+        <img src="background.png" alt="Background" class="welcome-image"/>
+    </div>
+</div>

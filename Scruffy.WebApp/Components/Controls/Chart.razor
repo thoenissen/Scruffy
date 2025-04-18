@@ -1,4 +1,10 @@
 ﻿<div class="chart-outer-container">
+    @if (string.IsNullOrEmpty(Title) == false)
+    {
+        <div class="chart-title">
+            <p>@Title</p>
+        </div>
+    }
     <div class="chart-innter-container">
         <canvas id="@_id"></canvas>
     </div>

@@ -1,0 +1,27 @@
+﻿@using Scruffy.WebApp.Components.Base
+@using Scruffy.WebApp.Components.Controls
+
+@inherits LocatedComponent
+@page "/Ranking/Personal"
+@rendermode InteractiveServer
+
+<PageTitle>@LocalizationGroup.GetText("PageTitle", "FooI - Ranking - Personal")</PageTitle>
+
+<div class="full-size-page">
+   <div class="charts-container">
+      <div class="chart-distribution">
+         <Chart Type="bar"
+                Data="@_distributionChartData"
+                Options="@_distributionChartOptions"
+                Title="@LocalizationGroup.GetText("DistributionTitle", "")"
+                Description="@LocalizationGroup.GetText("DistributionDescription", "")" />
+      </div>
+      <div class="chart-history">
+         <Chart Type="bar"
+                Data="@_historyChartData"
+                Options="@_historyChartOptions"
+                Title="@LocalizationGroup.GetText("HistoryTitle", "")"
+                Description="@LocalizationGroup.GetText("HistoryDescription", "")" />
+      </div>
+   </div>
+</div>

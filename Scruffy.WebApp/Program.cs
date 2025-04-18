@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Tables.CoreData;
 using Scruffy.Data.Entity.Tables.Web;
+using Scruffy.Services.Core.Localization;
 using Scruffy.WebApp.Components;
 using Scruffy.WebApp.Components.Account;
 
@@ -26,7 +27,8 @@ public class Program
     /// <summary>
     /// Main entry
     /// </summary>
-    public static void Main()
+    /// <returns>A <see cref=""/></returns>
+    public static async Task Main()
     {
         var builder = WebApplication.CreateBuilder();
 
@@ -35,6 +37,10 @@ public class Program
         builder.Services.AddCascadingAuthenticationState();
         builder.Services.AddScoped<IdentityRedirectManager>();
         builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
+
+        var locationService = new LocalizationService();
+
+        builder.Services.AddSingleton(locationService);
 
         var persistenceDirectory = Environment.GetEnvironmentVariable("SCRUFFY_PERSISTENCE_DIRECTORY");
 
@@ -74,6 +80,9 @@ public class Program
 
         var app = builder.Build();
 
+        await locationService.Initialize(app.Services)
+                             .ConfigureAwait(false);
+
         app.UseForwardedHeaders(new ForwardedHeadersOptions
                                 {
                                     ForwardedHeaders = ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedHost
@@ -102,6 +111,7 @@ public class Program
         app.MapRazorComponents<App>()
            .AddInteractiveServerRenderMode();
         app.MapAdditionalIdentityEndpoints();
-        app.Run();
+        await app.RunAsync()
+                 .ConfigureAwait(false);
     }
 }

@@ -1,0 +1,33 @@
+﻿@page "/Administration/Users"
+@rendermode InteractiveServer
+@inherits Scruffy.WebApp.Components.Base.LocatedComponent
+
+@using Microsoft.AspNetCore.Components.QuickGrid
+
+<PageTitle>@LocalizationGroup.GetText("PageTitle", "FooI - Administration - Users")</PageTitle>
+
+<div class="scrollable-page">
+    <div>
+        <label>Filter:</label>
+        <input @bind="_filter" @bind:event="oninput" @bind:after="OnFilterChanged"/>
+
+        <div class="quickgrid-std mb-3">
+            <QuickGrid Items="@_filteredUsers">
+                <PropertyColumn Title="@LocalizationGroup.GetText("Discord", "Discord")" Property="@(u => u.DiscordAccountName)" Sortable="true" IsDefaultSortColumn="true" InitialSortDirection="SortDirection.Ascending"/>
+                <PropertyColumn Title="@LocalizationGroup.GetText("GuildWars", "Guild Wars")" Property="@(u => u.GuildWarsAccountName)" Sortable="true"/>
+                <TemplateColumn Title="@LocalizationGroup.GetText("GuildMember", "Guild Member")" Context="u" SortBy="@_gridSortIsGuildMember" Sortable="true">
+                    @if (u.IsGuildMember)
+                    {
+                        <span class="text-success">✔️</span>
+                    }
+                </TemplateColumn>
+                <TemplateColumn Title="@LocalizationGroup.GetText("ApiKey", "API-Key")" Context="u" SortBy="@_gridSortIsApiKeyValid" Sortable="true">
+                    @if (u.IsApiKeyValid)
+                    {
+                        <span class="text-success">✔️</span>
+                    }
+                </TemplateColumn>
+            </QuickGrid>
+        </div>
+    </div>
+</div>

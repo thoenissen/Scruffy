@@ -1,6 +1,6 @@
 ﻿.chart-outer-container {
    display: grid;
-   grid-template-rows: 1fr auto;
+   grid-template-rows: auto 1fr auto;
    width: 100%;
    height: 100%;
    max-width: 100%;
@@ -12,8 +12,19 @@
    padding: 30px;
 }
 
-.chart-innter-container {
+.chart-title {
    grid-row: 1;
+   padding-bottom: 30px;
+}
+
+   .chart-title p {
+      font-size: 1.5rem;
+      font-weight: 600;
+      text-align: center;
+   }
+
+.chart-innter-container {
+   grid-row: 2;
    position: relative;
    width: 100%;
    height: 100%;
@@ -22,7 +33,7 @@
 }
 
 .chart-description {
-   grid-row: 2;
+   grid-row: 3;
    padding-top: 30px;
 }
 

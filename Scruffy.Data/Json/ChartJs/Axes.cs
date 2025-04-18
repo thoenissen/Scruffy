@@ -1,10 +1,17 @@
-﻿namespace Scruffy.Data.Json.ChartJs;
+﻿using System.Reflection.Emit;
+
+namespace Scruffy.Data.Json.ChartJs;
 
 /// <summary>
 /// Represents the configuration for the axes of a chart
 /// </summary>
 public class Axes
 {
+    /// <summary>
+    /// Stacked
+    /// </summary>
+    public bool? Stacked { get; set; }
+
     /// <summary>
     /// Configuration for the grid lines of the axis
     /// </summary>

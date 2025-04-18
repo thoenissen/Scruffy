@@ -20,7 +20,7 @@ namespace Scruffy.WebApp.Components.Pages.Raid;
 /// User raid roles
 /// </summary>
 [Authorize(Roles = "Member")]
-public partial class Roles
+public partial class RaidRolesPage
 {
     #region Fields
 
