@@ -19,4 +19,9 @@ public class UserRaidRoleDTO
     /// Special roles
     /// </summary>
     public RaidSpecialRole SpecialRoles { get; init; }
+
+    /// <summary>
+    /// Is the player currently active?
+    /// </summary>
+    public bool IsActive { get; set; }
 }

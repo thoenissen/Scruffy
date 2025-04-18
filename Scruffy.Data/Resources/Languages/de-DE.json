@@ -1010,7 +1010,8 @@
          "SoullessHorrorPusher": "Soulless Horror - Pusher",
          "Quadim1Kiter": "Quadim 1 - Kiter",
          "Quadim2Kiter": "Quadim 2 - Pylon Kiter",
-         "Export": "Exportieren"
+         "Export": "Exportieren",
+         "ActivePlayer": "Aktive Spieler"
       },
       "RaidParticipationPage": {
          "PageTitle": "FooI - Raid - Teilnahmepunkte"

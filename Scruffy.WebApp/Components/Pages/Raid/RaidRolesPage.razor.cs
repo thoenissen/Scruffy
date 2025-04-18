@@ -44,6 +44,8 @@ public partial class RaidRolesPage
     /// </summary>
     private ElementReference _rolesElement;
 
+    private bool _showOnlyActivePlayers = true;
+
     #endregion // Fields
 
     #region Properties
@@ -68,8 +70,8 @@ public partial class RaidRolesPage
     private static double GetParticipantCount(List<UserRaidAppointmentsData> users, DayOfWeek day, Func<UserRaidAppointmentsData, bool> filter)
     {
         var points = users.Where(filter)
-                          .Sum(user => user.Appointments.Where(obj => obj.DayOfWeek == day)
-                                                        .Sum(obj2 => Math.Pow(10, -(((DateTime.Today - obj2).Days / 7) - 15) / 14.6)));
+                          .Sum(user => user.Appointments.Where(appointment => appointment.DayOfWeek == day)
+                                                        .Sum(appointment => Math.Pow(10, -(((DateTime.Today - appointment).Days / 7) - 15) / 14.6)));
 
         return points / 66.147532745646117;
     }
@@ -105,6 +107,9 @@ public partial class RaidRolesPage
         var specialRoles = _repositoryFactory.GetRepository<RaidUserSpecialRoleRepository>()
                                              .GetQuery();
 
+        var currentPoints = _repositoryFactory.GetRepository<RaidCurrentUserPointsRepository>()
+                                              .GetQuery();
+
         _userRaidRoles = _repositoryFactory.GetRepository<DiscordServerMemberRepository>()
                                            .GetQuery()
                                            .Where(member => member.ServerId == WebAppConfiguration.DiscordServerId)
@@ -116,7 +121,9 @@ public partial class RaidRolesPage
                                                                                   .ToList(),
                                                                  SpecialRoles = specialRoles.Where(specialRole => specialRole.UserId == member.Account.UserId)
                                                                                             .Select(specialRole => specialRole.SpecialRoleId)
-                                                                                            .ToList()
+                                                                                            .ToList(),
+                                                                 IsActive = currentPoints.Any(userPoints => userPoints.UserId == member.Account.UserId
+                                                                                                            && userPoints.Points > 0)
                                                              })
                                            .Where(member => member.Roles.Any())
                                            .AsEnumerable()
@@ -145,71 +152,72 @@ public partial class RaidRolesPage
                                                                                                                                        3 => RaidSpecialRole.Quadim1Kiter,
                                                                                                                                        4 => RaidSpecialRole.Quadim2Kiter,
                                                                                                                                        _ => current
-                                                                                                                                   })
+                                                                                                                                   }),
+                                                                 IsActive = member.IsActive
                                                              })
                                            .ToList();
 
         _days = _repositoryFactory.GetRepository<RaidDayConfigurationRepository>()
-                                             .GetQuery()
-                                             .Select(day => new RaidDayStatisticsDTO
-                                                            {
-                                                                Day = day.Day,
-                                                            })
-                                             .ToList();
+                                  .GetQuery()
+                                  .Select(day => new RaidDayStatisticsDTO
+                                                 {
+                                                     Day = day.Day,
+                                                 })
+                                  .ToList();
 
         var dateLimit = DateTime.Today.AddDays(-7 * 15);
 
         var users = _repositoryFactory.GetRepository<RaidRegistrationRepository>()
-                     .GetQuery()
-                     .Where(obj => obj.Points != null
-                                && obj.RaidAppointment.TimeStamp > dateLimit)
-                     .Select(obj => new
-                                    {
-                                        obj.UserId,
-                                        obj.RaidAppointment.TimeStamp,
-                                    })
-                     .GroupBy(obj => obj.UserId)
-                     .Select(obj => new
-                                    {
-                                        UserId = obj.Key,
-                                        Appointments = obj.Select(obj2 => obj2.TimeStamp)
-                                                          .ToList(),
-                                        Roles = raidRoles.Where(raidRole => raidRole.UserId == obj.Key)
-                                                         .Select(raidRole => raidRole.RoleId)
-                                                         .ToList(),
-                                        SpecialRoles = specialRoles.Where(specialRole => specialRole.UserId == obj.Key)
-                                                                   .Select(specialRole => specialRole.SpecialRoleId)
-                                                                   .ToList()
-                                    })
-                     .AsEnumerable()
-                     .Select(user => new UserRaidAppointmentsData
-                                     {
-                                         Appointments = user.Appointments,
-                                         Roles = user.Roles.Aggregate(RaidRole.None,
-                                                                      (current, role) => current
-                                                                                         | role switch
-                                                                                         {
-                                                                                             1 => RaidRole.DamageDealer,
-                                                                                             2 => RaidRole.AlacrityDamageDealer,
-                                                                                             3 => RaidRole.QuicknessDamageDealer,
-                                                                                             4 => RaidRole.AlacrityHealer,
-                                                                                             5 => RaidRole.QuicknessHealer,
-                                                                                             8 => RaidRole.AlacrityTankHealer,
-                                                                                             9 => RaidRole.QuicknessTankHealer,
-                                                                                             _ => current
-                                                                                         }),
-                                         SpecialRoles = user.SpecialRoles.Aggregate(RaidSpecialRole.None,
-                                                                                    (current, role) => current
-                                                                                                       | role switch
-                                                                                                       {
-                                                                                                           1 => RaidSpecialRole.HandKiter,
-                                                                                                           2 => RaidSpecialRole.SoullessHorrorPusher,
-                                                                                                           3 => RaidSpecialRole.Quadim1Kiter,
-                                                                                                           4 => RaidSpecialRole.Quadim2Kiter,
-                                                                                                           _ => current
-                                                                                                       })
-                                     })
-                     .ToList();
+                                      .GetQuery()
+                                      .Where(obj => obj.Points != null
+                                                 && obj.RaidAppointment.TimeStamp > dateLimit)
+                                      .Select(obj => new
+                                                     {
+                                                         obj.UserId,
+                                                         obj.RaidAppointment.TimeStamp,
+                                                     })
+                                      .GroupBy(obj => obj.UserId)
+                                      .Select(obj => new
+                                                     {
+                                                         UserId = obj.Key,
+                                                         Appointments = obj.Select(obj2 => obj2.TimeStamp)
+                                                                           .ToList(),
+                                                         Roles = raidRoles.Where(raidRole => raidRole.UserId == obj.Key)
+                                                                          .Select(raidRole => raidRole.RoleId)
+                                                                          .ToList(),
+                                                         SpecialRoles = specialRoles.Where(specialRole => specialRole.UserId == obj.Key)
+                                                                                    .Select(specialRole => specialRole.SpecialRoleId)
+                                                                                    .ToList()
+                                                     })
+                                      .AsEnumerable()
+                                      .Select(user => new UserRaidAppointmentsData
+                                                      {
+                                                          Appointments = user.Appointments,
+                                                          Roles = user.Roles.Aggregate(RaidRole.None,
+                                                                                       (current, role) => current
+                                                                                                          | role switch
+                                                                                                          {
+                                                                                                              1 => RaidRole.DamageDealer,
+                                                                                                              2 => RaidRole.AlacrityDamageDealer,
+                                                                                                              3 => RaidRole.QuicknessDamageDealer,
+                                                                                                              4 => RaidRole.AlacrityHealer,
+                                                                                                              5 => RaidRole.QuicknessHealer,
+                                                                                                              8 => RaidRole.AlacrityTankHealer,
+                                                                                                              9 => RaidRole.QuicknessTankHealer,
+                                                                                                              _ => current
+                                                                                                          }),
+                                                          SpecialRoles = user.SpecialRoles.Aggregate(RaidSpecialRole.None,
+                                                                                                     (current, role) => current
+                                                                                                                        | role switch
+                                                                                                                        {
+                                                                                                                            1 => RaidSpecialRole.HandKiter,
+                                                                                                                            2 => RaidSpecialRole.SoullessHorrorPusher,
+                                                                                                                            3 => RaidSpecialRole.Quadim1Kiter,
+                                                                                                                            4 => RaidSpecialRole.Quadim2Kiter,
+                                                                                                                            _ => current
+                                                                                                                        })
+                                                      })
+                                      .ToList();
 
         foreach (var day in _days)
         {
