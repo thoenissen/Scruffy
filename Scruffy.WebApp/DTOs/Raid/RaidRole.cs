@@ -16,35 +16,35 @@ public enum RaidRole
     /// <summary>
     /// DPS
     /// </summary>
-    DamageDealer = 1 << 1,
+    DamageDealer = 1 << 0,
 
     /// <summary>
     /// Alacrity - DPS
     /// </summary>
-    AlacrityDamageDealer = 1 << 2,
+    AlacrityDamageDealer = 1 << 1,
 
     /// <summary>
     /// Quickness - DPS
     /// </summary>
-    QuicknessDamageDealer = 1 << 3,
+    QuicknessDamageDealer = 1 << 2,
 
     /// <summary>
     /// Alacrity - Healer
     /// </summary>
-    AlacrityHealer = 1 << 4,
+    AlacrityHealer = 1 << 3,
 
     /// <summary>
     /// Quickness - Healer
     /// </summary>
-    QuicknessHealer = 1 << 5,
+    QuicknessHealer = 1 << 4,
 
     /// <summary>
     /// Alacrity - Tank - Healer
     /// </summary>
-    AlacrityTankHealer = 1 << 6,
+    AlacrityTankHealer = 1 << 5,
 
     /// <summary>
     /// Quickness - Tank - Healer
     /// </summary>
-    QuicknessTankHealer = 1 << 7,
+    QuicknessTankHealer = 1 << 6,
 }

@@ -16,20 +16,20 @@ public enum RaidSpecialRole
     /// <summary>
     /// Hand kiter
     /// </summary>
-    HandKiter,
+    HandKiter = 1 << 0,
 
     /// <summary>
     /// Soulless horror pusher
     /// </summary>
-    SoullessHorrorPusher,
+    SoullessHorrorPusher = 1 << 1,
 
     /// <summary>
     /// Quadim 1 - Kiter
     /// </summary>
-    Quadim1Kiter,
+    Quadim1Kiter = 1 << 2,
 
     /// <summary>
     /// Quadim 1 - Kiter
     /// </summary>
-    Quadim2Kiter
+    Quadim2Kiter = 1 << 3,
 }
