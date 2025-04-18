@@ -26,4 +26,9 @@ public class SelectMenuOptionData
     /// Emote
     /// </summary>
     public IEmote Emote { get; set; }
+
+    /// <summary>
+    /// Is this entry selected by default?
+    /// </summary>
+    public bool? IsDefault { get; set; }
 }

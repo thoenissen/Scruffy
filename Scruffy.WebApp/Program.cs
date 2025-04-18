@@ -27,7 +27,7 @@ public class Program
     /// <summary>
     /// Main entry
     /// </summary>
-    /// <returns>A <see cref=""/></returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public static async Task Main()
     {
         var builder = WebApplication.CreateBuilder();

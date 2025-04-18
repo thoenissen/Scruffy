@@ -107,6 +107,14 @@ public class RaidPreparedSpecialRolesSelectDialogElement : DialogEmbedMultiSelec
 
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
+                var userId = _userManagementService.GetUserByDiscordAccountId(CommandContext.User).Result.Id;
+
+                var userRoles = dbFactory.GetRepository<RaidUserSpecialRoleRepository>()
+                                         .GetQuery()
+                                         .Where(obj => obj.UserId == userId)
+                                         .Select(obj => obj.SpecialRoleId)
+                                         .ToList();
+
                 var roles = dbFactory.GetRepository<RaidSpecialRoleRepository>()
                                      .GetQuery()
                                      .OrderBy(obj => obj.Id)
@@ -119,6 +127,7 @@ public class RaidPreparedSpecialRolesSelectDialogElement : DialogEmbedMultiSelec
                                      Label = role.Description,
                                      Emote = DiscordEmoteService.GetGuildEmote(CommandContext.Client, role.DiscordEmojiId),
                                      Value = role.Id.ToString(),
+                                     IsDefault = userRoles.Contains(role.Id)
                                  });
                 }
             }

@@ -75,7 +75,7 @@ public abstract class DialogEmbedMultiSelectSelectMenuElementBase<TData> : Inter
             {
                 foreach (var entry in entries.Take(25))
                 {
-                    selectMenu.AddOption(entry.Label, entry.Value, entry.Description, entry.Emote);
+                    selectMenu.AddOption(entry.Label, entry.Value, entry.Description, entry.Emote, isDefault: entry.IsDefault);
                 }
             }
 
