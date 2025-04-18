@@ -13,6 +13,7 @@ using Scruffy.Data.Entity.Tables.Discord;
 using Scruffy.Data.Entity.Tables.Raid;
 using Scruffy.Data.Enumerations.CoreData;
 using Scruffy.Services.Core;
+using Scruffy.Services.Core.Exceptions;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
 using Scruffy.Services.Discord;
@@ -761,29 +762,37 @@ public class RaidCommandHandler : LocatedServiceBase
     public async Task ConfigureRoles(IContextContainer context)
     {
         var dialogHandler = new DialogHandler(context);
+
         await using (dialogHandler.ConfigureAwait(false))
         {
             var user = await _userManagementService.GetUserByDiscordAccountId(context.User)
                                                    .ConfigureAwait(false);
 
-            var selectedRoles = await dialogHandler.Run<RaidPreparedRolesSelectDialogElement, List<long>>(new RaidPreparedRolesSelectDialogElement(_localizationService, _raidRolesService, _userManagementService))
-                                                   .ConfigureAwait(false);
-
-            using (var dbFactory = RepositoryFactory.CreateInstance())
+            try
             {
-                dbFactory.GetRepository<RaidUserRoleRepository>()
-                         .RemoveRange(obj => obj.UserId == user.Id);
+                var selectedRoles = await dialogHandler.Run<RaidPreparedRolesSelectDialogElement, List<long>>(new RaidPreparedRolesSelectDialogElement(_localizationService, _raidRolesService, _userManagementService))
+                                                       .ConfigureAwait(false);
 
-                foreach (var roleId in selectedRoles)
+                using (var dbFactory = RepositoryFactory.CreateInstance())
                 {
                     dbFactory.GetRepository<RaidUserRoleRepository>()
-                             .Add(new RaidUserRoleEntity
-                                  {
-                                      UserId = user.Id,
-                                      RoleId = roleId
-                                  });
+                             .RemoveRange(obj => obj.UserId == user.Id);
+
+                    foreach (var roleId in selectedRoles)
+                    {
+                        dbFactory.GetRepository<RaidUserRoleRepository>()
+                                 .Add(new RaidUserRoleEntity
+                                      {
+                                          UserId = user.Id,
+                                          RoleId = roleId
+                                      });
+                    }
                 }
             }
+            catch (ScruffyTimeoutException)
+            {
+            }
+
             await dialogHandler.DeleteMessages()
                                .ConfigureAwait(false);
         }
@@ -797,29 +806,37 @@ public class RaidCommandHandler : LocatedServiceBase
     public async Task ConfigureSpecialRoles(IContextContainer context)
     {
         var dialogHandler = new DialogHandler(context);
+
         await using (dialogHandler.ConfigureAwait(false))
         {
             var user = await _userManagementService.GetUserByDiscordAccountId(context.User)
                                                    .ConfigureAwait(false);
 
-            var selectedRoles = await dialogHandler.Run<RaidPreparedSpecialRolesSelectDialogElement, List<long>>(new RaidPreparedSpecialRolesSelectDialogElement(_localizationService, _raidRolesService, _userManagementService))
-                                                   .ConfigureAwait(false);
-
-            using (var dbFactory = RepositoryFactory.CreateInstance())
+            try
             {
-                dbFactory.GetRepository<RaidUserSpecialRoleRepository>()
-                         .RemoveRange(obj => obj.UserId == user.Id);
+                var selectedRoles = await dialogHandler.Run<RaidPreparedSpecialRolesSelectDialogElement, List<long>>(new RaidPreparedSpecialRolesSelectDialogElement(_localizationService, _raidRolesService, _userManagementService))
+                                                       .ConfigureAwait(false);
 
-                foreach (var roleId in selectedRoles)
+                using (var dbFactory = RepositoryFactory.CreateInstance())
                 {
                     dbFactory.GetRepository<RaidUserSpecialRoleRepository>()
-                             .Add(new RaidUserSpecialRoleEntity
-                                  {
-                                      UserId = user.Id,
-                                      SpecialRoleId = roleId
-                                  });
+                             .RemoveRange(obj => obj.UserId == user.Id);
+
+                    foreach (var roleId in selectedRoles)
+                    {
+                        dbFactory.GetRepository<RaidUserSpecialRoleRepository>()
+                                 .Add(new RaidUserSpecialRoleEntity
+                                      {
+                                          UserId = user.Id,
+                                          SpecialRoleId = roleId
+                                      });
+                    }
                 }
             }
+            catch (ScruffyTimeoutException)
+            {
+            }
+
             await dialogHandler.DeleteMessages()
                                .ConfigureAwait(false);
         }

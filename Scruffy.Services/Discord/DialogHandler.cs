@@ -195,11 +195,8 @@ public sealed class DialogHandler : IAsyncDisposable, IDisposable
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public async Task DeleteMessages()
     {
-        if (_commandContext.Channel is ITextChannel textChannel)
-        {
-            await textChannel.DeleteMessagesAsync(DialogContext.Messages)
+        await _commandContext.DeleteMessages(DialogContext.Messages)
                              .ConfigureAwait(false);
-        }
     }
 
     #endregion // Methods

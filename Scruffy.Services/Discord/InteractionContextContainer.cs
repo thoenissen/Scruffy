@@ -40,6 +40,11 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
     /// </summary>
     private ImmutableArray<IRouteSegmentMatch> _segmentMatches;
 
+    /// <summary>
+    /// Original response message
+    /// </summary>
+    private IUserMessage _originalResponse;
+
     #endregion // Fields
 
     #region Constructor
@@ -349,8 +354,10 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
                                           .ConfigureAwait(false);
                     }
 
-                    return await _interaction.GetOriginalResponseAsync()
-                                             .ConfigureAwait(false);
+                    _originalResponse = await _interaction.GetOriginalResponseAsync()
+                                                          .ConfigureAwait(false);
+
+                    return _originalResponse;
                 }
 
                 if (_deferMessage != null)
@@ -398,6 +405,53 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
         catch (TimeoutException)
         {
             throw new ScruffyAbortedException();
+        }
+    }
+
+    /// <summary>
+    /// Modify a message
+    /// </summary>
+    /// <param name="message">Message</param>
+    /// <param name="func">Properties</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public async Task ModifyMessageAsync(IUserMessage message, Action<MessageProperties> func)
+    {
+        if (_interaction != null
+            && message == _originalResponse)
+        {
+            await _interaction.ModifyOriginalResponseAsync(func)
+                              .ConfigureAwait(false);
+        }
+        else
+        {
+            await message.ModifyAsync(func)
+                         .ConfigureAwait(false);
+        }
+    }
+
+    /// <summary>
+    /// Delete messages
+    /// </summary>
+    /// <param name="messages">Messages</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public async Task DeleteMessages(List<IMessage> messages)
+    {
+        if (Channel is ITextChannel textChannel)
+        {
+            if (messages.Contains(_originalResponse))
+            {
+                await _interaction.DeleteOriginalResponseAsync()
+                                  .ConfigureAwait(false);
+
+                messages = messages.Except([_originalResponse])
+                                   .ToList();
+            }
+
+            if (messages.Count > 0)
+            {
+                await textChannel.DeleteMessagesAsync(messages)
+                                 .ConfigureAwait(false);
+            }
         }
     }
 

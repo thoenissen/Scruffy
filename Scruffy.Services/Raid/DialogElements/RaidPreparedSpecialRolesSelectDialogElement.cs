@@ -45,6 +45,8 @@ public class RaidPreparedSpecialRolesSelectDialogElement : DialogEmbedMultiSelec
     {
         _raidRoleService = raidRolesService;
         _userManagementService = userManagementService;
+
+        IsEphermeral = true;
     }
 
     #endregion // Constructor

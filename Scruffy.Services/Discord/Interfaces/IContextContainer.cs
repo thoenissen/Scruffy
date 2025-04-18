@@ -99,5 +99,20 @@ public interface IContextContainer
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     Task<IUserMessage> SendMessageAsync(string text = null, bool isTTS = false, Embed embed = null, RequestOptions options = null, AllowedMentions allowedMentions = null, MessageReference messageReference = null, MessageComponent components = null, ISticker[] stickers = null, Embed[] embeds = null, bool ephemeral = false, IEnumerable<FileAttachment> attachments = null);
 
+    /// <summary>
+    /// Modify a message
+    /// </summary>
+    /// <param name="message">Message</param>
+    /// <param name="func">Properties</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task ModifyMessageAsync(IUserMessage message, Action<MessageProperties> func);
+
+    /// <summary>
+    /// Delete messages
+    /// </summary>
+    /// <param name="messages">Messages</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task DeleteMessages(List<IMessage> messages);
+
     #endregion // Methods
 }

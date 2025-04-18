@@ -61,6 +61,7 @@ public abstract class DialogEmbedMultiSelectSelectMenuElementBase<TData> : Inter
     public override async Task<List<TData>> Run()
     {
         var components = CommandContext.Interactivity.CreateTemporaryComponentContainer<int>(obj => obj.User.Id == CommandContext.User.Id);
+
         await using (components.ConfigureAwait(false))
         {
             var componentsBuilder = new ComponentBuilder();
@@ -81,7 +82,7 @@ public abstract class DialogEmbedMultiSelectSelectMenuElementBase<TData> : Inter
 
             componentsBuilder.WithSelectMenu(selectMenu);
 
-            var message = await CommandContext.SendMessageAsync(embed: (await GetMessage().ConfigureAwait(false)).Build(), components: componentsBuilder.Build())
+            var message = await CommandContext.SendMessageAsync(embed: (await GetMessage().ConfigureAwait(false)).Build(), components: componentsBuilder.Build(), ephemeral: IsEphermeral)
                                               .ConfigureAwait(false);
 
             DialogContext.Messages.Add(message);
@@ -94,8 +95,8 @@ public abstract class DialogEmbedMultiSelectSelectMenuElementBase<TData> : Inter
             await component.DeferAsync()
                            .ConfigureAwait(false);
 
-            await message.ModifyAsync(obj => obj.Components = new ComponentBuilder().Build())
-                         .ConfigureAwait(false);
+            await CommandContext.ModifyMessageAsync(message, obj => obj.Components = new ComponentBuilder().Build())
+                                .ConfigureAwait(false);
 
             var selectedEntries = new List<TData>();
 

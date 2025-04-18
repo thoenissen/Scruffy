@@ -46,6 +46,11 @@ public abstract class DialogElementBase
     /// </summary>
     public DialogContext DialogContext { get; private set; }
 
+    /// <summary>
+    /// Is the element ephermeral?
+    /// </summary>
+    public bool IsEphermeral { get; set; }
+
     #endregion // Properties
 
     #region Methods
