@@ -32,6 +32,11 @@ public class PlayerDTO
     /// </summary>
     public bool IsAssigned { get; set; }
 
+    /// <summary>
+    /// Discord account ID
+    /// </summary>
+    public ulong DiscordAccountId { get; init; }
+
     #endregion // Properties
 
     #region Object

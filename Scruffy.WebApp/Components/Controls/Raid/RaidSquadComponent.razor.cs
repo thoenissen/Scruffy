@@ -10,7 +10,7 @@ namespace Scruffy.WebApp.Components.Controls.Raid;
 /// <summary>
 /// Squad
 /// </summary>
-public partial class Squad
+public partial class RaidSquadComponent
 {
     #region Fields
 

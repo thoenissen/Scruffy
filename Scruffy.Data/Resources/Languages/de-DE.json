@@ -1022,6 +1022,21 @@
          "GuildWars": "Guild Wars",
          "GuildMember": "Gildenmitglied",
          "ApiKey": "API-Key"
+      },
+      "RaidLineUpPage": {
+         "PageTitle": "FooI - Raid - Aufstellung",
+         "LineUp": "Aufstellung {0}",
+         "SquadTitle": "Aufstellung - {0} - {1}",
+         "SquadDescription": "Aufstellung für Squad {0}",
+         "GroupdFieldName": "Group {0}",
+         "Registrations": "Registrierungen",
+         "Name": "Name",
+         "RoleRequests": "Rollenwünsche",
+         "Commit": "Bestätigen"
+      },
+      "RaidSquadComponent": {
+         "SquadTitle": "Squad {0}",
+         "GroupTitle": "Gruppe {0}"
       }
    }
 }

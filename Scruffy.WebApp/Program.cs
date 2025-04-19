@@ -2,6 +2,9 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
+using Discord;
+using Discord.Rest;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.DataProtection;
@@ -43,6 +46,13 @@ public class Program
         builder.Services.AddSingleton(locationService);
 
         var persistenceDirectory = Environment.GetEnvironmentVariable("SCRUFFY_PERSISTENCE_DIRECTORY");
+
+        var discordClient = new DiscordRestClient();
+
+        await discordClient.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_TOKEN")!)
+                           .ConfigureAwait(false);
+
+        builder.Services.AddSingleton(discordClient);
 
         if (string.IsNullOrWhiteSpace(persistenceDirectory) == false)
         {
