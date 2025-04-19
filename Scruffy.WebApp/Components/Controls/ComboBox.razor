@@ -1,25 +1,25 @@
 ﻿@typeparam TItem  
 
 <select @bind="@SelectedIndex">
-   <option value="-1"></option>
+    <option @key="@("Default")" value="-1"></option>
 
-   @foreach (var group in GetItems())
-   {
-      if (string.IsNullOrWhiteSpace(group.Name))
-      {
-         foreach (var item in group.Items)
-         {
-             <option value="@item.Index" disabled="@(item.Value.IsEqualsTo(SelectedItem) == false && item.Value.IsDisabled)">@item.Value.ToString()</option>
-         }         
-      }
-      else
-      {
-         <optgroup label="@group.Name">
-             @foreach (var item in group.Items)
-             {
-               <option value="@item.Index" disabled="@(item.Value.IsEqualsTo(SelectedItem) == false && item.Value.IsDisabled)">@item.Value.ToString()</option>
-             }         
-         </optgroup>
-      }
-   }
+    @foreach (var group in GetItems())
+    {
+        if (string.IsNullOrWhiteSpace(group.Name))
+        {
+            foreach (var item in group.Items)
+            {
+                <option @key="@item.Index" value="@item.Index" disabled="@(item.Value.IsEqualsTo(SelectedItem) == false && item.Value.IsDisabled)">@item.Value.ToString()</option>
+            }
+        }
+        else
+        {
+            <optgroup @key="@group.Name" label="@group.Name">
+                @foreach (var item in group.Items)
+                {
+                    <option @key="@item.Index" value="@item.Index" disabled="@(item.Value.IsEqualsTo(SelectedItem) == false && item.Value.IsDisabled)">@item.Value.ToString()</option>
+                }
+            </optgroup>
+        }
+    }
 </select>
