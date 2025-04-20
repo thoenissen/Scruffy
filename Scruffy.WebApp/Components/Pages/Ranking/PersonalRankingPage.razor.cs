@@ -5,7 +5,6 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Guild;

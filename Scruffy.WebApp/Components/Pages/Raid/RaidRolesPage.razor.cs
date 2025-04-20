@@ -77,6 +77,44 @@ public partial class RaidRolesPage
     }
 
     /// <summary>
+    /// Get the role availability level
+    /// </summary>
+    /// <param name="rolePoints">Role points</param>
+    /// <param name="totalPoints">Total points</param>
+    /// <param name="low">Low limit</param>
+    /// <param name="medium">Medium limit</param>
+    /// <returns>Role availability</returns>
+    private RoleAvailabilityLevel GetRoleAvailability(double rolePoints, double totalPoints, double low, double medium)
+    {
+        if (rolePoints < low * totalPoints)
+        {
+            return RoleAvailabilityLevel.Low;
+        }
+
+        if (rolePoints < medium * totalPoints)
+        {
+            return RoleAvailabilityLevel.Medium;
+        }
+
+        return RoleAvailabilityLevel.High;
+    }
+
+    /// <summary>
+    /// Get CSS class for the role availability level
+    /// </summary>
+    /// <param name="level">Level</param>
+    /// <returns>CSS class</returns>
+    private object GetRoleAvailabilityClass(RoleAvailabilityLevel level)
+    {
+        return level switch
+               {
+                   RoleAvailabilityLevel.Low => "availability-low",
+                   RoleAvailabilityLevel.Medium => "availability-medium",
+                   _ => "availability-high"
+               };
+    }
+
+    /// <summary>
     /// Export clicked
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
@@ -221,17 +259,40 @@ public partial class RaidRolesPage
 
         foreach (var day in _days)
         {
+            var totalPoints = GetParticipantCount(users, day.Day, _ => true) * 1.5 / 10;
+
             day.DamageDealer = GetParticipantCount(users, day.Day, user => user.Roles.HasFlag(RaidRole.DamageDealer));
+            day.DamageDealerAvailability = RoleAvailabilityLevel.High;
+
             day.AlacrityDamageDealer = GetParticipantCount(users, day.Day, user => user.Roles.HasFlag(RaidRole.AlacrityDamageDealer));
+            day.AlacrityDamageDealerAvailability = GetRoleAvailability(day.AlacrityDamageDealer, totalPoints, 2, 3);
+
             day.QuicknessDamageDealer = GetParticipantCount(users, day.Day, user => user.Roles.HasFlag(RaidRole.QuicknessDamageDealer));
+            day.QuicknessDamageDealerAvailability = GetRoleAvailability(day.QuicknessDamageDealer, totalPoints, 2, 3);
+
             day.AlacrityHealer = GetParticipantCount(users, day.Day, user => user.Roles.HasFlag(RaidRole.AlacrityHealer));
+            day.AlacrityHealerAvailability = GetRoleAvailability(day.AlacrityHealer, totalPoints, 2, 3);
+
             day.QuicknessHealer = GetParticipantCount(users, day.Day, user => user.Roles.HasFlag(RaidRole.QuicknessHealer));
+            day.QuicknessHealerAvailability = GetRoleAvailability(day.QuicknessHealer, totalPoints, 2, 3);
+
             day.AlacrityTankHealer = GetParticipantCount(users, day.Day, user => user.Roles.HasFlag(RaidRole.AlacrityTankHealer));
+            day.AlacrityTankHealerAvailability = GetRoleAvailability(day.AlacrityTankHealer, totalPoints, 2, 3);
+
             day.QuicknessTankHealer = GetParticipantCount(users, day.Day, user => user.Roles.HasFlag(RaidRole.QuicknessTankHealer));
+            day.QuicknessTankHealerAvailability = GetRoleAvailability(day.QuicknessTankHealer, totalPoints, 2, 3);
+
             day.HandKiter = GetParticipantCount(users, day.Day, user => user.SpecialRoles.HasFlag(RaidSpecialRole.HandKiter));
+            day.HandKiterAvailability = GetRoleAvailability(day.HandKiter, totalPoints, 1, 2);
+
             day.SoullessHorrorPusher = GetParticipantCount(users, day.Day, user => user.SpecialRoles.HasFlag(RaidSpecialRole.SoullessHorrorPusher));
+            day.SoullessHorrorPusherAvailability = GetRoleAvailability(day.SoullessHorrorPusher, totalPoints, 1, 2);
+
             day.Quadim1Kiter = GetParticipantCount(users, day.Day, user => user.SpecialRoles.HasFlag(RaidSpecialRole.Quadim1Kiter));
+            day.Quadim1KiterAvailability = GetRoleAvailability(day.Quadim1Kiter, totalPoints, 1, 2);
+
             day.Quadim2Kiter = GetParticipantCount(users, day.Day, user => user.SpecialRoles.HasFlag(RaidSpecialRole.Quadim2Kiter));
+            day.Quadim2KiterAvailability = GetRoleAvailability(day.Quadim2Kiter, totalPoints, 3, 4);
         }
     }
 

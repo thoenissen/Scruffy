@@ -103,6 +103,17 @@
    gap: 0.5rem;
 }
 
+.availability-low {
+   color: #dc2626
+}
+
+.availability-medium {
+   color: #f59e0b
+}
+
+.availability-high {
+}
+
 .btn-export {
    width: 150px;
    margin-top: 1rem;
