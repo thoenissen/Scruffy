@@ -15,6 +15,12 @@
         <h3>@LocalizationGroup.GetText("Registrations", "Registrations")</h3>
         <div class="quickgrid-std registrations-container mb-3">
             <QuickGrid Items="@_registrations.AsQueryable()">
+                <TemplateColumn Context="u" Sortable="false" class="isassigned-column">
+                   @if (u.IsAssigned)
+                   {
+                       <div class="isassigned-icon">check</div>
+                   }
+                </TemplateColumn>
                 <PropertyColumn Title="@LocalizationGroup.GetText("Name", "Name")" Property="@(u => u.Name)" Sortable="true" IsDefaultSortColumn="true" InitialSortDirection="SortDirection.Ascending"/>
                 <TemplateColumn Title="@LocalizationGroup.GetText("RoleRequests", "Role requests")" Context="u" Sortable="false" class="role-column">
                     <div class="registration-roles-container">
@@ -78,9 +84,9 @@
         <div class="squads-container">
             @for (var index = 0; index < _groupCount; index++)
             {
-               var currentIndex = index;
+                var currentIndex = index;
 
-               <RaidSquadComponent GroupNumber="@(index + 1)" Registrations="@_registrations" AssignmentChanged="OnSquadAssignmentChanged" @ref="_squads[currentIndex]" />
+                <RaidSquadComponent GroupNumber="@(index + 1)" Registrations="@_registrations" AssignmentChanged="OnSquadAssignmentChanged" @ref="_squads[currentIndex]"/>
             }
         </div>
         <button type="submit" class="btn btn-primary btn-commit" @onclick="OnCommit">@LocalizationGroup.GetText("Commit", "Commit")</button>
