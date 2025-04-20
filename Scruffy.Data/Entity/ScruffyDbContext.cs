@@ -228,6 +228,13 @@ public class ScruffyDbContext : IdentityDbContext<UserEntity, RoleEntity, long, 
                     .WithOne(obj => obj.RaidDayTemplate)
                     .HasForeignKey(obj => obj.TemplateId);
 
+        modelBuilder.Entity<RaidAppointmentLineUpSquadEntity>()
+                    .HasKey(obj => new
+                                   {
+                                       obj.AppointmentId,
+                                       obj.GroupNumber
+                                   });
+
         // Reminder
         modelBuilder.Entity<OneTimeReminderEntity>();
         modelBuilder.Entity<WeeklyReminderEntity>();

@@ -34,7 +34,6 @@
     <Folder Include="Entity\Queryable\Reminder\" />
     <Folder Include="Entity\Repositories\General\" />
     <Folder Include="Entity\Repositories\Account\" />
-    <Folder Include="Entity\Repositories\Raid\" />
     <Folder Include="Entity\Repositories\Reminder\" />
   </ItemGroup>
 </Project>

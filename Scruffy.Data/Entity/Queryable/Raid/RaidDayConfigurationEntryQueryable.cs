@@ -6,7 +6,7 @@ namespace Scruffy.Data.Entity.Queryable.Raid;
 /// <summary>
 /// Queryable for accessing the <see cref="RaidDayConfigurationEntity"/>
 /// </summary>
-public class RaidDayConfigurationEntryEntityQueryable : QueryableBase<RaidDayConfigurationEntity>
+public class RaidDayConfigurationEntryQueryable : QueryableBase<RaidDayConfigurationEntity>
 {
     #region Constructor
 
@@ -14,7 +14,7 @@ public class RaidDayConfigurationEntryEntityQueryable : QueryableBase<RaidDayCon
     /// Constructor
     /// </summary>
     /// <param name="queryable"><see cref="IQueryable"/>-object</param>
-    public RaidDayConfigurationEntryEntityQueryable(IQueryable<RaidDayConfigurationEntity> queryable)
+    public RaidDayConfigurationEntryQueryable(IQueryable<RaidDayConfigurationEntity> queryable)
         : base(queryable)
     {
     }
