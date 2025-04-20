@@ -11,6 +11,7 @@ using Microsoft.JSInterop;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Entity.Repositories.Raid;
+using Scruffy.Data.Enumerations.Raid;
 using Scruffy.WebApp.Components.Pages.Raid.Data;
 using Scruffy.WebApp.DTOs.Raid;
 

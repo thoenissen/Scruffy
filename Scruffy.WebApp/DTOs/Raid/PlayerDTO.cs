@@ -1,4 +1,6 @@
-﻿namespace Scruffy.WebApp.DTOs.Raid;
+﻿using Scruffy.Data.Enumerations.Raid;
+
+namespace Scruffy.WebApp.DTOs.Raid;
 
 /// <summary>
 /// Player

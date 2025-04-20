@@ -1,4 +1,5 @@
-﻿using Scruffy.WebApp.Components.Controls.Abstraction;
+﻿using Scruffy.Data.Enumerations.Raid;
+using Scruffy.WebApp.Components.Controls.Abstraction;
 
 namespace Scruffy.WebApp.DTOs.Raid;
 

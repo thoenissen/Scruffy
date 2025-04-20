@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Scruffy.WebApp.DTOs.Raid;
+﻿namespace Scruffy.Data.Enumerations.Raid;
 
 /// <summary>
 /// Raid roles

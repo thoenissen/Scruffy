@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
 using Scruffy.Data.Entity.Tables.CoreData;
+using Scruffy.Data.Enumerations.Raid;
 
 namespace Scruffy.Data.Entity.Tables.Raid;
 
@@ -39,6 +40,11 @@ public class RaidAppointmentLineUpSquadEntity
     public long? TankUserId { get; set; }
 
     /// <summary>
+    /// Tank Raid Role
+    /// </summary>
+    public RaidRole TankRaidRole { get; set; }
+
+    /// <summary>
     /// Support 1 User ID
     /// </summary>
     public long? Support1UserId { get; set; }
@@ -66,6 +72,11 @@ public class RaidAppointmentLineUpSquadEntity
     /// Healer User ID
     /// </summary>
     public long? HealerUserId { get; set; }
+
+    /// <summary>
+    /// Healer Raid Role
+    /// </summary>
+    public RaidRole HealerRaidRole { get; set; }
 
     /// <summary>
     /// Support 2 User ID

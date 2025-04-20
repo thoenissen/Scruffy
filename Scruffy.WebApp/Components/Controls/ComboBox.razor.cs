@@ -21,6 +21,11 @@ public partial class ComboBox<TItem>
     /// </summary>
     private int _selectedIndex = -1;
 
+    /// <summary>
+    /// Selected item
+    /// </summary>
+    private TItem _selectedItem;
+
     #endregion // Fields
 
     #region Properties
@@ -37,7 +42,16 @@ public partial class ComboBox<TItem>
     /// Selected item
     /// </summary>
     [Parameter]
-    public TItem SelectedItem { get; set; }
+    public TItem SelectedItem
+    {
+        get => _selectedItem;
+        set
+        {
+            _selectedItem = value;
+
+            SetSelectedIndex(value);
+        }
+    }
 
     /// <summary>
     /// Selected item changed
@@ -121,5 +135,50 @@ public partial class ComboBox<TItem>
         }
     }
 
+    /// <summary>
+    /// Set <see cref="SelectedIndex"/> based on the selected item"/>
+    /// </summary>
+    /// <param name="selectedItem">Selected item</param>
+    private void SetSelectedIndex(TItem selectedItem)
+    {
+        if (selectedItem == null)
+        {
+            if (SelectedIndex != -1)
+            {
+                SelectedIndex = -1;
+            }
+
+            return;
+        }
+
+        for (var index = 0; index < Items.Count; index++)
+        {
+            if (selectedItem == Items[index])
+            {
+                if (SelectedIndex != index)
+                {
+                    SelectedIndex = index;
+                }
+
+                break;
+            }
+        }
+    }
+
     #endregion // Methods
+
+    #region ComponentBase
+
+    /// <inheritdoc />
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+
+        if (firstRender && SelectedItem != null)
+        {
+            SetSelectedIndex(SelectedItem);
+        }
+    }
+
+    #endregion // ComponentBase
 }

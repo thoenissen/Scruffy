@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Components;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
+using Scruffy.Data.Entity.Tables.Raid;
+using Scruffy.Data.Enumerations.Raid;
 using Scruffy.WebApp.Components.Controls.Raid;
 using Scruffy.WebApp.DTOs.Raid;
 
@@ -43,6 +45,11 @@ public partial class RaidLineUpPage
     #endregion // Constants
 
     #region Fields
+
+    /// <summary>
+    /// Appointment ID
+    /// </summary>
+    private long? _appointmentId;
 
     /// <summary>
     /// Time stamp of the appointment
@@ -235,17 +242,45 @@ public partial class RaidLineUpPage
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     private async Task OnCommit()
     {
-        if (_timeStamp == null || _channelId == null)
+        if (_appointmentId == null || _timeStamp == null || _channelId == null)
         {
             return;
         }
 
         if (await DiscordClient.GetChannelAsync(_channelId.Value).ConfigureAwait(false) is ITextChannel textChannel)
         {
+            await DeleteCurrentLineUp(textChannel).ConfigureAwait(false);
+
             foreach (var squad in _squads)
             {
                 await SendSquadMessage(textChannel, squad).ConfigureAwait(false);
             }
+        }
+    }
+
+    /// <summary>
+    /// Delete current line up
+    /// </summary>
+    /// <param name="textChannel">text Channel</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    private async Task DeleteCurrentLineUp(ITextChannel textChannel)
+    {
+        using (var repositoryFactory = new RepositoryFactory())
+        {
+            var lineUpMessages = repositoryFactory.GetRepository<RaidAppointmentLineUpSquadRepository>()
+                                                  .GetQuery()
+                                                  .Where(lineUp => lineUp.AppointmentId == _appointmentId)
+                                                  .Select(lineUp => lineUp.MessageId)
+                                                  .ToList();
+
+            foreach (var lineUpMessage in lineUpMessages)
+            {
+                await textChannel.DeleteMessageAsync(lineUpMessage)
+                                 .ConfigureAwait(false);
+            }
+
+            repositoryFactory.GetRepository<RaidAppointmentLineUpSquadRepository>()
+                             .RemoveRange(lineUp => lineUp.AppointmentId == _appointmentId);
         }
     }
 
@@ -281,8 +316,10 @@ public partial class RaidLineUpPage
                  squad.Value.SelectedDps5,
                  squad.Value.SelectedDps6);
 
-        await textChannel.SendMessageAsync(embed: embed.Build())
-                         .ConfigureAwait(false);
+        var message = await textChannel.SendMessageAsync(embed: embed.Build())
+                                       .ConfigureAwait(false);
+
+        SaveLineUp(squad.Key, squad.Value, message.Id);
     }
 
     /// <summary>
@@ -315,6 +352,60 @@ public partial class RaidLineUpPage
                        });
     }
 
+    /// <summary>
+    /// Save the line up
+    /// </summary>
+    /// <param name="groupNumber">Group number</param>
+    /// <param name="squad">Squad</param>
+    /// <param name="messageId">Message ID</param>
+    private void SaveLineUp(int groupNumber, RaidSquadComponent squad, ulong messageId)
+    {
+        using (var repositoryFactory = RepositoryFactory.CreateInstance())
+        {
+            var lineUp = new RaidAppointmentLineUpSquadEntity
+                         {
+                             AppointmentId = _appointmentId!.Value,
+                             GroupNumber = groupNumber,
+                             MessageId = messageId,
+                             TankUserId = squad.SelectedTankRole?.Player.Id,
+                             Support1UserId = squad.SelectedDpsSupport1?.Player.Id,
+                             Dps1UserId = squad.SelectedDps1?.Player.Id,
+                             Dps2UserId = squad.SelectedDps2?.Player.Id,
+                             Dps3UserId = squad.SelectedDps3?.Player.Id,
+                             HealerUserId = squad.SelectedHealerRole?.Player.Id,
+                             Support2UserId = squad.SelectedDpsSupport2?.Player.Id,
+                             Dps4UserId = squad.SelectedDps4?.Player.Id,
+                             Dps5UserId = squad.SelectedDps5?.Player.Id,
+                             Dps6UserId = squad.SelectedDps6?.Player.Id
+                         };
+
+            if (squad.SelectedTankRole != null)
+            {
+                lineUp.TankRaidRole = squad.SelectedTankRole.Role;
+            }
+            else if (squad.SelectedDpsSupport1 != null)
+            {
+                lineUp.TankRaidRole = squad.SelectedDpsSupport1.Role == RaidRole.AlacrityDamageDealer
+                                          ? RaidRole.QuicknessTankHealer
+                                          : RaidRole.AlacrityTankHealer;
+            }
+
+            if (squad.SelectedHealerRole != null)
+            {
+                lineUp.HealerRaidRole = squad.SelectedHealerRole.Role;
+            }
+            else if (squad.SelectedDpsSupport2 != null)
+            {
+                lineUp.HealerRaidRole = squad.SelectedDpsSupport2.Role == RaidRole.AlacrityDamageDealer
+                                            ? RaidRole.QuicknessHealer
+                                            : RaidRole.AlacrityHealer;
+            }
+
+            repositoryFactory.GetRepository<RaidAppointmentLineUpSquadRepository>()
+                             .Add(lineUp);
+        }
+    }
+
     #endregion // Methods
 
     #region ComponentBase
@@ -343,6 +434,7 @@ public partial class RaidLineUpPage
                                        .OrderBy(appointment => appointment.TimeStamp)
                                        .FirstOrDefault();
 
+            _appointmentId = appointment?.Id;
             _timeStamp = appointment?.TimeStamp;
             _groupCount = appointment?.GroupCount ?? 0;
             _channelId = appointment?.ChannelId;
@@ -407,5 +499,32 @@ public partial class RaidLineUpPage
         }
     }
 
-    #endregion // ComponentBase
+    /// <inheritdoc />
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+
+        if (firstRender)
+        {
+            using (var repositoryFactory = new RepositoryFactory())
+            {
+                var lineUps = repositoryFactory.GetRepository<RaidAppointmentLineUpSquadRepository>()
+                                               .GetQuery()
+                                               .Where(lineUp => lineUp.AppointmentId == _appointmentId)
+                                               .ToList();
+
+                foreach (var squad in _squads)
+                {
+                    var lineUp = lineUps.FirstOrDefault(lineUp => lineUp.GroupNumber == squad.Key);
+
+                    if (lineUp != null)
+                    {
+                        squad.Value.Initialize(lineUp);
+                    }
+                }
+            }
+        }
+    }
+
+#endregion // ComponentBase
 }

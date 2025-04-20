@@ -3,6 +3,8 @@ using System.Linq;
 
 using Microsoft.AspNetCore.Components;
 
+using Scruffy.Data.Entity.Tables.Raid;
+using Scruffy.Data.Enumerations.Raid;
 using Scruffy.WebApp.DTOs.Raid;
 
 namespace Scruffy.WebApp.Components.Controls.Raid;
@@ -167,6 +169,42 @@ public partial class RaidSquadComponent
     #endregion // Properties
 
     #region Methods
+
+    /// <summary>
+    /// Initialize
+    /// </summary>
+    /// <param name="lineUp">Line up</param>
+    public void Initialize(RaidAppointmentLineUpSquadEntity lineUp)
+    {
+        if (lineUp.TankRaidRole == RaidRole.AlacrityTankHealer)
+        {
+            SelectedTankRole = _tankRoles.FirstOrDefault(entry => entry.Player.Id == lineUp.TankUserId && entry.Role == RaidRole.AlacrityTankHealer);
+            SelectedDpsSupport1 = _dpsSupportRoles.FirstOrDefault(entry => entry.Player.Id == lineUp.Support1UserId && entry.Role == RaidRole.QuicknessDamageDealer);
+        }
+        else
+        {
+            SelectedTankRole = _tankRoles.FirstOrDefault(entry => entry.Player.Id == lineUp.TankUserId && entry.Role == RaidRole.QuicknessTankHealer);
+            SelectedDpsSupport1 = _dpsSupportRoles.FirstOrDefault(entry => entry.Player.Id == lineUp.Support1UserId && entry.Role == RaidRole.AlacrityDamageDealer);
+        }
+
+        if (lineUp.HealerRaidRole == RaidRole.AlacrityHealer)
+        {
+            SelectedHealerRole = _healerRoles.FirstOrDefault(entry => entry.Player.Id == lineUp.HealerUserId && entry.Role == RaidRole.AlacrityHealer);
+            SelectedDpsSupport2 = _dpsSupportRoles.FirstOrDefault(entry => entry.Player.Id == lineUp.Support2UserId && entry.Role == RaidRole.QuicknessDamageDealer);
+        }
+        else
+        {
+            SelectedHealerRole = _healerRoles.FirstOrDefault(entry => entry.Player.Id == lineUp.HealerUserId && entry.Role == RaidRole.QuicknessHealer);
+            SelectedDpsSupport2 = _dpsSupportRoles.FirstOrDefault(entry => entry.Player.Id == lineUp.Support2UserId && entry.Role == RaidRole.AlacrityDamageDealer);
+        }
+
+        SelectedDps1 = _dpsRoles.FirstOrDefault(entry => entry.Player.Id == lineUp.Dps1UserId);
+        SelectedDps2 = _dpsRoles.FirstOrDefault(entry => entry.Player.Id == lineUp.Dps2UserId);
+        SelectedDps3 = _dpsRoles.FirstOrDefault(entry => entry.Player.Id == lineUp.Dps3UserId);
+        SelectedDps4 = _dpsRoles.FirstOrDefault(entry => entry.Player.Id == lineUp.Dps4UserId);
+        SelectedDps5 = _dpsRoles.FirstOrDefault(entry => entry.Player.Id == lineUp.Dps5UserId);
+        SelectedDps6 = _dpsRoles.FirstOrDefault(entry => entry.Player.Id == lineUp.Dps6UserId);
+    }
 
     /// <summary>
     /// Set the selected role

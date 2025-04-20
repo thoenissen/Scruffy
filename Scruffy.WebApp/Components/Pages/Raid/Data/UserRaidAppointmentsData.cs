@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using Scruffy.Data.Enumerations.Raid;
 using Scruffy.WebApp.DTOs.Raid;
 
 namespace Scruffy.WebApp.Components.Pages.Raid.Data;
