@@ -126,7 +126,7 @@ public sealed class RepositoryFactory : IDisposable
 
         try
         {
-            _dbContext.Database.SetCommandTimeout(1200);
+            _dbContext.Database.SetCommandTimeout(1800);
 
             value = await _dbContext.Database
                                     .ExecuteSqlRawAsync(sql, parameters)
