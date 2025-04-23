@@ -374,7 +374,7 @@ public class GuildRankService : LocatedServiceBase
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
-            var from = DateTime.Today.AddDays(-64);
+            var from = DateTime.Today.AddDays(-8);
             var to = DateTime.Today.AddDays(-1);
 
             foreach (var guild in dbFactory.GetRepository<GuildRepository>()
