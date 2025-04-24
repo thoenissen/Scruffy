@@ -292,7 +292,7 @@ public partial class RaidLineUpPage
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     private async Task SendSquadMessage(ITextChannel textChannel, KeyValuePair<int, RaidSquadComponent> squad)
     {
-        var embed = new EmbedBuilder().WithTitle(LocalizationGroup.GetFormattedText("SquadTitle", "Line up - {0} - {1}", LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(_timeStamp!.Value.DayOfWeek), _timeStamp.Value.ToString("f", LocalizationGroup.CultureInfo)))
+        var embed = new EmbedBuilder().WithTitle(LocalizationGroup.GetFormattedText("SquadTitle", "Line up - {0} - {1}", LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(_timeStamp!.Value.DayOfWeek), _timeStamp.Value.ToString("g", LocalizationGroup.CultureInfo)))
                                       .WithDescription(LocalizationGroup.GetFormattedText("SquadDescription", "Line up for squad {0}", squad.Key + 1))
                                       .WithThumbnailUrl(_thumbnailUrl)
                                       .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
