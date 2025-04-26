@@ -374,7 +374,7 @@ public class GuildRankService : LocatedServiceBase
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
-            var from = DateTime.Today.AddDays(-8);
+            var from = DateTime.Today.AddDays(-64);
             var to = DateTime.Today.AddDays(-1);
 
             foreach (var guild in dbFactory.GetRepository<GuildRepository>()
@@ -427,7 +427,7 @@ public class GuildRankService : LocatedServiceBase
                                                                 AND [Target].[Date] = [Source].[Date]
                                                                 AND [Target].[Type] = 0
                                                          
-                                                         WHEN MATCHED 
+                                                         WHEN MATCHED AND [Target].[Points] <> [Source].[Points]
                                                            THEN UPDATE
                                                                 SET [Target].[Points] = [Source].[Points]
                                                          
@@ -497,7 +497,7 @@ public class GuildRankService : LocatedServiceBase
                                                                 AND [Target].[Date] = [Source].[Date]
                                                                 AND [Target].[Type] = 1
                                                          
-                                                         WHEN MATCHED 
+                                                         WHEN MATCHED AND [Target].[Points] <> [Source].[Points] 
                                                            THEN UPDATE
                                                                 SET [Target].[Points] = [Source].[Points]
                                                          
@@ -573,7 +573,7 @@ public class GuildRankService : LocatedServiceBase
                                                                 AND [Target].[Date] = [Source].[Date]
                                                                 AND [Target].[Type] = 2
                                                          
-                                                         WHEN MATCHED 
+                                                         WHEN MATCHED AND [Target].[Points] <> [Source].[Points] 
                                                            THEN UPDATE
                                                                 SET [Target].[Points] = [Source].[Points]
                                                          
@@ -642,7 +642,7 @@ public class GuildRankService : LocatedServiceBase
                                                                 AND [Target].[Date] = [Source].[Date]
                                                                 AND [Target].[Type] = 3
                                                          
-                                                         WHEN MATCHED 
+                                                         WHEN MATCHED AND [Target].[Points] <> [Source].[Points] 
                                                            THEN UPDATE
                                                                 SET [Target].[Points] = [Source].[Points]
                                                          
@@ -659,7 +659,26 @@ public class GuildRankService : LocatedServiceBase
                 }
 
                 // Donations
-                if (await dbFactory.ExecuteSqlRawAsync(@"WITH [CurrentDonationPoints]
+                if (await dbFactory.ExecuteSqlRawAsync(@"CREATE TABLE #WeeklyDonationReferences 
+                                                                      (
+                                                                          [Day]    DATE,
+                                                                          [Week]   INT,
+                                                                          [Weight] FLOAT,
+                                                                          [Value]  BIGINT
+                                                                          PRIMARY KEY ( [Day], [Week] )
+                                                                      );
+                                                         
+                                                         INSERT INTO #WeeklyDonationReferences
+                                                              SELECT [Dates].[Date],
+                                                                     [Reference].[Week],
+                                                                     [Reference].[Weight],
+                                                                     [Reference].[Value]
+                                                                FROM ( SELECT [Value] AS [Date] FROM GetDateRange(@from, @to) ) AS [DATES] 
+                                                         CROSS APPLY ScruffyGetWeeklyDonationReferences ( @guildId,
+                                                                                                          DATEADD ( DAY, -63, [Dates].[Date] ),
+                                                                                                          DATEADD ( DAY,   1, [Dates].[Date] ) ) AS [Reference];
+                                                         
+                                                         WITH [CurrentDonationPoints]
                                                          AS
                                                          (
                                                              SELECT [Dates].[UserId], 
@@ -728,14 +747,13 @@ public class GuildRankService : LocatedServiceBase
                                                                                       [RawDay].[Date],
                                                                                       [RawDay].[Week] ) AS [Summed]
                                                                  
-                                                                 CROSS APPLY ScruffyGetWeeklyDonationReferences ( @guildId,
-                                                                                                                  DATEADD ( DAY, -63, [Summed].[Date] ),
-                                                                                                                  DATEADD ( DAY,   1, [Summed].[Date] ) ) AS [WeeklyReference]
-                                                                       WHERE [WeeklyReference].[Week] = [Summed].[Week] ) AS [Dates]
+                                                                 INNER JOIN #WeeklyDonationReferences AS [WeeklyReference]
+                                                                         ON [WeeklyReference].[Day] = [Summed].[Date]
+                                                                        AND [WeeklyReference].[Week] = [Summed].[Week] ) AS [Dates]
                                                            GROUP BY [Dates].[UserId],
                                                                     [Dates].[Date] 
                                                          )
-                                                         
+
                                                          MERGE INTO [GuildRankCurrentPoints] AS [Target]
                                                               USING [CurrentDonationPoints] AS [SOURCE]
                                                          
@@ -744,7 +762,7 @@ public class GuildRankService : LocatedServiceBase
                                                                 AND [Target].[Date] = [Source].[Date]
                                                                 AND [Target].[Type] = 4
                                                          
-                                                         WHEN MATCHED 
+                                                         WHEN MATCHED AND [Target].[Points] <> [Source].[Points]
                                                            THEN UPDATE
                                                                 SET [Target].[Points] = [Source].[Points]
                                                          
@@ -807,7 +825,7 @@ public class GuildRankService : LocatedServiceBase
                                                                 AND [Target].[Date] = [Source].[Date]
                                                                 AND [Target].[Type] = 5
                                                          
-                                                         WHEN MATCHED 
+                                                         WHEN MATCHED AND [Target].[Points] <> [Source].[Points] 
                                                            THEN UPDATE
                                                                 SET [Target].[Points] = [Source].[Points]
                                                          
@@ -870,7 +888,7 @@ public class GuildRankService : LocatedServiceBase
                                                                 AND [Target].[Date] = [Source].[Date]
                                                                 AND [Target].[Type] = 6
                                                          
-                                                         WHEN MATCHED 
+                                                         WHEN MATCHED AND [Target].[Points] <> [Source].[Points] 
                                                            THEN UPDATE
                                                                 SET [Target].[Points] = [Source].[Points]
                                                          
@@ -955,7 +973,7 @@ public class GuildRankService : LocatedServiceBase
                                                                 AND [Target].[Date] = [Source].[Date]
                                                                 AND [Target].[Type] = 7
                                                          
-                                                         WHEN MATCHED 
+                                                         WHEN MATCHED AND [Target].[Points] <> [Source].[Points] 
                                                            THEN UPDATE
                                                                 SET [Target].[Points] = [Source].[Points]
                                                          
@@ -1040,7 +1058,7 @@ public class GuildRankService : LocatedServiceBase
                                                                 AND [Target].[Date] = [Source].[Date]
                                                                 AND [Target].[Type] = 8
                                                          
-                                                         WHEN MATCHED 
+                                                         WHEN MATCHED AND [Target].[Points] <> [Source].[Points] 
                                                            THEN UPDATE
                                                                 SET [Target].[Points] = [Source].[Points]
                                                          
