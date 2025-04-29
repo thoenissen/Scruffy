@@ -1028,7 +1028,7 @@
          "LineUp": "Aufstellung {0}",
          "SquadTitle": "Aufstellung - {0} - {1}",
          "SquadDescription": "Aufstellung für Squad {0}",
-         "GroupdFieldName": "Group {0}",
+         "GroupFieldName": "Group {0}",
          "Registrations": "Registrierungen",
          "Name": "Name",
          "RoleRequests": "Rollenwünsche",

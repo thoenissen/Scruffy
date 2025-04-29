@@ -337,7 +337,7 @@ public partial class RaidLineUpPage
     {
         embed.AddField(field =>
                        {
-                           field.WithName(LocalizationGroup.GetFormattedText("Group", "Group {0}", groupNumber))
+                           field.WithName(LocalizationGroup.GetFormattedText("GroupFieldName", "Group {0}", groupNumber))
                                 .WithIsInline(false);
 
                            var groupBuilder = new StringBuilder();
