@@ -12,6 +12,7 @@ using Scruffy.Data.Entity.Tables.Guild;
 using Scruffy.Data.Entity.Tables.GuildWars2.Account;
 using Scruffy.Data.Entity.Tables.GuildWars2.GameData;
 using Scruffy.Data.Entity.Tables.GuildWars2.Guild;
+using Scruffy.Data.Entity.Tables.LookingForGroup;
 using Scruffy.Data.Entity.Tables.Raid;
 using Scruffy.Data.Entity.Tables.Reminder;
 using Scruffy.Data.Entity.Tables.Statistics;
@@ -591,6 +592,22 @@ public class ScruffyDbContext : IdentityDbContext<UserEntity, RoleEntity, long, 
 
         modelBuilder.Entity<UserTokenEntity>()
                     .ToTable("UserTokens");
+
+        // Looking for group
+        modelBuilder.Entity<LookingForGroupAppointmentEntity>();
+        modelBuilder.Entity<LookingForGroupParticipantEntity>();
+        modelBuilder.Entity<LookingForGroupParticipantEntity>()
+                    .HasKey(obj => new
+                                   {
+                                       obj.AppointmentId,
+                                       obj.UserId
+                                   });
+
+        modelBuilder.Entity<LookingForGroupAppointmentEntity>()
+                    .HasMany(obj => obj.Participants)
+                    .WithOne(obj => obj.Appointment)
+                    .HasForeignKey(obj => obj.AppointmentId)
+                    .IsRequired();
 
         // Keyless
         modelBuilder.Entity<DateValue>(eb =>
