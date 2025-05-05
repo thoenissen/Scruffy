@@ -100,6 +100,11 @@ public class RaidAppointmentLineUpSquadEntity
 
     #endregion // Group 2
 
+    /// <summary>
+    /// Remarks
+    /// </summary>
+    public string Remarks { get; set; }
+
     #region Navigation properties
 
     #region Key

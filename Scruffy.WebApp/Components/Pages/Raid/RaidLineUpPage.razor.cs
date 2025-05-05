@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,11 +10,14 @@ using Discord.Rest;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 
 using Scruffy.Data.Entity;
+using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Data.Entity.Tables.Raid;
 using Scruffy.Data.Enumerations.Raid;
+using Scruffy.Services.Core.Extensions;
 using Scruffy.WebApp.Components.Controls.Raid;
 using Scruffy.WebApp.DTOs.Raid;
 
@@ -90,6 +94,12 @@ public partial class RaidLineUpPage
     /// </summary>
     [Inject]
     private DiscordRestClient DiscordClient { get; set; }
+
+    /// <summary>
+    /// Authentication state provider
+    /// </summary>
+    [Inject]
+    private AuthenticationStateProvider AuthenticationStateProvider { get; set; }
 
     #endregion // Properties
 
@@ -295,9 +305,15 @@ public partial class RaidLineUpPage
         var embed = new EmbedBuilder().WithTitle(LocalizationGroup.GetFormattedText("SquadTitle", "Line up - {0} - {1}", LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(_timeStamp!.Value.DayOfWeek), _timeStamp.Value.ToString("g", LocalizationGroup.CultureInfo)))
                                       .WithDescription(LocalizationGroup.GetFormattedText("SquadDescription", "Line up for squad {0}", squad.Key + 1))
                                       .WithThumbnailUrl(_thumbnailUrl)
-                                      .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
                                       .WithColor(Color.Green)
                                       .WithTimestamp(DateTime.Now);
+
+        var user = await GetCurrentUser().ConfigureAwait(false);
+
+        if (user != null)
+        {
+            embed.WithFooter(LocalizationGroup.GetFormattedText("CreatedBy", "Created by {0}", user.TryGetDisplayName()), user.GetAvatarUrl());
+        }
 
         AddGroup(embed,
                  1,
@@ -316,10 +332,49 @@ public partial class RaidLineUpPage
                  squad.Value.SelectedDps5,
                  squad.Value.SelectedDps6);
 
+        if (string.IsNullOrWhiteSpace(squad.Value.Remarks) == false)
+        {
+            embed.AddField(LocalizationGroup.GetText("Remarks", "Remarks"), squad.Value.Remarks);
+        }
+
         var message = await textChannel.SendMessageAsync(embed: embed.Build())
                                        .ConfigureAwait(false);
 
         SaveLineUp(squad.Key, squad.Value, message.Id);
+    }
+
+    /// <summary>
+    /// Get current user
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    private async Task<IGuildUser> GetCurrentUser()
+    {
+        IGuildUser user = null;
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync()
+                                                         .ConfigureAwait(false);
+        var nameIdentifier = authState.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(nameIdentifier) == false
+            && int.TryParse(nameIdentifier, out var userId))
+        {
+            using (var dbFactory = RepositoryFactory.CreateInstance())
+            {
+                var discordAccountId = dbFactory.GetRepository<DiscordAccountRepository>()
+                                                .GetQuery()
+                                                .Where(account => account.UserId == userId)
+                                                .Select(account => account.Id)
+                                                .FirstOrDefault();
+
+                if (discordAccountId > 0)
+                {
+                    user = await DiscordClient.GetGuildUserAsync(WebAppConfiguration.DiscordServerId, discordAccountId)
+                                              .ConfigureAwait(false);
+                }
+            }
+        }
+
+        return user;
     }
 
     /// <summary>
@@ -376,7 +431,8 @@ public partial class RaidLineUpPage
                              Support2UserId = squad.SelectedDpsSupport2?.Player.Id,
                              Dps4UserId = squad.SelectedDps4?.Player.Id,
                              Dps5UserId = squad.SelectedDps5?.Player.Id,
-                             Dps6UserId = squad.SelectedDps6?.Player.Id
+                             Dps6UserId = squad.SelectedDps6?.Player.Id,
+                             Remarks = squad.Remarks
                          };
 
             if (squad.SelectedTankRole != null)

@@ -89,3 +89,44 @@
    width: 100%;
    grid-column: 4;
 }
+
+.remarks-label {
+   padding: 1rem;
+   background-color: #2d3748;
+   font-weight: 600;
+   text-transform: uppercase;
+   letter-spacing: 0.05em;
+   border-radius: 4px;
+   margin-bottom: 0.5rem;
+   margin-top: 2rem;
+}
+
+.remarks-textareay {
+   background-color: #1a1a1a;
+   color: #ffffff;
+   border: 1px solid #4a5568;
+   border-radius: 6px;
+   padding: 0.75rem 1rem;
+   font-family: inherit;
+   font-size: 0.875rem;
+   line-height: 1.25rem;
+   width: 100%;
+   resize: vertical;
+   transition: border-color 0.2s, box-shadow 0.2s;
+   margin-top: 0.5rem;
+}
+
+   .remarks-textareay:focus {
+      outline: none;
+      border-color: #4299e1;
+      box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+   }
+
+   .remarks-textareay:hover {
+      border-color: #718096;
+   }
+
+   .remarks-textareay::placeholder {
+      color: #a0aec0;
+      opacity: 0.8;
+   }

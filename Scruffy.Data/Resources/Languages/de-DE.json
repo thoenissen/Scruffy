@@ -1032,11 +1032,14 @@
          "Registrations": "Registrierungen",
          "Name": "Name",
          "RoleRequests": "Rollenwünsche",
-         "Commit": "Bestätigen"
+         "Commit": "Bestätigen",
+         "Remarks": "Anmerkungen",
+         "CreatedBy": "Erstellt von {0}"
       },
       "RaidSquadComponent": {
          "SquadTitle": "Squad {0}",
-         "GroupTitle": "Gruppe {0}"
+         "GroupTitle": "Gruppe {0}",
+         "Remarks": "Anmerkungen"
       }
    }
 }

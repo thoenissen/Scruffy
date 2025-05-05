@@ -166,6 +166,11 @@ public partial class RaidSquadComponent
         set => SetSelectedRole(ref _selectedDps6, value);
     }
 
+    /// <summary>
+    /// Remarks
+    /// </summary>
+    public string Remarks { get; set; }
+
     #endregion // Properties
 
     #region Methods
@@ -204,6 +209,9 @@ public partial class RaidSquadComponent
         SelectedDps4 = _dpsRoles.FirstOrDefault(entry => entry.Player.Id == lineUp.Dps4UserId);
         SelectedDps5 = _dpsRoles.FirstOrDefault(entry => entry.Player.Id == lineUp.Dps5UserId);
         SelectedDps6 = _dpsRoles.FirstOrDefault(entry => entry.Player.Id == lineUp.Dps6UserId);
+        Remarks = lineUp.Remarks;
+
+        StateHasChanged();
     }
 
     /// <summary>

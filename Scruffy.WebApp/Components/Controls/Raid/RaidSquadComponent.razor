@@ -141,5 +141,11 @@
                 </div>
             </div>
         </div>
+        <div class="remarks-container">
+            <div class="remarks-label">
+                @LocalizationGroup.GetFormattedText("Remarks", "Remarks")
+            </div>
+            <textarea id="remarks" class="remarks-textareay" @bind="Remarks" @bind:event="oninput"></textarea>
+        </div>
     </div>
 </div>
