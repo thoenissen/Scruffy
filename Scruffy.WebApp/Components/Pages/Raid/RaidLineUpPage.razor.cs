@@ -17,6 +17,7 @@ using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Data.Entity.Tables.Raid;
 using Scruffy.Data.Enumerations.Raid;
+using Scruffy.Services.Core;
 using Scruffy.Services.Core.Extensions;
 using Scruffy.WebApp.Components.Controls.Raid;
 using Scruffy.WebApp.DTOs.Raid;
@@ -285,8 +286,14 @@ public partial class RaidLineUpPage
 
             foreach (var lineUpMessage in lineUpMessages)
             {
-                await textChannel.DeleteMessageAsync(lineUpMessage)
-                                 .ConfigureAwait(false);
+                try
+                {
+                    await textChannel.DeleteMessageAsync(lineUpMessage)
+                                     .ConfigureAwait(false);
+                }
+                catch
+                {
+                }
             }
 
             repositoryFactory.GetRepository<RaidAppointmentLineUpSquadRepository>()
