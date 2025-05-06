@@ -1030,6 +1030,7 @@
          "SquadDescription": "Aufstellung für Squad {0}",
          "GroupFieldName": "Group {0}",
          "Registrations": "Registrierungen",
+         "SubstitutesBench": "Ersatzbank",
          "Name": "Name",
          "RoleRequests": "Rollenwünsche",
          "Commit": "Bestätigen",

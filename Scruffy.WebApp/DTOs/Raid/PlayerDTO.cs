@@ -39,6 +39,11 @@ public class PlayerDTO
     /// </summary>
     public ulong DiscordAccountId { get; init; }
 
+    /// <summary>
+    /// Is the player on the substitutes' bench?
+    /// </summary>
+    public bool IsOnSubstitutesBench { get; init; }
+
     #endregion // Properties
 
     #region Object

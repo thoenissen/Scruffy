@@ -77,6 +77,11 @@ public partial class RaidLineUpPage
     private string _thumbnailUrl;
 
     /// <summary>
+    /// Are there players on the bench?
+    /// </summary>
+    private bool _isTheSubstitutesBenchAvailable;
+
+    /// <summary>
     /// Registrations
     /// </summary>
     private List<PlayerDTO> _registrations;
@@ -505,8 +510,7 @@ public partial class RaidLineUpPage
 
             _registrations = dbFactory.GetRepository<RaidRegistrationRepository>()
                                       .GetQuery()
-                                      .Where(registration => registration.LineupExperienceLevelId != null
-                                                             && registration.AppointmentId == appointment.Id)
+                                      .Where(registration => registration.AppointmentId == appointment.Id)
                                       .Select(registration => new
                                                               {
                                                                   Id = registration.UserId,
@@ -519,7 +523,8 @@ public partial class RaidLineUpPage
                                                                                                          .ToList(),
                                                                   RegistrationRoles = registration.RaidRegistrationRoleAssignments
                                                                                                   .Select(role => role.RoleId)
-                                                                                                  .ToList()
+                                                                                                  .ToList(),
+                                                                  IsOnSubstitutesBench = registration.LineupExperienceLevelId == null
                                                               })
                                       .AsEnumerable()
                                       .Select(registration => new PlayerDTO
@@ -556,9 +561,12 @@ public partial class RaidLineUpPage
                                                                                                                                                       8 => RaidRole.AlacrityTankHealer,
                                                                                                                                                       9 => RaidRole.QuicknessTankHealer,
                                                                                                                                                       _ => current
-                                                                                                                                                  })
+                                                                                                                                                  }),
+                                                                  IsOnSubstitutesBench = registration.IsOnSubstitutesBench
                                                               })
                                       .ToList();
+
+            _isTheSubstitutesBenchAvailable = _registrations.Any(registration => registration.IsOnSubstitutesBench);
         }
     }
 
