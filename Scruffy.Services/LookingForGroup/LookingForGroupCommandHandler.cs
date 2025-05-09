@@ -1,4 +1,6 @@
-﻿using Discord;
+﻿using System.Globalization;
+
+using Discord;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.LookingForGroup;
@@ -109,7 +111,7 @@ public class LookingForGroupCommandHandler : LocatedServiceBase
                                   ThreadId = thread.Id
                               };
 
-            if (DateTime.TryParse(dateString, out var appointmentDate))
+            if (DateTime.TryParseExact(dateString, "dd.MM.yyyy HH:mm", null, DateTimeStyles.None, out var appointmentDate))
             {
                 appointment.Date = appointmentDate;
             }
@@ -149,8 +151,8 @@ public class LookingForGroupCommandHandler : LocatedServiceBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task Edit(InteractionContextContainer context, int appointmentId, string title, string dateString, string countString, string description)
     {
-        await context.DeferAsync()
-                     .ConfigureAwait(false);
+        var message = await context.DeferProcessing(true)
+                                   .ConfigureAwait(false);
 
         if (_repositoryFactory.GetRepository<LookingForGroupAppointmentRepository>()
                               .Refresh(obj => obj.Id == appointmentId,
@@ -159,7 +161,7 @@ public class LookingForGroupCommandHandler : LocatedServiceBase
                                            obj.Title = title;
                                            obj.Description = description;
 
-                                           if (DateTime.TryParse(dateString, out var appointmentDate))
+                                           if (DateTime.TryParseExact(dateString, "dd.MM.yyyy HH:mm", null, DateTimeStyles.None, out var appointmentDate))
                                            {
                                                obj.Date = appointmentDate;
                                            }
@@ -199,6 +201,9 @@ public class LookingForGroupCommandHandler : LocatedServiceBase
                 }
             }
         }
+
+        await context.DeleteMessages([message])
+                     .ConfigureAwait(false);
     }
 
     /// <summary>

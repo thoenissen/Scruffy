@@ -63,8 +63,9 @@ public interface IContextContainer
     /// <summary>
     /// Response general processing message
     /// </summary>
+    /// <param name="ephemeral">Ephemeral response</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task<IUserMessage> DeferProcessing();
+    Task<IUserMessage> DeferProcessing(bool ephemeral = false);
 
     /// <summary>
     /// Reply to the user message or command

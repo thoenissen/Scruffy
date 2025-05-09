@@ -108,16 +108,18 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
     /// <summary>
     /// Response general processing message
     /// </summary>
+    /// <param name="ephemeral">Ephemeral response</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task<IUserMessage> DeferProcessing()
+    public async Task<IUserMessage> DeferProcessing(bool ephemeral = false)
     {
         try
         {
             _deferMessage = await SendMessageAsync(ServiceProvider.GetRequiredService<LocalizationService>()
-                                                                .GetGroup(nameof(InteractionContextContainer))
-                                                                .GetFormattedText("Processing",
-                                                                                  "{0} The action is being processed.",
-                                                                                  DiscordEmoteService.GetLoadingEmote(Client))).ConfigureAwait(false);
+                                                                  .GetGroup(nameof(InteractionContextContainer))
+                                                                  .GetFormattedText("Processing",
+                                                                                    "{0} The action is being processed.",
+                                                                                    DiscordEmoteService.GetLoadingEmote(Client)),
+                                                                                    ephemeral: ephemeral).ConfigureAwait(false);
 
             return _deferMessage;
         }
