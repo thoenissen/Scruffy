@@ -1,6 +1,7 @@
 ﻿using Discord;
 
 using Scruffy.Data.Entity;
+using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Data.Entity.Tables.Raid;
 using Scruffy.Data.Services.Raid;
@@ -134,12 +135,19 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
                                                  }
                                                  else
                                                  {
-                                                     _commitData.Users
-                                                                .Add(new RaidCommitUserData
-                                                                     {
-                                                                         Points = data.Points,
-                                                                         DiscordUserId = data.User.Id
-                                                                     });
+                                                     using (var dbFactory = RepositoryFactory.CreateInstance())
+                                                     {
+                                                         _commitData.Users.Add(new RaidCommitUserData
+                                                                               {
+                                                                                   Points = data.Points,
+                                                                                   DiscordUserId = data.User.Id,
+                                                                                   DiscordEmoji = dbFactory.GetRepository<DiscordAccountRepository>()
+                                                                                                           .GetQuery()
+                                                                                                           .Where(account => account.Id == data.User.Id)
+                                                                                                           .Select(account => account.User.RaidExperienceLevel.DiscordEmoji)
+                                                                                                           .FirstOrDefault()
+                                                                               });
+                                                     }
                                                  }
 
                                                  return true;

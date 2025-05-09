@@ -73,16 +73,11 @@ public class RaidRegistrationService : LocatedServiceBase
                                   && obj.RaidDayTemplate.RaidExperienceAssignments.Any(obj2 => obj2.RaidExperienceLevel.Rank >= user.ExperienceLevelRank)))
             {
                 var success = true;
-                var deadlineReached = false;
 
                 var transaction = dbFactory.BeginTransaction(IsolationLevel.RepeatableRead);
+
                 await using (transaction.ConfigureAwait(false))
                 {
-                    var substitutesBenchCount = dbFactory.GetRepository<RaidRegistrationRepository>()
-                                                         .GetQuery()
-                                                         .Count(obj => obj.AppointmentId == appointmentId
-                                                                    && obj.LineupExperienceLevelId == null);
-
                     if (dbFactory.GetRepository<RaidRegistrationRepository>()
                                  .AddOrRefresh(obj => obj.AppointmentId == appointmentId
                                                    && obj.UserId == user.Id,
@@ -125,26 +120,18 @@ public class RaidRegistrationService : LocatedServiceBase
 
                             if (registration != null)
                             {
-                                if (registration.AvailableSlots != null
-                                 && registration.AvailableSlots > registration.Registrations)
+                                if (registration.IsDeadlineReached == false)
                                 {
-                                    success = dbFactory.GetRepository<RaidRegistrationRepository>()
-                                                       .Refresh(obj => obj.Id == registrationId,
-                                                                obj => obj.LineupExperienceLevelId = registration.RaidExperienceLevelId);
-                                }
-                                else
-                                {
-                                    success = await RefreshAppointment(dbFactory, appointmentId).ConfigureAwait(false);
-
-                                    if (success
-                                     && registration.IsDeadlineReached
-                                     && substitutesBenchCount != dbFactory.GetRepository<RaidRegistrationRepository>()
-                                                                          .GetQuery()
-                                                                          .Count(obj => obj.AppointmentId == appointmentId
-                                                                                     && obj.LineupExperienceLevelId == null))
+                                    if (registration.AvailableSlots != null
+                                        && registration.AvailableSlots > registration.Registrations)
                                     {
-                                        deadlineReached = true;
-                                        success = false;
+                                        success = dbFactory.GetRepository<RaidRegistrationRepository>()
+                                                           .Refresh(obj => obj.Id == registrationId,
+                                                                    obj => obj.LineupExperienceLevelId = registration.RaidExperienceLevelId);
+                                    }
+                                    else
+                                    {
+                                        success = await RefreshAppointment(dbFactory, appointmentId).ConfigureAwait(false);
                                     }
                                 }
                             }
@@ -168,12 +155,6 @@ public class RaidRegistrationService : LocatedServiceBase
                     {
                         registrationId = null;
                     }
-                }
-
-                if (deadlineReached)
-                {
-                    await commandContext.ReplyAsync(LocalizationGroup.GetText("DeadlineReached", "Registrations after the deadline are not possible if there are no available slots."), ephemeral: true)
-                                        .ConfigureAwait(false);
                 }
             }
             else
@@ -379,7 +360,8 @@ public class RaidRegistrationService : LocatedServiceBase
                                                                                .Select(obj2 => new
                                                                                                {
                                                                                                    obj2.Id,
-                                                                                                   Rank = (int?)obj2.User.RaidExperienceLevel.Rank
+                                                                                                   Rank = (int?)obj2.User.RaidExperienceLevel.Rank,
+                                                                                                   IsBevorDeadline = obj2.RegistrationTimeStamp < obj.Deadline
                                                                                                })
                                                                                .ToList()
                                                         })
@@ -402,7 +384,7 @@ public class RaidRegistrationService : LocatedServiceBase
             // Assigning the users to the slots
             var remainingRegistrations = new List<long>();
 
-            foreach (var registration in appointment.Registrations)
+            foreach (var registration in appointment.Registrations.Where(obj => obj.IsBevorDeadline))
             {
                 var slot = slots.FirstOrDefault(obj => obj.SlotCount > obj.Registrations.Count
                                                     && obj.Rank >= (registration.Rank ?? defaultRank));
@@ -417,7 +399,7 @@ public class RaidRegistrationService : LocatedServiceBase
                 }
             }
 
-            var substitutesBench = new List<long>();
+            var substitutesBench = appointment.Registrations.Where(obj => obj.IsBevorDeadline == false).Select(obj => obj.Id).ToList();
 
             foreach (var registrationId in remainingRegistrations)
             {

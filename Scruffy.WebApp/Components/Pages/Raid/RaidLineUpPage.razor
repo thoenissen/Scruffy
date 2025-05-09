@@ -21,7 +21,7 @@
                         <div class="isassigned-icon">check</div>
                     }
                 </TemplateColumn>
-                <PropertyColumn Title="@LocalizationGroup.GetText("Name", "Name")" Property="@(u => u.Name)" Sortable="true" IsDefaultSortColumn="true" InitialSortDirection="SortDirection.Ascending"/>
+                <PropertyColumn Title="@LocalizationGroup.GetText("Name", "Name")" Property="@(u => u.Name)" Sortable="false"/>
                 <TemplateColumn Title="@LocalizationGroup.GetText("RoleRequests", "Role requests")" Context="u" Sortable="false" class="role-column">
                     <div class="registration-roles-container">
                         @if (u.RegistrationRoles.HasFlag(RaidRole.DamageDealer))
@@ -89,7 +89,7 @@
                             <div class="isassigned-icon">check</div>
                         }
                     </TemplateColumn>
-                    <PropertyColumn Title="@LocalizationGroup.GetText("Name", "Name")" Property="@(u => u.Name)" Sortable="true" IsDefaultSortColumn="true" InitialSortDirection="SortDirection.Ascending"/>
+                    <PropertyColumn Title="@LocalizationGroup.GetText("Name", "Name")" Property="@(u => u.Name)" Sortable="false"/>
                     <TemplateColumn Title="@LocalizationGroup.GetText("RoleRequests", "Role requests")" Context="u" Sortable="false" class="role-column">
                         <div class="registration-roles-container">
                             @if (u.RegistrationRoles.HasFlag(RaidRole.DamageDealer))

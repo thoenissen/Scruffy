@@ -508,9 +508,19 @@ public partial class RaidLineUpPage
             _channelId = appointment?.ChannelId;
             _thumbnailUrl = appointment?.ThumbnailUrl;
 
+            var currentRaidPoints = dbFactory.GetRepository<RaidCurrentUserPointsRepository>()
+                                             .GetQuery()
+                                             .Select(points => points);
+
             _registrations = dbFactory.GetRepository<RaidRegistrationRepository>()
                                       .GetQuery()
                                       .Where(registration => registration.AppointmentId == appointment.Id)
+                                      .OrderByDescending(registration => registration.RegistrationTimeStamp < registration.RaidAppointment.Deadline
+                                                                             ? currentRaidPoints.Where(points => points.UserId == registration.UserId)
+                                                                                                .Select(points => points.Points)
+                                                                                                .FirstOrDefault()
+                                                                             : 0D)
+                                      .ThenBy(registration => registration.RegistrationTimeStamp)
                                       .Select(registration => new
                                                               {
                                                                   Id = registration.UserId,

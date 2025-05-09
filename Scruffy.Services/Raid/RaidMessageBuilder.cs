@@ -109,7 +109,8 @@ public class RaidMessageBuilder : LocatedServiceBase
                                                                                  ExperienceLevelDiscordEmote = (ulong?)obj3.User.RaidExperienceLevel.DiscordEmoji,
                                                                                  Roles = obj3.RaidRegistrationRoleAssignments
                                                                                              .Select(obj4 => obj4.Role)
-                                                                                             .ToList()
+                                                                                             .ToList(),
+                                                                                 obj3.RegistrationTimeStamp
                                                                              })
                                                                              .ToList()
                                                       })
@@ -130,7 +131,6 @@ public class RaidMessageBuilder : LocatedServiceBase
                     if (message is IUserMessage userMessage)
                     {
                         var fieldBuilder = new StringBuilder();
-                        var areSlotsAvailable = false;
                         int fieldCounter;
 
                         // Building the message
@@ -143,10 +143,6 @@ public class RaidMessageBuilder : LocatedServiceBase
                                                            .Where(obj => obj.LineupExperienceLevelId == slot.RaidExperienceLevelId)
                                                            .OrderByDescending(obj => obj.Points)
                                                            .ToList();
-                            if (registrations.Count < slot.Count* appointment.GroupCount)
-                            {
-                                areSlotsAvailable = true;
-                            }
 
                             foreach (var registration in registrations)
                             {
@@ -217,7 +213,8 @@ public class RaidMessageBuilder : LocatedServiceBase
 
                         foreach (var entry in appointment.Registrations
                                                          .Where(obj => obj.LineupExperienceLevelId == null)
-                                                         .OrderByDescending(obj => obj.Points))
+                                                         .OrderByDescending(obj => obj.RegistrationTimeStamp < appointment.Deadline ? obj.Points : 0D)
+                                                         .ThenBy(obj => obj.RegistrationTimeStamp))
                         {
                             var discordUser = await _client.GetUserAsync(entry.UserId)
                                                            .ConfigureAwait(false);
@@ -286,8 +283,7 @@ public class RaidMessageBuilder : LocatedServiceBase
                                                      ButtonStyle.Secondary,
                                                      DiscordEmoteService.GetCheckEmote(_client),
                                                      null,
-                                                     (appointment.Deadline <= DateTime.Now && areSlotsAvailable == false)
-                                                  || appointment.TimeStamp <= DateTime.Now);
+                                                     appointment.TimeStamp <= DateTime.Now);
 
                         if (appointment.Deadline > DateTime.Now
                          && appointment.TimeStamp > DateTime.Now)

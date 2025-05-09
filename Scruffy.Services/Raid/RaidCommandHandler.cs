@@ -222,63 +222,48 @@ public class RaidCommandHandler : LocatedServiceBase
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
-            var discordAccountQuery = dbFactory.GetRepository<DiscordAccountRepository>()
-                                               .GetQuery()
-                                               .Select(obj => obj);
-
-            if (true // TODO Implementation of line up configuration
-             || dbFactory.GetRepository<RaidUserRoleRepository>()
-                         .GetQuery()
-                         .Any(obj => discordAccountQuery.Any(obj2 => obj2.UserId == obj.UserId
-                                                                  && obj2.Id == container.User.Id)))
-            {
-                var appointment = await dbFactory.GetRepository<RaidAppointmentRepository>()
-                                                 .GetQuery()
-                                                 .Where(obj => obj.TimeStamp > DateTime.Now
-                                                            && obj.RaidDayConfiguration.AliasName == name)
-                                                 .Select(obj => new
-                                                 {
-                                                     obj.Id,
-                                                     obj.ConfigurationId,
-                                                     obj.Deadline
-                                                 })
-                                                 .FirstOrDefaultAsync()
-                                                 .ConfigureAwait(false);
-
-                if (appointment != null)
-                {
-                    var registrationId = await _registrationService.Join(container, appointment.Id, container.User)
-                                                                   .ConfigureAwait(false);
-
-                    if (registrationId != null)
-                    {
-                        if (isDisplayRoleSelection)
-                        {
-                            if (DateTime.Now < appointment.Deadline)
-                            {
-                                await _roleAssignmentService.AssignRoles(container, registrationId.Value)
-                                                            .ConfigureAwait(false);
-                            }
-                            else
-                            {
-                                await container.ReplyAsync(LocalizationGroup.GetText("NoRoleSelectionAfterDeadline", "It is not possible to edit your preferred roles after the registration deadline."), ephemeral: true)
-                                               .ConfigureAwait(false);
-                            }
-                        }
-
-                        await _messageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
+            var appointment = await dbFactory.GetRepository<RaidAppointmentRepository>()
+                                             .GetQuery()
+                                             .Where(obj => obj.TimeStamp > DateTime.Now
+                                                        && obj.RaidDayConfiguration.AliasName == name)
+                                             .Select(obj => new
+                                             {
+                                                 obj.Id,
+                                                 obj.ConfigurationId,
+                                                 obj.Deadline
+                                             })
+                                             .FirstOrDefaultAsync()
                                              .ConfigureAwait(false);
-                    }
-                }
-                else
+
+            if (appointment != null)
+            {
+                var registrationId = await _registrationService.Join(container, appointment.Id, container.User)
+                                                               .ConfigureAwait(false);
+
+                if (registrationId != null)
                 {
-                    await container.ReplyAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."), ephemeral: true)
-                                   .ConfigureAwait(false);
+                    if (isDisplayRoleSelection)
+                    {
+                        if (DateTime.Now < appointment.Deadline)
+                        {
+                            await _roleAssignmentService.AssignRoles(container, registrationId.Value)
+                                                        .ConfigureAwait(false);
+                        }
+                        else
+                        {
+                            await container.ReplyAsync(LocalizationGroup.GetText("NoRoleSelectionAfterDeadline", "It is not possible to edit your preferred roles after the registration deadline."), ephemeral: true)
+                                           .ConfigureAwait(false);
+                        }
+                    }
+
+                    await _messageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
+                                         .ConfigureAwait(false);
                 }
             }
             else
             {
-                await ConfigureRolesFirstTime(container).ConfigureAwait(false);
+                await container.ReplyAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."), ephemeral: true)
+                               .ConfigureAwait(false);
             }
         }
     }
@@ -294,74 +279,58 @@ public class RaidCommandHandler : LocatedServiceBase
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
-            var discordAccountQuery = dbFactory.GetRepository<DiscordAccountRepository>()
-                                               .GetQuery()
-                                               .Select(obj => obj);
+            var appointment = await dbFactory.GetRepository<RaidAppointmentRepository>()
+                                         .GetQuery()
+                                         .Where(obj => obj.TimeStamp > DateTime.Now
+                                                    && obj.ConfigurationId == configurationId)
+                                         .Select(obj => new
+                                                        {
+                                                            obj.Id,
+                                                            obj.ConfigurationId,
+                                                            obj.Deadline
+                                                        })
+                                         .FirstOrDefaultAsync()
+                                         .ConfigureAwait(false);
 
-            if (true // TODO Implementation of line up configuration
-             || dbFactory.GetRepository<RaidUserRoleRepository>()
-                         .GetQuery()
-                         .Any(obj => discordAccountQuery.Any(obj2 => obj2.UserId == obj.UserId
-                                                                  && obj2.Id == container.User.Id)))
+            if (appointment != null)
             {
-                var appointment = await dbFactory.GetRepository<RaidAppointmentRepository>()
-                                             .GetQuery()
-                                             .Where(obj => obj.TimeStamp > DateTime.Now
-                                                        && obj.ConfigurationId == configurationId)
-                                             .Select(obj => new
-                                             {
-                                                 obj.Id,
-                                                 obj.ConfigurationId,
-                                                 obj.Deadline
-                                             })
-                                             .FirstOrDefaultAsync()
-                                             .ConfigureAwait(false);
+                var registrationId = await _registrationService.Join(container, appointment.Id, container.User)
+                                                               .ConfigureAwait(false);
 
-                if (appointment != null)
+                if (registrationId != null)
                 {
-                    var registrationId = await _registrationService.Join(container, appointment.Id, container.User)
-                                                                   .ConfigureAwait(false);
-
-                    if (registrationId != null)
+                    if (DateTime.Now < appointment.Deadline)
                     {
-                        if (DateTime.Now < appointment.Deadline)
-                        {
-                            dbFactory.GetRepository<RaidRegistrationRoleAssignmentRepository>()
-                                     .RemoveRange(obj => obj.RegistrationId == registrationId);
+                        dbFactory.GetRepository<RaidRegistrationRoleAssignmentRepository>()
+                                 .RemoveRange(obj => obj.RegistrationId == registrationId);
 
-                            if (values?.Length > 0
-                             && values.Length < 8)
+                        if (values?.Length is > 0 and < 8)
+                        {
+                            foreach (var roleId in values.Select(obj => Convert.ToInt64(obj)))
                             {
-                                foreach (var roleId in values.Select(obj => Convert.ToInt64(obj)))
-                                {
-                                    dbFactory.GetRepository<RaidRegistrationRoleAssignmentRepository>()
-                                             .Add(new RaidRegistrationRoleAssignmentEntity
-                                                  {
-                                                      RegistrationId = registrationId.Value,
-                                                      RoleId = roleId
-                                                  });
-                                }
+                                dbFactory.GetRepository<RaidRegistrationRoleAssignmentRepository>()
+                                         .Add(new RaidRegistrationRoleAssignmentEntity
+                                              {
+                                                  RegistrationId = registrationId.Value,
+                                                  RoleId = roleId
+                                              });
                             }
                         }
-                        else
-                        {
-                            await container.ReplyAsync(LocalizationGroup.GetText("NoRoleSelectionAfterDeadline", "It is not possible to edit your preferred roles after the registration deadline."), ephemeral: true)
-                                           .ConfigureAwait(false);
-                        }
-
-                        await _messageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
-                                             .ConfigureAwait(false);
                     }
-                }
-                else
-                {
-                    await container.ReplyAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."), ephemeral: true)
-                                   .ConfigureAwait(false);
+                    else
+                    {
+                        await container.ReplyAsync(LocalizationGroup.GetText("NoRoleSelectionAfterDeadline", "It is not possible to edit your preferred roles after the registration deadline."), ephemeral: true)
+                                       .ConfigureAwait(false);
+                    }
+
+                    await _messageBuilder.RefreshMessageAsync(appointment.ConfigurationId)
+                                         .ConfigureAwait(false);
                 }
             }
             else
             {
-                await ConfigureRolesFirstTime(container).ConfigureAwait(false);
+                await container.ReplyAsync(LocalizationGroup.GetText("NoActiveAppointment", "Currently there is no active appointment."), ephemeral: true)
+                               .ConfigureAwait(false);
             }
         }
     }
@@ -680,6 +649,7 @@ public class RaidCommandHandler : LocatedServiceBase
                 foreach (var appointment in appointments)
                 {
                     var transaction = dbFactory.BeginTransaction(IsolationLevel.RepeatableRead);
+
                     await using (transaction.ConfigureAwait(false))
                     {
                         if (await _registrationService.RefreshAppointment(dbFactory, appointment.Id)

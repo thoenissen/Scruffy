@@ -89,7 +89,8 @@ public class RaidCommitService : LocatedServiceBase
                                                             {
                                                                 obj.Id,
                                                                 obj.ConfigurationId,
-                                                                obj.TimeStamp
+                                                                obj.TimeStamp,
+                                                                obj.Deadline
                                                             })
                                              .FirstOrDefaultAsync()
                                              .ConfigureAwait(false);
@@ -122,18 +123,32 @@ public class RaidCommitService : LocatedServiceBase
                                                                               .Select(obj2 => obj2.Id)
                                                                               .FirstOrDefault(),
                                                                   obj.User.RaidExperienceLevelId,
-                                                                  obj.LineupExperienceLevelId
+                                                                  obj.LineupExperienceLevelId,
+                                                                  obj.RegistrationTimeStamp
                                                               })
                                                .ToList())
                 {
                     var experienceLevel = experienceLevels.FirstOrDefault(obj => obj.Id == entry.RaidExperienceLevelId) ?? fallbackExperienceLevel;
 
-                    users.Add(new RaidCommitUserData
-                              {
-                                  DiscordUserId = entry.UserId,
-                                  Points = experienceLevel.ParticipationPoints * (entry.LineupExperienceLevelId == null ? 3.0 : 1.0),
-                                  DiscordEmoji = experienceLevel.DiscordEmoji
-                              });
+                    var user = new RaidCommitUserData
+                               {
+                                   DiscordUserId = entry.UserId,
+                                   DiscordEmoji = experienceLevel.DiscordEmoji
+                               };
+
+                    if (entry.LineupExperienceLevelId is null)
+                    {
+                        if (entry.RegistrationTimeStamp < appointment.Deadline)
+                        {
+                            user.Points = experienceLevel.ParticipationPoints * 3.0;
+                        }
+                    }
+                    else
+                    {
+                        user.Points = experienceLevel.ParticipationPoints * 1.0;
+                    }
+
+                    users.Add(user);
                 }
 
                 var container = new RaidCommitContainer
