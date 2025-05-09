@@ -27,6 +27,22 @@ public class LookingForGroupCreationModalData : IModal
     public string AppointmentTitle { get; set; }
 
     /// <summary>
+    /// Time
+    /// </summary>
+    [InputLabel("Time")]
+    [RequiredInput(false)]
+    [ModalTextInput(nameof(AppointmentTime), TextInputStyle.Short, "dd.mm.yyyy hh:mm", 16, 16)]
+    public string AppointmentTime { get; set; }
+
+    /// <summary>
+    /// Number of participants
+    /// </summary>
+    [InputLabel("Participants")]
+    [RequiredInput(false)]
+    [ModalTextInput(nameof(AppointmentParticipantCount))]
+    public string AppointmentParticipantCount { get; set; }
+
+    /// <summary>
     /// Description
     /// </summary>
     [InputLabel("Description")]

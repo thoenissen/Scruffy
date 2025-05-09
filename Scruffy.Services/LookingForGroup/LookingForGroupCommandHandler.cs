@@ -71,13 +71,15 @@ public class LookingForGroupCommandHandler : LocatedServiceBase
     }
 
     /// <summary>
-    /// Creation of an new appoint
+    /// Creation of a new appointment
     /// </summary>
     /// <param name="context">Command context</param>
     /// <param name="title">Title</param>
+    /// <param name="dateString">Time of the appointment</param>
+    /// <param name="countString">Number of participants</param>
     /// <param name="description">Description</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task Create(InteractionContextContainer context, string title, string description)
+    public async Task Create(InteractionContextContainer context, string title, string dateString, string countString, string description)
     {
         var userTask = _userManagementService.GetUserByDiscordAccountId(context.User);
 
@@ -107,6 +109,17 @@ public class LookingForGroupCommandHandler : LocatedServiceBase
                                   ThreadId = thread.Id
                               };
 
+            if (DateTime.TryParse(dateString, out var appointmentDate))
+            {
+                appointment.Date = appointmentDate;
+            }
+
+            if (int.TryParse(countString, out var participantCount)
+                && participantCount > 0)
+            {
+                appointment.ParticipantCount = participantCount;
+            }
+
             if (_repositoryFactory.GetRepository<LookingForGroupAppointmentRepository>()
                                   .Add(appointment))
             {
@@ -125,14 +138,16 @@ public class LookingForGroupCommandHandler : LocatedServiceBase
     }
 
     /// <summary>
-    /// Creation of an new appoint
+    /// Edit of an appointment
     /// </summary>
     /// <param name="context">Command context</param>
     /// <param name="appointmentId">Appointment id</param>
     /// <param name="title">Title</param>
+    /// <param name="dateString">Time of the appointment</param>
+    /// <param name="countString">Number of participants</param>
     /// <param name="description">Description</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task Edit(InteractionContextContainer context, int appointmentId, string title, string description)
+    public async Task Edit(InteractionContextContainer context, int appointmentId, string title, string dateString, string countString, string description)
     {
         await context.DeferAsync()
                      .ConfigureAwait(false);
@@ -143,6 +158,25 @@ public class LookingForGroupCommandHandler : LocatedServiceBase
                                        {
                                            obj.Title = title;
                                            obj.Description = description;
+
+                                           if (DateTime.TryParse(dateString, out var appointmentDate))
+                                           {
+                                               obj.Date = appointmentDate;
+                                           }
+                                           else
+                                           {
+                                               obj.Date = null;
+                                           }
+
+                                           if (int.TryParse(countString, out var participantCount)
+                                               && participantCount > 0)
+                                           {
+                                               obj.ParticipantCount = participantCount;
+                                           }
+                                           else
+                                           {
+                                               obj.ParticipantCount = null;
+                                           }
                                        }))
         {
             await _messageService.RefreshMessage(appointmentId)
@@ -293,17 +327,50 @@ public class LookingForGroupCommandHandler : LocatedServiceBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public async Task ConfigureMenuOption(InteractionContextContainer context, int appointmentId, string value)
     {
-        if (context.User is IGuildUser { GuildPermissions.Administrator: true }
-         || _repositoryFactory.GetRepository<LookingForGroupAppointmentRepository>()
-                              .GetQuery()
-                              .Any(obj => obj.Id == appointmentId
-                                       && obj.CreationUser.DiscordAccounts.Any(obj2 => obj2.Id == context.User.Id)))
+        var appointment = _repositoryFactory.GetRepository<LookingForGroupAppointmentRepository>()
+                                            .GetQuery()
+                                            .Where(obj => obj.Id == appointmentId)
+                                            .Select(obj => new
+                                                           {
+                                                               obj.Title,
+                                                               obj.Date,
+                                                               obj.ParticipantCount,
+                                                               obj.Description,
+                                                               IsCreator = obj.CreationUser.DiscordAccounts.Any(obj2 => obj2.Id == context.User.Id)
+                                                           })
+                                            .FirstOrDefault();
+
+        if (appointment != null
+            && (context.User is IGuildUser { GuildPermissions.Administrator: true }
+                || appointment.IsCreator))
         {
             switch (value)
             {
                 case "edit":
                     {
-                        await context.RespondWithModalAsync<LookingForGroupEditModalData>($"{LookingForGroupEditModalData.CustomId};{appointmentId}")
+                        await context.RespondWithModalAsync<LookingForGroupEditModalData>($"{LookingForGroupEditModalData.CustomId};{appointmentId}",
+                                                                                         builder =>
+                                                                                         {
+                                                                                             builder.UpdateTextInput(nameof(LookingForGroupEditModalData.AppointmentTitle), appointment.Title);
+
+                                                                                             if (appointment.Date != null)
+                                                                                             {
+                                                                                                 builder.UpdateTextInput(nameof(LookingForGroupEditModalData.AppointmentTime), appointment.Date!.Value.ToString("dd.MM.yyyy HH:mm"));
+                                                                                             }
+
+                                                                                             if (appointment.ParticipantCount != null)
+                                                                                             {
+                                                                                                 builder.UpdateTextInput(nameof(LookingForGroupEditModalData.AppointmentParticipantCount), appointment.ParticipantCount!.Value.ToString());
+                                                                                             }
+
+                                                                                             if (string.IsNullOrEmpty(appointment.Description) == false)
+                                                                                             {
+                                                                                                 builder.UpdateTextInput(nameof(LookingForGroupEditModalData.AppointmentDescription), appointment.Description);
+                                                                                             }
+                                                                                         })
+                                     .ConfigureAwait(false);
+
+                        await context.DeleteOriginalResponse()
                                      .ConfigureAwait(false);
                     }
                     break;

@@ -28,7 +28,7 @@ public class LookingForGroupModals : LocatedInteractionModuleBase
     /// <param name="modal">Modal input</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [ModalInteraction(LookingForGroupCreationModalData.CustomId)]
-    public Task Creation(LookingForGroupCreationModalData modal) => CommandHandler.Create(Context, modal.AppointmentTitle, modal.AppointmentDescription);
+    public Task Creation(LookingForGroupCreationModalData modal) => CommandHandler.Create(Context, modal.AppointmentTitle, modal.AppointmentTime, modal.AppointmentParticipantCount, modal.AppointmentDescription);
 
     /// <summary>
     /// Edit
@@ -37,7 +37,7 @@ public class LookingForGroupModals : LocatedInteractionModuleBase
     /// <param name="modal">Modal input</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [ModalInteraction($"{LookingForGroupEditModalData.CustomId};*")]
-    public Task Edit(int appointmentId, LookingForGroupEditModalData modal) => CommandHandler.Edit(Context, appointmentId, modal.AppointmentTitle, modal.AppointmentDescription);
+    public Task Edit(int appointmentId, LookingForGroupEditModalData modal) => CommandHandler.Edit(Context, appointmentId, modal.AppointmentTitle, modal.AppointmentTime, modal.AppointmentParticipantCount, modal.AppointmentDescription);
 
     #endregion // Methods
 }

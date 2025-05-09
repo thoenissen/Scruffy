@@ -65,21 +65,24 @@ public class LookingForGroupMessageService : LocatedServiceBase
                                                 .GetQuery()
                                                 .Where(obj => obj.Id == appointmentId)
                                                 .Select(obj => new
-                                                {
-                                                    obj.ChannelId,
-                                                    obj.MessageId,
-                                                    obj.Title,
-                                                    obj.Description,
-                                                    obj.ThreadId,
-                                                    Participants = obj.Participants
+                                                               {
+                                                                   obj.ChannelId,
+                                                                   obj.MessageId,
+                                                                   obj.Title,
+                                                                   obj.Description,
+                                                                   obj.ThreadId,
+                                                                   obj.Date,
+                                                                   obj.ParticipantCount,
+                                                                   Participants = obj.Participants
                                                                                      .Select(obj2 => new
-                                                                                     {
-                                                                                         obj2.RegistrationTimeStamp,
-                                                                                         UserId = discordAccountQuery.Where(obj3 => obj3.UserId == obj2.UserId)
+                                                                                                     {
+                                                                                                         obj2.RegistrationTimeStamp,
+                                                                                                         UserId = discordAccountQuery.Where(obj3 => obj3.UserId == obj2.UserId)
                                                                                                                                      .Select(obj3 => obj3.Id)
                                                                                                                                      .FirstOrDefault()
-                                                                                     })
-                                                })
+                                                                                                     })
+                                                                                     .ToList()
+                                                               })
                                                 .FirstOrDefault();
 
         if (appointmentData != null)
@@ -105,22 +108,36 @@ public class LookingForGroupMessageService : LocatedServiceBase
                         embedBuilder.WithDescription(appointmentData.Description);
                     }
 
-                    var participantCount = 0;
+                    if (appointmentData.Date != null)
+                    {
+                        embedBuilder.AddField(LocalizationGroup.GetText("Date", "Date"),
+                                              $"<t:{new DateTimeOffset(appointmentData.Date.Value).ToUnixTimeSeconds()}:f>");
+                    }
+
+                    var participantCounter = 0;
                     var participantsBuilder = new StringBuilder();
 
-                    foreach (var participant in appointmentData.Participants.OrderBy(obj => obj.RegistrationTimeStamp))
+                    var participants = appointmentData.Participants.OrderBy(obj => obj.RegistrationTimeStamp).AsEnumerable();
+
+                    if (appointmentData.ParticipantCount != null)
+                    {
+                        participants = participants.Take(appointmentData.ParticipantCount.Value);
+                    }
+
+                    foreach (var participant in participants)
                     {
                         var line = "> " + _discordClient.GetUser(participant.UserId).Mention;
 
-                        if (participantCount > 0
-                         && participantCount % 10 == 0)
+                        if (participantCounter > 0
+                         && participantCounter % 10 == 0)
                         {
-                            embedBuilder.AddField(embedBuilder.Fields.Count == 0 ? LocalizationGroup.GetText("Participants", "Participants") : "\u200b", participantsBuilder.ToString(), true);
+                            embedBuilder.AddField(GetParticipantTitle(participantCounter == 10, appointmentData.Participants.Count, appointmentData.ParticipantCount), participantsBuilder.ToString(), true);
+
                             participantsBuilder = new StringBuilder();
                         }
 
                         participantsBuilder.AppendLine(line);
-                        participantCount++;
+                        participantCounter++;
                     }
 
                     if (participantsBuilder.Length == 0)
@@ -128,7 +145,41 @@ public class LookingForGroupMessageService : LocatedServiceBase
                         participantsBuilder.Append(">  \u200b");
                     }
 
-                    embedBuilder.AddField(embedBuilder.Fields.Count == 0 ? LocalizationGroup.GetText("Participants", "Participants") : "\u200b", participantsBuilder.ToString(), true);
+                    embedBuilder.AddField(GetParticipantTitle(participantCounter < 10, appointmentData.Participants.Count, appointmentData.ParticipantCount), participantsBuilder.ToString(), true);
+
+                    if (appointmentData.ParticipantCount != null
+                        && appointmentData.Participants.Count > appointmentData.ParticipantCount)
+                    {
+                        participants = appointmentData.Participants
+                                                      .OrderBy(participant => participant.RegistrationTimeStamp)
+                                                      .Skip(appointmentData.ParticipantCount.Value);
+
+                        participantCounter = 0;
+                        participantsBuilder = new StringBuilder();
+
+                        foreach (var participant in participants)
+                        {
+                            var line = "> " + _discordClient.GetUser(participant.UserId).Mention;
+
+                            if (participantCounter > 0
+                                && participantCounter % 10 == 0)
+                            {
+                                embedBuilder.AddField(GetSubstitutesBenchTitle(participantCounter == 10), participantsBuilder.ToString(), participantCounter != 10);
+
+                                participantsBuilder = new StringBuilder();
+                            }
+
+                            participantsBuilder.AppendLine(line);
+                            participantCounter++;
+                        }
+
+                        if (participantsBuilder.Length == 0)
+                        {
+                            participantsBuilder.Append(">  \u200b");
+                        }
+
+                        embedBuilder.AddField(GetSubstitutesBenchTitle(participantCounter < 10), participantsBuilder.ToString(), participantCounter > 10);
+                    }
 
                     var componentsBuilder = new ComponentBuilder();
 
@@ -158,6 +209,44 @@ public class LookingForGroupMessageService : LocatedServiceBase
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// Get the title of the participant field
+    /// </summary>
+    /// <param name="isFirstField">Is it the first field?</param>
+    /// <param name="registrations">Number of registrations</param>
+    /// <param name="participantCount">Maximum number of participants</param>
+    /// <returns>Title</returns>
+    private string GetParticipantTitle(bool isFirstField, int registrations, int? participantCount)
+    {
+        string title;
+
+        if (isFirstField)
+        {
+            title = LocalizationGroup.GetText("Participants", "Participants");
+
+            if (participantCount != null)
+            {
+                title = $"{title} ({(registrations > participantCount.Value ? participantCount : registrations)}/{participantCount})";
+            }
+        }
+        else
+        {
+            title = "\u200b";
+        }
+
+        return title;
+    }
+
+    /// <summary>
+    /// Get the title of the participant field
+    /// </summary>
+    /// <param name="isFirstField">Is it the first field?</param>
+    /// <returns>Title</returns>
+    private string GetSubstitutesBenchTitle(bool isFirstField)
+    {
+        return isFirstField ? LocalizationGroup.GetText("SubstitutesBench", "Substitutes bench") : "\u200b";
     }
 
     #endregion // Methods

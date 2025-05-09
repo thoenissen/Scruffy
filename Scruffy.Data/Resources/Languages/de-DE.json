@@ -953,7 +953,9 @@
          "ConfigurationPermissionsDenied": "Du bist nicht berechtigt diesen Termin zu bearbeiten."
       },
       "LookingForGroupMessageService": {
+         "Date": "Zeitpunkt",
          "Participants": "Teilnehmer",
+         "SubstitutesBench": "Ersatzbank",
          "Join": "Anmelden",
          "Leave": "Abmelden",
          "Thread": "Thread"

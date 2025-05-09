@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Scruffy.Data.Entity;
 
@@ -11,9 +12,11 @@ using Scruffy.Data.Entity;
 namespace Scruffy.Data.Entity.Migrations
 {
     [DbContext(typeof(ScruffyDbContext))]
-    partial class ScruffyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250509174518_Update82")]
+    partial class Update82
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1218,8 +1221,8 @@ namespace Scruffy.Data.Entity.Migrations
                     b.Property<decimal>("MessageId")
                         .HasColumnType("decimal(20,0)");
 
-                    b.Property<int?>("ParticipantCount")
-                        .HasColumnType("int");
+                    b.Property<decimal?>("ParticipantCount")
+                        .HasColumnType("decimal(20,0)");
 
                     b.Property<decimal>("ThreadId")
                         .HasColumnType("decimal(20,0)");

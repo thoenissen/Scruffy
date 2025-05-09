@@ -148,14 +148,15 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
     /// Response with a modal
     /// </summary>
     /// <param name="customId">Custom ID</param>
+    /// <param name="modifyModal">Modal modification</param>
     /// <typeparam name="TModal">Modal data</typeparam>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task RespondWithModalAsync<TModal>(string customId)
+    public async Task RespondWithModalAsync<TModal>(string customId, Action<ModalBuilder> modifyModal = null)
         where TModal : class, IModal
     {
         try
         {
-            await _interaction.RespondWithModalAsync<TModal>(customId)
+            await _interaction.RespondWithModalAsync<TModal>(customId, null, modifyModal)
                               .ConfigureAwait(false);
         }
         catch (TimeoutException)

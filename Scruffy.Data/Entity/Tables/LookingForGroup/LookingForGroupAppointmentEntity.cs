@@ -24,6 +24,16 @@ public class LookingForGroupAppointmentEntity
     public string Title { get; set; }
 
     /// <summary>
+    /// Date of the appointment
+    /// </summary>
+    public DateTime? Date { get; set; }
+
+    /// <summary>
+    /// Number of participants
+    /// </summary>
+    public int? ParticipantCount { get; set; }
+
+    /// <summary>
     /// Description
     /// </summary>
     public string Description { get; set; }
