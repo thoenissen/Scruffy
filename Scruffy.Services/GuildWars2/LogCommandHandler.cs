@@ -705,7 +705,7 @@ public class LogCommandHandler : LocatedServiceBase
                 foreach (var bossGroup in reportGroup.GroupBy(obj => new { obj.Encounter.BossId, obj.Encounter.Boss }))
                 {
                     // Start a new field, when we don't have enough space for some logs
-                    if (reports.Length > 896)
+                    if (reports.Length > 768)
                     {
                         builder.AddReportGroup(reportGroup.Key, reports.ToString());
                         reports = new StringBuilder();
