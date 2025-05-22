@@ -111,7 +111,7 @@ public class LookingForGroupMessageService : LocatedServiceBase
                     if (appointmentData.Date != null)
                     {
                         embedBuilder.AddField(LocalizationGroup.GetText("Date", "Date"),
-                                              $"<t:{new DateTimeOffset(appointmentData.Date.Value).ToUnixTimeSeconds()}:f>");
+                                              $"<t:{new DateTimeOffset(appointmentData.Date.Value).ToUnixTimeSeconds()}:f> (<t:{new DateTimeOffset(appointmentData.Date.Value).ToUnixTimeSeconds()}:R>)");
                     }
 
                     var participantCounter = 0;
