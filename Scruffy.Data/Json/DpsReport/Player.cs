@@ -36,4 +36,10 @@ public class Player
     {
         set => CharacterName = value;
     }
+
+    /// <summary>
+    /// Elite specialization
+    /// </summary>
+    [JsonProperty("elite_spec")]
+    public int EliteSpecialization { get; set; }
 }

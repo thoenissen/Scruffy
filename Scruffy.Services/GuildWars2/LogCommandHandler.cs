@@ -464,17 +464,17 @@ public class LogCommandHandler : LocatedServiceBase
                                               .WithAuthor($"{context.User.Username} - {account.Name}", context.User.GetAvatarUrl())
                                               .WithTitle(LocalizationGroup.GetFormattedText("DpsReportTitle", "Your reports from {0}", startDate.ToString("d", LocalizationGroup.CultureInfo)));
 
-                foreach (var groupedByBoss in uploads.GroupBy(upload => upload.Encounter.Boss))
+                foreach (var groupBySpec in uploads.GroupBy(upload => upload.Players.FirstOrDefault().Value?.EliteSpecialization))
                 {
                     var fieldBuilder = new StringBuilder();
 
-                    foreach (var upload in groupedByBoss.OrderByDescending(obj => obj.UploadTime))
+                    foreach (var upload in groupBySpec.OrderByDescending(obj => obj.UploadTime))
                     {
-                        var line = $"└ {Format.Url($"{upload.Encounter.Duration:mm\\:ss} - {upload.Encounter.CompDps:N0} DPS ⧉", upload.Permalink)}";
+                        var line = $"└{(upload.Encounter.Success ? DiscordEmoteService.GetCheckEmote(context.Client) : DiscordEmoteService.GetCrossEmote(context.Client))} {Format.Url($"{upload.Encounter.Duration:mm\\:ss} - {upload.Encounter.CompDps:N0} DPS ⧉", upload.Permalink)}";
 
                         if (line.Length + fieldBuilder.Length >= 1024)
                         {
-                            embed.AddField(groupedByBoss.Key, fieldBuilder.ToString(), true);
+                            embed.AddField($"{GuildWars2Helper.GetSpecializationEmote(groupBySpec.Key ?? 0)} {GuildWars2Helper.GetSpecializationName(groupBySpec.Key ?? 0)}", fieldBuilder.ToString(), true);
 
                             fieldBuilder = new StringBuilder();
                         }
@@ -482,7 +482,7 @@ public class LogCommandHandler : LocatedServiceBase
                         fieldBuilder.AppendLine(line);
                     }
 
-                    embed.AddField(groupedByBoss.Key, fieldBuilder.ToString(), true);
+                    embed.AddField($"{GuildWars2Helper.GetSpecializationEmote(groupBySpec.Key ?? 0)} {GuildWars2Helper.GetSpecializationName(groupBySpec.Key ?? 0)}", fieldBuilder.ToString(), true);
                 }
 
                 await message.ModifyAsync(message =>
