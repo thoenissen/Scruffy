@@ -56,7 +56,7 @@ public class LookingForGroupAppointmentEntity
     /// <summary>
     /// Id of the thread
     /// </summary>
-    public ulong ThreadId { get; set; }
+    public ulong? ThreadId { get; set; }
 
     #region Navigation properties
 

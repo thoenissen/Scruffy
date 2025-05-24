@@ -191,20 +191,25 @@ public class LookingForGroupMessageService : LocatedServiceBase
                                                  InteractivityService.GetPermanentCustomId("lfg", "leave", appointmentId.ToString()),
                                                  ButtonStyle.Secondary,
                                                  DiscordEmoteService.GetCrossEmote(_discordClient));
-                    componentsBuilder.WithButton(LocalizationGroup.GetText("Thread", "Thread"),
-                                                 style: ButtonStyle.Link,
-                                                 url: $"https://discord.com/channels/{textChannel.GuildId}/{appointmentData.ThreadId}/");
+
+                    if (appointmentData.ThreadId is not null)
+                    {
+                        componentsBuilder.WithButton(LocalizationGroup.GetText("Thread", "Thread"),
+                                                     style: ButtonStyle.Link,
+                                                     url: $"https://discord.com/channels/{textChannel.GuildId}/{appointmentData.ThreadId}/");
+                    }
+
                     componentsBuilder.WithButton(null,
                                                  InteractivityService.GetPermanentCustomId("lfg", "configuration", appointmentId.ToString()),
                                                  ButtonStyle.Secondary,
                                                  new Emoji("⚙️"));
 
                     await userMessage.ModifyAsync(obj =>
-                    {
-                        obj.Content = string.Empty;
-                        obj.Embed = embedBuilder.Build();
-                        obj.Components = componentsBuilder.Build();
-                    })
+                                                  {
+                                                      obj.Content = string.Empty;
+                                                      obj.Embed = embedBuilder.Build();
+                                                      obj.Components = componentsBuilder.Build();
+                                                  })
                                      .ConfigureAwait(false);
                 }
             }

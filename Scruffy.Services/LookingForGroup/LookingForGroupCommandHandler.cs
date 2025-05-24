@@ -90,14 +90,19 @@ public class LookingForGroupCommandHandler : LocatedServiceBase
             var message = await context.ReplyAsync(DiscordEmoteService.GetLoadingEmote(context.Client) + " " + LocalizationGroup.GetText("AppointmentCreation", "The appoint is being created."))
                                        .ConfigureAwait(false);
 
-            var thread = await textChannel.CreateThreadAsync("LFG: " + title)
+            IThreadChannel thread = null;
+
+            if (textChannel is not IThreadChannel)
+            {
+                thread = await textChannel.CreateThreadAsync("LFG: " + title)
                                           .ConfigureAwait(false);
 
-            await thread.AddUserAsync(context.Member)
-                        .ConfigureAwait(false);
+                await thread.AddUserAsync(context.Member)
+                            .ConfigureAwait(false);
 
-            await textChannel.DeleteMessageAsync(thread.Id)
-                             .ConfigureAwait(false);
+                await textChannel.DeleteMessageAsync(thread.Id)
+                                 .ConfigureAwait(false);
+            }
 
             var user = await userTask.ConfigureAwait(false);
 
@@ -108,7 +113,7 @@ public class LookingForGroupCommandHandler : LocatedServiceBase
                                   CreationUserId = user.Id,
                                   Title = title,
                                   Description = description,
-                                  ThreadId = thread.Id
+                                  ThreadId = thread?.Id
                               };
 
             if (DateTime.TryParseExact(dateString, "dd.MM.yyyy HH:mm", null, DateTimeStyles.None, out var appointmentDate))
@@ -190,10 +195,10 @@ public class LookingForGroupCommandHandler : LocatedServiceBase
                                              .Select(obj => obj.ThreadId)
                                              .FirstOrDefault();
 
-            if (threadId > 0)
+            if (threadId is not null)
             {
                 if (await context.Client
-                                 .GetChannelAsync(threadId)
+                                 .GetChannelAsync(threadId.Value)
                                  .ConfigureAwait(false) is IThreadChannel threadChannel)
                 {
                     await threadChannel.ModifyAsync(obj => obj.Name = "LFG: " + title)
@@ -234,10 +239,10 @@ public class LookingForGroupCommandHandler : LocatedServiceBase
                                              .Select(obj => obj.ThreadId)
                                              .FirstOrDefault();
 
-            if (threadId > 0)
+            if (threadId is not null)
             {
                 if (await context.Client
-                                 .GetChannelAsync(threadId)
+                                 .GetChannelAsync(threadId.Value)
                                  .ConfigureAwait(false) is IThreadChannel threadChannel)
                 {
                     await threadChannel.AddUserAsync(context.Member)
@@ -271,10 +276,10 @@ public class LookingForGroupCommandHandler : LocatedServiceBase
                                              .Select(obj => obj.ThreadId)
                                              .FirstOrDefault();
 
-            if (threadId > 0)
+            if (threadId is not null)
             {
                 if (await context.Client
-                                 .GetChannelAsync(threadId)
+                                 .GetChannelAsync(threadId.Value)
                                  .ConfigureAwait(false) is IThreadChannel threadChannel)
                 {
                     await threadChannel.RemoveUserAsync(context.Member)
@@ -397,9 +402,10 @@ public class LookingForGroupCommandHandler : LocatedServiceBase
                                                      .FirstOrDefault();
                         if (data != null)
                         {
-                            if (await context.Client
-                                             .GetChannelAsync(data.ThreadId)
-                                             .ConfigureAwait(false) is IThreadChannel threadChannel)
+                            if (data.ThreadId is not null
+                                && await context.Client
+                                                .GetChannelAsync(data.ThreadId.Value)
+                                                .ConfigureAwait(false) is IThreadChannel threadChannel)
                             {
                                 await threadChannel.DeleteAsync()
                                                    .ConfigureAwait(false);
