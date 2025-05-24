@@ -24,7 +24,7 @@ namespace Scruffy.WebApp.Components.Pages.DpsReports;
 /// <summary>
 /// Today's reports
 /// </summary>
-[Authorize(Roles = "Developer")]
+[Authorize(Roles = "Member")]
 public partial class TodaysLogsOverviewPage
 {
     #region Fields

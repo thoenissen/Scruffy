@@ -7,12 +7,14 @@ using Discord.Rest;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
+using Minio;
+using Minio.AspNetCore;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Tables.CoreData;
@@ -43,13 +45,22 @@ public class Program
         builder.Services.AddCascadingAuthenticationState();
         builder.Services.AddScoped<IdentityRedirectManager>();
         builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
+        builder.Services.AddMinio(options =>
+                                  {
+                                      options.Endpoint = Environment.GetEnvironmentVariable("SCRUFFY_MINIO_ENDPOINT")!;
+                                      options.ConfigureClient(client =>
+                                                              {
+                                                                  client.WithCredentials(Environment.GetEnvironmentVariable("SCRUFFY_MINIO_ACCESS_KEY")!,
+                                                                                         Environment.GetEnvironmentVariable("SCRUFFY_MINIO_SECRET_KEY")!)
+                                                                        .WithSSL(false)
+                                                                        .WithRegion(Environment.GetEnvironmentVariable("SCRUFFY_MINIO_REGION"));
+                                                              });
+                                  });
         builder.Services.AddSingleton<DpsReportProcessor>();
 
         var locationService = new LocalizationService();
 
         builder.Services.AddSingleton(locationService);
-
-        var persistenceDirectory = Environment.GetEnvironmentVariable("SCRUFFY_PERSISTENCE_DIRECTORY");
 
         var discordClient = new DiscordRestClient();
 
@@ -57,6 +68,8 @@ public class Program
                            .ConfigureAwait(false);
 
         builder.Services.AddSingleton(discordClient);
+
+        var persistenceDirectory = Environment.GetEnvironmentVariable("SCRUFFY_PERSISTENCE_DIRECTORY");
 
         if (string.IsNullOrWhiteSpace(persistenceDirectory) == false)
         {

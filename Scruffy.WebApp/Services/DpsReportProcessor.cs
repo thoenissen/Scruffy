@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Net.Http;
-using System.Net.Http.Json;
+using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -8,6 +10,10 @@ using System.Threading.Tasks;
 using GW2EIJSON;
 
 using Microsoft.Extensions.Logging;
+
+using Minio.AspNetCore;
+using Minio.DataModel.Args;
+using Minio.Exceptions;
 
 using Scruffy.WebApp.Services.Data;
 
@@ -23,7 +29,12 @@ public sealed class DpsReportProcessor : IAsyncDisposable
     /// <summary>
     /// HTTP client factory to create clients for requests
     /// </summary>
-    private readonly IHttpClientFactory _factory;
+    private readonly IHttpClientFactory _httpClientFactory;
+
+    /// <summary>
+    /// Minio client factory to create clients for Minio operations
+    /// </summary>
+    private readonly IMinioClientFactory _minioClientFactory;
 
     /// <summary>
     /// Logger for logging
@@ -52,11 +63,13 @@ public sealed class DpsReportProcessor : IAsyncDisposable
     /// <summary>
     /// Constructor
     /// </summary>
-    /// <param name="factory">HTTP client factory to create clients for requests</param>
+    /// <param name="httpClientFactory">HTTP client factory to create clients for requests</param>
+    /// <param name="minioClientFactory">Minio client factory to create clients for Minio operations</param>
     /// <param name="logger">Logger for logging</param>
-    public DpsReportProcessor(IHttpClientFactory factory, ILogger<DpsReportProcessor> logger)
+    public DpsReportProcessor(IHttpClientFactory httpClientFactory, IMinioClientFactory minioClientFactory, ILogger<DpsReportProcessor> logger)
     {
-        _factory = factory;
+        _httpClientFactory = httpClientFactory;
+        _minioClientFactory = minioClientFactory;
         _logger = logger;
         _channel = Channel.CreateUnbounded<DetailedDpsReportRequest>();
         _tokenSource = new CancellationTokenSource();
@@ -128,20 +141,116 @@ public sealed class DpsReportProcessor : IAsyncDisposable
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     private async Task ProcessRequest(DetailedDpsReportRequest request)
     {
-        using (var client = _factory.CreateClient())
+        if (await TryGetFromCache(request).ConfigureAwait(false) == false)
+        {
+            await GetFromDpsReport(request).ConfigureAwait(false);
+        }
+    }
+
+    /// <summary>
+    /// Tries to get a detailed DPS report from the cache
+    /// </summary>
+    /// <param name="request">Request</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    private async Task<bool> TryGetFromCache(DetailedDpsReportRequest request)
+    {
+        var success = false;
+
+        try
+        {
+            using (var minioClient = _minioClientFactory.CreateClient())
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    var e = new GetObjectArgs().WithBucket("dps.report")
+                                               .WithObject(request.Id)
+                                               .WithCallbackStream(objectStream => objectStream.CopyTo(memoryStream));
+
+                    await minioClient.GetObjectAsync(e).ConfigureAwait(false);
+
+                    memoryStream.Position = 0;
+
+                    var log = JsonSerializer.Deserialize(memoryStream, JsonLogSerializerContext.Default.JsonLog);
+
+                    request.Report.SetResult(log);
+
+                    success = true;
+                }
+            }
+        }
+        catch (ObjectNotFoundException)
+        {
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while trying to get the detailed DPS report from cache for ID {Id}.", request.Id);
+        }
+
+        return success;
+    }
+
+    /// <summary>
+    /// Gets a detailed DPS report from dps.report by its ID
+    /// </summary>
+    /// <param name="request">Request</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    private async Task GetFromDpsReport(DetailedDpsReportRequest request)
+    {
+        using (var client = _httpClientFactory.CreateClient())
         {
             var response = await client.GetAsync($"https://dps.report/getJson?id={request.Id}").ConfigureAwait(false);
 
             if (response.IsSuccessStatusCode)
             {
-                var json = await response.Content.ReadFromJsonAsync(JsonLogSerializerContext.Default.JsonLog).ConfigureAwait(false);
+                var content = await response.Content
+                                            .ReadAsStringAsync()
+                                            .ConfigureAwait(false);
 
-                request.Report.SetResult(json);
+                var log = JsonSerializer.Deserialize(content, JsonLogSerializerContext.Default.JsonLog);
+
+                request.Report.SetResult(log);
+
+                await UploadToCache(content, request.Id).ConfigureAwait(false);
             }
             else
             {
                 request.Report.SetResult(null);
             }
+        }
+    }
+
+    /// <summary>
+    /// Uploads the detailed DPS report to the cache
+    /// </summary>
+    /// <param name="content">Content</param>
+    /// <param name="id">ID</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    private async Task UploadToCache(string content, string id)
+    {
+        try
+        {
+            using (var minioClient = _minioClientFactory.CreateClient())
+            {
+                var data = Encoding.UTF8.GetBytes(content);
+
+                using (var memoryStream = new MemoryStream(data))
+                {
+                    var e = new PutObjectArgs().WithBucket("dps.report")
+                                               .WithObject(id)
+                                               .WithStreamData(memoryStream)
+                                               .WithObjectSize(data.Length)
+                                               .WithContentType("application/json");
+
+                    await minioClient.PutObjectAsync(e).ConfigureAwait(false);
+                }
+            }
+        }
+        catch (ObjectNotFoundException)
+        {
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while trying to upload the detailed DPS report to cache for ID {Id}.", id);
         }
     }
 
