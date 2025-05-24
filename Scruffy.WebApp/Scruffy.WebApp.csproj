@@ -26,4 +26,13 @@
         <ProjectReference Include="..\Scruffy.Services\Scruffy.Services.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="GW2EIDPSReport">
+        <HintPath>..\libs\GW2EIDPSReport.dll</HintPath>
+      </Reference>
+      <Reference Include="GW2EIJSON">
+        <HintPath>..\libs\GW2EIJSON.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>

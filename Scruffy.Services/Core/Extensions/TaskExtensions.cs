@@ -1,4 +1,6 @@
-﻿namespace Scruffy.Services.Core.Extensions;
+﻿using System.Runtime.CompilerServices;
+
+namespace Scruffy.Services.Core.Extensions;
 
 /// <summary>
 /// <see cref="Task"/>  extension methods
@@ -9,6 +11,7 @@ public static class TaskExtensions
     /// Marking that there is no need to wait for the task
     /// </summary>
     /// <param name="task">Task</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Forget(this Task task)
     {
     }

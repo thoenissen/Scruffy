@@ -970,6 +970,9 @@
       "NavigationMenu": {
          "Home": "Startseite",
          "Ranking": "Ranking",
+         "Raid": "Raid",
+         "Logs": "Logs",
+         "Today": "Heutige",
          "Personal": "Persönlich",
          "Participation": "Teilnahmepunkte",
          "Roles": "Rollen",

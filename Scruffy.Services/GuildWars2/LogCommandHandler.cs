@@ -466,7 +466,6 @@ public class LogCommandHandler : LocatedServiceBase
 
                 foreach (var groupBySpec in uploads.GroupBy(upload => upload.Players.FirstOrDefault().Value?.EliteSpecialization))
                 {
-                    var isInline = false;
                     var fieldBuilder = new StringBuilder();
 
                     foreach (var upload in groupBySpec.OrderByDescending(obj => obj.UploadTime))
@@ -475,9 +474,7 @@ public class LogCommandHandler : LocatedServiceBase
 
                         if (line.Length + fieldBuilder.Length >= 1024)
                         {
-                            embed.AddField($"{GuildWars2Helper.GetSpecializationEmote(groupBySpec.Key ?? 0)} {GuildWars2Helper.GetSpecializationName(groupBySpec.Key ?? 0)}", fieldBuilder.ToString(), isInline);
-
-                            isInline = isInline == false;
+                            embed.AddField($"{GuildWars2Helper.GetSpecializationEmote(groupBySpec.Key ?? 0)} {GuildWars2Helper.GetSpecializationName(groupBySpec.Key ?? 0)}", fieldBuilder.ToString());
 
                             fieldBuilder = new StringBuilder();
                         }
@@ -485,7 +482,7 @@ public class LogCommandHandler : LocatedServiceBase
                         fieldBuilder.AppendLine(line);
                     }
 
-                    embed.AddField($"{GuildWars2Helper.GetSpecializationEmote(groupBySpec.Key ?? 0)} {GuildWars2Helper.GetSpecializationName(groupBySpec.Key ?? 0)}", fieldBuilder.ToString(), isInline);
+                    embed.AddField($"{GuildWars2Helper.GetSpecializationEmote(groupBySpec.Key ?? 0)} {GuildWars2Helper.GetSpecializationName(groupBySpec.Key ?? 0)}", fieldBuilder.ToString());
                 }
 
                 await message.ModifyAsync(message =>

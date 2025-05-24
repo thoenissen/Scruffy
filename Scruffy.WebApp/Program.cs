@@ -19,6 +19,7 @@ using Scruffy.Data.Entity.Tables.Web;
 using Scruffy.Services.Core.Localization;
 using Scruffy.WebApp.Components;
 using Scruffy.WebApp.Components.Account;
+using Scruffy.WebApp.Services;
 
 namespace Scruffy.WebApp;
 
@@ -35,11 +36,13 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder();
 
+        builder.Services.AddHttpClient();
         builder.Services.AddRazorComponents()
                         .AddInteractiveServerComponents();
         builder.Services.AddCascadingAuthenticationState();
         builder.Services.AddScoped<IdentityRedirectManager>();
         builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
+        builder.Services.AddSingleton<DpsReportProcessor>();
 
         var locationService = new LocalizationService();
 

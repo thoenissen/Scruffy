@@ -79,6 +79,10 @@
    --icon-name: "groups";
 }
 
+.bi-nav-icon-logs-today {
+   --icon-name: "table_view";
+}
+
 .bi-nav-icon-administration-users {
    --icon-name: "group";
 }

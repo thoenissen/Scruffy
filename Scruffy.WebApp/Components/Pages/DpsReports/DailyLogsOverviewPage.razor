@@ -1,0 +1,43 @@
+﻿@using Microsoft.AspNetCore.Components.QuickGrid
+
+@page "/DpsReports/Daily"
+@inherits Scruffy.WebApp.Components.Base.LocatedComponent
+@rendermode @(new InteractiveServerRenderMode(prerender:false))
+
+<h3>Daily reports</h3>
+
+<div class="page-container">
+   <div class="quickgrid-std registrations-container mb-3">
+      <QuickGrid Items="@_reports.AsQueryable()">
+         <TemplateColumn Context="u" Sortable="false">
+            @if (u.IsSuccess)
+            {
+               <div class="state-icon state-icon-success"></div>
+            }
+            else
+            {
+               <div class="state-icon state-icon-failure"></div>
+            }
+         </TemplateColumn>
+         <TemplateColumn Title="@LocalizationGroup.GetText("EncounterTime", "Time")" Context="u" Sortable="false">
+            <div>@u.EncounterTime.ToString("g", LocalizationGroup.CultureInfo)</div>
+         </TemplateColumn>
+         <PropertyColumn Title="@LocalizationGroup.GetText("Boss", "Boss")" Property="@(u => u.Boss)" Sortable="false"/>
+         <TemplateColumn Title="@LocalizationGroup.GetText("Dps", "DPS")" Context="u" Align="Align.End" Sortable="false">
+            @if (u.AdditionalData == null)
+            {
+               <div>loading...</div>
+            }
+            else
+            {
+               <div>@u.AdditionalData.Dps?.ToString("N0", LocalizationGroup.CultureInfo)</div>
+            }
+         </TemplateColumn>
+            <TemplateColumn Title="@LocalizationGroup.GetText("Duration", "Duration")" Context="u" Align="Align.End" Sortable="false">
+                <div>@($"{(int)u.Duration.TotalMinutes}:{u.Duration.Seconds:D2}")</div>
+            </TemplateColumn>
+            <TemplateColumn Context="u" Sortable="false" class="isassigned-column">
+                <a target="_blank" rel="noopener noreferrer" href="@u.PermaLink">⧉</a>
+            </TemplateColumn>
+        </QuickGrid>
+    </div></div>

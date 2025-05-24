@@ -1,0 +1,29 @@
+﻿a {
+   text-decoration: none;
+}
+
+.page-container {
+   display: flex;
+   flex-direction: row;
+}
+
+.state-icon {
+   font-family: 'Material Icons';
+   font-size: 24px;
+   color: white;
+   display: inline-flex;
+   align-items: center;
+}
+
+   .state-icon::before {
+      font-style: normal;
+      content: var(--icon-name);
+   }
+
+.state-icon-success {
+   --icon-name: "check";
+}
+
+.state-icon-failure {
+   --icon-name: "close";
+}
