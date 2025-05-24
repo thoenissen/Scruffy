@@ -475,7 +475,7 @@ public class LogCommandHandler : LocatedServiceBase
 
                     foreach (var upload in groupBySpec.OrderByDescending(obj => obj.UploadTime))
                     {
-                        var line = $"└{(upload.Encounter.Success ? DiscordEmoteService.GetCheckEmote(context.Client) : DiscordEmoteService.GetCrossEmote(context.Client))} {Format.Url($"{upload.Encounter.Duration:mm\\:ss} - {upload.Encounter.CompDps:N0} DPS ⧉", upload.Permalink)}";
+                        var line = $"└{(upload.Encounter.Success ? DiscordEmoteService.GetCheckEmote(context.Client) : DiscordEmoteService.GetCrossEmote(context.Client))} {Format.Url($"{upload.Encounter.Duration:mm\\:ss} - {upload.Encounter.CompDps.ToString("N0", LocalizationGroup.CultureInfo)} DPS ⧉", upload.Permalink)}";
 
                         if (line.Length + fieldBuilder.Length >= 1024)
                         {
