@@ -522,6 +522,9 @@
          "ScoreType": "Typ",
          "TotalScore": "Gesamtpunkte"
       },
+      "GuildSlashCommandHandler": {
+         "WebAppHint": "Du möchstes noch genauere Daten zu deinem Ranking? Dann teste doch die neue [Webseite]({0})."
+      },
       "GuildSpecialRankDeletionDialogElement": {
          "DeletePrompt": "Soll der Spezial-Rang wirklich gelöscht werden?"
       },
@@ -670,7 +673,8 @@
          "DpsReportFightDurationStat": "{0} in {1} Kämpfen",
          "NoDpsReportUploads": "Keine DPS-Reports gefunden!",
          "NoDpsReportToken": "Deinem Account sind keine DPS-Report-User-Tokens zugeordnet.",
-         "GroupDPS": "Gruppen DPS"
+         "GroupDPS": "Gruppen DPS",
+         "WebAppGolemHint": "Möchstest du noch mehr Informationen über eine Logs? Dann teste doch die neue [Webseite]({0})."
       },
       "LocatedTextCommandModuleBase": {
          "SlashCommandMigrationHint": "Textbasierte Befehle stehen nicht mehr zur Verfügung. Du kannst diesen Befehl über den Slash Command `/{0}` ausführen."

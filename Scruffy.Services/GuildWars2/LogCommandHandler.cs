@@ -32,7 +32,12 @@ public class LogCommandHandler : LocatedServiceBase
     /// <summary>
     /// Formats for parsing an input date
     /// </summary>
-    private static readonly string[] _dateFormats = { "dd.MM", "dd.MM.yyyy", "MM-dd", "yyyy-MM-dd" };
+    private static readonly string[] _dateFormats = ["dd.MM", "dd.MM.yyyy", "MM-dd", "yyyy-MM-dd"];
+
+    /// <summary>
+    /// Web application URL
+    /// </summary>
+    private static readonly string _webbAppUrl = Environment.GetEnvironmentVariable("SCRUFFY_WEBAPP_URL");
 
     /// <summary>
     /// Discord socket client
@@ -487,7 +492,21 @@ public class LogCommandHandler : LocatedServiceBase
 
                 await message.ModifyAsync(message =>
                                           {
-                                              message.Embed = embed.Build();
+                                              if (string.IsNullOrWhiteSpace(_webbAppUrl))
+                                              {
+                                                  message.Embed = embed.Build();
+                                              }
+                                              else
+                                              {
+                                                  var webAppEmbed = new EmbedBuilder().WithColor(Color.Green)
+                                                                                      .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
+                                                                                      .WithColor(Color.Green)
+                                                                                      .WithTimestamp(DateTime.Now)
+                                                                                      .WithDescription(LocalizationGroup.GetFormattedText("WebAppGolemHint", "Would you like more information about a log? Then check out the new [website]({0}).", _webbAppUrl + "/DpsReports/Daily"));
+
+                                                  message.Embeds = new[] { embed.Build(), webAppEmbed.Build() };
+                                              }
+
                                               message.Content = "\u200b";
                                           })
                              .ConfigureAwait(false);
