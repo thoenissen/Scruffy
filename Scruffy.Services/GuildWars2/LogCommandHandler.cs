@@ -502,7 +502,7 @@ public class LogCommandHandler : LocatedServiceBase
                                                                                       .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
                                                                                       .WithColor(Color.Green)
                                                                                       .WithTimestamp(DateTime.Now)
-                                                                                      .WithDescription(LocalizationGroup.GetFormattedText("WebAppGolemHint", "Would you like more information about a log? Then check out the new [website]({0}).", _webbAppUrl + "/DpsReports/Daily"));
+                                                                                      .WithDescription(LocalizationGroup.GetFormattedText("WebAppGolemHint", "Would you like more information about a log? Then check out the new [website]({0}).", _webbAppUrl + "/DpsReports/Today"));
 
                                                   message.Embeds = new[] { embed.Build(), webAppEmbed.Build() };
                                               }

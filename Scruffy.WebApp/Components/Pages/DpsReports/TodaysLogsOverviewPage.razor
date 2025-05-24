@@ -1,10 +1,12 @@
 ﻿@using Microsoft.AspNetCore.Components.QuickGrid
 
-@page "/DpsReports/Daily"
+@page "/DpsReports/Today"
 @inherits Scruffy.WebApp.Components.Base.LocatedComponent
 @rendermode @(new InteractiveServerRenderMode(prerender:false))
 
-<h3>Daily reports</h3>
+<PageTitle>@LocalizationGroup.GetText("PageTitle", "FooI - Logs - Today")</PageTitle>
+
+<h3>@LocalizationGroup.GetText("PageHeader", "Today's logs")</h3>
 
 <div class="page-container">
    <div class="quickgrid-std registrations-container mb-3">
@@ -26,7 +28,7 @@
          <TemplateColumn Title="@LocalizationGroup.GetText("Dps", "DPS")" Context="u" Align="Align.End" Sortable="false">
             @if (u.AdditionalData == null)
             {
-               <div>loading...</div>
+               <div>@LocalizationGroup.GetText("Loading", "Loading...")</div>
             }
             else
             {

@@ -22,10 +22,10 @@ using Scruffy.WebApp.Services;
 namespace Scruffy.WebApp.Components.Pages.DpsReports;
 
 /// <summary>
-/// Daily reports
+/// Today's reports
 /// </summary>
 [Authorize(Roles = "Developer")]
-public partial class DailyLogsOverviewPage
+public partial class TodaysLogsOverviewPage
 {
     #region Fields
 
@@ -160,7 +160,7 @@ public partial class DailyLogsOverviewPage
                                          IsSuccess = upload.Encounter?.Success == true,
                                          PermaLink = upload.Permalink,
                                          EncounterTime = DateTimeOffset.FromUnixTimeSeconds(upload.EncounterTime ?? 0).ToLocalTime(),
-                                         Boss = upload.Encounter?.BossName ?? "loading...",
+                                         Boss = upload.Encounter?.BossName ?? LocalizationGroup.GetText("Loading", "Loading..."),
                                          Duration = TimeSpan.FromSeconds(upload.Encounter?.Duration ?? 0)
                                      };
 

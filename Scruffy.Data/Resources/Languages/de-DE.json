@@ -523,7 +523,7 @@
          "TotalScore": "Gesamtpunkte"
       },
       "GuildSlashCommandHandler": {
-         "WebAppHint": "Du möchstes noch genauere Daten zu deinem Ranking? Dann teste doch die neue [Webseite]({0})."
+         "WebAppHint": "Du möchtest noch genauere Daten zu deinem Ranking? Dann teste doch die neue [Webseite]({0})."
       },
       "GuildSpecialRankDeletionDialogElement": {
          "DeletePrompt": "Soll der Spezial-Rang wirklich gelöscht werden?"
@@ -674,7 +674,7 @@
          "NoDpsReportUploads": "Keine DPS-Reports gefunden!",
          "NoDpsReportToken": "Deinem Account sind keine DPS-Report-User-Tokens zugeordnet.",
          "GroupDPS": "Gruppen DPS",
-         "WebAppGolemHint": "Möchstest du noch mehr Informationen über eine Logs? Dann teste doch die neue [Webseite]({0})."
+         "WebAppGolemHint": "Möchstest du noch mehr Informationen über deine Logs? Dann teste doch die neue [Webseite]({0})."
       },
       "LocatedTextCommandModuleBase": {
          "SlashCommandMigrationHint": "Textbasierte Befehle stehen nicht mehr zur Verfügung. Du kannst diesen Befehl über den Slash Command `/{0}` ausführen."
@@ -1050,6 +1050,15 @@
          "SquadTitle": "Squad {0}",
          "GroupTitle": "Gruppe {0}",
          "Remarks": "Anmerkungen"
+      },
+      "TodaysLogsOverviewPage": {
+         "PageTitle": "FooI - Logs - Heutige Logs",
+         "PageHeader": "Heutige Logs",
+         "EncounterTime": "Zeit",
+         "Boss": "Gegner",
+         "Dps": "DPS",
+         "Duration": "Dauer",
+         "Loading": "Lade..."
       }
    }
 }
