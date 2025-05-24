@@ -1,4 +1,6 @@
-﻿using Discord.Interactions;
+﻿using System.Reactive;
+
+using Discord.Interactions;
 
 using Scruffy.Data.Enumerations.DpsReport;
 using Scruffy.Services.Discord;
@@ -94,7 +96,21 @@ public class LogSlashCommandModule : SlashCommandModuleBase
     /// <param name="until">Until day</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("export", "Export of log urls")]
-    public Task Export([Summary("since-day", "Logs since the given day. (dd.MM.yyyy)")] string since, [Summary("until-day", "Logs until the given day. (dd.MM.yyyy)")] string until = null) => CommandHandler.ExportLogs(Context, since, until);
+    public Task Export([Summary("since-day", "Logs since the given day. (dd.MM.yyyy)")] string since, [Summary("until-day", "Logs until the given day. (dd.MM.yyyy)")] string until = null)
+    {
+        return CommandHandler.ExportLogs(Context, since, until);
+    }
+
+    /// <summary>
+    /// Golem logs of a certain day
+    /// </summary>
+    /// <param name="day">Day</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [SlashCommand("golem", "Shows all golem logs of a day")]
+    public Task Golem([Summary("day", "Day of the logs (dd.MM)")] string day = null)
+    {
+        return CommandHandler.PostGolemLogs(Context, day);
+    }
 
     #endregion // Commands
 }

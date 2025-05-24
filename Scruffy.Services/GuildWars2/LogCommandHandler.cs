@@ -426,6 +426,86 @@ public class LogCommandHandler : LocatedServiceBase
     }
 
     /// <summary>
+    /// Posts the golem logs of the given day
+    /// </summary>
+    /// <param name="context">Command context</param>
+    /// <param name="dayString">Day</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task PostGolemLogs(IContextContainer context, string dayString)
+    {
+        var message = await context.DeferProcessing()
+                                   .ConfigureAwait(false);
+
+        var account = _repositoryFactory.GetRepository<DiscordAccountRepository>()
+                                        .GetQuery()
+                                        .Where(obj => obj.Id == context.User.Id)
+                                        .Select(obj => new
+                                                       {
+                                                           obj.User.GuildWarsAccounts.FirstOrDefault().Name,
+                                                           obj.User.DpsReportUserToken
+                                                       })
+                                        .FirstOrDefault();
+
+        if (string.IsNullOrEmpty(account?.DpsReportUserToken) == false)
+        {
+            var startDate = ParseStartDate(dayString);
+            var endDate = startDate.AddDays(1);
+
+            var uploads = await _dpsReportConnector.GetUploads(account.DpsReportUserToken,
+                                                               startDate,
+                                                               endDate,
+                                                               upload => _dpsReportConnector.GetReportGroup(upload.Encounter.BossId) == DpsReportGroup.TrainingArea)
+                                                   .ToListAsync()
+                                                   .ConfigureAwait(false);
+
+            if (uploads.Count > 0)
+            {
+                var embed = new EmbedBuilder().WithColor(Color.Green)
+                                              .WithAuthor($"{context.User.Username} - {account.Name}", context.User.GetAvatarUrl())
+                                              .WithTitle(LocalizationGroup.GetFormattedText("DpsReportTitle", "Your reports from {0}", startDate.ToString("d", LocalizationGroup.CultureInfo)));
+
+                foreach (var groupedByBoss in uploads.GroupBy(upload => upload.Encounter.Boss))
+                {
+                    var fieldBuilder = new StringBuilder();
+
+                    foreach (var upload in groupedByBoss.OrderByDescending(obj => obj.UploadTime))
+                    {
+                        var line = $"└ {Format.Url($"{upload.Encounter.Duration:mm\\:ss} - {upload.Encounter.CompDps:N0} DPS ⧉", upload.Permalink)}";
+
+                        if (line.Length + fieldBuilder.Length >= 1024)
+                        {
+                            embed.AddField(groupedByBoss.Key, fieldBuilder.ToString(), true);
+
+                            fieldBuilder = new StringBuilder();
+                        }
+
+                        fieldBuilder.AppendLine(line);
+                    }
+
+                    embed.AddField(groupedByBoss.Key, fieldBuilder.ToString(), true);
+                }
+
+                await message.ModifyAsync(message =>
+                                          {
+                                              message.Embed = embed.Build();
+                                              message.Content = "\u200b";
+                                          })
+                             .ConfigureAwait(false);
+            }
+            else
+            {
+                await context.ReplyAsync(LocalizationGroup.GetText("NoDpsReportUploads", "No DPS-Reports found!"))
+                             .ConfigureAwait(false);
+            }
+        }
+        else
+        {
+            await context.ReplyAsync(LocalizationGroup.GetText("NoDpsReportToken", "The are no DPS-Report user tokens assigned to your account."))
+                         .ConfigureAwait(false);
+        }
+    }
+
+    /// <summary>
     /// Posts the guild raid summary of the raid appointments in a week
     /// </summary>
     /// <param name="context">Command context</param>
