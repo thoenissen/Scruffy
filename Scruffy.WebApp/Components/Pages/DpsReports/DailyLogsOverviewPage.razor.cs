@@ -73,6 +73,7 @@ public partial class DailyLogsOverviewPage
 
         if (detailedReport != null)
         {
+            report.Boss = detailedReport.FightName;
             additionalData.Dps = detailedReport.Players?.Sum(player => player.DpsTargets?.Sum(dpsTarget => dpsTarget.Count > 0 ? dpsTarget[0].Dps : 0));
         }
 
@@ -149,7 +150,7 @@ public partial class DailyLogsOverviewPage
 
                         if (uploadTime < today)
                         {
-                            //uploads = null;
+                            uploads = null;
                             break;
                         }
 
@@ -159,7 +160,7 @@ public partial class DailyLogsOverviewPage
                                          IsSuccess = upload.Encounter?.Success == true,
                                          PermaLink = upload.Permalink,
                                          EncounterTime = DateTimeOffset.FromUnixTimeSeconds(upload.EncounterTime ?? 0).ToLocalTime(),
-                                         Boss = upload.Encounter?.BossName,
+                                         Boss = upload.Encounter?.BossName ?? "loading...",
                                          Duration = TimeSpan.FromSeconds(upload.Encounter?.Duration ?? 0)
                                      };
 
