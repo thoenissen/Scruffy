@@ -7,6 +7,7 @@ using Discord.Rest;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
@@ -90,7 +91,6 @@ public class Program
                         .AddEntityFrameworkStores<ScruffyDbContext>()
                         .AddSignInManager()
                         .AddDefaultTokenProviders();
-
         var app = builder.Build();
 
         await locationService.Initialize(app.Services)

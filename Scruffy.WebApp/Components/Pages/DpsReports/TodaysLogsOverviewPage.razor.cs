@@ -89,6 +89,11 @@ public partial class TodaysLogsOverviewPage
     /// <inheritdoc />
     protected override async Task OnInitializedAsync()
     {
+        if (_reports.Count > 0)
+        {
+            return;
+        }
+
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync()
                                                          .ConfigureAwait(false);
         var nameIdentifier = authState.User.FindFirstValue(ClaimTypes.NameIdentifier);
