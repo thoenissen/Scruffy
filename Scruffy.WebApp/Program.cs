@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 
 using Discord;
@@ -15,6 +16,11 @@ using Microsoft.Extensions.Hosting;
 
 using Minio;
 using Minio.AspNetCore;
+
+using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Tables.CoreData;
@@ -45,6 +51,50 @@ public class Program
         builder.Services.AddCascadingAuthenticationState();
         builder.Services.AddScoped<IdentityRedirectManager>();
         builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
+
+        var openTelemetryEndpoint = Environment.GetEnvironmentVariable("SCRUFFY_OPENTELEMETRY_ENDPOINT");
+        var openTelemetryInstance = Environment.GetEnvironmentVariable("SCRUFFY_OPENTELEMETRY_INSTANCE");
+
+        if (string.IsNullOrWhiteSpace(openTelemetryEndpoint) == false
+            && string.IsNullOrWhiteSpace(openTelemetryInstance) == false)
+        {
+            var resourceBuilder = ResourceBuilder.CreateDefault()
+                                                 .AddService("Scruffy.WebApp", "Scruffy", Assembly.GetExecutingAssembly().GetName().Version!.ToString(), false, openTelemetryInstance);
+
+            builder.Services.AddOpenTelemetry()
+                            .WithTracing(tracerProviderBuilder =>
+                                         {
+                                             tracerProviderBuilder.SetResourceBuilder(resourceBuilder)
+                                                                  .AddAspNetCoreInstrumentation()
+                                                                  .AddHttpClientInstrumentation()
+                                                                  .AddOtlpExporter(otlpOptions =>
+                                                                                   {
+                                                                                       otlpOptions.Endpoint = new Uri(openTelemetryEndpoint);
+                                                                                       otlpOptions.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
+                                                                                   });
+                                         })
+                .WithMetrics(meterProviderBuilder =>
+                             {
+                                 meterProviderBuilder.SetResourceBuilder(resourceBuilder)
+                                                     .AddAspNetCoreInstrumentation()
+                                                     .AddHttpClientInstrumentation()
+                                                     .AddOtlpExporter(otlpOptions =>
+                                                                      {
+                                                                          otlpOptions.Endpoint = new Uri(openTelemetryEndpoint);
+                                                                          otlpOptions.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
+                                                                      });
+                             })
+                .WithLogging(loggingProviderBuilder =>
+                             {
+                                 loggingProviderBuilder.SetResourceBuilder(resourceBuilder)
+                                                       .AddOtlpExporter(otlpOptions =>
+                                                                       {
+                                                                           otlpOptions.Endpoint = new Uri(openTelemetryEndpoint);
+                                                                           otlpOptions.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
+                                                                       });
+                             });
+        }
+
         builder.Services.AddMinio(options =>
                                   {
                                       options.Endpoint = Environment.GetEnvironmentVariable("SCRUFFY_MINIO_ENDPOINT")!;
