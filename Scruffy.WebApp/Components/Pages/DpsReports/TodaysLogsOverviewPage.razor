@@ -16,11 +16,11 @@
                 <TemplateColumn Context="u" Sortable="false">
                     @if (u.IsSuccess)
                     {
-                        <div class="state-icon state-icon-success"></div>
+                        <div class="state-icon state-icon-success skill-level-2"></div>
                     }
                     else
                     {
-                        <div class="state-icon state-icon-failure"></div>
+                        <div class="state-icon state-icon-failure skill-level-0"></div>
                     }
                 </TemplateColumn>
                 <TemplateColumn Title="@LocalizationGroup.GetText("EncounterTime", "Time")" Context="u" Sortable="false">
@@ -28,14 +28,19 @@
                 </TemplateColumn>
                 <PropertyColumn Title="@LocalizationGroup.GetText("Boss", "Boss")" Property="@(u => u.Boss)" Sortable="false"/>
                 <TemplateColumn Title="@LocalizationGroup.GetText("Dps", "DPS")" Context="u" Align="Align.End" Sortable="false">
-                    @if (u.AdditionalData == null)
-                    {
-                        <div>@LocalizationGroup.GetText("Loading", "Loading...")</div>
-                    }
-                    else
-                    {
+                    <LoadingContainer Size="LoadingIndicatorSize.Small" IsLoading="@u.IsLoadingAdditionalData">
                         <div>@u.AdditionalData.Dps?.ToString("N0", LocalizationGroup.CultureInfo)</div>
-                    }
+                    </LoadingContainer>
+                </TemplateColumn>
+                <TemplateColumn Title="@LocalizationGroup.GetText("Quickness", "Quickness")" Context="u" Align="Align.End" Sortable="false">
+                    <LoadingContainer Size="LoadingIndicatorSize.Small" IsLoading="@u.IsLoadingAdditionalData">
+                        <div class="@GetSkillLevelFromUptime(u.AdditionalData.Quickness)">@((u.AdditionalData.Quickness ?? 0).ToString("N2", LocalizationGroup.CultureInfo) + " %")</div>
+                    </LoadingContainer>
+                </TemplateColumn>
+                <TemplateColumn Title="@LocalizationGroup.GetText("Alacrity", "Alacrity")" Context="u" Align="Align.End" Sortable="false">
+                    <LoadingContainer Size="LoadingIndicatorSize.Small" IsLoading="@u.IsLoadingAdditionalData">
+                        <div class="@GetSkillLevelFromUptime(u.AdditionalData.Alacrity)">@((u.AdditionalData.Alacrity ?? 0).ToString("N2", LocalizationGroup.CultureInfo) + " %")</div>
+                    </LoadingContainer>
                 </TemplateColumn>
                 <TemplateColumn Title="@LocalizationGroup.GetText("Duration", "Duration")" Context="u" Align="Align.End" Sortable="false">
                     <div>@($"{(int)u.Duration.TotalMinutes}:{u.Duration.Seconds:D2}")</div>

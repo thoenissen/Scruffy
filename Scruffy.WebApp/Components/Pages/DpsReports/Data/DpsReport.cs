@@ -33,6 +33,11 @@ public class DpsReport
     public string Boss { get; set; }
 
     /// <summary>
+    /// Indicates whether additional data is currently being loaded for this report
+    /// </summary>
+    public bool IsLoadingAdditionalData { get; set; }
+
+    /// <summary>
     /// Additional parsed data from the DPS report.
     /// </summary>
     public AdditionalData AdditionalData { get; set; }

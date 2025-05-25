@@ -29,6 +29,20 @@ namespace Scruffy.WebApp.Components.Pages.DpsReports;
 [Authorize(Roles = "Member")]
 public sealed partial class TodaysLogsOverviewPage : IAsyncDisposable
 {
+    #region Constants
+
+    /// <summary>
+    /// ID for the alacrity buff
+    /// </summary>
+    private const int AlacrityId = 30328;
+
+    /// <summary>
+    /// ID for the quickness buff
+    /// </summary>
+    private const int QuicknessId = 1187;
+
+    #endregion // Constants
+
     #region Fields
 
     /// <summary>
@@ -163,7 +177,8 @@ public sealed partial class TodaysLogsOverviewPage : IAsyncDisposable
                                              PermaLink = upload.Permalink,
                                              EncounterTime = DateTimeOffset.FromUnixTimeSeconds(upload.EncounterTime ?? 0).ToLocalTime(),
                                              Boss = upload.Encounter?.BossName ?? LocalizationGroup.GetText("Loading", "Loading..."),
-                                             Duration = TimeSpan.FromSeconds(upload.Encounter?.Duration ?? 0)
+                                             Duration = TimeSpan.FromSeconds(upload.Encounter?.Duration ?? 0),
+                                             IsLoadingAdditionalData = true,
                                          };
 
                             GetAdditionalDataAsync(report).Forget();
@@ -203,11 +218,34 @@ public sealed partial class TodaysLogsOverviewPage : IAsyncDisposable
         {
             report.Boss = detailedReport.FightName;
             additionalData.Dps = detailedReport.Players?.Sum(player => player.DpsTargets?.Sum(dpsTarget => dpsTarget.Count > 0 ? dpsTarget[0].Dps : 0));
+            additionalData.Alacrity = detailedReport.Players?.Average(player => player.BuffUptimes?.FirstOrDefault(buf => buf.Id == AlacrityId)?.BuffData?.FirstOrDefault()?.Uptime);
+            additionalData.Quickness = detailedReport.Players?.Average(player => player.BuffUptimes?.FirstOrDefault(buf => buf.Id == QuicknessId)?.BuffData?.FirstOrDefault()?.Uptime);
         }
 
+        report.IsLoadingAdditionalData = false;
         report.AdditionalData = additionalData;
 
         await InvokeAsync(StateHasChanged).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Gets the skill level based on the uptime percentage
+    /// </summary>
+    /// <param name="uptime">Uptime</param>
+    /// <returns>Skill-Level CSS class</returns>
+    private string GetSkillLevelFromUptime(double? uptime)
+    {
+        if (uptime > 80.00D)
+        {
+            return "skill-level-2";
+        }
+
+        if (uptime > 50.00D)
+        {
+            return "skill-level-1";
+        }
+
+        return "skill-level-0";
     }
 
     #endregion // Methods

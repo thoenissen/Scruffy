@@ -3,7 +3,7 @@
    @if (IsLoading)
    {
       <div @key="@("IsLoadingContainer")" class="spinner-container">
-         <div @key="@("IsLoadingSpinner")" class="spinner"></div>
+         <div @key="@("IsLoadingSpinner")" class="@GetSpinnerClasses()"></div>
       </div>
    }
    else

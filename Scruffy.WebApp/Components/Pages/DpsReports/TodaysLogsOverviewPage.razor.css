@@ -27,3 +27,15 @@
 .state-icon-failure {
    --icon-name: "close";
 }
+
+.skill-level-0 {
+   color: #dc2626;
+}
+
+.skill-level-1 {
+   color: #f59e0b;
+}
+
+.skill-level-2 {
+   color: #16a34a;
+}

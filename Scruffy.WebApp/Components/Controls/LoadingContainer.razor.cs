@@ -30,7 +30,28 @@ public partial class LoadingContainer
     [Parameter]
     public RenderFragment ChildContent { get; set; }
 
+    /// <summary>
+    /// Size of the loading animation
+    /// </summary>
+    [Parameter]
+    public LoadingIndicatorSize Size { get; set; } = LoadingIndicatorSize.Medium;
+
     #endregion // Properties
+
+    #region Methods
+
+    /// <summary>
+    /// Get the CSS classes for the spinner
+    /// </summary>
+    /// <returns>CSS classes</returns>
+    private string GetSpinnerClasses()
+    {
+        return Size == LoadingIndicatorSize.Small
+                   ? "spinner spinner-small"
+                   : "spinner spinner-medium";
+    }
+
+    #endregion // Methods
 
     #region ComponentBase
 
