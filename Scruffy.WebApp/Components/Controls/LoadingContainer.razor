@@ -1,0 +1,13 @@
+﻿@if (_isInitialized)
+{
+   @if (IsLoading)
+   {
+      <div @key="@("IsLoadingContainer")" class="spinner-container">
+         <div @key="@("IsLoadingSpinner")" class="spinner"></div>
+      </div>
+   }
+   else
+   {
+      @ChildContent
+   }
+}
