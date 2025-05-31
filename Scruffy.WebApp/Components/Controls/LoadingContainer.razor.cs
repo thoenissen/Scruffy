@@ -25,6 +25,12 @@ public partial class LoadingContainer
     public bool IsLoading { get; set; }
 
     /// <summary>
+    /// Loading hint
+    /// </summary>
+    [Parameter]
+    public string Hint { get; set; }
+
+    /// <summary>
     /// Content
     /// </summary>
     [Parameter]

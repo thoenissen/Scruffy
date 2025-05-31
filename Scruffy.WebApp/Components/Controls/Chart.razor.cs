@@ -72,6 +72,24 @@ public partial class Chart : IAsyncDisposable
 
     #endregion // Properties
 
+    #region Methods
+
+    /// <summary>
+    /// Update
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public async Task Update()
+    {
+        if (_module != null
+            && _instance != null            )
+        {
+            await _module.InvokeVoidAsync("updateChart", _instance, Type, Data, Options)
+                         .ConfigureAwait(false);
+        }
+    }
+
+    #endregion // Methods
+
     #region ComponentBase
 
     /// <inheritdoc />

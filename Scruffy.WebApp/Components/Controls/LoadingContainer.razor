@@ -2,9 +2,15 @@
 {
    @if (IsLoading)
    {
-      <div @key="@("IsLoadingContainer")" class="spinner-container">
-         <div @key="@("IsLoadingSpinner")" class="@GetSpinnerClasses()"></div>
-      </div>
+       <div class="loading-container">
+           <div @key="@("IsLoadingContainer")" class="spinner-container">
+               <div @key="@("IsLoadingSpinner")" class="@GetSpinnerClasses()"></div>
+           </div>
+           @if (string.IsNullOrWhiteSpace(Hint) == false)
+           {
+               <div class="loading-hint">@Hint</div>
+           }
+       </div>
    }
    else
    {

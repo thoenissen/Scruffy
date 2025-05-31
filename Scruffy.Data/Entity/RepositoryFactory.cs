@@ -36,6 +36,7 @@ public sealed class RepositoryFactory : IDisposable
     public RepositoryFactory()
     {
         _dbContext = new ScruffyDbContext();
+        _dbContext.Database.SetCommandTimeout(60000);
         _repositories = new Dictionary<Type, RepositoryBase>();
     }
 

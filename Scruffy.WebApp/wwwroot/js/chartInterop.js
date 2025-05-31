@@ -24,3 +24,9 @@ export function createChart(chartId, type, data, options) {
       options: options,
    });
 }
+
+export function updateChart(chart, type, data, options) {
+    chart.type = type;
+    chart.data = data;
+    chart.options = options;
+}

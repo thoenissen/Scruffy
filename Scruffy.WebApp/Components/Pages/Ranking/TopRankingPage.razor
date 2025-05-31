@@ -1,0 +1,26 @@
+@using Scruffy.WebApp.Components.Base
+@using Scruffy.WebApp.Components.Controls
+
+@inherits LocatedComponent
+@page "/Ranking/Top"
+@rendermode InteractiveServer
+
+<PageTitle>@LocalizationGroup.GetText("PageTitle", "FooI - Ranking - Top")</PageTitle>
+
+<div class="full-size-page">
+    <div class="charts-container">
+        <div class="chart-max-points-outer">
+            <LoadingContainer IsLoading="@_isMaxPointsLoading"
+                              Hint="@LocalizationGroup.GetText("MaxPointsLoadingHint", "")">
+                <div class="chart-max-points-inner">
+                    <Chart @ref="_maxPointsChart"
+                           Type="bar"
+                           Data="@_maxPointsChartData"
+                           Options="@_maxPointsChartOptions"
+                           Title="@LocalizationGroup.GetText("MaxPointsTitle", "")"
+                           Description="@LocalizationGroup.GetText("MaxPointsDescription", "")"/>
+                </div>
+            </LoadingContainer>
+        </div>
+    </div>
+</div>

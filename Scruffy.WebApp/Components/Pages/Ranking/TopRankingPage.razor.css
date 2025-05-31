@@ -1,0 +1,17 @@
+.charts-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    width: 100%;
+    height: 100%;
+}
+
+.chart-max-points-outer {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.chart-max-points-inner {
+   width: 100%;
+   height: 100%;
+}

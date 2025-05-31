@@ -67,6 +67,10 @@
    --icon-name: "person";
 }
 
+.bi-nav-icon-ranking-top {
+   --icon-name: "workspace_premium";
+}
+
 .bi-nav-icon-raid-participation {
    --icon-name: "bar_chart";
 }
