@@ -106,6 +106,20 @@ public class Program
                                                                         .WithRegion(Environment.GetEnvironmentVariable("SCRUFFY_MINIO_REGION"));
                                                               });
                                   });
+
+        var redisConnectionString = Environment.GetEnvironmentVariable("SCRUFFY_REDIS_CONNECTION_STRING");
+
+        if (string.IsNullOrWhiteSpace(redisConnectionString) == false)
+        {
+            builder.Services.AddStackExchangeRedisCache(opts =>
+                                                        {
+                                                            opts.Configuration = redisConnectionString;
+                                                            opts.InstanceName = "Scruffy.WebApp";
+                                                        });
+        }
+
+        builder.Services.AddHybridCache();
+
         builder.Services.AddSingleton<DpsReportProcessor>();
 
         var locationService = new LocalizationService();
