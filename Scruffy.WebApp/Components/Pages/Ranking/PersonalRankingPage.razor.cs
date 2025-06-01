@@ -11,6 +11,7 @@ using Scruffy.Data.Entity.Repositories.Guild;
 using Scruffy.Data.Entity.Repositories.GuildWars2.Account;
 using Scruffy.Data.Entity.Repositories.GuildWars2.Guild;
 using Scruffy.Data.Enumerations.Guild;
+using Scruffy.Data.Extensions;
 using Scruffy.Data.Json.ChartJs;
 using Scruffy.Data.Services.Guild;
 using Scruffy.Services.Core.Localization;
@@ -193,7 +194,7 @@ public partial class PersonalRankingPage
                                                             {
                                                                 Data = userPoints.Select(obj => obj.Points)
                                                                                  .ToArray(),
-                                                                BackgroundColor = userPoints.Select(obj => GetColor(obj.Type))
+                                                                BackgroundColor = userPoints.Select(obj => obj.Type.GetColor())
                                                                                             .ToArray()
                                                             }
                                                         ],
@@ -254,8 +255,8 @@ public partial class PersonalRankingPage
                                                                                                                 && rankPoint.Type == type)?.Points
                                                                           ?? 0.0)
                                                       .ToArray(),
-                                          BackgroundColor = [GetColor(type)],
-                                          BorderColor = [GetColor(type)],
+                                          BackgroundColor = [type.GetColor()],
+                                          BorderColor = [type.GetColor()]
                                       };
                 }
 
@@ -279,28 +280,6 @@ public partial class PersonalRankingPage
         _typeDescriptions ??= LocalizationService.GetGroup(nameof(GuildRankPointType));
 
         return _typeDescriptions.GetText(type.ToString(), type.ToString());
-    }
-
-    /// <summary>
-    /// Get color
-    /// </summary>
-    /// <param name="type">Type</param>
-    /// <returns>Color</returns>
-    private string GetColor(GuildRankPointType type)
-    {
-        return type switch
-               {
-                   GuildRankPointType.Login => "#1E6FA3",
-                   GuildRankPointType.Representation => "#CC4F6A",
-                   GuildRankPointType.AchievementPoints => "#CC9E44",
-                   GuildRankPointType.Membership => "#2F7A7A",
-                   GuildRankPointType.Donation => "#6B46C1",
-                   GuildRankPointType.DiscordVoiceActivity => "#CC7F33",
-                   GuildRankPointType.DiscordMessageActivity => "#8C8F93",
-                   GuildRankPointType.Events => "#2B8FB5",
-                   GuildRankPointType.Development => "#AD4A86",
-                   _ => "#FFFFFF"
-               };
     }
 
     #endregion // Methods

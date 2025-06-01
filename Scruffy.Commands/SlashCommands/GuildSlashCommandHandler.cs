@@ -19,6 +19,9 @@ public class GuildSlashCommandHandler : SlashCommandModuleBase
     /// </summary>
     public enum GuildBankUnlocks
     {
+        /// <summary>
+        /// Dyes
+        /// </summary>
         Dyes
     }
 
@@ -85,9 +88,8 @@ public class GuildSlashCommandHandler : SlashCommandModuleBase
         await CommandHandler.PostPersonalRankingHistoryTypeOverview(Context, Context.Member)
                             .ConfigureAwait(false);
 
-        var webAppEmbed = new EmbedBuilder().WithColor(Color.Green)
+        var webAppEmbed = new EmbedBuilder().WithColor(Color.DarkBlue)
                                             .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
-                                            .WithColor(Color.Green)
                                             .WithTimestamp(DateTime.Now)
                                             .WithDescription(LocalizationGroup.GetFormattedText("WebAppHint", "Would you like more precise data on your ranking? Then test the new [website]({0}).", _webbAppUrl + "/Ranking/Personal"));
 

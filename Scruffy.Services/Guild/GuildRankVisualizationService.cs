@@ -11,6 +11,7 @@ using Scruffy.Data.Entity.Repositories.Guild;
 using Scruffy.Data.Entity.Repositories.GuildWars2.Account;
 using Scruffy.Data.Entity.Repositories.GuildWars2.Guild;
 using Scruffy.Data.Enumerations.Guild;
+using Scruffy.Data.Extensions;
 using Scruffy.Data.Json.QuickChart;
 using Scruffy.Data.Services.Guild;
 using Scruffy.Services.Core;
@@ -260,19 +261,8 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                                                    new DataSet<double>
                                                                    {
                                                                        BorderColor = "#333333",
-                                                                       BackgroundColor = new List<string>
-                                                                                         {
-                                                                                             "#0d1c26",
-                                                                                             "#142b39",
-                                                                                             "#1d3e53",
-                                                                                             "#21475e",
-                                                                                             "#2e6384",
-                                                                                             "#357197",
-                                                                                             "#3c80aa",
-                                                                                             "#428ebd",
-                                                                                             "#5599c3",
-                                                                                             "#68a4ca"
-                                                                                         },
+                                                                       BackgroundColor = userPoints.Select(obj => obj.Type.GetColor())
+                                                                                                   .ToList(),
                                                                        Data = userPoints.Select(obj => obj.Points)
                                                                                         .ToList()
                                                                    }
@@ -581,34 +571,19 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                   .Select(obj => DateTime.Today.AddDays(obj))
                                   .ToList();
 
-            var colors = new List<string>
-                         {
-                             "#0d1c26",
-                             "#142b39",
-                             "#1d3e53",
-                             "#21475e",
-                             "#2e6384",
-                             "#357197",
-                             "#3c80aa",
-                             "#428ebd",
-                             "#5599c3",
-                             "#68a4ca"
-                         };
-
             foreach (var type in Enum.GetValues(typeof(GuildRankPointType))
                                      .OfType<GuildRankPointType>())
             {
                 dataSets.Add(new DataSet<double>
                              {
                                  Label = LocalizationGroup.GetText(type.ToString(), type.ToString()),
-                                 BorderColor = colors[(int)type],
+                                 BorderColor = type.GetColor(),
                                  Data = dates.Select(obj => currentPoints.FirstOrDefault(obj2 => obj2.Date == obj
                                                                                               && obj2.Type == type)?.Points
                                                          ?? 0.0)
                                              .ToList(),
                                  Fill = false,
-                                 PointRadius = 0.0,
-                                 BorderDash = (int)type % 2  == 0 ?  new double[] { 5 } : null
+                                 PointRadius = 0.0
                              });
             }
 
