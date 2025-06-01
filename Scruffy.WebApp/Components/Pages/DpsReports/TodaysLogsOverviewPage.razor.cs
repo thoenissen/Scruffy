@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 using GW2EIDPSReport.DPSReportJsons;
 
+using GW2EIJSON;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -218,14 +220,64 @@ public sealed partial class TodaysLogsOverviewPage : IAsyncDisposable
         {
             report.Boss = detailedReport.FightName;
             additionalData.Dps = detailedReport.Players?.Sum(player => player.DpsTargets?.Sum(dpsTarget => dpsTarget.Count > 0 ? dpsTarget[0].Dps : 0));
-            additionalData.Alacrity = detailedReport.Players?.Average(player => player.BuffUptimes?.FirstOrDefault(buf => buf.Id == AlacrityId)?.BuffData?.FirstOrDefault()?.Uptime);
-            additionalData.Quickness = detailedReport.Players?.Average(player => player.BuffUptimes?.FirstOrDefault(buf => buf.Id == QuicknessId)?.BuffData?.FirstOrDefault()?.Uptime);
+            additionalData.Alacrity = GetUptime(detailedReport.Players, AlacrityId);
+            additionalData.Quickness = GetUptime(detailedReport.Players, QuicknessId);
         }
 
         report.IsLoadingAdditionalData = false;
         report.AdditionalData = additionalData;
 
         await InvokeAsync(StateHasChanged).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Calculates the uptime of a specific buff across all players in the report
+    /// </summary>
+    /// <param name="players">Players</param>
+    /// <param name="buffId">Buff ID</param>
+    /// <returns>Average Uptime</returns>
+    private double? GetUptime(IReadOnlyList<JsonPlayer> players, int buffId)
+    {
+        if (players == null
+            || players.Count == 0)
+        {
+            return null;
+        }
+
+        double weightedUptime = 0;
+        long summedActiveTime = 0;
+
+        foreach (var player in players)
+        {
+            if (player.ActiveTimes == null
+                || player.ActiveTimes.Count == 0)
+            {
+                continue;
+            }
+
+            var playerActiveTime = player.ActiveTimes[0];
+            summedActiveTime += playerActiveTime;
+
+            if (player.BuffUptimesActive == null
+                || player.BuffUptimesActive.Count == 0)
+            {
+                continue;
+            }
+
+            var buffUptime = player.BuffUptimesActive.FirstOrDefault(buf => buf.Id == buffId);
+
+            if (buffUptime?.BuffData == null
+                || buffUptime.BuffData.Count == 0)
+            {
+                continue;
+            }
+
+            weightedUptime += buffUptime.BuffData[0].Uptime * playerActiveTime;
+        }
+
+        return summedActiveTime > 0
+                   ? weightedUptime / summedActiveTime
+                   : null;
     }
 
     /// <summary>
