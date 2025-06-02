@@ -87,6 +87,10 @@
    --icon-name: "table_view";
 }
 
+.bi-nav-icon-logs-search {
+   --icon-name: "search";
+}
+
 .bi-nav-icon-administration-users {
    --icon-name: "group";
 }
