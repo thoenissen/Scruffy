@@ -163,7 +163,7 @@ public sealed class DpsReportProcessor : IAsyncDisposable
                 using (var memoryStream = new MemoryStream())
                 {
                     var e = new GetObjectArgs().WithBucket("dps.report")
-                                               .WithObject(request.Id)
+                                               .WithObject($"{request.Id}.json".ToLowerInvariant())
                                                .WithCallbackStream(objectStream => objectStream.CopyTo(memoryStream));
 
                     await minioClient.GetObjectAsync(e).ConfigureAwait(false);
@@ -236,7 +236,7 @@ public sealed class DpsReportProcessor : IAsyncDisposable
                 using (var memoryStream = new MemoryStream(data))
                 {
                     var e = new PutObjectArgs().WithBucket("dps.report")
-                                               .WithObject(id)
+                                               .WithObject($"{id}.json".ToLowerInvariant())
                                                .WithStreamData(memoryStream)
                                                .WithObjectSize(data.Length)
                                                .WithContentType("application/json");
