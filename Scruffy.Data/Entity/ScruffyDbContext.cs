@@ -10,6 +10,7 @@ using Scruffy.Data.Entity.Tables.Discord;
 using Scruffy.Data.Entity.Tables.General;
 using Scruffy.Data.Entity.Tables.Guild;
 using Scruffy.Data.Entity.Tables.GuildWars2.Account;
+using Scruffy.Data.Entity.Tables.GuildWars2.DpsReports;
 using Scruffy.Data.Entity.Tables.GuildWars2.GameData;
 using Scruffy.Data.Entity.Tables.GuildWars2.Guild;
 using Scruffy.Data.Entity.Tables.LookingForGroup;
@@ -538,6 +539,33 @@ public class ScruffyDbContext : IdentityDbContext<UserEntity, RoleEntity, long, 
                                        obj.GuildId,
                                        obj.UserId
                                    });
+
+        modelBuilder.Entity<UserDpsReportsConfigurationEntity>()
+                    .HasKey(obj => new
+                                   {
+                                       obj.UserId
+                                   });
+
+        modelBuilder.Entity<DpsReportEntity>()
+                    .HasKey(obj => new
+                                   {
+                                       obj.UserId,
+                                       obj.Id
+                                   });
+        modelBuilder.Entity<DpsReportEntity>()
+                    .HasIndex(obj => new
+                                     {
+                                         obj.UserId,
+                                         obj.UploadTime
+                                     },
+                              "IX_UserId_UploadTime");
+        modelBuilder.Entity<DpsReportEntity>()
+                    .HasIndex(obj => new
+                              {
+                                  obj.UserId,
+                                  obj.EncounterTime
+                              },
+                              "IX_UserId_EncounterTime");
 
         // Statistics
         modelBuilder.Entity<DiscordMessageEntity>();
