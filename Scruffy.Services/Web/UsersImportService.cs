@@ -67,6 +67,7 @@ public class UsersImportService : LocatedServiceBase
                               .Select(obj => new
                                              {
                                                  obj.MemberDiscordRoleId,
+                                                 obj.PrivilegedMemberRoleId,
                                                  AdministratorRoleId = serverConfiguration.Where(obj2 => obj2.DiscordServerId == obj.DiscordServerId)
                                                                                           .Select(obj2 => obj2.DiscordAdministratorRoleId)
                                                                                           .FirstOrDefault()
@@ -74,10 +75,12 @@ public class UsersImportService : LocatedServiceBase
                               .FirstOrDefault();
 
         if (roles?.MemberDiscordRoleId != null
-         && roles.AdministratorRoleId != null)
+            && (roles.AdministratorRoleId != null
+                || roles.PrivilegedMemberRoleId != null))
         {
             var users = new List<(long UserId, ulong DiscordAccountId, string Name)>();
             var administrators = new List<long>();
+            var privilegedMembers = new List<long>();
 
             foreach (var user in await discordServer.GetUsersAsync()
                                                     .ConfigureAwait(false))
@@ -91,9 +94,16 @@ public class UsersImportService : LocatedServiceBase
                     {
                         users.Add((internalUser.Id, user.Id, $"{user.Username}#{user.Discriminator}"));
 
-                        if (user.RoleIds.Contains(roles.AdministratorRoleId.Value))
+                        if (roles.AdministratorRoleId != null
+                            && user.RoleIds.Contains(roles.AdministratorRoleId.Value))
                         {
                             administrators.Add(internalUser.Id);
+                        }
+
+                        if (roles.PrivilegedMemberRoleId != null
+                            && user.RoleIds.Contains(roles.PrivilegedMemberRoleId.Value))
+                        {
+                            privilegedMembers.Add(internalUser.Id);
                         }
                     }
                 }
@@ -105,6 +115,10 @@ public class UsersImportService : LocatedServiceBase
 
             await _dbFactory.GetRepository<UserRoleRepository>()
                             .BulkInsertAdministrators(administrators)
+                            .ConfigureAwait(false);
+
+            await _dbFactory.GetRepository<UserRoleRepository>()
+                            .BulkInsertPrivilegedMembers(privilegedMembers)
                             .ConfigureAwait(false);
 
             await _dbFactory.GetRepository<UserRoleRepository>()
