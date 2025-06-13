@@ -17,7 +17,6 @@ using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Data.Entity.Tables.Raid;
 using Scruffy.Data.Enumerations.Raid;
-using Scruffy.Services.Core;
 using Scruffy.Services.Core.Extensions;
 using Scruffy.WebApp.Components.Controls.Raid;
 using Scruffy.WebApp.DTOs.Raid;
@@ -27,7 +26,7 @@ namespace Scruffy.WebApp.Components.Pages.Raid;
 /// <summary>
 /// Line up
 /// </summary>
-[Authorize(Roles = "Administrator")]
+[Authorize(Roles = "PrivilegedMember")]
 public partial class RaidLineUpPage
 {
     #region Constants
