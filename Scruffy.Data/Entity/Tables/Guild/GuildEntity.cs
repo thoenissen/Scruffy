@@ -48,6 +48,11 @@ public class GuildEntity
     /// </summary>
     public ulong? MemberDiscordRoleId { get; set; }
 
+    /// <summary>
+    /// Role of privilege members
+    /// </summary>
+    public ulong? PrivilegedMemberRoleId { get; set; }
+
     #region Navigation - Properties
 
     /// <summary>
