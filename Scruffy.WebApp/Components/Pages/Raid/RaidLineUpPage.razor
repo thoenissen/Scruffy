@@ -158,6 +158,6 @@
                 <RaidSquadComponent GroupNumber="@(index + 1)" Registrations="@_registrations" AssignmentChanged="OnSquadAssignmentChanged" @ref="_squads[currentIndex]"/>
             }
         </div>
-        <button type="submit" class="btn btn-primary btn-commit" @onclick="OnCommit">@LocalizationGroup.GetText("Commit", "Commit")</button>
+        <button type="submit" class="primary-button btn-commit" @onclick="OnCommit">@LocalizationGroup.GetText("Commit", "Commit")</button>
     </div>
 </div>

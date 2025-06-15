@@ -8,7 +8,7 @@ namespace Scruffy.WebApp.Components.Layout;
 /// <summary>
 /// Top menu
 /// </summary>
-public sealed partial class TopMenu : IDisposable
+public sealed partial class LoginMenu : IDisposable
 {
     #region Fields
 

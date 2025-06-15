@@ -1,110 +1,88 @@
 ﻿@inherits Scruffy.WebApp.Components.Base.LocatedComponent
 
-<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid d-flex align-items-center">
-        <img src="logo.png" alt="Logo" class="navbar-logo"/>
-        <a class="navbar-brand ms-2" href="">Forces of Imagination</a>
-    </div>
-</div>
-<input type="checkbox" title="Navigation menu" class="navbar-toggler"/>
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-nav-icon bi-nav-icon-home"
-                      aria-hidden="true">
-                </span>@LocalizationGroup.GetText("Home", "Home")
-            </NavLink>
-        </div>
-        <AuthorizeView Roles="Member">
-            <Authorized Context="MemberContext">
-                <div class="nav-group">
-                    <div class="nav-group-header px-3">@LocalizationGroup.GetText("Ranking", "Ranking")</div>
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="/Ranking/Personal" Match="NavLinkMatch.Prefix">
-                            <span class="bi bi-nav-icon bi-nav-icon-ranking-personal"
-                                  aria-hidden="true">
-                            </span>@LocalizationGroup.GetText("Personal", "Personal")
+<div class="navigation-menu">
+    <AuthorizeView Roles="Member">
+        <Authorized Context="MemberContext">
+            <div class="navigation-menu-group">
+                <div class="navigation-menu-header">@LocalizationGroup.GetText("Ranking", "Ranking")</div>
+                <span class="navigation-menu-items">
+                    <div class="navigation-menu-item">
+                        <NavLink class="navigation-menu-link" href="/Ranking/Personal" Match="NavLinkMatch.Prefix">
+                            @LocalizationGroup.GetText("Personal", "Personal")
                         </NavLink>
                     </div>
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="/Ranking/Top" Match="NavLinkMatch.Prefix">
-                            <span class="bi bi-nav-icon bi-nav-icon-ranking-top"
-                                  aria-hidden="true">
-                            </span>@LocalizationGroup.GetText("Top", "Top")
+                    <div class="navigation-menu-item">
+                        <NavLink class="navigation-menu-link" href="/Ranking/Top" Match="NavLinkMatch.Prefix">
+                            @LocalizationGroup.GetText("Top", "Top")
                         </NavLink>
                     </div>
-                </div>
-                <div class="nav-group">
-                    <div class="nav-group-header px-3">@LocalizationGroup.GetText("Raid", "Raid")</div>
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="/Raid/Participation" Match="NavLinkMatch.Prefix">
-                            <span class="bi bi-nav-icon bi-nav-icon-raid-participation"
-                                  aria-hidden="true">
-                            </span>@LocalizationGroup.GetText("Participation", "Participation")
+                </span>
+            </div>
+            <div class="navigation-menu-group">
+                <div class="navigation-menu-header">@LocalizationGroup.GetText("Raid", "Raid")</div>
+                <span class="navigation-menu-items">
+                    <div class="navigation-menu-item">
+                        <NavLink class="navigation-menu-link" href="/Raid/Participation" Match="NavLinkMatch.Prefix">
+                            @LocalizationGroup.GetText("Participation", "Participation")
                         </NavLink>
                     </div>
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="/Raid/Roles" Match="NavLinkMatch.Prefix">
-                            <span class="bi bi-nav-icon bi-nav-icon-raid-roles"
-                                  aria-hidden="true">
-                            </span>@LocalizationGroup.GetText("Roles", "Roles")
+                    <div class="navigation-menu-item">
+                        <NavLink class="navigation-menu-link" href="/Raid/Roles" Match="NavLinkMatch.Prefix">
+                            @LocalizationGroup.GetText("Roles", "Roles")
                         </NavLink>
                     </div>
                     <AuthorizeView Roles="PrivilegedMember">
                         <Authorized>
-                            <div class="nav-item px-3">
-                                <NavLink class="nav-link" href="/Raid/LineUp" Match="NavLinkMatch.Prefix">
-                                    <span class="bi bi-nav-icon bi-nav-icon-raid-lineup"
-                                          aria-hidden="true">
-                                    </span>@LocalizationGroup.GetText("LineUp", "Line up")
+                            <div class="navigation-menu-item">
+                                <NavLink class="navigation-menu-link" href="/Raid/LineUp" Match="NavLinkMatch.Prefix">
+                                    @LocalizationGroup.GetText("LineUp", "Line up")
                                 </NavLink>
                             </div>
                         </Authorized>
                     </AuthorizeView>
-                </div>
-                <div class="nav-group">
-                    <div class="nav-group-header px-3">@LocalizationGroup.GetText("Logs", "Logs")</div>
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="/DpsReports/Today" Match="NavLinkMatch.Prefix">
-                            <span class="bi bi-nav-icon bi-nav-icon-logs-today"
-                                  aria-hidden="true">
-                            </span>@LocalizationGroup.GetText("Today", "Today's")
+                </span>
+            </div>
+            <div class="navigation-menu-group">
+                <div class="navigation-menu-header">@LocalizationGroup.GetText("Logs", "Logs")</div>
+                <span class="navigation-menu-items">
+                    <div class="navigation-menu-item">
+                        <NavLink class="navigation-menu-link" href="/DpsReports/Today" Match="NavLinkMatch.Prefix">
+                            @LocalizationGroup.GetText("Today", "Today's")
                         </NavLink>
                     </div>
+                </span>
+            </div>
+        </Authorized>
+    </AuthorizeView>
+    <AuthorizeView Roles="Administrator">
+        <Authorized>
+            <div class="navigation-menu-group">
+                <div class="navigation-menu-header">
+                    @LocalizationGroup.GetText("Administration", "Administration")
                 </div>
-            </Authorized>
-        </AuthorizeView>
-        <AuthorizeView Roles="Administrator">
-            <Authorized>
-                <div class="nav-group">
-                    <div
-                        class="nav-group-header px-3">
-                        @LocalizationGroup.GetText("Administration", "Administration")
-                    </div>
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="/Administration/Users" Match="NavLinkMatch.Prefix">
-                            <span class="bi bi-nav-icon bi-nav-icon-administration-users"
-                                  aria-hidden="true">
-                            </span>@LocalizationGroup.GetText("Users", "Users")
+                <span class="navigation-menu-items">
+
+                    <div class="navigation-menu-item">
+                        <NavLink class="navigation-menu-link" href="/Administration/Users" Match="NavLinkMatch.Prefix">
+                            @LocalizationGroup.GetText("Users", "Users")
                         </NavLink>
                     </div>
-                </div>
-            </Authorized>
-        </AuthorizeView>
-        <AuthorizeView Roles="Member">
-            <Authorized>
-                <div class="nav-group">
-                    <div class="nav-group-header px-3">@LocalizationGroup.GetText("Development", "In Development")</div>
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="/DpsReports/Search" Match="NavLinkMatch.Prefix">
-                            <span class="bi bi-nav-icon bi-nav-icon-logs-search"
-                                  aria-hidden="true">
-                            </span>Logs - @LocalizationGroup.GetText("Search", "Search")
+                </span>
+            </div>
+        </Authorized>
+    </AuthorizeView>
+    <AuthorizeView Roles="Member">
+        <Authorized>
+            <div class="navigation-menu-group">
+                <div class="navigation-menu-header">@LocalizationGroup.GetText("Development", "In Development")</div>
+                <span class="navigation-menu-items">
+                    <div class="navigation-menu-item">
+                        <NavLink class="navigation-menu-link" href="/DpsReports/Search" Match="NavLinkMatch.Prefix">
+                            Logs - @LocalizationGroup.GetText("Search", "Search")
                         </NavLink>
                     </div>
-                </div>
-            </Authorized>
-        </AuthorizeView>
-    </nav>
+                </span>
+            </div>
+        </Authorized>
+    </AuthorizeView>
 </div>

@@ -1,17 +1,32 @@
-html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
-
 :root {
-   --bs-body-color: #A0AEC0;
+   /** Colors **/
+   --text: #eae9fc;
+   --background: #171a1c;
+   --background-alt: #0c0d0e;
+   --primary: #351d3f;
+   --secondary: #281476;
+   --accent: #f1d083;
+   /** Fonts **/
+   font-family: Quicksand, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+   --font-scale: 1.333;
+   --p: 1rem;
+   --h5: calc(var(--p) * var(--font-scale));
+   --h4: calc(var(--h5) * var(--font-scale));
+   --h3: calc(var(--h4) * var(--font-scale));
+   --h2: calc(var(--h3) * var(--font-scale));
+   --h1: calc(var(--h2) * var(--font-scale));
+   --small: calc(var(--p) / var(--font-scale));
+
+   --border1: 1rem;
+   --border05: 0.5rem;
 }
 
 body {
-   background-color: #0D0E0F
-}
-
-a, .btn-link {
-    color: #006bb7;
+   min-width: 1200px;
+   min-height: 800px;
+   color: var(--text);
+   background-color: var(--background);
+   margin: 0px;
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
@@ -47,3 +62,48 @@ h1:focus {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+/* Buttons */
+button {
+   cursor: pointer;
+   border: none;
+   color: var(--text);
+}
+
+button:hover {
+   transform: translate(0, -3px);
+   box-shadow: 0 20px 80px -10px var(--primary);
+}
+
+.primary-button {
+   padding: 0.5em 2em;
+   background-color: var(--primary);
+   border-radius: var(--border05);
+   transition: transform ease 0.2s, box-shadow ease 0.2s;
+   display: inline-block;
+   font-size: var(--p);
+   z-index: 2;
+   white-space: nowrap;
+}
+
+   .primary-button:hover {
+      transform: translate(0, -3px);
+      box-shadow: 0 20px 80px -10px var(--primary);
+   }
+
+.secondary-button {
+   padding: 0.5em 2em;
+   background-color: var(--secondary);
+   border-radius: 0.5rem;
+   display: inline-block;
+   font-size: var(--p);
+   z-index: 1;
+   cursor: pointer;
+   transition: transform ease 0.2s;
+   white-space: nowrap;
+}
+
+   .secondary-button:hover {
+      transform: translate(0, -3px);
+      transition: transform ease 0.2s;
+   }
