@@ -7,6 +7,41 @@ namespace Scruffy.WebApp;
 /// </summary>
 public static class WebAppConfiguration
 {
+    #region Nested classes
+
+    /// <summary>
+    /// Colors
+    /// </summary>
+    public static class Colors
+    {
+        /// <summary>
+        /// Text
+        /// </summary>
+        public const string Text = "#eae9fc";
+
+        /// <summary>
+        /// Background
+        /// </summary>
+        public const string Background = "#171a1c";
+
+        /// <summary>
+        /// Primary
+        /// </summary>
+        public const string Primary = "#351d3f";
+
+        /// <summary>
+        /// Secondary
+        /// </summary>
+        public const string Secondary = "#281476";
+
+        /// <summary>
+        /// Ascent
+        /// </summary>
+        public const string Accent = "#f1d083";
+    }
+
+    #endregion // Nested classes
+
     #region Constructor
 
     /// <summary>

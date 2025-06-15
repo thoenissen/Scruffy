@@ -8,5 +8,5 @@ public class PluginsCollection
     /// <summary>
     /// Value indicating whether the legend plugin is enabled
     /// </summary>
-    public bool Legend { get; set; }
+    public LegendPlugin Legend { get; set; }
 }

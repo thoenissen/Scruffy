@@ -64,10 +64,7 @@ public partial class PersonalRankingPage
                                     {
                                         Responsive = true,
                                         MaintainAspectRatio = false,
-                                        Plugins = new PluginsCollection
-                                                  {
-                                                      Legend = false
-                                                  },
+                                        Plugins = new PluginsCollection(),
                                         Scales = new Scales
                                                  {
                                                      X = new Axes
@@ -75,18 +72,18 @@ public partial class PersonalRankingPage
                                                              Grid = new GridConfiguration(),
                                                              Ticks = new AxisTicks
                                                                      {
-                                                                         Color = "#A0AEC0"
+                                                                         Color = WebAppConfiguration.Colors.Text
                                                                      }
                                                          },
                                                      Y = new Axes
                                                          {
                                                              Grid = new GridConfiguration
                                                                     {
-                                                                        Color = "lightgrey"
+                                                                        Color = WebAppConfiguration.Colors.Text
                                                                     },
                                                              Ticks = new AxisTicks
                                                                      {
-                                                                         Color = "#A0AEC0"
+                                                                         Color = WebAppConfiguration.Colors.Text
                                                                      }
                                                          }
                                                  }
@@ -97,7 +94,14 @@ public partial class PersonalRankingPage
                                    MaintainAspectRatio = false,
                                    Plugins = new PluginsCollection
                                              {
-                                                 Legend = true
+                                                 Legend = new LegendPlugin
+                                                          {
+                                                              Enabled = true,
+                                                              Labels = new LegendLabels
+                                                                       {
+                                                                           Color = WebAppConfiguration.Colors.Text
+                                                                       }
+                                                          }
                                              },
                                    Scales = new Scales
                                             {
@@ -106,7 +110,7 @@ public partial class PersonalRankingPage
                                                         Grid = new GridConfiguration(),
                                                         Ticks = new AxisTicks
                                                                 {
-                                                                    Color = "#A0AEC0"
+                                                                    Color = WebAppConfiguration.Colors.Text
                                                                 }
                                                     },
                                                 Y = new Axes
@@ -114,11 +118,11 @@ public partial class PersonalRankingPage
                                                         Stacked = true,
                                                         Grid = new GridConfiguration
                                                                {
-                                                                   Color = "lightgrey"
+                                                                   Color = WebAppConfiguration.Colors.Text
                                                                },
                                                         Ticks = new AxisTicks
                                                                 {
-                                                                    Color = "#A0AEC0"
+                                                                    Color = WebAppConfiguration.Colors.Text
                                                                 }
                                                     }
                                             }

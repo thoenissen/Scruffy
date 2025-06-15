@@ -40,10 +40,7 @@ public partial class RaidParticipationPage
                         {
                             Responsive = true,
                             MaintainAspectRatio = false,
-                            Plugins = new PluginsCollection
-                                      {
-                                          Legend = false
-                                      },
+                            Plugins = new PluginsCollection(),
                             IndexAxis = "y",
                             Scales = new Scales
                                      {
@@ -51,18 +48,18 @@ public partial class RaidParticipationPage
                                              {
                                                  Grid = new GridConfiguration
                                                         {
-                                                            Color = "lightgrey"
+                                                            Color = WebAppConfiguration.Colors.Text
                                                         },
                                                  Ticks = new AxisTicks
                                                          {
-                                                             Color = "#A0AEC0"
+                                                             Color = WebAppConfiguration.Colors.Text
                                                          }
                                              },
                                          Y = new Axes
                                              {
                                                  Ticks = new AxisTicks
                                                          {
-                                                             Color = "#A0AEC0"
+                                                             Color = WebAppConfiguration.Colors.Text
                                                          }
                                              }
                                      }
@@ -101,8 +98,8 @@ public partial class RaidParticipationPage
                              Datasets = [
                                             new DataSet
                                             {
-                                                Color = users.Select(_ => "red").ToArray(),
-                                                BackgroundColor = users.Select(_ => "#316ed5").ToArray(),
+                                                Color = users.Select(_ => string.Empty).ToArray(),
+                                                BackgroundColor = users.Select(_ => WebAppConfiguration.Colors.Secondary).ToArray(),
                                                 Data = users.Select(user => user.Points).ToArray()
                                             }
                                         ],

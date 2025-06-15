@@ -58,10 +58,7 @@ public partial class TopRankingPage : LocatedComponent
                                  {
                                      Responsive = true,
                                      MaintainAspectRatio = false,
-                                     Plugins = new PluginsCollection
-                                               {
-                                                   Legend = false
-                                               },
+                                     Plugins = new PluginsCollection(),
                                      IndexAxis = "y",
                                      Scales = new Scales
                                               {
@@ -69,18 +66,18 @@ public partial class TopRankingPage : LocatedComponent
                                                       {
                                                           Grid = new GridConfiguration
                                                                  {
-                                                                     Color = "lightgrey"
+                                                                     Color = WebAppConfiguration.Colors.Text
                                                                  },
                                                           Ticks = new AxisTicks
                                                                   {
-                                                                      Color = "#A0AEC0"
+                                                                      Color = WebAppConfiguration.Colors.Text
                                                                   }
                                                       },
                                                   Y = new Axes
                                                       {
                                                           Ticks = new AxisTicks
                                                                   {
-                                                                      Color = "#A0AEC0"
+                                                                      Color = WebAppConfiguration.Colors.Text
                                                                   }
                                                       }
                                               }
@@ -124,7 +121,7 @@ public partial class TopRankingPage : LocatedComponent
                                                      {
                                                          Data = maxPoints.Select(points => points.Points)
                                                                          .ToArray(),
-                                                         BackgroundColor = maxPoints.Select(_ => "#316ed5")
+                                                         BackgroundColor = maxPoints.Select(_ => WebAppConfiguration.Colors.Secondary)
                                                                                     .ToArray()
                                                      }
                                                  ],
