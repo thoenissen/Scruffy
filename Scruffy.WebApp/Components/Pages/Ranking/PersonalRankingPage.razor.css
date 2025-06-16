@@ -1,10 +1,18 @@
-﻿.charts-container {
+﻿.page {
+   max-height: 1000px;
+   width: 100%;
+   height: 100%;
+   flex: 1 0 auto;
+}
+
+.charts-container {
    display: grid;
    grid-template-columns: 1fr 1fr;
    grid-template-rows: 1fr;
    gap: 2rem;
    width: 100%;
    height: 100%;
+   flex: 1 0 auto;
 }
 
 .chart-distribution {
@@ -15,21 +23,4 @@
 .chart-history {
    grid-column: 2;
    grid-row: 1;
-}
-
-@media (max-width: 1024px) {
-   .charts-container {
-      grid-template-columns: 1fr;
-      grid-template-rows: 1fr 1fr;
-   }
-
-   .chart-distribution {
-      grid-column: 1;
-      grid-row: 1;
-   }
-
-   .chart-history {
-      grid-column: 1;
-      grid-row: 2;
-   }
 }

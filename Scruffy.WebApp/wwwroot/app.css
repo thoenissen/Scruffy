@@ -6,9 +6,11 @@
    --primary: #351d3f;
    --secondary: #281476;
    --accent: #f1d083;
+   
    /** Fonts **/
    font-family: Quicksand, 'Helvetica Neue', Helvetica, Arial, sans-serif;
    --font-scale: 1.333;
+
    --p: 1rem;
    --h5: calc(var(--p) * var(--font-scale));
    --h4: calc(var(--h5) * var(--font-scale));
@@ -19,11 +21,14 @@
 
    --border1: 1rem;
    --border05: 0.5rem;
+
+   --min-width: 1200px;
+   --min-height: 800px;
 }
 
 body {
-   min-width: 1200px;
-   min-height: 800px;
+   min-width: var(--min-width);
+   min-height: var(--min-height);
    color: var(--text);
    background-color: var(--background);
    margin: 0px;

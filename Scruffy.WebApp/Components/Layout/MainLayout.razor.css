@@ -68,11 +68,11 @@
 main {
    flex: 1;
    overflow: auto;
-   min-height: calc(100vh - 4rem);
+   min-height: max(calc(100vh - 4rem), 800px);
 }
 
 .limiter {
-   min-height: calc(100vh - 4rem);
+   display: flex;
    max-width: 1700px;
    margin: 0 auto;
    position: relative;
@@ -104,5 +104,11 @@ main {
    }
 
 .content {
+   display: flex;
    padding: 1rem 4rem;
+
+   min-width: var(--min-width);
+   min-height: max(var(--min-height), calc(100vh - 4rem));
+   
+   flex: 1 1 auto;
 }
