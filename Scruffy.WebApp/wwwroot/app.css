@@ -4,7 +4,7 @@
    --background: #171a1c;
    --background-alt: #0c0d0e;
    --primary: #351d3f;
-   --secondary: #351d3f;
+   --secondary: #004d4d;
    --accent: #f1d083;
    --color-indicator-low: #dc2626;
    --color-indicator-medium: #f59e0b;
@@ -32,6 +32,11 @@ body {
    background-color: var(--background);
    margin: 0px;
    font-family: var(--font-family);
+}
+
+a {
+   color: var(--text);
+   text-decoration: none;
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
