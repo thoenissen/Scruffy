@@ -32,7 +32,7 @@ public static class WebAppConfiguration
         /// <summary>
         /// Secondary
         /// </summary>
-        public const string Secondary = "#281476";
+        public const string Secondary = "#351d3f";
 
         /// <summary>
         /// Ascent
