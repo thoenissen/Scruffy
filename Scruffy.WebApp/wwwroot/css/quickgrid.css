@@ -1,44 +1,38 @@
 ﻿.quickgrid-std {
-   background-color: #1a1a1a;
-   padding: 1rem;
-   border-radius: 8px;
-   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-   margin-top: 1rem;
+   border-radius: 0.5rem;
+   overflow: hidden;
 }
 
    .quickgrid-std table {
       min-width: 100%;
       border-collapse: collapse;
-      color: #ffffff;
+      color: var(--text);
    }
 
    .quickgrid-std thead {
-      border-bottom: 2px solid #4a5568;
+      border-bottom: 2px solid var(--text);
    }
 
    .quickgrid-std th {
       padding: 1rem 1rem 1rem 0rem;
       text-align: left;
-      background-color: #2d3748;
+      background-color: var(--primary);
       font-weight: 600;
       letter-spacing: 0.05em;
    }
 
    .quickgrid-std td {
       padding: 0.75rem 1rem;
-      border-bottom: 1px solid #4a5568;
+      border-bottom: 1px solid var(--text);
    }
 
-   .quickgrid-std tr:nth-child(odd) {
-      background-color: rgba(255, 255, 255, 0.05);
-   }
-
-   .quickgrid-std tr:nth-child(even) {
-      background-color: rgba(255, 255, 255, 0.1);
+   .quickgrid-std tr {
+      height: 2rem;
+      background-color: var(--background)
    }
 
    .quickgrid-std tr:hover {
-      background-color: rgba(66, 153, 225, 0.1);
+      background-color: var(--background-alt)
    }
 
    .quickgrid-std .sort-indicator {
@@ -52,5 +46,6 @@
    }
 
    .quickgrid-std .col-title-text {
-      color: var(--bs-body-color);
+      color: var(--text);
+      font-size: large;
    }

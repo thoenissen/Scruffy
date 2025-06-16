@@ -72,9 +72,8 @@
    width: 192px;
    padding: 0.1rem 1.4rem 0.1rem 0.4rem;
    display: table-cell;
-   background-color: #2d3748;
    font-weight: 600;
-   color: var(--bs-body-color);
+   color: var(--text);
    text-align: center;
 }
 
@@ -92,7 +91,9 @@
 .statistics-row {
    display: table;
    width: 100%;
-   border-top: 2px solid #4a5568;
+   background: var(--primary);
+   border-top: 2px solid var(--text);
+   border-spacing: 0rem 0.5rem;
 }
 
 .statistics-container {
@@ -104,14 +105,15 @@
 }
 
 .availability-low {
-   color: #dc2626
+   color: var(--color-indicator-low)
 }
 
 .availability-medium {
-   color: #f59e0b
+   color: var(--color-indicator-medium)
 }
 
 .availability-high {
+   color: var(--color-indicator-high)
 }
 
 .btn-export {
@@ -128,7 +130,7 @@
 .checkbox-activeplayers {
    display: flex;
    flex-direction: row;
-   border: 3px solid #4a5568;
+   border: 3px solid var(--text);
    border-radius: 10px;
    padding: 0.5rem;
    margin-top: 1rem;

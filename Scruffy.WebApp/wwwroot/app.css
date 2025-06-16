@@ -6,11 +6,12 @@
    --primary: #351d3f;
    --secondary: #281476;
    --accent: #f1d083;
-   
+   --color-indicator-low: #dc2626;
+   --color-indicator-medium: #f59e0b;
+   --color-indicator-high: var(--text);
    /** Fonts **/
-   font-family: Quicksand, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+   --font-family: Quicksand, 'Helvetica Neue', Helvetica, Arial, sans-serif;
    --font-scale: 1.333;
-
    --p: 1rem;
    --h5: calc(var(--p) * var(--font-scale));
    --h4: calc(var(--h5) * var(--font-scale));
@@ -18,10 +19,8 @@
    --h2: calc(var(--h3) * var(--font-scale));
    --h1: calc(var(--h2) * var(--font-scale));
    --small: calc(var(--p) / var(--font-scale));
-
    --border1: 1rem;
    --border05: 0.5rem;
-
    --min-width: 1200px;
    --min-height: 800px;
 }
@@ -32,6 +31,7 @@ body {
    color: var(--text);
    background-color: var(--background);
    margin: 0px;
+   font-family: var(--font-family);
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
@@ -73,6 +73,8 @@ button {
    cursor: pointer;
    border: none;
    color: var(--text);
+   font-family: var(--font-family);
+   font-weight: bold;
 }
 
 button:hover {
