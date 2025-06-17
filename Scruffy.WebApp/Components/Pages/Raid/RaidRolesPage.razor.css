@@ -118,22 +118,20 @@
 
 .btn-export {
    width: 150px;
-   margin-top: 1rem;
-   margin-left: 2rem;
 }
 
 .options-container {
    display: flex;
-   flex-direction: row;
+   flex-direction: row-reverse;
+   align-items: center;
+   gap: 1rem;
+   margin-bottom: 1rem;
 }
 
 .checkbox-activeplayers {
    display: flex;
    flex-direction: row;
-   border: 3px solid var(--text);
-   border-radius: 10px;
-   padding: 0.5rem;
-   margin-top: 1rem;
+   align-items: center
 }
 
 .label-activeplayers {

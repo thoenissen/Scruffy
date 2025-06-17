@@ -9,6 +9,16 @@
 <PageTitle>@LocalizationGroup.GetText("PageTitle", "FooI - Raid - Roles")</PageTitle>
 
 <div class="scrollable-page">
+    <div class="options-container">        
+        <button class="primary-button btn-export" @onclick="OnExport">@LocalizationGroup.GetText("Export", "Export")</button>
+        <div class="checkbox-activeplayers">
+            <InputCheckbox @bind-Value="@_showOnlyActivePlayers" class="slider-checkbox" />
+
+            <div class="label-activeplayers">
+                @LocalizationGroup.GetText("ActivePlayer", "Only active players")
+            </div>
+        </div>
+    </div>
     <div class="quickgrid-container">
         <div class="quickgrid-std">
             <div @ref="_rolesElement">
@@ -131,13 +141,5 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="options-container">
-       <div class="checkbox-activeplayers">
-           <InputCheckbox @bind-Value="_showOnlyActivePlayers" DisplayName="Test" />
-           <div class="label-activeplayers">@LocalizationGroup.GetText("ActivePlayer", "Only active players")</div>
-       </div>
-        <button class="primary-button btn-export" @onclick="OnExport">@LocalizationGroup.GetText("Export", "Export")</button>
     </div>
 </div>
