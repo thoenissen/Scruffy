@@ -1,4 +1,8 @@
-﻿.welcome-container {
+﻿.page {
+   margin: 0 auto;
+}
+
+.welcome-container {
    display: flex;
    flex-direction: column;
    align-items: center;

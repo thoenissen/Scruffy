@@ -983,7 +983,7 @@
          "Roles": "Rollen",
          "Administration": "Administration",
          "Users": "Benutzer",
-         "Development": "Aktuelle Entwicklung",
+         "Development": "Beta-Funktionen",
          "LineUp": "Aufstellung"
       },
       "HomePage": {
@@ -1059,7 +1059,8 @@
          "Boss": "Gegner",
          "Dps": "DPS",
          "Duration": "Dauer",
-         "Loading": "Lade..."
+         "Loading": "Lade...",
+         "NoLogs": "Es stehen keine Logs zur Verfügung."
       },
      "TopRankingPage": {
        "PageTitle": "FooI - Ranking - Bestenliste",

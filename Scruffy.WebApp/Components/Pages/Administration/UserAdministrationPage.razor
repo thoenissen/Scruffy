@@ -6,10 +6,12 @@
 
 <PageTitle>@LocalizationGroup.GetText("PageTitle", "FooI - Administration - Users")</PageTitle>
 
-<div class="scrollable-page">
+<div class="page">
     <div>
-        <label>Filter:</label>
-        <input @bind="_filter" @bind:event="oninput" @bind:after="OnFilterChanged"/>
+      <div class="filter-container">
+         <input type="text" @bind="_filter" @bind:event="oninput" @bind:after="OnFilterChanged" />
+         <label>Filter</label>
+       </div>
 
         <div class="quickgrid-std mb-3">
             <QuickGrid Items="@_filteredUsers">

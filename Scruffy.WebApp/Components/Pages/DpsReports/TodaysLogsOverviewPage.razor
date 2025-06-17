@@ -7,11 +7,12 @@
 
 <PageTitle>@LocalizationGroup.GetText("PageTitle", "FooI - Logs - Today")</PageTitle>
 
-<h3>@LocalizationGroup.GetText("PageHeader", "Today's logs")</h3>
-
-<LoadingContainer IsLoading="@_isPageLoading">
-    <div class="page-container">
-        <div class="quickgrid-std registrations-container mb-3">
+<div class="page-container">
+    <h3>@LocalizationGroup.GetText("PageHeader", "Today's logs")</h3>
+    <LoadingContainer IsLoading="@_isPageLoading">
+       @if (_reports?.Count > 0)
+       {
+        <div class="quickgrid-std registrations-container">
             <QuickGrid Items="@_reports.AsQueryable()">
                 <TemplateColumn Context="u" Sortable="false">
                     @if (u.IsSuccess)
@@ -49,6 +50,11 @@
                     <a target="_blank" rel="noopener noreferrer" href="@u.PermaLink">⧉</a>
                 </TemplateColumn>
             </QuickGrid>
-        </div>
-    </div>
-</LoadingContainer>
+         </div>
+      }
+      else
+      {
+         <label>@LocalizationGroup.GetText("NoLogs", "No logs are available.")</label>
+      }
+   </LoadingContainer>
+</div>

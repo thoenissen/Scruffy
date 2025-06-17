@@ -1,19 +1,10 @@
-﻿::deep input {
-   background-color: #2d3748;
-   border: 1px solid #4a5568;
-   color: white;
-   padding: 0.5rem 1rem;
-   border-radius: 4px;
-   margin: 1rem 0;
+﻿.page {
+   margin: 0 auto;
 }
 
-   ::deep input:focus {
-      outline: none;
-      border-color: #63b3ed;
-      box-shadow: 0 0 0 3px rgba(99, 179, 237, 0.3);
-   }
-
-label {
-   color: #a0aec0;
-   margin-right: 0.5rem;
+.filter-container {
+   display: flex;
+   flex-direction: row-reverse;
+   align-items: center;
+   gap: 1rem;
 }

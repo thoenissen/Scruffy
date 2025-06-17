@@ -22,6 +22,7 @@
    border-bottom: 0.25rem solid var(--primary);
    padding-left: 1rem;
    padding-right: 1rem;
+   z-index: 1000;
 }
 
 .logo {
