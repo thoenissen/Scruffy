@@ -94,6 +94,7 @@
    background: var(--primary);
    border-top: 2px solid var(--text);
    border-spacing: 0rem 0.5rem;
+   border-radius: 0rem 0rem 0.5rem 0.5rem;
 }
 
 .statistics-container {

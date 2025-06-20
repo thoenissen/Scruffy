@@ -1,9 +1,15 @@
-﻿.lineup-page {
+﻿.page {
+   display: flex;
+   flex-direction: column;
+}
+
+.lineup-page {
    display: flex;
    flex-direction: row;
    flex-wrap: wrap;
    gap: 1rem;
 }
+
 .registrations-container {
    display: flex;
    flex-direction: column;
@@ -47,7 +53,6 @@
 ::deep .isassigned-icon {
    font-family: 'Material Icons';
    width: 24px;
-   height: 24px;
    text-align: center;
 }
 
@@ -89,4 +94,5 @@
    width: 150px;
    grid-column: 1;
    margin-left: auto;
+   margin-top: 1rem;
 }

@@ -1,6 +1,7 @@
 :root {
    /** Colors **/
    --text: #eae9fc;
+   --text-disabled: #bfbcf6;
    --background: #171a1c;
    --background-alt: #0c0d0e;
    --primary: #351d3f;

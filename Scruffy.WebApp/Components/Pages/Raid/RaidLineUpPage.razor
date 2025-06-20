@@ -8,81 +8,14 @@
 
 <PageTitle>@LocalizationGroup.GetText("PageTitle", "FooI - Raid - Line up")</PageTitle>
 
-<h1>@LocalizationGroup.GetFormattedText("LineUp", "Line up {0}", @_timeStamp?.ToString("f", LocalizationGroup.CultureInfo))</h1>
+<div class="page">
+    <h1>@LocalizationGroup.GetFormattedText("LineUp", "Line up {0}", @_timeStamp?.ToString("f", LocalizationGroup.CultureInfo))</h1>
 
-<div class="lineup-page">
-    <div class="registrations-container">
-        <h3>@LocalizationGroup.GetText("Registrations", "Registrations")</h3>
-        <div class="quickgrid-std registrations-container mb-3">
-            <QuickGrid Items="@_registrations.AsQueryable().Where(registration => registration.IsOnSubstitutesBench == false)">
-                <TemplateColumn Context="u" Sortable="false" class="isassigned-column">
-                    @if (u.IsAssigned)
-                    {
-                        <div class="isassigned-icon">check</div>
-                    }
-                </TemplateColumn>
-                <PropertyColumn Title="@LocalizationGroup.GetText("Name", "Name")" Property="@(u => u.Name)" Sortable="false"/>
-                <TemplateColumn Title="@LocalizationGroup.GetText("RoleRequests", "Role requests")" Context="u" Sortable="false" class="role-column">
-                    <div class="registration-roles-container">
-                        @if (u.RegistrationRoles.HasFlag(RaidRole.DamageDealer))
-                        {
-                            <div class="roles-container" title="DPS">
-                                <div class="role-icon role-icon-dps"></div>
-                            </div>
-                        }
-                        @if (u.RegistrationRoles.HasFlag(RaidRole.AlacrityDamageDealer))
-                        {
-                            <div class="roles-container" title="Alacrity - DPS">
-                                <div class="role-icon role-icon-alacrity"></div>
-                                <div class="role-icon role-icon-dps"></div>
-                            </div>
-                        }
-                        @if (u.RegistrationRoles.HasFlag(RaidRole.QuicknessDamageDealer))
-                        {
-                            <div class="roles-container" title="Quickness - DPS">
-                                <div class="role-icon role-icon-quickness"></div>
-                                <div class="role-icon role-icon-dps"></div>
-                            </div>
-                        }
-                        @if (u.RegistrationRoles.HasFlag(RaidRole.AlacrityHealer))
-                        {
-                            <div class="roles-container" title="Alacrity - Heal">
-                                <div class="role-icon role-icon-alacrity"></div>
-                                <div class="role-icon role-icon-healer"></div>
-                            </div>
-                        }
-                        @if (u.RegistrationRoles.HasFlag(RaidRole.QuicknessHealer))
-                        {
-                            <div class="roles-container" title="Quickness - Heal">
-                                <div class="role-icon role-icon-quickness"></div>
-                                <div class="role-icon role-icon-healer"></div>
-                            </div>
-                        }
-                        @if (u.RegistrationRoles.HasFlag(RaidRole.AlacrityTankHealer))
-                        {
-                            <div class="roles-container" title="Alacrity - Tank">
-                                <div class="role-icon role-icon-tank"></div>
-                                <div class="role-icon role-icon-alacrity"></div>
-                                <div class="role-icon role-icon-healer"></div>
-                            </div>
-                        }
-                        @if (u.RegistrationRoles.HasFlag(RaidRole.QuicknessTankHealer))
-                        {
-                            <div class="roles-container" title="Quickness - Heal">
-                                <div class="role-icon role-icon-tank"></div>
-                                <div class="role-icon role-icon-quickness"></div>
-                                <div class="role-icon role-icon-healer"></div>
-                            </div>
-                        }
-                    </div>
-                </TemplateColumn>
-            </QuickGrid>
-        </div>
-        @if (_isTheSubstitutesBenchAvailable)
-        {
-            <h3>@LocalizationGroup.GetText("SubstitutesBench", "Substitutes bench")</h3>
+    <div class="lineup-page">
+        <div class="registrations-container">
+            <h3>@LocalizationGroup.GetText("Registrations", "Registrations")</h3>
             <div class="quickgrid-std registrations-container mb-3">
-                <QuickGrid Items="@_registrations.AsQueryable().Where(registration => registration.IsOnSubstitutesBench)">
+                <QuickGrid Items="@_registrations.AsQueryable().Where(registration => registration.IsOnSubstitutesBench == false)">
                     <TemplateColumn Context="u" Sortable="false" class="isassigned-column">
                         @if (u.IsAssigned)
                         {
@@ -146,18 +79,86 @@
                     </TemplateColumn>
                 </QuickGrid>
             </div>
-        }
-    </div>
-
-    <div class="lineup-container">
-        <div class="squads-container">
-            @for (var index = 0; index < _groupCount; index++)
+            @if (_isTheSubstitutesBenchAvailable)
             {
-                var currentIndex = index;
-
-                <RaidSquadComponent GroupNumber="@(index + 1)" Registrations="@_registrations" AssignmentChanged="OnSquadAssignmentChanged" @ref="_squads[currentIndex]"/>
+                <h3>@LocalizationGroup.GetText("SubstitutesBench", "Substitutes bench")</h3>
+                <div class="quickgrid-std registrations-container mb-3">
+                    <QuickGrid Items="@_registrations.AsQueryable().Where(registration => registration.IsOnSubstitutesBench)">
+                        <TemplateColumn Context="u" Sortable="false" class="isassigned-column">
+                            @if (u.IsAssigned)
+                            {
+                                <div class="isassigned-icon">check</div>
+                            }
+                        </TemplateColumn>
+                        <PropertyColumn Title="@LocalizationGroup.GetText("Name", "Name")" Property="@(u => u.Name)" Sortable="false"/>
+                        <TemplateColumn Title="@LocalizationGroup.GetText("RoleRequests", "Role requests")" Context="u" Sortable="false" class="role-column">
+                            <div class="registration-roles-container">
+                                @if (u.RegistrationRoles.HasFlag(RaidRole.DamageDealer))
+                                {
+                                    <div class="roles-container" title="DPS">
+                                        <div class="role-icon role-icon-dps"></div>
+                                    </div>
+                                }
+                                @if (u.RegistrationRoles.HasFlag(RaidRole.AlacrityDamageDealer))
+                                {
+                                    <div class="roles-container" title="Alacrity - DPS">
+                                        <div class="role-icon role-icon-alacrity"></div>
+                                        <div class="role-icon role-icon-dps"></div>
+                                    </div>
+                                }
+                                @if (u.RegistrationRoles.HasFlag(RaidRole.QuicknessDamageDealer))
+                                {
+                                    <div class="roles-container" title="Quickness - DPS">
+                                        <div class="role-icon role-icon-quickness"></div>
+                                        <div class="role-icon role-icon-dps"></div>
+                                    </div>
+                                }
+                                @if (u.RegistrationRoles.HasFlag(RaidRole.AlacrityHealer))
+                                {
+                                    <div class="roles-container" title="Alacrity - Heal">
+                                        <div class="role-icon role-icon-alacrity"></div>
+                                        <div class="role-icon role-icon-healer"></div>
+                                    </div>
+                                }
+                                @if (u.RegistrationRoles.HasFlag(RaidRole.QuicknessHealer))
+                                {
+                                    <div class="roles-container" title="Quickness - Heal">
+                                        <div class="role-icon role-icon-quickness"></div>
+                                        <div class="role-icon role-icon-healer"></div>
+                                    </div>
+                                }
+                                @if (u.RegistrationRoles.HasFlag(RaidRole.AlacrityTankHealer))
+                                {
+                                    <div class="roles-container" title="Alacrity - Tank">
+                                        <div class="role-icon role-icon-tank"></div>
+                                        <div class="role-icon role-icon-alacrity"></div>
+                                        <div class="role-icon role-icon-healer"></div>
+                                    </div>
+                                }
+                                @if (u.RegistrationRoles.HasFlag(RaidRole.QuicknessTankHealer))
+                                {
+                                    <div class="roles-container" title="Quickness - Heal">
+                                        <div class="role-icon role-icon-tank"></div>
+                                        <div class="role-icon role-icon-quickness"></div>
+                                        <div class="role-icon role-icon-healer"></div>
+                                    </div>
+                                }
+                            </div>
+                        </TemplateColumn>
+                    </QuickGrid>
+                </div>
             }
         </div>
-        <button type="submit" class="primary-button btn-commit" @onclick="OnCommit">@LocalizationGroup.GetText("Commit", "Commit")</button>
+        <div class="lineup-container">
+            <div class="squads-container">
+                @for (var index = 0; index < _groupCount; index++)
+                {
+                    var currentIndex = index;
+
+                    <RaidSquadComponent GroupNumber="@(index + 1)" Registrations="@_registrations" AssignmentChanged="OnSquadAssignmentChanged" @ref="_squads[currentIndex]"/>
+                }
+            </div>
+            <button type="submit" class="primary-button btn-commit" @onclick="OnCommit">@LocalizationGroup.GetText("Commit", "Commit")</button>
+        </div>
     </div>
 </div>
