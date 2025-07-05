@@ -927,7 +927,9 @@
          "ReminderMessagePrompt": "Gib bitte die Nachricht der Erinnerung ein.",
          "ReminderTimePrompt": "Wähle bitte den Zeitpunkt der Erinnerung. (Format: hh:mm)",
          "SelectDayPrompt": "Wähle bitte einen der folgenden Tage aus.",
-         "WeekdaySelectionTitle": "Auswahl Wochentag"
+         "WeekdaySelectionTitle": "Auswahl Wochentag",
+         "NoOpenReminders": "Es sind keine offenen Erinnerungen vorhanden.",
+         "ListRemindersTitle": "Offene Erinnerungen"
       },
       "ScruffyTimeoutException": {
          "CommandTimeout": "Die Verarbeitung des Befehls wurde wegen einer Zeitüberschreitung abgebrochen."

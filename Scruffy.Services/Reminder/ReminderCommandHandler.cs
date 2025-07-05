@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Text.RegularExpressions;
 
+using Discord;
 using Discord.Commands;
 
 using Scruffy.Data.Entity;
@@ -10,6 +11,7 @@ using Scruffy.Services.Core;
 using Scruffy.Services.Core.JobScheduler;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
+using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Interfaces;
 
 namespace Scruffy.Services.Reminder;
@@ -180,6 +182,88 @@ public class ReminderCommandHandler : LocatedServiceBase
                                              ephemeral: true)
                                  .ConfigureAwait(false);
                 }
+            }
+        }
+    }
+
+    /// <summary>
+    /// List reminders
+    /// </summary>
+    /// <param name="context">Command context</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task ListReminders(IContextContainer context)
+    {
+        var message = await context.DeferProcessing(true)
+                                   .ConfigureAwait(false);
+
+        using (var dbFactory = RepositoryFactory.CreateInstance())
+        {
+            var reminders = dbFactory.GetRepository<OneTimeReminderRepository>()
+                                     .GetQuery()
+                                     .Where(reminder => reminder.DiscordAccountId == context.User.Id
+                                                        && reminder.IsExecuted == false)
+                                     .OrderBy(reminder => reminder.TimeStamp)
+                                     .Select(reminder => new
+                                                         {
+                                                             reminder.TimeStamp,
+                                                             reminder.Message
+                                                         })
+                                     .Take(50)
+                                     .ToList();
+
+            if (reminders.Count > 0)
+            {
+                var embedBuilder = new EmbedBuilder().WithTitle(LocalizationGroup.GetText("ListRemindersTitle", "Open reminders"))
+                                                     .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
+                                                     .WithColor(Color.Green)
+                                                     .WithTimestamp(DateTime.Now);
+
+                var descriptionBuilder = new StringBuilder();
+                var lineBuilder = new StringBuilder();
+
+                foreach (var reminder in reminders)
+                {
+                    lineBuilder.Clear();
+                    lineBuilder.Append("**");
+                    lineBuilder.Append(reminder.TimeStamp.ToString("g", LocalizationGroup.CultureInfo));
+                    lineBuilder.Append("** `");
+
+                    if (reminder.Message.Length > 30)
+                    {
+                        lineBuilder.Append(reminder.Message[..27]);
+                        lineBuilder.Append("...");
+                    }
+                    else
+                    {
+                        lineBuilder.Append(reminder.Message);
+                    }
+
+                    lineBuilder.AppendLine("`");
+
+                    if (descriptionBuilder.Length + lineBuilder.Length > 4093)
+                    {
+                        descriptionBuilder.Append("...");
+                        break;
+                    }
+
+                    descriptionBuilder.Append(lineBuilder);
+                }
+
+                if (reminders.Count == 50
+                    && descriptionBuilder[reminders.Count - 1] != '.')
+                {
+                    descriptionBuilder.Append("...");
+                }
+
+                embedBuilder.Description = descriptionBuilder.ToString();
+
+                await context.ReplyAsync(embed: embedBuilder.Build())
+                             .ConfigureAwait(false);
+            }
+            else
+            {
+                await context.ReplyAsync(LocalizationGroup.GetFormattedText("NoOpenReminders", "There are no open reminders."))
+                             .ConfigureAwait(false);
             }
         }
     }
