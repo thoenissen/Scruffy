@@ -21,6 +21,8 @@ public enum DpsReportGroup
     SilentSurf,
     [ChoiceDisplay("Lonely Tower")]
     LonelyTower,
+    [ChoiceDisplay("Kinfall")]
+    Kinfall,
 
     // Strikes
     [ChoiceDisplay("IBS Strikes")]
@@ -80,11 +82,14 @@ public static class DpsReportGroupExtensions
             case DpsReportGroup.SunquaPeak:
             case DpsReportGroup.SilentSurf:
             case DpsReportGroup.LonelyTower:
+            case DpsReportGroup.Kinfall:
                 return DpsReportType.Fractal;
+
             case DpsReportGroup.IBSStrikes:
             case DpsReportGroup.EoDStrikes:
             case DpsReportGroup.SotOStrikes:
                 return DpsReportType.Strike;
+
             case DpsReportGroup.SpritVale:
             case DpsReportGroup.SalvationPass:
             case DpsReportGroup.StrongholdOfTheFaithful:
@@ -94,11 +99,10 @@ public static class DpsReportGroupExtensions
             case DpsReportGroup.TheKeyOfAhdashim:
             case DpsReportGroup.MountBalrior:
                 return DpsReportType.Raid;
+
             case DpsReportGroup.TrainingArea:
             default:
-                {
-                    return DpsReportType.Other;
-                }
+                return DpsReportType.Other;
         }
     }
 
@@ -121,6 +125,8 @@ public static class DpsReportGroupExtensions
                 return "Silent Surf";
             case DpsReportGroup.LonelyTower:
                 return "Lonely Tower";
+            case DpsReportGroup.Kinfall:
+                return "Kinfall";
             case DpsReportGroup.IBSStrikes:
                 return "IBS Strikes";
             case DpsReportGroup.EoDStrikes:

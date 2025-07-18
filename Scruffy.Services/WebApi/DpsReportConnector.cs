@@ -303,6 +303,9 @@ public class DpsReportConnector
             case 26231:
                 return DpsReportGroup.LonelyTower;
 
+            case 27010:
+                return DpsReportGroup.Kinfall;
+
             case 22154:
             case 22343:
             case 22481:
