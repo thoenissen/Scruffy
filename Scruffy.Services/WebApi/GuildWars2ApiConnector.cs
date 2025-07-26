@@ -736,6 +736,46 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     }
 
     /// <summary>
+    /// Gets the account materials
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public Task<List<AccountMaterial>> GetAccountMaterials()
+    {
+        return Invoke(GuildWars2ApiPermission.Account | GuildWars2ApiPermission.Inventories,
+                      async () =>
+                      {
+                          using (var response = await CreateRequest("https://api.guildwars2.com/v2/account/materials").ConfigureAwait(false))
+                          {
+                              var jsonResult = await response.Content
+                                                             .ReadAsStringAsync()
+                                                             .ConfigureAwait(false);
+                              return JsonConvert.DeserializeObject<List<AccountMaterial>>(jsonResult);
+                          }
+                      });
+    }
+
+    /// <summary>
+    /// Gets the materials
+    /// </summary>
+    /// <param name="ids">IDs</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public Task<List<MaterialCategory>> GetMaterialCategory(IEnumerable<int> ids)
+    {
+        return Invoke(GuildWars2ApiPermission.None,
+                      async () =>
+                      {
+                          using (var response = await CreateRequest($"https://api.guildwars2.com/v2/materials?ids={string.Join(',', ids)}").ConfigureAwait(false))
+                          {
+                              var jsonResult = await response.Content
+                                                             .ReadAsStringAsync()
+                                                             .ConfigureAwait(false);
+
+                              return JsonConvert.DeserializeObject<List<MaterialCategory>>(jsonResult);
+                          }
+                      });
+    }
+
+    /// <summary>
     /// Invoke the web api
     /// </summary>
     /// <typeparam name="T">Type</typeparam>

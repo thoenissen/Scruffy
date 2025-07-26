@@ -980,7 +980,7 @@
          "Logs": "Logs",
          "Today": "Heutige",
          "Personal": "Persönlich",
-         "Top": "Bestenliste", 
+         "Top": "Bestenliste",
          "Participation": "Teilnahmepunkte",
          "Roles": "Rollen",
          "Administration": "Administration",
@@ -1064,11 +1064,17 @@
          "Loading": "Lade...",
          "NoLogs": "Es stehen keine Logs zur Verfügung."
       },
-     "TopRankingPage": {
-       "PageTitle": "FooI - Ranking - Bestenliste",
-       "MaxPointsTitle": "Höchste Anzahl an Gesamtpunkten",
-       "MaxPointsDescription": "Darstellung der höchsten jemals erreichten Gesamtpunkte",
-       "MaxPointsLoadingHint": "Ermittlung der aktuellen Werte"
-     }
+      "TopRankingPage": {
+         "PageTitle": "FooI - Ranking - Bestenliste",
+         "MaxPointsTitle": "Höchste Anzahl an Gesamtpunkten",
+         "MaxPointsDescription": "Darstellung der höchsten jemals erreichten Gesamtpunkte",
+         "MaxPointsLoadingHint": "Ermittlung der aktuellen Werte"
+      },
+      "GuildWars2CommandHandler": {
+         "FullMaterialTitle": "Auflistung voller Materiallagerplätze",
+         "FullMaterialDescription": "**Account:** {0}\n**Geschätzte Materiallagergröße:** {1}",
+         "UnknownMaterialCategory": "Unbekannte Kategorie",
+         "UnknownMaterial": "Unbekanntes Material"
+      }
    }
 }

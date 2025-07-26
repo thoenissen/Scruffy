@@ -26,6 +26,18 @@ public class GuildWars2SlashCommandModule : SlashCommandModuleBase
         Fractals
     }
 
+    /// <summary>
+    /// Bank commands
+    /// </summary>
+    public enum BankCommand
+    {
+        /// <summary>
+        /// Lists all slots of the material storage with has the maximum amount of items
+        /// </summary>
+        [ChoiceDisplay("List full material storage slots")]
+        ListFullMaterialStorage,
+    }
+
     #endregion // Enumerations
 
     #region Properties
@@ -83,6 +95,28 @@ public class GuildWars2SlashCommandModule : SlashCommandModuleBase
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(type), type, null);
+        }
+    }
+
+    /// <summary>
+    /// Bank commands
+    /// </summary>
+    /// <param name="command">command</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [SlashCommand("bank", "Guild Wars 2 bank")]
+    public async Task Bank([Summary("Command", "Select one of the commands")] BankCommand command)
+    {
+        switch (command)
+        {
+            case BankCommand.ListFullMaterialStorage:
+                {
+                    await CommandHandler.ListFullMaterialStorage(Context)
+                                        .ConfigureAwait(false);
+                }
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException(nameof(command), command, null);
         }
     }
 

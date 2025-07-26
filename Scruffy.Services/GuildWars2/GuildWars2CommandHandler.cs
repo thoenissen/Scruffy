@@ -1,9 +1,12 @@
 ﻿using Discord;
 
+using Scruffy.Data.Entity;
+using Scruffy.Data.Entity.Repositories.GuildWars2.Account;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Interfaces;
+using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.GuildWars2;
 
@@ -232,6 +235,89 @@ public class GuildWars2CommandHandler : LocatedServiceBase
 
         await container.ReplyAsync(embed: builder.Build())
                        .ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Lists full material storage
+    /// </summary>
+    /// <param name="context">Context</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task ListFullMaterialStorage(InteractionContextContainer context)
+    {
+        await context.DeferAsync()
+                     .ConfigureAwait(false);
+
+        using (var dbFactory = RepositoryFactory.CreateInstance())
+        {
+            var accounts = dbFactory.GetRepository<GuildWarsAccountRepository>()
+                                    .GetQuery()
+                                    .Where(obj => obj.User.DiscordAccounts.Any(discordAccount => discordAccount.Id == context.User.Id))
+                                    .Select(obj => new
+                                                   {
+                                                       obj.Name,
+                                                       obj.ApiKey
+                                                   })
+                                    .ToList();
+
+            foreach (var account in accounts)
+            {
+                using (var connector = new GuildWars2ApiConnector(account.ApiKey))
+                {
+                    var materials = await connector.GetAccountMaterials()
+                                                   .ConfigureAwait(false);
+
+                    materials = materials.Where(item => item.Count > 0
+                                                        && item.Count % 250 == 0)
+                                         .ToList();
+
+                    var maxCount = materials.Count > 0
+                                      ? materials.Max(item => item.Count)
+                                      : 0;
+
+                    var embed = new EmbedBuilder().WithTitle(LocalizationGroup.GetText("FullMaterialTitle", "Full material storage slots"))
+                                                  .WithDescription(LocalizationGroup.GetFormattedText("FullMaterialDescription", "**Account:** {0}\n**Assumed Slot count:** {1}", account.Name, maxCount == 0 ? "-" : maxCount.ToString()))
+                                                  .WithColor(Color.Green)
+                                                  .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
+                                                  .WithTimestamp(DateTime.Now);
+
+                    if (materials.Count > 0)
+                    {
+                        var categories = materials.Where(item => item.Count == maxCount)
+                                                  .GroupBy(item => item.Category)
+                                                  .ToList();
+
+                        var categoryInformation = await connector.GetMaterialCategory(categories.Select(category => category.Key))
+                                                                 .ConfigureAwait(false);
+
+                        var items = await connector.GetItems(categories.SelectMany(category => category.Select(item => (int?)item.Id)).ToList())
+                                                   .ConfigureAwait(false);
+
+                        foreach (var category in categories)
+                        {
+                            var categoryName = categoryInformation.FirstOrDefault(categoryInfo => categoryInfo.Id == category.Key)?.Name
+                                                   ?? LocalizationGroup.GetText("UnknownMaterialCategory", "Unknown Category");
+
+                            var field = new EmbedFieldBuilder().WithName(categoryName);
+                            var fieldValue = new StringBuilder();
+
+                            foreach (var item in category)
+                            {
+                                var itemName = items.FirstOrDefault(itemInfo => itemInfo.Id == item.Id)?.Name
+                                                   ?? LocalizationGroup.GetText("UnknownMaterial", "Unknown Material");
+
+                                fieldValue.Append("> ");
+                                fieldValue.AppendLine(itemName);
+                            }
+
+                            embed.AddField(field.WithValue(fieldValue.ToString()));
+                        }
+                    }
+
+                    await context.SendMessageAsync(embed: embed.Build())
+                                 .ConfigureAwait(false);
+                }
+            }
+        }
     }
 
     #endregion // Methods
