@@ -3,10 +3,16 @@
 namespace Scruffy.Data.Json.QuickChart;
 
 /// <summary>
-/// Y-Axis
+/// X-Axis
 /// </summary>
 public class XAxis
 {
+    /// <summary>
+    /// Stacked
+    /// </summary>
+    [JsonProperty("stacked")]
+    public bool? Stacked { get; set; }
+
     /// <summary>
     /// Ticks
     /// </summary>

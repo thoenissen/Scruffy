@@ -249,7 +249,8 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                .WithColor(Color.DarkBlue)
                                .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
                                .WithTimestamp(DateTime.Now)
-                               .WithImageUrl("attachment://chart.png");
+                               .WithImageUrl("attachment://chart.png")
+                               .AddField("\u200b", LocalizationGroup.GetText("RankingPersonalOverviewFooter", "\u200b"));
 
             var chartConfiguration = new ChartConfigurationData
                                      {
@@ -577,7 +578,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
                 dataSets.Add(new DataSet<double>
                              {
                                  Label = LocalizationGroup.GetText(type.ToString(), type.ToString()),
-                                 BorderColor = type.GetColor(),
+                                 BackgroundColor = [type.GetColor()],
                                  Data = dates.Select(obj => currentPoints.FirstOrDefault(obj2 => obj2.Date == obj
                                                                                               && obj2.Type == type)?.Points
                                                          ?? 0.0)
@@ -591,18 +592,20 @@ public class GuildRankVisualizationService : LocatedServiceBase
 
             descriptionBuilder.Append(LocalizationGroup.GetText("RankingUser", "User"));
             descriptionBuilder.Append(": ");
-            descriptionBuilder.Append(guildUser.Mention);
+            descriptionBuilder.AppendLine(guildUser.Mention);
+            descriptionBuilder.Append(LocalizationGroup.GetText("RankingTimeSpan", "Timespan: 63 days"));
 
             var embedBuilder = new EmbedBuilder().WithTitle($"{LocalizationGroup.GetText("RankingPersonalTypeHistoryOverview", "Guild ranking history per type")}")
                                                  .WithDescription(descriptionBuilder.ToString())
                                                  .WithColor(Color.DarkBlue)
                                                  .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
                                                  .WithTimestamp(DateTime.Now)
-                                                 .WithImageUrl("attachment://chart.png");
+                                                 .WithImageUrl("attachment://chart.png")
+                                                 .AddField("\u200b", LocalizationGroup.GetText("RankingPersonalTypeHistoryOverviewFooter", "\u200b"));
 
             var chartConfiguration = new ChartConfigurationData
                                      {
-                                         Type = "line",
+                                         Type = "bar",
                                          Data = new Data.Json.QuickChart.Data
                                                 {
                                                     Labels = dates.Select(obj => obj.ToString("d", LocalizationGroup.CultureInfo))
@@ -621,7 +624,22 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                                                    FontColor = "white",
                                                                    FontSize = 26,
                                                                    Text = LocalizationGroup.GetText("MeOverviewChartTitle", "Point distribution")
-                                                               }
+                                                               },
+                                                       Scales = new ScalesCollection
+                                                                {
+                                                                    XAxes = [
+                                                                                new()
+                                                                                {
+                                                                                    Stacked = true
+                                                                                }
+                                                                            ],
+                                                                    YAxes = [
+                                                                                new()
+                                                                                {
+                                                                                    Stacked = true
+                                                                                }
+                                                                            ]
+                                                                }
                                                    }
                                      };
 
