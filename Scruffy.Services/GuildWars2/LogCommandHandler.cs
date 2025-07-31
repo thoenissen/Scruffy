@@ -465,6 +465,8 @@ public class LogCommandHandler : LocatedServiceBase
 
             if (uploads.Count > 0)
             {
+                var embeds = new List<EmbedBuilder>();
+
                 var embed = new EmbedBuilder().WithColor(Color.Green)
                                               .WithAuthor($"{context.User.Username} - {account.Name}", context.User.GetAvatarUrl())
                                               .WithTitle(LocalizationGroup.GetFormattedText("DpsReportTitle", "Your reports from {0}", startDate.ToString("d", LocalizationGroup.CultureInfo)));
@@ -479,6 +481,15 @@ public class LogCommandHandler : LocatedServiceBase
 
                         if (line.Length + fieldBuilder.Length >= 1024)
                         {
+                            if (embed.Length + fieldBuilder.Length >= 5376)
+                            {
+                                embeds.Add(embed);
+
+                                embed = new EmbedBuilder().WithColor(Color.Green)
+                                                          .WithAuthor($"{context.User.Username} - {account.Name}", context.User.GetAvatarUrl())
+                                                          .WithTitle(LocalizationGroup.GetFormattedText("DpsReportTitle", "Your reports from {0}", startDate.ToString("d", LocalizationGroup.CultureInfo)));
+                            }
+
                             embed.AddField($"{GuildWars2Helper.GetSpecializationEmote(groupBySpec.Key ?? 0)} {GuildWars2Helper.GetSpecializationName(groupBySpec.Key ?? 0)}", fieldBuilder.ToString());
 
                             fieldBuilder = new StringBuilder();
@@ -487,29 +498,40 @@ public class LogCommandHandler : LocatedServiceBase
                         fieldBuilder.AppendLine(line);
                     }
 
+                    if (embed.Length + fieldBuilder.Length >= 5376)
+                    {
+                        embeds.Add(embed);
+
+                        embed = new EmbedBuilder().WithColor(Color.Green)
+                                                  .WithAuthor($"{context.User.Username} - {account.Name}", context.User.GetAvatarUrl())
+                                                  .WithTitle(LocalizationGroup.GetFormattedText("DpsReportTitle", "Your reports from {0}", startDate.ToString("d", LocalizationGroup.CultureInfo)));
+                    }
+
                     embed.AddField($"{GuildWars2Helper.GetSpecializationEmote(groupBySpec.Key ?? 0)} {GuildWars2Helper.GetSpecializationName(groupBySpec.Key ?? 0)}", fieldBuilder.ToString());
                 }
 
-                await message.ModifyAsync(message =>
-                                          {
-                                              if (string.IsNullOrWhiteSpace(_webbAppUrl))
-                                              {
-                                                  message.Embed = embed.Build();
-                                              }
-                                              else
-                                              {
-                                                  var webAppEmbed = new EmbedBuilder().WithColor(Color.Green)
-                                                                                      .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
-                                                                                      .WithColor(Color.Green)
-                                                                                      .WithTimestamp(DateTime.Now)
-                                                                                      .WithDescription(LocalizationGroup.GetFormattedText("WebAppGolemHint", "Would you like more information about a log? Then check out the new [website]({0}).", _webbAppUrl + "/DpsReports/Today"));
+                embeds.Add(embed);
 
-                                                  message.Embeds = new[] { embed.Build(), webAppEmbed.Build() };
-                                              }
+                if (embeds.Count > 1)
+                {
+                    foreach (var builder in embeds)
+                    {
+                        await context.SendMessageAsync(embed: builder.Build())
+                                     .ConfigureAwait(false);
+                    }
+                }
 
-                                              message.Content = "\u200b";
-                                          })
-                             .ConfigureAwait(false);
+                if (string.IsNullOrWhiteSpace(_webbAppUrl) == false)
+                {
+                    var webAppEmbed = new EmbedBuilder().WithColor(Color.Green)
+                                                        .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
+                                                        .WithColor(Color.Green)
+                                                        .WithTimestamp(DateTime.Now)
+                                                        .WithDescription(LocalizationGroup.GetFormattedText("WebAppGolemHint", "Would you like more information about a log? Then check out the new [website]({0}).", _webbAppUrl + "/DpsReports/Today"));
+
+                    await context.SendMessageAsync(embed: webAppEmbed.Build())
+                                 .ConfigureAwait(false);
+                }
             }
             else
             {
