@@ -523,6 +523,7 @@ public partial class RaidLineUpPage
                                       .Select(registration => new
                                                               {
                                                                   Id = registration.UserId,
+                                                                  registration.User.UserName,
                                                                   Name = registration.User.DiscordAccounts.Select(account => account.Members.Where(member => member.ServerId == WebAppConfiguration.DiscordServerId)
                                                                                                                                             .Select(member => member.Name)
                                                                                                                                             .FirstOrDefault())
@@ -539,7 +540,9 @@ public partial class RaidLineUpPage
                                       .Select(registration => new PlayerDTO
                                                               {
                                                                   Id = registration.Id,
-                                                                  Name = registration.Name,
+                                                                  Name = string.IsNullOrEmpty(registration.Name)
+                                                                             ? registration.UserName
+                                                                             : registration.Name,
                                                                   DiscordAccountId = registration.DiscordAccountId,
                                                                   Roles = registration.Roles.Count > 0
                                                                           || registration.RegistrationRoles.Count > 0
