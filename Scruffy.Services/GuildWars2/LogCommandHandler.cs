@@ -512,13 +512,10 @@ public class LogCommandHandler : LocatedServiceBase
 
                 embeds.Add(embed);
 
-                if (embeds.Count > 1)
+                foreach (var builder in embeds)
                 {
-                    foreach (var builder in embeds)
-                    {
-                        await context.SendMessageAsync(embed: builder.Build())
-                                     .ConfigureAwait(false);
-                    }
+                    await context.SendMessageAsync(embed: builder.Build())
+                        .ConfigureAwait(false);
                 }
 
                 if (string.IsNullOrWhiteSpace(_webbAppUrl) == false)
