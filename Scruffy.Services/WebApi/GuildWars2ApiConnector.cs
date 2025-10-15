@@ -515,6 +515,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
                                                                    .ConfigureAwait(false);
 
                               var recipeIds = JsonConvert.DeserializeObject<List<int>>(jsonResult);
+
                               if (recipeIds?.Count > 0)
                               {
                                   using (var recipeResponse = await CreateRequest("https://api.guildwars2.com/v2/recipes/" + recipeIds[0]).ConfigureAwait(false))

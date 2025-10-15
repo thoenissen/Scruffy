@@ -85,18 +85,21 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
                                         .ConfigureAwait(false);
                 }
                 break;
+
             case ConfigurationType.ExperienceLevels:
                 {
                     await CommandHandler.LevelsConfiguration(Context)
                                         .ConfigureAwait(false);
                 }
                 break;
+
             case ConfigurationType.Templates:
                 {
                     await CommandHandler.TemplatesConfiguration(Context)
                                         .ConfigureAwait(false);
                 }
                 break;
+
             default:
                 throw new ArgumentOutOfRangeException(nameof(type), type, null);
         }
@@ -195,24 +198,28 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
                                         .ConfigureAwait(false);
                 }
                 break;
+
             case OverviewType.Levels:
                 {
                     await CommandHandler.PostExperienceLevelOverview(Context)
                                         .ConfigureAwait(false);
                 }
                 break;
+
             case OverviewType.Logs:
                 {
                     await LogCommandHandler.PostGuildRaidSummary(Context, raidWeekDay)
                                            .ConfigureAwait(false);
                 }
                 break;
+
             case OverviewType.CurrentLineUp:
                 {
                     await CommandHandler.PostCurrentLineUp(Context)
                                         .ConfigureAwait(false);
                 }
                 break;
+
             default:
                 throw new ArgumentOutOfRangeException(nameof(type), type, null);
         }

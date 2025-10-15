@@ -150,9 +150,11 @@ public class DebugService
             if (logEntry != null)
             {
                 var memoryStream = new MemoryStream();
+
                 await using (memoryStream.ConfigureAwait(false))
                 {
                     var writer = new StreamWriter(memoryStream);
+
                     await using (writer.ConfigureAwait(false))
                     {
                         await writer.WriteAsync(nameof(logEntry.Id))
@@ -337,6 +339,7 @@ public class DebugService
                                               async obj =>
                                               {
                                                   var connector = new GuildWars2ApiConnector(obj.ApiKey);
+
                                                   await using (connector.ConfigureAwait(false))
                                                   {
                                                       var tokenInfo = await connector.GetTokenInformationAsync()

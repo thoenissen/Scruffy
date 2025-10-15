@@ -84,9 +84,11 @@ public class RaidExperienceLevelSetupDialogElement : DialogEmbedReactionElementB
         var levelsBuilder = new StringBuilder();
 
         var levels = GetLevels();
+
         if (levels.Count > 0)
         {
             var currentLevel = levels.FirstOrDefault(obj => obj.SuperiorExperienceLevelId == null);
+
             while (currentLevel != null)
             {
                 levelsBuilder.AppendLine(Format.Bold($"{DiscordEmoteService.GetGuildEmote(CommandContext.Client, currentLevel.DiscordEmoji)} {currentLevel.Description}"));

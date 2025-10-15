@@ -80,6 +80,7 @@ public class ServerConfigurationDialogElement : DialogEmbedSelectMenuElementBase
                                                                           && obj.IsAbstract == false))
                                   {
                                       var commandModule = (SlashCommandModuleBase)Activator.CreateInstance(type);
+
                                       if (commandModule != null)
                                       {
                                           commands = commands == null
@@ -94,6 +95,7 @@ public class ServerConfigurationDialogElement : DialogEmbedSelectMenuElementBase
                                                                           && obj.IsAbstract == false))
                                   {
                                       var commandModule = (MessageCommandModuleBase)Activator.CreateInstance(type);
+
                                       if (commandModule != null)
                                       {
                                           commands = commands == null

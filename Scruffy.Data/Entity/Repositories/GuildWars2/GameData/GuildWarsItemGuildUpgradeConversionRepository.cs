@@ -43,6 +43,7 @@ public class GuildWarsItemGuildUpgradeConversionRepository : RepositoryBase<Guil
         try
         {
             var connection = new SqlConnection(GetDbContext().ConnectionString);
+
             await using (connection.ConfigureAwait(false))
             {
                 await connection.OpenAsync()
@@ -53,6 +54,7 @@ public class GuildWarsItemGuildUpgradeConversionRepository : RepositoryBase<Guil
                                                                        [UpgradeId] bigint NOT NULL
                                                                    )",
                                                 connection);
+
                 await using (sqlCommand.ConfigureAwait(false))
                 {
                     sqlCommand.ExecuteNonQuery();

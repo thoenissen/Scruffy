@@ -67,6 +67,7 @@ public class RaidExperienceLevelSuperiorLevelDialogElement : DialogEmbedMessageE
             levelsFieldsText.Append('\n');
 
             var i = 1;
+
             foreach (var role in mainRoles)
             {
                 levelsFieldsText.Append('`');

@@ -56,6 +56,7 @@ public abstract class DialogReactionElementBase<TData> : DialogElementBase<TData
                                              .WaitForReactionAsync(message, CommandContext.User);
 
         var reactions = GetReactions();
+
         if (reactions?.Count > 0)
         {
             foreach (var reaction in reactions)

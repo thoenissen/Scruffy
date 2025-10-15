@@ -41,6 +41,7 @@ public abstract class BatchJob : LocatedAsyncJob
     public override async Task ExecuteOverrideAsync()
     {
         var serviceProvider = ServiceProviderContainer.Current.GetServiceProvider();
+
         await using (serviceProvider.ConfigureAwait(false))
         {
             var scopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
@@ -48,9 +49,11 @@ public abstract class BatchJob : LocatedAsyncJob
             foreach (var jobType in _jobTypes)
             {
                 var scope = scopeFactory.CreateAsyncScope();
+
                 await using (scope.ConfigureAwait(false))
                 {
                     var job = scope.ServiceProvider.GetService(jobType);
+
                     if (job is IAsyncJob asyncJob)
                     {
                         await asyncJob.ExecuteAsync()

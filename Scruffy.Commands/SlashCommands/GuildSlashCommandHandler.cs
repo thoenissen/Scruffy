@@ -70,6 +70,7 @@ public class GuildSlashCommandHandler : SlashCommandModuleBase
                                         .ConfigureAwait(false);
                 }
                 break;
+
             default:
                 throw new ArgumentOutOfRangeException(nameof(type), type, null);
         }

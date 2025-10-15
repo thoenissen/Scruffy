@@ -77,12 +77,14 @@ public class PlayerGroupStats
     public void AddEncounter(Upload upload)
     {
         var startTime = upload.EncounterTime;
+
         if (startTime < FirstEncounterTime)
         {
             FirstEncounterTime = startTime;
         }
 
         var endTime = startTime + upload.Encounter.Duration;
+
         if (endTime > LastEncounterTime)
         {
             LastEncounterTime = endTime;

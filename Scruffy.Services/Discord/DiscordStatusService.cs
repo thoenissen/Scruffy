@@ -39,14 +39,15 @@ public sealed class DiscordStatusService : SingletonLocatedServiceBase, IDisposa
     /// Status timer
     /// </summary>
     /// <param name="state">State</param>
-    private async void OnTimer(object state)
+    private void OnTimer(object state)
     {
         try
         {
             var title = _movies.Dequeue();
+
             _movies.Enqueue(title);
 
-            await _discordClient.SetActivityAsync(new Game(title, ActivityType.Watching)).ConfigureAwait(false);
+            Task.Run(async () => await _discordClient.SetActivityAsync(new Game(title, ActivityType.Watching)).ConfigureAwait(false));
         }
         catch
         {

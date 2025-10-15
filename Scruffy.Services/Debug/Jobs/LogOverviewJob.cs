@@ -19,9 +19,11 @@ public class LogOverviewJob : LocatedAsyncJob
     public override async Task ExecuteOverrideAsync()
     {
         var debugChannel = Environment.GetEnvironmentVariable("SCRUFFY_DEBUG_CHANNEL");
+
         if (string.IsNullOrWhiteSpace(debugChannel) == false)
         {
             var serviceProvider = ServiceProviderContainer.Current.GetServiceProvider();
+
             await using (serviceProvider.ConfigureAwait(false))
             {
                 var discordClient = serviceProvider.GetService<DiscordSocketClient>();

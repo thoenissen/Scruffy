@@ -62,6 +62,7 @@ public class WeeklyReminderPostJob : LocatedAsyncJob
                     var discordClient = serviceProvider.GetService<DiscordSocketClient>();
 
                     var channel = await discordClient.GetChannelAsync(data.ChannelId).ConfigureAwait(false);
+
                     if (channel is IMessageChannel messageChannel)
                     {
                         var message = await messageChannel.SendMessageAsync(data.Message).ConfigureAwait(false);

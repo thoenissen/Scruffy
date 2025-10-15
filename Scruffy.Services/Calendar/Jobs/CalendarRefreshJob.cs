@@ -18,6 +18,7 @@ public class CalendarRefreshJob : LocatedAsyncJob
     public override async Task ExecuteOverrideAsync()
     {
         var serviceProvider = ServiceProviderContainer.Current.GetServiceProvider();
+
         await using (serviceProvider.ConfigureAwait(false))
         {
             await serviceProvider.GetRequiredService<CalendarScheduleService>()

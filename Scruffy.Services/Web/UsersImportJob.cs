@@ -45,9 +45,11 @@ public class UsersImportJob : LocatedAsyncJob
     public override async Task ExecuteOverrideAsync()
     {
         var guildServer = Environment.GetEnvironmentVariable("SCRUFFY_GUILD_SERVER");
+
         if (ulong.TryParse(guildServer, out var guildServerId))
         {
             var guild = _discordSocketClient.GetGuild(guildServerId);
+
             if (guild != null)
             {
                 await _usersImportService.ImportDiscordUsers(guild)
@@ -62,6 +64,7 @@ public class UsersImportJob : LocatedAsyncJob
          && ulong.TryParse(developerRole, out var developerRoleId))
         {
             var guild = _discordSocketClient.GetGuild(developmentServerId);
+
             if (guild != null)
             {
                 await _usersImportService.ImportDevelopers(guild, developerRoleId)

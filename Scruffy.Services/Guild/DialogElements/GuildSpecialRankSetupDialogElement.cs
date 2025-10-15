@@ -84,6 +84,7 @@ public class GuildSpecialRankSetupDialogElement : DialogEmbedReactionElementBase
         var levelsBuilder = new StringBuilder();
 
         var ranks = GetRanks();
+
         if (ranks.Count > 0)
         {
             foreach (var rank in ranks)

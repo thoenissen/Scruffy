@@ -66,6 +66,7 @@ public class ReminderCommandHandler : LocatedServiceBase
         var checkUser = _userManagementService.CheckDiscordAccountAsync(context.User);
 
         var timeSpanValidation = new Regex(@"\d+(h|m|s)");
+
         if (timeSpanValidation.IsMatch(timeSpan))
         {
             var amount = Convert.ToUInt64(timeSpan[..^1], CultureInfo.InvariantCulture);

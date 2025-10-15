@@ -45,6 +45,7 @@ public class DiscordMessageRepository : RepositoryBase<DiscordMessageQueryable, 
         try
         {
             var connection = new SqlConnection(GetDbContext().ConnectionString);
+
             await using (connection.ConfigureAwait(false))
             {
                 await connection.OpenAsync()

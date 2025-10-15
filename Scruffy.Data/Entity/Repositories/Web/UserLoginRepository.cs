@@ -44,6 +44,7 @@ public class UserLoginRepository : RepositoryBase<UserLoginQueryable, UserLoginE
         try
         {
             var connection = new SqlConnection(GetDbContext().ConnectionString);
+
             await using (connection.ConfigureAwait(false))
             {
                 await connection.OpenAsync()

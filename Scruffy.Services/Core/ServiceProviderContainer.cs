@@ -81,6 +81,7 @@ public sealed class ServiceProviderContainer : IAsyncDisposable
                                                 && obj.IsAbstract == false))
         {
             var instance = (SingletonLocatedServiceBase)Activator.CreateInstance(type);
+
             if (instance != null)
             {
                 _serviceCollection.AddSingleton(type, instance);

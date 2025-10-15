@@ -79,6 +79,7 @@ public class CalendarScheduleSetupDialogElement : DialogEmbedReactionElementBase
         var schedulesBuilder = new StringBuilder();
 
         var schedules = GetSchedules();
+
         if (schedules.Count > 0)
         {
             foreach (var schedule in schedules)

@@ -103,6 +103,7 @@ public class CalendarScheduleScheduleDialogElement : DialogEmbedMessageElementBa
                                          };
                     }
                     break;
+
                 default:
                     throw new ArgumentOutOfRangeException();
             }

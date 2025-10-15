@@ -46,6 +46,7 @@ public class GuildWarsItemRepository : RepositoryBase<GuildWarsItemQueryable, Gu
         try
         {
             var connection = new SqlConnection(GetDbContext().ConnectionString);
+
             await using (connection.ConfigureAwait(false))
             {
                 await connection.OpenAsync()
@@ -73,6 +74,7 @@ public class GuildWarsItemRepository : RepositoryBase<GuildWarsItemQueryable, Gu
                 foreach (var entry in items)
                 {
                     var type = GuildWars2ApiDataConverter.ToItemType(entry.Type);
+
                     if (type != GuildWars2ItemType.Unknown)
                     {
                         dataTable.Rows.Add(entry.Id, entry.Name, type, entry.VendorValue ?? (object)DBNull.Value);
@@ -99,6 +101,7 @@ public class GuildWarsItemRepository : RepositoryBase<GuildWarsItemQueryable, Gu
                                                                           INSERT ( [ItemId], [Name], [Type], [VendorValue] )
                                                                           VALUES ( [Source].[ItemId], [Source].[Name], [Source].[Type], [Source].[VendorValue] ); ",
                                             connection);
+
                 await using (sqlCommand.ConfigureAwait(false))
                 {
                     sqlCommand.ExecuteNonQuery();

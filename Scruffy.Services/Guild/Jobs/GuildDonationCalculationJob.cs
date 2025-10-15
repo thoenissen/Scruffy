@@ -187,6 +187,7 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
             var isDonationThresholdRelevant = false;
 
             var customValue = customValues.FirstOrDefault(obj => obj.ItemId == itemLogEntry.ItemId);
+
             if (customValue != null)
             {
                 value = customValue.CustomValue;
@@ -297,6 +298,7 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
             if (calculatedValues.TryGetValue(itemId, out var calculatedValue) == false)
             {
                 var customValue = customValues.FirstOrDefault(obj => obj.ItemId == itemId);
+
                 if (customValue != null)
                 {
                     calculatedValue = calculatedValues[itemId] = (customValue.CustomValue, customValue.IsCustomValueThresholdActivated);
@@ -369,6 +371,7 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
                                     foreach (var ingredient in recipe.Ingredients)
                                     {
                                         value += (await GetValue(ingredient.ItemId).ConfigureAwait(false))?.Value * ingredient.Count;
+
                                         if (value == null)
                                         {
                                             break;
@@ -432,6 +435,7 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
         foreach (var upgradeLogEntry in upgradeLogEntries.Where(obj => obj.ItemId != null))
         {
             var calculatedValue = await GetValue(upgradeLogEntry.ItemId ?? 0).ConfigureAwait(false);
+
             if (calculatedValue != null)
             {
                 if (_dbFactory.GetRepository<GuildDonationRepository>()
@@ -513,6 +517,7 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
                                                         .ConfigureAwait(false))
         {
             var calculatedValue = await GetValue(upgradeLogEntry.ItemId ?? 0).ConfigureAwait(false);
+
             if (calculatedValue != null)
             {
                 if (_dbFactory.GetRepository<GuildDonationRepository>()

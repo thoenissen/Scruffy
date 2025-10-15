@@ -156,6 +156,7 @@ public class GuildRankAssignmentJob : LocatedAsyncJob
                                                             if (isAssignmentAllowed)
                                                             {
                                                                 var oldRank = ranks.FirstOrDefault(obj2 => obj2.Id == user.CurrentRankId);
+
                                                                 if (oldRank == null)
                                                                 {
                                                                     obj.RankId = ranks.OrderByDescending(obj2 => obj2.Order)

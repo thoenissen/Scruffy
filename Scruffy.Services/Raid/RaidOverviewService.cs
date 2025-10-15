@@ -74,6 +74,7 @@ public class RaidOverviewService : LocatedServiceBase
                 embedBuilder.WithImageUrl("attachment://chart.png");
 
                 var userNames = new List<string>();
+
                 foreach (var raidUser in users.Where(obj => obj.UserId > 0))
                 {
                     var name = "unknown user";

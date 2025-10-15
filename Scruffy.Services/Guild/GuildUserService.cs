@@ -179,6 +179,7 @@ public sealed class GuildUserService : SingletonLocatedServiceBase, IDisposable
 
                 var channel = await _discordClient.GetChannelAsync(channelId)
                                                   .ConfigureAwait(false);
+
                 if (channel is ITextChannel textChannel)
                 {
                     await textChannel.SendMessageAsync(LocalizationGroup.GetFormattedText(messageKey, messageKey + " {0}", userName))

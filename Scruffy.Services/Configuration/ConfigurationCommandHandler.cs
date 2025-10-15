@@ -47,6 +47,7 @@ public class ConfigurationCommandHandler : LocatedServiceBase
                                                .ConfigureAwait(false))
         {
             var dialogHandler = new DialogHandler(context);
+
             await using (dialogHandler.ConfigureAwait(false))
             {
                 await dialogHandler.Run<ServerConfigurationDialogElement, bool>()

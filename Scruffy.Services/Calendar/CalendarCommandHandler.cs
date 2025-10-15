@@ -123,6 +123,7 @@ public class CalendarCommandHandler : LocatedServiceBase
                                                .ConfigureAwait(false);
 
         var components = context.Interactivity.CreateTemporaryComponentContainer<int>(obj => obj.User.Id == context.User.Id);
+
         await using (components.ConfigureAwait(false))
         {
             var componentBuilder = new ComponentBuilder();

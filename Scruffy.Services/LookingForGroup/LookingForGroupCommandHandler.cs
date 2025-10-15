@@ -400,6 +400,7 @@ public class LookingForGroupCommandHandler : LocatedServiceBase
                                                          obj.ThreadId
                                                      })
                                                      .FirstOrDefault();
+
                         if (data != null)
                         {
                             if (data.ThreadId is not null

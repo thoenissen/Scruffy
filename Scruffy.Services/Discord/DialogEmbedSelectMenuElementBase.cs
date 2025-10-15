@@ -53,17 +53,20 @@ public abstract class DialogEmbedSelectMenuElementBase<TData> : InteractionDialo
     public override async Task<TData> Run()
     {
         var components = CommandContext.Interactivity.CreateTemporaryComponentContainer<int>(obj => obj.User.Id == CommandContext.User.Id);
+
         await using (components.ConfigureAwait(false))
         {
             var componentsBuilder = new ComponentBuilder();
 
             var entries = GetEntries();
+
             if (entries?.Count > 0)
             {
                 var selectMenu = new SelectMenuBuilder().WithCustomId(components.AddSelectMenu(0))
                                                         .WithPlaceholder(GetPlaceholder());
 
                 var i = 1;
+
                 foreach (var entry in entries.Take(25))
                 {
                     selectMenu.AddOption(entry.CommandText, i.ToString(), null, entry.Emote);

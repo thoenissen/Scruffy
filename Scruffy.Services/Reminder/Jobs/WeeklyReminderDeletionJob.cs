@@ -62,6 +62,7 @@ public class WeeklyReminderDeletionJob : LocatedAsyncJob
                     var discordClient = serviceProvider.GetService<DiscordSocketClient>();
 
                     var channel = await discordClient.GetChannelAsync(data.ChannelId).ConfigureAwait(false);
+
                     if (channel is ITextChannel textChannel)
                     {
                         var message = await textChannel.GetMessageAsync(data.MessageId.Value).ConfigureAwait(false);

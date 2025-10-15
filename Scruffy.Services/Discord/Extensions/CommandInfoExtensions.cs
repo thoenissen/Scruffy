@@ -23,6 +23,7 @@ public static class CommandInfoExtensions
         }
 
         var module = commandInfo.Module;
+
         while (module != null)
         {
             if (builder.Length != 0)
@@ -46,6 +47,7 @@ public static class CommandInfoExtensions
     public static string GetMainGroup(this CommandInfo commandInfo)
     {
         var module = commandInfo.Module;
+
         while (module.Parent != null)
         {
             module = module.Parent;

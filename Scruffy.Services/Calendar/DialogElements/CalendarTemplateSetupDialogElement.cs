@@ -80,6 +80,7 @@ public class CalendarTemplateSetupDialogElement : DialogEmbedReactionElementBase
         var templatesBuilder = new StringBuilder();
 
         var templates = GetTemplates();
+
         if (templates.Count > 0)
         {
             foreach (var template in templates)

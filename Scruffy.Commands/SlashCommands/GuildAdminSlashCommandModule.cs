@@ -326,12 +326,14 @@ public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
                                         .ConfigureAwait(false);
                 }
                 break;
+
             case GuildRankingVisualizationType.HistoryTypes:
                 {
                     await CommandHandler.PostPersonalRankingHistoryTypeOverview(Context, user)
                                         .ConfigureAwait(false);
                 }
                 break;
+
             default:
                 throw new ArgumentOutOfRangeException(nameof(type), type, null);
         }

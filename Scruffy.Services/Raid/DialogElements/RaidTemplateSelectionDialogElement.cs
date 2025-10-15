@@ -60,6 +60,7 @@ public class RaidTemplateSelectionDialogElement : DialogEmbedMessageElementBase<
                                      .ToList();
 
             var i = 1;
+
             foreach (var role in mainRoles)
             {
                 templatesFieldText.Append('`');

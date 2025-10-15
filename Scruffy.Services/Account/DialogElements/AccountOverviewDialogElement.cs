@@ -186,6 +186,7 @@ public class AccountOverviewDialogElement : DialogEmbedSelectMenuElementBase<boo
                                                                                                     var isExtendedDataStorageAccepted = false;
 
                                                                                                     var isDataStorageAccepted = await RunSubElement<AccountDataProcessingTermsDialogElement, bool>().ConfigureAwait(false);
+
                                                                                                     if (isDataStorageAccepted)
                                                                                                     {
                                                                                                         isExtendedDataStorageAccepted = await RunSubElement<AccountGuildStatisticsTermsDialogElement, bool>().ConfigureAwait(false);

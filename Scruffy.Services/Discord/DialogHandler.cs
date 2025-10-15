@@ -65,6 +65,7 @@ public sealed class DialogHandler : IAsyncDisposable, IDisposable
     public static async Task<TData> Run<T, TData>(IContextContainer commandContext, Action<DialogContext> onInitialize = null) where T : DialogElementBase<TData>
     {
         var serviceProvider = ServiceProviderContainer.Current.GetServiceProvider();
+
         await using (serviceProvider.ConfigureAwait(false))
         {
             var service = serviceProvider.GetService<T>();
@@ -90,6 +91,7 @@ public sealed class DialogHandler : IAsyncDisposable, IDisposable
     public static async Task<TData> RunForm<TData>(IContextContainer context, bool deleteMessages) where TData : new()
     {
         var serviceProvider = ServiceProviderContainer.Current.GetServiceProvider();
+
         await using (serviceProvider.ConfigureAwait(false))
         {
             var data = new TData();
@@ -100,6 +102,7 @@ public sealed class DialogHandler : IAsyncDisposable, IDisposable
                 var attribute = property.GetCustomAttributes(typeof(DialogElementAssignmentAttribute), false)
                                         .OfType<DialogElementAssignmentAttribute>()
                                         .FirstOrDefault();
+
                 if (attribute != null)
                 {
                     var service = (DialogElementBase)serviceProvider.GetService(attribute.DialogElementType);

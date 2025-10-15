@@ -195,6 +195,7 @@ public class CalendarScheduleService : LocatedServiceBase
                                     }
 
                                     var nextDate = currentDate;
+
                                     while (nextDate.Month == currentDate.Month)
                                     {
                                         nextDate = nextDate.AddDays(7);
@@ -205,6 +206,7 @@ public class CalendarScheduleService : LocatedServiceBase
                             }
                         }
                         break;
+
                     default:
                         {
                             Trace.WriteLine($"Invalid schedule: {schedule.Type}");
@@ -258,6 +260,7 @@ public class CalendarScheduleService : LocatedServiceBase
                                               .ToList())
             {
                 var server = _discordClient.GetGuild(calendar.ServerId);
+
                 if (server != null)
                 {
                     foreach (var appointment in calendar.Appointments)
@@ -289,6 +292,7 @@ public class CalendarScheduleService : LocatedServiceBase
     {
         var data = await DialogHandler.RunForm<CreateOneTimeEventFormData>(commandContext, false)
                                       .ConfigureAwait(false);
+
         if (data != null)
         {
             using (var dbFactory = RepositoryFactory.CreateInstance())

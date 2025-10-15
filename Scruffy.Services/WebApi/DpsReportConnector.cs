@@ -114,6 +114,7 @@ public class DpsReportConnector
                             if (shouldAbort(upload))
                             {
                                 currentPage = pageCount;
+
                                 break;
                             }
 

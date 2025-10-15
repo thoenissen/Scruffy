@@ -248,38 +248,45 @@ public class GuildCommandHandler : LocatedServiceBase
                         _configurationService.SetChannel(context, GuildChannelConfigurationType.SpecialRankRankChange, null);
                     }
                     break;
+
                 case GuildNotificationChannelConfigurationSelectDialogElement.ChannelType.CalendarReminderNotification:
                     {
                         _configurationService.SetChannel(context, GuildChannelConfigurationType.CalendarReminder, null);
                     }
                     break;
+
                 case GuildNotificationChannelConfigurationSelectDialogElement.ChannelType.GuildLogNotification:
                     {
                         _configurationService.SetChannel(context, GuildChannelConfigurationType.GuildLogNotification, null);
                     }
                     break;
+
                 case GuildNotificationChannelConfigurationSelectDialogElement.ChannelType.GuildRankChangeNotification:
                     {
                         _configurationService.SetChannel(context, GuildChannelConfigurationType.GuildRankChanges, null);
                     }
                     break;
+
                 case GuildNotificationChannelConfigurationSelectDialogElement.ChannelType.MessageOfTheDay:
                     {
                         await _configurationService.SetupMotd(context)
                                                    .ConfigureAwait(false);
                     }
                     break;
+
                 case GuildNotificationChannelConfigurationSelectDialogElement.ChannelType.Calendar:
                     {
                         await _configurationService.SetupCalendar(context)
                                                    .ConfigureAwait(false);
                     }
                     break;
+
                 case GuildNotificationChannelConfigurationSelectDialogElement.ChannelType.UserNotification:
                     {
                         _guildUserService.SetChannel(context.Guild.Id, context.Channel.Id);
                     }
                     break;
+
                 case null:
                 default:
                     break;
@@ -317,6 +324,7 @@ public class GuildCommandHandler : LocatedServiceBase
                                                        .ConfigureAwait(false);
                     }
                     break;
+
                 case null:
                 default:
                     break;

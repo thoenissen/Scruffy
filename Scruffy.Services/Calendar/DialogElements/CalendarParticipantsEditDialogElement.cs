@@ -156,6 +156,7 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedSelectMenuElemen
         }
 
         var fieldTitle = LocalizationGroup.GetText("Participants", "Participants");
+
         if (fieldCounter > 1)
         {
             fieldTitle += " #" + fieldCounter;
@@ -181,6 +182,7 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedSelectMenuElemen
                                     Response = async () =>
                                                {
                                                    var members = await RunSubElement<CalendarAddParticipantsDialogElement, List<IGuildUser>>().ConfigureAwait(false);
+
                                                    if (members != null)
                                                    {
                                                        foreach (var member in members)
@@ -206,6 +208,7 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedSelectMenuElemen
                                     Response = async () =>
                                                {
                                                    var members = await RunSubElement<CalendarAddVoiceChannelDialogElement, List<IGuildUser>>().ConfigureAwait(false);
+
                                                    if (members != null)
                                                    {
                                                        foreach (var member in members)
@@ -231,11 +234,13 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedSelectMenuElemen
                                     Response = async () =>
                                                {
                                                    var members = await RunSubElement<CalendarRemoveParticipantsDialogElement, List<IGuildUser>>().ConfigureAwait(false);
+
                                                    if (members != null)
                                                    {
                                                        foreach (var member in members)
                                                        {
                                                            var entry = _data.Participants.FirstOrDefault(obj => obj.Member.Id == member.Id);
+
                                                            if (entry != null)
                                                            {
                                                                _data.Participants.Remove(entry);
@@ -253,11 +258,13 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedSelectMenuElemen
                                     Response = async () =>
                                                {
                                                    var members = await RunSubElement<CalendarRemoveParticipantsDialogElement, List<IGuildUser>>().ConfigureAwait(false);
+
                                                    if (members != null)
                                                    {
                                                        foreach (var member in members)
                                                        {
                                                            var entry = _data.Participants.FirstOrDefault(obj => obj.Member.Id == member.Id);
+
                                                            if (entry != null)
                                                            {
                                                                entry.IsLeader = true;

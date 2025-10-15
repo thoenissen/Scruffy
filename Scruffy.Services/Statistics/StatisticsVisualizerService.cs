@@ -100,11 +100,13 @@ public class StatisticsVisualizerService : LocatedServiceBase
                                                      })
                                       .OrderByDescending(obj => obj.Count)
                                       .FirstOrDefault();
+
             if (mostActive != null)
             {
                 var channel = await commandContext.Guild
                                                   .GetChannelAsync(mostActive.Channeld)
                                                   .ConfigureAwait(false);
+
                 if (channel is ITextChannel textChannel)
                 {
                     stringBuilder.Append(LocalizationGroup.GetText("MeOverviewMessage", "Message:"));

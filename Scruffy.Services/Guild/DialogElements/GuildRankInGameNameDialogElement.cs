@@ -69,6 +69,7 @@ public class GuildRankInGameNameDialogElement : DialogEmbedMessageElementBase<st
                                           .OrderBy(obj => obj.Order))
             {
                 var currentLine = $"`{ranksCounter}` -  {rank.Id}\n";
+
                 if (currentLine.Length + stringBuilder.Length > 1024)
                 {
                     builder.AddField(LocalizationGroup.GetText("RanksField", "Ranks") + " #" + fieldsCounter, stringBuilder.ToString());

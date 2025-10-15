@@ -61,6 +61,7 @@ public class DeveloperService : LocatedServiceBase
                                                  .ConfigureAwait(false);
 
             var main = branches.FirstOrDefault(obj => obj.Name == "main");
+
             if (main != null)
             {
                 var commitSha = main.Commit?.Sha;

@@ -81,18 +81,21 @@ public class GuildWars2SlashCommandModule : SlashCommandModuleBase
                                         .ConfigureAwait(false);
                 }
                 break;
+
             case GuideType.StrikeMissions:
                 {
                     await CommandHandler.PostStrikeMissionGuides(Context)
                                         .ConfigureAwait(false);
                 }
                 break;
+
             case GuideType.Fractals:
                 {
                     await CommandHandler.PostFractalGuides(Context)
                                         .ConfigureAwait(false);
                 }
                 break;
+
             default:
                 throw new ArgumentOutOfRangeException(nameof(type), type, null);
         }

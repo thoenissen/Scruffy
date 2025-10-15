@@ -97,6 +97,7 @@ public class GuildActivityDiscordMessageSetupDialogElement : DialogEmbedReaction
         var levelsBuilder = new StringBuilder();
 
         var roles = GetRoles();
+
         if (roles.Count > 0)
         {
             foreach (var (mention, points) in roles)

@@ -72,6 +72,7 @@ public abstract class DialogEmbedMultiSelectSelectMenuElementBase<TData> : Inter
                                                     .WithMaxValues(MaxValues);
 
             var entries = GetEntries();
+
             if (entries?.Count > 0)
             {
                 foreach (var entry in entries.Take(25))

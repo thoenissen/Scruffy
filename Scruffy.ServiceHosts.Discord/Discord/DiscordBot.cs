@@ -87,6 +87,7 @@ public sealed class DiscordBot : IAsyncDisposable
     public async Task StartAsync()
     {
         var debugChannel = Environment.GetEnvironmentVariable("SCRUFFY_DEBUG_CHANNEL");
+
         if (string.IsNullOrWhiteSpace(debugChannel) == false)
         {
             _debugChannel = Convert.ToUInt64(debugChannel);
@@ -321,6 +322,7 @@ public sealed class DiscordBot : IAsyncDisposable
                                 }
                             }
                             break;
+
                         case InteractionCommandError.UnknownCommand:
                         case InteractionCommandError.ParseFailed:
                         case InteractionCommandError.ConvertFailed:
@@ -366,6 +368,7 @@ public sealed class DiscordBot : IAsyncDisposable
                                 }
                             }
                             break;
+
                         case InteractionCommandError.UnknownCommand:
                         case InteractionCommandError.ParseFailed:
                         case InteractionCommandError.ConvertFailed:
@@ -411,6 +414,7 @@ public sealed class DiscordBot : IAsyncDisposable
                                 }
                             }
                             break;
+
                         case InteractionCommandError.UnknownCommand:
                         case InteractionCommandError.ParseFailed:
                         case InteractionCommandError.ConvertFailed:

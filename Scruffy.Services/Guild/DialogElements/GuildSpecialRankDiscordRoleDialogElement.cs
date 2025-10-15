@@ -50,6 +50,7 @@ public class GuildSpecialRankDiscordRoleDialogElement : DialogEmbedMessageElemen
         foreach (var role in CommandContext.Guild.Roles)
         {
             var currentLine = $"`{rolesCounter}` -  {role.Mention}\n";
+
             if (currentLine.Length + stringBuilder.Length > 1024)
             {
                 builder.AddField(LocalizationGroup.GetText("RolesField", "Roles") + " #" + fieldsCounter, stringBuilder.ToString());

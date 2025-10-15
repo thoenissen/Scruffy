@@ -130,6 +130,7 @@ public class UtilityCommandHandler : LocatedServiceBase
                 }
 
                 var actionRowBuilder = componentsBuilder.ActionRows?.LastOrDefault();
+
                 if (actionRowBuilder == null)
                 {
                     actionRowBuilder = new ActionRowBuilder();

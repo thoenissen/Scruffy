@@ -233,6 +233,7 @@ public sealed class JobScheduler : SingletonLocatedServiceBase,
         var scope = _scopeFactory.CreateScope();
 
         var job = scope.ServiceProvider.GetRequiredService<T>();
+
         if (job is IServiceScopeSupport scopeSupport)
         {
             scopeSupport.SetScope(scope);

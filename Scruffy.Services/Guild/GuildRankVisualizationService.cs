@@ -786,6 +786,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
                         if (user.DiscordUserId != null)
                         {
                             var userName = "Invalid user";
+
                             try
                             {
                                 var member = guild.GetUser(user.DiscordUserId.Value);
@@ -813,6 +814,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
                         if (user.DiscordRoleId != null)
                         {
                             var role = guild.GetRole(user.DiscordRoleId.Value);
+
                             if (role != null)
                             {
                                 user.UserColor = role.Color.ToString();

@@ -91,6 +91,7 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
                                                   .ConfigureAwait(false);
 
             var currentLine = $"{Format.Code(user.Points.ToString("0.0"))} - {DiscordEmoteService.GetGuildEmote(CommandContext.Client, user.DiscordEmoji)} {discordUser.Mention}";
+
             if (currentLine.Length + message.Length > 1024)
             {
                 builder.AddField(LocalizationGroup.GetText("Users", "Users") + " #" + fieldCounter, message.ToString());
@@ -105,6 +106,7 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
         message.AppendLine("\u200b");
 
         var fieldName = LocalizationGroup.GetText("Users", "Users");
+
         if (fieldCounter > 1)
         {
             fieldName = fieldName + " #" + fieldCounter;
@@ -254,6 +256,7 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
                                                                             obj =>
                                                                             {
                                                                                 var user = users.FirstOrDefault(obj2 => obj2.UserId == obj.UserId);
+
                                                                                 if (user != null)
                                                                                 {
                                                                                     obj.Points = user.Points.Sum(obj2 =>

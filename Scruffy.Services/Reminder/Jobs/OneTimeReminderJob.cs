@@ -78,6 +78,7 @@ public class OneTimeReminderJob : LocatedAsyncJob
                                 var discordClient = serviceProvider.GetRequiredService<DiscordSocketClient>();
 
                                 var channel = await discordClient.GetChannelAsync(jobEntity.ChannelId).ConfigureAwait(false);
+
                                 if (channel is IMessageChannel textChannel)
                                 {
                                     var user = await discordClient.GetUserAsync(jobEntity.DiscordAccountId).ConfigureAwait(false);

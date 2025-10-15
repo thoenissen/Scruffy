@@ -63,6 +63,7 @@ public abstract class DialogEmbedReactionElementBase<TData> : DialogElementBase<
         if (reactions?.Count > 0)
         {
             var commands = new StringBuilder();
+
             foreach (var reaction in reactions)
             {
                 commands.AppendLine(reaction.CommandText);
@@ -88,6 +89,7 @@ public abstract class DialogEmbedReactionElementBase<TData> : DialogElementBase<
         }
 
         var userReaction = await userReactionTask.ConfigureAwait(false);
+
         if (userReaction != null)
         {
             if (reactions?.Count > 0)

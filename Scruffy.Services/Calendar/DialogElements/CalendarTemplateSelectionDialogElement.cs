@@ -63,6 +63,7 @@ public class CalendarTemplateSelectionDialogElement : DialogEmbedMessageElementB
                                      .ToList();
 
             var i = 1;
+
             foreach (var role in mainRoles)
             {
                 levelsFieldsText.Append('`');

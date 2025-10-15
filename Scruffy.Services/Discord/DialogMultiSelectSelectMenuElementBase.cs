@@ -61,6 +61,7 @@ public abstract class DialogMultiSelectSelectMenuElementBase<TData> : Interactio
     public override async Task<List<TData>> Run()
     {
         var components = CommandContext.Interactivity.CreateTemporaryComponentContainer<int>(obj => obj.User.Id == CommandContext.User.Id);
+
         await using (components.ConfigureAwait(false))
         {
             var componentsBuilder = new ComponentBuilder();
@@ -71,6 +72,7 @@ public abstract class DialogMultiSelectSelectMenuElementBase<TData> : Interactio
                                                     .WithMaxValues(MaxValues);
 
             var entries = GetEntries();
+
             if (entries?.Count > 0)
             {
                 foreach (var entry in entries.Take(25))

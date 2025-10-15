@@ -255,6 +255,7 @@ public class RaidRegistrationService : LocatedServiceBase
         {
             var templateId = await dialogHandler.Run<RaidTemplateSelectionDialogElement, long>()
                                                 .ConfigureAwait(false);
+
             if (templateId > 0)
             {
                 using (var dbFactory = RepositoryFactory.CreateInstance())
@@ -425,6 +426,7 @@ public class RaidRegistrationService : LocatedServiceBase
                                            obj => obj.LineupExperienceLevelId = slot.ExperienceLevelId) == false)
                 {
                     success = false;
+
                     break;
                 }
             }

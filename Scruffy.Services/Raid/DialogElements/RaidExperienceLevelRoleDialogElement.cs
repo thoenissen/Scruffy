@@ -52,6 +52,7 @@ public class RaidExperienceLevelRoleDialogElement : DialogEmbedMessageElementBas
         levelsFieldsText.Append('\n');
 
         var i = 1;
+
         foreach (var role in CommandContext.Guild.Roles)
         {
             levelsFieldsText.Append('`');

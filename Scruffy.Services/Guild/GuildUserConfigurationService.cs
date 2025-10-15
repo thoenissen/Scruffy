@@ -147,6 +147,7 @@ public class GuildUserConfigurationService : LocatedServiceBase
                                 userConfiguration.IsFixedRank = userConfiguration.IsFixedRank == false;
                             }
                             break;
+
                         case nameof(userConfiguration.IsInactive):
                             {
                                 userConfiguration.IsInactive = userConfiguration.IsInactive == false;

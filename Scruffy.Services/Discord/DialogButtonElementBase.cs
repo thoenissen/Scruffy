@@ -47,11 +47,13 @@ public abstract class DialogButtonElementBase<TData> : DialogElementBase<TData>
     public override async Task<TData> Run()
     {
         var components = CommandContext.Interactivity.CreateTemporaryComponentContainer<int>(obj => obj.User.Id == CommandContext.User.Id);
+
         await using (components.ConfigureAwait(false))
         {
             var componentsBuilder = new ComponentBuilder();
 
             var buttons = GetButtons();
+
             if (buttons?.Count > 0)
             {
                 var i = 1;

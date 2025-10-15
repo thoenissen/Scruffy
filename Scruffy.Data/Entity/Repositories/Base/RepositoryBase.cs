@@ -142,6 +142,7 @@ public abstract class RepositoryBase<TQueryable, TEntity> : RepositoryBase
             var newEntity = false;
 
             var entity = _dbContext.Set<TEntity>().FirstOrDefault(expression);
+
             if (entity == null)
             {
                 entity = Activator.CreateInstance<TEntity>();

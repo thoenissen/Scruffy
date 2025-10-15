@@ -66,6 +66,7 @@ public class GuildRankSelectionDialogElement : DialogEmbedMessageElementBase<int
             foreach (var rank in ranks)
             {
                 var currentLine = $"`{ranksCounter}` -  {rank.InGameName} {CommandContext.Guild.GetRole(rank.DiscordRoleId).Mention}\n";
+
                 if (currentLine.Length + stringBuilder.Length > 1024)
                 {
                     builder.AddField(LocalizationGroup.GetText("RanksField", "Ranks") + " #" + fieldsCounter, stringBuilder.ToString());

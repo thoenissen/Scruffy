@@ -56,6 +56,7 @@ public class CalendarParticipantsService : LocatedServiceBase
     public async Task EditParticipants(IContextContainer commandContext)
     {
         var dialogHandler = new DialogHandler(commandContext);
+
         await using (dialogHandler.ConfigureAwait(false))
         {
             var appointmentId = await dialogHandler.Run<CalendarAppointmentSelectionDialogElement, long>()

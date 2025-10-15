@@ -199,6 +199,7 @@ public class RaidMessageBuilder : LocatedServiceBase
                             fieldBuilder.Append('\u200B');
 
                             var fieldName = $"{DiscordEmoteService.GetGuildEmote(_client, slot.DiscordEmoji)} {slot.Description} ({registrations.Count}/{slot.Count * appointment.GroupCount})";
+
                             if (fieldCounter > 1)
                             {
                                 fieldName = $"{fieldName} #{fieldCounter}";
@@ -260,6 +261,7 @@ public class RaidMessageBuilder : LocatedServiceBase
                         fieldBuilder.Append('\u200B');
 
                         var substitutesBenchFieldName = LocalizationGroup.GetText("SubstitutesBench", "Substitutes bench");
+
                         if (fieldCounter > 1)
                         {
                             substitutesBenchFieldName = $"{substitutesBenchFieldName} #{fieldCounter}";

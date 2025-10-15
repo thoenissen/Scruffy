@@ -74,6 +74,7 @@ public class LocalizationService : SingletonLocatedServiceBase
 
         // TODO configuration
         var stream = Assembly.Load("Scruffy.Data").GetManifestResourceStream("Scruffy.Data.Resources.Languages.de-DE.json");
+
         if (stream != null)
         {
             await using (stream.ConfigureAwait(false))

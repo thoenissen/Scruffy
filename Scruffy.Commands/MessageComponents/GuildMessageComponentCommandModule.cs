@@ -55,6 +55,7 @@ public class GuildMessageComponentCommandModule : LocatedInteractionModuleBase
                      .ConfigureAwait(false);
 
         var pointType = default(GuildRankPointType?);
+
         if (pointTypeRaw >= 0
          && Enum.IsDefined(typeof(GuildRankPointType), pointTypeRaw.Value))
         {

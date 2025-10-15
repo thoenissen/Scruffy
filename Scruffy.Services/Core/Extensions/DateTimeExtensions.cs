@@ -17,6 +17,7 @@ public static class DateTimeExtensions
     public static int GetIso8601WeekOfYear(this DateTime date)
     {
         var day = CultureInfo.InvariantCulture.Calendar.GetDayOfWeek(date);
+
         if (day >= DayOfWeek.Monday && day <= DayOfWeek.Wednesday)
         {
             date = date.AddDays(3);
