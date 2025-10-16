@@ -73,6 +73,7 @@ public class GuildBankService : LocatedServiceBase
                 msg.WithTimestamp(DateTime.Now);
 
                 var connector = new GuildWars2ApiConnector(guild.ApiKey);
+
                 await using (connector.ConfigureAwait(false))
                 {
                     var vault =  await connector.GetGuildVault(guild.GuildId)
@@ -192,6 +193,7 @@ public class GuildBankService : LocatedServiceBase
                 if (apiKeys.Count > 0)
                 {
                     var guildConnector = new GuildWars2ApiConnector(guild.ApiKey);
+
                     await using (guildConnector.ConfigureAwait(false))
                     {
                         var vault = await guildConnector.GetGuildVault(guild.GuildId)
@@ -209,6 +211,7 @@ public class GuildBankService : LocatedServiceBase
                         foreach (var apiKey in apiKeys)
                         {
                             var accountConnector = new GuildWars2ApiConnector(apiKey.ApiKey);
+
                             await using (accountConnector.ConfigureAwait(false))
                             {
                                 var dyes = await accountConnector.GetDyes()

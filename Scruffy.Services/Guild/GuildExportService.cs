@@ -88,6 +88,7 @@ public class GuildExportService : LocatedServiceBase
                                     .ToList();
 
             var connector = new GuildWars2ApiConnector(null);
+
             await using (connector.ConfigureAwait(false))
             {
                 var tradingsPostValues = await connector.GetTradingPostPrices(itemIds)
@@ -97,9 +98,11 @@ public class GuildExportService : LocatedServiceBase
                                            .ConfigureAwait(false);
 
                 var memoryStream = new MemoryStream();
+
                 await using (memoryStream.ConfigureAwait(false))
                 {
                     var writer = new StreamWriter(memoryStream);
+
                     await using (writer.ConfigureAwait(false))
                     {
                         await writer.WriteLineAsync("TimeStamp;User;Operation;ItemId;ItemName;Count;TradingPostValue;VendorValue;CustomValue")
@@ -187,6 +190,7 @@ public class GuildExportService : LocatedServiceBase
                                     .ToList();
 
             var connector = new GuildWars2ApiConnector(null);
+
             await using (connector.ConfigureAwait(false))
             {
                 var tradingsPostValues = await connector.GetTradingPostPrices(itemIds)
@@ -196,9 +200,11 @@ public class GuildExportService : LocatedServiceBase
                                            .ConfigureAwait(false);
 
                 var memoryStream = new MemoryStream();
+
                 await using (memoryStream.ConfigureAwait(false))
                 {
                     var writer = new StreamWriter(memoryStream);
+
                     await using (writer.ConfigureAwait(false))
                     {
                         await writer.WriteLineAsync("User;Operation;ItemId;ItemName;Count;TradingPostValue;VendorValue;CustomValue")
@@ -297,6 +303,7 @@ public class GuildExportService : LocatedServiceBase
                                        .ToList();
 
             var connector = new GuildWars2ApiConnector(null);
+
             await using (connector.ConfigureAwait(false))
             {
                 var tradingsPostValues = await connector.GetTradingPostPrices(itemIds)
@@ -309,9 +316,11 @@ public class GuildExportService : LocatedServiceBase
                                               .ConfigureAwait(false);
 
                 var memoryStream = new MemoryStream();
+
                 await using (memoryStream.ConfigureAwait(false))
                 {
                     var writer = new StreamWriter(memoryStream);
+
                     await using (writer.ConfigureAwait(false))
                     {
                         await writer.WriteLineAsync("TimeStamp;User;ItemId;ItemName;Count;TradingPostValue;VendorValue;CustomValue")
@@ -420,6 +429,7 @@ public class GuildExportService : LocatedServiceBase
                                        .ToList();
 
             var connector = new GuildWars2ApiConnector(null);
+
             await using (connector.ConfigureAwait(false))
             {
                 var tradingsPostValues = await connector.GetTradingPostPrices(itemIds)
@@ -432,9 +442,11 @@ public class GuildExportService : LocatedServiceBase
                                               .ConfigureAwait(false);
 
                 var memoryStream = new MemoryStream();
+
                 await using (memoryStream.ConfigureAwait(false))
                 {
                     var writer = new StreamWriter(memoryStream);
+
                     await using (writer.ConfigureAwait(false))
                     {
                         await writer.WriteLineAsync("User;ItemId;ItemName;Count;TradingPostValue;VendorValue;CustomValue")
@@ -498,9 +510,11 @@ public class GuildExportService : LocatedServiceBase
                                          .ConfigureAwait(false);
 
             var memoryStream = new MemoryStream();
+
             await using (memoryStream.ConfigureAwait(false))
             {
                 var writer = new StreamWriter(memoryStream);
+
                 await using (writer.ConfigureAwait(false))
                 {
                     await writer.WriteLineAsync("AccountName")
@@ -589,9 +603,11 @@ public class GuildExportService : LocatedServiceBase
             }
 
             var memoryStream = new MemoryStream();
+
             await using (memoryStream.ConfigureAwait(false))
             {
                 var writer = new StreamWriter(memoryStream);
+
                 await using (writer.ConfigureAwait(false))
                 {
                     await writer.WriteLineAsync("User;AccountName;Characters;Representation;Percentage")
@@ -651,6 +667,7 @@ public class GuildExportService : LocatedServiceBase
             var members = new List<(string Name, DateTime? Joined, bool IsApiKeyValid, bool HasAllPermissions)>();
 
             var connector = new GuildWars2ApiConnector(guild.ApiKey);
+
             await using (connector.ConfigureAwait(false))
             {
                 foreach (var member in await connector.GetGuildMembers(guild.GuildId)
@@ -666,9 +683,11 @@ public class GuildExportService : LocatedServiceBase
             }
 
             var memoryStream = new MemoryStream();
+
             await using (memoryStream.ConfigureAwait(false))
             {
                 var writer = new StreamWriter(memoryStream);
+
                 await using (writer.ConfigureAwait(false))
                 {
                     await writer.WriteLineAsync("AccountName;Joined;API-Key;Permissions")

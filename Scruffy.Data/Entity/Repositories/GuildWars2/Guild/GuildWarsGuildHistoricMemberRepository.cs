@@ -44,6 +44,7 @@ public class GuildWarsGuildHistoricMemberRepository : RepositoryBase<GuildWarsGu
         try
         {
             var connection = new SqlConnection(GetDbContext().ConnectionString);
+
             await using (connection.ConfigureAwait(false))
             {
                 await connection.OpenAsync()

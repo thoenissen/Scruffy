@@ -56,6 +56,7 @@ public class RaidRoleAssignmentService : LocatedServiceBase
     public async Task AssignRoles(IContextContainer commandContext, long registrationId)
     {
         var dialogHandler = new DialogHandler(commandContext);
+
         await using (dialogHandler.ConfigureAwait(false))
         {
             using (var dbFactory = RepositoryFactory.CreateInstance())

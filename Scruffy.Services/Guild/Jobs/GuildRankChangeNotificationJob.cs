@@ -71,10 +71,12 @@ public class GuildRankChangeNotificationJob : LocatedAsyncJob
         {
             var embed = await _guildRankService.CheckCurrentAssignments(guild.GuildId, false)
                                                .ConfigureAwait(false);
+
             if (embed != null)
             {
                 var channel = await _discordClient.GetChannelAsync(guild.DiscordChannelId)
                                                   .ConfigureAwait(false);
+
                 if (channel is ITextChannel textChannel)
                 {
                     await textChannel.SendMessageAsync(embed: embed)

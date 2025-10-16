@@ -49,6 +49,7 @@ public class DpsReportConnector
     public IAsyncEnumerable<Upload> GetUploads(string token, Func<Upload, bool> filter, Func<Upload, bool> shouldAbort, bool skipEnhancement = false)
     {
         var omitTime = new DateTimeOffset(DateTime.MinValue, TimeSpan.Zero);
+
         return GetUploads(token, omitTime, omitTime, filter, shouldAbort, skipEnhancement);
     }
 

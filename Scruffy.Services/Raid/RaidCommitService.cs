@@ -159,6 +159,7 @@ public class RaidCommitService : LocatedServiceBase
                                 };
 
                 var dialogHandler = new DialogHandler(commandContext);
+
                 await using (dialogHandler.ConfigureAwait(false))
                 {
                     while (await dialogHandler.Run<RaidCommitDialogElement, bool>(new RaidCommitDialogElement(_localizationService, _userManagementService, container, _jobScheduler)).ConfigureAwait(false))

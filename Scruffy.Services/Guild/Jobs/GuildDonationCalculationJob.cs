@@ -399,6 +399,7 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
                                         else
                                         {
                                             value = null;
+
                                             break;
                                         }
                                     }

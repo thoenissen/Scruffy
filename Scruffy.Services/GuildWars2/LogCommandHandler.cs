@@ -307,6 +307,7 @@ public class LogCommandHandler : LocatedServiceBase
                                                                            if (fightCount < count)
                                                                            {
                                                                                ++counts[upload.FightName];
+
                                                                                return true;
                                                                            }
 

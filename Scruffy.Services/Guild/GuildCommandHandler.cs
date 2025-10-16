@@ -204,6 +204,7 @@ public class GuildCommandHandler : LocatedServiceBase
     public async Task ConfigureVoiceActivityRoles(IContextContainer context)
     {
         var dialogHandler = new DialogHandler(context);
+
         await using (dialogHandler.ConfigureAwait(false))
         {
             while (await dialogHandler.Run<GuildActivityDiscordVoiceSetupDialogElement, bool>().ConfigureAwait(false))
@@ -220,6 +221,7 @@ public class GuildCommandHandler : LocatedServiceBase
     public async Task ConfigureMessageActivityRoles(IContextContainer context)
     {
         var dialogHandler = new DialogHandler(context);
+
         await using (dialogHandler.ConfigureAwait(false))
         {
             while (await dialogHandler.Run<GuildActivityDiscordMessageSetupDialogElement, bool>().ConfigureAwait(false))
@@ -236,6 +238,7 @@ public class GuildCommandHandler : LocatedServiceBase
     public async Task ConfigureNotificationChannel(InteractionContextContainer context)
     {
         var dialogHandler = new DialogHandler(context);
+
         await using (dialogHandler.ConfigureAwait(false))
         {
             var type = await dialogHandler.Run<GuildNotificationChannelConfigurationSelectDialogElement, GuildNotificationChannelConfigurationSelectDialogElement.ChannelType?>()
@@ -305,6 +308,7 @@ public class GuildCommandHandler : LocatedServiceBase
     public async Task ConfigureOverviewMessages(InteractionContextContainer context)
     {
         var dialogHandler = new DialogHandler(context);
+
         await using (dialogHandler.ConfigureAwait(false))
         {
             var type = await dialogHandler.Run<GuildOverviewMessageConfigurationSelectDialogElement, GuildOverviewMessageConfigurationSelectDialogElement.MessageType?>()

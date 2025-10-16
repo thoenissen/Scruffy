@@ -39,6 +39,7 @@ public class RaidMessageRefreshJob : LocatedAsyncJob
         if (_configurationId > 0)
         {
             var serviceProvider = ServiceProviderContainer.Current.GetServiceProvider();
+
             await using (serviceProvider.ConfigureAwait(false))
             {
                 await serviceProvider.GetRequiredService<RaidMessageBuilder>()

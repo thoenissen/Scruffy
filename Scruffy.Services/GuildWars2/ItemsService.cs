@@ -45,6 +45,7 @@ public class ItemsService : LocatedServiceBase
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
             var connector = new GuildWars2ApiConnector(null);
+
             await using (connector.ConfigureAwait(false))
             {
                 var itemIds = await connector.GetAllItemIds()
@@ -73,17 +74,21 @@ public class ItemsService : LocatedServiceBase
     public async Task ConfigureItem(IContextContainer context)
     {
         var dialogHandler = new DialogHandler(context);
+
         await using (dialogHandler.ConfigureAwait(false))
         {
             var data = await dialogHandler.RunForm<ItemConfigurationFormData>()
                                       .ConfigureAwait(false);
+
             if (data != null)
             {
                 var connector = new GuildWars2ApiConnector(null);
+
                 await using (connector.ConfigureAwait(false))
                 {
                     var item = await connector.GetItem(data.ItemId)
                                               .ConfigureAwait(false);
+
                     if (item != null)
                     {
                         using (var dbFactory = RepositoryFactory.CreateInstance())

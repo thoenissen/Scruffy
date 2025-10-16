@@ -45,6 +45,7 @@ public class OneTimeReminderJob : LocatedAsyncJob
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
             var transaction = dbFactory.BeginTransaction(System.Data.IsolationLevel.RepeatableRead);
+
             await using (transaction.ConfigureAwait(false))
             {
                 var jobEntity = dbFactory.GetRepository<OneTimeReminderRepository>()
@@ -73,6 +74,7 @@ public class OneTimeReminderJob : LocatedAsyncJob
                         try
                         {
                             var serviceProvider = ServiceProviderContainer.Current.GetServiceProvider();
+
                             await using (serviceProvider.ConfigureAwait(false))
                             {
                                 var discordClient = serviceProvider.GetRequiredService<DiscordSocketClient>();

@@ -81,6 +81,7 @@ public class AccountAdministrationService : LocatedServiceBase
                         {
                             var accountInformation = await connector.GetAccountInformationAsync()
                                                                     .ConfigureAwait(false);
+
                             if (accountInformation.Name != account.Name)
                             {
                                 invalidNames.Add((account.Name, accountInformation.Name));

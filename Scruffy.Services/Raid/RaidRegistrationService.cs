@@ -180,6 +180,7 @@ public class RaidRegistrationService : LocatedServiceBase
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
             var transaction = dbFactory.BeginTransaction(IsolationLevel.RepeatableRead);
+
             await using (transaction.ConfigureAwait(false))
             {
                 var now = DateTime.Now;
@@ -251,6 +252,7 @@ public class RaidRegistrationService : LocatedServiceBase
         var success = false;
 
         var dialogHandler = new DialogHandler(commandContext);
+
         await using (dialogHandler.ConfigureAwait(false))
         {
             var templateId = await dialogHandler.Run<RaidTemplateSelectionDialogElement, long>()
@@ -261,6 +263,7 @@ public class RaidRegistrationService : LocatedServiceBase
                 using (var dbFactory = RepositoryFactory.CreateInstance())
                 {
                     var transaction = dbFactory.BeginTransaction(IsolationLevel.RepeatableRead);
+
                     await using (transaction.ConfigureAwait(false))
                     {
                         success = dbFactory.GetRepository<RaidAppointmentRepository>()
@@ -298,6 +301,7 @@ public class RaidRegistrationService : LocatedServiceBase
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
             var transaction = dbFactory.BeginTransaction(IsolationLevel.RepeatableRead);
+
             await using (transaction.ConfigureAwait(false))
             {
                 success = dbFactory.GetRepository<RaidAppointmentRepository>()

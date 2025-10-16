@@ -244,6 +244,7 @@ public class ReminderCommandHandler : LocatedServiceBase
                     if (descriptionBuilder.Length + lineBuilder.Length > 4093)
                     {
                         descriptionBuilder.Append("...");
+
                         break;
                     }
 

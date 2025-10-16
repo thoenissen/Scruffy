@@ -750,6 +750,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
                               var jsonResult = await response.Content
                                                              .ReadAsStringAsync()
                                                              .ConfigureAwait(false);
+
                               return JsonConvert.DeserializeObject<List<AccountMaterial>>(jsonResult);
                           }
                       });

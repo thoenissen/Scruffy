@@ -690,6 +690,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
 
         var scopeLock = await _overviewsLock.CreateLockAsync()
                                             .ConfigureAwait(false);
+
         await using (scopeLock.ConfigureAwait(false))
         {
             if (isForceRefresh)
@@ -779,6 +780,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
                 }
 
                 var guild = _discordClient.GetGuild(discordServerId);
+
                 if (guild != null)
                 {
                     foreach (var user in users)
@@ -790,6 +792,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
                             try
                             {
                                 var member = guild.GetUser(user.DiscordUserId.Value);
+
                                 if (member != null)
                                 {
                                     userName = $"{member.TryGetDisplayName()}";
@@ -798,6 +801,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                 {
                                     var discordUser = await _discordClient.GetUserAsync(user.DiscordUserId.Value)
                                                                           .ConfigureAwait(false);
+
                                     if (discordUser != null)
                                     {
                                         userName = discordUser.Username;
@@ -1010,6 +1014,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
                 {
                     var scopeLock = await _modifyLock.CreateLockAsync()
                                                      .ConfigureAwait(false);
+
                     await using (scopeLock.ConfigureAwait(false))
                     {
                         try

@@ -102,6 +102,7 @@ public class GuildUserConfigurationService : LocatedServiceBase
                 builder.AddField(LocalizationGroup.GetText("Configuration", "Configuration"), stringBuilder);
 
                 var components = context.Interactivity.CreateTemporaryComponentContainer<int>(obj => obj.User.Id == context.User.Id);
+
                 await using (components.ConfigureAwait(false))
                 {
                     var componentsBuilder = new ComponentBuilder();

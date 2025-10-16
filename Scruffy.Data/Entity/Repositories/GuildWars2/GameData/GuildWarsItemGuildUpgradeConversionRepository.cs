@@ -85,6 +85,7 @@ public class GuildWarsItemGuildUpgradeConversionRepository : RepositoryBase<Guil
                                                                           INSERT ( [ItemId], [UpgradeId])
                                                                           VALUES ( [Source].[ItemId], [Source].[UpgradeId]); ",
                                             connection);
+
                 await using (sqlCommand.ConfigureAwait(false))
                 {
                     sqlCommand.ExecuteNonQuery();

@@ -50,6 +50,7 @@ public class GuildSpecialRankPointsJob : LocatedAsyncJob
     public override async Task ExecuteOverrideAsync()
     {
         var serviceProvider = ServiceProviderContainer.Current.GetServiceProvider();
+
         await using (serviceProvider.ConfigureAwait(false))
         {
             var client = serviceProvider.GetService<DiscordSocketClient>();
@@ -114,6 +115,7 @@ public class GuildSpecialRankPointsJob : LocatedAsyncJob
                                                    .ConfigureAwait(false);
 
                         var transaction = dbFactory.BeginTransaction(IsolationLevel.RepeatableRead);
+
                         await using (transaction.ConfigureAwait(false))
                         {
                             if (accounts.TryGetValue(pointsPerUser.Key, out var userId))
@@ -173,6 +175,7 @@ public class GuildSpecialRankPointsJob : LocatedAsyncJob
                             if (configuration.IgnoreRoles.Any(obj => user.RoleIds.Any(obj2 => obj2 == obj)) == false)
                             {
                                 var isRoleAssigned = user.RoleIds.Any(obj => obj == configuration.DiscordRoleId);
+
                                 if (isRoleAssigned)
                                 {
                                     if (configuration.Users.Any(obj => obj.Id == user.Id) == false)
@@ -195,6 +198,7 @@ public class GuildSpecialRankPointsJob : LocatedAsyncJob
                             try
                             {
                                 var role = action.User.Guild.GetRole(action.RoleId);
+
                                 if (role != null)
                                 {
                                     if (action.IsGrant)

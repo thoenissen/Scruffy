@@ -42,6 +42,7 @@ public sealed class ThatShamanConnector : IAsyncDisposable, IDisposable
     public async Task<NextUpdateData> GetNextUpdate()
     {
         var client = _httpClientFactory.CreateClient();
+
         using (var response = await client.GetAsync("https://thatshaman.com/tools/countdown/?format=json")
                                           .ConfigureAwait(false))
         {
@@ -60,6 +61,7 @@ public sealed class ThatShamanConnector : IAsyncDisposable, IDisposable
     public async Task<NextUpdateData> GetEODRelease()
     {
         var client = _httpClientFactory.CreateClient();
+
         using (var response = await client.GetAsync("https://thatshaman.com/tools/eod/?format=json")
                                           .ConfigureAwait(false))
         {

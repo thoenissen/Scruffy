@@ -65,6 +65,7 @@ public class AccountGuildWarsConfigurationDialogElement : DialogEmbedSelectMenuE
                                         .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
                                         .WithColor(Color.Green)
                                         .WithTimestamp(DateTime.Now);
+
         return Task.FromResult(builder);
     }
 

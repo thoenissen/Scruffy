@@ -28,6 +28,7 @@ public class GuildLogImportJob : LocatedAsyncJob
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
             var serviceProvider = ServiceProviderContainer.Current.GetServiceProvider();
+
             await using (serviceProvider.ConfigureAwait(false))
             {
                 var discordClient = serviceProvider.GetService<DiscordSocketClient>();
@@ -61,6 +62,7 @@ public class GuildLogImportJob : LocatedAsyncJob
                                              : null;
 
                     var connector = new GuildWars2ApiConnector(guild.ApiKey);
+
                     await using (connector.ConfigureAwait(false))
                     {
                         try

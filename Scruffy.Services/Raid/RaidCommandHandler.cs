@@ -820,6 +820,7 @@ public class RaidCommandHandler : LocatedServiceBase
     private async Task ConfigureRolesFirstTime(IContextContainer context)
     {
         var dialogHandler = new DialogHandler(context);
+
         await using (dialogHandler.ConfigureAwait(false))
         {
             try
