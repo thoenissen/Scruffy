@@ -11,5 +11,5 @@ public interface IServiceScopeSupport
     /// Set the current scope
     /// </summary>
     /// <param name="scope">scope</param>
-    void SetScope(IServiceScope scope);
+    public void SetScope(IServiceScope scope);
 }

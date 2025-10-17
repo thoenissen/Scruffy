@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="StyleCop - Rules - Release" ToolsVersion="14.0">
+<RuleSet Name="StyleCop - Rules - Release" ToolsVersion="18.0">
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
     <Rule Id="CA1001" Action="Warning" />
     <Rule Id="CA1009" Action="Warning" />
@@ -65,13 +65,68 @@
     <Rule Id="CA2242" Action="Warning" />
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp" RuleNamespace="Microsoft.CodeAnalysis.CSharp">
-    <Rule Id="CS1591" Action="None" />
     <Rule Id="CS1573" Action="Error" />
+    <Rule Id="CS1591" Action="None" />
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.Features" RuleNamespace="Microsoft.CodeAnalysis.CSharp.Features">
     <Rule Id="IDE0001" Action="Warning" />
     <Rule Id="IDE0044" Action="None" />
     <Rule Id="IDE0049" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="Reihitsu.Analyzer" RuleNamespace="Reihitsu.Analyzer">
+    <Rule Id="RH0001" Action="Error" />
+    <Rule Id="RH0101" Action="Error" />
+    <Rule Id="RH0102" Action="Error" />
+    <Rule Id="RH0202" Action="Error" />
+    <Rule Id="RH0203" Action="Error" />
+    <Rule Id="RH0204" Action="Error" />
+    <Rule Id="RH0205" Action="Error" />
+    <Rule Id="RH0206" Action="Error" />
+    <Rule Id="RH0207" Action="Error" />
+    <Rule Id="RH0208" Action="Error" />
+    <Rule Id="RH0209" Action="Error" />
+    <Rule Id="RH0210" Action="Error" />
+    <Rule Id="RH0211" Action="Error" />
+    <Rule Id="RH0212" Action="Error" />
+    <Rule Id="RH0213" Action="Error" />
+    <Rule Id="RH0214" Action="Error" />
+    <Rule Id="RH0215" Action="Error" />
+    <Rule Id="RH0216" Action="Error" />
+    <Rule Id="RH0217" Action="Error" />
+    <Rule Id="RH0218" Action="Error" />
+    <Rule Id="RH0219" Action="Error" />
+    <Rule Id="RH0220" Action="Error" />
+    <Rule Id="RH0221" Action="Error" />
+    <Rule Id="RH0222" Action="Error" />
+    <Rule Id="RH0223" Action="Error" />
+    <Rule Id="RH0224" Action="Error" />
+    <Rule Id="RH0225" Action="Error" />
+    <Rule Id="RH0226" Action="Error" />
+    <Rule Id="RH0227" Action="Error" />
+    <Rule Id="RH0301" Action="Error" />
+    <Rule Id="RH0302" Action="Error" />
+    <Rule Id="RH0303" Action="Error" />
+    <Rule Id="RH0304" Action="Error" />
+    <Rule Id="RH0305" Action="Error" />
+    <Rule Id="RH0306" Action="Error" />
+    <Rule Id="RH0307" Action="Error" />
+    <Rule Id="RH0308" Action="Error" />
+    <Rule Id="RH0309" Action="Error" />
+    <Rule Id="RH0310" Action="Error" />
+    <Rule Id="RH0311" Action="Error" />
+    <Rule Id="RH0312" Action="Error" />
+    <Rule Id="RH0313" Action="Error" />
+    <Rule Id="RH0314" Action="Error" />
+    <Rule Id="RH0315" Action="Error" />
+    <Rule Id="RH0316" Action="Error" />
+    <Rule Id="RH0317" Action="Error" />
+    <Rule Id="RH0318" Action="Error" />
+    <Rule Id="RH0319" Action="Error" />
+    <Rule Id="RH0320" Action="Error" />
+    <Rule Id="RH0321" Action="Error" />
+    <Rule Id="RH0401" Action="Error" />
+    <Rule Id="RH0501" Action="Error" />
+    <Rule Id="RH0502" Action="Error" />
   </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
     <Rule Id="SA1000" Action="Error" />

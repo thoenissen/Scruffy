@@ -23,7 +23,7 @@ namespace Scruffy.Data.Entity.Migrations
 
             migrationBuilder.AddPrimaryKey("PK_GuildWarsAccountHistoricCharacters",
                                            "GuildWarsAccountHistoricCharacters",
-                                           new string[] { "Date", "AccountName", "CharacterName" });
+                                           ["Date", "AccountName", "CharacterName"]);
         }
 
         /// <inheritdoc/>
@@ -42,7 +42,7 @@ namespace Scruffy.Data.Entity.Migrations
 
             migrationBuilder.AddPrimaryKey("PK_GuildWarsAccountHistoricCharacters",
                                            "GuildWarsAccountHistoricCharacters",
-                                           new string[] { "Date", "AccountName", "CharacterName" });
+                                           ["Date", "AccountName", "CharacterName"]);
         }
     }
 }

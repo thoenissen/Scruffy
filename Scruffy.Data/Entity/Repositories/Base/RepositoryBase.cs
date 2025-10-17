@@ -27,7 +27,7 @@ public abstract class RepositoryBase<TQueryable, TEntity> : RepositoryBase
     /// <summary>
     /// Internal <see cref="DbContext"/>-object
     /// </summary>
-    private ScruffyDbContext _dbContext;
+    private readonly ScruffyDbContext _dbContext;
 
     #endregion // Fields
 

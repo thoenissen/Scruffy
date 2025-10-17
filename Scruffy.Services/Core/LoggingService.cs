@@ -46,7 +46,7 @@ public class LoggingService
     /// <summary>
     /// Stop watch
     /// </summary>
-    private Stopwatch _stopwatch = Stopwatch.StartNew();
+    private readonly Stopwatch _stopwatch = Stopwatch.StartNew();
 
     /// <summary>
     /// Limiting counter

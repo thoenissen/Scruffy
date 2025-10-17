@@ -102,7 +102,7 @@ public class AccountGuildWarsConfigurationDialogElement : DialogEmbedSelectMenuE
 
         foreach (var guildWarsAccount in guildWarsAccounts)
         {
-            list.Add(new()
+            list.Add(new SelectMenuEntryData<bool>
                      {
                          CommandText = LocalizationGroup.GetFormattedText("RemoveAccount", "Remove account '{0}'", guildWarsAccount),
                          Response = async () =>

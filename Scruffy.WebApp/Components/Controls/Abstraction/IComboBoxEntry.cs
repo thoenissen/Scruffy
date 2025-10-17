@@ -20,5 +20,5 @@ public interface IComboBoxEntry
     /// </summary>
     /// <param name="other">Other entry</param>
     /// <returns>Is the entry equal to <paramref name="other"/>?</returns>
-    bool IsEqualsTo(IComboBoxEntry other);
+    public bool IsEqualsTo(IComboBoxEntry other);
 }

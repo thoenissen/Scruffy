@@ -18,7 +18,7 @@ public sealed class DialogHandler : IAsyncDisposable, IDisposable
     /// <summary>
     /// Command context
     /// </summary>
-    private IContextContainer _commandContext;
+    private readonly IContextContainer _commandContext;
 
     /// <summary>
     /// Service provider

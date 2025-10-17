@@ -339,20 +339,16 @@ public class LogCommandHandler : LocatedServiceBase
                                                  Type = "line",
                                                  Data = new Data.Json.QuickChart.Data
                                                         {
-                                                            DataSets = new List<DataSet>
-                                                                       {
+                                                            DataSets = [
                                                                            new DataSet<int>
                                                                            {
-                                                                               BackgroundColor = new List<string>
-                                                                                                 {
-                                                                                                     "#316ed5"
-                                                                                                 },
+                                                                               BackgroundColor = ["#316ed5"],
                                                                                BorderColor = "#274d85",
                                                                                Data = bossGroup.OrderBy(obj => obj.EncounterTime)
                                                                                                .Select(obj => obj.Encounter.CompDps)
                                                                                                .ToList()
                                                                            }
-                                                                       },
+                                                                       ],
                                                             Labels = bossGroup.OrderBy(obj => obj.EncounterTime)
                                                                               .Select(obj => obj.EncounterTime.ToString("d", LocalizationGroup.CultureInfo))
                                                                               .ToList()
@@ -368,26 +364,24 @@ public class LogCommandHandler : LocatedServiceBase
                                                                        },
                                                                Scales = new ScalesCollection
                                                                         {
-                                                                            XAxes = new List<XAxis>
-                                                                                    {
-                                                                                        new()
+                                                                            XAxes = [
+                                                                                        new XAxis
                                                                                         {
                                                                                             Ticks = new AxisTicks
                                                                                                     {
                                                                                                         FontColor = "#b3b3b3"
                                                                                                     }
                                                                                         }
-                                                                                    },
-                                                                            YAxes = new List<YAxis>
-                                                                                    {
-                                                                                        new()
+                                                                                    ],
+                                                                            YAxes = [
+                                                                                        new YAxis
                                                                                         {
                                                                                             Ticks = new AxisTicks
                                                                                                     {
                                                                                                         FontColor = "#b3b3b3"
                                                                                                     }
                                                                                         }
-                                                                                    }
+                                                                                    ]
                                                                         },
                                                                Plugins = new PluginsCollection
                                                                          {
@@ -413,7 +407,7 @@ public class LogCommandHandler : LocatedServiceBase
 
                     await using (chartStream.ConfigureAwait(false))
                     {
-                        await context.SendMessageAsync(embed: builder.Build(), attachments: new[] { new FileAttachment(chartStream, "chart.png") })
+                        await context.SendMessageAsync(embed: builder.Build(), attachments: [new FileAttachment(chartStream, "chart.png")])
                                      .ConfigureAwait(false);
                     }
                 }
@@ -552,16 +546,9 @@ public class LogCommandHandler : LocatedServiceBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task PostGuildRaidSummary(IContextContainer context, string dateOfWeek)
     {
-        DateTime startOfWeek;
-
-        if (ParseDay(dateOfWeek, out var startOfWeekDay))
-        {
-            startOfWeek = startOfWeekDay.ToDateTime(TimeOnly.MinValue);
-        }
-        else
-        {
-            startOfWeek = DateTime.Today;
-        }
+        var startOfWeek = ParseDay(dateOfWeek, out var startOfWeekDay)
+                              ? startOfWeekDay.ToDateTime(TimeOnly.MinValue)
+                              : DateTime.Today;
 
         // Go back to monday, the start of the week
         while (startOfWeek.DayOfWeek != DayOfWeek.Monday)
@@ -712,9 +699,10 @@ public class LogCommandHandler : LocatedServiceBase
                     if (memoryStream.Length > 0)
                     {
                         await writer.FlushAsync().ConfigureAwait(false);
+
                         memoryStream.Position = 0;
 
-                        await context.ReplyAsync(attachments: new[] { new FileAttachment(memoryStream, "logs.txt") })
+                        await context.ReplyAsync(attachments: [new FileAttachment(memoryStream, "logs.txt")])
                             .ConfigureAwait(false);
                     }
                     else
@@ -914,7 +902,7 @@ public class LogCommandHandler : LocatedServiceBase
             return result.ToList();
         }
 
-        return new List<Upload>();
+        return [];
     }
 
     /// <summary>
@@ -1031,7 +1019,7 @@ public class LogCommandHandler : LocatedServiceBase
 
             if (result.TryGetValue(group, out var uploadsOfGroup) == false)
             {
-                uploadsOfGroup = new();
+                uploadsOfGroup = [];
 
                 result.Add(group, uploadsOfGroup);
             }
@@ -1066,11 +1054,11 @@ public class LogCommandHandler : LocatedServiceBase
                 {
                     var log = await logs[upload.Id].ConfigureAwait(false);
 
-                    result.Add(new(upload, log.RemainingTotalHealth));
+                    result.Add(new Tuple<Upload, double?>(upload, log.RemainingTotalHealth));
                 }
                 else
                 {
-                    result.Add(new(upload, null));
+                    result.Add(new Tuple<Upload, double?>(upload, null));
                 }
             }
         }

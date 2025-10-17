@@ -20,7 +20,7 @@ public class OneTimeReminderJob : LocatedAsyncJob
     /// <summary>
     /// Id of the reminder
     /// </summary>
-    private long _id;
+    private readonly long _id;
 
     #endregion // Fields
 

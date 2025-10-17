@@ -22,46 +22,7 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
     /// <summary>
     /// Upgrades which don't generate a 'completed' entry
     /// </summary>
-    private static readonly List<int> _upgradesWithoutCompleted = new()
-                                                                  {
-                                                                      73,
-                                                                      100,
-                                                                      144,
-                                                                      190,
-                                                                      219,
-                                                                      239,
-                                                                      277,
-                                                                      332,
-                                                                      333,
-                                                                      372,
-                                                                      400,
-                                                                      409,
-                                                                      414,
-                                                                      457,
-                                                                      463,
-                                                                      471,
-                                                                      475,
-                                                                      503,
-                                                                      508,
-                                                                      537,
-                                                                      549,
-                                                                      560,
-                                                                      599,
-                                                                      676,
-                                                                      699,
-                                                                      703,
-                                                                      730,
-                                                                      837,
-                                                                      846,
-                                                                      862,
-                                                                      864,
-                                                                      935,
-                                                                      963,
-                                                                      1067,
-                                                                      1121,
-                                                                      1143,
-                                                                      1202
-                                                                  };
+    private static readonly List<int> _upgradesWithoutCompleted = [73, 100, 144, 190, 219, 239, 277, 332, 333, 372, 400, 409, 414, 457, 463, 471, 475, 503, 508, 537, 549, 560, 599, 676, 699, 703, 730, 837, 846, 862, 864, 935, 963, 1067, 1121, 1143, 1202];
 
     /// <summary>
     /// Repository factory
@@ -336,7 +297,7 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
                         {
                             if (tradingsPostValues.TryGetValue(itemId, out var tradingPostValue) == false)
                             {
-                                var prices = await connector.GetTradingPostPrices(new List<int?> { itemId })
+                                var prices = await connector.GetTradingPostPrices([itemId])
                                                             .ConfigureAwait(false);
 
                                 tradingPostValue = tradingsPostValues[itemId] = prices.FirstOrDefault();

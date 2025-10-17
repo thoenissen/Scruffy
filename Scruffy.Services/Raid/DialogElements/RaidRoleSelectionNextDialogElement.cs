@@ -11,14 +11,14 @@ public class RaidRoleSelectionNextDialogElement : DialogButtonElementBase<bool>
     #region Fields
 
     /// <summary>
+    /// First call?
+    /// </summary>
+    private readonly bool _first;
+
+    /// <summary>
     /// Buttons
     /// </summary>
     private List<ButtonData<bool>> _buttons;
-
-    /// <summary>
-    /// First call?
-    /// </summary>
-    private bool _first;
 
     #endregion // Fields
 
@@ -46,21 +46,20 @@ public class RaidRoleSelectionNextDialogElement : DialogButtonElementBase<bool>
     /// <inheritdoc/>
     public override IReadOnlyList<ButtonData<bool>> GetButtons()
     {
-        return _buttons ??= new List<ButtonData<bool>>
-                            {
-                                new()
+        return _buttons ??= [
+                                new ButtonData<bool>
                                 {
                                     CommandText = LocalizationGroup.GetText("Yes", "Yes"),
                                     Emote = DiscordEmoteService.GetCheckEmote(CommandContext.Client),
                                     Func = () => Task.FromResult(true)
                                 },
-                                new()
+                                new ButtonData<bool>
                                 {
                                     CommandText = LocalizationGroup.GetText("No", "No"),
                                     Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
                                     Func = () => Task.FromResult(false)
                                 },
-                            };
+                            ];
     }
 
     /// <inheritdoc/>

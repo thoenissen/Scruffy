@@ -105,7 +105,7 @@ public class RaidPreparedSpecialRolesSelectDialogElement : DialogEmbedMultiSelec
     {
         if (_entries == null)
         {
-            _entries = new List<SelectMenuOptionData>();
+            _entries = [];
 
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {

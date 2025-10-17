@@ -18,7 +18,8 @@ public static class DateTimeExtensions
     {
         var day = CultureInfo.InvariantCulture.Calendar.GetDayOfWeek(date);
 
-        if (day >= DayOfWeek.Monday && day <= DayOfWeek.Wednesday)
+        if (day is >= DayOfWeek.Monday
+               and <= DayOfWeek.Wednesday)
         {
             date = date.AddDays(3);
         }

@@ -14,7 +14,7 @@ public class RequireDeveloperPermissionsAttribute : PreconditionAttribute
     /// <summary>
     /// User ids
     /// </summary>
-    private static ConcurrentDictionary<ulong, byte> _userIds;
+    private static readonly ConcurrentDictionary<ulong, byte> _userIds;
 
     #endregion // Fields
 

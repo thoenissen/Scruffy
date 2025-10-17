@@ -1184,9 +1184,9 @@ public class GuildRankService : LocatedServiceBase
             {
                 var stringBuilder = new StringBuilder();
 
-                foreach (var user in rank.OrderBy(obj => obj.Name))
+                foreach (var (_, name, _) in rank.OrderBy(obj => obj.Name))
                 {
-                    stringBuilder.AppendLine(user.Name);
+                    stringBuilder.AppendLine(name);
                 }
 
                 embed.AddField(rank.Key, stringBuilder.ToString());

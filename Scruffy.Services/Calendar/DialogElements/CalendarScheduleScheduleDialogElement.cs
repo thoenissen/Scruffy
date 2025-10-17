@@ -46,7 +46,7 @@ public class CalendarScheduleScheduleDialogElement : DialogEmbedMessageElementBa
         builder.WithTitle(LocalizationGroup.GetText("ChooseTypeTitle", "Type selection"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseTypeDescription", "Please choose one of the following types:"));
 
-        _types = new Dictionary<int, CalendarAppointmentScheduleType>();
+        _types = [];
         var typesField = new StringBuilder();
 
         var i = 1;

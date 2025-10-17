@@ -52,51 +52,50 @@ public class RaidDayDayOfWeekDialogElement : DialogEmbedReactionElementBase<DayO
     /// <inheritdoc/>
     public override IReadOnlyList<ReactionData<DayOfWeek>> GetReactions()
     {
-        return _reactions ??= new List<ReactionData<DayOfWeek>>
-                              {
-                                  new()
+        return _reactions ??= [
+                                  new ReactionData<DayOfWeek>
                                   {
                                       Emote = Emoji.Parse(":one:"),
                                       CommandText = $"{Emoji.Parse(":one:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Monday)}",
                                       Func = () => Task.FromResult(DayOfWeek.Monday)
                                   },
-                                  new()
+                                  new ReactionData<DayOfWeek>
                                   {
                                       Emote = Emoji.Parse(":two:"),
                                       CommandText = $"{Emoji.Parse(":two:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Tuesday)}",
                                       Func = () => Task.FromResult(DayOfWeek.Tuesday)
                                   },
-                                  new()
+                                  new ReactionData<DayOfWeek>
                                   {
                                       Emote = Emoji.Parse(":three:"),
                                       CommandText = $"{Emoji.Parse(":three:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Wednesday)}",
                                       Func = () => Task.FromResult(DayOfWeek.Wednesday)
                                   },
-                                  new()
+                                  new ReactionData<DayOfWeek>
                                   {
                                       Emote = Emoji.Parse(":four:"),
                                       CommandText = $"{Emoji.Parse(":four:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Thursday)}",
                                       Func = () => Task.FromResult(DayOfWeek.Thursday)
                                   },
-                                  new()
+                                  new ReactionData<DayOfWeek>
                                   {
                                       Emote = Emoji.Parse(":five:"),
                                       CommandText = $"{Emoji.Parse(":five:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Friday)}",
                                       Func = () => Task.FromResult(DayOfWeek.Friday)
                                   },
-                                  new()
+                                  new ReactionData<DayOfWeek>
                                   {
                                       Emote = Emoji.Parse(":six:"),
                                       CommandText = $"{Emoji.Parse(":six:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Saturday)}",
                                       Func = () => Task.FromResult(DayOfWeek.Saturday)
                                   },
-                                  new()
+                                  new ReactionData<DayOfWeek>
                                   {
                                       Emote = Emoji.Parse(":seven:"),
                                       CommandText = $"{Emoji.Parse(":seven:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Sunday)}",
                                       Func = () => Task.FromResult(DayOfWeek.Sunday)
                                   },
-                              };
+                              ];
     }
 
     /// <inheritdoc/>

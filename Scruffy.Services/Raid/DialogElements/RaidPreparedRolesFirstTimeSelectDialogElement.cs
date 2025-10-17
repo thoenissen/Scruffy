@@ -58,7 +58,7 @@ public class RaidPreparedRolesFirstTimeSelectDialogElement : DialogMultiSelectSe
     {
         if (_entries == null)
         {
-            _entries = new List<SelectMenuOptionData>();
+            _entries = [];
 
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {

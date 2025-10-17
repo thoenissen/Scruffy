@@ -218,16 +218,15 @@ internal static class CommandExtensions
         }
 
         return moduleInfo.IsSlashGroup
-                   ? new List<ApplicationCommandOptionProperties>
-                     {
-                         new()
+                   ? [
+                         new ApplicationCommandOptionProperties
                          {
                              Name = moduleInfo.SlashGroupName.ToLower(),
                              Description = moduleInfo.Description,
                              Type = ApplicationCommandOptionType.SubCommandGroup,
                              Options = options
                          }
-                     }
+                     ]
                    : options;
     }
 }

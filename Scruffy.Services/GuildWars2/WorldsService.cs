@@ -134,8 +134,7 @@ public class WorldsService : LocatedServiceBase
                                              Type = "bar",
                                              Data = new Data.Json.QuickChart.Data
                                                     {
-                                                        DataSets = new List<DataSet>
-                                                                   {
+                                                        DataSets = [
                                                                        new DataSet<int>
                                                                        {
                                                                            BackgroundColor = worlds.Select(obj => "#316ed5")
@@ -146,7 +145,7 @@ public class WorldsService : LocatedServiceBase
                                                                                         .Select(obj => obj.Count)
                                                                                         .ToList()
                                                                        }
-                                                                   },
+                                                                   ],
                                                         Labels = worlds.OrderByDescending(obj => obj.Count)
                                                                        .ThenBy(obj => obj.Name)
                                                                        .Select(obj => obj.Name)
@@ -156,19 +155,17 @@ public class WorldsService : LocatedServiceBase
                                                        {
                                                            Scales = new ScalesCollection
                                                                     {
-                                                                        XAxes = new List<XAxis>
-                                                                                {
-                                                                                    new()
+                                                                        XAxes = [
+                                                                                    new XAxis
                                                                                     {
                                                                                         Ticks = new AxisTicks
                                                                                                 {
                                                                                                     FontColor = "#b3b3b3"
                                                                                                 }
                                                                                     }
-                                                                                },
-                                                                        YAxes = new List<YAxis>
-                                                                                {
-                                                                                    new()
+                                                                                ],
+                                                                        YAxes = [
+                                                                                    new YAxis
                                                                                     {
                                                                                         Ticks = new AxisTicks<int>
                                                                                                 {
@@ -177,7 +174,7 @@ public class WorldsService : LocatedServiceBase
                                                                                                     FontColor = "#b3b3b3"
                                                                                                 }
                                                                                     }
-                                                                                }
+                                                                                ]
                                                                     },
                                                            Plugins = new PluginsCollection
                                                                      {
@@ -203,7 +200,7 @@ public class WorldsService : LocatedServiceBase
 
                 await using (chartStream.ConfigureAwait(false))
                 {
-                    await commandContext.ReplyAsync(embed: embedBuilder.Build(), attachments: new[] { new FileAttachment(chartStream, "chart.png") })
+                    await commandContext.ReplyAsync(embed: embedBuilder.Build(), attachments: [new FileAttachment(chartStream, "chart.png")])
                                         .ConfigureAwait(false);
                 }
             }

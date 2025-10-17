@@ -43,7 +43,7 @@ public class RaidExperienceLevelSelectionDialogElement : DialogEmbedMessageEleme
         builder.WithTitle(LocalizationGroup.GetText("ChooseLevelTitle", "Raid experience level selection"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseLevelDescription", "Please choose one of the following experience levels:"));
 
-        _levels = new Dictionary<int, long>();
+        _levels = [];
         var levelsFieldsText = new StringBuilder();
 
         using (var dbFactory = RepositoryFactory.CreateInstance())

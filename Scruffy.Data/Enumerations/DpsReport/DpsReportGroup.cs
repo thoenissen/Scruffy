@@ -75,35 +75,30 @@ public static class DpsReportGroupExtensions
     /// <returns>The report type for the given report group</returns>
     public static DpsReportType GetReportType(this DpsReportGroup value)
     {
-        switch (value)
-        {
-            case DpsReportGroup.Nightmare:
-            case DpsReportGroup.ShatteredObservatory:
-            case DpsReportGroup.SunquaPeak:
-            case DpsReportGroup.SilentSurf:
-            case DpsReportGroup.LonelyTower:
-            case DpsReportGroup.Kinfall:
-                return DpsReportType.Fractal;
+        return value switch
+               {
+                   DpsReportGroup.Nightmare
+                   or DpsReportGroup.ShatteredObservatory
+                   or DpsReportGroup.SunquaPeak
+                   or DpsReportGroup.SilentSurf
+                   or DpsReportGroup.LonelyTower
+                   or DpsReportGroup.Kinfall => DpsReportType.Fractal,
 
-            case DpsReportGroup.IBSStrikes:
-            case DpsReportGroup.EoDStrikes:
-            case DpsReportGroup.SotOStrikes:
-                return DpsReportType.Strike;
+                   DpsReportGroup.IBSStrikes
+                   or DpsReportGroup.EoDStrikes
+                   or DpsReportGroup.SotOStrikes => DpsReportType.Strike,
 
-            case DpsReportGroup.SpritVale:
-            case DpsReportGroup.SalvationPass:
-            case DpsReportGroup.StrongholdOfTheFaithful:
-            case DpsReportGroup.BastionOfThePenitent:
-            case DpsReportGroup.HallOfChains:
-            case DpsReportGroup.MythwrightGambit:
-            case DpsReportGroup.TheKeyOfAhdashim:
-            case DpsReportGroup.MountBalrior:
-                return DpsReportType.Raid;
+                   DpsReportGroup.SpritVale
+                   or DpsReportGroup.SalvationPass
+                   or DpsReportGroup.StrongholdOfTheFaithful
+                   or DpsReportGroup.BastionOfThePenitent
+                   or DpsReportGroup.HallOfChains
+                   or DpsReportGroup.MythwrightGambit
+                   or DpsReportGroup.TheKeyOfAhdashim
+                   or DpsReportGroup.MountBalrior => DpsReportType.Raid,
 
-            case DpsReportGroup.TrainingArea:
-            default:
-                return DpsReportType.Other;
-        }
+                   _ => DpsReportType.Other,
+               };
     }
 
     /// <summary>
@@ -113,48 +108,27 @@ public static class DpsReportGroupExtensions
     /// <returns>A proper text for the given report group</returns>
     public static string AsText(this DpsReportGroup value)
     {
-        switch (value)
-        {
-            case DpsReportGroup.Nightmare:
-                return "Nightmare";
-            case DpsReportGroup.ShatteredObservatory:
-                return "Shattered Observatory";
-            case DpsReportGroup.SunquaPeak:
-                return "Sunqua Peak";
-            case DpsReportGroup.SilentSurf:
-                return "Silent Surf";
-            case DpsReportGroup.LonelyTower:
-                return "Lonely Tower";
-            case DpsReportGroup.Kinfall:
-                return "Kinfall";
-            case DpsReportGroup.IBSStrikes:
-                return "IBS Strikes";
-            case DpsReportGroup.EoDStrikes:
-                return "EoD Strikes";
-            case DpsReportGroup.SotOStrikes:
-                return "SotO Strikes";
-            case DpsReportGroup.TrainingArea:
-                return "Special Forces Training Area";
-            case DpsReportGroup.SpritVale:
-                return "W1 - Spirit Vale";
-            case DpsReportGroup.SalvationPass:
-                return "W2 - Salvation Pass";
-            case DpsReportGroup.StrongholdOfTheFaithful:
-                return "W3 - Stronghold of the Faithful";
-            case DpsReportGroup.BastionOfThePenitent:
-                return "W4 - Bastion of the Penitent";
-            case DpsReportGroup.HallOfChains:
-                return "W5 - Hall of Chains";
-            case DpsReportGroup.MythwrightGambit:
-                return "W6 - Mythwright Gambit";
-            case DpsReportGroup.TheKeyOfAhdashim:
-                return "W7 - The Key of Ahdashim";
-            case DpsReportGroup.MountBalrior:
-                return "W8 - Mount Balrior";
-            default:
-                {
-                    return "Other";
-                }
-        }
+        return value switch
+               {
+                   DpsReportGroup.Nightmare => "Nightmare",
+                   DpsReportGroup.ShatteredObservatory => "Shattered Observatory",
+                   DpsReportGroup.SunquaPeak => "Sunqua Peak",
+                   DpsReportGroup.SilentSurf => "Silent Surf",
+                   DpsReportGroup.LonelyTower => "Lonely Tower",
+                   DpsReportGroup.Kinfall => "Kinfall",
+                   DpsReportGroup.IBSStrikes => "IBS Strikes",
+                   DpsReportGroup.EoDStrikes => "EoD Strikes",
+                   DpsReportGroup.SotOStrikes => "SotO Strikes",
+                   DpsReportGroup.TrainingArea => "Special Forces Training Area",
+                   DpsReportGroup.SpritVale => "W1 - Spirit Vale",
+                   DpsReportGroup.SalvationPass => "W2 - Salvation Pass",
+                   DpsReportGroup.StrongholdOfTheFaithful => "W3 - Stronghold of the Faithful",
+                   DpsReportGroup.BastionOfThePenitent => "W4 - Bastion of the Penitent",
+                   DpsReportGroup.HallOfChains => "W5 - Hall of Chains",
+                   DpsReportGroup.MythwrightGambit => "W6 - Mythwright Gambit",
+                   DpsReportGroup.TheKeyOfAhdashim => "W7 - The Key of Ahdashim",
+                   DpsReportGroup.MountBalrior => "W8 - Mount Balrior",
+                   _ => "Other"
+               };
     }
 }

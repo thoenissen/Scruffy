@@ -440,11 +440,8 @@ public sealed class DiscordBot : IAsyncDisposable
     /// <returns>A task that represents the asynchronous dispose operation.</returns>
     public async ValueTask DisposeAsync()
     {
-        if (_interaction != null)
-        {
-            _interaction.Dispose();
-            _interaction = null;
-        }
+        _interaction?.Dispose();
+        _interaction = null;
 
         if (_discordClient != null)
         {
@@ -458,11 +455,8 @@ public sealed class DiscordBot : IAsyncDisposable
             _discordClient = null;
         }
 
-        if (_serviceScope != null)
-        {
-            _serviceScope.Dispose();
-            _serviceScope = null;
-        }
+        _serviceScope?.Dispose();
+        _serviceScope = null;
 
         if (_serviceProviderContainer != null)
         {

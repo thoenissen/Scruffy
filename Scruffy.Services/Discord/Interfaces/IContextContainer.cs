@@ -13,42 +13,42 @@ public interface IContextContainer
     /// <summary>
     /// Custom ID
     /// </summary>
-    string CustomId { get; }
+    public string CustomId { get; }
 
     /// <summary>
     /// Service provider
     /// </summary>
-    IServiceProvider ServiceProvider { get; }
+    public IServiceProvider ServiceProvider { get; }
 
     /// <summary>
-    /// Gets the <see cref="T:Discord.DiscordSocketClient" /> that the command is executed with.
+    /// Gets the <see cref="T:DiscordSocketClient" /> that the command is executed with.
     /// </summary>
-    DiscordSocketClient Client { get; }
+    public DiscordSocketClient Client { get; }
 
     /// <summary>
-    /// Gets the <see cref="T:Discord.IGuild" /> that the command is executed in.
+    /// Gets the <see cref="T:IGuild" /> that the command is executed in.
     /// </summary>
-    IGuild Guild { get; }
+    public IGuild Guild { get; }
 
     /// <summary>
-    /// Gets the <see cref="T:Discord.IMessageChannel" /> that the command is executed in.
+    /// Gets the <see cref="T:IMessageChannel" /> that the command is executed in.
     /// </summary>
-    IMessageChannel Channel { get; }
+    public IMessageChannel Channel { get; }
 
     /// <summary>
-    /// Gets the <see cref="T:Discord.IUser" /> who executed the command.
+    /// Gets the <see cref="IUser" /> who executed the command.
     /// </summary>
-    IUser User { get; }
+    public IUser User { get; }
 
     /// <summary>
-    /// Gets the <see cref="T:Discord.IGuildUser" /> who executed the command.
+    /// Gets the <see cref="T:IGuildUser" /> who executed the command.
     /// </summary>
-    IGuildUser Member { get; }
+    public IGuildUser Member { get; }
 
     /// <summary>
     /// Interactivity service
     /// </summary>
-    InteractivityService Interactivity { get; }
+    public InteractivityService Interactivity { get; }
 
     #endregion // Properties
 
@@ -58,14 +58,14 @@ public interface IContextContainer
     /// Switching to a direct message context
     /// </summary>
     /// <returns>ICommandContext-implementation</returns>
-    Task SwitchToDirectMessageContext();
+    public Task SwitchToDirectMessageContext();
 
     /// <summary>
     /// Response general processing message
     /// </summary>
     /// <param name="ephemeral">Ephemeral response</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task<IUserMessage> DeferProcessing(bool ephemeral = false);
+    public Task<IUserMessage> DeferProcessing(bool ephemeral = false);
 
     /// <summary>
     /// Reply to the user message or command
@@ -81,7 +81,7 @@ public interface IContextContainer
     /// <param name="ephemeral">Should the message be posted ephemeral if possible?</param>
     /// <param name="attachments">File attachments</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task<IUserMessage> ReplyAsync(string text = null, bool isTTS = false, Embed embed = null, RequestOptions options = null, AllowedMentions allowedMentions = null, MessageComponent components = null, ISticker[] stickers = null, Embed[] embeds = null, bool ephemeral = false, IEnumerable<FileAttachment> attachments = null);
+    public Task<IUserMessage> ReplyAsync(string text = null, bool isTTS = false, Embed embed = null, RequestOptions options = null, AllowedMentions allowedMentions = null, MessageComponent components = null, ISticker[] stickers = null, Embed[] embeds = null, bool ephemeral = false, IEnumerable<FileAttachment> attachments = null);
 
     /// <summary>
     /// Reply to the user message or command
@@ -98,7 +98,7 @@ public interface IContextContainer
     /// <param name="ephemeral">Should the message be posted ephemeral if possible?</param>
     /// <param name="attachments">File attachments</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task<IUserMessage> SendMessageAsync(string text = null, bool isTTS = false, Embed embed = null, RequestOptions options = null, AllowedMentions allowedMentions = null, MessageReference messageReference = null, MessageComponent components = null, ISticker[] stickers = null, Embed[] embeds = null, bool ephemeral = false, IEnumerable<FileAttachment> attachments = null);
+    public Task<IUserMessage> SendMessageAsync(string text = null, bool isTTS = false, Embed embed = null, RequestOptions options = null, AllowedMentions allowedMentions = null, MessageReference messageReference = null, MessageComponent components = null, ISticker[] stickers = null, Embed[] embeds = null, bool ephemeral = false, IEnumerable<FileAttachment> attachments = null);
 
     /// <summary>
     /// Modify a message
@@ -106,14 +106,14 @@ public interface IContextContainer
     /// <param name="message">Message</param>
     /// <param name="func">Properties</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task ModifyMessageAsync(IUserMessage message, Action<MessageProperties> func);
+    public Task ModifyMessageAsync(IUserMessage message, Action<MessageProperties> func);
 
     /// <summary>
     /// Delete messages
     /// </summary>
     /// <param name="messages">Messages</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task DeleteMessages(List<IMessage> messages);
+    public Task DeleteMessages(List<IMessage> messages);
 
     #endregion // Methods
 }

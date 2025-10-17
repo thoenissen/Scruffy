@@ -41,19 +41,18 @@ public class CalendarTemplateGuildPointsDialogElement : DialogReactionElementBas
     /// <inheritdoc/>
     public override IReadOnlyList<ReactionData<CalenderTemplateGuildData>> GetReactions()
     {
-        return _reactions ??= new List<ReactionData<CalenderTemplateGuildData>>
-                              {
-                                  new()
+        return _reactions ??= [
+                                  new ReactionData<CalenderTemplateGuildData>
                                   {
                                       Emote = DiscordEmoteService.GetCheckEmote(CommandContext.Client),
                                       Func = RunSubForm<CalenderTemplateGuildData>,
                                   },
-                                  new()
+                                  new ReactionData<CalenderTemplateGuildData>
                                   {
                                       Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
                                       Func = () => Task.FromResult<CalenderTemplateGuildData>(null)
                                   }
-                              };
+                              ];
     }
 
     /// <inheritdoc/>

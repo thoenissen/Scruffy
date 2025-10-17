@@ -43,7 +43,7 @@ public class GuildRankSelectionDialogElement : DialogEmbedMessageElementBase<int
         builder.WithTitle(LocalizationGroup.GetText("ChooseTitle", "Rank selection"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseDescription", "Please choose one of the following ranks:"));
 
-        _ranks = new Dictionary<int, int>();
+        _ranks = [];
         var stringBuilder = new StringBuilder();
 
         var ranksCounter = 1;

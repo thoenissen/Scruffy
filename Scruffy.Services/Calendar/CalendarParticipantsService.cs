@@ -20,12 +20,12 @@ public class CalendarParticipantsService : LocatedServiceBase
     /// <summary>
     /// Localization service
     /// </summary>
-    private LocalizationService _localizationService;
+    private readonly LocalizationService _localizationService;
 
     /// <summary>
     /// User management
     /// </summary>
-    private UserManagementService _userManagementService;
+    private readonly UserManagementService _userManagementService;
 
     #endregion // Fields
 

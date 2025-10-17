@@ -25,7 +25,7 @@ public class CalendarMessageBuilderService : LocatedServiceBase
     /// <summary>
     /// Client
     /// </summary>
-    private DiscordSocketClient _discordClient;
+    private readonly DiscordSocketClient _discordClient;
 
     #endregion // Fields
 

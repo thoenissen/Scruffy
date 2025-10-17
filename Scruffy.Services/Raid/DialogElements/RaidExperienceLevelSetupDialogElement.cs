@@ -111,9 +111,8 @@ public class RaidExperienceLevelSetupDialogElement : DialogEmbedReactionElementB
     {
         if (_reactions == null)
         {
-            _reactions = new List<ReactionData<bool>>
-                         {
-                             new()
+            _reactions = [
+                             new ReactionData<bool>
                              {
                                  Emote = DiscordEmoteService.GetAddEmote(CommandContext.Client),
                                  CommandText = LocalizationGroup.GetFormattedText("AddCommand", "{0} Add level", DiscordEmoteService.GetAddEmote(CommandContext.Client)),
@@ -149,7 +148,7 @@ public class RaidExperienceLevelSetupDialogElement : DialogEmbedReactionElementB
                                             return true;
                                         }
                              }
-                         };
+                         ];
 
             if (GetLevels().Count > 0)
             {

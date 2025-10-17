@@ -482,7 +482,7 @@ public partial class RaidLineUpPage
     {
         base.OnInitialized();
 
-        _squads = new Dictionary<int, RaidSquadComponent>();
+        _squads = [];
 
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {

@@ -45,7 +45,7 @@ public class CalendarAddVoiceChannelDialogElement : DialogEmbedSelectMenuElement
     }
 
     /// <inheritdoc/>
-    protected override List<IGuildUser> DefaultFunc() => new();
+    protected override List<IGuildUser> DefaultFunc() => [];
 
     /// <inheritdoc/>
     public override IReadOnlyList<SelectMenuEntryData<List<IGuildUser>>> GetEntries()
@@ -57,7 +57,7 @@ public class CalendarAddVoiceChannelDialogElement : DialogEmbedSelectMenuElement
                                          .GetChannelsAsync()
                                          .Result;
 
-            _channels = new List<SelectMenuEntryData<List<IGuildUser>>>();
+            _channels = [];
 
             foreach (var channel in channels)
             {

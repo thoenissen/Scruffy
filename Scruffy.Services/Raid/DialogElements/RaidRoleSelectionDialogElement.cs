@@ -58,7 +58,7 @@ public class RaidRoleSelectionDialogElement : DialogMultiSelectSelectMenuElement
     {
         if (_entries == null)
         {
-            _entries = new List<SelectMenuOptionData>();
+            _entries = [];
 
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {

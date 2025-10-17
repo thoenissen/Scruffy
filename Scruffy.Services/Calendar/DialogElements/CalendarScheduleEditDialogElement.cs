@@ -72,9 +72,8 @@ public class CalendarScheduleEditDialogElement : DialogEmbedReactionElementBase<
     /// <inheritdoc/>
     public override IReadOnlyList<ReactionData<bool>> GetReactions()
     {
-        return _reactions ??= new List<ReactionData<bool>>
-                              {
-                                  new()
+        return _reactions ??= [
+                                  new ReactionData<bool>
                                   {
                                       Emote = DiscordEmoteService.GetEditEmote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("EditDescriptionCommand", "{0} Edit description", DiscordEmoteService.GetEditEmote(CommandContext.Client)),
@@ -94,7 +93,7 @@ public class CalendarScheduleEditDialogElement : DialogEmbedReactionElementBase<
                                                  return true;
                                              }
                                   },
-                                  new()
+                                  new ReactionData<bool>
                                   {
                                       Emote = DiscordEmoteService.GetEdit2Emote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("EditScheduleCommand", "{0} Edit schedule", DiscordEmoteService.GetEdit2Emote(CommandContext.Client)),
@@ -118,7 +117,7 @@ public class CalendarScheduleEditDialogElement : DialogEmbedReactionElementBase<
                                                  return true;
                                              }
                                   },
-                                  new()
+                                  new ReactionData<bool>
                                   {
                                       Emote = DiscordEmoteService.GetEdit3Emote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("EditTemplateCommand", "{0} Edit template", DiscordEmoteService.GetEdit3Emote(CommandContext.Client)),
@@ -138,13 +137,13 @@ public class CalendarScheduleEditDialogElement : DialogEmbedReactionElementBase<
                                                  return true;
                                              }
                                   },
-                                  new()
+                                  new ReactionData<bool>
                                   {
                                       Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmoteService.GetCrossEmote(CommandContext.Client)),
                                       Func = () => Task.FromResult(false)
                                   }
-                              };
+                              ];
     }
 
     /// <inheritdoc/>

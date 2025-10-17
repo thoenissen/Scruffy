@@ -100,17 +100,17 @@ public class TemporaryComponentsContainer<TIdentification> : TemporaryComponents
     /// <summary>
     /// Task source
     /// </summary>
-    private TaskCompletionSource<(SocketMessageComponent Component, TIdentification Identification)> _taskSource;
+    private readonly TaskCompletionSource<(SocketMessageComponent Component, TIdentification Identification)> _taskSource;
 
     /// <summary>
     /// Buttons
     /// </summary>
-    private Dictionary<string, TIdentification> _buttons;
+    private readonly Dictionary<string, TIdentification> _buttons;
 
     /// <summary>
     /// Select menus
     /// </summary>
-    private Dictionary<string, TIdentification> _selectMenus;
+    private readonly Dictionary<string, TIdentification> _selectMenus;
 
     #endregion // Fields
 
@@ -127,8 +127,8 @@ public class TemporaryComponentsContainer<TIdentification> : TemporaryComponents
         _checkFunction = checkFunction;
         _cancellationTokenSource = new CancellationTokenSource();
         _taskSource = new TaskCompletionSource<(SocketMessageComponent, TIdentification)>();
-        _buttons = new Dictionary<string, TIdentification>();
-        _selectMenus = new Dictionary<string, TIdentification>();
+        _buttons = [];
+        _selectMenus = [];
     }
 
     #endregion // Constructor

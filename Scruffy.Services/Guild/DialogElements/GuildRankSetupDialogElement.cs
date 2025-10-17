@@ -54,7 +54,7 @@ public class GuildRankSetupDialogElement : DialogEmbedReactionElementBase<bool>
         {
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
-                _ranks = new List<GuildRankData>();
+                _ranks = [];
 
                 var ranks = dbFactory.GetRepository<GuildRankRepository>()
                                      .GetQuery()
@@ -119,9 +119,8 @@ public class GuildRankSetupDialogElement : DialogEmbedReactionElementBase<bool>
     {
         if (_reactions == null)
         {
-            _reactions = new List<ReactionData<bool>>
-                         {
-                             new()
+            _reactions = [
+                             new ReactionData<bool>
                              {
                                  Emote = DiscordEmoteService.GetAddEmote(CommandContext.Client),
                                  CommandText = LocalizationGroup.GetFormattedText("AddCommand", "{0} Add rank", DiscordEmoteService.GetAddEmote(CommandContext.Client)),
@@ -183,7 +182,7 @@ public class GuildRankSetupDialogElement : DialogEmbedReactionElementBase<bool>
                                             return true;
                                         }
                              }
-                         };
+                         ];
 
             if (GetRanks().Count > 0)
             {

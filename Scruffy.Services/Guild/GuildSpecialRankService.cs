@@ -110,8 +110,7 @@ public class GuildSpecialRankService : LocatedServiceBase
                                                  Type = "bar",
                                                  Data = new Data.Json.QuickChart.Data
                                                         {
-                                                            DataSets = new List<DataSet>
-                                                                       {
+                                                            DataSets = [
                                                                            new DataSet<double>
                                                                            {
                                                                                BackgroundColor = configuration.Users
@@ -124,16 +123,15 @@ public class GuildSpecialRankService : LocatedServiceBase
                                                                                                    .Select(obj => obj.Points)
                                                                                                    .ToList()
                                                                            }
-                                                                       },
+                                                                       ],
                                                             Labels = users
                                                         },
                                                  Options = new OptionsCollection
                                                            {
                                                                Annotation = new AnnotationsCollection
                                                                             {
-                                                                                Annotations = new List<Annotation>
-                                                                                              {
-                                                                                                  new()
+                                                                                Annotations = [
+                                                                                                  new Annotation
                                                                                                   {
                                                                                                       BorderColor = "#f45b5b",
                                                                                                       BorderWidth = 2,
@@ -142,7 +140,7 @@ public class GuildSpecialRankService : LocatedServiceBase
                                                                                                       Type = "line",
                                                                                                       Value = configuration.RemoveThreshold
                                                                                                   },
-                                                                                                  new()
+                                                                                                  new Annotation
                                                                                                   {
                                                                                                       BorderColor = "#90ee7e",
                                                                                                       BorderWidth = 2,
@@ -151,30 +149,28 @@ public class GuildSpecialRankService : LocatedServiceBase
                                                                                                       Type = "line",
                                                                                                       Value = configuration.GrantThreshold
                                                                                                   }
-                                                                                              }
+                                                                                              ]
                                                                             },
                                                                Scales = new ScalesCollection
                                                                         {
-                                                                            XAxes = new List<XAxis>
-                                                                                    {
-                                                                                        new()
+                                                                            XAxes = [
+                                                                                        new XAxis
                                                                                         {
                                                                                             Ticks = new AxisTicks
                                                                                                     {
                                                                                                         FontColor = "#b3b3b3"
                                                                                                     }
                                                                                         }
-                                                                                    },
-                                                                            YAxes = new List<YAxis>
-                                                                                    {
-                                                                                        new()
+                                                                                    ],
+                                                                            YAxes = [
+                                                                                        new YAxis
                                                                                         {
                                                                                             Ticks = new AxisTicks
                                                                                                     {
                                                                                                         FontColor = "#b3b3b3"
                                                                                                     }
                                                                                         }
-                                                                                    }
+                                                                                    ]
                                                                         },
                                                                Plugins = new PluginsCollection
                                                                          {
@@ -204,12 +200,12 @@ public class GuildSpecialRankService : LocatedServiceBase
                         {
                             isFirstReply = false;
 
-                            await commandContext.ReplyAsync(embed: embedBuilder.Build(), attachments: new[] { new FileAttachment(chartStream, "chart.png") })
+                            await commandContext.ReplyAsync(embed: embedBuilder.Build(), attachments: [new FileAttachment(chartStream, "chart.png")])
                                                 .ConfigureAwait(false);
                         }
                         else
                         {
-                            await commandContext.SendMessageAsync(embed: embedBuilder.Build(), attachments: new[] { new FileAttachment(chartStream, "chart.png") })
+                            await commandContext.SendMessageAsync(embed: embedBuilder.Build(), attachments: [new FileAttachment(chartStream, "chart.png")])
                                                 .ConfigureAwait(false);
                         }
                     }

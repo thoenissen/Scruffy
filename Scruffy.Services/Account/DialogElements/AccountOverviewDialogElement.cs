@@ -133,8 +133,7 @@ public class AccountOverviewDialogElement : DialogEmbedSelectMenuElementBase<boo
     public override string GetPlaceholder() => LocalizationGroup.GetText("Placeholder", "Please choose which data do you like to edit...");
 
     /// <inheritdoc/>
-    public override IReadOnlyList<SelectMenuEntryData<bool>> GetEntries() => new List<SelectMenuEntryData<bool>>
-                                                                             {
+    public override IReadOnlyList<SelectMenuEntryData<bool>> GetEntries() => [
                                                                                  new()
                                                                                  {
                                                                                      CommandText = "Guild Wars 2",
@@ -218,7 +217,7 @@ public class AccountOverviewDialogElement : DialogEmbedSelectMenuElementBase<boo
                                                                                                     return isDataStorageAccepted;
                                                                                                 }
                                                                                  },
-                                                                             };
+                                                                             ];
 
     /// <inheritdoc/>
     protected override bool DefaultFunc() => false;

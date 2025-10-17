@@ -22,11 +22,7 @@ namespace Scruffy.Data.Entity.Migrations
 
             migrationBuilder.AddPrimaryKey(name: "PK_RaidUserRoles",
                                            table: "RaidUserRoles",
-                                           columns: new[]
-                                                    {
-                                                        "UserId",
-                                                        "RoleId"
-                                                    });
+                                           columns: ["UserId", "RoleId"]);
 
             migrationBuilder.AddForeignKey(name: "FK_RaidUserRoles_RaidRoles_RoleId",
                                            table: "RaidUserRoles",
@@ -54,12 +50,7 @@ namespace Scruffy.Data.Entity.Migrations
 
             migrationBuilder.AddPrimaryKey(name: "PK_RaidUserRoles",
                                            table: "RaidUserRoles",
-                                           columns: new[]
-                                                    {
-                                                        "UserId",
-                                                        "MainRoleId",
-                                                        "SubRoleId"
-                                                    });
+                                           columns: ["UserId", "MainRoleId", "SubRoleId"]);
             migrationBuilder.CreateIndex(name: "IX_RaidUserRoles_MainRoleId", table: "RaidUserRoles", column: "MainRoleId");
 
             migrationBuilder.AddForeignKey(name: "FK_RaidUserRoles_RaidRoles_MainRoleId",

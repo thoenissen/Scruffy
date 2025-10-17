@@ -16,7 +16,7 @@ public class BlockedChannelCheckAttribute : PreconditionAttribute
     /// <summary>
     /// Service
     /// </summary>
-    private static BlockedChannelService _service;
+    private static readonly BlockedChannelService _service;
 
     #endregion // Fields
 

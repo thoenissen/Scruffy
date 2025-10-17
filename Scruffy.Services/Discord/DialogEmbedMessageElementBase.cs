@@ -16,7 +16,7 @@ public abstract class DialogEmbedMessageElementBase<TData> : DialogElementBase<T
     /// <summary>
     /// Localization service
     /// </summary>
-    private LocalizationService _localizationService;
+    private readonly LocalizationService _localizationService;
 
     #endregion // Fields
 

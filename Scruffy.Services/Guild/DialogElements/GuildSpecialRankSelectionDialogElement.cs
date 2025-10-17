@@ -43,7 +43,7 @@ public class GuildSpecialRankSelectionDialogElement : DialogEmbedMessageElementB
         builder.WithTitle(LocalizationGroup.GetText("ChooseSpecialRankTitle", "Special rank selection"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseSpecialRankDescription", "Please choose one of the following special ranks:"));
 
-        _ranks = new Dictionary<int, long>();
+        _ranks = [];
         var levelsFieldsText = new StringBuilder();
 
         using (var dbFactory = RepositoryFactory.CreateInstance())

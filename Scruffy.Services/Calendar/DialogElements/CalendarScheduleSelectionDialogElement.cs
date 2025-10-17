@@ -43,7 +43,7 @@ public class CalendarScheduleSelectionDialogElement : DialogEmbedMessageElementB
         builder.WithTitle(LocalizationGroup.GetText("ChooseScheduleTitle", "Calendar schedule selection"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseScheduleDescription", "Please choose one of the following calendar schedules:"));
 
-        _schedules = new Dictionary<int, long>();
+        _schedules = [];
         var levelsFieldsText = new StringBuilder();
 
         using (var dbFactory = RepositoryFactory.CreateInstance())

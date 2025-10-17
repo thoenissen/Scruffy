@@ -24,22 +24,22 @@ public class RaidCommitService : LocatedServiceBase
     /// <summary>
     /// Localization Service
     /// </summary>
-    private LocalizationService _localizationService;
+    private readonly LocalizationService _localizationService;
 
     /// <summary>
     /// Message builder
     /// </summary>
-    private RaidMessageBuilder _messageBuilder;
+    private readonly RaidMessageBuilder _messageBuilder;
 
     /// <summary>
     /// User management service
     /// </summary>
-    private UserManagementService _userManagementService;
+    private readonly UserManagementService _userManagementService;
 
     /// <summary>
     /// Job scheduler
     /// </summary>
-    private JobScheduler _jobScheduler;
+    private readonly JobScheduler _jobScheduler;
 
     #endregion // Fields
 

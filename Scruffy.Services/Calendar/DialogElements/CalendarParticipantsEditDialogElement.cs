@@ -2,6 +2,7 @@
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Calendar;
+using Scruffy.Data.Entity.Tables.Calendar;
 using Scruffy.Data.Services.Calendar;
 using Scruffy.Services.Core.Extensions;
 using Scruffy.Services.Core.Localization;
@@ -18,19 +19,19 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedSelectMenuElemen
     #region Fields
 
     /// <summary>
+    /// User management service
+    /// </summary>
+    private readonly UserManagementService _userManagementService;
+
+    /// <summary>
     /// Data
     /// </summary>
-    private AppointmentParticipantsContainer _data;
+    private readonly AppointmentParticipantsContainer _data;
 
     /// <summary>
     /// Reactions
     /// </summary>
     private List<SelectMenuEntryData<bool>> _entries;
-
-    /// <summary>
-    /// User management service
-    /// </summary>
-    private UserManagementService _userManagementService;
 
     #endregion // Fields
 
@@ -65,7 +66,7 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedSelectMenuElemen
 
         if (_data.Participants == null)
         {
-            _data.Participants = new List<CalendarAppointmentParticipantData>();
+            _data.Participants = [];
 
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
@@ -173,162 +174,167 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedSelectMenuElemen
     /// <inheritdoc/>
     public override IReadOnlyList<SelectMenuEntryData<bool>> GetEntries()
     {
-        return _entries ??= new List<SelectMenuEntryData<bool>>
-                            {
-                                new()
+        return _entries ??= [
+                                new SelectMenuEntryData<bool>
                                 {
                                     Emote = DiscordEmoteService.GetAddEmote(CommandContext.Client),
                                     CommandText = LocalizationGroup.GetText("AddUserCommand", "Add user"),
                                     Response = async () =>
-                                               {
-                                                   var members = await RunSubElement<CalendarAddParticipantsDialogElement, List<IGuildUser>>().ConfigureAwait(false);
+                                    {
+                                        var members = await RunSubElement<CalendarAddParticipantsDialogElement, List<IGuildUser>>().ConfigureAwait(false);
 
-                                                   if (members != null)
-                                                   {
-                                                       foreach (var member in members)
-                                                       {
-                                                           if (_data.Participants.Any(obj => obj.Member.Id == member.Id) == false)
-                                                           {
-                                                               _data.Participants.Add(new CalendarAppointmentParticipantData
-                                                                                      {
-                                                                                          Member = member,
-                                                                                          IsLeader = false
-                                                                                      });
-                                                           }
-                                                       }
-                                                   }
+                                        if (members != null)
+                                        {
+                                            foreach (var member in members)
+                                            {
+                                                if (_data.Participants.Any(obj => obj.Member.Id == member.Id) == false)
+                                                {
+                                                    _data.Participants.Add(new CalendarAppointmentParticipantData
+                                                                           {
+                                                                               Member = member,
+                                                                               IsLeader = false
+                                                                           });
+                                                }
+                                            }
+                                        }
 
-                                                   return true;
-                                               }
+                                        return true;
+                                    }
                                 },
-                                new()
+
+                                new SelectMenuEntryData<bool>
                                 {
                                     Emote = DiscordEmoteService.GetAdd2Emote(CommandContext.Client),
                                     CommandText = LocalizationGroup.GetText("AddVoiceChannelCommand", "Add channel"),
                                     Response = async () =>
-                                               {
-                                                   var members = await RunSubElement<CalendarAddVoiceChannelDialogElement, List<IGuildUser>>().ConfigureAwait(false);
+                                    {
+                                        var members = await RunSubElement<CalendarAddVoiceChannelDialogElement, List<IGuildUser>>().ConfigureAwait(false);
 
-                                                   if (members != null)
-                                                   {
-                                                       foreach (var member in members)
-                                                       {
-                                                           if (_data.Participants.Any(obj => obj.Member.Id == member.Id) == false)
-                                                           {
-                                                               _data.Participants.Add(new CalendarAppointmentParticipantData
-                                                                                      {
-                                                                                          Member = member,
-                                                                                          IsLeader = false
-                                                                                      });
-                                                           }
-                                                       }
-                                                   }
+                                        if (members != null)
+                                        {
+                                            foreach (var member in members)
+                                            {
+                                                if (_data.Participants.Any(obj => obj.Member.Id == member.Id) == false)
+                                                {
+                                                    _data.Participants.Add(new CalendarAppointmentParticipantData
+                                                                           {
+                                                                               Member = member,
+                                                                               IsLeader = false
+                                                                           });
+                                                }
+                                            }
+                                        }
 
-                                                   return true;
-                                               }
+                                        return true;
+                                    }
                                 },
-                                new()
+
+                                new SelectMenuEntryData<bool>
                                 {
                                     Emote = DiscordEmoteService.GetTrashCanEmote(CommandContext.Client),
                                     CommandText = LocalizationGroup.GetText("RemoveUserCommand", "Remove user"),
                                     Response = async () =>
-                                               {
-                                                   var members = await RunSubElement<CalendarRemoveParticipantsDialogElement, List<IGuildUser>>().ConfigureAwait(false);
+                                    {
+                                        var members = await RunSubElement<CalendarRemoveParticipantsDialogElement, List<IGuildUser>>().ConfigureAwait(false);
 
-                                                   if (members != null)
-                                                   {
-                                                       foreach (var member in members)
-                                                       {
-                                                           var entry = _data.Participants.FirstOrDefault(obj => obj.Member.Id == member.Id);
+                                        if (members != null)
+                                        {
+                                            foreach (var member in members)
+                                            {
+                                                var entry = _data.Participants.FirstOrDefault(obj => obj.Member.Id == member.Id);
 
-                                                           if (entry != null)
-                                                           {
-                                                               _data.Participants.Remove(entry);
-                                                           }
-                                                       }
-                                                   }
+                                                if (entry != null)
+                                                {
+                                                    _data.Participants.Remove(entry);
+                                                }
+                                            }
+                                        }
 
-                                                   return true;
-                                               }
+                                        return true;
+                                    }
                                 },
-                                new()
+
+                                new SelectMenuEntryData<bool>
                                 {
                                     Emote = DiscordEmoteService.GetStarEmote(CommandContext.Client),
                                     CommandText = LocalizationGroup.GetText("SetLeaderCommand", "Leader"),
                                     Response = async () =>
-                                               {
-                                                   var members = await RunSubElement<CalendarRemoveParticipantsDialogElement, List<IGuildUser>>().ConfigureAwait(false);
+                                    {
+                                        var members = await RunSubElement<CalendarRemoveParticipantsDialogElement, List<IGuildUser>>().ConfigureAwait(false);
 
-                                                   if (members != null)
-                                                   {
-                                                       foreach (var member in members)
-                                                       {
-                                                           var entry = _data.Participants.FirstOrDefault(obj => obj.Member.Id == member.Id);
+                                        if (members != null)
+                                        {
+                                            foreach (var member in members)
+                                            {
+                                                var entry = _data.Participants.FirstOrDefault(obj => obj.Member.Id == member.Id);
 
-                                                           if (entry != null)
-                                                           {
-                                                               entry.IsLeader = true;
-                                                           }
-                                                           else
-                                                           {
-                                                               _data.Participants.Add(new CalendarAppointmentParticipantData
-                                                                                      {
-                                                                                          Member = member,
-                                                                                          IsLeader = true
-                                                                                      });
-                                                           }
-                                                       }
-                                                   }
+                                                if (entry != null)
+                                                {
+                                                    entry.IsLeader = true;
+                                                }
+                                                else
+                                                {
+                                                    _data.Participants.Add(new CalendarAppointmentParticipantData
+                                                                           {
+                                                                               Member = member,
+                                                                               IsLeader = true
+                                                                           });
+                                                }
+                                            }
+                                        }
 
-                                                   return true;
-                                               }
+                                        return true;
+                                    }
                                 },
-                                new()
+
+                                new SelectMenuEntryData<bool>
                                 {
                                     Emote = DiscordEmoteService.GetCheckEmote(CommandContext.Client),
                                     CommandText = LocalizationGroup.GetText("CommitCommand", "Commit"),
                                     Response = async () =>
-                                               {
-                                                   using (var dbFactory = RepositoryFactory.CreateInstance())
-                                                   {
-                                                       dbFactory.GetRepository<CalendarAppointmentParticipantRepository>()
-                                                                .RemoveRange(obj => obj.AppointmentId == _data.AppointmentId);
+                                    {
+                                        using (var dbFactory = RepositoryFactory.CreateInstance())
+                                        {
+                                            dbFactory.GetRepository<CalendarAppointmentParticipantRepository>()
+                                                     .RemoveRange(obj => obj.AppointmentId == _data.AppointmentId);
 
-                                                       foreach (var entry in _data.Participants)
-                                                       {
-                                                           await _userManagementService.CheckDiscordAccountAsync(entry.Member)
+                                            foreach (var entry in _data.Participants)
+                                            {
+                                                await _userManagementService.CheckDiscordAccountAsync(entry.Member)
+                                                                            .ConfigureAwait(false);
+
+                                                var user = await _userManagementService.GetUserByDiscordAccountId(entry.Member)
                                                                                        .ConfigureAwait(false);
 
-                                                           var user = await _userManagementService.GetUserByDiscordAccountId(entry.Member)
-                                                                                                  .ConfigureAwait(false);
+                                                if (dbFactory.GetRepository<CalendarAppointmentParticipantRepository>()
+                                                             .Add(new CalendarAppointmentParticipantEntity
+                                                                  {
+                                                                      AppointmentId = _data.AppointmentId,
+                                                                      UserId = user.Id,
+                                                                      IsLeader = entry.IsLeader
+                                                                  }) == false)
+                                                {
+                                                    throw dbFactory.LastError;
+                                                }
+                                            }
+                                        }
 
-                                                           if (dbFactory.GetRepository<CalendarAppointmentParticipantRepository>()
-                                                                        .Add(new Data.Entity.Tables.Calendar.CalendarAppointmentParticipantEntity
-                                                                             {
-                                                                                 AppointmentId = _data.AppointmentId,
-                                                                                 UserId = user.Id,
-                                                                                 IsLeader = entry.IsLeader
-                                                                             }) == false)
-                                                           {
-                                                               throw dbFactory.LastError;
-                                                           }
-                                                       }
-                                                   }
+                                        await CommandContext.Channel
+                                                            .SendMessageAsync(LocalizationGroup.GetText("CommitSuccess", "The participants list has been refreshed."))
+                                                            .ConfigureAwait(false);
 
-                                                   await CommandContext.Channel
-                                                                       .SendMessageAsync(LocalizationGroup.GetText("CommitSuccess", "The participants list has been refreshed."))
-                                                                       .ConfigureAwait(false);
-
-                                                   return false;
-                                               }
+                                        return false;
+                                    }
                                 },
-                                new()
+
+                                new SelectMenuEntryData<bool>
                                 {
                                     Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
                                     CommandText = LocalizationGroup.GetText("CancelCommand", "Cancel"),
                                     Response = () => Task.FromResult(false)
-                                },
-                            };
+                                }
+
+                            ];
     }
 
     #endregion // DialogEmbedReactionElementBase<bool>

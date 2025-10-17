@@ -58,25 +58,24 @@ public class CalendarAppointmentSelectionDialogElement : DialogEmbedSelectMenuEl
             {
                 var limit = DateTime.Now.AddMinutes(15);
 
-                var appointments = dbFactory.GetRepository<CalendarAppointmentRepository>()
-                                            .GetQuery()
-                                            .Where(obj => obj.TimeStamp < limit)
-                                            .Select(obj => new
-                                                           {
-                                                               obj.Id,
-                                                               obj.TimeStamp,
-                                                               obj.CalendarAppointmentTemplate.Description
-                                                           })
-                                            .OrderByDescending(obj => obj.TimeStamp)
-                                            .Take(10)
-                                            .ToList();
-
-                _appointments = appointments.Select(obj => new SelectMenuEntryData<long>
-                                                           {
-                                                               CommandText = $"{obj.Description} - {obj.TimeStamp.ToString("g", LocalizationGroup.CultureInfo)}",
-                                                               Response = () => Task.FromResult(obj.Id)
-                                                           })
-                                            .ToList();
+                _appointments = dbFactory.GetRepository<CalendarAppointmentRepository>()
+                                         .GetQuery()
+                                         .Where(obj => obj.TimeStamp < limit)
+                                         .Select(obj => new
+                                                        {
+                                                            obj.Id,
+                                                            obj.TimeStamp,
+                                                            obj.CalendarAppointmentTemplate.Description
+                                                        })
+                                         .OrderByDescending(obj => obj.TimeStamp)
+                                         .Take(10)
+                                         .AsEnumerable()
+                                         .Select(obj => new SelectMenuEntryData<long>
+                                                        {
+                                                            CommandText = $"{obj.Description} - {obj.TimeStamp.ToString("g", LocalizationGroup.CultureInfo)}",
+                                                            Response = () => Task.FromResult(obj.Id)
+                                                        })
+                                         .ToList();
             }
         }
 

@@ -42,7 +42,7 @@ public class GuildGuildDialogElement : DialogEmbedMessageElementBase<string>
         builder.WithTitle(LocalizationGroup.GetText("ChooseGuildTitle", "Guild selection"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseGuildDescription", "Please choose one of the following guilds:"));
 
-        _guilds = new Dictionary<int, string>();
+        _guilds = [];
 
         using (var connector = new GuildWars2ApiConnector(DialogContext.GetValue<string>("ApiKey")))
         {

@@ -327,7 +327,7 @@ public class RaidMessageBuilder : LocatedServiceBase
     {
         if (_entries == null)
         {
-            _entries = new List<SelectMenuOptionBuilder>();
+            _entries = [];
 
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {

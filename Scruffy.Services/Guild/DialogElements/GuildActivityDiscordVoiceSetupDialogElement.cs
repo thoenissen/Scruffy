@@ -120,9 +120,8 @@ public class GuildActivityDiscordVoiceSetupDialogElement : DialogEmbedReactionEl
     {
         if (_reactions == null)
         {
-            _reactions = new List<ReactionData<bool>>
-                         {
-                             new()
+            _reactions = [
+                             new ReactionData<bool>
                              {
                                  Emote = DiscordEmoteService.GetAddEmote(CommandContext.Client),
                                  CommandText = LocalizationGroup.GetFormattedText("AddCommand", "{0} Add role", DiscordEmoteService.GetAddEmote(CommandContext.Client)),
@@ -165,7 +164,7 @@ public class GuildActivityDiscordVoiceSetupDialogElement : DialogEmbedReactionEl
                                             return true;
                                         }
                              }
-                         };
+                         ];
 
             if (GetRoles().Count > 0)
             {

@@ -107,26 +107,24 @@ public class RaidOverviewService : LocatedServiceBase
                                              Type = "horizontalBar",
                                              Data = new Data.Json.QuickChart.Data
                                                     {
-                                                        DataSets = new List<DataSet>
-                                                                   {
+                                                        DataSets = [
                                                                        new DataSet<double>
                                                                        {
-                                                                           BackgroundColor = users.Select(obj => "#316ed5")
+                                                                           BackgroundColor = users.Select(_ => "#316ed5")
                                                                                                   .ToList(),
                                                                            BorderColor = "#274d85",
                                                                            Data = users.Select(obj => obj.Points)
                                                                                        .ToList()
                                                                        }
-                                                                   },
+                                                                   ],
                                                         Labels = userNames
                                                     },
                                              Options = new OptionsCollection
                                                        {
                                                            Scales = new ScalesCollection
                                                                     {
-                                                                        XAxes = new List<XAxis>
-                                                                                {
-                                                                                    new()
+                                                                        XAxes = [
+                                                                                    new XAxis
                                                                                     {
                                                                                         Ticks = new AxisTicks<double>
                                                                                                 {
@@ -135,17 +133,16 @@ public class RaidOverviewService : LocatedServiceBase
                                                                                                     FontColor = "#b3b3b3"
                                                                                                 }
                                                                                     }
-                                                                                },
-                                                                        YAxes = new List<YAxis>
-                                                                                {
-                                                                                    new()
+                                                                                ],
+                                                                        YAxes = [
+                                                                                    new YAxis
                                                                                     {
                                                                                         Ticks = new AxisTicks<double>
                                                                                                 {
                                                                                                     FontColor = "#b3b3b3"
                                                                                                 }
                                                                                     }
-                                                                                }
+                                                                                ]
                                                                     },
                                                            Plugins = new PluginsCollection
                                                                      {
@@ -171,7 +168,7 @@ public class RaidOverviewService : LocatedServiceBase
 
                 await using (chartStream.ConfigureAwait(false))
                 {
-                    await commandContext.ReplyAsync(null, embed: embedBuilder.Build(), attachments: new[] { new FileAttachment(chartStream, "chart.png") })
+                    await commandContext.ReplyAsync(null, embed: embedBuilder.Build(), attachments: [new FileAttachment(chartStream, "chart.png")])
                                         .ConfigureAwait(false);
                 }
             }

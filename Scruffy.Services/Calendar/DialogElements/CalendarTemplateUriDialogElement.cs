@@ -40,19 +40,18 @@ public class CalendarTemplateUriDialogElement : DialogReactionElementBase<string
     /// <inheritdoc/>
     public override IReadOnlyList<ReactionData<string>> GetReactions()
     {
-        return _reactions ??= new List<ReactionData<string>>
-                              {
-                                  new()
+        return _reactions ??= [
+                                  new ReactionData<string>
                                   {
                                       Emote = DiscordEmoteService.GetCheckEmote(CommandContext.Client),
                                       Func = RunSubElement<CalendarTemplateUriUriDialogElement, string>
                                   },
-                                  new()
+                                  new ReactionData<string>
                                   {
                                       Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
                                       Func = () => Task.FromResult<string>(null)
                                   }
-                              };
+                              ];
     }
 
     /// <inheritdoc/>

@@ -102,9 +102,8 @@ public class CalendarScheduleSetupDialogElement : DialogEmbedReactionElementBase
     {
         if (_reactions == null)
         {
-            _reactions = new List<ReactionData<bool>>
-                         {
-                             new()
+            _reactions = [
+                             new ReactionData<bool>
                              {
                                  Emote = DiscordEmoteService.GetAddEmote(CommandContext.Client),
                                  CommandText = LocalizationGroup.GetFormattedText("AddCommand", "{0} Add schedule", DiscordEmoteService.GetAddEmote(CommandContext.Client)),
@@ -131,7 +130,7 @@ public class CalendarScheduleSetupDialogElement : DialogEmbedReactionElementBase
                                             return true;
                                         }
                              }
-                         };
+                          ];
 
             if (GetSchedules().Count > 0)
             {

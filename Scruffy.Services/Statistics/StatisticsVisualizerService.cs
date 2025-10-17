@@ -119,7 +119,7 @@ public class StatisticsVisualizerService : LocatedServiceBase
                 }
             }
 
-            stringBuilder.Append("\u200b");
+            stringBuilder.Append('\u200b');
 
             embedBuilder.AddField(LocalizationGroup.GetText("MeOverviewMostActive", "Most Active Channel"), stringBuilder.ToString());
 
@@ -211,13 +211,11 @@ public class StatisticsVisualizerService : LocatedServiceBase
                                          Type = "outlabeledDoughnut",
                                          Data = new Data.Json.QuickChart.Data
                                                 {
-                                                    DataSets = new List<DataSet>
-                                                               {
+                                                    DataSets = [
                                                                    new DataSet<int>
                                                                    {
                                                                        BorderColor = "#333333",
-                                                                       BackgroundColor = new List<string>
-                                                                                         {
+                                                                       BackgroundColor = [
                                                                                              "#0d1c26",
                                                                                              "#142b39",
                                                                                              "#1d3e53",
@@ -228,10 +226,10 @@ public class StatisticsVisualizerService : LocatedServiceBase
                                                                                              "#428ebd",
                                                                                              "#5599c3",
                                                                                              "#68a4ca"
-                                                                                         },
+                                                                                         ],
                                                                        Data = messagesData
                                                                    }
-                                                               },
+                                                               ],
                                                     Labels = messagesLabels
                                                 },
                                          Options = new OptionsCollection
@@ -246,19 +244,18 @@ public class StatisticsVisualizerService : LocatedServiceBase
                                                                                  },
                                                                      DoughnutLabel = new DoughnutLabelCollection
                                                                                      {
-                                                                                         Labels = new List<Label>
-                                                                                                  {
-                                                                                                      new()
+                                                                                         Labels = [
+                                                                                                      new Label
                                                                                                       {
                                                                                                           Color = "white",
                                                                                                           Text = messagesSum.ToString()
                                                                                                       },
-                                                                                                      new()
+                                                                                                      new Label
                                                                                                       {
                                                                                                           Color = "white",
                                                                                                           Text = LocalizationGroup.GetText("MeOverviewMessages", "messages")
                                                                                                       },
-                                                                                                  }
+                                                                                                  ]
                                                                                      },
                                                                  },
                                                        Title = new TitleConfiguration
@@ -290,7 +287,7 @@ public class StatisticsVisualizerService : LocatedServiceBase
                 embedBuilder.WithImageUrl("attachment://chart.png");
 
                 await commandContext.ReplyAsync(embed: embedBuilder.Build(),
-                                                attachments: new[] { new FileAttachment(chartStream, "chart.png") })
+                                                attachments: [new FileAttachment(chartStream, "chart.png")])
                                     .ConfigureAwait(false);
             }
         }

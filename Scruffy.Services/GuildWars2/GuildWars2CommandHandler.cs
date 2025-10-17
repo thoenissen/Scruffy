@@ -20,12 +20,12 @@ public class GuildWars2CommandHandler : LocatedServiceBase
     /// <summary>
     /// Quaggan service
     /// </summary>
-    private QuagganService _quagganService;
+    private readonly QuagganService _quagganService;
 
     /// <summary>
     /// Guild Wars 2 update service
     /// </summary>
-    private GuildWarsUpdateService _updateService;
+    private readonly GuildWarsUpdateService _updateService;
 
     #endregion // Fields
 

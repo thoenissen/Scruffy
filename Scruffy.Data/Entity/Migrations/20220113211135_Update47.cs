@@ -16,24 +16,11 @@ namespace Scruffy.Data.Entity.Migrations
                                                  table: "GuildRankCurrentPointsEntity",
                                                  type: "datetime2",
                                                  nullable: false,
-                                                 defaultValue: new DateTime(1,
-                                                                            1,
-                                                                            1,
-                                                                            0,
-                                                                            0,
-                                                                            0,
-                                                                            0,
-                                                                            DateTimeKind.Unspecified));
+                                                 defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
 
             migrationBuilder.AddPrimaryKey(name: "PK_GuildRankCurrentPointsEntity",
                                            table: "GuildRankCurrentPointsEntity",
-                                           columns: new[]
-                                                    {
-                                                        "GuildId",
-                                                        "UserId",
-                                                        "Date",
-                                                        "Type"
-                                                    });
+                                           columns: ["GuildId", "UserId", "Date", "Type"]);
         }
 
         /// <inheritdoc/>
@@ -44,12 +31,7 @@ namespace Scruffy.Data.Entity.Migrations
 
             migrationBuilder.AddPrimaryKey(name: "PK_GuildRankCurrentPointsEntity",
                                            table: "GuildRankCurrentPointsEntity",
-                                           columns: new[]
-                                                    {
-                                                        "GuildId",
-                                                        "UserId",
-                                                        "Type"
-                                                    });
+                                           columns: ["GuildId", "UserId", "Type"]);
         }
     }
 }

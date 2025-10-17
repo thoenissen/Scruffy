@@ -42,9 +42,8 @@ public class GuildRankDeletionDialogElement : DialogReactionElementBase<bool>
     /// <inheritdoc/>
     public override IReadOnlyList<ReactionData<bool>> GetReactions()
     {
-        return _reactions ??= new List<ReactionData<bool>>
-                              {
-                                  new()
+        return _reactions ??= [
+                                  new ReactionData<bool>
                                   {
                                       Emote = DiscordEmoteService.GetCheckEmote(CommandContext.Client),
                                       Func = () =>
@@ -74,12 +73,12 @@ public class GuildRankDeletionDialogElement : DialogReactionElementBase<bool>
                                                  return Task.FromResult(true);
                                              }
                                   },
-                                  new()
+                                  new ReactionData<bool>
                                   {
                                       Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
                                       Func = () => Task.FromResult(true)
                                   }
-                              };
+                              ];
     }
 
     /// <inheritdoc/>

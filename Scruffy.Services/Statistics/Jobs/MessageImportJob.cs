@@ -95,7 +95,7 @@ public class MessageImportJob : LocatedAsyncJob
                             {
                                 var lastMessage = messages[^1];
 
-                                messages = new List<IMessage>();
+                                messages = [];
 
                                 await foreach (var collection in channel.GetMessagesAsync(lastMessage, Direction.Before).ConfigureAwait(false))
                                 {

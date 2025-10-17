@@ -64,7 +64,7 @@ public class Upload
     /// Players
     /// </summary>
     [JsonProperty("players")]
-    public Dictionary<string, Player> Players { get; set; } = new();
+    public Dictionary<string, Player> Players { get; set; } = [];
 
     /// <summary>
     /// Encounter
@@ -90,7 +90,7 @@ public class Upload
     /// <summary>
     /// HashSet of all player's unique names
     /// </summary>
-    public HashSet<string> Group => Players?.Select(obj => obj.Value.DisplayName).Distinct().ToHashSet() ?? new HashSet<string>();
+    public HashSet<string> Group => Players?.Select(obj => obj.Value.DisplayName).Distinct().ToHashSet() ?? [];
 
     #endregion // Properties
 
@@ -109,7 +109,7 @@ public class Upload
         // If no players exist the players are represented as empty array and so the serialization into a dictionary fails
         if (errorContext.Member?.Equals("players") == true)
         {
-            Players = new Dictionary<string, Player>();
+            Players = [];
 
             errorContext.Handled = true;
         }

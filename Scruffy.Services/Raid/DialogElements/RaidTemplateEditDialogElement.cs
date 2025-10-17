@@ -77,9 +77,8 @@ public class RaidTemplateEditDialogElement : DialogEmbedReactionElementBase<bool
     /// <inheritdoc/>
     public override IReadOnlyList<ReactionData<bool>> GetReactions()
     {
-        return _reactions ??= new List<ReactionData<bool>>
-                              {
-                                  new()
+        return _reactions ??= [
+                                  new ReactionData<bool>
                                   {
                                       Emote = DiscordEmoteService.GetEditEmote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("EditAliasCommand", "{0} Edit alias name", DiscordEmoteService.GetEditEmote(CommandContext.Client)),
@@ -99,7 +98,7 @@ public class RaidTemplateEditDialogElement : DialogEmbedReactionElementBase<bool
                                                  return true;
                                              }
                                   },
-                                  new()
+                                  new ReactionData<bool>
                                   {
                                       Emote = DiscordEmoteService.GetEdit2Emote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("EditTitleCommand", "{0} Edit title", DiscordEmoteService.GetEdit2Emote(CommandContext.Client)),
@@ -119,7 +118,7 @@ public class RaidTemplateEditDialogElement : DialogEmbedReactionElementBase<bool
                                                  return true;
                                              }
                                   },
-                                  new()
+                                  new ReactionData<bool>
                                   {
                                       Emote = DiscordEmoteService.GetEdit3Emote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("EditDescriptionCommand", "{0} Edit description", DiscordEmoteService.GetEdit3Emote(CommandContext.Client)),
@@ -139,7 +138,7 @@ public class RaidTemplateEditDialogElement : DialogEmbedReactionElementBase<bool
                                                  return true;
                                              }
                                   },
-                                  new()
+                                  new ReactionData<bool>
                                   {
                                       Emote = DiscordEmoteService.GetImageEmote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("EditThumbnailCommand", "{0} Edit thumbnail", DiscordEmoteService.GetImageEmote(CommandContext.Client)),
@@ -159,13 +158,13 @@ public class RaidTemplateEditDialogElement : DialogEmbedReactionElementBase<bool
                                                  return true;
                                              }
                                   },
-                                  new()
+                                  new ReactionData<bool>
                                   {
                                       Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmoteService.GetCrossEmote(CommandContext.Client)),
                                       Func = () => Task.FromResult(false)
                                   }
-                              };
+                              ];
     }
 
     /// <inheritdoc/>

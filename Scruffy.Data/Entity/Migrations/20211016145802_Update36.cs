@@ -211,11 +211,11 @@ namespace Scruffy.Data.Entity.Migrations
             migrationBuilder.CreateIndex(name: "IX_DiscordAccounts_UserId", table: "DiscordAccounts", column: "UserId");
             migrationBuilder.CreateIndex(name: "IX_GuildWarsAccounts_UserId", table: "GuildWarsAccounts", column: "UserId");
 
-            migrationBuilder.AddPrimaryKey(name: "PK_RaidUserRoles", "RaidUserRoles", new[] { "UserId", "MainRoleId", "SubRoleId" });
+            migrationBuilder.AddPrimaryKey(name: "PK_RaidUserRoles", "RaidUserRoles", ["UserId", "MainRoleId", "SubRoleId"]);
             migrationBuilder.AddPrimaryKey(name: "PK_RaidCurrentUserPoints", "RaidCurrentUserPoints", "UserId");
-            migrationBuilder.AddPrimaryKey(name: "PK_GuildSpecialRankPoints", "GuildSpecialRankPoints", new[] { "ConfigurationId", "UserId" });
-            migrationBuilder.AddPrimaryKey(name: "PK_FractalRegistrations", "FractalRegistrations", new[] { "ConfigurationId", "AppointmentTimeStamp", "UserId" });
-            migrationBuilder.AddPrimaryKey(name: "PK_CalendarAppointmentParticipants", "CalendarAppointmentParticipants", new[] { "AppointmentId", "UserId" });
+            migrationBuilder.AddPrimaryKey(name: "PK_GuildSpecialRankPoints", "GuildSpecialRankPoints", ["ConfigurationId", "UserId"]);
+            migrationBuilder.AddPrimaryKey(name: "PK_FractalRegistrations", "FractalRegistrations", ["ConfigurationId", "AppointmentTimeStamp", "UserId"]);
+            migrationBuilder.AddPrimaryKey(name: "PK_CalendarAppointmentParticipants", "CalendarAppointmentParticipants", ["AppointmentId", "UserId"]);
 
             migrationBuilder.AddForeignKey(name: "FK_Users_RaidExperienceLevels_RaidExperienceLevelId", "Users", "RaidExperienceLevelId", "RaidExperienceLevels", principalColumn: "Id", onDelete: ReferentialAction.Restrict);
             migrationBuilder.AddForeignKey(name: "FK_RaidUserRoles_Users_UserId", table: "RaidUserRoles", column: "UserId", principalTable: "Users", principalColumn: "Id", onDelete: ReferentialAction.Restrict);

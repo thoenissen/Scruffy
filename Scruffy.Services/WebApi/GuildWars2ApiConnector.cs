@@ -40,17 +40,22 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <summary>
     /// Lock
     /// </summary>
-    private static object _lock = new();
+    private static readonly object _lock = new();
 
     /// <summary>
     /// Current minute
     /// </summary>
-    private static Stopwatch _stopWatch = Stopwatch.StartNew();
+    private static readonly Stopwatch _stopWatch = Stopwatch.StartNew();
 
     /// <summary>
     /// Current count
     /// </summary>
     private static int _currentCount;
+
+    /// <summary>
+    /// Api key
+    /// </summary>
+    private readonly string _apiKey;
 
     /// <summary>
     /// Service provider
@@ -61,11 +66,6 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// Http client
     /// </summary>
     private HttpClient _httpClient;
-
-    /// <summary>
-    /// Api key
-    /// </summary>
-    private string _apiKey;
 
     #endregion // Fields
 

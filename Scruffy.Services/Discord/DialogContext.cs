@@ -12,7 +12,7 @@ public class DialogContext
     /// <summary>
     /// Values
     /// </summary>
-    private Dictionary<string, object> _values;
+    private readonly Dictionary<string, object> _values;
 
     #endregion // Fields
 
@@ -23,8 +23,8 @@ public class DialogContext
     /// </summary>
     public DialogContext()
     {
-        _values = new Dictionary<string, object>();
-        Messages = new List<IMessage>();
+        _values = [];
+        Messages = [];
     }
 
     #endregion // Constructor

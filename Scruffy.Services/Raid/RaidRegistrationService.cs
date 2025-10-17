@@ -27,7 +27,7 @@ public class RaidRegistrationService : LocatedServiceBase
     /// <summary>
     /// User management
     /// </summary>
-    private UserManagementService _userManagementService;
+    private readonly UserManagementService _userManagementService;
 
     #endregion // Fields
 
@@ -215,8 +215,8 @@ public class RaidRegistrationService : LocatedServiceBase
                              .Remove(obj => obj.Id == registration.Id);
 
                     if ((registration.AvailableSlots != null
-                      && registration.AvailableSlots > registration.Registrations)
-                     || registration.IsDeadlineReached)
+                         && registration.AvailableSlots > registration.Registrations)
+                        || registration.IsDeadlineReached)
                     {
                         success = true;
                     }
@@ -380,7 +380,7 @@ public class RaidRegistrationService : LocatedServiceBase
                                    .Select(obj => new RaidAppointmentSlotData
                                                   {
                                                       ExperienceLevelId = obj.ExperienceLevelId,
-                                                      Registrations = new List<long>(),
+                                                      Registrations = [],
                                                       Rank = obj.Rank,
                                                       SlotCount = obj.Count * appointment.GroupCount
                                                   })

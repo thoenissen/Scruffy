@@ -19,7 +19,7 @@ public class GuildWarsUpdateService : LocatedServiceBase
     /// <summary>
     /// thatshaman.com connector
     /// </summary>
-    private ThatShamanConnector _thatShamanConnector;
+    private readonly ThatShamanConnector _thatShamanConnector;
 
     #endregion // Fields
 

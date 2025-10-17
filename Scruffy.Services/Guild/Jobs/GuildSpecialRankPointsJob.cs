@@ -193,34 +193,34 @@ public class GuildSpecialRankPointsJob : LocatedAsyncJob
 
                     if (actions.Count > 0)
                     {
-                        foreach (var action in actions)
+                        foreach (var (isGrant, user, roleId) in actions)
                         {
                             try
                             {
-                                var role = action.User.Guild.GetRole(action.RoleId);
+                                var role = user.Guild.GetRole(roleId);
 
                                 if (role != null)
                                 {
-                                    if (action.IsGrant)
+                                    if (isGrant)
                                     {
-                                        await action.User
+                                        await user
                                                     .AddRoleAsync(role)
                                                     .ConfigureAwait(false);
 
-                                        LoggingService.AddJobLogEntry(LogEntryLevel.Warning, nameof(GuildSpecialRankPointsJob), $"Role granted: configuration {configuration.Id}; user: {action.User.Id}; role: {role.Id}");
+                                        LoggingService.AddJobLogEntry(LogEntryLevel.Warning, nameof(GuildSpecialRankPointsJob), $"Role granted: configuration {configuration.Id}; user: {user.Id}; role: {role.Id}");
                                     }
                                     else
                                     {
-                                        await action.User
+                                        await user
                                                     .RemoveRoleAsync(role)
                                                     .ConfigureAwait(false);
 
-                                        LoggingService.AddJobLogEntry(LogEntryLevel.Warning, nameof(GuildSpecialRankPointsJob), $"Role revoked: configuration {configuration.Id}; user: {action.User.Id}; role: {role.Id}");
+                                        LoggingService.AddJobLogEntry(LogEntryLevel.Warning, nameof(GuildSpecialRankPointsJob), $"Role revoked: configuration {configuration.Id}; user: {user.Id}; role: {role.Id}");
                                     }
                                 }
                                 else
                                 {
-                                    LoggingService.AddJobLogEntry(LogEntryLevel.Error, nameof(GuildSpecialRankPointsJob), "Role assignment", $"Unknown role {action.RoleId} at {action.User.Guild.Id}", null);
+                                    LoggingService.AddJobLogEntry(LogEntryLevel.Error, nameof(GuildSpecialRankPointsJob), "Role assignment", $"Unknown role {roleId} at {user.Guild.Id}", null);
                                 }
                             }
                             catch (Exception ex)
@@ -241,9 +241,9 @@ public class GuildSpecialRankPointsJob : LocatedAsyncJob
                             {
                                 var stringBuilder = new StringBuilder();
 
-                                foreach (var action in actions.Where(obj => obj.IsGrant == false))
+                                foreach (var (_, user, _) in actions.Where(obj => obj.IsGrant == false))
                                 {
-                                    stringBuilder.AppendLine(DiscordEmoteService.GetBulletEmote(client) + " " + action.User.Mention);
+                                    stringBuilder.AppendLine(DiscordEmoteService.GetBulletEmote(client) + " " + user.Mention);
                                 }
 
                                 builder.AddField(LocalizationGroup.GetText("RemovedRoles", "Removed roles"), stringBuilder.ToString());
@@ -253,9 +253,9 @@ public class GuildSpecialRankPointsJob : LocatedAsyncJob
                             {
                                 var stringBuilder = new StringBuilder();
 
-                                foreach (var action in actions.Where(obj => obj.IsGrant))
+                                foreach (var (_, user, _) in actions.Where(obj => obj.IsGrant))
                                 {
-                                    stringBuilder.AppendLine(DiscordEmoteService.GetBulletEmote(client) + " " + action.User.Mention);
+                                    stringBuilder.AppendLine(DiscordEmoteService.GetBulletEmote(client) + " " + user.Mention);
                                 }
 
                                 builder.AddField(LocalizationGroup.GetText("GrantedRoles", "Granted roles"), stringBuilder.ToString());

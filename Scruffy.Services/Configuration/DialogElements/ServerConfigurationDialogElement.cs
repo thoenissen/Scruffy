@@ -83,9 +83,7 @@ public class ServerConfigurationDialogElement : DialogEmbedSelectMenuElementBase
 
                                       if (commandModule != null)
                                       {
-                                          commands = commands == null
-                                                         ? commandModule.GetCommands(buildContext)
-                                                         : commands.Concat(commandModule.GetCommands(buildContext));
+                                          commands = commands?.Concat(commandModule.GetCommands(buildContext)) ?? commandModule.GetCommands(buildContext);
                                       }
                                   }
 
@@ -98,9 +96,7 @@ public class ServerConfigurationDialogElement : DialogEmbedSelectMenuElementBase
 
                                       if (commandModule != null)
                                       {
-                                          commands = commands == null
-                                                         ? commandModule.GetCommands(buildContext)
-                                                         : commands.Concat(commandModule.GetCommands(buildContext));
+                                          commands = commands?.Concat(commandModule.GetCommands(buildContext)) ?? commandModule.GetCommands(buildContext);
                                       }
                                   }
 
@@ -120,7 +116,7 @@ public class ServerConfigurationDialogElement : DialogEmbedSelectMenuElementBase
                        Response = async () =>
                               {
                                   await CommandContext.Guild
-                                                      .BulkOverwriteApplicationCommandsAsync(Array.Empty<ApplicationCommandProperties>())
+                                                      .BulkOverwriteApplicationCommandsAsync([])
                                                       .ConfigureAwait(false);
 
                                   return true;

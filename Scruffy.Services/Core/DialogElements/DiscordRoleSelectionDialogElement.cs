@@ -54,7 +54,7 @@ public class DiscordRoleSelectionDialogElement : DialogSelectMenuElementBase<ulo
     {
         if (_entries == null)
         {
-            _entries = new List<SelectMenuEntryData<ulong>>();
+            _entries = [];
 
             foreach (var role in CommandContext.Guild
                                                .Roles

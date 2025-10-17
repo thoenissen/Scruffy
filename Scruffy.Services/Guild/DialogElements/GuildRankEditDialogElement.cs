@@ -77,9 +77,8 @@ public class GuildRankEditDialogElement : DialogEmbedReactionElementBase<bool>
     /// <inheritdoc/>
     public override IReadOnlyList<ReactionData<bool>> GetReactions()
     {
-        return _reactions ??= new List<ReactionData<bool>>
-                              {
-                                  new()
+        return _reactions ??= [
+                                  new ReactionData<bool>
                                   {
                                       Emote = DiscordEmoteService.GetEditEmote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("EditInGameNameCommand", "{0} Edit in game name", DiscordEmoteService.GetEditEmote(CommandContext.Client)),
@@ -99,7 +98,7 @@ public class GuildRankEditDialogElement : DialogEmbedReactionElementBase<bool>
                                                  return true;
                                              }
                                   },
-                                  new()
+                                  new ReactionData<bool>
                                   {
                                       Emote = DiscordEmoteService.GetEdit2Emote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("EditDiscordCommand", "{0} Edit discord role", DiscordEmoteService.GetEdit2Emote(CommandContext.Client)),
@@ -119,7 +118,7 @@ public class GuildRankEditDialogElement : DialogEmbedReactionElementBase<bool>
                                                  return true;
                                              }
                                   },
-                                  new()
+                                  new ReactionData<bool>
                                   {
                                       Emote = DiscordEmoteService.GetEdit3Emote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("EditPercentageCommand", "{0} Edit percentage", DiscordEmoteService.GetEdit3Emote(CommandContext.Client)),
@@ -139,13 +138,13 @@ public class GuildRankEditDialogElement : DialogEmbedReactionElementBase<bool>
                                                  return true;
                                              }
                                   },
-                                  new()
+                                  new ReactionData<bool>
                                   {
                                       Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmoteService.GetCrossEmote(CommandContext.Client)),
                                       Func = () => Task.FromResult(false)
                                   }
-                              };
+                              ];
     }
 
     /// <inheritdoc/>

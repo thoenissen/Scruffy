@@ -43,7 +43,7 @@ public class CalendarTemplateSelectionDialogElement : DialogEmbedMessageElementB
         builder.WithTitle(LocalizationGroup.GetText("ChooseTemplateTitle", "Calendar template selection"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseTemplateDescription", "Please choose one of the following calendar templates:"));
 
-        _templates = new Dictionary<int, long>();
+        _templates = [];
         var levelsFieldsText = new StringBuilder();
 
         using (var dbFactory = RepositoryFactory.CreateInstance())

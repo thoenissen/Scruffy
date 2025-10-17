@@ -39,7 +39,7 @@ public class MessageImportService : IAsyncDisposable
     /// <param name="client">Discord client</param>
     public MessageImportService(DiscordSocketClient client)
     {
-        _messages = new List<DiscordMessageBulkInsertData>();
+        _messages = [];
 
         _client = client;
         _client.MessageReceived += OnMessageReceived;
@@ -77,7 +77,7 @@ public class MessageImportService : IAsyncDisposable
                     {
                         importMessages = _messages;
 
-                        _messages = new List<DiscordMessageBulkInsertData>();
+                        _messages = [];
                     }
                 }
             }
@@ -112,7 +112,7 @@ public class MessageImportService : IAsyncDisposable
         {
             importMessages = _messages;
 
-            _messages = new List<DiscordMessageBulkInsertData>();
+            _messages = [];
         }
 
         if (importMessages != null)

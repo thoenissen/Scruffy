@@ -109,9 +109,8 @@ public class GuildSpecialRankSetupDialogElement : DialogEmbedReactionElementBase
     {
         if (_reactions == null)
         {
-            _reactions = new List<ReactionData<bool>>
-                         {
-                             new()
+            _reactions = [
+                             new ReactionData<bool>
                              {
                                  Emote = DiscordEmoteService.GetAddEmote(CommandContext.Client),
                                  CommandText = LocalizationGroup.GetFormattedText("AddCommand", "{0} Add rank", DiscordEmoteService.GetAddEmote(CommandContext.Client)),
@@ -154,7 +153,7 @@ public class GuildSpecialRankSetupDialogElement : DialogEmbedReactionElementBase
                                             return true;
                                         }
                              }
-                         };
+                         ];
 
             if (GetRanks().Count > 0)
             {

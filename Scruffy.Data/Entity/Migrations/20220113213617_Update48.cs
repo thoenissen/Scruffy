@@ -18,13 +18,7 @@ namespace Scruffy.Data.Entity.Migrations
 
             migrationBuilder.AddPrimaryKey(name: "PK_GuildRankCurrentPoints",
                                            table: "GuildRankCurrentPoints",
-                                           columns: new[]
-                                                    {
-                                                        "GuildId",
-                                                        "UserId",
-                                                        "Date",
-                                                        "Type"
-                                                    });
+                                           columns: ["GuildId", "UserId", "Date", "Type"]);
 
             migrationBuilder.AddForeignKey(name: "FK_GuildRankCurrentPoints_Guilds_GuildId",
                                            table: "GuildRankCurrentPoints",
@@ -52,13 +46,7 @@ namespace Scruffy.Data.Entity.Migrations
 
             migrationBuilder.AddPrimaryKey(name: "PK_GuildRankCurrentPointsEntity",
                                            table: "GuildRankCurrentPointsEntity",
-                                           columns: new[]
-                                                    {
-                                                        "GuildId",
-                                                        "UserId",
-                                                        "Date",
-                                                        "Type"
-                                                    });
+                                           columns: ["GuildId", "UserId", "Date", "Type"]);
 
             migrationBuilder.AddForeignKey(name: "FK_GuildRankCurrentPointsEntity_Guilds_GuildId",
                                            table: "GuildRankCurrentPointsEntity",

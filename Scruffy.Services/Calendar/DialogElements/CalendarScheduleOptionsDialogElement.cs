@@ -53,33 +53,32 @@ public class CalendarScheduleOptionsDialogElement : DialogEmbedReactionElementBa
     /// <inheritdoc/>
     public override IReadOnlyList<ReactionData<WeekDayOfMonthSpecialOptions>> GetReactions()
     {
-        return _reactions ??= new List<ReactionData<WeekDayOfMonthSpecialOptions>>
-                              {
-                                  new()
+        return _reactions ??= [
+                                  new ReactionData<WeekDayOfMonthSpecialOptions>
                                   {
                                       Emote = Emoji.Parse(":one:"),
                                       CommandText = $"{Emoji.Parse(":one:")} {LocalizationGroup.GetText(WeekDayOfMonthSpecialOptions.None.ToString(), "No options")}",
                                       Func = () => Task.FromResult(WeekDayOfMonthSpecialOptions.None)
                                   },
-                                  new()
+                                  new ReactionData<WeekDayOfMonthSpecialOptions>
                                   {
                                       Emote = Emoji.Parse(":two:"),
                                       CommandText = $"{Emoji.Parse(":two:")} {LocalizationGroup.GetText(WeekDayOfMonthSpecialOptions.EvenMonth.ToString(), "Even month")}",
                                       Func = () => Task.FromResult(WeekDayOfMonthSpecialOptions.EvenMonth)
                                   },
-                                  new()
+                                  new ReactionData<WeekDayOfMonthSpecialOptions>
                                   {
                                       Emote = Emoji.Parse(":three:"),
                                       CommandText = $"{Emoji.Parse(":three:")} {LocalizationGroup.GetText(WeekDayOfMonthSpecialOptions.UnevenMonth.ToString(), "Uneven month")}",
                                       Func = () => Task.FromResult(WeekDayOfMonthSpecialOptions.UnevenMonth)
                                   },
-                                  new()
+                                  new ReactionData<WeekDayOfMonthSpecialOptions>
                                   {
                                       Emote = Emoji.Parse(":four:"),
                                       CommandText = $"{Emoji.Parse(":four:")} {LocalizationGroup.GetText(WeekDayOfMonthSpecialOptions.MonthSelection.ToString(), "Month selection")}",
                                       Func = () => Task.FromResult(WeekDayOfMonthSpecialOptions.MonthSelection)
                                   }
-                              };
+                              ];
     }
 
     /// <inheritdoc/>

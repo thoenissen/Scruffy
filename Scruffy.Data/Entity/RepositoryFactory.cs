@@ -17,14 +17,14 @@ public sealed class RepositoryFactory : IDisposable
     #region Fields
 
     /// <summary>
+    /// Repositories
+    /// </summary>
+    private readonly Dictionary<Type, RepositoryBase> _repositories;
+
+    /// <summary>
     /// Internal <see cref="DbContext"/>-object
     /// </summary>
     private ScruffyDbContext _dbContext;
-
-    /// <summary>
-    /// Repositories
-    /// </summary>
-    private Dictionary<Type, RepositoryBase> _repositories;
 
     #endregion // Fields
 
@@ -37,7 +37,7 @@ public sealed class RepositoryFactory : IDisposable
     {
         _dbContext = new ScruffyDbContext();
         _dbContext.Database.SetCommandTimeout(60000);
-        _repositories = new Dictionary<Type, RepositoryBase>();
+        _repositories = [];
     }
 
     #endregion // Constructor

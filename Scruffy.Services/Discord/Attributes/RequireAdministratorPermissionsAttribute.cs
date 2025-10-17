@@ -17,7 +17,7 @@ public class RequireAdministratorPermissionsAttribute : PreconditionAttribute
     /// <summary>
     /// Service
     /// </summary>
-    private static AdministrationPermissionsValidationService _service;
+    private static readonly AdministrationPermissionsValidationService _service;
 
     #endregion // Fields
 

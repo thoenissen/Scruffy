@@ -61,11 +61,7 @@ namespace Scruffy.Data.Entity.Migrations
                                                                                              x.AchievementId
                                                                                          },
                                                                            principalTable: "GuildWarsAccountAchievements",
-                                                                           principalColumns: new[]
-                                                                                             {
-                                                                                                 "AccountName",
-                                                                                                 "AchievementId"
-                                                                                             },
+                                                                           principalColumns: ["AccountName", "AchievementId"],
                                                                            onDelete: ReferentialAction.Restrict);
 
                                                           table.ForeignKey(name: "FK_GuildWarsAccountAchievementBits_GuildWarsAccounts_AccountName",

@@ -33,17 +33,17 @@ public class GuildRankVisualizationService : LocatedServiceBase
     /// <summary>
     /// Lock (Accessing <see cref="_overviews"/>)
     /// </summary>
-    private static LockFactory _overviewsLock = new();
+    private static readonly LockFactory _overviewsLock = new();
 
     /// <summary>
     /// Lock (Modifying the message)
     /// </summary>
-    private static LockFactory _modifyLock = new();
+    private static readonly LockFactory _modifyLock = new();
 
     /// <summary>
     /// Guild overviews
     /// </summary>
-    private static Dictionary<(ulong DiscordServerId, GuildRankPointType? PointType), GuildRankingOverviewData> _overviews = new();
+    private static readonly Dictionary<(ulong DiscordServerId, GuildRankPointType? PointType), GuildRankingOverviewData> _overviews = [];
 
     /// <summary>
     /// Repository factory
@@ -257,8 +257,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                          Type = "bar",
                                          Data = new Data.Json.QuickChart.Data
                                                 {
-                                                    DataSets = new List<DataSet>
-                                                               {
+                                                    DataSets = [
                                                                    new DataSet<double>
                                                                    {
                                                                        BorderColor = "#333333",
@@ -267,7 +266,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                                                        Data = userPoints.Select(obj => obj.Points)
                                                                                         .ToList()
                                                                    }
-                                                               },
+                                                               ],
                                                     Labels = userPoints.Select(obj => $"{LocalizationGroup.GetText(obj.Type.ToString(), obj.Type.ToString())} ({obj.Points.ToString("0.##", LocalizationGroup.CultureInfo)})")
                                                                        .ToList()
                                                 },
@@ -306,7 +305,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
                 embedBuilder.WithImageUrl("attachment://chart.png");
 
                 await context.SendMessageAsync(embed: embedBuilder.Build(),
-                                               attachments: new[] { new FileAttachment(chartStream, "chart.png") })
+                                               attachments: [new FileAttachment(chartStream, "chart.png")])
                              .ConfigureAwait(false);
             }
         }
@@ -448,8 +447,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                          Type = "bar",
                                          Data = new Data.Json.QuickChart.Data
                                                 {
-                                                    DataSets = new List<DataSet>
-                                                               {
+                                                    DataSets = [
                                                                    new DataSet<double>
                                                                    {
                                                                        Label = guildUser.TryGetDisplayName(),
@@ -470,7 +468,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                                                                                .Select(obj => obj.Points)
                                                                                                .ToList()
                                                                    }
-                                                               },
+                                                               ],
                                                     Labels = userPoints.OrderBy(obj => obj.Type)
                                                                        .Select(obj => $"{LocalizationGroup.GetText(obj.Type.ToString(), obj.Type.ToString())} ({obj.Points.ToString("0.##", LocalizationGroup.CultureInfo)} vs {compareUserPoints.Where(obj2 => obj2.Type == obj.Type).Select(obj2 => obj2.Points).First().ToString("0.##", LocalizationGroup.CultureInfo)})")
                                                                        .ToList()
@@ -514,7 +512,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
                 embedBuilder.WithImageUrl("attachment://chart.png");
 
                 await context.SendMessageAsync(embed: embedBuilder.Build(),
-                                               attachments: new[] { new FileAttachment(chartStream, "chart.png") })
+                                               attachments: [new FileAttachment(chartStream, "chart.png")])
                              .ConfigureAwait(false);
             }
         }
@@ -628,13 +626,13 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                                        Scales = new ScalesCollection
                                                                 {
                                                                     XAxes = [
-                                                                                new()
+                                                                                new XAxis
                                                                                 {
                                                                                     Stacked = true
                                                                                 }
                                                                             ],
                                                                     YAxes = [
-                                                                                new()
+                                                                                new YAxis
                                                                                 {
                                                                                     Stacked = true
                                                                                 }
@@ -662,7 +660,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
                 embedBuilder.WithImageUrl("attachment://chart.png");
 
                 await context.SendMessageAsync(embed: embedBuilder.Build(),
-                                               attachments: new[] { new FileAttachment(chartStream, "chart.png") })
+                                               attachments: [new FileAttachment(chartStream, "chart.png")])
                              .ConfigureAwait(false);
             }
         }
@@ -828,10 +826,8 @@ public class GuildRankVisualizationService : LocatedServiceBase
                 }
 
                 var page = new List<OverviewUserPointsData>();
-                data.Pages = new List<List<OverviewUserPointsData>>
-                             {
-                                 page
-                             };
+
+                data.Pages = [page];
 
                 foreach (var user in users)
                 {
@@ -841,7 +837,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
                     if (page.Count == 20)
 #endif
                     {
-                        page = new List<OverviewUserPointsData>();
+                        page = [];
                         data.Pages.Add(page);
                     }
 
@@ -943,8 +939,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                      Type = "horizontalBar",
                                      Data = new Data.Json.QuickChart.Data
                                             {
-                                                DataSets = new List<DataSet>
-                                                           {
+                                                DataSets = [
                                                                new DataSet<double>
                                                                {
                                                                    BackgroundColor = page.Select(obj => obj.UserColor ?? "#98A4A6")
@@ -953,7 +948,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                                                    Data = page.Select(obj => obj.Points)
                                                                               .ToList()
                                                                }
-                                                           },
+                                                           ],
                                                 Labels = page.Select(obj => obj.UserName)
                                                              .ToList()
                                             },
@@ -961,9 +956,8 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                                {
                                                    Scales = new ScalesCollection
                                                             {
-                                                                XAxes = new List<XAxis>
-                                                                        {
-                                                                            new()
+                                                                XAxes = [
+                                                                            new XAxis
                                                                             {
                                                                                 Ticks = new AxisTicks<double>
                                                                                         {
@@ -972,17 +966,16 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                                                                             FontColor = "#b3b3b3"
                                                                                         }
                                                                             }
-                                                                        },
-                                                                YAxes = new List<YAxis>
-                                                                        {
-                                                                            new()
+                                                                        ],
+                                                                YAxes = [
+                                                                            new YAxis
                                                                             {
                                                                                 Ticks = new AxisTicks<double>
                                                                                         {
                                                                                             FontColor = "#b3b3b3"
                                                                                         }
                                                                             }
-                                                                        }
+                                                                        ]
                                                             },
                                                    Plugins = new PluginsCollection
                                                              {

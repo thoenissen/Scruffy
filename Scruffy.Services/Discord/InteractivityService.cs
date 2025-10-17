@@ -287,7 +287,7 @@ public sealed class InteractivityService : SingletonLocatedServiceBase, IDisposa
                 }
             }
 
-            WaitHandle.WaitAny(new[] { _messageEvent, tokenSourceToken.WaitHandle });
+            WaitHandle.WaitAny([_messageEvent, tokenSourceToken.WaitHandle]);
         }
     }
 
@@ -317,7 +317,7 @@ public sealed class InteractivityService : SingletonLocatedServiceBase, IDisposa
                 }
             }
 
-            WaitHandle.WaitAny(new[] { _reactionEvent, tokenSourceToken.WaitHandle });
+            WaitHandle.WaitAny([_reactionEvent, tokenSourceToken.WaitHandle]);
         }
     }
 
@@ -333,15 +333,15 @@ public sealed class InteractivityService : SingletonLocatedServiceBase, IDisposa
 
         _tokenSource = new CancellationTokenSource();
 
-        _waitForMessage = new List<InteractionWaitEntry<IUserMessage>>();
+        _waitForMessage = [];
         _messageEvent = new AutoResetEvent(false);
         _messages = new ConcurrentQueue<IUserMessage>();
 
-        _waitForReaction = new List<InteractionWaitEntry<IReaction>>();
+        _waitForReaction = [];
         _reactionEvent = new AutoResetEvent(false);
         _reactions = new ConcurrentQueue<IReaction>();
 
-        _componentContainers = new List<TemporaryComponentsContainer>();
+        _componentContainers = [];
 
         Task.Run(() => CheckMessages(_tokenSource.Token), _tokenSource.Token).Forget();
         Task.Run(() => CheckReactions(_tokenSource.Token), _tokenSource.Token).Forget();

@@ -13,12 +13,12 @@ public class LocalizationGroup
     /// <summary>
     /// Text
     /// </summary>
-    private ConcurrentDictionary<string, string> _texts;
+    private readonly ConcurrentDictionary<string, string> _texts;
 
     /// <summary>
     /// Service
     /// </summary>
-    private LocalizationService _service;
+    private readonly LocalizationService _service;
 
     #endregion // Fields
 

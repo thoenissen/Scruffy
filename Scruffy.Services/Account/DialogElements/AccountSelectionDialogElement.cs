@@ -43,7 +43,7 @@ public class AccountSelectionDialogElement : DialogEmbedMessageElementBase<strin
         builder.WithTitle(LocalizationGroup.GetText("ChooseTitle", "Account selection"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseDescription", "Please choose one of the following accounts:"));
 
-        _accounts = new Dictionary<int, string>();
+        _accounts = [];
         var typesField = new StringBuilder();
 
         var i = 1;

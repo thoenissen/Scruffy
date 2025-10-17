@@ -43,7 +43,7 @@ public class RaidTemplateSelectionDialogElement : DialogEmbedMessageElementBase<
         builder.WithTitle(LocalizationGroup.GetText("ChooseTemplateTitle", "Raid template selection"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseTemplateDescription", "Please choose one of the following templates:"));
 
-        _templates = new Dictionary<int, long>();
+        _templates = [];
         var templatesFieldText = new StringBuilder();
 
         using (var dbFactory = RepositoryFactory.CreateInstance())

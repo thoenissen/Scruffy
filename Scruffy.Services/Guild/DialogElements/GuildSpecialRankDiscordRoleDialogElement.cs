@@ -41,7 +41,7 @@ public class GuildSpecialRankDiscordRoleDialogElement : DialogEmbedMessageElemen
         builder.WithTitle(LocalizationGroup.GetText("ChooseRoleTitle", "Role selection"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseRoleDescription", "Please choose one of the following roles:"));
 
-        _roles = new Dictionary<int, ulong>();
+        _roles = [];
         var stringBuilder = new StringBuilder();
 
         var rolesCounter = 1;

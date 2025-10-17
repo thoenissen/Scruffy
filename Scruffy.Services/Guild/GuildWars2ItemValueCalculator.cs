@@ -26,32 +26,32 @@ namespace Scruffy.Services.Guild
         /// <summary>
         /// Items
         /// </summary>
-        private Dictionary<int, Item> _items;
+        private readonly Dictionary<int, Item> _items;
 
         /// <summary>
         /// Trading post values
         /// </summary>
-        private Dictionary<int, TradingPostItemPrice> _tradingsPostValues;
+        private readonly Dictionary<int, TradingPostItemPrice> _tradingsPostValues;
 
         /// <summary>
         /// Recipes
         /// </summary>
-        private Dictionary<int, ItemRecipe> _recipes;
+        private readonly Dictionary<int, ItemRecipe> _recipes;
 
         /// <summary>
         /// Conversion
         /// </summary>
-        private Dictionary<int, int?> _conversions;
+        private readonly Dictionary<int, int?> _conversions;
+
+        /// <summary>
+        /// Connector
+        /// </summary>
+        private readonly GuildWars2ApiConnector _connector;
 
         /// <summary>
         /// Custom values
         /// </summary>
         private List<CustomValueData> _customValues;
-
-        /// <summary>
-        /// Connector
-        /// </summary>
-        private GuildWars2ApiConnector _connector;
 
         #endregion // Fields
 
@@ -66,10 +66,10 @@ namespace Scruffy.Services.Guild
             : base(localizationService)
         {
             _dbFactory = dbFactory;
-            _items = new Dictionary<int, Item>();
-            _tradingsPostValues = new Dictionary<int, TradingPostItemPrice>();
-            _recipes = new Dictionary<int, ItemRecipe>();
-            _conversions = new Dictionary<int, int?>();
+            _items = [];
+            _tradingsPostValues = [];
+            _recipes = [];
+            _conversions = [];
             _connector = new GuildWars2ApiConnector(null);
         }
 
@@ -161,7 +161,7 @@ namespace Scruffy.Services.Guild
                     {
                         if (_tradingsPostValues.TryGetValue(itemId, out var tradingPostValue) == false)
                         {
-                            var prices = await _connector.GetTradingPostPrices(new List<int?> { itemId } )
+                            var prices = await _connector.GetTradingPostPrices([itemId])
                                                          .ConfigureAwait(false);
 
                             tradingPostValue = _tradingsPostValues[itemId] = prices.FirstOrDefault();

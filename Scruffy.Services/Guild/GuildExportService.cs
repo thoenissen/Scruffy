@@ -119,7 +119,7 @@ public class GuildExportService : LocatedServiceBase
                                 customValue = null;
                             }
 
-                            await writer.WriteLineAsync($"{entry.Time.ToString("g", LocalizationGroup.CultureInfo)};{entry.User};{entry.Operation};{entry.ItemId};{(entry.ItemId == null || entry.ItemId == 0 ? "Coins" : item?.Name)};{entry.Count};{tradingPostPrice?.TradingPostSellValue?.UnitPrice};{(entry.ItemId == null || entry.ItemId == 0 ? entry.Coins : item?.VendorValue)};{customValue}")
+                            await writer.WriteLineAsync($"{entry.Time.ToString("g", LocalizationGroup.CultureInfo)};{entry.User};{entry.Operation};{entry.ItemId};{(entry.ItemId is null or 0 ? "Coins" : item?.Name)};{entry.Count};{tradingPostPrice?.TradingPostSellValue?.UnitPrice};{(entry.ItemId is null or 0 ? entry.Coins : item?.VendorValue)};{customValue}")
                                         .ConfigureAwait(false);
                         }
 
@@ -221,7 +221,7 @@ public class GuildExportService : LocatedServiceBase
                                 customValue = null;
                             }
 
-                            await writer.WriteLineAsync($"{entry.User};{entry.Operation};{entry.ItemId};{(entry.ItemId == null || entry.ItemId == 0 ? "Coins" : item?.Name)};{entry.Count};{tradingPostPrice?.TradingPostSellValue?.UnitPrice};{(entry.ItemId == null || entry.ItemId == 0 ? entry.Coins : item?.VendorValue)};{customValue}")
+                            await writer.WriteLineAsync($"{entry.User};{entry.Operation};{entry.ItemId};{(entry.ItemId is null or 0 ? "Coins" : item?.Name)};{entry.Count};{tradingPostPrice?.TradingPostSellValue?.UnitPrice};{(entry.ItemId is null or 0 ? entry.Coins : item?.VendorValue)};{customValue}")
                                         .ConfigureAwait(false);
                         }
 

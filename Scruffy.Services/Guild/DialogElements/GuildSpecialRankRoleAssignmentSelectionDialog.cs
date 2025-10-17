@@ -43,7 +43,7 @@ public class GuildSpecialRankRoleAssignmentSelectionDialog : DialogEmbedMessageE
         builder.WithTitle(LocalizationGroup.GetText("ChooseAssignmentTitle", "Assignment selection"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseAssignmentDescription", "Please choose one of the following assignments:"));
 
-        _ranks = new Dictionary<int, ulong>();
+        _ranks = [];
         var levelsFieldsText = new StringBuilder();
 
         using (var dbFactory = RepositoryFactory.CreateInstance())

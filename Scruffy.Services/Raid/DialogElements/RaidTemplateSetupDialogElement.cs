@@ -101,9 +101,8 @@ public class RaidTemplateSetupDialogElement : DialogEmbedReactionElementBase<boo
     {
         if (_reactions == null)
         {
-            _reactions = new List<ReactionData<bool>>
-                         {
-                             new()
+            _reactions = [
+                             new ReactionData<bool>
                              {
                                  Emote = DiscordEmoteService.GetAddEmote(CommandContext.Client),
                                  CommandText = LocalizationGroup.GetFormattedText("AddCommand", "{0} Add template", DiscordEmoteService.GetAddEmote(CommandContext.Client)),
@@ -127,7 +126,7 @@ public class RaidTemplateSetupDialogElement : DialogEmbedReactionElementBase<boo
                                             return true;
                                         }
                              }
-                         };
+                         ];
 
             if (GetTemplates().Count > 0)
             {

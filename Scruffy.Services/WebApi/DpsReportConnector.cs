@@ -223,7 +223,7 @@ public class DpsReportConnector
             var log = await GetLog(upload.Id).ConfigureAwait(false);
 
             upload.FightName = log.FightName;
-            upload.Players = new Dictionary<string, Player>();
+            upload.Players = [];
 
             foreach (var player in log.Players)
             {
@@ -283,123 +283,103 @@ public class DpsReportConnector
     /// <returns>report group of the boss</returns>
     public DpsReportGroup GetReportGroup(int bossId)
     {
-        switch (bossId)
-        {
-            case 17021:
-            case 17028:
-            case 16948:
-                return DpsReportGroup.Nightmare;
+        return bossId switch
+               {
+                   17021
+                   or 17028
+                   or 16948 => DpsReportGroup.Nightmare,
 
-            case 17632:
-            case 17949:
-            case 17759:
-                return DpsReportGroup.ShatteredObservatory;
+                   17632
+                   or 17949
+                   or 17759 => DpsReportGroup.ShatteredObservatory,
 
-            case 23254:
-                return DpsReportGroup.SunquaPeak;
+                   23254 => DpsReportGroup.SunquaPeak,
+                   25577 => DpsReportGroup.SilentSurf,
 
-            case 25577:
-                return DpsReportGroup.SilentSurf;
+                   26257
+                   or 26231 => DpsReportGroup.LonelyTower,
 
-            case 26257:
-            case 26231:
-                return DpsReportGroup.LonelyTower;
+                   27010 => DpsReportGroup.Kinfall,
 
-            case 27010:
-                return DpsReportGroup.Kinfall;
+                   22154
+                   or 22343
+                   or 22481
+                   or 22492
+                   or 22436
+                   or 22711
+                   or 22836
+                   or 22521 => DpsReportGroup.IBSStrikes,
 
-            case 22154:
-            case 22343:
-            case 22481:
-            case 22492:
-            case 22436:
-            case 22711:
-            case 22836:
-            case 22521:
-                return DpsReportGroup.IBSStrikes;
+                   24033
+                   or 24768
+                   or 25247
+                   or 23957
+                   or 24485
+                   or 24266
+                   or 43488
+                   or 1378
+                   or 24375
+                   or 25414 => DpsReportGroup.EoDStrikes,
 
-            case 24033:
-            case 24768:
-            case 25247:
-            case 23957:
-            case 24485:
-            case 24266:
-            case 43488:
-            case 1378:
-            case 24375:
-            case 25414:
-                return DpsReportGroup.EoDStrikes;
+                   25705
+                   or 25989 => DpsReportGroup.SotOStrikes,
 
-            case 25705:
-            case 25989:
-                return DpsReportGroup.SotOStrikes;
+                   16169
+                   or 16202
+                   or 16178
+                   or 16198
+                   or 16177
+                   or 16199
+                   or 19676
+                   or 19645
+                   or 16174
+                   or 16176 => DpsReportGroup.TrainingArea,
 
-            case 16169:
-            case 16202:
-            case 16178:
-            case 16198:
-            case 16177:
-            case 16199:
-            case 19676:
-            case 19645:
-            case 16174:
-            case 16176:
-                return DpsReportGroup.TrainingArea;
+                   15438
+                   or 15429
+                   or 15375 => DpsReportGroup.SpritVale,
 
-            case 15438:
-            case 15429:
-            case 15375:
-                return DpsReportGroup.SpritVale;
+                   16123
+                   or 16088
+                   or 16137
+                   or 16125
+                   or 16115 => DpsReportGroup.SalvationPass,
 
-            case 16123:
-            case 16088:
-            case 16137:
-            case 16125:
-            case 16115:
-                return DpsReportGroup.SalvationPass;
+                   16253
+                   or 16235
+                   or 16247
+                   or 16246 => DpsReportGroup.StrongholdOfTheFaithful,
 
-            case 16253:
-            case 16235:
-            case 16247:
-            case 16246:
-                return DpsReportGroup.StrongholdOfTheFaithful;
+                   17194
+                   or 17172
+                   or 17188
+                   or 17154 => DpsReportGroup.BastionOfThePenitent,
 
-            case 17194:
-            case 17172:
-            case 17188:
-            case 17154:
-                return DpsReportGroup.BastionOfThePenitent;
+                   19767
+                   or 19828
+                   or 19691
+                   or 19536
+                   or 19651
+                   or 19844
+                   or 19450 => DpsReportGroup.HallOfChains,
 
-            case 19767:
-            case 19828:
-            case 19691:
-            case 19536:
-            case 19651:
-            case 19844:
-            case 19450:
-                return DpsReportGroup.HallOfChains;
+                   43974
+                   or 10142
+                   or 37464
+                   or 21105
+                   or 21089
+                   or 20934 => DpsReportGroup.MythwrightGambit,
 
-            case 43974:
-            case 10142: // Gadget
-            case 37464: // Gadget
-            case 21105:
-            case 21089:
-            case 20934:
-                return DpsReportGroup.MythwrightGambit;
+                   22006
+                   or 21964
+                   or 22000 => DpsReportGroup.TheKeyOfAhdashim,
 
-            case 22006:
-            case 21964:
-            case 22000:
-                return DpsReportGroup.TheKeyOfAhdashim;
+                   26774
+                   or 26725
+                   or 26712 => DpsReportGroup.MountBalrior,
 
-            case 26774:
-            case 26725:
-            case 26712:
-                return DpsReportGroup.MountBalrior;
-
-            default:
-                return DpsReportGroup.Unknown;
-        }
+                   _ => DpsReportGroup.Unknown
+               };
     }
 
     /// <summary>
@@ -409,116 +389,90 @@ public class DpsReportConnector
     /// <returns>The sort value for the given boss</returns>
     public int GetSortValue(int bossId)
     {
-        int bossSortValue;
+        var bossSortValue = bossId switch
+                            {
+                                17021
+                                or 17632
+                                or 23254
+                                or 22154
+                                or 22343
+                                or 22492
+                                or 22711
+                                or 22836
+                                or 24033
+                                or 23957
+                                or 24485
+                                or 43488
+                                or 16169
+                                or 15438
+                                or 16123
+                                or 16253
+                                or 17194
+                                or 19767
+                                or 43974
+                                or 22006
+                                or 25705
+                                or 26774 => 1,
 
-        switch (bossId)
-        {
-            case 17021:
-            case 17632:
-            case 23254:
-            case 22154:
-            case 22343:
-            case 22492:
-            case 22711:
-            case 22836:
-            case 24033:
-            case 23957:
-            case 24485:
-            case 43488:
-            case 16169:
-            case 15438:
-            case 16123:
-            case 16253:
-            case 17194:
-            case 19767:
-            case 43974:
-            case 22006:
-            case 25705:
-            case 26774:
-                bossSortValue = 1;
-                break;
+                                17028
+                                or 17949
+                                or 22481
+                                or 22436
+                                or 22521
+                                or 24768
+                                or 24266
+                                or 1378
+                                or 16202
+                                or 15429
+                                or 16088
+                                or 16235
 
-            case 17028:
-            case 17949:
-            case 22481:
-            case 22436:
-            case 22521:
-            case 24768:
-            case 24266:
-            case 1378:
-            case 16202:
-            case 15429:
-            case 16088:
-            case 16235:
-            case 17172:
-            case 17188:
-            case 19828:
-            case 10142:
-            case 21964:
-            case 25989:
-            case 26725:
-                bossSortValue = 2;
-                break;
+                                or 17172
+                                or 17188
+                                or 19828
+                                or 10142
+                                or 21964
+                                or 25989
+                                or 26725 => 2,
 
-            case 16948:
-            case 17759:
-            case 25247:
-            case 24375:
-            case 16178:
-            case 15375:
-            case 16137:
-            case 16247:
-            case 17154:
-            case 19691:
-            case 37464:
-            case 22000:
-            case 26712:
-                bossSortValue = 3;
-                break;
+                                16948
+                                or 17759
+                                or 25247
+                                or 24375
+                                or 16178
+                                or 15375
+                                or 16137
+                                or 16247
+                                or 17154
+                                or 19691
+                                or 37464
+                                or 22000
+                                or 26712 => 3,
 
-            case 16198:
-            case 16125:
-            case 16246:
-            case 19536:
-            case 21105:
-                bossSortValue = 4;
-                break;
+                                16198
+                                or 16125
+                                or 16246
+                                or 19536
+                                or 21105 => 4,
 
-            case 16177:
-            case 16115:
-            case 19651:
-            case 21089:
-            case 25414:
-                bossSortValue = 5;
-                break;
+                                16177
+                                or 16115
+                                or 19651
+                                or 21089
+                                or 25414 => 5,
 
-            case 16199:
-            case 19844:
-            case 20934:
-                bossSortValue = 6;
-                break;
+                                16199
+                                or 19844
+                                or 20934 => 6,
 
-            case 19676:
-            case 19450:
-                bossSortValue = 7;
-                break;
+                                19676
+                                or 19450 => 7,
 
-            case 19645:
-                bossSortValue = 8;
-                break;
-
-            case 16174:
-                bossSortValue = 9;
-                break;
-
-            case 16176:
-                bossSortValue = 10;
-                break;
-
-            default:
-                bossSortValue = 0;
-                break;
-        }
+                                19645 => 8,
+                                16174 => 9,
+                                16176 => 10,
+                                _ => 0
+                            };
 
         return GetReportGroup(bossId).GetSortValue() + bossSortValue;
     }

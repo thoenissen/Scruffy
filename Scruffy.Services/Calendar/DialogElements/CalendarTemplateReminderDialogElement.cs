@@ -41,19 +41,18 @@ public class CalendarTemplateReminderDialogElement : DialogReactionElementBase<C
     /// <inheritdoc/>
     public override IReadOnlyList<ReactionData<CalenderTemplateReminderData>> GetReactions()
     {
-        return _reactions ??= new List<ReactionData<CalenderTemplateReminderData>>
-                              {
-                                  new()
+        return _reactions ??= [
+                                  new ReactionData<CalenderTemplateReminderData>
                                   {
                                       Emote = DiscordEmoteService.GetCheckEmote(CommandContext.Client),
                                       Func = RunSubForm<CalenderTemplateReminderData>,
                                   },
-                                  new()
+                                  new ReactionData<CalenderTemplateReminderData>
                                   {
                                       Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
                                       Func = () => Task.FromResult<CalenderTemplateReminderData>(null)
                                   }
-                              };
+                              ];
     }
 
     /// <inheritdoc/>

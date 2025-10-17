@@ -14,7 +14,7 @@ public class MissingGuildWars2ApiPermissionException : ScruffyUserMessageExcepti
     /// <summary>
     /// Permission
     /// </summary>
-    private GuildWars2ApiPermission _permission;
+    private readonly GuildWars2ApiPermission _permission;
 
     #endregion // Fields
 
