@@ -2,7 +2,6 @@
 
 using Discord;
 
-using Scruffy.Data.Entity;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord;
 
@@ -13,27 +12,15 @@ namespace Scruffy.Services.Configuration.DialogElements;
 /// </summary>
 public class ServerConfigurationDialogElement : DialogEmbedSelectMenuElementBase<bool>
 {
-    #region Fields
-
-    /// <summary>
-    /// Repository factory
-    /// </summary>
-    private readonly RepositoryFactory _repositoryFactory;
-
-    #endregion // Fields
-
     #region Constructor
 
     /// <summary>
     /// Constructor
     /// </summary>
     /// <param name="localizationService">Localization service</param>
-    /// <param name="repositoryFactory">Repository factory</param>
-    public ServerConfigurationDialogElement(LocalizationService localizationService,
-                                            RepositoryFactory repositoryFactory)
+    public ServerConfigurationDialogElement(LocalizationService localizationService)
         : base(localizationService)
     {
-        _repositoryFactory = repositoryFactory;
     }
 
     #endregion // Constructor
@@ -58,9 +45,8 @@ public class ServerConfigurationDialogElement : DialogEmbedSelectMenuElementBase
     /// <inheritdoc/>
     public override IReadOnlyList<SelectMenuEntryData<bool>> GetEntries()
     {
-        return new List<SelectMenuEntryData<bool>>
-               {
-                   new()
+        return [
+                   new SelectMenuEntryData<bool>
                    {
                        CommandText = LocalizationGroup.GetText("InstallCommands", "Command installation"),
                        Response = async () =>
@@ -110,7 +96,7 @@ public class ServerConfigurationDialogElement : DialogEmbedSelectMenuElementBase
                                   return true;
                               }
                    },
-                   new()
+                   new SelectMenuEntryData<bool>
                    {
                        CommandText = LocalizationGroup.GetText("UninstallCommands", "Command uninstallation"),
                        Response = async () =>
@@ -122,7 +108,7 @@ public class ServerConfigurationDialogElement : DialogEmbedSelectMenuElementBase
                                   return true;
                               }
                    }
-               };
+               ];
     }
 
     /// <inheritdoc/>

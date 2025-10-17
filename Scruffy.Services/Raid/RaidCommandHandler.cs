@@ -784,7 +784,7 @@ public class RaidCommandHandler : LocatedServiceBase
 
             try
             {
-                var selectedRoles = await dialogHandler.Run<RaidPreparedSpecialRolesSelectDialogElement, List<long>>(new RaidPreparedSpecialRolesSelectDialogElement(_localizationService, _raidRolesService, _userManagementService))
+                var selectedRoles = await dialogHandler.Run<RaidPreparedSpecialRolesSelectDialogElement, List<long>>(new RaidPreparedSpecialRolesSelectDialogElement(_localizationService, _userManagementService))
                                                        .ConfigureAwait(false);
 
                 using (var dbFactory = RepositoryFactory.CreateInstance())

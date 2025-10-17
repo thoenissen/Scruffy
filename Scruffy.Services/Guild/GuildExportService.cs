@@ -128,7 +128,7 @@ public class GuildExportService : LocatedServiceBase
 
                         memoryStream.Position = 0;
 
-                        await commandContext.ReplyAsync(attachments: new[] { new FileAttachment(memoryStream, "stash_log.csv") })
+                        await commandContext.ReplyAsync(attachments: [new FileAttachment(memoryStream, "stash_log.csv")])
                                             .ConfigureAwait(false);
                     }
                 }
@@ -230,7 +230,7 @@ public class GuildExportService : LocatedServiceBase
 
                         memoryStream.Position = 0;
 
-                        await commandContext.ReplyAsync(attachments: new[] { new FileAttachment(memoryStream, "stash_log.csv") })
+                        await commandContext.ReplyAsync(attachments: [new FileAttachment(memoryStream, "stash_log.csv")])
                                             .ConfigureAwait(false);
                     }
                 }
@@ -350,7 +350,7 @@ public class GuildExportService : LocatedServiceBase
 
                         memoryStream.Position = 0;
 
-                        await commandContext.ReplyAsync(attachments: new[] { new FileAttachment(memoryStream, "upgrades_log.csv") })
+                        await commandContext.ReplyAsync(attachments: [new FileAttachment(memoryStream, "upgrades_log.csv")])
                                             .ConfigureAwait(false);
                     }
                 }
@@ -476,7 +476,7 @@ public class GuildExportService : LocatedServiceBase
 
                         memoryStream.Position = 0;
 
-                        await commandContext.ReplyAsync(attachments: new[] { new FileAttachment(memoryStream, "upgrades_log.csv") })
+                        await commandContext.ReplyAsync(attachments: [new FileAttachment(memoryStream, "upgrades_log.csv")])
                                             .ConfigureAwait(false);
                     }
                 }
@@ -531,8 +531,7 @@ public class GuildExportService : LocatedServiceBase
 
                     memoryStream.Position = 0;
 
-                    await commandContext.ReplyAsync(attachments: new[] { new FileAttachment(memoryStream, "activity_log.csv") })
-                                        .ConfigureAwait(false);
+                    await commandContext.ReplyAsync(attachments: [new FileAttachment(memoryStream, "activity_log.csv")]).ConfigureAwait(false);
                 }
             }
         }
@@ -625,7 +624,7 @@ public class GuildExportService : LocatedServiceBase
 
                     memoryStream.Position = 0;
 
-                    await commandContext.ReplyAsync(attachments: new[] { new FileAttachment(memoryStream, "representation.csv") })
+                    await commandContext.ReplyAsync(attachments: [new FileAttachment(memoryStream, "representation.csv")])
                                         .ConfigureAwait(false);
                 }
             }
@@ -706,7 +705,7 @@ public class GuildExportService : LocatedServiceBase
 
                     memoryStream.Position = 0;
 
-                    await commandContext.ReplyAsync(attachments: new[] { new FileAttachment(memoryStream, "members.csv") })
+                    await commandContext.ReplyAsync(attachments: [new FileAttachment(memoryStream, "members.csv")])
                                         .ConfigureAwait(false);
                 }
             }
@@ -758,7 +757,7 @@ public class GuildExportService : LocatedServiceBase
 
                 memoryStream.Position = 0;
 
-                await commandContext.ReplyAsync(attachments: new[] { new FileAttachment(memoryStream, "roles.csv") })
+                await commandContext.ReplyAsync(attachments: [new FileAttachment(memoryStream, "roles.csv")])
                                     .ConfigureAwait(false);
             }
         }
@@ -826,7 +825,7 @@ public class GuildExportService : LocatedServiceBase
 
                 memoryStream.Position = 0;
 
-                await commandContext.ReplyAsync(attachments: new[] { new FileAttachment(memoryStream, "rank_points.csv") })
+                await commandContext.ReplyAsync(attachments: [new FileAttachment(memoryStream, "rank_points.csv")])
                                     .ConfigureAwait(false);
             }
         }
@@ -892,7 +891,7 @@ public class GuildExportService : LocatedServiceBase
 
                 memoryStream.Position = 0;
 
-                await commandContext.ReplyAsync(attachments: new[] { new FileAttachment(memoryStream, "assignments.csv") })
+                await commandContext.ReplyAsync(attachments: [new FileAttachment(memoryStream, "assignments.csv")])
                                     .ConfigureAwait(false);
             }
         }

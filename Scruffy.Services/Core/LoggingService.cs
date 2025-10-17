@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
+using System.Threading;
 
 using Discord;
 using Discord.Interactions;
@@ -31,7 +32,7 @@ public class LoggingService
     /// <summary>
     /// Lock
     /// </summary>
-    private readonly object _lock = new();
+    private readonly Lock _lock = new();
 
     /// <summary>
     /// Environment
@@ -108,7 +109,6 @@ public class LoggingService
     /// <returns>Log entry id</returns>
     public static long? AddTextCommandLogEntry(LogEntryLevel level, string qualifiedCommandName, string lastUserCommand, string message, string additionalInformation = null, Exception ex = null)
     {
-        // TODO No direct logging to this method. Implementation of logging in IContextContainer.
         return _logger?.WriteLine<object>(LogEntryType.Command, level, qualifiedCommandName, lastUserCommand, message, additionalInformation, ex, null);
     }
 

@@ -12,26 +12,15 @@ namespace Scruffy.Services.Administration;
 /// </summary>
 public class AdministrationCommandHandler : LocatedServiceBase
 {
-    #region Fields
-
-    /// <summary>
-    /// Blocked channels
-    /// </summary>
-    private readonly BlockedChannelService _blockedChannelService;
-
-    #endregion // Fields
-
     #region Constructor
 
     /// <summary>
     /// Constructor
     /// </summary>
     /// <param name="localizationService">Localization service</param>
-    /// <param name="blockedChannelService">Blocked channels</param>
-    public AdministrationCommandHandler(LocalizationService localizationService, BlockedChannelService blockedChannelService)
+    public AdministrationCommandHandler(LocalizationService localizationService)
         : base(localizationService)
     {
-        _blockedChannelService = blockedChannelService;
     }
 
     #endregion // Constructor

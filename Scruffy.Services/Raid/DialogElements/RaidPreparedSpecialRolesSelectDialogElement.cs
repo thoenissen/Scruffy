@@ -16,11 +16,6 @@ public class RaidPreparedSpecialRolesSelectDialogElement : DialogEmbedMultiSelec
     #region Fields
 
     /// <summary>
-    /// Raid roles service
-    /// </summary>
-    private readonly RaidRolesService _raidRoleService;
-
-    /// <summary>
     /// UserManagementService
     /// </summary>
     private readonly UserManagementService _userManagementService;
@@ -38,12 +33,10 @@ public class RaidPreparedSpecialRolesSelectDialogElement : DialogEmbedMultiSelec
     /// Constructor
     /// </summary>
     /// <param name="localizationService">Localization service</param>
-    /// <param name="raidRolesService">Raid roles service</param>
     /// <param name="userManagementService">UserManagementService</param>
-    public RaidPreparedSpecialRolesSelectDialogElement(LocalizationService localizationService, RaidRolesService raidRolesService, UserManagementService userManagementService)
+    public RaidPreparedSpecialRolesSelectDialogElement(LocalizationService localizationService, UserManagementService userManagementService)
         : base(localizationService)
     {
-        _raidRoleService = raidRolesService;
         _userManagementService = userManagementService;
 
         IsEphermeral = true;

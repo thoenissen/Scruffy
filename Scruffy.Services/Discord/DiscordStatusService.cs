@@ -67,8 +67,7 @@ public sealed class DiscordStatusService : SingletonLocatedServiceBase, IDisposa
         _discordClient = serviceProvider.GetRequiredService<DiscordSocketClient>();
         _timer = new Timer(OnTimer, null, TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(60));
 
-        _movies = new Queue<string>(new[]
-                                    {
+        _movies = new Queue<string>([
                                         "The Amazing Spider-Quaggan",
                                         "The Quaggan of Balthazar High Road",
                                         "Interquaggan",
@@ -93,7 +92,7 @@ public sealed class DiscordStatusService : SingletonLocatedServiceBase, IDisposa
                                         "Avengers Quaggangame",
                                         "Star Quaggan - The Revenge of the Fish",
                                         "The last Quagganhunter",
-                                    });
+                                    ]);
     }
 
     #endregion // SingletonLocatedServiceBase

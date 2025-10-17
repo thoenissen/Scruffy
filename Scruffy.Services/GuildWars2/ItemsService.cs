@@ -179,7 +179,7 @@ public class ItemsService : LocatedServiceBase
 
                     memoryStream.Position = 0;
 
-                    await context.ReplyAsync(attachments: new[] { new FileAttachment(memoryStream, "custom_values.csv") })
+                    await context.ReplyAsync(attachments: [new FileAttachment(memoryStream, "custom_values.csv")])
                                  .ConfigureAwait(false);
                 }
             }

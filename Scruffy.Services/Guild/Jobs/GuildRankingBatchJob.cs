@@ -18,8 +18,7 @@ public class GuildRankingBatchJob : BatchJob
     /// Constructor
     /// </summary>
     public GuildRankingBatchJob()
-        : base(new List<Type>
-               {
+        : base([
                    typeof(AccountLoginCheckJob),
                    typeof(AchievementImportJob),
                    typeof(GuildRankImportJob),
@@ -36,7 +35,7 @@ public class GuildRankingBatchJob : BatchJob
                    typeof(GuildCheckUnknownUsersJob),
                    typeof(GuildCheckInactiveUsersJob),
                    typeof(UsersImportJob)
-               })
+               ])
     {
     }
 

@@ -197,7 +197,7 @@ internal static class CommandExtensions
     {
         if (moduleInfo.DontAutoRegister)
         {
-            return Array.Empty<ApplicationCommandOptionProperties>();
+            return [];
         }
 
         args.AddRange(moduleInfo.ContextCommands?.Select(x => x.ToApplicationCommandProps()));

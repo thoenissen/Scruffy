@@ -275,7 +275,7 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
                                                              obj.AllowedMentions = allowedMentions;
                                                              obj.Components = components;
                                                              obj.Embeds = embeds;
-                                                             obj.Attachments = new Optional<IEnumerable<FileAttachment>>(attachments ?? Enumerable.Empty<FileAttachment>());
+                                                             obj.Attachments = new Optional<IEnumerable<FileAttachment>>(attachments ?? []);
                                                          })
                                             .ConfigureAwait(false);
                     }
@@ -299,7 +299,7 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
                                                                           obj.AllowedMentions = allowedMentions;
                                                                           obj.Components = components;
                                                                           obj.Embeds = embeds;
-                                                                          obj.Attachments = new Optional<IEnumerable<FileAttachment>>(attachments ?? Enumerable.Empty<FileAttachment>());
+                                                                          obj.Attachments = new Optional<IEnumerable<FileAttachment>>(attachments ?? []);
                                                                       })
                                          .ConfigureAwait(false);
             }
@@ -385,7 +385,7 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
                                                        obj.AllowedMentions = allowedMentions;
                                                        obj.Components = components;
                                                        obj.Embeds = embeds;
-                                                       obj.Attachments = new Optional<IEnumerable<FileAttachment>>(attachments ?? Enumerable.Empty<FileAttachment>());
+                                                       obj.Attachments = new Optional<IEnumerable<FileAttachment>>(attachments ?? []);
                                                    })
                                       .ConfigureAwait(false);
 

@@ -71,7 +71,7 @@ public sealed class ServiceProviderContainer : IAsyncDisposable
     /// <param name="onInitialize">Additional initialization</param>
     public void Initialize(Action<IServiceCollection> onInitialize)
     {
-        _serviceCollection = new ServiceCollection();
+        _serviceCollection = [];
 
         var singletons = new List<SingletonLocatedServiceBase>();
 

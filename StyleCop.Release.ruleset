@@ -70,6 +70,7 @@
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.Features" RuleNamespace="Microsoft.CodeAnalysis.CSharp.Features">
     <Rule Id="IDE0001" Action="Warning" />
+    <Rule Id="IDE0028" Action="Error" />
     <Rule Id="IDE0044" Action="None" />
     <Rule Id="IDE0049" Action="None" />
   </Rules>

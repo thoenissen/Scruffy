@@ -91,7 +91,7 @@ public class GuildLogImportJob : LocatedAsyncJob
                                                       Action = entry.Action,
                                                       Activity = entry.Activity,
                                                       TotalParticipants = entry.TotalParticipants,
-                                                      Participants = string.Join(';', entry.Participants?.Where(obj => string.IsNullOrWhiteSpace(obj) == false) ?? Array.Empty<string>()),
+                                                      Participants = string.Join(';', entry.Participants?.Where(obj => string.IsNullOrWhiteSpace(obj) == false) ?? []),
                                                       MessageOfTheDay = entry.MessageOfTheDay
                                                   }))
                                 {
@@ -99,26 +99,13 @@ public class GuildLogImportJob : LocatedAsyncJob
 
                                     try
                                     {
-                                        switch (entry.Type)
-                                        {
-                                            case GuildLogEntryEntity.Types.Joined:
-                                                {
-                                                    isProcessed = await OnJoined(discordChannel, entry).ConfigureAwait(false);
-                                                }
-                                                break;
-
-                                            case GuildLogEntryEntity.Types.Kick:
-                                                {
-                                                    isProcessed = await OnKick(discordChannel, entry).ConfigureAwait(false);
-                                                }
-                                                break;
-
-                                            case GuildLogEntryEntity.Types.RankChange:
-                                                {
-                                                    isProcessed = await OnRankChanged(discordChannel, guildRankService.Value, guild.Id, entry).ConfigureAwait(false);
-                                                }
-                                                break;
-                                        }
+                                        isProcessed = entry.Type switch
+                                                      {
+                                                          GuildLogEntryEntity.Types.Joined => await OnJoined(discordChannel, entry).ConfigureAwait(false),
+                                                          GuildLogEntryEntity.Types.Kick => await OnKick(discordChannel, entry).ConfigureAwait(false),
+                                                          GuildLogEntryEntity.Types.RankChange => await OnRankChanged(discordChannel, guildRankService.Value, guild.Id, entry).ConfigureAwait(false),
+                                                          _ => isProcessed
+                                                      };
                                     }
                                     catch (Exception ex)
                                     {
