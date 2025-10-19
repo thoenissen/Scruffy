@@ -463,12 +463,12 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
     #region IInteractionContext
 
     /// <summary>
-    /// Gets the <see cref="T:Discord.DiscordSocketClient" /> that the command is executed with.
+    /// Gets the <see cref="DiscordSocketClient" /> that the command is executed with.
     /// </summary>
     public DiscordSocketClient Client { get; }
 
     /// <summary>
-    /// Gets the <see cref="T:Discord.IDiscordClient" /> that the command is executed with.
+    /// Gets the <see cref="IDiscordClient" /> that the command is executed with.
     /// </summary>
     IDiscordClient IInteractionContext.Client => Client;
 
@@ -511,7 +511,7 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
     #region IRouteMatchContainer
 
     /// <summary>
-    /// Sets the <see cref="P:Discord.IRouteMatchContainer.SegmentMatches" /> property of this container.
+    /// Sets the <see cref="P:IRouteMatchContainer.SegmentMatches" /> property of this container.
     /// </summary>
     /// <param name="segmentMatches">The collection of captured route segments.</param>
     void IRouteMatchContainer.SetSegmentMatches(IEnumerable<IRouteSegmentMatch> segmentMatches) => _segmentMatches = segmentMatches.ToImmutableArray();

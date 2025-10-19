@@ -346,9 +346,13 @@ public sealed class InteractivityService : SingletonLocatedServiceBase, IDisposa
         Task.Run(() => CheckMessages(_tokenSource.Token), _tokenSource.Token).Forget();
         Task.Run(() => CheckReactions(_tokenSource.Token), _tokenSource.Token).Forget();
 
-        await serviceProvider.GetRequiredService<InteractionService>()
-                             .AddModuleAsync(typeof(TemporaryMessageComponentCommandModule), serviceProvider)
-                             .ConfigureAwait(false);
+        var interactiveService = serviceProvider.GetService<InteractionService>();
+
+        if (interactiveService != null)
+        {
+            await interactiveService.AddModuleAsync<TemporaryMessageComponentCommandModule>(serviceProvider)
+                                    .ConfigureAwait(false);
+        }
 
         _client = serviceProvider.GetRequiredService<DiscordSocketClient>();
         _client.MessageReceived += OnMessageReceived;

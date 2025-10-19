@@ -21,5 +21,11 @@ serviceProvider.Initialize(obj => obj.AddSingleton(Preparation.DiscordClient));
 
 using var scope = serviceProvider.CreateScope();
 
+// Debug context
+// var context = new DebuggingContext(scope.ServiceProvider);
+//
+// await context.InitializeFromChannel(1429146759606567115, 699320744781545473)
+//              .ConfigureAwait(false);
+
 // Testing
-//var service = scope.ServiceProvider.GetService<TODO>();
+// var service = scope.ServiceProvider.GetRequiredService<LogCommandHandler>();
