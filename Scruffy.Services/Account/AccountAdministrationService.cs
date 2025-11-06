@@ -53,10 +53,10 @@ public class AccountAdministrationService : LocatedServiceBase
             var accounts = dbFactory.GetRepository<GuildWarsAccountRepository>()
                                     .GetQuery()
                                     .Select(obj => new
-                                    {
-                                        obj.Name,
-                                        obj.ApiKey
-                                    })
+                                                   {
+                                                       obj.Name,
+                                                       obj.ApiKey
+                                                   })
                                     .ToList();
 
             foreach (var account in accounts)
@@ -71,9 +71,9 @@ public class AccountAdministrationService : LocatedServiceBase
                                                               .ConfigureAwait(false);
 
                         if (tokenInformation?.Permissions == null
-                         || tokenInformation.Permissions.Contains(TokenInformation.Permission.Account) == false
-                         || tokenInformation.Permissions.Contains(TokenInformation.Permission.Characters) == false
-                         || tokenInformation.Permissions.Contains(TokenInformation.Permission.Progression) == false)
+                            || tokenInformation.Permissions.Contains(TokenInformation.Permission.Account) == false
+                            || tokenInformation.Permissions.Contains(TokenInformation.Permission.Characters) == false
+                            || tokenInformation.Permissions.Contains(TokenInformation.Permission.Progression) == false)
                         {
                             invalidPermissions.Add((account.Name, GuildWars2ApiDataConverter.ToPermission(tokenInformation?.Permissions)));
                         }
@@ -100,8 +100,8 @@ public class AccountAdministrationService : LocatedServiceBase
             }
 
             if (invalidPermissions.Count > 0
-             || invalidNames.Count > 0
-             || unknownError.Count > 0)
+                || invalidNames.Count > 0
+                || unknownError.Count > 0)
             {
                 if (invalidPermissions.Count > 0)
                 {
@@ -137,7 +137,7 @@ public class AccountAdministrationService : LocatedServiceBase
                     {
                         sb.Append(name);
                         sb.Append(" -> ");
-                        sb.Append(newName);
+                        sb.AppendLine(newName);
                     }
 
                     sb.Append("```");
@@ -149,7 +149,7 @@ public class AccountAdministrationService : LocatedServiceBase
                 if (unknownError.Count > 0)
                 {
                     var sb = new StringBuilder();
-                    sb.AppendLine(LocalizationGroup.GetText("ListOfUnknownErrors", "The following accounts could be checked"));
+                    sb.AppendLine(LocalizationGroup.GetText("ListOfUnknownErrors", "The following accounts could not be checked"));
                     sb.Append("```");
 
                     foreach (var (name, exception) in unknownError)
@@ -157,7 +157,7 @@ public class AccountAdministrationService : LocatedServiceBase
                         sb.Append(name);
                         sb.Append(" (");
                         sb.Append(exception);
-                        sb.Append(")");
+                        sb.AppendLine(")");
                     }
 
                     sb.Append("```");

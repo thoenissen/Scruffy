@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -28,7 +29,7 @@ namespace Scruffy.Services.WebApi;
 /// Accessing the Guild Wars 2 WEB API
 /// </summary>
 public sealed class GuildWars2ApiConnector : IAsyncDisposable,
-                                            IDisposable
+                                             IDisposable
 {
     #region Fields
 
@@ -101,10 +102,9 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<TokenInformation> GetTokenInformationAsync()
     {
-        return Invoke(GuildWars2ApiPermission.Account,
-                      async () =>
+        return Invoke(async () =>
                       {
-                          using (var response = await CreateRequest("https://api.guildwars2.com/v2/tokeninfo").ConfigureAwait(false))
+                          using (var response = await CreateRequest("https://api.guildwars2.com/v2/tokeninfo", GuildWars2ApiPermission.Account).ConfigureAwait(false))
                           {
                               var jsonResult = await response.Content
                                                              .ReadAsStringAsync()
@@ -121,10 +121,9 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<AccountInformation> GetAccountInformationAsync()
     {
-        return Invoke(GuildWars2ApiPermission.Account,
-                      async () =>
+        return Invoke(async () =>
                       {
-                          using (var response = await CreateRequest("https://api.guildwars2.com/v2/account?v=latest").ConfigureAwait(false))
+                          using (var response = await CreateRequest("https://api.guildwars2.com/v2/account?v=latest", GuildWars2ApiPermission.Account).ConfigureAwait(false))
                           {
                               var jsonResult = await response.Content
                                                              .ReadAsStringAsync()
@@ -141,10 +140,9 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<List<Character>> GetCharactersAsync()
     {
-        return Invoke(GuildWars2ApiPermission.Characters,
-                      async () =>
+        return Invoke(async () =>
                       {
-                          using (var response = await CreateRequest("https://api.guildwars2.com/v2/characters?ids=all").ConfigureAwait(false))
+                          using (var response = await CreateRequest("https://api.guildwars2.com/v2/characters?ids=all", GuildWars2ApiPermission.Characters).ConfigureAwait(false))
                           {
                               var jsonResult = await response.Content
                                                              .ReadAsStringAsync()
@@ -163,10 +161,9 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<List<string>> GetCharacterNamesAsync()
     {
-        return Invoke(GuildWars2ApiPermission.Characters,
-                      async () =>
+        return Invoke(async () =>
                       {
-                          using (var response = await CreateRequest("https://api.guildwars2.com/v2/characters").ConfigureAwait(false))
+                          using (var response = await CreateRequest("https://api.guildwars2.com/v2/characters", GuildWars2ApiPermission.Characters).ConfigureAwait(false))
                           {
                               var jsonResult = await response.Content
                                                              .ReadAsStringAsync()
@@ -184,10 +181,9 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<Character> GetCharacterAsync(string characterName)
     {
-        return Invoke(GuildWars2ApiPermission.Characters,
-                      async () =>
+        return Invoke(async () =>
                       {
-                          using (var response = await CreateRequest($"https://api.guildwars2.com/v2/characters/{Uri.EscapeDataString(characterName)}?v=latest").ConfigureAwait(false))
+                          using (var response = await CreateRequest($"https://api.guildwars2.com/v2/characters/{Uri.EscapeDataString(characterName)}?v=latest", GuildWars2ApiPermission.Characters).ConfigureAwait(false))
                           {
                               var jsonResult = await response.Content
                                                              .ReadAsStringAsync()
@@ -204,10 +200,9 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<List<int>> GetDyes()
     {
-        return Invoke(GuildWars2ApiPermission.Unlocks,
-                      async () =>
+        return Invoke(async () =>
                       {
-                          using (var response = await CreateRequest("https://api.guildwars2.com/v2/account/dyes").ConfigureAwait(false))
+                          using (var response = await CreateRequest("https://api.guildwars2.com/v2/account/dyes", GuildWars2ApiPermission.Unlocks).ConfigureAwait(false))
                           {
                               var jsonResult = await response.Content
                                                              .ReadAsStringAsync()
@@ -225,10 +220,9 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<GuildInformation> GetGuildInformation(string id)
     {
-        return Invoke(GuildWars2ApiPermission.Guilds,
-                      async () =>
+        return Invoke(async () =>
                       {
-                          using (var response = await CreateRequest($"https://api.guildwars2.com/v2/guild/{id}?v=latest").ConfigureAwait(false))
+                          using (var response = await CreateRequest($"https://api.guildwars2.com/v2/guild/{id}?v=latest", GuildWars2ApiPermission.Guilds).ConfigureAwait(false))
                           {
                               var jsonResult = await response.Content
                                                              .ReadAsStringAsync()
@@ -247,10 +241,9 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<List<GuildLogEntry>> GetGuildLogEntries(string guildId, long sinceId)
     {
-        return Invoke(GuildWars2ApiPermission.Guilds,
-                      async () =>
+        return Invoke(async () =>
                       {
-                          using (var response = await CreateRequest($"https://api.guildwars2.com/v2/guild/{guildId}/log?since={sinceId}?v=latest").ConfigureAwait(false))
+                          using (var response = await CreateRequest($"https://api.guildwars2.com/v2/guild/{guildId}/log?since={sinceId}?v=latest", GuildWars2ApiPermission.Guilds).ConfigureAwait(false))
                           {
                               var jsonResult = await response.Content
                                                              .ReadAsStringAsync()
@@ -268,10 +261,9 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<List<GuildMember>> GetGuildMembers(string guildId)
     {
-        return Invoke(GuildWars2ApiPermission.Guilds,
-                      async () =>
+        return Invoke(async () =>
                       {
-                          using (var response = await CreateRequest($"https://api.guildwars2.com/v2/guild/{guildId}/members").ConfigureAwait(false))
+                          using (var response = await CreateRequest($"https://api.guildwars2.com/v2/guild/{guildId}/members", GuildWars2ApiPermission.Guilds).ConfigureAwait(false))
                           {
                               var jsonResult = await response.Content
                                                              .ReadAsStringAsync()
@@ -291,10 +283,9 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<List<GuildRank>> GetGuildRanks(string guildId)
     {
-        return Invoke(GuildWars2ApiPermission.Account | GuildWars2ApiPermission.Guilds,
-                      async () =>
+        return Invoke(async () =>
                       {
-                          using (var response = await CreateRequest($"https://api.guildwars2.com/v2/guild/{guildId}/ranks").ConfigureAwait(false))
+                          using (var response = await CreateRequest($"https://api.guildwars2.com/v2/guild/{guildId}/ranks", GuildWars2ApiPermission.Account | GuildWars2ApiPermission.Guilds).ConfigureAwait(false))
                           {
                               var jsonResult = await response.Content
                                                              .ReadAsStringAsync()
@@ -311,10 +302,9 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<List<long>> GetGuildEmblemForegrounds()
     {
-        return Invoke(GuildWars2ApiPermission.None,
-                      async () =>
+        return Invoke(async () =>
                       {
-                          using (var response = await CreateRequest("https://api.guildwars2.com/v2/emblem/foregrounds").ConfigureAwait(false))
+                          using (var response = await CreateRequest("https://api.guildwars2.com/v2/emblem/foregrounds", GuildWars2ApiPermission.None).ConfigureAwait(false))
                           {
                               var jsonResult = await response.Content
                                                              .ReadAsStringAsync()
@@ -331,10 +321,9 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<List<long>> GetGuildEmblemBackgrounds()
     {
-        return Invoke(GuildWars2ApiPermission.None,
-                      async () =>
+        return Invoke(async () =>
                       {
-                          using (var response = await CreateRequest("https://api.guildwars2.com/v2/emblem/backgrounds").ConfigureAwait(false))
+                          using (var response = await CreateRequest("https://api.guildwars2.com/v2/emblem/backgrounds", GuildWars2ApiPermission.None).ConfigureAwait(false))
                           {
                               var jsonResult = await response.Content
                                                              .ReadAsStringAsync()
@@ -352,10 +341,9 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<GuildEmblemLayerData> GetGuildEmblemBackgroundLayer(long id)
     {
-        return Invoke(GuildWars2ApiPermission.None,
-                      async () =>
+        return Invoke(async () =>
                       {
-                          using (var response = await CreateRequest($"https://api.guildwars2.com/v2/emblem/backgrounds?ids={id}").ConfigureAwait(false))
+                          using (var response = await CreateRequest($"https://api.guildwars2.com/v2/emblem/backgrounds?ids={id}", GuildWars2ApiPermission.None).ConfigureAwait(false))
                           {
                               var jsonResult = await response.Content
                                                              .ReadAsStringAsync()
@@ -374,10 +362,9 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<GuildEmblemLayerData> GetGuildEmblemForegroundLayer(long id)
     {
-        return Invoke(GuildWars2ApiPermission.None,
-                      async () =>
+        return Invoke(async () =>
                       {
-                          using (var response = await CreateRequest($"https://api.guildwars2.com/v2/emblem/foregrounds?ids={id}").ConfigureAwait(false))
+                          using (var response = await CreateRequest($"https://api.guildwars2.com/v2/emblem/foregrounds?ids={id}", GuildWars2ApiPermission.None).ConfigureAwait(false))
                           {
                               var jsonResult = await response.Content
                                                              .ReadAsStringAsync()
@@ -396,10 +383,9 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<List<GuildStash>> GetGuildVault(string guildId)
     {
-        return Invoke(GuildWars2ApiPermission.Guilds,
-                      async () =>
+        return Invoke(async () =>
                       {
-                          using (var response = await CreateRequest($"https://api.guildwars2.com/v2/guild/{guildId}/stash").ConfigureAwait(false))
+                          using (var response = await CreateRequest($"https://api.guildwars2.com/v2/guild/{guildId}/stash", GuildWars2ApiPermission.Guilds).ConfigureAwait(false))
                           {
                               var jsonResult = await response.Content
                                                              .ReadAsStringAsync()
@@ -416,10 +402,9 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<List<int>> GetAllItemIds()
     {
-        return Invoke(GuildWars2ApiPermission.None,
-                      async () =>
+        return Invoke(async () =>
                       {
-                          using (var response = await CreateRequest("https://api.guildwars2.com/v2/items").ConfigureAwait(false))
+                          using (var response = await CreateRequest("https://api.guildwars2.com/v2/items", GuildWars2ApiPermission.None).ConfigureAwait(false))
                           {
                               var jsonResult = await response.Content
                                                              .ReadAsStringAsync()
@@ -437,12 +422,11 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<Item> GetItem(int itemId)
     {
-        return Invoke(GuildWars2ApiPermission.None,
-                      async () =>
+        return Invoke(async () =>
                       {
                           try
                           {
-                              using (var response = await CreateRequest($"https://api.guildwars2.com/v2/items/{itemId}").ConfigureAwait(false))
+                              using (var response = await CreateRequest($"https://api.guildwars2.com/v2/items/{itemId}", GuildWars2ApiPermission.None).ConfigureAwait(false))
                               {
                                   var jsonResult = await response.Content
                                                                  .ReadAsStringAsync()
@@ -465,8 +449,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<List<Item>> GetItems(List<int?> itemIds)
     {
-        return Invoke(GuildWars2ApiPermission.None,
-                      async () =>
+        return Invoke(async () =>
                       {
                           var pageCount = (int)Math.Ceiling(itemIds.Count / 200.0);
 
@@ -478,7 +461,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
 
                               try
                               {
-                                  using (var response = await CreateRequest("https://api.guildwars2.com/v2/items?ids=" + ids).ConfigureAwait(false))
+                                  using (var response = await CreateRequest("https://api.guildwars2.com/v2/items?ids=" + ids, GuildWars2ApiPermission.None).ConfigureAwait(false))
                                   {
                                       var jsonResult = await response.Content
                                                                      .ReadAsStringAsync()
@@ -503,12 +486,11 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<ItemRecipe> GetRecipe(int itemId)
     {
-        return Invoke(GuildWars2ApiPermission.None,
-                      async () =>
+        return Invoke(async () =>
                       {
                           ItemRecipe recipe = null;
 
-                          using (var searchResponse = await CreateRequest("https://api.guildwars2.com/v2/recipes/search?output=" + itemId).ConfigureAwait(false))
+                          using (var searchResponse = await CreateRequest("https://api.guildwars2.com/v2/recipes/search?output=" + itemId, GuildWars2ApiPermission.None).ConfigureAwait(false))
                           {
                               var jsonResult = await searchResponse.Content
                                                                    .ReadAsStringAsync()
@@ -518,7 +500,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
 
                               if (recipeIds?.Count > 0)
                               {
-                                  using (var recipeResponse = await CreateRequest("https://api.guildwars2.com/v2/recipes/" + recipeIds[0]).ConfigureAwait(false))
+                                  using (var recipeResponse = await CreateRequest("https://api.guildwars2.com/v2/recipes/" + recipeIds[0], GuildWars2ApiPermission.None).ConfigureAwait(false))
                                   {
                                       jsonResult = await recipeResponse.Content
                                                                        .ReadAsStringAsync()
@@ -540,8 +522,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<List<Upgrade>> GetUpgrades(List<int?> upgradeIds)
     {
-        return Invoke(GuildWars2ApiPermission.None,
-                      async () =>
+        return Invoke(async () =>
                       {
                           var pageCount = (int)Math.Ceiling(upgradeIds.Count / 200.0);
 
@@ -551,7 +532,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
                           {
                               var ids = string.Join(",", upgradeIds.Skip(i * 200).Take(200).Select(obj => obj.ToString()));
 
-                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/guild/upgrades?ids=" + ids).ConfigureAwait(false))
+                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/guild/upgrades?ids=" + ids, GuildWars2ApiPermission.None).ConfigureAwait(false))
                               {
                                   var jsonResult = await response.Content
                                                                  .ReadAsStringAsync()
@@ -571,10 +552,9 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<List<string>> GetQuaggans()
     {
-        return Invoke(GuildWars2ApiPermission.None,
-                      async () =>
+        return Invoke(async () =>
                       {
-                          using (var response = await CreateRequest("https://api.guildwars2.com/v2/quaggans").ConfigureAwait(false))
+                          using (var response = await CreateRequest("https://api.guildwars2.com/v2/quaggans", GuildWars2ApiPermission.None).ConfigureAwait(false))
                           {
                               var jsonResult = await response.Content
                                                              .ReadAsStringAsync()
@@ -592,10 +572,9 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<QuagganData> GetQuaggan(string name)
     {
-        return Invoke(GuildWars2ApiPermission.None,
-                      async () =>
+        return Invoke(async () =>
                       {
-                          using (var response = await CreateRequest($"https://api.guildwars2.com/v2/quaggans/{name}").ConfigureAwait(false))
+                          using (var response = await CreateRequest($"https://api.guildwars2.com/v2/quaggans/{name}", GuildWars2ApiPermission.None).ConfigureAwait(false))
                           {
                               var jsonResult = await response.Content
                                                              .ReadAsStringAsync()
@@ -612,10 +591,9 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<List<WorldData>> GetWorlds()
     {
-        return Invoke(GuildWars2ApiPermission.None,
-                      async () =>
+        return Invoke(async () =>
                       {
-                          using (var response = await CreateRequest("https://api.guildwars2.com/v2/worlds?ids=all").ConfigureAwait(false))
+                          using (var response = await CreateRequest("https://api.guildwars2.com/v2/worlds?ids=all", GuildWars2ApiPermission.None).ConfigureAwait(false))
                           {
                               var jsonResult = await response.Content
                                                              .ReadAsStringAsync()
@@ -633,8 +611,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<List<TradingPostItemPrice>> GetTradingPostPrices(List<int?> itemIds)
     {
-        return Invoke(GuildWars2ApiPermission.None,
-                      async () =>
+        return Invoke(async () =>
                       {
                           var pageCount = (int)Math.Ceiling(itemIds.Count / 200.0);
 
@@ -646,7 +623,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
 
                               try
                               {
-                                  using (var response = await CreateRequest("https://api.guildwars2.com/v2/commerce/prices?ids=" + ids).ConfigureAwait(false))
+                                  using (var response = await CreateRequest("https://api.guildwars2.com/v2/commerce/prices?ids=" + ids, GuildWars2ApiPermission.None).ConfigureAwait(false))
                                   {
                                       var jsonResult = await response.Content
                                                                      .ReadAsStringAsync()
@@ -670,10 +647,9 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<List<int>> GetAllAchievementIds()
     {
-        return Invoke(GuildWars2ApiPermission.None,
-                      async () =>
+        return Invoke(async () =>
                       {
-                          using (var response = await CreateRequest("https://api.guildwars2.com/v2/achievements").ConfigureAwait(false))
+                          using (var response = await CreateRequest("https://api.guildwars2.com/v2/achievements", GuildWars2ApiPermission.None).ConfigureAwait(false))
                           {
                               var jsonResult = await response.Content
                                                              .ReadAsStringAsync()
@@ -691,8 +667,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<List<Achievement>> GetAchievements(List<int> itemIds)
     {
-        return Invoke(GuildWars2ApiPermission.None,
-                      async () =>
+        return Invoke(async () =>
                       {
                           var pageCount = (int)Math.Ceiling(itemIds.Count / 200.0);
 
@@ -702,7 +677,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
                           {
                               var ids = string.Join(",", itemIds.Skip(i * 200).Take(200).Select(obj => obj.ToString()));
 
-                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/achievements?ids=" + ids).ConfigureAwait(false))
+                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/achievements?ids=" + ids, GuildWars2ApiPermission.None).ConfigureAwait(false))
                               {
                                   var jsonResult = await response.Content
                                                                  .ReadAsStringAsync()
@@ -722,10 +697,9 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<List<AccountAchievement>> GetAccountAchievements()
     {
-        return Invoke(GuildWars2ApiPermission.Account | GuildWars2ApiPermission.Progression,
-                      async () =>
+        return Invoke(async () =>
                       {
-                          using (var response = await CreateRequest("https://api.guildwars2.com/v2/account/achievements").ConfigureAwait(false))
+                          using (var response = await CreateRequest("https://api.guildwars2.com/v2/account/achievements", GuildWars2ApiPermission.Account | GuildWars2ApiPermission.Progression).ConfigureAwait(false))
                           {
                               var jsonResult = await response.Content
                                                              .ReadAsStringAsync()
@@ -742,10 +716,9 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<List<AccountMaterial>> GetAccountMaterials()
     {
-        return Invoke(GuildWars2ApiPermission.Account | GuildWars2ApiPermission.Inventories,
-                      async () =>
+        return Invoke(async () =>
                       {
-                          using (var response = await CreateRequest("https://api.guildwars2.com/v2/account/materials").ConfigureAwait(false))
+                          using (var response = await CreateRequest("https://api.guildwars2.com/v2/account/materials", GuildWars2ApiPermission.Account | GuildWars2ApiPermission.Inventories).ConfigureAwait(false))
                           {
                               var jsonResult = await response.Content
                                                              .ReadAsStringAsync()
@@ -763,10 +736,9 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<List<MaterialCategory>> GetMaterialCategory(IEnumerable<int> ids)
     {
-        return Invoke(GuildWars2ApiPermission.None,
-                      async () =>
+        return Invoke(async () =>
                       {
-                          using (var response = await CreateRequest($"https://api.guildwars2.com/v2/materials?ids={string.Join(',', ids)}").ConfigureAwait(false))
+                          using (var response = await CreateRequest($"https://api.guildwars2.com/v2/materials?ids={string.Join(',', ids)}", GuildWars2ApiPermission.None).ConfigureAwait(false))
                           {
                               var jsonResult = await response.Content
                                                              .ReadAsStringAsync()
@@ -781,30 +753,13 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// Invoke the web api
     /// </summary>
     /// <typeparam name="T">Type</typeparam>
-    /// <param name="permission">Permission</param>
     /// <param name="func">Response</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private static async Task<T> Invoke<T>(GuildWars2ApiPermission permission, Func<Task<T>> func)
+    private static async Task<T> Invoke<T>(Func<Task<T>> func)
     {
         await CheckRateLimit().ConfigureAwait(false);
 
-        try
-        {
-            return await func().ConfigureAwait(false);
-        }
-        catch (HttpRequestException ex) when (ex.StatusCode is HttpStatusCode.Unauthorized
-                                                            or HttpStatusCode.Forbidden
-                                                            or HttpStatusCode.BadRequest)
-        {
-            throw new MissingGuildWars2ApiPermissionException(permission);
-        }
-        catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.TooManyRequests)
-        {
-            await Task.Delay(5000)
-                      .ConfigureAwait(false);
-
-            return await func().ConfigureAwait(false);
-        }
+        return await func().ConfigureAwait(false);
     }
 
     /// <summary>
@@ -839,8 +794,9 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// Create a new request
     /// </summary>
     /// <param name="uri">Uri</param>
+    /// <param name="permissions">Required permissions</param>
     /// <returns>The created request</returns>
-    private async Task<HttpResponseMessage> CreateRequest(string uri)
+    private async Task<HttpResponseMessage> CreateRequest(string uri, GuildWars2ApiPermission permissions)
     {
         HttpResponseMessage response = null;
 
@@ -858,20 +814,73 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
             response = await HttpClient.SendAsync(message)
                                        .ConfigureAwait(false);
 
-            if (response.IsSuccessStatusCode == false)
+            if (response.IsSuccessStatusCode)
             {
-                string content = null;
+                break;
+            }
 
-                try
-                {
-                    content = await response.Content
-                                            .ReadAsStringAsync()
-                                            .ConfigureAwait(false);
-                }
-                catch
-                {
-                }
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.Unauthorized
+                     or HttpStatusCode.Forbidden:
+                    {
+                        throw new MissingGuildWars2ApiPermissionException(permissions);
+                    }
 
+                case HttpStatusCode.NotFound:
+                    {
+                        response.EnsureSuccessStatusCode();
+                    }
+                    break;
+
+                case HttpStatusCode.TooManyRequests
+                     or HttpStatusCode.BadGateway
+                     or HttpStatusCode.GatewayTimeout
+                     or HttpStatusCode.ServiceUnavailable:
+                    {
+                        await CheckRateLimit().ConfigureAwait(false);
+
+                        continue;
+                    }
+            }
+
+            var isTimeOut = false;
+            string content = null;
+
+            try
+            {
+                content = await response.Content
+                                        .ReadAsStringAsync()
+                                        .ConfigureAwait(false);
+
+                var document = JsonDocument.Parse(content);
+
+                if (document.RootElement.TryGetProperty("text", out var textProperty))
+                {
+                    switch (textProperty.GetString())
+                    {
+                        case "ErrTimeout":
+                            {
+                                isTimeOut = true;
+                            }
+                            break;
+
+                        case "invalid key":
+                        case "Invalid access token":
+                        case "account does not have game access":
+                            {
+                                throw new MissingGuildWars2ApiPermissionException(permissions);
+                            }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingService.AddServiceLogEntry(LogEntryLevel.Warning, nameof(GuildWars2ApiConnector), "Failed to get content", null, ex);
+            }
+
+            if (isTimeOut == false)
+            {
                 LoggingService.AddServiceLogEntry(LogEntryLevel.Warning,
                                                   nameof(GuildWars2ApiConnector),
                                                   "Unsuccessful Request",
@@ -884,17 +893,8 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
                                                       response.ReasonPhrase,
                                                       Content = content
                                                   });
-            }
 
-            if (response.StatusCode is HttpStatusCode.GatewayTimeout
-                                    or HttpStatusCode.BadGateway)
-            {
-                await Task.Delay(2000)
-                          .ConfigureAwait(false);
-            }
-            else
-            {
-                break;
+                response.EnsureSuccessStatusCode();
             }
         }
 
