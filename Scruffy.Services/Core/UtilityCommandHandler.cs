@@ -122,7 +122,7 @@ public class UtilityCommandHandler : LocatedServiceBase
 
                         foreach (var innerComponent in actionRow.Components)
                         {
-                            rowBuilder.AddComponent(innerComponent);
+                            rowBuilder.AddComponent(innerComponent.ToBuilder());
                         }
 
                         componentsBuilder.AddRow(rowBuilder);
@@ -134,6 +134,7 @@ public class UtilityCommandHandler : LocatedServiceBase
                 if (actionRowBuilder == null)
                 {
                     actionRowBuilder = new ActionRowBuilder();
+
                     componentsBuilder.AddRow(actionRowBuilder);
                 }
 
