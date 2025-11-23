@@ -36,20 +36,6 @@ public partial class RaidSquadComponent
     /// </summary>
     private List<PlayerRoleDTO> _dpsRoles = [];
 
-    /// <summary>
-    /// Selection
-    /// </summary>
-    private PlayerRoleDTO _selectedTankRole;
-    private PlayerRoleDTO _selectedHealerRole;
-    private PlayerRoleDTO _selectedDpsSupport1;
-    private PlayerRoleDTO _selectedDpsSupport2;
-    private PlayerRoleDTO _selectedDps1;
-    private PlayerRoleDTO _selectedDps2;
-    private PlayerRoleDTO _selectedDps3;
-    private PlayerRoleDTO _selectedDps4;
-    private PlayerRoleDTO _selectedDps5;
-    private PlayerRoleDTO _selectedDps6;
-
     #endregion // Fields
 
     #region Properties
@@ -81,8 +67,8 @@ public partial class RaidSquadComponent
     /// </summary>
     public PlayerRoleDTO SelectedTankRole
     {
-        get => _selectedTankRole;
-        set => SetSelectedRole(ref _selectedTankRole, value);
+        get;
+        set => SetSelectedRole(ref field, value);
     }
 
     /// <summary>
@@ -90,8 +76,8 @@ public partial class RaidSquadComponent
     /// </summary>
     public PlayerRoleDTO SelectedHealerRole
     {
-        get => _selectedHealerRole;
-        set => SetSelectedRole(ref _selectedHealerRole, value);
+        get;
+        set => SetSelectedRole(ref field, value);
     }
 
     /// <summary>
@@ -99,8 +85,8 @@ public partial class RaidSquadComponent
     /// </summary>
     public PlayerRoleDTO SelectedDpsSupport1
     {
-        get => _selectedDpsSupport1;
-        set => SetSelectedRole(ref _selectedDpsSupport1, value);
+        get;
+        set => SetSelectedRole(ref field, value);
     }
 
     /// <summary>
@@ -108,8 +94,8 @@ public partial class RaidSquadComponent
     /// </summary>
     public PlayerRoleDTO SelectedDpsSupport2
     {
-        get => _selectedDpsSupport2;
-        set => SetSelectedRole(ref _selectedDpsSupport2, value);
+        get;
+        set => SetSelectedRole(ref field, value);
     }
 
     /// <summary>
@@ -117,8 +103,8 @@ public partial class RaidSquadComponent
     /// </summary>
     public PlayerRoleDTO SelectedDps1
     {
-        get => _selectedDps1;
-        set => SetSelectedRole(ref _selectedDps1, value);
+        get;
+        set => SetSelectedRole(ref field, value);
     }
 
     /// <summary>
@@ -126,8 +112,8 @@ public partial class RaidSquadComponent
     /// </summary>
     public PlayerRoleDTO SelectedDps2
     {
-        get => _selectedDps2;
-        set => SetSelectedRole(ref _selectedDps2, value);
+        get;
+        set => SetSelectedRole(ref field, value);
     }
 
     /// <summary>
@@ -135,8 +121,8 @@ public partial class RaidSquadComponent
     /// </summary>
     public PlayerRoleDTO SelectedDps3
     {
-        get => _selectedDps3;
-        set => SetSelectedRole(ref _selectedDps3, value);
+        get;
+        set => SetSelectedRole(ref field, value);
     }
 
     /// <summary>
@@ -144,8 +130,8 @@ public partial class RaidSquadComponent
     /// </summary>
     public PlayerRoleDTO SelectedDps4
     {
-        get => _selectedDps4;
-        set => SetSelectedRole(ref _selectedDps4, value);
+        get;
+        set => SetSelectedRole(ref field, value);
     }
 
     /// <summary>
@@ -153,8 +139,8 @@ public partial class RaidSquadComponent
     /// </summary>
     public PlayerRoleDTO SelectedDps5
     {
-        get => _selectedDps5;
-        set => SetSelectedRole(ref _selectedDps5, value);
+        get;
+        set => SetSelectedRole(ref field, value);
     }
 
     /// <summary>
@@ -162,8 +148,8 @@ public partial class RaidSquadComponent
     /// </summary>
     public PlayerRoleDTO SelectedDps6
     {
-        get => _selectedDps6;
-        set => SetSelectedRole(ref _selectedDps6, value);
+        get;
+        set => SetSelectedRole(ref field, value);
     }
 
     /// <summary>
@@ -221,17 +207,11 @@ public partial class RaidSquadComponent
     /// <param name="value">Value</param>
     private void SetSelectedRole(ref PlayerRoleDTO field, PlayerRoleDTO value)
     {
-        if (field != null)
-        {
-            field.Player.IsAssigned = false;
-        }
+        field?.Player.IsAssigned = false;
 
         field = value;
 
-        if (field != null)
-        {
-            field.Player.IsAssigned = true;
-        }
+        field?.Player.IsAssigned = true;
 
         AssignmentChanged.InvokeAsync();
     }

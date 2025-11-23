@@ -12,15 +12,6 @@ namespace Scruffy.Services.Discord;
 /// </summary>
 public class LocatedInteractionModuleBase : InteractionModuleBase<InteractionContextContainer>
 {
-    #region Fields
-
-    /// <summary>
-    /// Localization group
-    /// </summary>
-    private LocalizationGroup _localizationGroup;
-
-    #endregion // Fields
-
     #region Properties
 
     /// <summary>
@@ -41,7 +32,7 @@ public class LocatedInteractionModuleBase : InteractionModuleBase<InteractionCon
     /// <summary>
     /// Localization group
     /// </summary>
-    public LocalizationGroup LocalizationGroup => _localizationGroup ??= LocalizationService.GetGroup(GetType().Name);
+    public LocalizationGroup LocalizationGroup => field ??= LocalizationService.GetGroup(GetType().Name);
 
     #endregion // Properties
 

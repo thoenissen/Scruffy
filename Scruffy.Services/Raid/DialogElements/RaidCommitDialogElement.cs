@@ -165,10 +165,7 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
                                                  var user = _commitData.Users
                                                                        .FirstOrDefault(obj => obj.DiscordUserId == data.User.Id);
 
-                                                 if (user != null)
-                                                 {
-                                                     user.Points = data.Points;
-                                                 }
+                                                 user?.Points = data.Points;
 
                                                  return true;
                                              }

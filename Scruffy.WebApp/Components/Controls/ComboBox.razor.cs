@@ -19,14 +19,21 @@ public partial class ComboBox<TItem>
     /// <summary>
     /// Selected index
     /// </summary>
-    private int _selectedIndex = -1;
-
-    /// <summary>
-    /// Selected item
-    /// </summary>
-    private TItem _selectedItem;
+    private int _selectedIndex;
 
     #endregion // Fields
+
+    #region Constructor
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public ComboBox()
+    {
+        _selectedIndex = -1;
+    }
+
+    #endregion // Constructor
 
     #region Properties
 
@@ -44,10 +51,10 @@ public partial class ComboBox<TItem>
     [Parameter]
     public TItem SelectedItem
     {
-        get => _selectedItem;
+        get;
         set
         {
-            _selectedItem = value;
+            field = value;
 
             SetSelectedIndex(value);
         }

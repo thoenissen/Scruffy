@@ -11,15 +11,6 @@ namespace Scruffy.Data.Json.DpsReport;
 /// </summary>
 public class Upload
 {
-    #region Fields
-
-    /// <summary>
-    /// Fight name
-    /// </summary>
-    private string _fightName;
-
-    #endregion // Fields
-
     #region Properties
 
     /// <summary>
@@ -83,8 +74,8 @@ public class Upload
     /// </summary>
     public string FightName
     {
-        get => _fightName ?? Encounter?.Boss;
-        set => _fightName = value;
+        get => field ?? Encounter?.Boss;
+        set;
     }
 
     /// <summary>

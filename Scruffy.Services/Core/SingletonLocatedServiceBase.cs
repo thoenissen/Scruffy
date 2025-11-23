@@ -16,11 +16,6 @@ public class SingletonLocatedServiceBase
     /// </summary>
     private LocalizationService _localizationService;
 
-    /// <summary>
-    /// Localization group
-    /// </summary>
-    private LocalizationGroup _localizationGroup;
-
     #endregion // Fields
 
     #region Properties
@@ -28,7 +23,7 @@ public class SingletonLocatedServiceBase
     /// <summary>
     /// Localization group
     /// </summary>
-    public LocalizationGroup LocalizationGroup => _localizationGroup ??= _localizationService.GetGroup(GetType().Name);
+    public LocalizationGroup LocalizationGroup => field ??= _localizationService.GetGroup(GetType().Name);
 
     #endregion // Properties
 

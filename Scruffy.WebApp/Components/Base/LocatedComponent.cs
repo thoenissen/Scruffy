@@ -9,15 +9,6 @@ namespace Scruffy.WebApp.Components.Base;
 /// </summary>
 public class LocatedComponent : ComponentBase
 {
-    #region Fields
-
-    /// <summary>
-    /// Localization group
-    /// </summary>
-    private LocalizationGroup _localizationGroup;
-
-    #endregion // Fields
-
     #region Properties
 
     /// <summary>
@@ -29,7 +20,7 @@ public class LocatedComponent : ComponentBase
     /// <summary>
     /// Localization group
     /// </summary>
-    protected LocalizationGroup LocalizationGroup => _localizationGroup ??= LocalizationService?.GetGroup(GetType().Name);
+    protected LocalizationGroup LocalizationGroup => field ??= LocalizationService?.GetGroup(GetType().Name);
 
     #endregion // Properties
 }
