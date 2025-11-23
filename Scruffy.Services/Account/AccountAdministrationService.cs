@@ -55,7 +55,8 @@ public class AccountAdministrationService : LocatedServiceBase
                                     .Select(obj => new
                                                    {
                                                        obj.Name,
-                                                       obj.ApiKey
+                                                       obj.ApiKey,
+                                                       obj.Permissions
                                                    })
                                     .ToList();
 
@@ -70,12 +71,14 @@ public class AccountAdministrationService : LocatedServiceBase
                         var tokenInformation = await connector.GetTokenInformationAsync()
                                                               .ConfigureAwait(false);
 
+                        var permissions = GuildWars2ApiDataConverter.ToPermission(tokenInformation?.Permissions);
+
                         if (tokenInformation?.Permissions == null
                             || tokenInformation.Permissions.Contains(TokenInformation.Permission.Account) == false
                             || tokenInformation.Permissions.Contains(TokenInformation.Permission.Characters) == false
                             || tokenInformation.Permissions.Contains(TokenInformation.Permission.Progression) == false)
                         {
-                            invalidPermissions.Add((account.Name, GuildWars2ApiDataConverter.ToPermission(tokenInformation?.Permissions)));
+                            invalidPermissions.Add((account.Name, permissions));
                         }
                         else
                         {
@@ -86,6 +89,13 @@ public class AccountAdministrationService : LocatedServiceBase
                             {
                                 invalidNames.Add((account.Name, accountInformation.Name));
                             }
+                        }
+
+                        if (account.Permissions != permissions)
+                        {
+                            dbFactory.GetRepository<GuildWarsAccountRepository>()
+                                     .Refresh(obj => obj.Name == account.Name,
+                                              obj => obj.Permissions = permissions);
                         }
                     }
                     catch (MissingGuildWars2ApiPermissionException)
@@ -111,10 +121,6 @@ public class AccountAdministrationService : LocatedServiceBase
 
                     foreach (var (name, permissions) in invalidPermissions)
                     {
-                        dbFactory.GetRepository<GuildWarsAccountRepository>()
-                                 .Refresh(obj => obj.Name == name,
-                                          obj => obj.Permissions = permissions);
-
                         sb.Append(name);
                         sb.Append(" (");
                         sb.Append(permissions);
