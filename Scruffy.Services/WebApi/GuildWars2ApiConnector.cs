@@ -874,6 +874,10 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
                     }
                 }
             }
+            catch (MissingGuildWars2ApiPermissionException)
+            {
+                throw;
+            }
             catch (Exception ex)
             {
                 LoggingService.AddServiceLogEntry(LogEntryLevel.Warning, nameof(GuildWars2ApiConnector), "Failed to get content", null, ex);
