@@ -86,6 +86,15 @@ public static class GuildWars2Helper
                    70 => "Mechanist",
                    71 => "Specter",
                    72 => "Untamed",
+                   73 => "Troubadour",
+                   74 => "Paragon",
+                   75 => "Amalgam",
+                   76 => "Ritualist",
+                   77 => "Antiquary",
+                   78 => "Galeshot",
+                   79 => "Conduit",
+                   80 => "Evoker",
+                   81 => "Luminary",
                    _ => null
                };
     }
@@ -171,6 +180,15 @@ public static class GuildWars2Helper
                    70 => "<:mechanist:1375747285085847572>",
                    71 => "<:specter:1375747429802180638>",
                    72 => "<:untamed:1375747479072673852>",
+                   73 => "<:troubadour:1457780509416362213>",
+                   74 => "<:paragon:1457780505847140558>",
+                   75 => "<:amalgam:1457780490756030546>",
+                   76 => "<:ritualist:1457780507277398158>",
+                   77 => "<:antiquary:1457780492651860218>",
+                   78 => "<:galeshot:1457780496946827285>",
+                   79 => "<:conduit:1457780493968998474>",
+                   80 => "<:evoker:1457780495193477160>",
+                   81 => "<:luminary:1457780504840503347>",
                    _ => ":grey_question:"
                };
     }

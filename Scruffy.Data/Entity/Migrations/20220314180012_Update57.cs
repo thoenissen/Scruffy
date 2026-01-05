@@ -83,7 +83,10 @@ namespace Scruffy.Data.Entity.Migrations
                                                        INNER JOIN [GuildWarsAccounts] AS [Account]
                                                                ON [Account].[Name] = [UserLogEntry].[User]
                                                             WHERE [UserLogEntry].[Time] > @from
-                                                              AND [UserLogEntry].[Time] < @to )
+                                                              AND [UserLogEntry].[Time] < @to 
+                      	                                      AND [UserDonation].[GuildId] = @guildId
+                      	                                      AND [UserLogEntry].[GuildId] = @guildId
+                      	                                      AND ( ( DATEDIFF ( DAY, [UserLogEntry].[Time], @to ) / 7) + 1 ) = [Week] )
                                                        / 5 AS [Value]
                                                 FROM ( SELECT ( DATEDIFF ( DAY, [LogEntry].[Time], @to ) / 7) + 1  AS [Week],
                                                               [Donation].[Value]
