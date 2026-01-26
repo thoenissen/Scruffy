@@ -53,6 +53,11 @@ public class GuildEntity
     /// </summary>
     public ulong? PrivilegedMemberRoleId { get; set; }
 
+    /// <summary>
+    /// Role of the ranking leader
+    /// </summary>
+    public ulong? RankingLeaderRoleId { get; set; }
+
     #region Navigation - Properties
 
     /// <summary>
