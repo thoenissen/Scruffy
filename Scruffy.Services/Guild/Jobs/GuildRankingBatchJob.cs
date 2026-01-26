@@ -29,6 +29,7 @@ public class GuildRankingBatchJob : BatchJob
                    typeof(GuildDonationCalculationJob),
                    typeof(GuildRankCurrentPointsJob),
                    typeof(GuildRankAssignmentJob),
+                   typeof(GuildRankingLeaderRoleAssignmentJob),
                    typeof(GuildRankChangeNotificationJob),
                    typeof(GuildSpecialRankPointsJob),
                    typeof(GuildVisualizationRefreshJob),
