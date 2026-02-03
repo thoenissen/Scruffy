@@ -135,18 +135,35 @@ public class AccountCommandHandler : LocatedServiceBase
                         var user = await _userManagementService.GetUserByDiscordAccountId(context.User)
                                                                .ConfigureAwait(false);
 
+                        var isNewAccount = false;
+
                         if (dbFactory.GetRepository<AccountRepository>()
                                      .AddOrRefresh(obj => obj.UserId == user.Id
                                                        && obj.Name == accountInformation.Name,
                                                    obj =>
                                                    {
+                                                       isNewAccount = obj.UserId == 0;
+
                                                        obj.UserId = user.Id;
                                                        obj.Name = accountInformation.Name;
                                                        obj.ApiKey = apiKey;
                                                        obj.Permissions = GuildWars2ApiDataConverter.ToPermission(tokenInformation.Permissions);
                                                    }))
                         {
-                            await AccountOverview(context).ConfigureAwait(false);
+                            if (isNewAccount)
+                            {
+                                await context.ReplyAsync(LocalizationGroup.GetFormattedText("AccountAdded", "The account _{0}_ has been added or refreshed successfully.", accountInformation.Name))
+                                             .ConfigureAwait(false);
+                            }
+                            else
+                            {
+                                await context.ReplyAsync(LocalizationGroup.GetFormattedText("AccountRefreshed", "The account _{0}_ has been refreshed successfully.", accountInformation.Name))
+                                             .ConfigureAwait(false);
+                            }
+                        }
+                        else
+                        {
+                            throw dbFactory.LastError;
                         }
                     }
                 }
