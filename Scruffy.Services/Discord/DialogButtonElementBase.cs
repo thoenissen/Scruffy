@@ -71,30 +71,44 @@ public abstract class DialogButtonElementBase<TData> : DialogElementBase<TData>
 
             DialogContext.Messages.Add(message);
 
-            components.StartTimeout();
-
-            var (component, identification) = await components.Task
-                                                              .ConfigureAwait(false);
-
-            await component.DeferAsync()
-                           .ConfigureAwait(false);
-
-            var disabledComponentBuilder = new ComponentBuilder();
-
-            foreach (var buttonComponent in componentsBuilder.ActionRows.SelectMany(obj => obj.Components).OfType<ButtonComponent>())
+            async Task DisableComponents()
             {
-                disabledComponentBuilder.WithButton(buttonComponent.ToBuilder().WithDisabled(true));
+                var disabledComponentBuilder = new ComponentBuilder();
+
+                foreach (var buttonComponent in componentsBuilder.ActionRows.SelectMany(obj => obj.Components).OfType<ButtonBuilder>())
+                {
+                    disabledComponentBuilder.WithButton(buttonComponent.WithDisabled(true));
+                }
+
+                await message.ModifyAsync(obj => obj.Components = disabledComponentBuilder.Build())
+                             .ConfigureAwait(false);
             }
 
-            await message.ModifyAsync(obj => obj.Components = disabledComponentBuilder.Build())
-                         .ConfigureAwait(false);
+            components.StartTimeout();
 
-            var executedButton = buttons?.Take(identification).LastOrDefault();
+            try
+            {
+                var (component, identification) = await components.Task
+                                                                  .ConfigureAwait(false);
 
-            return executedButton != null
-                       ? await executedButton.Func()
-                                             .ConfigureAwait(false)
-                       : DefaultFunc();
+                await component.DeferAsync()
+                               .ConfigureAwait(false);
+
+                await DisableComponents().ConfigureAwait(false);
+
+                var executedButton = buttons?.Take(identification).LastOrDefault();
+
+                return executedButton != null
+                           ? await executedButton.Func()
+                                                 .ConfigureAwait(false)
+                           : DefaultFunc();
+            }
+            catch
+            {
+                await DisableComponents().ConfigureAwait(false);
+
+                throw;
+            }
         }
     }
 

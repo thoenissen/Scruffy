@@ -88,17 +88,16 @@ public abstract class DialogEmbedSelectMenuElementBase<TData> : InteractionDialo
             {
                 var disabledComponentBuilder = new ComponentBuilder();
 
-                foreach (var selectMenuComponent in componentsBuilder.ActionRows.SelectMany(obj => obj.Components).OfType<SelectMenuComponent>())
+                foreach (var selectMenuComponent in componentsBuilder.ActionRows.SelectMany(obj => obj.Components).OfType<SelectMenuBuilder>())
                 {
-                    disabledComponentBuilder.WithSelectMenu(selectMenuComponent.ToBuilder()
-                                                                               .WithOptions(selectMenuComponent.Options
+                    disabledComponentBuilder.WithSelectMenu(selectMenuComponent.WithOptions(selectMenuComponent.Options
                                                                                                                .Where(obj => selectedValue == null
                                                                                                                           || obj.Value == selectedValue)
                                                                                                                .Select(obj => new SelectMenuOptionBuilder().WithLabel(obj.Label)
                                                                                                                                                            .WithValue(obj.Value)
                                                                                                                                                            .WithEmote(obj.Emote)
                                                                                                                                                            .WithDefault(obj.Value == selectedValue
-                                                                                                                                                                     && selectedValue != null))
+                                                                                                                                                                                     && selectedValue != null))
                                                                                                                .ToList())
                                                                                .WithDisabled(true));
                 }
