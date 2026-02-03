@@ -21,7 +21,9 @@ public class TemporaryMessageComponentCommandModule : LocatedInteractionModuleBa
     {
         if (((IInteractionContext)Context).Interaction is SocketMessageComponent component)
         {
-            Context.Interactivity.CheckButtonComponent(identification, component);
+            await Context.Interactivity
+                         .CheckButtonComponent(identification, component)
+                         .ConfigureAwait(false);
         }
         else
         {
@@ -41,7 +43,9 @@ public class TemporaryMessageComponentCommandModule : LocatedInteractionModuleBa
     {
         if (((IInteractionContext)Context).Interaction is SocketMessageComponent component)
         {
-            Context.Interactivity.CheckSelectMenuComponent(identification, component);
+            await Context.Interactivity
+                         .CheckSelectMenuComponent(identification, component)
+                         .ConfigureAwait(false);
         }
         else
         {

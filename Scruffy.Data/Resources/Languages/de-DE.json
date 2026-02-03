@@ -661,6 +661,9 @@
       "InteractionService": {
          "DialogNotAssigned": "Du kannst nur mit Dialogen interagieren, die dir zugeordnet sind."
       },
+    "InteractivityService": {
+      "CommandNotActive": "Dieser Befehl ist nicht mehr verfügbar. Bitte starten Sie den ursprünglichen Befehl neu."
+    },
       "ItemsService": {
          "InvalidItem": "Es konnte kein Gegenstand mit der angegebenen ID gefunden werden.",
          "ValueAssigned": "Der Wert wurde zugewiesen."

@@ -181,17 +181,32 @@ public sealed class InteractivityService : SingletonLocatedServiceBase, IDisposa
     /// </summary>
     /// <param name="identification">Identification</param>
     /// <param name="component">Component</param>
-    internal void CheckButtonComponent(string identification, SocketMessageComponent component)
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    internal async Task CheckButtonComponent(string identification, SocketMessageComponent component)
     {
+        var isProcessed = false;
+
         lock (_componentContainers)
         {
             foreach (var container in _componentContainers)
             {
                 if (container.CheckButtonComponent(identification, component))
                 {
+                    isProcessed = true;
+
                     break;
                 }
             }
+        }
+
+        if (isProcessed == false)
+        {
+            await component.RespondAsync(LocalizationGroup.GetText("CommandNotActive", "This command is no longer available. Please restart the original command."))
+                           .ConfigureAwait(false);
+
+            await component.Message
+                           .ModifyAsync(obj => obj.Components = new ComponentBuilder().Build())
+                           .ConfigureAwait(false);
         }
     }
 
@@ -200,17 +215,32 @@ public sealed class InteractivityService : SingletonLocatedServiceBase, IDisposa
     /// </summary>
     /// <param name="identification">Identification</param>
     /// <param name="component">Component</param>
-    internal void CheckSelectMenuComponent(string identification, SocketMessageComponent component)
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    internal async Task CheckSelectMenuComponent(string identification, SocketMessageComponent component)
     {
+        var isProcessed = false;
+
         lock (_componentContainers)
         {
             foreach (var container in _componentContainers)
             {
                 if (container.CheckSelectMenuComponent(identification, component))
                 {
+                    isProcessed = true;
+
                     break;
                 }
             }
+        }
+
+        if (isProcessed == false)
+        {
+            await component.RespondAsync(LocalizationGroup.GetText("CommandNotActive", "This command is no longer available. Please restart the original command."))
+                           .ConfigureAwait(false);
+
+            await component.Message
+                           .ModifyAsync(obj => obj.Components = new ComponentBuilder().Build())
+                           .ConfigureAwait(false);
         }
     }
 
