@@ -1,4 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Net.Http;
+
+using Minio;
+using Minio.DataModel.Args;
+using Minio.Exceptions;
 
 using Newtonsoft.Json;
 
@@ -21,6 +27,11 @@ public class DpsReportConnector
     /// </summary>
     private readonly IHttpClientFactory _clientFactory;
 
+    /// <summary>
+    /// Minio client factory to create clients for Minio operations
+    /// </summary>
+    private readonly IMinioClientFactory _minioClientFactory;
+
     #endregion // Fields
 
     #region Constructor
@@ -29,9 +40,11 @@ public class DpsReportConnector
     /// Constructor
     /// </summary>
     /// <param name="clientFactory">Client factory</param>
-    public DpsReportConnector(IHttpClientFactory clientFactory)
+    /// <param name="minioClientFactory">Minio factory</param>
+    public DpsReportConnector(IHttpClientFactory clientFactory, IMinioClientFactory minioClientFactory)
     {
         _clientFactory = clientFactory;
+        _minioClientFactory = minioClientFactory;
     }
 
     #endregion // Constructor
@@ -83,7 +96,9 @@ public class DpsReportConnector
                 while (pageTasks.Count != 0)
                 {
                     var finishedTask = await Task.WhenAny(pageTasks).ConfigureAwait(false);
+
                     pageTasks.Remove(finishedTask);
+
                     var page = finishedTask.Result;
 
                     if (page.Uploads != null)
@@ -103,6 +118,7 @@ public class DpsReportConnector
                 do
                 {
                     await nextPage.ConfigureAwait(false);
+
                     page = nextPage.Result;
 
                     nextPage = GetUploads(token, currentPage, startTime, endTime);
@@ -132,6 +148,7 @@ public class DpsReportConnector
             while (uploadTasks.Count != 0)
             {
                 var finishedTask = await Task.WhenAny(uploadTasks).ConfigureAwait(false);
+
                 uploadTasks.Remove(finishedTask);
 
                 if (finishedTask.Result != null)
@@ -199,71 +216,76 @@ public class DpsReportConnector
     /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
     private async Task<Upload> CheckUpload(Upload upload, bool skipEnhancement)
     {
+        var isUploadComplete = true;
+
         // HACK
         // Sometimes the API doesn't report all players, so we have to load the full report for correct data
         // We also need to get the fight name to differentiate the different Ai phases.
-        if (skipEnhancement == false &&
-            (upload.Players.Count != upload.Encounter.NumberOfPlayers || upload.Encounter.BossId == 23254))
+        if (skipEnhancement == false
+            && (upload.Players.Count != upload.Encounter.NumberOfPlayers
+                || upload.Encounter.BossId == 23254))
         {
-            await UpdateUploadData(upload).ConfigureAwait(false);
+            isUploadComplete = await UpdateUploadData(upload).ConfigureAwait(false);
         }
 
-        return skipEnhancement || upload.Players.Count > 0 ? upload : null;
+        return isUploadComplete
+                   ? upload
+                   : null;
     }
 
     /// <summary>
     /// Refresh the player data from the specific upload
     /// </summary>
     /// <param name="upload">Upload to be refreshed</param>
-    /// <returns>The enriched upload</returns>
-    private async Task UpdateUploadData(Upload upload)
+    /// <returns>Could the data be updated?</returns>
+    private async Task<bool> UpdateUploadData(Upload upload)
     {
-        if (upload.Encounter.JsonAvailable)
+        if (upload.Encounter.JsonAvailable == false)
         {
-            var log = await GetLog(upload.Id).ConfigureAwait(false);
+            return false;
+        }
 
-            upload.FightName = log.FightName;
-            upload.Players = [];
+        var log = await GetLog(upload.Id).ConfigureAwait(false);
 
-            foreach (var player in log.Players)
+        if (log == null)
+        {
+            return false;
+        }
+
+        upload.FightName = log.FightName;
+        upload.Players = [];
+
+        foreach (var player in log.Players)
+        {
+            if (upload.Players.TryAdd(player.DisplayName, player) == false)
             {
-                if (upload.Players.TryAdd(player.DisplayName, player) == false)
-                {
-                    upload.Players.Add($"Unknown ({Guid.NewGuid()})", player);
+                upload.Players.Add($"Unknown ({Guid.NewGuid()})", player);
 
-                    LoggingService.AddServiceLogEntry(LogEntryLevel.Error,
-                                                      nameof(DpsReportConnector),
-                                                      "Duplicate player display name",
-                                                      null,
-                                                      new
-                                                      {
-                                                          player.DisplayName,
-                                                          upload.Id,
-                                                          upload.Permalink,
-                                                      });
-                }
+                LoggingService.AddServiceLogEntry(LogEntryLevel.Error,
+                                                  nameof(DpsReportConnector),
+                                                  "Duplicate player display name",
+                                                  null,
+                                                  new
+                                                  {
+                                                      player.DisplayName,
+                                                      upload.Id,
+                                                      upload.Permalink,
+                                                  });
             }
         }
+
+        return true;
     }
 
     /// <summary>
     /// Requests the log for the given upload id
     /// </summary>
-    /// <param name="id">The Id of the upload</param>
+    /// <param name="id">The ID of the upload</param>
     /// <returns>The log for the given id</returns>
     public async Task<Log> GetLog(string id)
     {
-        var client = _clientFactory.CreateClient();
-
-        using (var response = await client.GetAsync($"https://dps.report/getJson?id={id}")
-                                         .ConfigureAwait(false))
-        {
-            var jsonResult = await response.Content
-                                           .ReadAsStringAsync()
-                                           .ConfigureAwait(false);
-
-            return JsonConvert.DeserializeObject<Log>(jsonResult);
-        }
+        return await TryGetLogFromCache(id).ConfigureAwait(false)
+               ?? await GetLogFromDpsReport(id).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -520,6 +542,114 @@ public class DpsReportConnector
                               };
 
         return iconId;
+    }
+
+    /// <summary>
+    /// Tries to get the log for the cache
+    /// </summary>
+    /// <param name="id">The ID of the upload</param>
+    /// <returns>The log for the given id</returns>
+    [SuppressMessage("ReSharper", "AccessToDisposedClosure", Justification = "Object is not disposed when being used.")]
+    private async Task<Log> TryGetLogFromCache(string id)
+    {
+        Log log = null;
+
+        try
+        {
+            using (var minioClient = _minioClientFactory.CreateClient())
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    var e = new GetObjectArgs().WithBucket("dps.report")
+                                               .WithObject($"{id}.json")
+                                               .WithCallbackStream(objectStream => objectStream.CopyTo(memoryStream));
+
+                    await minioClient.GetObjectAsync(e).ConfigureAwait(false);
+
+                    memoryStream.Position = 0;
+
+                    using (var reader = new StreamReader(memoryStream))
+                    {
+                        var logContent = await reader.ReadToEndAsync().ConfigureAwait(false);
+
+                        log = JsonConvert.DeserializeObject<Log>(logContent);
+                    }
+                }
+            }
+        }
+        catch (ObjectNotFoundException)
+        {
+        }
+        catch (Exception ex)
+        {
+            LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(DpsReportConnector), $"An error occurred while trying to get the detailed DPS report from cache for ID {id}.", null, ex);
+        }
+
+        return log;
+    }
+
+    /// <summary>
+    /// Request log from dps.report
+    /// </summary>
+    /// <param name="id">The ID of the upload</param>
+    /// <returns>The log for the given id</returns>
+    private async Task<Log> GetLogFromDpsReport(string id)
+    {
+        using (var client = _clientFactory.CreateClient())
+        {
+            try
+            {
+                using (var response = await client.GetAsync($"https://dps.report/getJson?id={id}")
+                           .ConfigureAwait(false))
+                {
+                    var jsonResult = await response.Content
+                        .ReadAsStringAsync()
+                        .ConfigureAwait(false);
+
+                    await UploadToCache(jsonResult, id).ConfigureAwait(false);
+
+                    return JsonConvert.DeserializeObject<Log>(jsonResult);
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(DpsReportConnector), $"An error occurred while trying to download the detailed DPS report for ID {id}.", null, ex);
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Uploads the detailed DPS report to the cache
+    /// </summary>
+    /// <param name="content">Content</param>
+    /// <param name="id">ID</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    private async Task UploadToCache(string content, string id)
+    {
+        try
+        {
+            using (var minioClient = _minioClientFactory.CreateClient())
+            {
+                var data = Encoding.UTF8.GetBytes(content);
+
+                using (var memoryStream = new MemoryStream(data))
+                {
+                    var e = new PutObjectArgs().WithBucket("dps.report")
+                                               .WithObject($"{id}.json")
+                                               .WithStreamData(memoryStream)
+                                               .WithObjectSize(data.Length)
+                                               .WithContentType("application/json");
+
+                    await minioClient.PutObjectAsync(e).ConfigureAwait(false);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(DpsReportConnector), $"An error occurred while trying to upload the detailed DPS report to cache for ID {id}.", null, ex);
+        }
     }
 
     #endregion // Methods

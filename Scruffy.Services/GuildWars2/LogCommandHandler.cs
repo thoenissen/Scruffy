@@ -696,19 +696,19 @@ public class LogCommandHandler : LocatedServiceBase
                         await writer.WriteLineAsync(upload.Permalink).ConfigureAwait(false);
                     }
 
+                    await writer.FlushAsync().ConfigureAwait(false);
+
                     if (memoryStream.Length > 0)
                     {
-                        await writer.FlushAsync().ConfigureAwait(false);
-
                         memoryStream.Position = 0;
 
                         await context.ReplyAsync(attachments: [new FileAttachment(memoryStream, "logs.txt")])
-                            .ConfigureAwait(false);
+                                     .ConfigureAwait(false);
                     }
                     else
                     {
                         await context.ReplyAsync(LocalizationGroup.GetText("NoDpsReportUploads", "No DPS-Reports found!"))
-                            .ConfigureAwait(false);
+                                     .ConfigureAwait(false);
                     }
                 }
             }
@@ -1039,8 +1039,8 @@ public class LogCommandHandler : LocatedServiceBase
     private async Task<List<Tuple<Upload, double?>>> LoadRemainingHealths(List<Upload> uploads, Func<Upload, bool> shouldSkip)
     {
         var logs = uploads.Where(upload => shouldSkip(upload) == false
-                                        && upload.Encounter.Success == false
-                                        && upload.Encounter.JsonAvailable)
+                                           && upload.Encounter.Success == false
+                                           && upload.Encounter.JsonAvailable)
                           .ToDictionary(upload => upload.Id, upload => _dpsReportConnector.GetLog(upload.Id));
 
         var result = new List<Tuple<Upload, double?>>();
@@ -1054,7 +1054,7 @@ public class LogCommandHandler : LocatedServiceBase
                 {
                     var log = await logs[upload.Id].ConfigureAwait(false);
 
-                    result.Add(new Tuple<Upload, double?>(upload, log.RemainingTotalHealth));
+                    result.Add(new Tuple<Upload, double?>(upload, log?.RemainingTotalHealth));
                 }
                 else
                 {
@@ -1196,12 +1196,12 @@ public class LogCommandHandler : LocatedServiceBase
     {
         // Optionally filter all uploads
         var filteredUploads = uploads.Count > 0
-                           && summarize
-                           && uploads.Any(obj => obj.Item1.Encounter.Success) == false
-                                  ? uploads.OrderBy(obj => obj.Item2).Take(3)
-                                           .OrderByDescending(obj => obj.Item2)
-                                           .ToList()
-                                  : uploads;
+                              && summarize
+                              && uploads.Any(obj => obj.Item1.Encounter.Success) == false
+                                     ? uploads.OrderBy(obj => obj.Item2).Take(3)
+                                              .OrderByDescending(obj => obj.Item2)
+                                              .ToList()
+                                     : uploads;
 
         foreach (var (upload, remainingHealth) in filteredUploads)
         {

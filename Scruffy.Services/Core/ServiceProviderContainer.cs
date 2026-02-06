@@ -4,6 +4,8 @@ using System.Reflection;
 
 using Microsoft.Extensions.DependencyInjection;
 
+using Minio;
+
 using Scruffy.Data.Entity;
 using Scruffy.Services.Core.JobScheduler;
 using Scruffy.Services.CoreData;
@@ -131,6 +133,15 @@ public sealed class ServiceProviderContainer : IAsyncDisposable
                                                                     });
         _serviceCollection.AddHttpClient("GW2Wiki",
                                          obj => obj.DefaultRequestHeaders.Add("User-Agent", "Scruffy"));
+
+        _serviceCollection.AddMinio(options =>
+                                    {
+                                        options.WithEndpoint(Environment.GetEnvironmentVariable("SCRUFFY_MINIO_ENDPOINT"));
+                                        options.WithCredentials(Environment.GetEnvironmentVariable("SCRUFFY_MINIO_ACCESS_KEY")!,
+                                                                Environment.GetEnvironmentVariable("SCRUFFY_MINIO_SECRET_KEY")!)
+                                               .WithSSL(false)
+                                               .WithRegion(Environment.GetEnvironmentVariable("SCRUFFY_MINIO_REGION"));
+                                    });
 
         onInitialize?.Invoke(_serviceCollection);
 
