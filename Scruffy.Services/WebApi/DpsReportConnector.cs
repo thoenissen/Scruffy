@@ -52,6 +52,28 @@ public class DpsReportConnector
     #region Methods
 
     /// <summary>
+    /// Get upload per page
+    /// </summary>
+    /// <param name="userToken">User token</param>
+    /// <param name="page">Page</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public async Task<Page> GetUploads(string userToken, int page)
+    {
+        using (var client = _clientFactory.CreateClient())
+        {
+            using (var response = await client.GetAsync($"https://dps.report/getUploads?userToken={userToken}&page={page}")
+                                              .ConfigureAwait(false))
+            {
+                var jsonResult = await response.Content
+                                               .ReadAsStringAsync()
+                                               .ConfigureAwait(false);
+
+                return JsonConvert.DeserializeObject<Page>(jsonResult);
+            }
+        }
+    }
+
+    /// <summary>
     /// Requests a filtered list of DPS reports
     /// </summary>
     /// <param name="token">DPS-report user token</param>
@@ -278,10 +300,10 @@ public class DpsReportConnector
     }
 
     /// <summary>
-    /// Requests the log for the given upload id
+    /// Requests the log for the given upload Id
     /// </summary>
     /// <param name="id">The ID of the upload</param>
-    /// <returns>The log for the given id</returns>
+    /// <returns>The log for the given Id</returns>
     public async Task<Log> GetLog(string id)
     {
         return await TryGetLogFromCache(id).ConfigureAwait(false)
@@ -306,102 +328,102 @@ public class DpsReportConnector
     public DpsReportGroup GetReportGroup(int bossId)
     {
         return bossId switch
-               {
-                   17021
-                   or 17028
-                   or 16948 => DpsReportGroup.Nightmare,
+        {
+            17021
+            or 17028
+            or 16948 => DpsReportGroup.Nightmare,
 
-                   17632
-                   or 17949
-                   or 17759 => DpsReportGroup.ShatteredObservatory,
+            17632
+            or 17949
+            or 17759 => DpsReportGroup.ShatteredObservatory,
 
-                   23254 => DpsReportGroup.SunquaPeak,
-                   25577 => DpsReportGroup.SilentSurf,
+            23254 => DpsReportGroup.SunquaPeak,
+            25577 => DpsReportGroup.SilentSurf,
 
-                   26257
-                   or 26231 => DpsReportGroup.LonelyTower,
+            26257
+            or 26231 => DpsReportGroup.LonelyTower,
 
-                   27010 => DpsReportGroup.Kinfall,
+            27010 => DpsReportGroup.Kinfall,
 
-                   22154
-                   or 22343
-                   or 22481
-                   or 22492
-                   or 22436
-                   or 22711
-                   or 22836
-                   or 22521 => DpsReportGroup.IBSStrikes,
+            22154
+            or 22343
+            or 22481
+            or 22492
+            or 22436
+            or 22711
+            or 22836
+            or 22521 => DpsReportGroup.IBSStrikes,
 
-                   24033
-                   or 24768
-                   or 25247
-                   or 23957
-                   or 24485
-                   or 24266
-                   or 43488
-                   or 1378
-                   or 24375
-                   or 25414 => DpsReportGroup.EoDStrikes,
+            24033
+            or 24768
+            or 25247
+            or 23957
+            or 24485
+            or 24266
+            or 43488
+            or 1378
+            or 24375
+            or 25414 => DpsReportGroup.EoDStrikes,
 
-                   25705
-                   or 25989 => DpsReportGroup.SotOStrikes,
+            25705
+            or 25989 => DpsReportGroup.SotOStrikes,
 
-                   16169
-                   or 16202
-                   or 16178
-                   or 16198
-                   or 16177
-                   or 16199
-                   or 19676
-                   or 19645
-                   or 16174
-                   or 16176 => DpsReportGroup.TrainingArea,
+            16169
+            or 16202
+            or 16178
+            or 16198
+            or 16177
+            or 16199
+            or 19676
+            or 19645
+            or 16174
+            or 16176 => DpsReportGroup.TrainingArea,
 
-                   15438
-                   or 15429
-                   or 15375 => DpsReportGroup.SpritVale,
+            15438
+            or 15429
+            or 15375 => DpsReportGroup.SpritVale,
 
-                   16123
-                   or 16088
-                   or 16137
-                   or 16125
-                   or 16115 => DpsReportGroup.SalvationPass,
+            16123
+            or 16088
+            or 16137
+            or 16125
+            or 16115 => DpsReportGroup.SalvationPass,
 
-                   16253
-                   or 16235
-                   or 16247
-                   or 16246 => DpsReportGroup.StrongholdOfTheFaithful,
+            16253
+            or 16235
+            or 16247
+            or 16246 => DpsReportGroup.StrongholdOfTheFaithful,
 
-                   17194
-                   or 17172
-                   or 17188
-                   or 17154 => DpsReportGroup.BastionOfThePenitent,
+            17194
+            or 17172
+            or 17188
+            or 17154 => DpsReportGroup.BastionOfThePenitent,
 
-                   19767
-                   or 19828
-                   or 19691
-                   or 19536
-                   or 19651
-                   or 19844
-                   or 19450 => DpsReportGroup.HallOfChains,
+            19767
+            or 19828
+            or 19691
+            or 19536
+            or 19651
+            or 19844
+            or 19450 => DpsReportGroup.HallOfChains,
 
-                   43974
-                   or 10142
-                   or 37464
-                   or 21105
-                   or 21089
-                   or 20934 => DpsReportGroup.MythwrightGambit,
+            43974
+            or 10142
+            or 37464
+            or 21105
+            or 21089
+            or 20934 => DpsReportGroup.MythwrightGambit,
 
-                   22006
-                   or 21964
-                   or 22000 => DpsReportGroup.TheKeyOfAhdashim,
+            22006
+            or 21964
+            or 22000 => DpsReportGroup.TheKeyOfAhdashim,
 
-                   26774
-                   or 26725
-                   or 26712 => DpsReportGroup.MountBalrior,
+            26774
+            or 26725
+            or 26712 => DpsReportGroup.MountBalrior,
 
-                   _ => DpsReportGroup.Unknown
-               };
+            _ => DpsReportGroup.Unknown
+        };
     }
 
     /// <summary>
@@ -412,89 +434,89 @@ public class DpsReportConnector
     public int GetSortValue(int bossId)
     {
         var bossSortValue = bossId switch
-                            {
-                                17021
-                                or 17632
-                                or 23254
-                                or 22154
-                                or 22343
-                                or 22492
-                                or 22711
-                                or 22836
-                                or 24033
-                                or 23957
-                                or 24485
-                                or 43488
-                                or 16169
-                                or 15438
-                                or 16123
-                                or 16253
-                                or 17194
-                                or 19767
-                                or 43974
-                                or 22006
-                                or 25705
-                                or 26774 => 1,
+        {
+            17021
+            or 17632
+            or 23254
+            or 22154
+            or 22343
+            or 22492
+            or 22711
+            or 22836
+            or 24033
+            or 23957
+            or 24485
+            or 43488
+            or 16169
+            or 15438
+            or 16123
+            or 16253
+            or 17194
+            or 19767
+            or 43974
+            or 22006
+            or 25705
+            or 26774 => 1,
 
-                                17028
-                                or 17949
-                                or 22481
-                                or 22436
-                                or 22521
-                                or 24768
-                                or 24266
-                                or 1378
-                                or 16202
-                                or 15429
-                                or 16088
-                                or 16235
+            17028
+            or 17949
+            or 22481
+            or 22436
+            or 22521
+            or 24768
+            or 24266
+            or 1378
+            or 16202
+            or 15429
+            or 16088
+            or 16235
 
-                                or 17172
-                                or 17188
-                                or 19828
-                                or 10142
-                                or 21964
-                                or 25989
-                                or 26725 => 2,
+            or 17172
+            or 17188
+            or 19828
+            or 10142
+            or 21964
+            or 25989
+            or 26725 => 2,
 
-                                16948
-                                or 17759
-                                or 25247
-                                or 24375
-                                or 16178
-                                or 15375
-                                or 16137
-                                or 16247
-                                or 17154
-                                or 19691
-                                or 37464
-                                or 22000
-                                or 26712 => 3,
+            16948
+            or 17759
+            or 25247
+            or 24375
+            or 16178
+            or 15375
+            or 16137
+            or 16247
+            or 17154
+            or 19691
+            or 37464
+            or 22000
+            or 26712 => 3,
 
-                                16198
-                                or 16125
-                                or 16246
-                                or 19536
-                                or 21105 => 4,
+            16198
+            or 16125
+            or 16246
+            or 19536
+            or 21105 => 4,
 
-                                16177
-                                or 16115
-                                or 19651
-                                or 21089
-                                or 25414 => 5,
+            16177
+            or 16115
+            or 19651
+            or 21089
+            or 25414 => 5,
 
-                                16199
-                                or 19844
-                                or 20934 => 6,
+            16199
+            or 19844
+            or 20934 => 6,
 
-                                19676
-                                or 19450 => 7,
+            19676
+            or 19450 => 7,
 
-                                19645 => 8,
-                                16174 => 9,
-                                16176 => 10,
-                                _ => 0
-                            };
+            19645 => 8,
+            16174 => 9,
+            16176 => 10,
+            _ => 0
+        };
 
         return GetReportGroup(bossId).GetSortValue() + bossSortValue;
     }
@@ -507,39 +529,39 @@ public class DpsReportConnector
     public ulong GetRaidBossIconId(int bossId)
     {
         ulong iconId = bossId switch
-                              {
-                                  15438 => 848910035747864576,
-                                  15429 => 848908993538949131,
-                                  15375 => 848909543915651072,
-                                  16123 => 848909627982610482,
-                                  16088 => 848909882115358720,
-                                  16137 => 848909882115358720,
-                                  16125 => 848909882115358720,
-                                  16115 => 848909162821845043,
-                                  16253 => 743938372195844117,
-                                  16235 => 848909049599885322,
-                                  16247 => 848909953112473622,
-                                  16246 => 848910090370940949,
-                                  17194 => 848908521680142359,
-                                  17172 => 848909340827713557,
-                                  17188 => 848909587938803762,
-                                  17154 => 848908773996101642,
-                                  19767 => 848911345964679188,
-                                  19828 => 743940484455596064,
-                                  19651 => 848909739509547058,
-                                  19844 => 848909739509547058,
-                                  19536 => 848908876039585822,
-                                  19691 => 848908317832773692,
-                                  19450 => 848908828866379777,
-                                  43974 => 848908712692547614,
-                                  21105 => 848909098619895808,
-                                  21089 => 848909098619895808,
-                                  20934 => 848909410691973140,
-                                  22006 => 848908580749049866,
-                                  21964 => 848908653637533736,
-                                  22000 => 848909465553207296,
-                                  _ => 0ul
-                              };
+        {
+            15438 => 848910035747864576,
+            15429 => 848908993538949131,
+            15375 => 848909543915651072,
+            16123 => 848909627982610482,
+            16088 => 848909882115358720,
+            16137 => 848909882115358720,
+            16125 => 848909882115358720,
+            16115 => 848909162821845043,
+            16253 => 743938372195844117,
+            16235 => 848909049599885322,
+            16247 => 848909953112473622,
+            16246 => 848910090370940949,
+            17194 => 848908521680142359,
+            17172 => 848909340827713557,
+            17188 => 848909587938803762,
+            17154 => 848908773996101642,
+            19767 => 848911345964679188,
+            19828 => 743940484455596064,
+            19651 => 848909739509547058,
+            19844 => 848909739509547058,
+            19536 => 848908876039585822,
+            19691 => 848908317832773692,
+            19450 => 848908828866379777,
+            43974 => 848908712692547614,
+            21105 => 848909098619895808,
+            21089 => 848909098619895808,
+            20934 => 848909410691973140,
+            22006 => 848908580749049866,
+            21964 => 848908653637533736,
+            22000 => 848909465553207296,
+            _ => 0ul
+        };
 
         return iconId;
     }
@@ -548,7 +570,7 @@ public class DpsReportConnector
     /// Tries to get the log for the cache
     /// </summary>
     /// <param name="id">The ID of the upload</param>
-    /// <returns>The log for the given id</returns>
+    /// <returns>The log for the given Id</returns>
     [SuppressMessage("ReSharper", "AccessToDisposedClosure", Justification = "Object is not disposed when being used.")]
     private async Task<Log> TryGetLogFromCache(string id)
     {
@@ -592,7 +614,7 @@ public class DpsReportConnector
     /// Request log from dps.report
     /// </summary>
     /// <param name="id">The ID of the upload</param>
-    /// <returns>The log for the given id</returns>
+    /// <returns>The log for the given Id</returns>
     private async Task<Log> GetLogFromDpsReport(string id)
     {
         using (var client = _clientFactory.CreateClient())
@@ -603,8 +625,8 @@ public class DpsReportConnector
                            .ConfigureAwait(false))
                 {
                     var jsonResult = await response.Content
-                        .ReadAsStringAsync()
-                        .ConfigureAwait(false);
+                                                   .ReadAsStringAsync()
+                                                   .ConfigureAwait(false);
 
                     await UploadToCache(jsonResult, id).ConfigureAwait(false);
 

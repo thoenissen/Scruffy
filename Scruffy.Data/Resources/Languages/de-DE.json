@@ -670,6 +670,7 @@
       "ValueAssigned": "Der Wert wurde zugewiesen."
     },
     "LogCommandHandler": {
+      "DpsReportCheck": "DPS-Report Überprüfung",
       "DpsReportTitle": "Deine Reports vom {0}",
       "DpsReportHistory": "Deine letzten {0} {1} {2} Versuche",
       "DpsReportGuildRaidSummaryTitle": "Gilden-Raid {0}",
@@ -680,6 +681,7 @@
       "DpsReportFightDurationStat": "{0} in {1} Kämpfen",
       "NoDpsReportUploads": "Keine DPS-Reports gefunden!",
       "NoDpsReportToken": "Deinem Account sind keine DPS-Report-User-Tokens zugeordnet.",
+      "NoDpsReportTokenAdmin": "Dem Account sind keine DPS-Report-User-Tokens zugeordnet.",
       "GroupDPS": "Gruppen DPS",
       "WebAppGolemHint": "Möchstest du noch mehr Informationen über deine Logs? Dann teste doch die neue [Webseite]({0})."
     },

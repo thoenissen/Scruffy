@@ -1,6 +1,4 @@
-﻿using System.Reactive;
-
-using Discord.Interactions;
+﻿using Discord.Interactions;
 
 using Scruffy.Data.Enumerations.DpsReport;
 using Scruffy.Services.Discord;
@@ -12,7 +10,7 @@ namespace Scruffy.Commands.SlashCommands;
 /// Log slash commands
 /// </summary>
 [Group("logs", "Log commands")]
-public class LogSlashCommandModule : SlashCommandModuleBase
+public class LogsSlashCommandModule : SlashCommandModuleBase
 {
     #region Properties
 

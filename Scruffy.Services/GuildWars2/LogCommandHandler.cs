@@ -11,6 +11,7 @@ using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Data.Enumerations.DpsReport;
+using Scruffy.Data.Enumerations.General;
 using Scruffy.Data.Json.DpsReport;
 using Scruffy.Data.Json.QuickChart;
 using Scruffy.Data.Services.DpsReport;
@@ -18,6 +19,7 @@ using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord;
 using Scruffy.Services.Discord.Interfaces;
+using Scruffy.Services.GuildWars2.Data;
 using Scruffy.Services.WebApi;
 
 namespace Scruffy.Services.GuildWars2;
@@ -101,6 +103,137 @@ public class LogCommandHandler : LocatedServiceBase
     #endregion // Properties
 
     #region Public methods
+
+    /// <summary>
+    /// Check logs of a given user
+    /// </summary>
+    /// <param name="context">Context</param>
+    /// <param name="user">User</param>
+    /// <param name="count">Count</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task CheckLogs(IContextContainer context, IUser user, int count)
+    {
+        var account = _repositoryFactory.GetRepository<DiscordAccountRepository>()
+                                      .GetQuery()
+                                      .Where(obj => obj.Id == user.Id)
+                                      .Select(obj => new { obj.User.GuildWarsAccounts.FirstOrDefault().Name, obj.User.DpsReportUserToken })
+                                      .FirstOrDefault();
+
+        if (string.IsNullOrWhiteSpace(account?.DpsReportUserToken))
+        {
+            await context.ReplyAsync(LocalizationGroup.GetText("NoDpsReportTokenAdmin", "The are no DPS-Report user tokens assigned to the user account."))
+                         .ConfigureAwait(false);
+
+            return;
+        }
+
+        Page page;
+        var uploads = new List<UploadCheckData>();
+        var currentPage = 1;
+
+        do
+        {
+            page = await _dpsReportConnector.GetUploads(account.DpsReportUserToken, currentPage++)
+                                            .ConfigureAwait(false);
+
+            if (page?.Uploads?.Count > 0)
+            {
+                foreach (var upload in page.Uploads)
+                {
+                    uploads.Add(new UploadCheckData
+                                {
+                                    Id = upload.Id,
+                                    Permalink = upload.Permalink
+                                });
+
+                    if (uploads.Count >= count)
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        while (page?.Uploads != null
+               && currentPage <= page.Pages
+               && uploads.Count < count);
+
+        await Parallel.ForEachAsync(uploads,
+                                    new ParallelOptions
+                                    {
+                                        MaxDegreeOfParallelism = 4
+                                    },
+                                    async (upload, _) =>
+                                    {
+                                        try
+                                        {
+                                            if (await _dpsReportConnector.GetLog(upload.Id).ConfigureAwait(false) != null)
+                                            {
+                                                upload.IsValid = true;
+                                            }
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            LoggingService.AddServiceLogEntry(LogEntryLevel.Warning, nameof(LogCommandHandler), "CheckLogs", "Error checking log availability", $"UploadId: {upload.Id}", ex);
+                                        }
+                                    })
+                      .ConfigureAwait(false);
+
+        if (uploads.Count > 0)
+        {
+            var fieldCounter = 0;
+            var embeds = new List<EmbedBuilder>();
+            var embed = new EmbedBuilder().WithColor(Color.Green)
+                                          .WithAuthor($"{user.Username} - {account.Name}", user.GetAvatarUrl())
+                                          .WithTitle(LocalizationGroup.GetText("DpsReportCheck", "DPS-Report check"));
+            var fieldBuilder = new StringBuilder();
+
+            foreach (var upload in uploads)
+            {
+                var line = $"└{(upload.IsValid ? DiscordEmoteService.GetCheckEmote(context.Client) : DiscordEmoteService.GetCrossEmote(context.Client))} {Format.Url(Path.GetFileName(upload.Permalink), upload.Permalink)}";
+
+                if (line.Length + fieldBuilder.Length >= 1024)
+                {
+                    if (embed.Length + fieldBuilder.Length >= 5376)
+                    {
+                        embeds.Add(embed);
+
+                        embed = new EmbedBuilder().WithColor(Color.Green)
+                                                  .WithAuthor($"{user.Username} - {account.Name}", user.GetAvatarUrl())
+                                                  .WithTitle(LocalizationGroup.GetText("DpsReportCheck", "DPS-Report check"));
+                    }
+
+                    embed.AddField($"#{fieldCounter++}", fieldBuilder.ToString());
+
+                    fieldBuilder = new StringBuilder();
+                }
+
+                fieldBuilder.AppendLine(line);
+            }
+
+            if (embed.Length + fieldBuilder.Length >= 5376)
+            {
+                embeds.Add(embed);
+
+                embed = new EmbedBuilder().WithColor(Color.Green)
+                                          .WithAuthor($"{user.Username} - {account.Name}", user.GetAvatarUrl())
+                                          .WithTitle(LocalizationGroup.GetText("DpsReportCheck", "DPS-Report check"));
+            }
+
+            embed.AddField($"#{fieldCounter}", fieldBuilder.ToString());
+            embeds.Add(embed);
+
+            foreach (var builder in embeds)
+            {
+                await context.SendMessageAsync(embed: builder.Build())
+                             .ConfigureAwait(false);
+            }
+        }
+        else
+        {
+            await context.ReplyAsync(LocalizationGroup.GetText("NoDpsReportUploads", "No DPS-Reports found!"))
+                         .ConfigureAwait(false);
+        }
+    }
 
     /// <summary>
     /// Posts the logs of the given type + day
@@ -337,7 +470,7 @@ public class LogCommandHandler : LocatedServiceBase
                     var chartConfiguration = new ChartConfigurationData
                                              {
                                                  Type = "line",
-                                                 Data = new Data.Json.QuickChart.Data
+                                                 Data = new()
                                                         {
                                                             DataSets = [
                                                                            new DataSet<int>

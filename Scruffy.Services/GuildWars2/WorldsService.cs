@@ -132,12 +132,12 @@ public class WorldsService : LocatedServiceBase
                 var chartConfiguration = new ChartConfigurationData
                                          {
                                              Type = "bar",
-                                             Data = new Data.Json.QuickChart.Data
+                                             Data = new()
                                                     {
                                                         DataSets = [
                                                                        new DataSet<int>
                                                                        {
-                                                                           BackgroundColor = worlds.Select(obj => "#316ed5")
+                                                                           BackgroundColor = worlds.Select(_ => "#316ed5")
                                                                                                    .ToList(),
                                                                            BorderColor = "#274d85",
                                                                            Data = worlds.OrderByDescending(obj => obj.Count)
