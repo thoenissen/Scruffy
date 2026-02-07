@@ -128,6 +128,7 @@ public class LogCommandHandler : LocatedServiceBase
         }
 
         Page page;
+        var pageCount = 0;
         var uploads = new List<UploadCheckData>();
         var currentPage = 1;
 
@@ -138,6 +139,11 @@ public class LogCommandHandler : LocatedServiceBase
 
             if (page?.Uploads?.Count > 0)
             {
+                if (page.Pages > 0)
+                {
+                    pageCount = page.Pages;
+                }
+
                 foreach (var upload in page.Uploads)
                 {
                     uploads.Add(new UploadCheckData
@@ -154,7 +160,7 @@ public class LogCommandHandler : LocatedServiceBase
             }
         }
         while (page?.Uploads != null
-               && currentPage <= page.Pages
+               && (pageCount == 0 || currentPage <= pageCount)
                && uploads.Count < count);
 
         await Parallel.ForEachAsync(uploads,
