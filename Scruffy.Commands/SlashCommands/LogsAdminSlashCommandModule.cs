@@ -10,6 +10,7 @@ namespace Scruffy.Commands.SlashCommands;
 /// Admin log slash commands
 /// </summary>
 [Group("logs-admin", "Log admin commands")]
+[DefaultMemberPermissions(GuildPermission.Administrator)]
 public class LogsAdminSlashCommandModule : SlashCommandModuleBase
 {
     #region Properties
