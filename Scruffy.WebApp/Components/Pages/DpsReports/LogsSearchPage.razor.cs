@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.QuickGrid;
 using Microsoft.Extensions.Logging;
+using Microsoft.JSInterop;
 
 using Newtonsoft.Json;
 
@@ -29,7 +30,7 @@ namespace Scruffy.WebApp.Components.Pages.DpsReports;
 /// dps.report search
 /// </summary>
 [Authorize(Roles = "Member")]
-public sealed partial class LogsSearchPage
+public sealed partial class LogsSearchPage : IAsyncDisposable
 {
     #region Constants
 
@@ -51,9 +52,9 @@ public sealed partial class LogsSearchPage
     /// Pagination state for the reports
     /// </summary>
     private readonly PaginationState _paginationState = new()
-                                     {
-                                         ItemsPerPage = 20
-                                     };
+                                                        {
+                                                            ItemsPerPage = 20
+                                                        };
 
     /// <summary>
     /// dps.report user token
@@ -66,13 +67,39 @@ public sealed partial class LogsSearchPage
     private int _currentIndex = -1;
 
     /// <summary>
+    /// Current results
+    /// </summary>
+    private Dictionary<string, DpsReport> _currentItems;
+
+    /// <summary>
     /// Current result
     /// </summary>
     private GridItemsProviderResult<DpsReport> _currentResult;
 
+    /// <summary>
+    /// Selected report for overlay display
+    /// </summary>
+    private DpsReport _selectedReport;
+
+    /// <summary>
+    /// Grid container reference for JavaScript interop
+    /// </summary>
+    private ElementReference _gridContainer;
+
+    /// <summary>
+    /// JS module for JavaScript interop
+    /// </summary>
+    private IJSObjectReference _module;
+
     #endregion // Fields
 
     #region Properties
+
+    /// <summary>
+    /// JS-Runtime
+    /// </summary>
+    [Inject]
+    private IJSRuntime JsRuntime { get; set; }
 
     /// <summary>
     /// Authentication state provider
@@ -149,32 +176,32 @@ public sealed partial class LogsSearchPage
                 return default;
             }
 
-            var items = uploads.Uploads
-                               .Select(upload => new DpsReport
-                                                 {
-                                                     Id = upload.Id,
-                                                     IsSuccess = upload.Encounter?.Success == true,
-                                                     PermaLink = upload.Permalink,
-                                                     EncounterTime = DateTimeOffset.FromUnixTimeSeconds(upload.EncounterTime ?? 0).ToLocalTime(),
-                                                     Boss = upload.Encounter?.BossName ?? LocalizationGroup.GetText("Loading", "Loading..."),
-                                                     Duration = TimeSpan.FromSeconds(upload.Encounter?.Duration ?? 0),
-                                                     IsLoadingAdditionalData = true,
-                                                 })
-                               .ToList();
+            _currentItems = uploads.Uploads
+                                   .Select(upload => new DpsReport
+                                                     {
+                                                         Id = upload.Id,
+                                                         IsSuccess = upload.Encounter?.Success == true,
+                                                         PermaLink = upload.Permalink,
+                                                         EncounterTime = DateTimeOffset.FromUnixTimeSeconds(upload.EncounterTime ?? 0).ToLocalTime(),
+                                                         Boss = upload.Encounter?.BossName ?? LocalizationGroup.GetText("Loading", "Loading..."),
+                                                         Duration = TimeSpan.FromSeconds(upload.Encounter?.Duration ?? 0),
+                                                         IsLoadingAdditionalData = true,
+                                                     })
+                                   .ToDictionary(report => report.Id);
 
             Task.Run(() =>
                      {
-                         foreach (var item in items)
+                         foreach (var item in _currentItems)
                          {
-                             GetAdditionalDataAsync(item).Forget();
+                             GetAdditionalDataAsync(item.Value).Forget();
                          }
                      })
                 .Forget();
 
             _currentResult = new GridItemsProviderResult<DpsReport>
                              {
-                                 Items = items,
-                                 TotalItemCount = uploads.TotalUploads ?? items.Count
+                                 Items = _currentItems.Values,
+                                 TotalItemCount = uploads.TotalUploads ?? _currentItems.Count
                              };
             _currentIndex = request.StartIndex;
 
@@ -315,5 +342,75 @@ public sealed partial class LogsSearchPage
         return "skill-level-0";
     }
 
+    /// <summary>
+    /// Called from JavaScript when a row is clicked
+    /// </summary>
+    /// <param name="reportId">ID of the report</param>
+    [JSInvokable]
+    public void SelectReportFromJs(string reportId)
+    {
+        if (_currentItems.TryGetValue(reportId, out var report))
+        {
+            _selectedReport = report;
+
+            InvokeAsync(StateHasChanged);
+        }
+    }
+
+    /// <summary>
+    /// Closes the overlay
+    /// </summary>
+    private void CloseOverlay()
+    {
+        _selectedReport = null;
+
+        InvokeAsync(StateHasChanged);
+    }
+
     #endregion // Methods
+
+    #region ComponentBase
+
+    /// <inheritdoc />
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender)
+                  .ConfigureAwait(true);
+
+        if (firstRender)
+        {
+            try
+            {
+                _module = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/Pages/DpsReports/LogsSearchPage.razor.js")
+                                         .ConfigureAwait(true);
+
+                await _module.InvokeVoidAsync("setupRowClickHandlers", _gridContainer, DotNetObjectReference.Create(this))
+                             .ConfigureAwait(true);
+            }
+            catch
+            {
+            }
+        }
+    }
+
+    #endregion // ComponentBase
+
+    #region IAsyncDisposable
+
+    /// <inheritdoc />
+    public async ValueTask DisposeAsync()
+    {
+        if (_module is not null)
+        {
+            try
+            {
+                await _module.DisposeAsync().ConfigureAwait(false);
+            }
+            catch
+            {
+            }
+        }
+    }
+
+    #endregion // IAsyncDisposable
 }

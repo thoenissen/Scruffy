@@ -8,12 +8,12 @@
 
 <PageTitle>@LocalizationGroup.GetText("PageTitle", "FooI - Logs - Search")</PageTitle>
 
-<LoadingContainer IsLoading="@false">
-    <div class="page-container">
-        <div class="logs-container">
-            <div class="quickgrid-std registrations-container mb-3">
+<div class="page-container">
+    <div class="logs-container">
+        <div class="quickgrid-std registrations-container mb-3" @ref="_gridContainer">
             <QuickGrid TGridItem="DpsReport" ItemsProvider="@OnGetItems" Pagination="@_paginationState" Virtualize="@false">
-                    <TemplateColumn Context="u" Sortable="false">
+                <TemplateColumn Context="u" Sortable="false">
+                    <div data-report-id="@u.Id">
                         @if (u.IsSuccess)
                         {
                             <div class="state-icon state-icon-success skill-level-2"></div>
@@ -22,38 +22,93 @@
                         {
                             <div class="state-icon state-icon-failure skill-level-0"></div>
                         }
-                    </TemplateColumn>
-                    <TemplateColumn Title="@LocalizationGroup.GetText("EncounterTime", "Time")" Context="u" Sortable="false">
-                        <div>@u.EncounterTime.ToString("g", LocalizationGroup.CultureInfo)</div>
-                    </TemplateColumn>
-                    <PropertyColumn Title="@LocalizationGroup.GetText("Boss", "Boss")" Property="@(u => u.Boss)" Sortable="false"/>
-                    <TemplateColumn Title="@LocalizationGroup.GetText("Dps", "DPS")" Context="u" Align="Align.End" Sortable="false">
-                        <LoadingContainer Size="LoadingIndicatorSize.Small" IsLoading="@u.IsLoadingAdditionalData">
-                            <div>@u.AdditionalData.Dps?.ToString("N0", LocalizationGroup.CultureInfo)</div>
-                        </LoadingContainer>
-                    </TemplateColumn>
-                    <TemplateColumn Title="@LocalizationGroup.GetText("Quickness", "Quickness")" Context="u" Align="Align.End" Sortable="false">
-                        <LoadingContainer Size="LoadingIndicatorSize.Small" IsLoading="@u.IsLoadingAdditionalData">
-                            <div class="@GetSkillLevelFromUptime(u.AdditionalData.Quickness)">@((u.AdditionalData.Quickness ?? 0).ToString("N2", LocalizationGroup.CultureInfo) + " %")</div>
-                        </LoadingContainer>
-                    </TemplateColumn>
-                    <TemplateColumn Title="@LocalizationGroup.GetText("Alacrity", "Alacrity")" Context="u" Align="Align.End" Sortable="false">
-                        <LoadingContainer Size="LoadingIndicatorSize.Small" IsLoading="@u.IsLoadingAdditionalData">
-                            <div class="@GetSkillLevelFromUptime(u.AdditionalData.Alacrity)">@((u.AdditionalData.Alacrity ?? 0).ToString("N2", LocalizationGroup.CultureInfo) + " %")</div>
-                        </LoadingContainer>
-                    </TemplateColumn>
-                    <TemplateColumn Title="@LocalizationGroup.GetText("Duration", "Duration")" Context="u" Align="Align.End" Sortable="false">
-                        <div>@($"{(int)u.Duration.TotalMinutes}:{u.Duration.Seconds:D2}")</div>
-                    </TemplateColumn>
-                    <TemplateColumn Context="u" Sortable="false" class="isassigned-column">
-                        <a target="_blank" rel="noopener noreferrer" href="@u.PermaLink">⧉</a>
-                    </TemplateColumn>
-                </QuickGrid>
-            </div>
+                    </div>
+                </TemplateColumn>
+                <TemplateColumn Title="@LocalizationGroup.GetText("EncounterTime", "Time")" Context="u" Sortable="false">
+                    @u.EncounterTime.ToString("g", LocalizationGroup.CultureInfo)
+                </TemplateColumn>
+                <TemplateColumn Title="@LocalizationGroup.GetText("Boss", "Boss")" Context="u" Sortable="false">
+                    @u.Boss
+                </TemplateColumn>
+                <TemplateColumn Title="@LocalizationGroup.GetText("Dps", "DPS")" Context="u" Align="Align.End" Sortable="false">
+                    <LoadingContainer Size="LoadingIndicatorSize.Small" IsLoading="@u.IsLoadingAdditionalData">
+                        <div>@u.AdditionalData.Dps?.ToString("N0", LocalizationGroup.CultureInfo)</div>
+                    </LoadingContainer>
+                </TemplateColumn>
+                <TemplateColumn Title="@LocalizationGroup.GetText("Quickness", "Quickness")" Context="u" Align="Align.End" Sortable="false">
+                    <LoadingContainer Size="LoadingIndicatorSize.Small" IsLoading="@u.IsLoadingAdditionalData">
+                        <div class="@GetSkillLevelFromUptime(u.AdditionalData.Quickness)">@((u.AdditionalData.Quickness ?? 0).ToString("N2", LocalizationGroup.CultureInfo) + " %")</div>
+                    </LoadingContainer>
+                </TemplateColumn>
+                <TemplateColumn Title="@LocalizationGroup.GetText("Alacrity", "Alacrity")" Context="u" Align="Align.End" Sortable="false">
+                    <LoadingContainer Size="LoadingIndicatorSize.Small" IsLoading="@u.IsLoadingAdditionalData">
+                        <div class="@GetSkillLevelFromUptime(u.AdditionalData.Alacrity)">@((u.AdditionalData.Alacrity ?? 0).ToString("N2", LocalizationGroup.CultureInfo) + " %")</div>
+                    </LoadingContainer>
+                </TemplateColumn>
+                <TemplateColumn Title="@LocalizationGroup.GetText("Duration", "Duration")" Context="u" Align="Align.End" Sortable="false">
+                    @($"{(int)u.Duration.TotalMinutes}:{u.Duration.Seconds:D2}")
+                </TemplateColumn>
+                <TemplateColumn Context="u" Sortable="false" class="isassigned-column">
+                    <a target="_blank" rel="noopener noreferrer" href="@u.PermaLink" @onclick:stopPropagation="true">⧉</a>
+                </TemplateColumn>
+            </QuickGrid>
+        </div>
 
-            <div class="paginator-std">
-                <QuickGridPaginator State="@_paginationState"/>
+        <div class="paginator-std">
+            <QuickGridPaginator State="@_paginationState"/>
+        </div>
+    </div>
+</div>
+
+@if (_selectedReport?.AdditionalData != null)
+{
+    <div class="overlay-backdrop" @onclick="CloseOverlay"></div>
+    <div class="overlay-container">
+        <button class="overlay-close-button" @onclick="CloseOverlay" title="@LocalizationGroup.GetText("Close", "Close")">
+            <span class="material-icons">close</span>
+        </button>
+        <div class="overlay-content">
+            <h2>@_selectedReport.Boss</h2>
+            <div class="overlay-info">
+                <div class="overlay-info-row">
+                    <span class="overlay-label">@LocalizationGroup.GetText("EncounterTime", "Time")</span>
+                    <span>@_selectedReport.EncounterTime.ToString("g", LocalizationGroup.CultureInfo)</span>
+                </div>
+                <div class="overlay-info-row">
+                    <span class="overlay-label">@LocalizationGroup.GetText("Dps", "DPS")</span>
+                    <span>@_selectedReport.AdditionalData.Dps?.ToString("N0", LocalizationGroup.CultureInfo)</span>
+                </div>
+                <div class="overlay-info-row">
+                    <span class="overlay-label">@LocalizationGroup.GetText("Quickness", "Quickness")</span>
+                    <span class="@GetSkillLevelFromUptime(_selectedReport.AdditionalData.Quickness)">@((_selectedReport.AdditionalData.Quickness ?? 0).ToString("N2", LocalizationGroup.CultureInfo) + " %")</span>
+                </div>
+                <div class="overlay-info-row">
+                    <span class="overlay-label">@LocalizationGroup.GetText("Alacrity", "Alacrity")</span>
+                    <span class="@GetSkillLevelFromUptime(_selectedReport.AdditionalData.Alacrity)">@((_selectedReport.AdditionalData.Alacrity ?? 0).ToString("N2", LocalizationGroup.CultureInfo) + " %")</span>
+                </div>
+                <div class="overlay-info-row">
+                    <span class="overlay-label">@LocalizationGroup.GetText("Duration", "Duration")</span>
+                    <span>@($"{(int)_selectedReport.Duration.TotalMinutes}:{_selectedReport.Duration.Seconds:D2}")</span>
+                </div>
+                <div class="overlay-info-row">
+                    <span class="overlay-label">@LocalizationGroup.GetText("Status", "Status")</span>
+                    <span>
+                        @if (_selectedReport.IsSuccess)
+                        {
+                            <span class="skill-level-2">@LocalizationGroup.GetText("Success", "Success")</span>
+                        }
+                        else
+                        {
+                            <span class="skill-level-0">@LocalizationGroup.GetText("Failed", "Failed")</span>
+                        }
+                    </span>
+                </div>
+            </div>
+            <div class="overlay-actions">
+                <a target="_blank" rel="noopener noreferrer" href="@_selectedReport.PermaLink" class="primary-button">
+                    @LocalizationGroup.GetText("ViewDetails", "View Details")
+                </a>
             </div>
         </div>
     </div>
-</LoadingContainer>
+}
