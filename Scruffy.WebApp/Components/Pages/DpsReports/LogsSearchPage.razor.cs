@@ -178,7 +178,7 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
                                                                                            // Sometimes 'foundUploads' is a bool and the deserialization to int? fails
                                                                                            if (e.ErrorContext.Path == "foundUploads")
                                                                                            {
-                                                                                               e.ErrorContext.Handled = true;
+                                                                                                e.ErrorContext.Handled = true;
                                                                                            }
                                                                          }
                                                                                    });
@@ -290,12 +290,30 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
             additionalData.Dps = detailedReport.Players?.Sum(player => player.DpsTargets?.Sum(dpsTarget => dpsTarget.Count > 0 ? dpsTarget[0].Dps : 0));
             additionalData.Alacrity = GetUptime(detailedReport.Players, AlacrityId);
             additionalData.Quickness = GetUptime(detailedReport.Players, QuicknessId);
+            report.PlayerCharacterName = GetOwnCharacterName(detailedReport);
         }
 
         report.IsLoadingAdditionalData = false;
         report.AdditionalData = additionalData;
 
         await InvokeAsync(StateHasChanged).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Gets the own character name from the players list
+    /// </summary>
+    /// <param name="report">Detailed report</param>
+    /// <returns>Character name of the player</returns>
+    private string GetOwnCharacterName(JsonLog report)
+    {
+        if (report?.Players == null || report.Players.Count == 0)
+        {
+            return null;
+        }
+
+        var player = report.Players.FirstOrDefault(player => _guildWarsAccountNames.Any(accountName => player.Account?.Equals(accountName, StringComparison.OrdinalIgnoreCase) == true));
+
+        return player?.Name;
     }
 
     /// <summary>

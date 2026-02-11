@@ -74,6 +74,13 @@
                     <span class="overlay-label">@LocalizationGroup.GetText("EncounterTime", "Time")</span>
                     <span>@_selectedReport.EncounterTime.ToString("g", LocalizationGroup.CultureInfo)</span>
                 </div>
+                @if (!string.IsNullOrEmpty(_selectedReport.PlayerCharacterName))
+                {
+                    <div class="overlay-info-row">
+                        <span class="overlay-label">@LocalizationGroup.GetText("Character", "Character")</span>
+                        <span>@_selectedReport.PlayerCharacterName</span>
+                    </div>
+                }
                 <LoadingContainer IsLoading="@_selectedReport.IsLoadingAdditionalData">
                     <div class="overlay-info-row">
                         <span class="overlay-label">@LocalizationGroup.GetText("Dps", "DPS")</span>
