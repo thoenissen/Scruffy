@@ -154,3 +154,85 @@
    align-items: center;
    justify-content: center;
 }
+
+.overlay-mechanics-section {
+   grid-column: 1 / -1;
+   display: flex;
+   flex-direction: column;
+   gap: 0.5rem;
+}
+
+.overlay-mechanics-section h3 {
+   margin: 1.5rem 0 1rem 0;
+   color: var(--text);
+   font-size: 1.125rem;
+   font-weight: 600;
+   border-top: 2px solid var(--primary);
+   padding-top: 1rem;
+}
+
+.mechanics-table {
+   width: 100%;
+   border-collapse: collapse;
+   border: 1px solid var(--primary);
+   border-radius: 0.25rem;
+   overflow: hidden;
+   background-color: var(--background);
+}
+
+    .mechanics-table thead {
+        background-color: var(--primary);
+        border-bottom: 2px solid var(--primary);
+    }
+
+.mechanics-table th {
+   padding: 0.875rem;
+   text-align: left;
+   font-weight: 600;
+   color: var(--text);
+   font-size: 0.875rem;
+   text-transform: uppercase;
+   letter-spacing: 0.05em;
+}
+
+.mechanics-table td {
+   padding: 0.875rem;
+   border-bottom: 1px solid var(--background-alt);
+   color: var(--text);
+}
+
+.mechanics-table tbody tr {
+   transition: background-color 0.2s ease;
+}
+
+.mechanics-table tbody tr:hover {
+   background-color: var(--background-alt);
+}
+
+.mechanics-table tbody tr:last-child td {
+   border-bottom: none;
+}
+
+.mechanic-name {
+   font-weight: 600;
+   min-width: 150px;
+}
+
+.mechanic-description {
+    font-size: 0.875rem;
+    color: var(--text);
+    flex-grow: 1;
+}
+
+.mechanics-count-header {
+   text-align: right;
+   width: 80px;
+}
+
+.mechanics-count {
+    text-align: right;
+    font-weight: 600;
+    color: var(--text);
+    font-size: 1rem;
+    width: 80px;
+}

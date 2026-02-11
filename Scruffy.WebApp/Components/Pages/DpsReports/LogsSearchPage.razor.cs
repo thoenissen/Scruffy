@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -178,9 +178,9 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
                                                                                            // Sometimes 'foundUploads' is a bool and the deserialization to int? fails
                                                                                            if (e.ErrorContext.Path == "foundUploads")
                                                                                            {
-                                                                                                e.ErrorContext.Handled = true;
+                                                                                               e.ErrorContext.Handled = true;
                                                                                            }
-                                                                         }
+                                                                                       }
                                                                                    });
 
             if ((uploads?.Uploads?.Length > 0) == false)
@@ -291,6 +291,7 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
             additionalData.Alacrity = GetUptime(detailedReport.Players, AlacrityId);
             additionalData.Quickness = GetUptime(detailedReport.Players, QuicknessId);
             report.PlayerCharacterName = GetOwnCharacterName(detailedReport);
+            report.Mechanics = GetMechanics(detailedReport, report.PlayerCharacterName);
         }
 
         report.IsLoadingAdditionalData = false;
@@ -314,6 +315,43 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
         var player = report.Players.FirstOrDefault(player => _guildWarsAccountNames.Any(accountName => player.Account?.Equals(accountName, StringComparison.OrdinalIgnoreCase) == true));
 
         return player?.Name;
+    }
+
+    /// <summary>
+    /// Gets the mechanics counts for the own player
+    /// </summary>
+    /// <param name="report">Detailed report</param>
+    /// <param name="playerCharacterName">Character name of the own player</param>
+    /// <returns>List of mechanics with hit counts</returns>
+    private List<Mechanic> GetMechanics(JsonLog report, string playerCharacterName)
+    {
+        var result = new List<Mechanic>();
+
+        if (report?.Mechanics == null || playerCharacterName == null)
+        {
+            return result;
+        }
+
+        foreach (var mechanic in report.Mechanics)
+        {
+            if (mechanic.MechanicsData != null)
+            {
+                var count = mechanic.MechanicsData.Count(m => m.Actor?.Equals(playerCharacterName, StringComparison.OrdinalIgnoreCase) == true);
+
+                if (count > 0)
+                {
+                    result.Add(new Mechanic
+                               {
+                                   Name = mechanic.Name,
+                                   FullName = mechanic.FullName,
+                                   Description = mechanic.Description,
+                                   Count = count
+                               });
+                }
+            }
+        }
+
+        return result;
     }
 
     /// <summary>

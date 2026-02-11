@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Scruffy.WebApp.Components.Pages.DpsReports.Data;
 
@@ -51,4 +52,9 @@ public class DpsReport
     /// Character name of the own player in this encounter
     /// </summary>
     public string PlayerCharacterName { get; set; }
+
+    /// <summary>
+    /// Mechanics data for the own player
+    /// </summary>
+    public List<Mechanic> Mechanics { get; set; } = [];
 }

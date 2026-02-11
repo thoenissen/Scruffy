@@ -113,6 +113,33 @@
                     </span>
                 </div>
             </div>
+            @if (_selectedReport.Mechanics?.Count > 0)
+            {
+                <div class="overlay-mechanics-section">
+                    <h3>@LocalizationGroup.GetText("Mechanics", "Mechanics")</h3>
+                    <table class="mechanics-table">
+                        <thead>
+                            <tr>
+                                <th>@LocalizationGroup.GetText("Name", "Name")</th>
+                                <th>@LocalizationGroup.GetText("Description", "Description")</th>
+                                <th>@LocalizationGroup.GetText("Explanation", "Explanation")</th>
+                                <th class="mechanics-count-header">@LocalizationGroup.GetText("Count", "Count")</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var mechanic in _selectedReport.Mechanics)
+                            {
+                                <tr>
+                                    <td class="mechanic-name">@mechanic.Name</td>
+                                    <td class="mechanic-name">@mechanic.FullName</td>
+                                    <td class="mechanic-description">@mechanic.Description</td>
+                                    <td class="mechanics-count">@mechanic.Count</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
             <div class="overlay-actions">
                 <a target="_blank" rel="noopener noreferrer" href="@_selectedReport.PermaLink" class="primary-button">
                     @LocalizationGroup.GetText("ViewDetails", "View Details")
