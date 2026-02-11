@@ -1,10 +1,17 @@
-﻿namespace Scruffy.WebApp.Components.Pages.DpsReports.Data;
+﻿using GW2EIJSON;
+
+namespace Scruffy.WebApp.Components.Pages.DpsReports.Data;
 
 /// <summary>
 /// Contains additional parsed data for a DPS report.
 /// </summary>
 public class AdditionalData
 {
+    /// <summary>
+    /// Full report
+    /// </summary>
+    public required JsonLog FullReport { get; init; }
+
     /// <summary>
     /// The DPS (damage per second) value for the encounter.
     /// </summary>

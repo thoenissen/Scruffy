@@ -214,7 +214,10 @@ public sealed partial class TodaysLogsOverviewPage : IAsyncDisposable
     {
         var detailedReport = await DpsReportProcessor.Get(report.Id).ConfigureAwait(false);
 
-        var additionalData = new AdditionalData();
+        var additionalData = new AdditionalData
+                             {
+                                 FullReport = detailedReport
+                             };
 
         if (detailedReport != null)
         {
