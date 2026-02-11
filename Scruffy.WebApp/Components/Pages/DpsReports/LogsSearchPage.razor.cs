@@ -20,6 +20,7 @@ using Newtonsoft.Json;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.CoreData;
+using Scruffy.Data.Entity.Repositories.GuildWars2.Account;
 using Scruffy.Services.Core.Extensions;
 using Scruffy.WebApp.Components.Pages.DpsReports.Data;
 using Scruffy.WebApp.Services;
@@ -57,9 +58,19 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
                                                         };
 
     /// <summary>
+    /// Flag indicating whether user data has been loaded
+    /// </summary>
+    private bool _isUserDataLoaded;
+
+    /// <summary>
     /// dps.report user token
     /// </summary>
     private string _dpsReportToken;
+
+    /// <summary>
+    /// Guild Wars 2 account names of the user
+    /// </summary>
+    private List<string> _guildWarsAccountNames = [];
 
     /// <summary>
     /// Index of the current result
@@ -143,8 +154,9 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
 
         try
         {
-            var dpsReportToken = await GetDpsReportToken().ConfigureAwait(false);
-            var response = await HttpClient.GetAsync($"https://dps.report/getUploads?userToken={dpsReportToken}&page={(request.StartIndex / 25) + 1}&perPage=25",
+            await LoadUserDataAsync().ConfigureAwait(false);
+
+            var response = await HttpClient.GetAsync($"https://dps.report/getUploads?userToken={_dpsReportToken}&page={(request.StartIndex / 25) + 1}&perPage=25",
                                                      request.CancellationToken)
                                            .ConfigureAwait(false);
 
@@ -168,7 +180,7 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
                                                                                            {
                                                                                                e.ErrorContext.Handled = true;
                                                                                            }
-                                                                                       }
+                                                                         }
                                                                                    });
 
             if ((uploads?.Uploads?.Length > 0) == false)
@@ -219,32 +231,43 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
     }
 
     /// <summary>
-    /// Get dps.report token of current user
+    /// Load user data including DPS report token and Guild Wars 2 accounts
     /// </summary>
-    /// <returns>Token</returns>
-    private async ValueTask<string> GetDpsReportToken()
+    /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
+    private async ValueTask LoadUserDataAsync()
     {
-        if (_dpsReportToken == null)
+        if (_isUserDataLoaded)
         {
-            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync()
-                                                             .ConfigureAwait(false);
-            var nameIdentifier = authState.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return;
+        }
 
-            if (string.IsNullOrEmpty(nameIdentifier) == false
-                && int.TryParse(nameIdentifier, out var userId))
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync()
+                                                         .ConfigureAwait(false);
+        var nameIdentifier = authState.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(nameIdentifier) == false
+            && int.TryParse(nameIdentifier, out var userId))
+        {
+            using (var repository = RepositoryFactory.CreateInstance())
             {
-                using (var repository = RepositoryFactory.CreateInstance())
+                var userRepository = repository.GetRepository<UserRepository>();
+                var user = userRepository.GetQuery()
+                                         .FirstOrDefault(u => u.Id == userId);
+
+                if (user != null)
                 {
-                     _dpsReportToken = repository.GetRepository<UserRepository>()
-                                                 .GetQuery()
-                                                 .Where(user => user.Id == userId)
-                                                 .Select(user => user.DpsReportUserToken)
-                                                 .FirstOrDefault();
+                    _dpsReportToken = user.DpsReportUserToken;
+
+                    var accountRepository = repository.GetRepository<GuildWarsAccountRepository>();
+                    _guildWarsAccountNames = accountRepository.GetQuery()
+                                                              .Where(account => account.UserId == userId)
+                                                              .Select(account => account.Name)
+                                                              .ToList();
                 }
             }
         }
 
-        return _dpsReportToken;
+        _isUserDataLoaded = true;
     }
 
     /// <summary>
