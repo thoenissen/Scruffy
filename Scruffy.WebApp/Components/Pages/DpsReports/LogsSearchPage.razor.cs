@@ -293,6 +293,7 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
             additionalData.Quickness = GetUptime(detailedReport.Players, QuicknessId);
             report.PlayerCharacterName = GetOwnCharacterName(detailedReport);
             report.Mechanics = GetMechanics(detailedReport, report.PlayerCharacterName);
+            GetPlayerRole(report, detailedReport, report.PlayerCharacterName);
         }
 
         report.IsLoadingAdditionalData = false;
@@ -353,6 +354,48 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
         }
 
         return result;
+    }
+
+    /// <summary>
+    /// Get player role
+    /// </summary>
+    /// <param name="report">Report</param>
+    /// <param name="detailedReport">Detailed report</param>
+    /// <param name="playerCharacterName">Character name of the own player</param>
+    private void GetPlayerRole(DpsReport report, JsonLog detailedReport, string playerCharacterName)
+    {
+        var player = detailedReport?.Players?.FirstOrDefault(player => player.Name?.Equals(playerCharacterName, StringComparison.OrdinalIgnoreCase) == true);
+
+        if (player != null)
+        {
+            var alacrityBuff = player.GroupBuffs?.FirstOrDefault(buff => buff.Id == AlacrityId)?.BuffData;
+
+            if (alacrityBuff?.Count > 0
+                && alacrityBuff[0].Generation > 15.0D)
+            {
+                report.Alacrity = alacrityBuff[0].Generation;
+
+                report.PlayerRole = player.Healing > 0
+                                        ? "Alacrity Healer"
+                                        : "Alacrity DPS";
+            }
+            else
+            {
+                var quicknessBuff = player.GroupBuffs?.FirstOrDefault(buff => buff.Id == QuicknessId)?.BuffData;
+
+                if (quicknessBuff?.Count > 0
+                    && quicknessBuff[0].Generation > 15.0D)
+                {
+                    report.Quickness = quicknessBuff[0].Generation;
+
+                    report.PlayerRole = player.Healing > 0
+                                             ? "Quickness Healer"
+                                             : "Quickness DPS";
+                }
+            }
+        }
+
+        report.PlayerRole ??= "DPS";
     }
 
     /// <summary>

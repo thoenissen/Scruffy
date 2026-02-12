@@ -115,16 +115,33 @@
                     </div>
                 </div>
             </div>
-            @if (string.IsNullOrEmpty(_selectedReport.PlayerCharacterName) == false)
-            {
-                <div class="overlay-section">
-                    <h3>@LocalizationGroup.GetText("PersonalStatistics", "Personal Statistics")</h3>
+            <div class="overlay-section">
+                <h3>@LocalizationGroup.GetText("PersonalStatistics", "Personal Statistics")</h3>
+                <div class="overlay-info">
                     <div class="overlay-info-row">
                         <span class="overlay-label">@LocalizationGroup.GetText("Character", "Character")</span>
                         <span>@_selectedReport.PlayerCharacterName</span>
                     </div>
+                    <div class="overlay-info-row">
+                        <span class="overlay-label">@LocalizationGroup.GetText("Role", "Role")</span>
+                        <span>@_selectedReport.PlayerRole</span>
+                    </div>
+                    @if (_selectedReport.Alacrity != null)
+                    {
+                        <div class="overlay-info-row">
+                            <span class="overlay-label">@LocalizationGroup.GetText("Alacrity", "Alacrity")</span>
+                            <span class="@GetSkillLevelFromUptime(_selectedReport.Alacrity)">@_selectedReport.Alacrity.Value.ToString("N2", LocalizationGroup.CultureInfo) %</span>
+                        </div>
+                    }
+                    @if (_selectedReport.Quickness != null)
+                    {
+                        <div class="overlay-info-row">
+                            <span class="overlay-label">@LocalizationGroup.GetText("Quickness", "Quickness")</span>
+                            <span class="@GetSkillLevelFromUptime(_selectedReport.Quickness)">@_selectedReport.Quickness.Value.ToString("N2", LocalizationGroup.CultureInfo)  %</span>
+                        </div>
+                    }
                 </div>
-            }
+            </div>
             @if (_selectedReport.Mechanics?.Count > 0)
             {
                 <div class="overlay-section">
