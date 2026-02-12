@@ -23,6 +23,14 @@ public class DpsReportConnector
     #region Fields
 
     /// <summary>
+    /// JSON serializer settings
+    /// </summary>
+    private static readonly JsonSerializerSettings _settings = new()
+                                                   {
+                                                       NullValueHandling = NullValueHandling.Ignore,
+                                                   };
+
+    /// <summary>
     /// Client factory
     /// </summary>
     private readonly IHttpClientFactory _clientFactory;
@@ -68,7 +76,7 @@ public class DpsReportConnector
                                                .ReadAsStringAsync()
                                                .ConfigureAwait(false);
 
-                return JsonConvert.DeserializeObject<Page>(jsonResult);
+                return JsonConvert.DeserializeObject<Page>(jsonResult, _settings);
             }
         }
     }
@@ -209,7 +217,7 @@ public class DpsReportConnector
 
         using var response = await client.GetAsync(url).ConfigureAwait(false);
         var jsonResult = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-        var parsedPage = JsonConvert.DeserializeObject<Page>(jsonResult);
+        var parsedPage = JsonConvert.DeserializeObject<Page>(jsonResult, _settings);
 
         if (endTime != null && parsedPage?.Uploads != null)
         {
@@ -594,7 +602,7 @@ public class DpsReportConnector
                     {
                         var logContent = await reader.ReadToEndAsync().ConfigureAwait(false);
 
-                        log = JsonConvert.DeserializeObject<Log>(logContent);
+                        log = JsonConvert.DeserializeObject<Log>(logContent, _settings);
                     }
                 }
             }
@@ -630,7 +638,7 @@ public class DpsReportConnector
 
                     await UploadToCache(jsonResult, id).ConfigureAwait(false);
 
-                    return JsonConvert.DeserializeObject<Log>(jsonResult);
+                    return JsonConvert.DeserializeObject<Log>(jsonResult, _settings);
                 }
             }
             catch (Exception ex)
