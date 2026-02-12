@@ -110,7 +110,7 @@
 }
 
 .overlay-content h2 {
-   margin: 0 0 1.5rem 0;
+   margin: 0;
    color: var(--text);
    font-size: 1.875rem;
 }
@@ -155,14 +155,14 @@
    justify-content: center;
 }
 
-.overlay-mechanics-section {
+.overlay-section {
    grid-column: 1 / -1;
    display: flex;
    flex-direction: column;
    gap: 0.5rem;
 }
 
-.overlay-mechanics-section h3 {
+.overlay-section h3 {
    margin: 1.5rem 0 1rem 0;
    color: var(--text);
    font-size: 1.125rem;
