@@ -198,7 +198,6 @@
 .mechanics-table td {
    padding: 0.875rem;
    border-bottom: 1px solid var(--background-alt);
-   color: var(--text);
 }
 
 .mechanics-table tbody tr {
@@ -232,7 +231,6 @@
 .mechanics-count {
     text-align: right;
     font-weight: 600;
-    color: var(--text);
     font-size: 1rem;
     width: 80px;
 }

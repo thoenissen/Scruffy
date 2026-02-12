@@ -426,6 +426,27 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
     }
 
     /// <summary>
+    /// Gets the skill level for a mechanic based on the count
+    /// </summary>
+    /// <param name="name">Name</param>
+    /// <param name="count">Count</param>
+    /// <returns>Skill-Level CSS class</returns>
+    private string GetSkillLevelForMechanic(string name, int count)
+    {
+        if (count <= 1)
+        {
+            return "skill-level-2";
+        }
+
+        if (count <= 3)
+        {
+            return "skill-level-1";
+        }
+
+        return "skill-level-0";
+    }
+
+    /// <summary>
     /// Called from JavaScript when a row is clicked
     /// </summary>
     /// <param name="reportId">ID of the report</param>
