@@ -287,6 +287,7 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
         if (detailedReport != null)
         {
             report.Boss = detailedReport.FightName;
+            report.Duration = TimeSpan.FromMilliseconds(detailedReport.DurationMS);
             additionalData.Dps = detailedReport.Players?.Sum(player => player.DpsTargets?.Sum(dpsTarget => dpsTarget.Count > 0 ? dpsTarget[0].Dps : 0));
             additionalData.Alacrity = GetUptime(detailedReport.Players, AlacrityId);
             additionalData.Quickness = GetUptime(detailedReport.Players, QuicknessId);

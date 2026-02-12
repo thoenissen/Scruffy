@@ -44,7 +44,10 @@
                     </LoadingContainer>
                 </TemplateColumn>
                 <TemplateColumn Title="@LocalizationGroup.GetText("Duration", "Duration")" Context="u" Align="Align.End" Sortable="false">
-                    <div>@($"{(int)u.Duration.TotalMinutes}:{u.Duration.Seconds:D2}")</div>
+                    @if (u.Duration != null)
+                    {
+                        <div>@($"{(int)u.Duration.Value.TotalMinutes}:{u.Duration.Value.Seconds:D2}")</div>
+                    }
                 </TemplateColumn>
                 <TemplateColumn Context="u" Sortable="false" class="isassigned-column">
                     <a target="_blank" rel="noopener noreferrer" href="@u.PermaLink">⧉</a>

@@ -46,7 +46,10 @@
                     </LoadingContainer>
                 </TemplateColumn>
                 <TemplateColumn Title="@LocalizationGroup.GetText("Duration", "Duration")" Context="u" Align="Align.End" Sortable="false">
-                    @($"{(int)u.Duration.TotalMinutes}:{u.Duration.Seconds:D2}")
+                    @if (u.Duration != null)
+                    {
+                        @($"{(int)(u.Duration.Value.TotalMinutes)}:{u.Duration.Value.Seconds:D2}")
+                    }
                 </TemplateColumn>
                 <TemplateColumn Context="u" Sortable="false" class="isassigned-column">
                     <a target="_blank" rel="noopener noreferrer" href="@u.PermaLink" @onclick:stopPropagation="true">⧉</a>
@@ -95,10 +98,13 @@
                         <span class="@GetSkillLevelFromUptime(_selectedReport.AdditionalData?.Alacrity)">@((_selectedReport.AdditionalData?.Alacrity ?? 0).ToString("N2", LocalizationGroup.CultureInfo) + " %")</span>
                     </div>
                 </LoadingContainer>
-                <div class="overlay-info-row">
-                    <span class="overlay-label">@LocalizationGroup.GetText("Duration", "Duration")</span>
-                    <span>@($"{(int)_selectedReport.Duration.TotalMinutes}:{_selectedReport.Duration.Seconds:D2}")</span>
-                </div>
+                @if (_selectedReport.Duration != null)
+                {
+                    <div class="overlay-info-row">
+                        <span class="overlay-label">@LocalizationGroup.GetText("Duration", "Duration")</span>
+                        <span>@($"{(int)_selectedReport.Duration.Value.TotalMinutes}:{_selectedReport.Duration.Value.Seconds:D2}")</span>
+                    </div>
+                }
                 <div class="overlay-info-row">
                     <span class="overlay-label">@LocalizationGroup.GetText("Status", "Status")</span>
                     <span>

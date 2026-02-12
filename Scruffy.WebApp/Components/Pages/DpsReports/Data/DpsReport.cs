@@ -46,7 +46,7 @@ public class DpsReport
     /// <summary>
     /// Duration of the encounter.
     /// </summary>
-    public TimeSpan Duration { get; set; }
+    public TimeSpan? Duration { get; set; }
 
     /// <summary>
     /// Character name of the own player in this encounter
