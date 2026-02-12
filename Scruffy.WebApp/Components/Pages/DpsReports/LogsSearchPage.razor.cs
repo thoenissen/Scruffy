@@ -428,10 +428,9 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
     /// <summary>
     /// Gets the skill level for a mechanic based on the count
     /// </summary>
-    /// <param name="name">Name</param>
     /// <param name="count">Count</param>
     /// <returns>Skill-Level CSS class</returns>
-    private string GetSkillLevelForMechanic(string name, int count)
+    private string GetSkillLevelForMechanic(int count)
     {
         if (count <= 1)
         {
