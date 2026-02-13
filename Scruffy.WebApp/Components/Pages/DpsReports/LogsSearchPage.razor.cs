@@ -21,6 +21,7 @@ using Newtonsoft.Json;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.CoreData;
 using Scruffy.Data.Entity.Repositories.GuildWars2.Account;
+using Scruffy.Data.Json.DpsReport;
 using Scruffy.Services.Core.Extensions;
 using Scruffy.WebApp.Components.Pages.DpsReports.Data;
 using Scruffy.WebApp.Services;
@@ -191,15 +192,18 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
             _currentItems = uploads.Uploads
                                    .Select(upload => new DpsReport
                                                      {
-                                                         Id = upload.Id,
-                                                         IsSuccess = upload.Encounter?.Success == true,
-                                                         PermaLink = upload.Permalink,
-                                                         EncounterTime = DateTimeOffset.FromUnixTimeSeconds(upload.EncounterTime ?? 0).ToLocalTime(),
-                                                         Boss = upload.Encounter?.BossName ?? LocalizationGroup.GetText("Loading", "Loading..."),
-                                                         Duration = TimeSpan.FromSeconds(upload.Encounter?.Duration ?? 0),
+                                                         MetaData = new MetaData
+                                                                    {
+                                                                        Id = upload.Id,
+                                                                        IsSuccess = upload.Encounter?.Success == true,
+                                                                        PermaLink = upload.Permalink,
+                                                                        EncounterTime = DateTimeOffset.FromUnixTimeSeconds(upload.EncounterTime ?? 0).ToLocalTime(),
+                                                                        Boss = upload.Encounter?.BossName ?? LocalizationGroup.GetText("Loading", "Loading..."),
+                                                                        Duration = TimeSpan.FromSeconds(upload.Encounter?.Duration ?? 0),
+                                                                    },
                                                          IsLoadingAdditionalData = true,
                                                      })
-                                   .ToDictionary(report => report.Id);
+                                   .ToDictionary(report => report.MetaData.Id);
 
             Task.Run(() =>
                      {
@@ -277,29 +281,90 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     private async Task GetAdditionalDataAsync(DpsReport report)
     {
-        var detailedReport = await DpsReportProcessor.Get(report.Id).ConfigureAwait(false);
+        report.FullReport = await DpsReportProcessor.Get(report.MetaData.Id).ConfigureAwait(false);
 
-        var additionalData = new AdditionalData
-                             {
-                                 FullReport = detailedReport
-                             };
-
-        if (detailedReport != null)
+        if (report.FullReport != null)
         {
-            report.Boss = detailedReport.FightName;
-            report.Duration = TimeSpan.FromMilliseconds(detailedReport.DurationMS);
-            additionalData.Dps = detailedReport.Players?.Sum(player => player.DpsTargets?.Sum(dpsTarget => dpsTarget.Count > 0 ? dpsTarget[0].Dps : 0));
-            additionalData.Alacrity = GetUptime(detailedReport.Players, AlacrityId);
-            additionalData.Quickness = GetUptime(detailedReport.Players, QuicknessId);
-            report.PlayerCharacterName = GetOwnCharacterName(detailedReport);
-            report.Mechanics = GetMechanics(detailedReport, report.PlayerCharacterName);
-            GetPlayerRole(report, detailedReport, report.PlayerCharacterName);
+            report.MetaData.Boss = report.FullReport.FightName;
+            report.MetaData.Duration = TimeSpan.FromMilliseconds(report.FullReport.DurationMS);
+            report.OverallStatistics = ReportOverallStatistics(report.FullReport);
+            report.PersonalStatistics = GetPersonalStatistics(report.FullReport);
         }
 
         report.IsLoadingAdditionalData = false;
-        report.AdditionalData = additionalData;
 
         await InvokeAsync(StateHasChanged).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Get overall statistics
+    /// </summary>
+    /// <param name="detailedReport">Detailed report</param>
+    /// <returns>Overall statistics</returns>
+    private OverallStatistics ReportOverallStatistics(JsonLog detailedReport)
+    {
+        return new OverallStatistics
+               {
+                   Dps = detailedReport.Players?.Sum(player => player.DpsTargets?.Sum(dpsTarget => dpsTarget.Count > 0 ? dpsTarget[0].Dps : 0)),
+                   Alacrity = GetUptime(detailedReport.Players, AlacrityId),
+                   Quickness = GetUptime(detailedReport.Players, QuicknessId),
+               };
+    }
+
+    /// <summary>
+    /// Get personal statistics
+    /// </summary>
+    /// <param name="detailedReport">Detailed report</param>
+    /// <returns>Personal statistics</returns>
+    private PersonalStatistics GetPersonalStatistics(JsonLog detailedReport)
+    {
+        var playerCharacterName = GetOwnCharacterName(detailedReport);
+
+        var statistics = new PersonalStatistics
+                         {
+                             PlayerCharacterName = playerCharacterName,
+                             Mechanics = GetMechanics(detailedReport, playerCharacterName),
+                         };
+
+        var player = detailedReport?.Players?.FirstOrDefault(player => player.Name?.Equals(playerCharacterName, StringComparison.OrdinalIgnoreCase) == true);
+
+        if (player != null)
+        {
+            var alacrityBuff = player.GroupBuffs?.FirstOrDefault(buff => buff.Id == AlacrityId)?.BuffData;
+
+            if (alacrityBuff?.Count > 0
+                && alacrityBuff[0].Generation > 15.0D)
+            {
+                statistics.Alacrity = alacrityBuff[0].Generation;
+
+                statistics.PlayerRole = player.Healing > 0
+                                            ? "Alacrity Healer"
+                                            : "Alacrity DPS";
+            }
+            else
+            {
+                var quicknessBuff = player.GroupBuffs?.FirstOrDefault(buff => buff.Id == QuicknessId)?.BuffData;
+
+                if (quicknessBuff?.Count > 0
+                    && quicknessBuff[0].Generation > 15.0D)
+                {
+                    statistics.Quickness = quicknessBuff[0].Generation;
+
+                    statistics.PlayerRole = player.Healing > 0
+                                                ? "Quickness Healer"
+                                                : "Quickness DPS";
+                }
+            }
+
+            if (player.Healing == 0)
+            {
+                statistics.PlayerDps = player.DpsTargets?.Sum(dpsTarget => dpsTarget.Count > 0 ? dpsTarget[0].Dps : 0);
+            }
+        }
+
+        statistics.PlayerRole ??= "DPS";
+
+        return statistics;
     }
 
     /// <summary>
@@ -354,53 +419,6 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
         }
 
         return result;
-    }
-
-    /// <summary>
-    /// Get player role
-    /// </summary>
-    /// <param name="report">Report</param>
-    /// <param name="detailedReport">Detailed report</param>
-    /// <param name="playerCharacterName">Character name of the own player</param>
-    private void GetPlayerRole(DpsReport report, JsonLog detailedReport, string playerCharacterName)
-    {
-        var player = detailedReport?.Players?.FirstOrDefault(player => player.Name?.Equals(playerCharacterName, StringComparison.OrdinalIgnoreCase) == true);
-
-        if (player != null)
-        {
-            var alacrityBuff = player.GroupBuffs?.FirstOrDefault(buff => buff.Id == AlacrityId)?.BuffData;
-
-            if (alacrityBuff?.Count > 0
-                && alacrityBuff[0].Generation > 15.0D)
-            {
-                report.Alacrity = alacrityBuff[0].Generation;
-
-                report.PlayerRole = player.Healing > 0
-                                        ? "Alacrity Healer"
-                                        : "Alacrity DPS";
-            }
-            else
-            {
-                var quicknessBuff = player.GroupBuffs?.FirstOrDefault(buff => buff.Id == QuicknessId)?.BuffData;
-
-                if (quicknessBuff?.Count > 0
-                    && quicknessBuff[0].Generation > 15.0D)
-                {
-                    report.Quickness = quicknessBuff[0].Generation;
-
-                    report.PlayerRole = player.Healing > 0
-                                             ? "Quickness Healer"
-                                             : "Quickness DPS";
-                }
-            }
-
-            if (player.Healing == 0)
-            {
-                report.PlayerDps = player.DpsTargets?.Sum(dpsTarget => dpsTarget.Count > 0 ? dpsTarget[0].Dps : 0);
-            }
-        }
-
-        report.PlayerRole ??= "DPS";
     }
 
     /// <summary>

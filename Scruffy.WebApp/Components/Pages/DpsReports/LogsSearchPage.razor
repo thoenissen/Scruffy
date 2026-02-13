@@ -14,8 +14,8 @@
         <div class="quickgrid-std registrations-container mb-3" @ref="_gridContainer">
             <QuickGrid TGridItem="DpsReport" ItemsProvider="@OnGetItems" Pagination="@_paginationState" Virtualize="@false">
                 <TemplateColumn Context="u" Sortable="false">
-                    <div data-report-id="@u.Id">
-                        @if (u.IsSuccess)
+                    <div data-report-id="@u.MetaData.Id">
+                        @if (u.MetaData.IsSuccess)
                         {
                             <div class="state-icon state-icon-success skill-level-2"></div>
                         }
@@ -26,34 +26,34 @@
                     </div>
                 </TemplateColumn>
                 <TemplateColumn Title="@LocalizationGroup.GetText("EncounterTime", "Time")" Context="u" Sortable="false">
-                    @u.EncounterTime.ToString("g", LocalizationGroup.CultureInfo)
+                    @u.MetaData.EncounterTime.ToString("g", LocalizationGroup.CultureInfo)
                 </TemplateColumn>
                 <TemplateColumn Title="@LocalizationGroup.GetText("Boss", "Boss")" Context="u" Sortable="false">
-                    @u.Boss
+                    @u.MetaData.Boss
                 </TemplateColumn>
                 <TemplateColumn Title="@LocalizationGroup.GetText("Dps", "DPS")" Context="u" Align="Align.End" Sortable="false">
                     <LoadingContainer Size="LoadingIndicatorSize.Small" IsLoading="@u.IsLoadingAdditionalData">
-                        <div>@u.AdditionalData.Dps?.ToString("N0", LocalizationGroup.CultureInfo)</div>
+                        <div>@u.OverallStatistics?.Dps?.ToString("N0", LocalizationGroup.CultureInfo)</div>
                     </LoadingContainer>
                 </TemplateColumn>
                 <TemplateColumn Title="@LocalizationGroup.GetText("Quickness", "Quickness")" Context="u" Align="Align.End" Sortable="false">
                     <LoadingContainer Size="LoadingIndicatorSize.Small" IsLoading="@u.IsLoadingAdditionalData">
-                        <div class="@GetSkillLevelFromUptime(u.AdditionalData.Quickness)">@((u.AdditionalData.Quickness ?? 0).ToString("N2", LocalizationGroup.CultureInfo) + " %")</div>
+                        <div class="@GetSkillLevelFromUptime(u.OverallStatistics.Quickness)">@((u.OverallStatistics?.Quickness ?? 0).ToString("N2", LocalizationGroup.CultureInfo) + " %")</div>
                     </LoadingContainer>
                 </TemplateColumn>
                 <TemplateColumn Title="@LocalizationGroup.GetText("Alacrity", "Alacrity")" Context="u" Align="Align.End" Sortable="false">
                     <LoadingContainer Size="LoadingIndicatorSize.Small" IsLoading="@u.IsLoadingAdditionalData">
-                        <div class="@GetSkillLevelFromUptime(u.AdditionalData.Alacrity)">@((u.AdditionalData.Alacrity ?? 0).ToString("N2", LocalizationGroup.CultureInfo) + " %")</div>
+                        <div class="@GetSkillLevelFromUptime(u.OverallStatistics.Alacrity)">@((u.OverallStatistics?.Alacrity ?? 0).ToString("N2", LocalizationGroup.CultureInfo) + " %")</div>
                     </LoadingContainer>
                 </TemplateColumn>
                 <TemplateColumn Title="@LocalizationGroup.GetText("Duration", "Duration")" Context="u" Align="Align.End" Sortable="false">
-                    @if (u.Duration != null)
+                    @if (u.MetaData.Duration != null)
                     {
-                        @($"{(int)(u.Duration.Value.TotalMinutes)}:{u.Duration.Value.Seconds:D2}")
+                        @($"{(int)(u.MetaData.Duration.Value.TotalMinutes)}:{u.MetaData.Duration.Value.Seconds:D2}")
                     }
                 </TemplateColumn>
                 <TemplateColumn Context="u" Sortable="false" class="isassigned-column">
-                    <a target="_blank" rel="noopener noreferrer" href="@u.PermaLink" @onclick:stopPropagation="true">⧉</a>
+                    <a target="_blank" rel="noopener noreferrer" href="@u.MetaData.PermaLink" @onclick:stopPropagation="true">⧉</a>
                 </TemplateColumn>
             </QuickGrid>
         </div>
@@ -72,39 +72,39 @@
             <span class="material-icons">close</span>
         </button>
         <div class="overlay-content">
-            <h2>@_selectedReport.Boss</h2>
+            <h2>@_selectedReport.MetaData.Boss</h2>
             <div class="overlay-section">
                 <h3>@LocalizationGroup.GetText("OverallStatistics", "Overall Statistics")</h3>
                 <div class="overlay-info">
                     <div class="overlay-info-row">
                         <span class="overlay-label">@LocalizationGroup.GetText("EncounterTime", "Time")</span>
-                        <span>@_selectedReport.EncounterTime.ToString("g", LocalizationGroup.CultureInfo)</span>
+                        <span>@_selectedReport.MetaData.EncounterTime.ToString("g", LocalizationGroup.CultureInfo)</span>
                     </div>
                     <LoadingContainer IsLoading="@_selectedReport.IsLoadingAdditionalData">
                         <div class="overlay-info-row">
                             <span class="overlay-label">@LocalizationGroup.GetText("Dps", "DPS")</span>
-                            <span>@_selectedReport.AdditionalData?.Dps?.ToString("N0", LocalizationGroup.CultureInfo)</span>
+                            <span>@_selectedReport.OverallStatistics?.Dps?.ToString("N0", LocalizationGroup.CultureInfo)</span>
                         </div>
                         <div class="overlay-info-row">
                             <span class="overlay-label">@LocalizationGroup.GetText("Quickness", "Quickness")</span>
-                            <span class="@GetSkillLevelFromUptime(_selectedReport.AdditionalData?.Quickness)">@((_selectedReport.AdditionalData?.Quickness ?? 0).ToString("N2", LocalizationGroup.CultureInfo) + " %")</span>
+                            <span class="@GetSkillLevelFromUptime(_selectedReport.OverallStatistics?.Quickness)">@((_selectedReport.OverallStatistics?.Quickness ?? 0).ToString("N2", LocalizationGroup.CultureInfo) + " %")</span>
                         </div>
                         <div class="overlay-info-row">
                             <span class="overlay-label">@LocalizationGroup.GetText("Alacrity", "Alacrity")</span>
-                            <span class="@GetSkillLevelFromUptime(_selectedReport.AdditionalData?.Alacrity)">@((_selectedReport.AdditionalData?.Alacrity ?? 0).ToString("N2", LocalizationGroup.CultureInfo) + " %")</span>
+                            <span class="@GetSkillLevelFromUptime(_selectedReport.OverallStatistics?.Alacrity)">@((_selectedReport.OverallStatistics?.Alacrity ?? 0).ToString("N2", LocalizationGroup.CultureInfo) + " %")</span>
                         </div>
                     </LoadingContainer>
-                    @if (_selectedReport.Duration != null)
+                    @if (_selectedReport.MetaData.Duration != null)
                     {
                         <div class="overlay-info-row">
                             <span class="overlay-label">@LocalizationGroup.GetText("Duration", "Duration")</span>
-                            <span>@($"{(int)_selectedReport.Duration.Value.TotalMinutes}:{_selectedReport.Duration.Value.Seconds:D2}")</span>
+                            <span>@($"{(int)_selectedReport.MetaData.Duration.Value.TotalMinutes}:{_selectedReport.MetaData.Duration.Value.Seconds:D2}")</span>
                         </div>
                     }
                     <div class="overlay-info-row">
                         <span class="overlay-label">@LocalizationGroup.GetText("Status", "Status")</span>
                         <span>
-                            @if (_selectedReport.IsSuccess)
+                            @if (_selectedReport.MetaData.IsSuccess)
                             {
                                 <span class="skill-level-2">@LocalizationGroup.GetText("Success", "Success")</span>
                             }
@@ -116,41 +116,44 @@
                     </div>
                 </div>
             </div>
-            <div class="overlay-section">
-                <h3>@LocalizationGroup.GetText("PersonalStatistics", "Personal Statistics")</h3>
-                <div class="overlay-info">
-                    <div class="overlay-info-row">
-                        <span class="overlay-label">@LocalizationGroup.GetText("Character", "Character")</span>
-                        <span>@_selectedReport.PlayerCharacterName</span>
+            @if (_selectedReport.PersonalStatistics != null)
+            {
+                <div class="overlay-section">
+                    <h3>@LocalizationGroup.GetText("PersonalStatistics", "Personal Statistics")</h3>
+                    <div class="overlay-info">
+                        <div class="overlay-info-row">
+                            <span class="overlay-label">@LocalizationGroup.GetText("Character", "Character")</span>
+                            <span>@_selectedReport.PersonalStatistics.PlayerCharacterName</span>
+                        </div>
+                        <div class="overlay-info-row">
+                            <span class="overlay-label">@LocalizationGroup.GetText("Role", "Role")</span>
+                            <span>@_selectedReport.PersonalStatistics.PlayerRole</span>
+                        </div>
+                        @if (_selectedReport.PersonalStatistics.PlayerDps != null)
+                        {
+                            <div class="overlay-info-row">
+                                <span class="overlay-label">@LocalizationGroup.GetText("PlayerDps", "DPS")</span>
+                                <span class="@GetSkillLevelFromDps(_selectedReport.PersonalStatistics.PlayerDps)">@_selectedReport.PersonalStatistics.PlayerDps.Value</span>
+                            </div>
+                        }
+                        @if (_selectedReport.PersonalStatistics.Alacrity != null)
+                        {
+                            <div class="overlay-info-row">
+                                <span class="overlay-label">@LocalizationGroup.GetText("Alacrity", "Alacrity")</span>
+                                <span class="@GetSkillLevelFromUptime(_selectedReport.PersonalStatistics.Alacrity)">@_selectedReport.PersonalStatistics.Alacrity.Value.ToString("N2", LocalizationGroup.CultureInfo) %</span>
+                            </div>
+                        }
+                        @if (_selectedReport.PersonalStatistics.Quickness != null)
+                        {
+                            <div class="overlay-info-row">
+                                <span class="overlay-label">@LocalizationGroup.GetText("Quickness", "Quickness")</span>
+                                <span class="@GetSkillLevelFromUptime(_selectedReport.PersonalStatistics.Quickness)">@_selectedReport.PersonalStatistics.Quickness.Value.ToString("N2", LocalizationGroup.CultureInfo)  %</span>
+                            </div>
+                        }
                     </div>
-                    <div class="overlay-info-row">
-                        <span class="overlay-label">@LocalizationGroup.GetText("Role", "Role")</span>
-                        <span>@_selectedReport.PlayerRole</span>
-                    </div>
-                    @if (_selectedReport.PlayerDps != null)
-                    {
-                        <div class="overlay-info-row">
-                            <span class="overlay-label">@LocalizationGroup.GetText("PlayerDps", "DPS")</span>
-                            <span class="@GetSkillLevelFromDps(_selectedReport.PlayerDps)">@_selectedReport.PlayerDps.Value</span>
-                        </div>
-                    }
-                    @if (_selectedReport.Alacrity != null)
-                    {
-                        <div class="overlay-info-row">
-                            <span class="overlay-label">@LocalizationGroup.GetText("Alacrity", "Alacrity")</span>
-                            <span class="@GetSkillLevelFromUptime(_selectedReport.Alacrity)">@_selectedReport.Alacrity.Value.ToString("N2", LocalizationGroup.CultureInfo) %</span>
-                        </div>
-                    }
-                    @if (_selectedReport.Quickness != null)
-                    {
-                        <div class="overlay-info-row">
-                            <span class="overlay-label">@LocalizationGroup.GetText("Quickness", "Quickness")</span>
-                            <span class="@GetSkillLevelFromUptime(_selectedReport.Quickness)">@_selectedReport.Quickness.Value.ToString("N2", LocalizationGroup.CultureInfo)  %</span>
-                        </div>
-                    }
                 </div>
-            </div>
-            @if (_selectedReport.Mechanics?.Count > 0)
+            }
+            @if (_selectedReport.PersonalStatistics?.Mechanics?.Count > 0)
             {
                 <div class="overlay-section">
                     <h3>@LocalizationGroup.GetText("PersonalMechanics", "Personal Mechanics")</h3>
@@ -164,7 +167,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var mechanic in _selectedReport.Mechanics)
+                            @foreach (var mechanic in _selectedReport.PersonalStatistics.Mechanics)
                             {
                                 <tr>
                                     <td class="mechanic-name">@mechanic.Name</td>
@@ -178,7 +181,7 @@
                 </div>
             }
             <div class="overlay-actions">
-                <a target="_blank" rel="noopener noreferrer" href="@_selectedReport.PermaLink" class="primary-button">
+                <a target="_blank" rel="noopener noreferrer" href="@_selectedReport.MetaData.PermaLink" class="primary-button">
                     @LocalizationGroup.GetText("ViewDetails", "View Details")
                 </a>
             </div>

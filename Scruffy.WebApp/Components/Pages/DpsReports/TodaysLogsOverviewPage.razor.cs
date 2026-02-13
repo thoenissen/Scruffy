@@ -174,12 +174,15 @@ public sealed partial class TodaysLogsOverviewPage : IAsyncDisposable
 
                             var report = new DpsReport
                                          {
-                                             Id = upload.Id,
-                                             IsSuccess = upload.Encounter?.Success == true,
-                                             PermaLink = upload.Permalink,
-                                             EncounterTime = DateTimeOffset.FromUnixTimeSeconds(upload.EncounterTime ?? 0).ToLocalTime(),
-                                             Boss = upload.Encounter?.BossName ?? LocalizationGroup.GetText("Loading", "Loading..."),
-                                             Duration = TimeSpan.FromSeconds(upload.Encounter?.Duration ?? 0),
+                                             MetaData = new MetaData
+                                                        {
+                                                            Id = upload.Id,
+                                                            IsSuccess = upload.Encounter?.Success == true,
+                                                            PermaLink = upload.Permalink,
+                                                            EncounterTime = DateTimeOffset.FromUnixTimeSeconds(upload.EncounterTime ?? 0).ToLocalTime(),
+                                                            Boss = upload.Encounter?.BossName ?? LocalizationGroup.GetText("Loading", "Loading..."),
+                                                            Duration = TimeSpan.FromSeconds(upload.Encounter?.Duration ?? 0),
+                                                        },
                                              IsLoadingAdditionalData = true,
                                          };
 
@@ -212,23 +215,20 @@ public sealed partial class TodaysLogsOverviewPage : IAsyncDisposable
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     private async Task GetAdditionalDataAsync(DpsReport report)
     {
-        var detailedReport = await DpsReportProcessor.Get(report.Id).ConfigureAwait(false);
+        report.FullReport = await DpsReportProcessor.Get(report.MetaData.Id).ConfigureAwait(false);
 
-        var additionalData = new AdditionalData
-                             {
-                                 FullReport = detailedReport
-                             };
+        var overallStatistics = new OverallStatistics();
 
-        if (detailedReport != null)
+        if (report.FullReport != null)
         {
-            report.Boss = detailedReport.FightName;
-            additionalData.Dps = detailedReport.Players?.Sum(player => player.DpsTargets?.Sum(dpsTarget => dpsTarget.Count > 0 ? dpsTarget[0].Dps : 0));
-            additionalData.Alacrity = GetUptime(detailedReport.Players, AlacrityId);
-            additionalData.Quickness = GetUptime(detailedReport.Players, QuicknessId);
+            report.MetaData.Boss = report.FullReport.FightName;
+            overallStatistics.Dps = report.FullReport.Players?.Sum(player => player.DpsTargets?.Sum(dpsTarget => dpsTarget.Count > 0 ? dpsTarget[0].Dps : 0));
+            overallStatistics.Alacrity = GetUptime(report.FullReport.Players, AlacrityId);
+            overallStatistics.Quickness = GetUptime(report.FullReport.Players, QuicknessId);
         }
 
+        report.OverallStatistics = overallStatistics;
         report.IsLoadingAdditionalData = false;
-        report.AdditionalData = additionalData;
 
         await InvokeAsync(StateHasChanged).ConfigureAwait(false);
     }

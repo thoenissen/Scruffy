@@ -15,7 +15,7 @@
         <div class="quickgrid-std registrations-container">
             <QuickGrid Items="@_reports.AsQueryable()">
                 <TemplateColumn Context="u" Sortable="false">
-                    @if (u.IsSuccess)
+                    @if (u.MetaData.IsSuccess)
                     {
                         <div class="state-icon state-icon-success skill-level-2"></div>
                     }
@@ -25,32 +25,32 @@
                     }
                 </TemplateColumn>
                 <TemplateColumn Title="@LocalizationGroup.GetText("EncounterTime", "Time")" Context="u" Sortable="false">
-                    <div>@u.EncounterTime.ToString("g", LocalizationGroup.CultureInfo)</div>
+                    <div>@u.MetaData.EncounterTime.ToString("g", LocalizationGroup.CultureInfo)</div>
                 </TemplateColumn>
-                <PropertyColumn Title="@LocalizationGroup.GetText("Boss", "Boss")" Property="@(u => u.Boss)" Sortable="false"/>
+                <PropertyColumn Title="@LocalizationGroup.GetText("Boss", "Boss")" Property="@(u => u.MetaData.Boss)" Sortable="false"/>
                 <TemplateColumn Title="@LocalizationGroup.GetText("Dps", "DPS")" Context="u" Align="Align.End" Sortable="false">
                     <LoadingContainer Size="LoadingIndicatorSize.Small" IsLoading="@u.IsLoadingAdditionalData">
-                        <div>@u.AdditionalData.Dps?.ToString("N0", LocalizationGroup.CultureInfo)</div>
+                        <div>@u.OverallStatistics.Dps?.ToString("N0", LocalizationGroup.CultureInfo)</div>
                     </LoadingContainer>
                 </TemplateColumn>
                 <TemplateColumn Title="@LocalizationGroup.GetText("Quickness", "Quickness")" Context="u" Align="Align.End" Sortable="false">
                     <LoadingContainer Size="LoadingIndicatorSize.Small" IsLoading="@u.IsLoadingAdditionalData">
-                        <div class="@GetSkillLevelFromUptime(u.AdditionalData.Quickness)">@((u.AdditionalData.Quickness ?? 0).ToString("N2", LocalizationGroup.CultureInfo) + " %")</div>
+                        <div class="@GetSkillLevelFromUptime(u.OverallStatistics.Quickness)">@((u.OverallStatistics.Quickness ?? 0).ToString("N2", LocalizationGroup.CultureInfo) + " %")</div>
                     </LoadingContainer>
                 </TemplateColumn>
                 <TemplateColumn Title="@LocalizationGroup.GetText("Alacrity", "Alacrity")" Context="u" Align="Align.End" Sortable="false">
                     <LoadingContainer Size="LoadingIndicatorSize.Small" IsLoading="@u.IsLoadingAdditionalData">
-                        <div class="@GetSkillLevelFromUptime(u.AdditionalData.Alacrity)">@((u.AdditionalData.Alacrity ?? 0).ToString("N2", LocalizationGroup.CultureInfo) + " %")</div>
+                        <div class="@GetSkillLevelFromUptime(u.OverallStatistics.Alacrity)">@((u.OverallStatistics.Alacrity ?? 0).ToString("N2", LocalizationGroup.CultureInfo) + " %")</div>
                     </LoadingContainer>
                 </TemplateColumn>
                 <TemplateColumn Title="@LocalizationGroup.GetText("Duration", "Duration")" Context="u" Align="Align.End" Sortable="false">
-                    @if (u.Duration != null)
+                    @if (u.MetaData.Duration != null)
                     {
-                        <div>@($"{(int)u.Duration.Value.TotalMinutes}:{u.Duration.Value.Seconds:D2}")</div>
+                        <div>@($"{(int)u.MetaData.Duration.Value.TotalMinutes}:{u.MetaData.Duration.Value.Seconds:D2}")</div>
                     }
                 </TemplateColumn>
                 <TemplateColumn Context="u" Sortable="false" class="isassigned-column">
-                    <a target="_blank" rel="noopener noreferrer" href="@u.PermaLink">⧉</a>
+                    <a target="_blank" rel="noopener noreferrer" href="@u.MetaData.PermaLink">⧉</a>
                 </TemplateColumn>
             </QuickGrid>
          </div>
