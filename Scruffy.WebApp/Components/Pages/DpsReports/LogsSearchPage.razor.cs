@@ -393,6 +393,11 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
                                              : "Quickness DPS";
                 }
             }
+
+            if (player.Healing == 0)
+            {
+                report.PlayerDps = player.DpsTargets?.Sum(dpsTarget => dpsTarget.Count > 0 ? dpsTarget[0].Dps : 0);
+            }
         }
 
         report.PlayerRole ??= "DPS";
@@ -481,6 +486,26 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
         }
 
         if (count <= 3)
+        {
+            return "skill-level-1";
+        }
+
+        return "skill-level-0";
+    }
+
+    /// <summary>
+    /// Gets the skell from player dps
+    /// </summary>
+    /// <param name="dps">DPS</param>
+    /// <returns>Skill-Level CSS class</returns>
+    private string GetSkillLevelFromDps(int? dps)
+    {
+        if (dps < 10_000)
+        {
+            return "skill-level-0";
+        }
+
+        if (dps < 20_000)
         {
             return "skill-level-1";
         }

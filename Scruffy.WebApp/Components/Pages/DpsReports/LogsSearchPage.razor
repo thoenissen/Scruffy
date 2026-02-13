@@ -4,6 +4,7 @@
 
 @page "/DpsReports/Search"
 @inherits Scruffy.WebApp.Components.Base.LocatedComponent
+
 @rendermode InteractiveServer
 
 <PageTitle>@LocalizationGroup.GetText("PageTitle", "FooI - Logs - Search")</PageTitle>
@@ -126,6 +127,13 @@
                         <span class="overlay-label">@LocalizationGroup.GetText("Role", "Role")</span>
                         <span>@_selectedReport.PlayerRole</span>
                     </div>
+                    @if (_selectedReport.PlayerDps != null)
+                    {
+                        <div class="overlay-info-row">
+                            <span class="overlay-label">@LocalizationGroup.GetText("PlayerDps", "DPS")</span>
+                            <span class="@GetSkillLevelFromDps(_selectedReport.PlayerDps)">@_selectedReport.PlayerDps.Value</span>
+                        </div>
+                    }
                     @if (_selectedReport.Alacrity != null)
                     {
                         <div class="overlay-info-row">
