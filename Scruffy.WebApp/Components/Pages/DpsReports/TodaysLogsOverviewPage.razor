@@ -8,7 +8,15 @@
 <PageTitle>@LocalizationGroup.GetText("PageTitle", "FooI - Logs - Today")</PageTitle>
 
 <div class="page-container">
-    <h3>@LocalizationGroup.GetText("PageHeader", "Today's logs")</h3>
+    @if (_logsDate == null || _logsDate == DateTime.Today)
+    {
+        <h3>@LocalizationGroup.GetText("PageHeader", "Today's logs")</h3>
+    }
+    else
+    {
+        <h3>@LocalizationGroup.GetFormattedText("PageHeaderLogsFrom", "{0:d} logs", _logsDate)</h3>
+        <h5>@LocalizationGroup.GetText("TodayNotAvailable", "For today there are no logs available.")</h5>
+    }
     <LoadingContainer IsLoading="@_isPageLoading">
        @if (_reports?.Count > 0)
        {

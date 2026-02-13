@@ -1066,6 +1066,8 @@
     "TodaysLogsOverviewPage": {
       "PageTitle": "FooI - Logs - Heutige Logs",
       "PageHeader": "Heutige Logs",
+      "PageHeaderLogsFrom": "Logs vom {0:d}",
+      "TodayNotAvailable": "Für heute stehen keine Logs zur Verfügung.",
       "EncounterTime": "Zeit",
       "Boss": "Gegner",
       "Dps": "DPS",

@@ -53,6 +53,11 @@ public sealed partial class TodaysLogsOverviewPage : IAsyncDisposable
     private bool _isPageLoading;
 
     /// <summary>
+    /// Are logs for today available?
+    /// </summary>
+    private DateTime? _logsDate;
+
+    /// <summary>
     /// Reports
     /// </summary>
     private List<DpsReport> _reports = [];
@@ -124,6 +129,8 @@ public sealed partial class TodaysLogsOverviewPage : IAsyncDisposable
                                                    .FirstOrDefault();
 
                     _reports = [];
+                    _logsDate = null;
+
                     var page = 1;
                     DPSReportGetUploadsObject uploads = null;
 
@@ -159,13 +166,15 @@ public sealed partial class TodaysLogsOverviewPage : IAsyncDisposable
                             continue;
                         }
 
-                        var today = DateTime.Today;
-
                         foreach (var upload in uploads.Uploads)
                         {
                             var uploadTime = DateTimeOffset.FromUnixTimeSeconds(upload.UploadTime ?? 0);
 
-                            if (uploadTime < today)
+                            if (_logsDate == null)
+                            {
+                                _logsDate = uploadTime.Date;
+                            }
+                            else if (uploadTime < _logsDate)
                             {
                                 uploads = null;
 
