@@ -143,10 +143,10 @@ public class DpsReportsMetaImporter : LocatedServiceBase
                                             BossId = upload.Encounter?.BossId ?? 0,
                                             IsSuccess = upload.Encounter?.Success == true,
                                             Mode = upload.Encounter?.IsLegendaryCm == true
-                                                ? DpsReportMode.LegendaryChallengeMode
-                                                : upload.Encounter?.IsCm == true
-                                                    ? DpsReportMode.ChallengeMode
-                                                    : DpsReportMode.Normal,
+                                                       ? DpsReportMode.LegendaryChallengeMode
+                                                       : upload.Encounter?.IsCm == true
+                                                             ? DpsReportMode.ChallengeMode
+                                                             : DpsReportMode.Normal,
                                             State = DpsReportProcessingState.Pending
                                         });
                         }

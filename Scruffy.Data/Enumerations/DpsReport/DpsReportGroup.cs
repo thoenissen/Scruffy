@@ -36,7 +36,7 @@ public enum DpsReportGroup
     [ChoiceDisplay("Special Forces Training Area")]
     TrainingArea,
     [ChoiceDisplay("W1 - Spirit Vale")]
-    SpritVale,
+    SpiritVale,
     [ChoiceDisplay("W2 - Salvation Pass")]
     SalvationPass,
     [ChoiceDisplay("W3 - Stronghold of the Faithful")]
@@ -88,7 +88,7 @@ public static class DpsReportGroupExtensions
                    or DpsReportGroup.EoDStrikes
                    or DpsReportGroup.SotOStrikes => DpsReportType.Strike,
 
-                   DpsReportGroup.SpritVale
+                   DpsReportGroup.SpiritVale
                    or DpsReportGroup.SalvationPass
                    or DpsReportGroup.StrongholdOfTheFaithful
                    or DpsReportGroup.BastionOfThePenitent
@@ -120,7 +120,7 @@ public static class DpsReportGroupExtensions
                    DpsReportGroup.EoDStrikes => "EoD Strikes",
                    DpsReportGroup.SotOStrikes => "SotO Strikes",
                    DpsReportGroup.TrainingArea => "Special Forces Training Area",
-                   DpsReportGroup.SpritVale => "W1 - Spirit Vale",
+                   DpsReportGroup.SpiritVale => "W1 - Spirit Vale",
                    DpsReportGroup.SalvationPass => "W2 - Salvation Pass",
                    DpsReportGroup.StrongholdOfTheFaithful => "W3 - Stronghold of the Faithful",
                    DpsReportGroup.BastionOfThePenitent => "W4 - Bastion of the Penitent",

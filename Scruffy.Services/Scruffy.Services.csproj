@@ -31,6 +31,9 @@
     <ProjectReference Include="..\Scruffy.Data\Scruffy.Data.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="GW2EIEvtcParser">
+      <HintPath>..\libs\GW2EIEvtcParser.dll</HintPath>
+    </Reference>
     <Reference Include="OpenSearch.Net">
       <HintPath>..\libs\OpenSearch.Net.dll</HintPath>
     </Reference>

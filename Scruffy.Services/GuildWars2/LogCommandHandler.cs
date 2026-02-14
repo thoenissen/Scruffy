@@ -322,7 +322,7 @@ public class LogCommandHandler : LocatedServiceBase
             var uploads = await _dpsReportConnector.GetUploads(account.DpsReportUserToken,
                                                                upload =>
                                                                {
-                                                                   if (upload.Encounter.Success && _dpsReportConnector.GetReportGroup(upload.Encounter.BossId) == group)
+                                                                   if (upload.Encounter.Success && DpsReportAnalyzer.GetReportGroupByBossId(upload.Encounter.BossId) == group)
                                                                    {
                                                                        counts.TryAdd(upload.Encounter.BossId, 0);
                                                                        ++counts[upload.Encounter.BossId];
@@ -371,7 +371,7 @@ public class LogCommandHandler : LocatedServiceBase
                                                                      obj.Encounter.Boss
                                                                  }))
                 {
-                    var title = $"{DiscordEmoteService.GetGuildEmote(_client, _dpsReportConnector.GetRaidBossIconId(bossGroup.Key.BossId))} {bossGroup.Key.Boss}";
+                    var title = $"{DiscordEmoteService.GetGuildEmote(_client, DpsReportAnalyzer.GetRaidBossIconId(bossGroup.Key.BossId))} {bossGroup.Key.Boss}";
                     var reports = new StringBuilder();
                     var isUseEmptyTitle = false;
 
@@ -439,7 +439,7 @@ public class LogCommandHandler : LocatedServiceBase
                                                                upload =>
                                                                {
                                                                    if (upload.Encounter.Success
-                                                                    && _dpsReportConnector.GetReportGroup(upload.Encounter.BossId) == group)
+                                                                    && DpsReportAnalyzer.GetReportGroupByBossId(upload.Encounter.BossId) == group)
                                                                    {
                                                                        if (counts.TryGetValue(upload.FightName, out var fightCount))
                                                                        {
@@ -593,7 +593,7 @@ public class LogCommandHandler : LocatedServiceBase
             var uploads = await _dpsReportConnector.GetUploads(account.DpsReportUserToken,
                                                                startDate,
                                                                endDate,
-                                                               upload => _dpsReportConnector.GetReportGroup(upload.Encounter.BossId) == DpsReportGroup.TrainingArea)
+                                                               upload => DpsReportAnalyzer.GetReportGroupByBossId(upload.Encounter.BossId) == DpsReportGroup.TrainingArea)
                                                    .ToListAsync()
                                                    .ConfigureAwait(false);
 
@@ -930,7 +930,7 @@ public class LogCommandHandler : LocatedServiceBase
 
         var typeGroups = uploads.OrderBy(obj => _dpsReportConnector.GetSortValue(obj.Encounter.BossId))
                                 .ThenBy(obj => obj.EncounterTime)
-                                .GroupBy(obj => _dpsReportConnector.GetReportGroup(obj.Encounter.BossId).GetReportType())
+                                .GroupBy(obj => DpsReportAnalyzer.GetReportGroupByBossId(obj.Encounter.BossId).GetReportType())
                                 .ToList();
 
         addSubTitles &= typeGroups.Count > 1;
@@ -942,7 +942,7 @@ public class LogCommandHandler : LocatedServiceBase
                 builder.AddSubTitle($"> {Format.Bold($"{typeGroup.Key}s")}");
             }
 
-            foreach (var reportGroup in typeGroup.GroupBy(obj => _dpsReportConnector.GetReportGroup(obj.Encounter.BossId)))
+            foreach (var reportGroup in typeGroup.GroupBy(obj => DpsReportAnalyzer.GetReportGroupByBossId(obj.Encounter.BossId)))
             {
                 var isFractal = reportGroup.Key.GetReportType() == DpsReportType.Fractal;
                 var hasMultipleGroups = GroupUploads(ref knownGroups, reportGroup, false).Count() > 1;
@@ -1057,9 +1057,9 @@ public class LogCommandHandler : LocatedServiceBase
 
         foreach (var typeGroup in uploads.OrderBy(obj => _dpsReportConnector.GetSortValue(obj.Encounter.BossId))
                                          .ThenBy(obj => obj.EncounterTime)
-                                         .GroupBy(obj => _dpsReportConnector.GetReportGroup(obj.Encounter.BossId).GetReportType()))
+                                         .GroupBy(obj => DpsReportAnalyzer.GetReportGroupByBossId(obj.Encounter.BossId).GetReportType()))
         {
-            foreach (var reportGroup in typeGroup.GroupBy(obj => _dpsReportConnector.GetReportGroup(obj.Encounter.BossId)))
+            foreach (var reportGroup in typeGroup.GroupBy(obj => DpsReportAnalyzer.GetReportGroupByBossId(obj.Encounter.BossId)))
             {
                 var isFractal = reportGroup.Key.GetReportType() == DpsReportType.Fractal;
                 var groupedUploads = GroupUploads(ref knownGroups, reportGroup, true).ToList();
@@ -1220,10 +1220,10 @@ public class LogCommandHandler : LocatedServiceBase
         var title = new StringBuilder();
 
         if (encounter.IsChallengeMode == false
-         || isFractal
-         || hasNormalTries == false)
+            || isFractal
+            || hasNormalTries == false)
         {
-            title.Append(RetrieveBossIconEmote(encounter.BossId));
+            title.Append(DiscordEmoteService.GetGuildEmote(_client, DpsReportAnalyzer.GetRaidBossIconId(encounter.BossId)));
             title.Append(' ');
             title.Append(encounter.Boss);
         }
@@ -1249,16 +1249,6 @@ public class LogCommandHandler : LocatedServiceBase
         WriteFails(title, uploads, summarize, hasNormalTries, hasChallengeTries);
 
         return title.ToString();
-    }
-
-    /// <summary>
-    /// Retrieves the text for the boss icon emoji
-    /// </summary>
-    /// <param name="bossId">Id of the boss</param>
-    /// <returns>Text for the boss icon emoji</returns>
-    private string RetrieveBossIconEmote(int bossId)
-    {
-        return DiscordEmoteService.GetGuildEmote(_client, _dpsReportConnector.GetRaidBossIconId(bossId)).ToString();
     }
 
     /// <summary>
@@ -1362,7 +1352,7 @@ public class LogCommandHandler : LocatedServiceBase
 
                 if (upload.Encounter.IsChallengeMode || hasNormalTries == false)
                 {
-                    reports.Append(RetrieveBossIconEmote(upload.Encounter.BossId));
+                    reports.Append(DiscordEmoteService.GetGuildEmote(_client, DpsReportAnalyzer.GetRaidBossIconId(upload.Encounter.BossId)));
                     reports.Append(' ');
                     reports.Append(upload.Encounter.Boss);
                     reports.AppendLine();

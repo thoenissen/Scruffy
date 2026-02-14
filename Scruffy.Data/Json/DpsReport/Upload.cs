@@ -1,5 +1,7 @@
 ﻿using System.Runtime.Serialization;
 
+using GW2EIEvtcParser;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
@@ -85,6 +87,47 @@ public class Upload
 
     #endregion // Properties
 
+    #region Methods
+
+    /// <summary>
+    /// Check if two boss IDS belong to the same encounter
+    /// </summary>
+    /// <param name="leftBossId">Left boss ID</param>
+    /// <param name="rightBossId">Right boss ID</param>
+    /// <returns>Do they belong to the same encounter?</returns>
+    private static bool IsSameEncounter(int leftBossId, int rightBossId)
+    {
+        var leftTargetId = SpeciesIDs.GetTargetID(leftBossId);
+
+        switch (leftTargetId)
+        {
+            case SpeciesIDs.TargetID.VoiceOfTheFallen:
+                leftTargetId = SpeciesIDs.TargetID.ClawOfTheFallen;
+                break;
+
+            case SpeciesIDs.TargetID.EyeOfJudgement:
+                leftTargetId = SpeciesIDs.TargetID.EyeOfFate;
+                break;
+        }
+
+        var rightTargetId = SpeciesIDs.GetTargetID(rightBossId);
+
+        switch (rightTargetId)
+        {
+            case SpeciesIDs.TargetID.VoiceOfTheFallen:
+                rightTargetId = SpeciesIDs.TargetID.ClawOfTheFallen;
+                break;
+
+            case SpeciesIDs.TargetID.EyeOfJudgement:
+                rightTargetId = SpeciesIDs.TargetID.EyeOfFate;
+                break;
+        }
+
+        return leftTargetId == rightTargetId;
+    }
+
+    #endregion // Methods
+
     #region Json
 
     /// <summary>
@@ -122,12 +165,10 @@ public class Upload
 
             if (Math.Abs((EncounterTime - other.EncounterTime).TotalSeconds) < 5.0)
             {
-                // Voice & Claw + Statues of Darkness special treatment
-                if (Encounter.BossId == other.Encounter.BossId
-                 || (Math.Min(Encounter.BossId, other.Encounter.BossId) == 22343 && Math.Max(Encounter.BossId, other.Encounter.BossId) == 22481)
-                 || (Math.Min(Encounter.BossId, other.Encounter.BossId) == 19651 && Math.Max(Encounter.BossId, other.Encounter.BossId) == 19844))
+                if (IsSameEncounter(Encounter.BossId, other.Encounter.BossId))
                 {
                     var group = Group;
+
                     group.ExceptWith(other.Group);
 
                     return group.Count == 0;

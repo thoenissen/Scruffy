@@ -36,4 +36,9 @@
     <Folder Include="Entity\Repositories\Account\" />
     <Folder Include="Entity\Repositories\Reminder\" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="GW2EIEvtcParser">
+      <HintPath>..\libs\GW2EIEvtcParser.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>
