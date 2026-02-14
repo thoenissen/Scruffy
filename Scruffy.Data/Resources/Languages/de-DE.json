@@ -1086,6 +1086,18 @@
       "FullMaterialDescription": "**Account:** {0}\n**Geschätzte Materiallagergröße:** {1}",
       "UnknownMaterialCategory": "Unbekannte Kategorie",
       "UnknownMaterial": "Unbekanntes Material"
+    },
+    "ScruffyUserMessageCodeException": {
+      "NoDpsReportTokenConfiguration": "Für die Ausführung wird die Hinterlegung einer benutzerdefinierten Tokens für dps.report benötigt.",
+      "DpsReportImportFailed": "Der Import der Logs konnte nicht durchgeführt werden. Bitte versuche es später erneut."
+    },
+    "LogBetaCommandHandler": {
+      "LogsStatisticsTitle": "Log - Statistiken",
+      "LastUpload": "Letzter Upload",
+      "LogCount": "Anzahl",
+      "LogFailed": "Erfolgreiche",
+      "LogSuccess": "Fehlgeschlagene",
+      "LogChallengeModes": "Challenge Modes"
     }
   }
 }

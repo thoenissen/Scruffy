@@ -265,11 +265,19 @@ public sealed class DiscordBot : IAsyncDisposable
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     private async Task HandleInteractionException(InteractionContextContainer context, Exception ex)
     {
-        if (ex is ScruffyException)
+        if (ex is ScruffyException
+            || ex.InnerException is ScruffyException)
         {
-            if (ex is ScruffyUserMessageException userException)
+            var userException = ex as ScruffyUserMessageException
+                                ?? ex.InnerException as ScruffyUserMessageException;
+
+            if (userException != null)
             {
-                await context.SendMessageAsync($"{context.User.Mention} {userException.GetLocalizedMessage()}", ephemeral: true)
+                var message = context.IsEphemeralResponse
+                                  ? $"{context.User.Mention} {userException.GetLocalizedMessage()}"
+                                  : userException.GetLocalizedMessage();
+
+                await context.SendMessageAsync(message, ephemeral: context.IsEphemeralResponse)
                              .ConfigureAwait(false);
             }
         }

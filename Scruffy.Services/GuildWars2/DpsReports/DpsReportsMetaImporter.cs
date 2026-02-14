@@ -8,6 +8,7 @@ using Scruffy.Data.Entity.Repositories.GuildWars2.DpsReports;
 using Scruffy.Data.Entity.Tables.GuildWars2.DpsReports;
 using Scruffy.Data.Enumerations.GuildWars2;
 using Scruffy.Services.Core;
+using Scruffy.Services.Core.Exceptions;
 using Scruffy.Services.Core.Localization;
 
 namespace Scruffy.Services.GuildWars2.DpsReports;
@@ -81,85 +82,102 @@ public class DpsReportsMetaImporter : LocatedServiceBase
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
-            var userToken = dbFactory.GetRepository<UserDpsReportsConfigurationRepository>()
-                                     .GetQuery()
-                                     .Where(configuration => configuration.UserId == userId)
-                                     .Select(configuration => configuration.UserToken)
-                                     .FirstOrDefault();
+            var userConfiguration = dbFactory.GetRepository<UserDpsReportsConfigurationRepository>()
+                                             .GetQuery()
+                                             .Where(configuration => configuration.UserId == userId)
+                                             .Select(configuration => new
+                                                                      {
+                                                                          configuration.UserToken,
+                                                                          configuration.LastImport
+                                                                      })
+                                             .FirstOrDefault();
 
-            if (string.IsNullOrEmpty(userToken) == false)
+            if (string.IsNullOrEmpty(userConfiguration?.UserToken))
             {
-                List<DpsReportEntity> reports = null;
+                ScruffyUserMessageCodeException.Throw(ScruffyUserMessageCodeExceptionCode.NoDpsReportTokenConfiguration);
+            }
 
-                using (var client = _clientFactory.CreateClient())
+            List<DpsReportEntity> reports = null;
+
+            using (var client = _clientFactory.CreateClient())
+            {
+                var page = 1;
+                DPSReportGetUploadsObject uploads = null;
+
+                do
                 {
-                    var page = 1;
-                    DPSReportGetUploadsObject uploads = null;
+                    var response = await client.GetAsync($"https://dps.report/getUploads?userToken={userConfiguration.UserToken}&page={page++}&perPage=100")
+                                               .ConfigureAwait(false);
 
-                    do
+                    if (response.IsSuccessStatusCode == false)
                     {
-                        var response = await client.GetAsync($"https://dps.report/getUploads?userToken={userToken}&page={page++}&perPage=1000")
-                                                   .ConfigureAwait(false);
-
-                        if (response.IsSuccessStatusCode == false)
-                        {
-                            continue;
-                        }
-
-                        var content = await response.Content
-                                                    .ReadAsStringAsync()
-                                                    .ConfigureAwait(false);
-
-                        uploads = JsonConvert.DeserializeObject<DPSReportGetUploadsObject>(content,
-                                                                                           new JsonSerializerSettings
-                                                                                           {
-                                                                                               Converters = { new IntOrBoolConverter() },
-                                                                                               Error = (_, e) =>
-                                                                                               {
-                                                                                                   // Sometimes 'foundUploads' is a bool and the deserialization to int? fails
-                                                                                                   if (e.ErrorContext.Path == "foundUploads")
-                                                                                                   {
-                                                                                                       e.ErrorContext.Handled = true;
-                                                                                                   }
-                                                                                               }
-                                                                                           });
-
-                        if ((uploads?.Uploads?.Length > 0) == false)
-                        {
-                            continue;
-                        }
-
-                        reports ??= new List<DpsReportEntity>(uploads.TotalUploads ?? 0);
-
-                        foreach (var upload in uploads.Uploads)
-                        {
-                            reports.Add(new DpsReportEntity
-                                        {
-                                            UserId = userId,
-                                            Id = upload.Id,
-                                            PermaLink = upload.Permalink,
-                                            UploadTime = DateTimeOffset.FromUnixTimeSeconds(upload.UploadTime ?? 0).ToLocalTime().DateTime,
-                                            EncounterTime = DateTimeOffset.FromUnixTimeSeconds(upload.EncounterTime ?? 0).ToLocalTime().DateTime,
-                                            BossId = upload.Encounter?.BossId ?? 0,
-                                            IsSuccess = upload.Encounter?.Success == true,
-                                            Mode = upload.Encounter?.IsLegendaryCm == true
-                                                       ? DpsReportMode.LegendaryChallengeMode
-                                                       : upload.Encounter?.IsCm == true
-                                                             ? DpsReportMode.ChallengeMode
-                                                             : DpsReportMode.Normal,
-                                            State = DpsReportProcessingState.Pending
-                                        });
-                        }
+                        ScruffyUserMessageCodeException.Throw(ScruffyUserMessageCodeExceptionCode.DpsReportImportFailed);
                     }
-                    while (uploads?.Uploads?.Length > 0);
-                }
 
-                if (reports?.Count > 0)
-                {
-                    await dbFactory.GetRepository<DpsReportRepository>()
-                                   .BulkInsert(reports)
-                                   .ConfigureAwait(false);
+                    var content = await response.Content
+                                                .ReadAsStringAsync()
+                                                .ConfigureAwait(false);
+
+                    uploads = JsonConvert.DeserializeObject<DPSReportGetUploadsObject>(content,
+                                                                                       new JsonSerializerSettings
+                                                                                       {
+                                                                                           Converters = { new IntOrBoolConverter() },
+                                                                                           Error = (_, e) =>
+                                                                                           {
+                                                                                               // Sometimes 'foundUploads' is a bool and the deserialization to int? fails
+                                                                                               if (e.ErrorContext.Path == "foundUploads")
+                                                                                               {
+                                                                                                   e.ErrorContext.Handled = true;
+                                                                                               }
+                                                                                           }
+                                                                                       });
+
+                    if ((uploads?.Uploads?.Length > 0) == false)
+                    {
+                        continue;
+                    }
+
+                    if (userConfiguration.LastImport != null
+                        && uploads.Uploads[0].UploadTime != null
+                        && DateTimeOffset.FromUnixTimeSeconds(uploads.Uploads[0].UploadTime.Value).ToLocalTime().DateTime < userConfiguration.LastImport.Value)
+                    {
+                        break;
+                    }
+
+                    reports ??= new List<DpsReportEntity>(uploads.TotalUploads ?? 0);
+
+                    foreach (var upload in uploads.Uploads)
+                    {
+                        reports.Add(new DpsReportEntity
+                                    {
+                                        UserId = userId,
+                                        Id = upload.Id,
+                                        PermaLink = upload.Permalink,
+                                        UploadTime = DateTimeOffset.FromUnixTimeSeconds(upload.UploadTime ?? 0).ToLocalTime().DateTime,
+                                        EncounterTime = DateTimeOffset.FromUnixTimeSeconds(upload.EncounterTime ?? 0).ToLocalTime().DateTime,
+                                        BossId = upload.Encounter?.BossId ?? 0,
+                                        IsSuccess = upload.Encounter?.Success == true,
+                                        Mode = upload.Encounter?.IsLegendaryCm == true
+                                                   ? DpsReportMode.LegendaryChallengeMode
+                                                   : upload.Encounter?.IsCm == true
+                                                         ? DpsReportMode.ChallengeMode
+                                                         : DpsReportMode.Normal,
+                                        State = DpsReportProcessingState.Pending
+                                    });
+                    }
                 }
+                while (uploads?.Uploads?.Length > 0);
+            }
+
+            if (reports?.Count > 0)
+            {
+                await dbFactory.GetRepository<DpsReportRepository>()
+                               .BulkInsert(reports)
+                               .ConfigureAwait(false);
+
+                dbFactory.GetRepository<UserDpsReportsConfigurationRepository>()
+                         .Refresh(configuration => configuration.UserId == userId,
+                                  configuration => configuration.LastImport = reports.Select(report => report.UploadTime).OrderByDescending(date => date).First());
             }
         }
     }

@@ -101,6 +101,11 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
     /// </summary>
     public bool HasResponded => _interaction?.HasResponded == true;
 
+    /// <summary>
+    /// Is the response ephemeral?
+    /// </summary>
+    public bool IsEphemeralResponse { get; private set; } = true;
+
     #endregion // Properties
 
     #region Methods
@@ -114,6 +119,8 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
     {
         try
         {
+            IsEphemeralResponse = ephemeral;
+
             _deferMessage = await SendMessageAsync(ServiceProvider.GetRequiredService<LocalizationService>()
                                                                   .GetGroup(nameof(InteractionContextContainer))
                                                                   .GetFormattedText("Processing",
@@ -230,6 +237,8 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
     {
         try
         {
+            IsEphemeralResponse = ephemeral;
+
             _deferMessage = null;
 
             if (_interaction != null)
@@ -335,6 +344,8 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
     {
         try
         {
+            IsEphemeralResponse = ephemeral;
+
             if (_interaction != null)
             {
                 if (_interaction.HasResponded == false)
