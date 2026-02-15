@@ -1088,7 +1088,7 @@
       "UnknownMaterial": "Unbekanntes Material"
     },
     "ScruffyUserMessageCodeException": {
-      "NoDpsReportTokenConfiguration": "Für die Ausführung wird die Hinterlegung einer benutzerdefinierten Tokens für dps.report benötigt.",
+      "NoDpsReportTokenConfiguration": "Für die Ausführung wird die Hinterlegung eines benutzerdefinierten Tokens für dps.report benötigt.",
       "DpsReportImportFailed": "Der Import der Logs konnte nicht durchgeführt werden. Bitte versuche es später erneut."
     },
     "LogBetaCommandHandler": {

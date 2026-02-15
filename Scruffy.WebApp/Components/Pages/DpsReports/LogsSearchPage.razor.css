@@ -115,6 +115,11 @@
    font-size: 1.875rem;
 }
 
+.overlay-group {
+    display: flex;
+    flex-direction: column;
+}
+
 .overlay-info {
    display: grid;
    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -172,41 +177,38 @@
 }
 
 .mechanics-table {
-   width: 100%;
-   border-collapse: collapse;
-   border: 1px solid var(--primary);
-   border-radius: 0.25rem;
-   overflow: hidden;
-   background-color: var(--background);
+    min-width: 100%;
+    border-collapse: collapse;
+    color: var(--text);
+    border-radius: 1rem 1rem 0rem 0rem;
+    overflow: hidden;
 }
 
     .mechanics-table thead {
+        border-bottom: 2px solid var(--text);
         background-color: var(--primary);
-        border-bottom: 2px solid var(--primary);
     }
 
-.mechanics-table th {
-   padding: 0.875rem;
-   text-align: left;
-   font-weight: 600;
-   color: var(--text);
-   font-size: 0.875rem;
-   text-transform: uppercase;
-   letter-spacing: 0.05em;
-}
+    .mechanics-table th {
+        padding: 0.75rem 1rem;
+        text-align: left;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+    }
 
-.mechanics-table td {
-   padding: 0.875rem;
-   border-bottom: 1px solid var(--background-alt);
-}
+    .mechanics-table td {
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid var(--text);
+    }
 
-.mechanics-table tbody tr {
-   transition: background-color 0.2s ease;
-}
+    .mechanics-table tbody tr {
+        height: 2rem;
+        background-color: var(--background)
+    }
 
-.mechanics-table tbody tr:hover {
-   background-color: var(--background-alt);
-}
+        .mechanics-table tbody tr:hover {
+            background-color: var(--background-alt)
+        }
 
 .mechanics-table tbody tr:last-child td {
    border-bottom: none;
