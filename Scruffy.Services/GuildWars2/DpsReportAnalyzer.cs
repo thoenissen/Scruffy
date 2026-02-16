@@ -1,6 +1,7 @@
-﻿using GW2EIEvtcParser;
+using GW2EIEvtcParser;
 
 using Scruffy.Data.Enumerations.DpsReport;
+using Scruffy.Services.GuildWars2.DpsReports;
 
 namespace Scruffy.Services.GuildWars2;
 
@@ -305,6 +306,510 @@ internal static class DpsReportAnalyzer
 
                    // Unknown
                    _ => 0
+               };
+    }
+
+    /// <summary>
+    /// Gets all encounters organized by expansion
+    /// </summary>
+    /// <returns>List of expansions with their encounters and bosses</returns>
+    public static List<DpsReportExpansionEntry> GetEncounters()
+    {
+        return [
+                   CreateCoreGame(),
+                   CreateHeartsOfThorns(),
+                   CreatePathOfFire(),
+                   CreateIcebroodSaga(),
+                   CreateEndOfDragons(),
+                   CreateSecretsOfTheObscure(),
+                   CreateJanthirWilds(),
+                   CreateVisionsOfEternity()
+               ];
+    }
+
+    /// <summary>
+    /// Creates the Core Game expansion entry with encounters
+    /// </summary>
+    /// <returns>A configured DpsReportExpansionEntry for Core Game</returns>
+    private static DpsReportExpansionEntry CreateCoreGame()
+    {
+        return new()
+               {
+                   ExpansionId = DpsReportExpansion.CoreGame,
+                   Name = "Core Game",
+                   Encounters =
+                   [
+                       new()
+                       {
+                           EncounterId = DpsReportEncounter.OldLionsCourt,
+                           Name = "Old Lion's Court",
+                           Bosses =
+                           [
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.LGolem,
+                                   Name = "Lion's Arch"
+                               }
+                           ]
+                       }
+                   ]
+               };
+    }
+
+    /// <summary>
+    /// Creates the Heart of Thorns expansion entry with encounters
+    /// </summary>
+    /// <returns>A configured DpsReportExpansionEntry for Heart of Thorns</returns>
+    private static DpsReportExpansionEntry CreateHeartsOfThorns()
+    {
+        return new()
+               {
+                   ExpansionId = DpsReportExpansion.HeartsOfThorns,
+                   Name = "Heart of Thorns",
+                   Encounters =
+                   [
+                       new()
+                       {
+                           EncounterId = DpsReportEncounter.SpiritVale,
+                           Name = "Spirit Vale",
+                           Bosses =
+                           [
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.ValeGuardian,
+                                   Name = "Vale Guardian"
+                               },
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.Gorseval,
+                                   Name = "Gorseval"
+                               },
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.Sabetha,
+                                   Name = "Sabetha"
+                               }
+                           ]
+                       },
+                       new()
+                       {
+                           EncounterId = DpsReportEncounter.SalvationPass,
+                           Name = "Salvation Pass",
+                           Bosses =
+                           [
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.Slothasor,
+                                   Name = "Slothasor"
+                               },
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.Berg,
+                                   Name = "Bandit Trio"
+                               },
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.Matthias,
+                                   Name = "Matthias"
+                               }
+                           ]
+                       },
+                       new()
+                       {
+                           EncounterId = DpsReportEncounter.StrongholdOfTheFaithful,
+                           Name = "Stronghold of the Faithful",
+                           Bosses =
+                           [
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.KeepConstruct,
+                                   Name = "Keep Construct"
+                               },
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.Xera,
+                                   Name = "Xera"
+                               }
+                           ]
+                       },
+                       new()
+                       {
+                           EncounterId = DpsReportEncounter.BastionOfThePenitent,
+                           Name = "Bastion of the Penitent",
+                           Bosses =
+                           [
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.Cairn,
+                                   Name = "Cairn"
+                               },
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.MursaatOverseer,
+                                   Name = "Mursaat Overseer"
+                               },
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.Samarog,
+                                   Name = "Samarog"
+                               },
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.Deimos,
+                                   Name = "Deimos"
+                               }
+                           ]
+                       }
+                   ]
+               };
+    }
+
+    /// <summary>
+    /// Creates the Path of Fire expansion entry with encounters
+    /// </summary>
+    /// <returns>A configured DpsReportExpansionEntry for Path of Fire</returns>
+    private static DpsReportExpansionEntry CreatePathOfFire()
+    {
+        return new()
+               {
+                   ExpansionId = DpsReportExpansion.PathOfFire,
+                   Name = "Path of Fire",
+                   Encounters =
+                   [
+                       new()
+                       {
+                           EncounterId = DpsReportEncounter.HallOfChains,
+                           Name = "Hall of Chains",
+                           Bosses =
+                           [
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.SoullessHorror,
+                                   Name = "Soulless Horror"
+                               },
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.Dhuum,
+                                   Name = "Voice in the Void (Dhuum)"
+                               }
+                           ]
+                       },
+                       new()
+                       {
+                           EncounterId = DpsReportEncounter.MythwrightGambit,
+                           Name = "Mythwright Gambit",
+                           Bosses =
+                           [
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.ConjuredAmalgamate,
+                                   Name = "Conjured Amalgamate"
+                               },
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.Nikare,
+                                   Name = "Twin Largos"
+                               },
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.Qadim,
+                                   Name = "Qadim"
+                               }
+                           ]
+                       },
+                       new()
+                       {
+                           EncounterId = DpsReportEncounter.TheKeyOfAhdashim,
+                           Name = "Key of Ahdashim",
+                           Bosses =
+                           [
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.Adina,
+                                   Name = "Cardinal Adina"
+                               },
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.Sabir,
+                                   Name = "Cardinal Sabir"
+                               },
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.QadimThePeerless,
+                                   Name = "Qadim the Peerless"
+                               }
+                           ]
+                       }
+                   ]
+               };
+    }
+
+    /// <summary>
+    /// Creates the Icebrood Saga expansion entry with encounters
+    /// </summary>
+    /// <returns>A configured DpsReportExpansionEntry for Icebrood Saga</returns>
+    private static DpsReportExpansionEntry CreateIcebroodSaga()
+    {
+        return new()
+               {
+                   ExpansionId = DpsReportExpansion.IcebroodSaga,
+                   Name = "Icebrood Saga",
+                   Encounters =
+                   [
+                       new()
+                       {
+                           EncounterId = DpsReportEncounter.ShiverpeaksPass,
+                           Name = "Shiverpeaks Pass",
+                           Bosses =
+                           [
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.IcebroodConstruct,
+                                   Name = "Icebrood Construct"
+                               }
+                           ]
+                       },
+                       new()
+                       {
+                           EncounterId = DpsReportEncounter.SanctuumArena,
+                           Name = "Sanctum Arena",
+                           Bosses =
+                           [
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.VoiceOfTheFallen,
+                                   Name = "Voice of the Fallen"
+                               },
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.FraenirOfJormag,
+                                   Name = "Fraenir of Jormag"
+                               },
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.Boneskinner,
+                                   Name = "Boneskinner"
+                               }
+                           ]
+                       },
+                       new()
+                       {
+                           EncounterId = DpsReportEncounter.WhisperingDepths,
+                           Name = "Whispering Depths",
+                           Bosses =
+                           [
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.WhisperOfJormag,
+                                   Name = "Whisper of Jormag"
+                               }
+                           ]
+                       },
+                       new()
+                       {
+                           EncounterId = DpsReportEncounter.EyeOfTheNorth,
+                           Name = "Eye of the North",
+                           Bosses =
+                           [
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.WhisperingShadow,
+                                   Name = "Forging Steel"
+                               }
+                           ]
+                       },
+                       new()
+                       {
+                           EncounterId = DpsReportEncounter.DrizzlewoodCoast,
+                           Name = "Drizzlewood Coast",
+                           Bosses =
+                           [
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.WhisperingShadow,
+                                   Name = "Cold War"
+                               }
+                           ]
+                       }
+                   ]
+               };
+    }
+
+    /// <summary>
+    /// Creates the End of Dragons expansion entry with encounters
+    /// </summary>
+    /// <returns>A configured DpsReportExpansionEntry for End of Dragons</returns>
+    private static DpsReportExpansionEntry CreateEndOfDragons()
+    {
+        return new()
+               {
+                   ExpansionId = DpsReportExpansion.EndOfDragons,
+                   Name = "End of Dragons",
+                   Encounters =
+                   [
+                       new()
+                       {
+                           EncounterId = DpsReportEncounter.AetherbladHideout,
+                           Name = "Aetherblade Hideout",
+                           Bosses =
+                           [
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.MaiTrinRaid,
+                                   Name = "Mai Trin"
+                               }
+                           ]
+                       },
+                       new()
+                       {
+                           EncounterId = DpsReportEncounter.XunlaiJadeJunkyard,
+                           Name = "Xunlai Jade Junkyard",
+                           Bosses =
+                           [
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.Ankka,
+                                   Name = "Ankka"
+                               }
+                           ]
+                       },
+                       new()
+                       {
+                           EncounterId = DpsReportEncounter.KainengOverlook,
+                           Name = "Kaineng Overlook",
+                           Bosses =
+                           [
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.MinisterLi,
+                                   Name = "Minister Li"
+                               }
+                           ]
+                       },
+                       new()
+                       {
+                           EncounterId = DpsReportEncounter.HarvestTemple,
+                           Name = "Harvest Temple",
+                           Bosses =
+                           [
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.VoidAmalgamate,
+                                   Name = "Void Amalgamate"
+                               }
+                           ]
+                       }
+                   ]
+               };
+    }
+
+    /// <summary>
+    /// Creates the Secrets of the Obscure expansion entry with encounters
+    /// </summary>
+    /// <returns>A configured DpsReportExpansionEntry for Secrets of the Obscure</returns>
+    private static DpsReportExpansionEntry CreateSecretsOfTheObscure()
+    {
+        return new()
+               {
+                   ExpansionId = DpsReportExpansion.SecretsOfTheObscure,
+                   Name = "Secrets of the Obscure",
+                   Encounters =
+                   [
+                       new()
+                       {
+                           EncounterId = DpsReportEncounter.CosmicObservatory,
+                           Name = "Cosmic Observatory",
+                           Bosses =
+                           [
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.Dagda,
+                                   Name = "Dagda"
+                               }
+                           ]
+                       },
+                       new()
+                       {
+                           EncounterId = DpsReportEncounter.TempleOfFebe,
+                           Name = "Temple of Febe",
+                           Bosses =
+                           [
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.Cerus,
+                                   Name = "Cerus"
+                               }
+                           ]
+                       }
+                   ]
+               };
+    }
+
+    /// <summary>
+    /// Creates the Janthir Wilds expansion entry with encounters
+    /// </summary>
+    /// <returns>A configured DpsReportExpansionEntry for Janthir Wilds</returns>
+    private static DpsReportExpansionEntry CreateJanthirWilds()
+    {
+        return new()
+               {
+                   ExpansionId = DpsReportExpansion.JanthirWilds,
+                   Name = "Janthir Wilds",
+                   Encounters =
+                   [
+                       new()
+                       {
+                           EncounterId = DpsReportEncounter.MountBalrior,
+                           Name = "Mount Balrior",
+                           Bosses =
+                           [
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.Greer,
+                                   Name = "Greer"
+                               },
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.Decima,
+                                   Name = "Decima"
+                               },
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.Ura,
+                                   Name = "Ura"
+                               }
+                           ]
+                       }
+                   ]
+               };
+    }
+
+    /// <summary>
+    /// Creates the Visions of Eternity expansion entry with encounters
+    /// </summary>
+    /// <returns>A configured DpsReportExpansionEntry for Visions of Eternity</returns>
+    private static DpsReportExpansionEntry CreateVisionsOfEternity()
+    {
+        return new()
+               {
+                   ExpansionId = DpsReportExpansion.VisionsOfEternity,
+                   Name = "Visions of Eternity",
+                   Encounters =
+                   [
+                       new()
+                       {
+                           EncounterId = DpsReportEncounter.GuardiansGlade,
+                           Name = "Guardian's Glade",
+                           Bosses =
+                           [
+                               new()
+                               {
+                                   BossId = SpeciesIDs.TargetID.WhisperingShadow,
+                                   Name = "Kela"
+                               }
+                           ]
+                       }
+                   ]
                };
     }
 }
