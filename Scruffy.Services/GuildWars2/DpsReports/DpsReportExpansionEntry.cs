@@ -20,7 +20,7 @@ public class DpsReportExpansionEntry
     public string Name { get; set; }
 
     /// <summary>
-    /// Encounters in this expansion
+    /// List of encounters in this expansion
     /// </summary>
     public List<DpsReportEncounterEntry> Encounters { get; set; } = [];
 

@@ -10,17 +10,22 @@ public class DpsReportEncounterEntry
     #region Properties
 
     /// <summary>
-    /// Encounter ID
+    /// Gets or sets the encounter ID
     /// </summary>
     public DpsReportEncounter EncounterId { get; set; }
 
     /// <summary>
-    /// Encounter name
+    /// Gets or sets the encounter name
     /// </summary>
     public string Name { get; set; }
 
     /// <summary>
-    /// Bosses in this encounter
+    /// Gets or sets the encounter icon URL
+    /// </summary>
+    public string IconUrl { get; set; }
+
+    /// <summary>
+    /// Gets or sets the list of bosses in this encounter
     /// </summary>
     public List<DpsReportBoss> Bosses { get; set; } = [];
 

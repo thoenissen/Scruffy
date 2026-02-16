@@ -8,12 +8,17 @@ namespace Scruffy.Services.GuildWars2.DpsReports;
 public class DpsReportBoss
 {
     /// <summary>
-    /// Gets or sets the boss ID
+    /// Boss ID
     /// </summary>
     public SpeciesIDs.TargetID BossId { get; set; }
 
     /// <summary>
-    /// Gets or sets the boss name
+    /// Boss name
     /// </summary>
     public string Name { get; set; }
+
+    /// <summary>
+    /// Boss icon URL
+    /// </summary>
+    public string IconUrl { get; set; }
 }
