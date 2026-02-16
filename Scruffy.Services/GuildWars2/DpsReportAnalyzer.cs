@@ -8,7 +8,7 @@ namespace Scruffy.Services.GuildWars2;
 /// <summary>
 /// Analyzing dps.report reports
 /// </summary>
-internal static class DpsReportAnalyzer
+public static class DpsReportAnalyzer
 {
     /// <summary>
     /// Get boss icon ID

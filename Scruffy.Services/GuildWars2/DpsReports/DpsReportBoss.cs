@@ -21,4 +21,9 @@ public class DpsReportBoss
     /// Boss icon URL
     /// </summary>
     public string IconUrl { get; set; }
+
+    /// <summary>
+    /// Indicates if the boss has been successfully defeated
+    /// </summary>
+    public bool? IsSuccessful { get; set; }
 }

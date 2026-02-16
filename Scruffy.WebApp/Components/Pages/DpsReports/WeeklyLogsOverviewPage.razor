@@ -1,0 +1,68 @@
+@using Scruffy.WebApp.Components.Controls
+
+@page "/DpsReports/Weekly"
+@inherits Scruffy.WebApp.Components.Base.LocatedComponent
+@rendermode InteractiveServer
+
+<PageTitle>@LocalizationGroup.GetText("PageTitle", "FooI - Logs - Weekly")</PageTitle>
+
+<div class="page-container">
+    <h3>@LocalizationGroup.GetText("PageHeader", "Weekly Overview")</h3>
+
+    @if (_encounters == null)
+    {
+        <LoadingContainer IsLoading="true">
+            <label>@LocalizationGroup.GetText("Loading", "Loading...")</label>
+        </LoadingContainer>
+    }
+    else if (_encounters.Count == 0)
+    {
+        <label>@LocalizationGroup.GetText("NoEncounters", "No encounters are available.")</label>
+    }
+    else
+    {
+        <div class="encounters-container">
+            @foreach (var expansion in _encounters)
+            {
+                <div class="expansion-section">
+                    <div class="expansion-header">
+                        @if (!string.IsNullOrEmpty(expansion.IconUrl))
+                        {
+                            <img src="@expansion.IconUrl" alt="@expansion.Name" class="expansion-icon" />
+                        }
+                        <h4>@expansion.Name</h4>
+                    </div>
+
+                    <div class="encounters-grid">
+                        @foreach (var encounter in expansion.Encounters)
+                        {
+                            <div class="encounter-section">
+                                <div class="encounter-header">
+                                    @if (!string.IsNullOrEmpty(encounter.IconUrl))
+                                    {
+                                        <img src="@encounter.IconUrl" alt="@encounter.Name" class="encounter-icon" />
+                                    }
+                                    <h5>@encounter.Name</h5>
+                                </div>
+
+                                <div class="bosses-list">
+                                    @foreach (var boss in encounter.Bosses.OrderBy(b => b.Name))
+                                    {
+                                        <div class="boss-item">
+                                            <div class="boss-success-indicator" title="@(boss.IsSuccessful == true ? "Success" : "Unsuccessfully")"></div>
+                                            @if (!string.IsNullOrEmpty(boss.IconUrl))
+                                            {
+                                                <img src="@boss.IconUrl" alt="@boss.Name" class="boss-icon" />
+                                            }
+                                            <span class="boss-name">@boss.Name</span>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

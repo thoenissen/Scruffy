@@ -1,0 +1,123 @@
+.encounters-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+}
+
+.expansion-section {
+    border: none;
+    border-radius: var(--border05);
+    padding: 0.5rem;
+    background-color: var(--secondary);
+}
+
+.expansion-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 2px solid var(--accent);
+}
+
+.expansion-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--border05);
+    object-fit: cover;
+}
+
+.expansion-header h4 {
+    margin: 0;
+    font-size: var(--h4);
+    color: var(--text);
+}
+
+.encounters-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+}
+
+.encounter-section {
+    border: 1px solid var(--secondary-border);
+    border-radius: var(--border05);
+    padding: 0.5rem;
+    background-color: var(--primary);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    transition: box-shadow 0.3s ease;
+}
+
+.encounter-section:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.encounter-header {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid var(--secondary-border);
+}
+
+.encounter-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: var(--border05);
+    object-fit: cover;
+}
+
+.encounter-header h5 {
+    margin: 0;
+    font-size: var(--h5);
+    color: var(--text);
+}
+
+.bosses-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.boss-item {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.2rem 0;
+    border-radius: var(--border05);
+    background-color: transparent;
+    transition: background-color 0.2s ease;
+}
+
+.boss-item:hover {
+    background-color: var(--secondary-focus);
+    padding: 0.2rem 0.35rem;
+}
+
+.boss-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 2px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.boss-name {
+    font-size: 0.8rem;
+    color: var(--text);
+    font-weight: normal;
+}
+
+.boss-success-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background-color: #d32f2f;
+}
+
+.boss-success-indicator[title*="Success"] {
+    background-color: #388e3c;
+}
