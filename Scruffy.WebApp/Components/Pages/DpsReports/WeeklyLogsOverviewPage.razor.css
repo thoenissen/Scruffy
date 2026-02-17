@@ -81,6 +81,11 @@
     gap: 0.2rem;
 }
 
+.boss-item-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
 .boss-item {
     display: flex;
     align-items: center;
@@ -106,6 +111,26 @@
 
 .boss-item-unknown {
     opacity: 0.5;
+    cursor: default !important;
+}
+
+.boss-item-expanded {
+    padding-bottom: 0.35rem;
+    margin-bottom: 0.35rem;
+}
+
+.boss-expand-icon {
+    margin-left: auto;
+    display: inline-block;
+    transition: transform 0.3s ease;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    width: 1rem;
+    text-align: center;
+}
+
+.boss-expand-icon.expanded {
+    transform: rotate(90deg);
 }
 
 .boss-icon {
@@ -142,4 +167,69 @@
 .indicator-unknown {
     background-color: #9e9e9e;
     box-shadow: none;
+}
+
+.boss-logs-container {
+    padding-left: 1.5rem;
+    padding-top: 0.35rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.boss-logs-loading {
+    padding: 0.5rem 0.35rem;
+}
+
+.boss-logs-empty {
+    padding: 0.35rem;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.boss-logs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.boss-log-entry {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.35rem;
+    border-radius: 2px;
+    text-decoration: none;
+    color: var(--text);
+    transition: background-color 0.2s ease;
+    font-size: 0.75rem;
+}
+
+.boss-log-entry:hover {
+    background-color: var(--secondary-focus);
+}
+
+.log-indicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.log-indicator-success {
+    background-color: #388e3c;
+}
+
+.log-indicator-failure {
+    background-color: #d32f2f;
+}
+
+.log-date {
+    flex: 1;
+}
+
+.log-status {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
 }

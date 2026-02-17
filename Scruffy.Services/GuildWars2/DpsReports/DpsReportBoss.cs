@@ -26,4 +26,19 @@ public class DpsReportBoss
     /// Indicates if the boss has been successfully defeated
     /// </summary>
     public bool? IsSuccessful { get; set; }
+
+    /// <summary>
+    /// List of DPS logs for this boss
+    /// </summary>
+    public List<DpsReportBossLogEntry> Logs { get; set; } = [];
+
+    /// <summary>
+    /// Indicates whether the boss details (logs) are currently expanded
+    /// </summary>
+    public bool IsExpanded { get; set; }
+
+    /// <summary>
+    /// Indicates whether logs are currently being loaded for this boss
+    /// </summary>
+    public bool IsLoadingLogs { get; set; }
 }

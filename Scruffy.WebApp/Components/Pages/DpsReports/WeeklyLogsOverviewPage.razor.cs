@@ -11,9 +11,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Logging;
 
 using Scruffy.Data.Entity;
-using Scruffy.Data.Entity.Repositories.CoreData;
 using Scruffy.Data.Entity.Repositories.GuildWars2.DpsReports;
-using Scruffy.Services.Core.Extensions;
 using Scruffy.Services.GuildWars2;
 using Scruffy.Services.GuildWars2.DpsReports;
 
@@ -56,6 +54,11 @@ public partial class WeeklyLogsOverviewPage : IAsyncDisposable
     /// Task for loading the reports asynchronously
     /// </summary>
     private Task _loadTask;
+
+    /// <summary>
+    /// Current user ID
+    /// </summary>
+    private int _userId;
 
     #endregion // Fields
 
@@ -118,6 +121,7 @@ public partial class WeeklyLogsOverviewPage : IAsyncDisposable
             if (string.IsNullOrEmpty(nameIdentifier) == false
                 && int.TryParse(nameIdentifier, out var userId))
             {
+                _userId = userId;
                 _weekStart = GetWeekStart();
                 _weekEnd = _weekStart.AddDays(7);
 
@@ -129,15 +133,12 @@ public partial class WeeklyLogsOverviewPage : IAsyncDisposable
                 {
                     var dpsReportRepository = repository.GetRepository<DpsReportRepository>();
 
-                    var dpsReports = dpsReportRepository
-                                     .GetQuery()
-                                     .Where(r => r.UserId == userId
-                                             && r.EncounterTime >= _weekStart
-                                             && r.EncounterTime < _weekEnd)
-                                     .ToList();
-
-                    var bossStatuses = dpsReports.GroupBy(r => r.BossId)
-                                                 .ToDictionary(g => g.Key, g => g.Any(r => r.IsSuccess));
+                    var bosses = dpsReportRepository.GetQuery()
+                                                    .Where(r => r.UserId == userId
+                                                                && r.EncounterTime >= _weekStart
+                                                                && r.EncounterTime < _weekEnd)
+                                                    .GroupBy(r => r.BossId)
+                                                    .ToDictionary(g => g.Key, g => g.Any(r => r.IsSuccess));
 
                     token.ThrowIfCancellationRequested();
 
@@ -147,7 +148,7 @@ public partial class WeeklyLogsOverviewPage : IAsyncDisposable
                         {
                             foreach (var boss in encounter.Bosses)
                             {
-                                if (bossStatuses.TryGetValue((long)boss.BossId, out var isSuccessful))
+                                if (bosses.TryGetValue((long)boss.BossId, out var isSuccessful))
                                 {
                                     boss.IsSuccessful = isSuccessful;
                                 }
@@ -170,6 +171,95 @@ public partial class WeeklyLogsOverviewPage : IAsyncDisposable
         }
 
         _isPageLoading = false;
+
+        await InvokeAsync(StateHasChanged).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Loads the DPS logs for a specific boss
+    /// </summary>
+    /// <param name="boss">The boss to load logs for</param>
+    /// <param name="token">Cancellation token</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    private async Task LoadBossLogs(DpsReportBoss boss, CancellationToken token)
+    {
+        if (boss.IsLoadingLogs)
+        {
+            return;
+        }
+
+        boss.IsLoadingLogs = true;
+
+        try
+        {
+            await InvokeAsync(StateHasChanged).ConfigureAwait(false);
+
+            token.ThrowIfCancellationRequested();
+
+            using (var repository = RepositoryFactory.CreateInstance())
+            {
+                var dpsReportRepository = repository.GetRepository<DpsReportRepository>();
+
+                var dpsReports = dpsReportRepository.GetQuery()
+                                                    .Where(r => r.UserId == _userId
+                                                            && r.BossId == (long)boss.BossId
+                                                            && r.EncounterTime >= _weekStart
+                                                            && r.EncounterTime < _weekEnd)
+                                                    .OrderByDescending(r => r.EncounterTime)
+                                                    .ToList();
+
+                boss.Logs = dpsReports.Select(r => new DpsReportBossLogEntry
+                                                   {
+                                                       Id = r.Id,
+                                                       PermaLink = r.PermaLink,
+                                                       EncounterTime = r.EncounterTime,
+                                                       IsSuccess = r.IsSuccess
+                                                   })
+                                           .ToList();
+            }
+        }
+        catch (OperationCanceledException)
+        {
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "An error occurred while loading DPS logs for boss {BossId}.", boss.BossId);
+        }
+        finally
+        {
+            boss.IsLoadingLogs = false;
+
+            await InvokeAsync(StateHasChanged).ConfigureAwait(false);
+        }
+    }
+
+    /// <summary>
+    /// Toggles the boss details (logs)
+    /// </summary>
+    /// <param name="boss">The boss to toggle</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    private async Task ToggleBossDetails(DpsReportBoss boss)
+    {
+        if (boss?.IsSuccessful is null)
+        {
+            return;
+        }
+
+        boss.IsExpanded = boss.IsExpanded == false;
+
+        if (boss.IsExpanded && boss.Logs.Count == 0)
+        {
+            if (_cancellationTokenSource != null)
+            {
+                await _cancellationTokenSource.CancelAsync().ConfigureAwait(false);
+
+                _cancellationTokenSource.Dispose();
+            }
+
+            _cancellationTokenSource = new CancellationTokenSource();
+
+            await LoadBossLogs(boss, _cancellationTokenSource.Token).ConfigureAwait(false);
+        }
 
         await InvokeAsync(StateHasChanged).ConfigureAwait(false);
     }

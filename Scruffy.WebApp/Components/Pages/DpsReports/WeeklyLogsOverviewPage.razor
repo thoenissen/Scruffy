@@ -1,4 +1,4 @@
-@using Scruffy.WebApp.Components.Controls
+﻿@using Scruffy.WebApp.Components.Controls
 
 @page "/DpsReports/Weekly"
 @inherits Scruffy.WebApp.Components.Base.LocatedComponent
@@ -19,7 +19,7 @@
     }
     else
     {
-        <h3>@LocalizationGroup.GetFormattedText("PageHeader", "Weekly Overview {0} - {1}", _weekStart.ToString("d"), _weekEnd.AddDays(-1).ToString("d"))</h3>
+        <h3>@LocalizationGroup.GetFormattedText("PageHeader", "Weekly Overview {0} - {1}", _weekStart.ToString("d", LocalizationGroup.CultureInfo), _weekEnd.AddDays(-1).ToString("d", LocalizationGroup.CultureInfo))</h3>
 
         <div class="encounters-container">
             @foreach (var expansion in _encounters)
@@ -48,13 +48,54 @@
                                 <div class="bosses-list">
                                     @foreach (var boss in encounter.Bosses.OrderBy(b => b.Name))
                                     {
-                                        <div class="boss-item @GetBossStatusClass(boss.IsSuccessful)">
-                                            <div class="boss-success-indicator @GetIndicatorClass(boss.IsSuccessful)" title="@GetStatusTooltip(boss.IsSuccessful)"></div>
-                                            @if (!string.IsNullOrEmpty(boss.IconUrl))
+                                        <div class="boss-item-wrapper">
+                                            <div class="boss-item @GetBossStatusClass(boss.IsSuccessful) @(boss.IsExpanded ? "boss-item-expanded" : "")"
+                                                 @onclick="@(() => ToggleBossDetails(boss))"
+                                                 style="@(boss.IsSuccessful != null ? "cursor: pointer;" : "")">
+                                                <div class="boss-success-indicator @GetIndicatorClass(boss.IsSuccessful)" title="@GetStatusTooltip(boss.IsSuccessful)"></div>
+                                                @if (!string.IsNullOrEmpty(boss.IconUrl))
+                                                {
+                                                    <img src="@boss.IconUrl" alt="@boss.Name" class="boss-icon" />
+                                                }
+                                                <span class="boss-name">@boss.Name</span>
+                                                @if (boss.IsSuccessful != null)
+                                                {
+                                                    <span class="boss-expand-icon @(boss.IsExpanded ? "expanded" : "")">▶</span>
+                                                }
+                                            </div>
+
+                                            @if (boss.IsExpanded)
                                             {
-                                                <img src="@boss.IconUrl" alt="@boss.Name" class="boss-icon" />
+                                                <div class="boss-logs-container">
+                                                    @if (boss.IsLoadingLogs)
+                                                    {
+                                                        <div class="boss-logs-loading">
+                                                            <LoadingContainer IsLoading="true">
+                                                                <label>@LocalizationGroup.GetText("LoadingLogs", "Loading logs...")</label>
+                                                            </LoadingContainer>
+                                                        </div>
+                                                    }
+                                                    else if (boss.Logs.Count == 0)
+                                                    {
+                                                        <div class="boss-logs-empty">
+                                                            <label>@LocalizationGroup.GetText("NoLogs", "No logs available.")</label>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="boss-logs-list">
+                                                            @foreach (var log in boss.Logs)
+                                                            {
+                                                                <a href="https://dps.report/@log.PermaLink" target="_blank" class="boss-log-entry @(log.IsSuccess ? "log-success" : "log-failure")">
+                                                                    <div class="log-indicator @(log.IsSuccess ? "log-indicator-success" : "log-indicator-failure")"></div>
+                                                                    <span class="log-date">@log.EncounterTime.ToString("g", LocalizationGroup.CultureInfo)</span>
+                                                                    <span class="log-status">@(log.IsSuccess ? LocalizationGroup.GetText("LogSuccess", "Success") : LocalizationGroup.GetText("LogFailure", "Failure"))</span>
+                                                                </a>
+                                                            }
+                                                        </div>
+                                                    }
+                                                </div>
                                             }
-                                            <span class="boss-name">@boss.Name</span>
                                         </div>
                                     }
                                 </div>
