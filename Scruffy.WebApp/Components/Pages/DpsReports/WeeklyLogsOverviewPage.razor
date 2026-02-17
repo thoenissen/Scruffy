@@ -7,20 +7,20 @@
 <PageTitle>@LocalizationGroup.GetText("PageTitle", "FooI - Logs - Weekly")</PageTitle>
 
 <div class="page-container">
-    <h3>@LocalizationGroup.GetText("PageHeader", "Weekly Overview")</h3>
-
-    @if (_encounters == null)
+    @if (_isPageLoading)
     {
         <LoadingContainer IsLoading="true">
             <label>@LocalizationGroup.GetText("Loading", "Loading...")</label>
         </LoadingContainer>
     }
-    else if (_encounters.Count == 0)
+    else if (_encounters == null || _encounters.Count == 0)
     {
         <label>@LocalizationGroup.GetText("NoEncounters", "No encounters are available.")</label>
     }
     else
     {
+        <h3>@LocalizationGroup.GetFormattedText("PageHeader", "Weekly Overview {0} - {1}", _weekStart.ToString("d"), _weekEnd.AddDays(-1).ToString("d"))</h3>
+
         <div class="encounters-container">
             @foreach (var expansion in _encounters)
             {
@@ -48,8 +48,8 @@
                                 <div class="bosses-list">
                                     @foreach (var boss in encounter.Bosses.OrderBy(b => b.Name))
                                     {
-                                        <div class="boss-item">
-                                            <div class="boss-success-indicator" title="@(boss.IsSuccessful == true ? "Success" : "Unsuccessfully")"></div>
+                                        <div class="boss-item @GetBossStatusClass(boss.IsSuccessful)">
+                                            <div class="boss-success-indicator @GetIndicatorClass(boss.IsSuccessful)" title="@GetStatusTooltip(boss.IsSuccessful)"></div>
                                             @if (!string.IsNullOrEmpty(boss.IconUrl))
                                             {
                                                 <img src="@boss.IconUrl" alt="@boss.Name" class="boss-icon" />
