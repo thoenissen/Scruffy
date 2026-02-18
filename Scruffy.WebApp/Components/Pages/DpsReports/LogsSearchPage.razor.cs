@@ -472,66 +472,6 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
     }
 
     /// <summary>
-    /// Gets the skill level based on the uptime percentage
-    /// </summary>
-    /// <param name="uptime">Uptime</param>
-    /// <returns>Skill-Level CSS class</returns>
-    private string GetSkillLevelFromUptime(double? uptime)
-    {
-        if (uptime > 80.00D)
-        {
-            return "skill-level-2";
-        }
-
-        if (uptime > 50.00D)
-        {
-            return "skill-level-1";
-        }
-
-        return "skill-level-0";
-    }
-
-    /// <summary>
-    /// Gets the skill level for a mechanic based on the count
-    /// </summary>
-    /// <param name="count">Count</param>
-    /// <returns>Skill-Level CSS class</returns>
-    private string GetSkillLevelForMechanic(int count)
-    {
-        if (count <= 1)
-        {
-            return "skill-level-2";
-        }
-
-        if (count <= 3)
-        {
-            return "skill-level-1";
-        }
-
-        return "skill-level-0";
-    }
-
-    /// <summary>
-    /// Gets the skell from player dps
-    /// </summary>
-    /// <param name="dps">DPS</param>
-    /// <returns>Skill-Level CSS class</returns>
-    private string GetSkillLevelFromDps(int? dps)
-    {
-        if (dps < 10_000)
-        {
-            return "skill-level-0";
-        }
-
-        if (dps < 20_000)
-        {
-            return "skill-level-1";
-        }
-
-        return "skill-level-0";
-    }
-
-    /// <summary>
     /// Called from JavaScript when a row is clicked
     /// </summary>
     /// <param name="reportId">ID of the report</param>
@@ -549,11 +489,31 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
     /// <summary>
     /// Closes the overlay
     /// </summary>
-    private void CloseOverlay()
+    private void OnCloseOverlay()
     {
         _selectedReport = null;
 
         InvokeAsync(StateHasChanged);
+    }
+
+    /// <summary>
+    /// Gets the skill level based on the uptime percentage
+    /// </summary>
+    /// <param name="uptime">Uptime</param>
+    /// <returns>Skill-Level CSS class</returns>
+    private string GetSkillLevelFromUptime(double? uptime)
+    {
+        if (uptime > 80.00D)
+        {
+            return "skill-level-2";
+        }
+
+        if (uptime > 50.00D)
+        {
+            return "skill-level-1";
+        }
+
+        return "skill-level-0";
     }
 
     #endregion // Methods
