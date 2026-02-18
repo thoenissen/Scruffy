@@ -43,7 +43,7 @@ public class DpsReportExpansionEntryBuilder
     {
         return new DpsReportExpansionEntryBuilder().WithExpansionId(DpsReportExpansion.CoreGame)
                                                    .WithName("Core Game")
-                                                   .WithIconUrl("https://cdn.discordapp.com/attachments/982003562462724186/1473028062408085609/GW2Logo_new.png?ex=6994b7c9&is=69936649&hm=5ee749732ecb2d332cccf364f292d69d0504d89731e0fe67a272bfe13a5f2c72&")
+                                                   .WithIconUrl("assets/icons/Mastery_point_(Central_Tyria).png")
                                                    .WithEncounters([
                                                                        new DpsReportEncounterEntryBuilder().WithEncounterId(DpsReportEncounter.OldLionsCourt)
                                                                                                            .WithName("Old Lion's Court")
@@ -62,7 +62,7 @@ public class DpsReportExpansionEntryBuilder
     {
         return new DpsReportExpansionEntryBuilder().WithExpansionId(DpsReportExpansion.HeartsOfThorns)
                                                    .WithName("Heart of Thorns")
-                                                   .WithIconUrl("https://media.discordapp.net/attachments/982003562462724186/1473028063431229571/HoT_Texture_Centered_Trans.png?ex=6994b7c9&is=69936649&hm=c1837e5c8d6cc9823c0856dc96e44cf87edcc3196b837eaf3103716a194a588c")
+                                                   .WithIconUrl("assets/icons/Mastery_point_(Heart_of_Thorns).png")
                                                    .WithEncounters([
                                                                        new DpsReportEncounterEntryBuilder().WithEncounterId(DpsReportEncounter.SpiritVale)
                                                                                                            .WithName("Spirit Vale")
@@ -104,7 +104,7 @@ public class DpsReportExpansionEntryBuilder
     {
         return new DpsReportExpansionEntryBuilder().WithExpansionId(DpsReportExpansion.PathOfFire)
                                                    .WithName("Path of Fire")
-                                                   .WithIconUrl("https://media.discordapp.net/attachments/982003562462724186/1473028064496717906/GW2-PoF_Texture_Centered_Trans.png?ex=6994b7ca&is=6993664a&hm=5bfbb623e748f10894d21a2c88d06197f0f6bed63cc19298cde8bc4d4ef6511a")
+                                                   .WithIconUrl("assets/icons/Mastery_point_(Path_of_Fire).png")
                                                    .WithEncounters([
                                                                        new DpsReportEncounterEntryBuilder().WithEncounterId(DpsReportEncounter.HallOfChains)
                                                                                                            .WithName("Hall of Chains")
@@ -138,7 +138,7 @@ public class DpsReportExpansionEntryBuilder
     {
         return new DpsReportExpansionEntryBuilder().WithExpansionId(DpsReportExpansion.IcebroodSaga)
                                                    .WithName("Icebrood Saga")
-                                                   .WithIconUrl("https://cdn.discordapp.com/attachments/982003562462724186/1473028064979193977/Living_World_Season_5_logo.png?ex=6994b7ca&is=6993664a&hm=7774ab972d29a6e510e37287f6c5d34e41798ee38e37909c8f4b61f49f9e060d&")
+                                                   .WithIconUrl("assets/icons/Mastery_point_(Icebrood_Saga).png")
                                                    .WithEncounters([
                                                                        new DpsReportEncounterEntryBuilder().WithEncounterId(DpsReportEncounter.ShiverpeaksPass)
                                                                                                            .WithName("Shiverpeaks Pass")
@@ -174,7 +174,7 @@ public class DpsReportExpansionEntryBuilder
     {
         return new DpsReportExpansionEntryBuilder().WithExpansionId(DpsReportExpansion.EndOfDragons)
                                                    .WithName("End of Dragons")
-                                                   .WithIconUrl("https://cdn.discordapp.com/attachments/982003562462724186/1473028130615591165/EoD_Texture_Trans.png?ex=6994b7d9&is=69936659&hm=72707b653248852a02d453828ab073d58b26d6ec8946ad8ad1d9f5cbd23e07d3&")
+                                                   .WithIconUrl("assets/icons/Mastery_point_(End_of_Dragons).png")
                                                    .WithEncounters([
                                                                        new DpsReportEncounterEntryBuilder().WithEncounterId(DpsReportEncounter.AetherbladHideout)
                                                                                                            .WithName("Aetherblade Hideout")
@@ -204,7 +204,7 @@ public class DpsReportExpansionEntryBuilder
     {
         return new DpsReportExpansionEntryBuilder().WithExpansionId(DpsReportExpansion.SecretsOfTheObscure)
                                                    .WithName("Secrets of the Obscure")
-                                                   .WithIconUrl("https://media.discordapp.net/attachments/982003562462724186/1473028131039350917/Secrets_of_the_Obscure_logo.png?ex=6994b7d9&is=69936659&hm=2dc8d9734dbdf4eeb6987e67805fc3663ab524303bb263edd84dcebd63d7fe4e")
+                                                   .WithIconUrl("assets/icons/Mastery_point_(Secrets_of_the_Obscure).png")
                                                    .WithEncounters([
                                                                        new DpsReportEncounterEntryBuilder().WithEncounterId(DpsReportEncounter.CosmicObservatory)
                                                                                                            .WithName("Cosmic Observatory")
@@ -226,7 +226,7 @@ public class DpsReportExpansionEntryBuilder
     {
         return new DpsReportExpansionEntryBuilder().WithExpansionId(DpsReportExpansion.JanthirWilds)
                                                    .WithName("Janthir Wilds")
-                                                   .WithIconUrl("https://cdn.discordapp.com/attachments/982003562462724186/1473028131848978493/Janthir_Wilds_logo.png?ex=6994b7da&is=6993665a&hm=90b0a0e766dff30f8e099fce1be603366226a77552bd9255992d3b8962fdb46d&")
+                                                   .WithIconUrl("assets/icons/Mastery_point_(Janthir_Wilds).png")
                                                    .WithEncounters([
                                                                        new DpsReportEncounterEntryBuilder().WithEncounterId(DpsReportEncounter.MountBalrior)
                                                                                                            .WithName("Mount Balrior")
@@ -247,7 +247,7 @@ public class DpsReportExpansionEntryBuilder
     {
         return new DpsReportExpansionEntryBuilder().WithExpansionId(DpsReportExpansion.VisionsOfEternity)
                                                    .WithName("Visions of Eternity")
-                                                   .WithIconUrl("https://cdn.discordapp.com/attachments/982003562462724186/1473028132624928849/Visions_of_Eternity_logo.png?ex=6994b7da&is=6993665a&hm=2bd4184e756f20f03d0588ada1eef1caf6fd2e20688821e83b5f4abdac07cb62&")
+                                                   .WithIconUrl("assets/icons/Mastery_point_(Visions_of_Eternity).png") 
                                                    .WithEncounters([
                                                                        new DpsReportEncounterEntryBuilder().WithEncounterId(DpsReportEncounter.GuardiansGlade)
                                                                                                            .WithName("Guardian's Glade")
