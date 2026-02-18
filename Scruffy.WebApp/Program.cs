@@ -26,6 +26,7 @@ using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Tables.CoreData;
 using Scruffy.Data.Entity.Tables.Web;
 using Scruffy.Services.Core.Localization;
+using Scruffy.Services.GuildWars2.DpsReports;
 using Scruffy.WebApp.Components;
 using Scruffy.WebApp.Components.Account;
 using Scruffy.WebApp.Services;
@@ -121,6 +122,7 @@ public class Program
         builder.Services.AddHybridCache();
 
         builder.Services.AddSingleton<DpsReportProcessor>();
+        builder.Services.AddTransient<DpsReportsMetaImporter>();
 
         var locationService = new LocalizationService();
 

@@ -2,16 +2,14 @@
 
 @page "/DpsReports/Weekly"
 @inherits Scruffy.WebApp.Components.Base.LocatedComponent
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <PageTitle>@LocalizationGroup.GetText("PageTitle", "FooI - Logs - Weekly")</PageTitle>
 
 <div class="page-container">
     @if (_isPageLoading)
     {
-        <LoadingContainer IsLoading="true">
-            <label>@LocalizationGroup.GetText("Loading", "Loading...")</label>
-        </LoadingContainer>
+        <LoadingContainer IsLoading="true"/>
     }
     else if (_encounters == null || _encounters.Count == 0)
     {

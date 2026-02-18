@@ -247,7 +247,7 @@ public class DpsReportExpansionEntryBuilder
     {
         return new DpsReportExpansionEntryBuilder().WithExpansionId(DpsReportExpansion.VisionsOfEternity)
                                                    .WithName("Visions of Eternity")
-                                                   .WithIconUrl("assets/icons/Mastery_point_(Visions_of_Eternity).png") 
+                                                   .WithIconUrl("assets/icons/Mastery_point_(Visions_of_Eternity).png")
                                                    .WithEncounters([
                                                                        new DpsReportEncounterEntryBuilder().WithEncounterId(DpsReportEncounter.GuardiansGlade)
                                                                                                            .WithName("Guardian's Glade")

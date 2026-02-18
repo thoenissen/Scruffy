@@ -33,7 +33,7 @@ public partial class WeeklyLogsOverviewPage : IAsyncDisposable
     /// <summary>
     /// Dictionary of currently loaded logs for quick lookup
     /// </summary>
-    private readonly Dictionary<string, DpsReport> _loadedLogs = new();
+    private readonly Dictionary<string, DpsReport> _loadedLogs = [];
 
     /// <summary>
     /// Guild Wars 2 account names of the user
@@ -102,6 +102,12 @@ public partial class WeeklyLogsOverviewPage : IAsyncDisposable
     [Inject]
     private DpsReportProcessor DpsReportProcessor { get; set; }
 
+    /// <summary>
+    /// Importer
+    /// </summary>
+    [Inject]
+    private DpsReportsMetaImporter DpsReportMetaImporter { get; set; }
+
     #endregion // Properties
 
     #region Methods
@@ -148,12 +154,13 @@ public partial class WeeklyLogsOverviewPage : IAsyncDisposable
                 && int.TryParse(nameIdentifier, out var userId))
             {
                 _userId = userId;
-                _weekStart = GetWeekStart().AddDays(-1000);
-                _weekEnd = _weekStart.AddDays(7).AddDays(1000);
-
+                _weekStart = GetWeekStart();
+                _weekEnd = _weekStart.AddDays(7);
                 _encounters = DpsReportAnalyzer.GetEncounters();
 
                 token.ThrowIfCancellationRequested();
+
+                await DpsReportMetaImporter.Import(userId).ConfigureAwait(false);
 
                 using (var repository = RepositoryFactory.CreateInstance())
                 {
@@ -604,7 +611,7 @@ public partial class WeeklyLogsOverviewPage : IAsyncDisposable
     #region ComponentBase
 
     /// <inheritdoc />
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         if (_isPageLoading)
         {
@@ -618,6 +625,7 @@ public partial class WeeklyLogsOverviewPage : IAsyncDisposable
         _cancellationTokenSource = new CancellationTokenSource();
 
         _loadTask = LoadWeeklyReports(_cancellationTokenSource.Token);
+        await _loadTask.ConfigureAwait(false);
     }
 
     #endregion // ComponentBase
