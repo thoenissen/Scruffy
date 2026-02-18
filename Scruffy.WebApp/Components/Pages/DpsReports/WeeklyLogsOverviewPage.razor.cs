@@ -5,15 +5,20 @@ using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
+using GW2EIJSON;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Logging;
 
 using Scruffy.Data.Entity;
+using Scruffy.Data.Entity.Repositories.GuildWars2.Account;
 using Scruffy.Data.Entity.Repositories.GuildWars2.DpsReports;
 using Scruffy.Services.GuildWars2;
 using Scruffy.Services.GuildWars2.DpsReports;
+using Scruffy.WebApp.Components.Pages.DpsReports.Data;
+using Scruffy.WebApp.Services;
 
 namespace Scruffy.WebApp.Components.Pages.DpsReports;
 
@@ -24,6 +29,16 @@ namespace Scruffy.WebApp.Components.Pages.DpsReports;
 public partial class WeeklyLogsOverviewPage : IAsyncDisposable
 {
     #region Fields
+
+    /// <summary>
+    /// Dictionary of currently loaded logs for quick lookup
+    /// </summary>
+    private readonly Dictionary<string, DpsReport> _loadedLogs = new();
+
+    /// <summary>
+    /// Guild Wars 2 account names of the user
+    /// </summary>
+    private List<string> _guildWarsAccountNames = [];
 
     /// <summary>
     /// List of encounters organized by expansion
@@ -60,6 +75,11 @@ public partial class WeeklyLogsOverviewPage : IAsyncDisposable
     /// </summary>
     private int _userId;
 
+    /// <summary>
+    /// Selected report for overlay display
+    /// </summary>
+    private DpsReport _selectedReport;
+
     #endregion // Fields
 
     #region Properties
@@ -75,6 +95,12 @@ public partial class WeeklyLogsOverviewPage : IAsyncDisposable
     /// </summary>
     [Inject]
     private ILogger<WeeklyLogsOverviewPage> Logger { get; set; }
+
+    /// <summary>
+    /// Processor for detailed DPS reports
+    /// </summary>
+    [Inject]
+    private DpsReportProcessor DpsReportProcessor { get; set; }
 
     #endregion // Properties
 
@@ -122,8 +148,8 @@ public partial class WeeklyLogsOverviewPage : IAsyncDisposable
                 && int.TryParse(nameIdentifier, out var userId))
             {
                 _userId = userId;
-                _weekStart = GetWeekStart();
-                _weekEnd = _weekStart.AddDays(7);
+                _weekStart = GetWeekStart().AddDays(-1000);
+                _weekEnd = _weekStart.AddDays(7).AddDays(1000);
 
                 _encounters = DpsReportAnalyzer.GetEncounters();
 
@@ -131,6 +157,12 @@ public partial class WeeklyLogsOverviewPage : IAsyncDisposable
 
                 using (var repository = RepositoryFactory.CreateInstance())
                 {
+                    _guildWarsAccountNames = repository.GetRepository<GuildWarsAccountRepository>()
+                                                       .GetQuery()
+                                                       .Where(account => account.UserId == userId)
+                                                       .Select(account => account.Name)
+                                                       .ToList();
+
                     var dpsReportRepository = repository.GetRepository<DpsReportRepository>();
 
                     var bosses = dpsReportRepository.GetQuery()
@@ -265,6 +297,254 @@ public partial class WeeklyLogsOverviewPage : IAsyncDisposable
     }
 
     /// <summary>
+    /// Opens the overlay for a log entry
+    /// </summary>
+    /// <param name="logEntry">The log entry to display</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    private async Task OpenLogOverlay(DpsReportBossLogEntry logEntry)
+    {
+        if (_loadedLogs.TryGetValue(logEntry.Id, out var existingReport))
+        {
+            _selectedReport = existingReport;
+
+            await InvokeAsync(StateHasChanged).ConfigureAwait(false);
+
+            return;
+        }
+
+        var report = new DpsReport
+                     {
+                         MetaData = new MetaData
+                                    {
+                                        Id = logEntry.Id,
+                                        IsSuccess = logEntry.IsSuccess,
+                                        PermaLink = logEntry.PermaLink,
+                                        EncounterTime = new DateTimeOffset(logEntry.EncounterTime),
+                                        Boss = "Loading...",
+                                        Duration = null
+                                    },
+                         IsLoadingAdditionalData = true
+                     };
+
+        _selectedReport = report;
+        _loadedLogs[logEntry.Id] = report;
+
+        await InvokeAsync(StateHasChanged).ConfigureAwait(false);
+
+        await GetAdditionalDataAsync(report).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Gets additional data for the report, like DPS, alacrity and quickness
+    /// </summary>
+    /// <param name="report">Report</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    private async Task GetAdditionalDataAsync(DpsReport report)
+    {
+        try
+        {
+            report.FullReport = await DpsReportProcessor.Get(report.MetaData.Id).ConfigureAwait(false);
+
+            if (report.FullReport != null)
+            {
+                report.MetaData.Boss = report.FullReport.FightName;
+                report.MetaData.Duration = TimeSpan.FromMilliseconds(report.FullReport.DurationMS);
+                report.OverallStatistics = ReportOverallStatistics(report.FullReport);
+                report.PersonalStatistics = GetPersonalStatistics(report.FullReport);
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "An error occurred while loading additional data for DPS report {ReportId}.", report.MetaData.Id);
+        }
+
+        report.IsLoadingAdditionalData = false;
+
+        await InvokeAsync(StateHasChanged).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Get overall statistics
+    /// </summary>
+    /// <param name="detailedReport">Detailed report</param>
+    /// <returns>Overall statistics</returns>
+    private OverallStatistics ReportOverallStatistics(JsonLog detailedReport)
+    {
+        const int alacrityId = 30328;
+        const int quicknessId = 1187;
+
+        return new OverallStatistics
+               {
+                   Dps = detailedReport.Players?.Sum(player => player.DpsTargets?.Sum(dpsTarget => dpsTarget.Count > 0 ? dpsTarget[0].Dps : 0)),
+                   Alacrity = GetUptime(detailedReport.Players, alacrityId),
+                   Quickness = GetUptime(detailedReport.Players, quicknessId),
+               };
+    }
+
+    /// <summary>
+    /// Get personal statistics
+    /// </summary>
+    /// <param name="detailedReport">Detailed report</param>
+    /// <returns>Personal statistics</returns>
+    private PersonalStatistics GetPersonalStatistics(JsonLog detailedReport)
+    {
+        const int alacrityId = 30328;
+        const int quicknessId = 1187;
+
+        var playerCharacterName = GetOwnCharacterName(detailedReport);
+
+        var statistics = new PersonalStatistics
+                         {
+                             PlayerCharacterName = playerCharacterName,
+                             Mechanics = GetMechanics(detailedReport, playerCharacterName),
+                         };
+
+        var player = detailedReport?.Players?.FirstOrDefault(player => player.Name?.Equals(playerCharacterName, StringComparison.OrdinalIgnoreCase) == true);
+
+        if (player != null)
+        {
+            var alacrityBuff = player.GroupBuffs?.FirstOrDefault(buff => buff.Id == alacrityId)?.BuffData;
+
+            if (alacrityBuff?.Count > 0
+                && alacrityBuff[0].Generation > 15.0D)
+            {
+                statistics.Alacrity = alacrityBuff[0].Generation;
+
+                statistics.PlayerRole = player.Healing > 0
+                                            ? "Alacrity Healer"
+                                            : "Alacrity DPS";
+            }
+            else
+            {
+                var quicknessBuff = player.GroupBuffs?.FirstOrDefault(buff => buff.Id == quicknessId)?.BuffData;
+
+                if (quicknessBuff?.Count > 0
+                    && quicknessBuff[0].Generation > 15.0D)
+                {
+                    statistics.Quickness = quicknessBuff[0].Generation;
+
+                    statistics.PlayerRole = player.Healing > 0
+                                                ? "Quickness Healer"
+                                                : "Quickness DPS";
+                }
+            }
+
+            if (player.Healing == 0)
+            {
+                statistics.PlayerDps = player.DpsTargets?.Sum(dpsTarget => dpsTarget.Count > 0 ? dpsTarget[0].Dps : 0);
+            }
+        }
+
+        statistics.PlayerRole ??= "DPS";
+
+        return statistics;
+    }
+
+    /// <summary>
+    /// Gets the own character name from the players list
+    /// </summary>
+    /// <param name="report">Detailed report</param>
+    /// <returns>Character name of the player</returns>
+    private string GetOwnCharacterName(JsonLog report)
+    {
+        if (report?.Players == null || report.Players.Count == 0)
+        {
+            return null;
+        }
+
+        var player = report.Players.FirstOrDefault(player => _guildWarsAccountNames.Any(accountName => player.Account?.Equals(accountName, StringComparison.OrdinalIgnoreCase) == true));
+
+        return player?.Name;
+    }
+
+    /// <summary>
+    /// Gets the mechanics counts for the own player
+    /// </summary>
+    /// <param name="report">Detailed report</param>
+    /// <param name="playerCharacterName">Character name of the own player</param>
+    /// <returns>List of mechanics with hit counts</returns>
+    private List<Mechanic> GetMechanics(JsonLog report, string playerCharacterName)
+    {
+        var result = new List<Mechanic>();
+
+        if (report?.Mechanics == null || playerCharacterName == null)
+        {
+            return result;
+        }
+
+        foreach (var mechanic in report.Mechanics)
+        {
+            if (mechanic.MechanicsData != null)
+            {
+                var count = mechanic.MechanicsData.Count(m => m.Actor?.Equals(playerCharacterName, StringComparison.OrdinalIgnoreCase) == true);
+
+                if (count > 0)
+                {
+                    result.Add(new Mechanic
+                               {
+                                   Name = mechanic.Name,
+                                   FullName = mechanic.FullName,
+                                   Description = mechanic.Description,
+                                   Count = count
+                               });
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Calculates the uptime of a specific buff across all players in the report
+    /// </summary>
+    /// <param name="players">Players</param>
+    /// <param name="buffId">Buff ID</param>
+    /// <returns>Average Uptime</returns>
+    private double? GetUptime(IReadOnlyList<JsonPlayer> players, int buffId)
+    {
+        if (players == null
+            || players.Count == 0)
+        {
+            return null;
+        }
+
+        double weightedUptime = 0;
+        long summedActiveTime = 0;
+
+        foreach (var player in players)
+        {
+            if (player.ActiveTimes == null
+                || player.ActiveTimes.Count == 0)
+            {
+                continue;
+            }
+
+            var playerActiveTime = player.ActiveTimes[0];
+            summedActiveTime += playerActiveTime;
+
+            if (player.BuffUptimesActive == null
+                || player.BuffUptimesActive.Count == 0)
+            {
+                continue;
+            }
+
+            var buffUptime = player.BuffUptimesActive.FirstOrDefault(buf => buf.Id == buffId);
+
+            if (buffUptime?.BuffData == null
+                || buffUptime.BuffData.Count == 0)
+            {
+                continue;
+            }
+
+            weightedUptime += buffUptime.BuffData[0].Uptime * playerActiveTime;
+        }
+
+        return summedActiveTime > 0
+                   ? weightedUptime / summedActiveTime
+                   : null;
+    }
+
+    /// <summary>
     /// Gets the CSS class for the boss item based on its status
     /// </summary>
     /// <param name="isSuccessful">Success status</param>
@@ -307,6 +587,16 @@ public partial class WeeklyLogsOverviewPage : IAsyncDisposable
                    false => LocalizationGroup.GetText("Unsuccessful", "Unsuccessfully attempted"),
                    null => LocalizationGroup.GetText("NotAttempted", "Not attempted")
                };
+    }
+
+    /// <summary>
+    /// Closes the overlay
+    /// </summary>
+    private void OnCloseOverlay()
+    {
+        _selectedReport = null;
+
+        InvokeAsync(StateHasChanged);
     }
 
     #endregion // Methods

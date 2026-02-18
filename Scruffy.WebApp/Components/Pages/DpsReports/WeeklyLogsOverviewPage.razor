@@ -86,11 +86,11 @@
                                                         <div class="boss-logs-list">
                                                             @foreach (var log in boss.Logs)
                                                             {
-                                                                <a href="https://dps.report/@log.PermaLink" target="_blank" class="boss-log-entry @(log.IsSuccess ? "log-success" : "log-failure")">
+                                                                <div class="boss-log-entry @(log.IsSuccess ? "log-success" : "log-failure")" @onclick="@(() => OpenLogOverlay(log))" style="cursor: pointer;">
                                                                     <div class="log-indicator @(log.IsSuccess ? "log-indicator-success" : "log-indicator-failure")"></div>
                                                                     <span class="log-date">@log.EncounterTime.ToString("g", LocalizationGroup.CultureInfo)</span>
                                                                     <span class="log-status">@(log.IsSuccess ? LocalizationGroup.GetText("LogSuccess", "Success") : LocalizationGroup.GetText("LogFailure", "Failure"))</span>
-                                                                </a>
+                                                                </div>
                                                             }
                                                         </div>
                                                     }
@@ -107,3 +107,8 @@
         </div>
     }
 </div>
+
+@if (_selectedReport != null)
+{
+    <DpsReportOverlay Report="@_selectedReport" OnCloseRequested="@OnCloseOverlay" />
+}
