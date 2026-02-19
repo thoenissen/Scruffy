@@ -10,7 +10,7 @@ public class DpsReportBoss
     /// <summary>
     /// Boss ID
     /// </summary>
-    public SpeciesIDs.TargetID BossId { get; set; }
+    public SpeciesIDs.TargetID[] BossIds { get; set; }
 
     /// <summary>
     /// Boss name

@@ -61,16 +61,6 @@ public enum DpsReportEncounter
     WhisperingDepths,
 
     /// <summary>
-    /// Eye of the North (Icebrood Saga)
-    /// </summary>
-    EyeOfTheNorth,
-
-    /// <summary>
-    /// Drizzlewood Coast (Icebrood Saga)
-    /// </summary>
-    DrizzlewoodCoast,
-
-    /// <summary>
     /// Aetherblade Hideout (End of Dragons)
     /// </summary>
     AetherbladHideout,

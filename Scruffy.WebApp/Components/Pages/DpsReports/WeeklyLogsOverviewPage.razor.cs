@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
@@ -187,13 +188,14 @@ public partial class WeeklyLogsOverviewPage : IAsyncDisposable
                         {
                             foreach (var boss in encounter.Bosses)
                             {
-                                if (bosses.TryGetValue((long)boss.BossId, out var isSuccessful))
+                                boss.IsSuccessful = null;
+
+                                foreach (var bossId in boss.BossIds)
                                 {
-                                    boss.IsSuccessful = isSuccessful;
-                                }
-                                else
-                                {
-                                    boss.IsSuccessful = null;
+                                    if (bosses.TryGetValue((long)bossId, out var isSuccessful))
+                                    {
+                                        boss.IsSuccessful = boss.IsSuccessful == true || isSuccessful;
+                                    }
                                 }
                             }
                         }
@@ -238,12 +240,12 @@ public partial class WeeklyLogsOverviewPage : IAsyncDisposable
             using (var repository = RepositoryFactory.CreateInstance())
             {
                 var dpsReportRepository = repository.GetRepository<DpsReportRepository>();
-
+                var bossIds= boss.BossIds.Select(id => (long)id).ToList();
                 var dpsReports = dpsReportRepository.GetQuery()
                                                     .Where(r => r.UserId == _userId
-                                                            && r.BossId == (long)boss.BossId
-                                                            && r.EncounterTime >= _weekStart
-                                                            && r.EncounterTime < _weekEnd)
+                                                                && bossIds.Contains(r.BossId)
+                                                                && r.EncounterTime >= _weekStart
+                                                                && r.EncounterTime < _weekEnd)
                                                     .OrderByDescending(r => r.EncounterTime)
                                                     .ToList();
 
@@ -262,7 +264,7 @@ public partial class WeeklyLogsOverviewPage : IAsyncDisposable
         }
         catch (Exception ex)
         {
-            Logger.LogError(ex, "An error occurred while loading DPS logs for boss {BossId}.", boss.BossId);
+            Logger.LogError(ex, "An error occurred while loading DPS logs for boss ids [{BossIds}].", string.Join(", ", boss.BossIds));
         }
         finally
         {

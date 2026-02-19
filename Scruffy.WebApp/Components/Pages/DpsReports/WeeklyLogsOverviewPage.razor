@@ -44,7 +44,7 @@
                                 </div>
 
                                 <div class="bosses-list">
-                                    @foreach (var boss in encounter.Bosses.OrderBy(b => b.Name))
+                                    @foreach (var boss in encounter.Bosses)
                                     {
                                         <div class="boss-item-wrapper">
                                             <div class="boss-item @GetBossStatusClass(boss.IsSuccessful) @(boss.IsExpanded ? "boss-item-expanded" : "")"

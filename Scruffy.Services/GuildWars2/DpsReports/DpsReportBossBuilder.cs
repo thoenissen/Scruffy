@@ -12,7 +12,7 @@ public class DpsReportBossBuilder
     /// <summary>
     /// Boss ID
     /// </summary>
-    private SpeciesIDs.TargetID _bossId;
+    private SpeciesIDs.TargetID[] _bossIds;
 
     /// <summary>
     /// Name
@@ -29,13 +29,13 @@ public class DpsReportBossBuilder
     #region Methods
 
     /// <summary>
-    /// Sets the boss ID
+    /// Sets the boss IDs
     /// </summary>
-    /// <param name="bossId">The boss ID</param>
+    /// <param name="bossIds">The boss IDs</param>
     /// <returns>The current builder instance</returns>
-    public DpsReportBossBuilder WithBossId(SpeciesIDs.TargetID bossId)
+    public DpsReportBossBuilder WithBossIds(params SpeciesIDs.TargetID[] bossIds)
     {
-        _bossId = bossId;
+        _bossIds = bossIds;
 
         return this;
     }
@@ -72,7 +72,7 @@ public class DpsReportBossBuilder
     {
         return new DpsReportBoss
                {
-                   BossId = _bossId,
+                   BossIds = _bossIds,
                    Name = _name,
                    IconUrl = _iconUrl
                };
