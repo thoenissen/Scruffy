@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 
 using GW2EIJSON;
+
+using Scruffy.Data.Services.DpsReport;
 
 namespace Scruffy.WebApp.Components.Pages.DpsReports.Data;
 

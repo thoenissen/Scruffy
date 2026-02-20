@@ -1,4 +1,4 @@
-namespace Scruffy.WebApp.Components.Pages.DpsReports.Data;
+namespace Scruffy.Data.Services.DpsReport;
 
 /// <summary>
 /// Represents a mechanic from a DPS report with hit count.

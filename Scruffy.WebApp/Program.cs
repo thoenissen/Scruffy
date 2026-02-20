@@ -121,8 +121,10 @@ public class Program
 
         builder.Services.AddHybridCache();
 
+        builder.Services.AddTransient<RepositoryFactory>();
         builder.Services.AddSingleton<DpsReportProcessor>();
         builder.Services.AddTransient<DpsReportsMetaImporter>();
+        builder.Services.AddTransient<DpsReportReportGenerator>();
 
         var locationService = new LocalizationService();
 

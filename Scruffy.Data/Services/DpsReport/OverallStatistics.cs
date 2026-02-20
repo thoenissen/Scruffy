@@ -1,7 +1,7 @@
-﻿namespace Scruffy.WebApp.Components.Pages.DpsReports.Data;
+namespace Scruffy.Data.Services.DpsReport;
 
 /// <summary>
-/// Overall statistics
+/// Overall statistics from a DPS report
 /// </summary>
 public class OverallStatistics
 {

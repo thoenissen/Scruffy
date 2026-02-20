@@ -20,6 +20,7 @@ using Newtonsoft.Json;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.CoreData;
 using Scruffy.Services.Core.Extensions;
+using Scruffy.Services.GuildWars2.DpsReports;
 using Scruffy.WebApp.Components.Pages.DpsReports.Data;
 using Scruffy.WebApp.Services;
 
@@ -99,6 +100,12 @@ public sealed partial class TodaysLogsOverviewPage : IAsyncDisposable
     /// </summary>
     [Inject]
     private ILogger<TodaysLogsOverviewPage> Logger { get; set; }
+
+    /// <summary>
+    /// Report generator
+    /// </summary>
+    [Inject]
+    private DpsReportReportGenerator DpsReportReportGenerator { get; set; }
 
     #endregion // Properties
 
@@ -226,70 +233,15 @@ public sealed partial class TodaysLogsOverviewPage : IAsyncDisposable
     {
         report.FullReport = await DpsReportProcessor.Get(report.MetaData.Id).ConfigureAwait(false);
 
-        var overallStatistics = new OverallStatistics();
-
         if (report.FullReport != null)
         {
             report.MetaData.Boss = report.FullReport.FightName;
-            overallStatistics.Dps = report.FullReport.Players?.Sum(player => player.DpsTargets?.Sum(dpsTarget => dpsTarget.Count > 0 ? dpsTarget[0].Dps : 0));
-            overallStatistics.Alacrity = GetUptime(report.FullReport.Players, AlacrityId);
-            overallStatistics.Quickness = GetUptime(report.FullReport.Players, QuicknessId);
+            report.OverallStatistics = DpsReportReportGenerator.GetOverallStatistics(report.FullReport);
         }
 
-        report.OverallStatistics = overallStatistics;
         report.IsLoadingAdditionalData = false;
 
         await InvokeAsync(StateHasChanged).ConfigureAwait(false);
-    }
-
-    /// <summary>
-    /// Calculates the uptime of a specific buff across all players in the report
-    /// </summary>
-    /// <param name="players">Players</param>
-    /// <param name="buffId">Buff ID</param>
-    /// <returns>Average Uptime</returns>
-    private double? GetUptime(IReadOnlyList<JsonPlayer> players, int buffId)
-    {
-        if (players == null
-            || players.Count == 0)
-        {
-            return null;
-        }
-
-        double weightedUptime = 0;
-        long summedActiveTime = 0;
-
-        foreach (var player in players)
-        {
-            if (player.ActiveTimes == null
-                || player.ActiveTimes.Count == 0)
-            {
-                continue;
-            }
-
-            var playerActiveTime = player.ActiveTimes[0];
-            summedActiveTime += playerActiveTime;
-
-            if (player.BuffUptimesActive == null
-                || player.BuffUptimesActive.Count == 0)
-            {
-                continue;
-            }
-
-            var buffUptime = player.BuffUptimesActive.FirstOrDefault(buf => buf.Id == buffId);
-
-            if (buffUptime?.BuffData == null
-                || buffUptime.BuffData.Count == 0)
-            {
-                continue;
-            }
-
-            weightedUptime += buffUptime.BuffData[0].Uptime * playerActiveTime;
-        }
-
-        return summedActiveTime > 0
-                   ? weightedUptime / summedActiveTime
-                   : null;
     }
 
     /// <summary>

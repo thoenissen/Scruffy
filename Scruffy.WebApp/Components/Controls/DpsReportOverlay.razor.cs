@@ -2,6 +2,7 @@
 
 using Microsoft.AspNetCore.Components;
 
+using Scruffy.Data.Services.DpsReport;
 using Scruffy.WebApp.Components.Pages.DpsReports.Data;
 
 namespace Scruffy.WebApp.Components.Controls;

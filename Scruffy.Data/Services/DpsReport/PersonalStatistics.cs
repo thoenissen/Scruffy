@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace Scruffy.WebApp.Components.Pages.DpsReports.Data;
+namespace Scruffy.Data.Services.DpsReport;
 
 /// <summary>
-/// Personal statistics
+/// Personal statistics from a DPS report
 /// </summary>
 public class PersonalStatistics
 {
