@@ -1,0 +1,77 @@
+@using Scruffy.WebApp.Components.Base
+
+@inherits LocatedComponent
+
+<div class="overlay-backdrop" @onclick="OnCloseOverlay"></div>
+<div class="overlay-container">
+    <button class="overlay-close-button" @onclick="OnCloseOverlay" title="@LocalizationGroup.GetText("Close", "Close")">
+        <span class="material-icons">close</span>
+    </button>
+    <div class="overlay-content">
+        <h2>@LocalizationGroup.GetText("UserConfiguration", "User Configuration")</h2>
+        <div class="overlay-section">
+            <div class="overlay-info">
+                <div class="overlay-info-row">
+                    <span class="overlay-label">@LocalizationGroup.GetText("Discord", "Discord")</span>
+                    <span>@User.DiscordAccountName</span>
+                </div>
+                @if (!string.IsNullOrEmpty(User.GuildWarsAccountName))
+                {
+                    <div class="overlay-info-row">
+                        <span class="overlay-label">@LocalizationGroup.GetText("GuildWars", "Guild Wars")</span>
+                        <span>@User.GuildWarsAccountName</span>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="overlay-section">
+            <h3>@LocalizationGroup.GetText("Configuration", "Configuration")</h3>
+            <div class="overlay-options">
+                <label class="toggle-option">
+                    <input type="checkbox" checked="@User.IsFixedRank" @onchange="OnToggleFixedRank" disabled="@_isSaving" />
+                    <span>@LocalizationGroup.GetText("IsFixedRank", "Excluded from ranking changes")</span>
+                </label>
+                <label class="toggle-option">
+                    <input type="checkbox" checked="@User.IsInactive" @onchange="OnToggleInactive" disabled="@_isSaving" />
+                    <span>@LocalizationGroup.GetText("IsInactive", "Inactive")</span>
+                </label>
+            </div>
+        </div>
+        <div class="overlay-section">
+            <h3>@LocalizationGroup.GetText("ApiKeySection", "API Key")</h3>
+            <div class="overlay-info">
+                <div class="overlay-info-row">
+                    <span class="overlay-label">@LocalizationGroup.GetText("ApiKeyStatus", "Status")</span>
+                    <span>
+                        @if (User.IsApiKeyValid)
+                        {
+                            <span class="status-valid">@LocalizationGroup.GetText("Valid", "Valid")</span>
+                        }
+                        else
+                        {
+                            <span class="status-invalid">@LocalizationGroup.GetText("Invalid", "Invalid")</span>
+                        }
+                    </span>
+                </div>
+            </div>
+            <div class="overlay-actions">
+                <button class="btn-action" @onclick="OnValidateApiKey" disabled="@(_isValidating || string.IsNullOrEmpty(User.GuildWarsAccountApiKey))">
+                    @if (_isValidating)
+                    {
+                        <span>@LocalizationGroup.GetText("Validating", "Validating...")</span>
+                    }
+                    else
+                    {
+                        <span>@LocalizationGroup.GetText("ValidateApiKey", "Validate API Key")</span>
+                    }
+                </button>
+            </div>
+            @if (_validationMessage != null)
+            {
+                <div class="validation-message @(_validationSuccess ? "status-valid" : "status-invalid")">
+                    @_validationMessage
+                </div>
+            }
+        </div>
+    </div>
+</div>

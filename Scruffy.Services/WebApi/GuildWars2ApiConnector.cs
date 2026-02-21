@@ -77,6 +77,16 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
         _serviceProvider = ServiceProviderContainer.Current.GetServiceProvider();
     }
 
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="httpClient">HTTP-Client</param>
+    /// <param name="apiKey">Api Key</param>
+    public GuildWars2ApiConnector(HttpClient httpClient, string apiKey)
+    {
+        _apiKey = apiKey;
+        HttpClient = httpClient;
+    }
     #endregion // Constructor
 
     #region Properties
@@ -84,8 +94,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <summary>
     /// Http client
     /// </summary>
-    public HttpClient HttpClient => field ??= _serviceProvider?.GetService<IHttpClientFactory>()
-                                                                    .CreateClient();
+    public HttpClient HttpClient => field ??= _serviceProvider?.GetService<IHttpClientFactory>().CreateClient();
 
     #endregion // Properties
 

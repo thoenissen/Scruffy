@@ -3,6 +3,7 @@
 @inherits Scruffy.WebApp.Components.Base.LocatedComponent
 
 @using Microsoft.AspNetCore.Components.QuickGrid
+@using Scruffy.WebApp.Components.Controls
 
 <PageTitle>@LocalizationGroup.GetText("PageTitle", "FooI - Administration - Users")</PageTitle>
 
@@ -29,7 +30,32 @@
                         <span class="text-success">✔️</span>
                     }
                 </TemplateColumn>
+                <TemplateColumn Title="@LocalizationGroup.GetText("FixedRank", "Fixed Rank")" Context="u" SortBy="@_gridSortIsFixedRank" Sortable="true">
+                    @if (u.IsFixedRank)
+                    {
+                        <span class="text-success">✔️</span>
+                    }
+                </TemplateColumn>
+                <TemplateColumn Title="@LocalizationGroup.GetText("Inactive", "Inactive")" Context="u" SortBy="@_gridSortIsInactive" Sortable="true">
+                    @if (u.IsInactive)
+                    {
+                        <span class="text-success">✔️</span>
+                    }
+                </TemplateColumn>
+                <TemplateColumn Context="u">
+                    @if (u.UserId.HasValue)
+                    {
+                        <button class="btn-edit" @onclick="() => OnUserSelected(u)">
+                            <span class="material-icons">settings</span>
+                        </button>
+                    }
+                </TemplateColumn>
             </QuickGrid>
         </div>
     </div>
 </div>
+
+@if (_selectedUser != null)
+{
+    <UserConfigurationOverlay User="@_selectedUser" OnCloseRequested="@OnCloseOverlay" OnConfigurationChanged="@OnConfigurationChanged" />
+}

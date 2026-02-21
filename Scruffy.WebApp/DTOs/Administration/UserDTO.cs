@@ -24,4 +24,29 @@ public class UserDTO
     /// Is the api key valid?
     /// </summary>
     public bool IsApiKeyValid { get; set; }
+
+    /// <summary>
+    /// Excluded from ranking changes?
+    /// </summary>
+    public bool IsFixedRank { get; set; }
+
+    /// <summary>
+    /// Inactive user?
+    /// </summary>
+    public bool IsInactive { get; set; }
+
+    /// <summary>
+    /// Internal user id
+    /// </summary>
+    public long? UserId { get; set; }
+
+    /// <summary>
+    /// Internal guild id
+    /// </summary>
+    public long? GuildId { get; set; }
+
+    /// <summary>
+    /// Guild Wars 2 API key
+    /// </summary>
+    public string GuildWarsAccountApiKey { get; set; }
 }

@@ -8,3 +8,18 @@
    align-items: center;
    gap: 1rem;
 }
+
+.btn-edit {
+   background: none;
+   border: none;
+   color: var(--text);
+   cursor: pointer;
+   padding: 0.25rem;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+    .btn-edit:hover {
+        color: var(--primary);
+    }

@@ -214,7 +214,7 @@ public partial class CalendarParticipantsPage
     /// <param name="participant">Participant to toggle</param>
     private void OnToggleLeader(CalendarParticipantDTO participant)
     {
-        participant.IsLeader = !participant.IsLeader;
+        participant.IsLeader = participant.IsLeader == false;
     }
 
     /// <summary>
