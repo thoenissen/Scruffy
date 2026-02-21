@@ -137,4 +137,24 @@ public static class DpsReportDisplayExtensions
                    _ => value.ToString()
                };
     }
+
+    /// <summary>
+    /// Returns the Discord emote string for the given group
+    /// </summary>
+    /// <param name="value">The group value</param>
+    /// <returns>A Discord emote string, or <c>null</c> if no emote is available</returns>
+    public static string ToEmote(this DpsReportGroup value)
+    {
+        return value switch
+               {
+                   DpsReportGroup.HeartsOfThorns => "<:hot:1474789521525571585>",
+                   DpsReportGroup.PathOfFire => "<:pof:1474789523006291989>",
+                   DpsReportGroup.IcebroodSaga => "<:ice:1474789524008865943>",
+                   DpsReportGroup.EndOfDragons => "<:eod:1474789525170426019>",
+                   DpsReportGroup.SecretsOfTheObscure => "<:soto:1474789526088974568>",
+                   DpsReportGroup.JanthirWilds => "<:jw:1474789527355654288>",
+                   DpsReportGroup.VisionsOfEternity => "<:voe:1474789535786340504>",
+                   _ => "<:core:1474789520896692244>"
+               };
+    }
 }

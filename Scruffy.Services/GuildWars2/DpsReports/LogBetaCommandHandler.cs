@@ -119,6 +119,7 @@ public class LogBetaCommandHandler : LocatedServiceBase
                 var entryBuilder = new StringBuilder();
 
                 entryBuilder.Append("# ");
+                entryBuilder.Append(encounterGroup.Key.ToEmote());
                 entryBuilder.AppendLine(encounterGroup.Key.ToDisplayString());
 
                 foreach (var encounterSubGroup in encounterGroup.GroupBy(group => group.Key.SubGroup))
@@ -135,7 +136,7 @@ public class LogBetaCommandHandler : LocatedServiceBase
                         foreach (var report in encounter.SelectMany(entry => entry.Value))
                         {
                             entryBuilder.Append("> ");
-                            entryBuilder.Append(report.IsSuccess ? "<:e:1474776706677215513> " : "<:e:1474776707792896081> ");
+                            entryBuilder.Append(report.IsSuccess ? "<:s:1474776706677215513> " : "<:f:1474776707792896081> ");
                             entryBuilder.Append("[");
                             entryBuilder.Append(report.EncounterTime.ToString("t", LocalizationGroup.CultureInfo));
                             entryBuilder.Append(" ⧉](");
