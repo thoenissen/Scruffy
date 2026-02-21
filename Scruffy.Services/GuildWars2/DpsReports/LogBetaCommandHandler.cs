@@ -124,9 +124,14 @@ public class LogBetaCommandHandler : LocatedServiceBase
 
                 foreach (var encounterSubGroup in encounterGroup.GroupBy(group => group.Key.SubGroup))
                 {
-                    entryBuilder.Append("**");
-                    entryBuilder.Append(encounterSubGroup.Key.ToDisplayString());
-                    entryBuilder.AppendLine("**");
+                    var subGroup = encounterSubGroup.Key.ToDisplayString();
+
+                    if (string.IsNullOrWhiteSpace(subGroup) == false)
+                    {
+                        entryBuilder.Append("**");
+                        entryBuilder.Append(subGroup);
+                        entryBuilder.AppendLine("**");
+                    }
 
                     foreach (var encounter in encounterSubGroup.GroupBy(encounter => encounter.Key.Encounter))
                     {
