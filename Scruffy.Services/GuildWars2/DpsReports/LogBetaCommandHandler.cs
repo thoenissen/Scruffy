@@ -1,4 +1,6 @@
-﻿using Discord;
+﻿using System.Globalization;
+
+using Discord;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.GuildWars2.DpsReports;
@@ -21,6 +23,11 @@ public class LogBetaCommandHandler : LocatedServiceBase
     /// Web application URL
     /// </summary>
     private static readonly string _webbAppUrl = Environment.GetEnvironmentVariable("SCRUFFY_WEBAPP_URL");
+
+    /// <summary>
+    /// Formats for parsing an input date
+    /// </summary>
+    private static readonly string[] _dateFormats = ["dd.MM", "dd.MM.yyyy", "yyyy-MM-dd"];
 
     /// <summary>
     /// User management service
@@ -83,10 +90,13 @@ public class LogBetaCommandHandler : LocatedServiceBase
     /// Display logs of current day
     /// </summary>
     /// <param name="context">Context container</param>
+    /// <param name="dateString">Date string</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task Day(IContextContainer context)
+    public async Task Day(IContextContainer context, string dateString)
     {
-        var message = await context.DeferProcessing(LocalizationGroup.GetText("DayTitle", "Logs of the day"),
+        var date = ParseDay(dateString);
+        var dayTitle = LocalizationGroup.GetFormattedText("DayTitle", "Logs {0}", date.ToString("d", LocalizationGroup.CultureInfo));
+        var message = await context.DeferProcessing(dayTitle,
                                                     LocalizationGroup.GetText("ImportLogs", "Your logs are currently being imported."),
                                                     LocalizationGroup.GetText("DayFooter", $"Visit the [website]({_webbAppUrl}) to get a more detailed summary of your logs."))
                                    .ConfigureAwait(false);
@@ -96,49 +106,51 @@ public class LogBetaCommandHandler : LocatedServiceBase
         var user = await _userManagementService.GetUserByDiscordAccountId(context.User)
                                                .ConfigureAwait(false);
 
-#if DEBUG
-        var today = new DateTime(2025, 05, 23);
-#else
-        var today = DateTime.Today;
-#endif
+        var encounters = _dpsReportReportGenerator.GetEncounters(user.Id, date, date.AddDays(1));
 
-        var encounters = _dpsReportReportGenerator.GetEncounters(user.Id, today, today.AddDays(1));
-
-        var components = new ContainerBuilder().WithTextDisplay($"# {LocalizationGroup.GetText("DayTitle", "Logs of the day")}")
+        var components = new ContainerBuilder().WithTextDisplay($"# {dayTitle}")
                                                .WithSeparator();
 
-        foreach (var encounterGroup in encounters.GroupBy(encounter => encounter.Key.Group).OrderBy(encounter => encounter.Key))
+        if (encounters.Count > 0)
         {
-            var entryBuilder = new StringBuilder();
-
-            entryBuilder.Append("# ");
-            entryBuilder.AppendLine(encounterGroup.Key.ToString());
-
-            foreach (var encounterSubGroup in encounterGroup.GroupBy(group => group.Key.SubGroup))
+            foreach (var encounterGroup in encounters.GroupBy(encounter => encounter.Key.Group).OrderBy(encounter => encounter.Key))
             {
-                entryBuilder.Append("**");
-                entryBuilder.Append(encounterSubGroup.Key.ToString());
-                entryBuilder.AppendLine("**");
+                var entryBuilder = new StringBuilder();
 
-                foreach (var encounter in encounterSubGroup.GroupBy(encounter => encounter.Key.Encounter))
+                entryBuilder.Append("# ");
+                entryBuilder.AppendLine(encounterGroup.Key.ToString());
+
+                foreach (var encounterSubGroup in encounterGroup.GroupBy(group => group.Key.SubGroup))
                 {
-                    entryBuilder.Append("> ");
-                    entryBuilder.AppendLine(encounter.Key.ToString());
+                    entryBuilder.Append("**");
+                    entryBuilder.Append(encounterSubGroup.Key.ToString());
+                    entryBuilder.AppendLine("**");
 
-                    foreach (var report in encounter.SelectMany(entry => entry.Value))
+                    foreach (var encounter in encounterSubGroup.GroupBy(encounter => encounter.Key.Encounter))
                     {
                         entryBuilder.Append("> ");
-                        entryBuilder.Append(report.IsSuccess ? "<:e:1474776706677215513> " : "<:e:1474776707792896081> ");
-                        entryBuilder.Append("[");
-                        entryBuilder.Append(report.EncounterTime.ToString("t", LocalizationGroup.CultureInfo));
-                        entryBuilder.Append(" ⧉](");
-                        entryBuilder.Append(report.PermaLink);
-                        entryBuilder.AppendLine(")");
+                        entryBuilder.AppendLine(encounter.Key.ToString());
+
+                        foreach (var report in encounter.SelectMany(entry => entry.Value))
+                        {
+                            entryBuilder.Append("> ");
+                            entryBuilder.Append(report.IsSuccess ? "<:e:1474776706677215513> " : "<:e:1474776707792896081> ");
+                            entryBuilder.Append("[");
+                            entryBuilder.Append(report.EncounterTime.ToString("t", LocalizationGroup.CultureInfo));
+                            entryBuilder.Append(" ⧉](");
+                            entryBuilder.Append(report.PermaLink);
+                            entryBuilder.AppendLine(")");
+                        }
                     }
                 }
-            }
 
-            components.WithTextDisplay(entryBuilder.ToString())
+                components.WithTextDisplay(entryBuilder.ToString())
+                          .WithSeparator();
+            }
+        }
+        else
+        {
+            components.WithTextDisplay(LocalizationGroup.GetText("NoLogsMessage", "There are no logs available."))
                       .WithSeparator();
         }
 
@@ -152,6 +164,22 @@ public class LogBetaCommandHandler : LocatedServiceBase
     #endregion // Commands
 
     #region Methods
+
+    /// <summary>
+    /// Parses the day from the given dayString.
+    /// </summary>
+    /// <param name="dayString">Day to parse</param>
+    /// <returns>Parsed day</returns>
+    private DateOnly ParseDay(string dayString)
+    {
+        if (string.IsNullOrWhiteSpace(dayString) == false
+            && DateOnly.TryParseExact(dayString, _dateFormats, null, DateTimeStyles.None, out var day))
+        {
+            return day;
+        }
+
+        return DateOnly.FromDateTime(DateTime.Today.Date);
+    }
 
     /// <summary>
     /// Imports logs from dps.report

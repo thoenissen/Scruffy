@@ -167,14 +167,15 @@ public class DpsReportReportGenerator : LocatedServiceBase
     /// <param name="from">From</param>
     /// <param name="to">To</param>
     /// <returns>Encounters</returns>
-    public Dictionary<DpsReportEncounterKey, List<DpsReportEncounterData>> GetEncounters(long user, DateTime from, DateTime to)
+    public Dictionary<DpsReportEncounterKey, List<DpsReportEncounterData>> GetEncounters(long user, DateOnly from, DateOnly to)
     {
         var dpsReportRepository = _repositoryFactory.GetRepository<DpsReportRepository>();
-
+        var timeFrom = from.ToDateTime(TimeOnly.MinValue);
+        var timeTo = to.ToDateTime(TimeOnly.MinValue);
         var bosses = dpsReportRepository.GetQuery()
                                         .Where(r => r.UserId == user
-                                                        && r.EncounterTime >= from
-                                                        && r.EncounterTime < to)
+                                                        && r.EncounterTime >= timeFrom
+                                                        && r.EncounterTime < timeTo)
                                         .ToList();
 
         var encounters = new Dictionary<DpsReportEncounterKey, List<DpsReportEncounterData>>();
