@@ -68,6 +68,15 @@ public interface IContextContainer
     public Task<IUserMessage> DeferProcessing(bool ephemeral = false);
 
     /// <summary>
+    /// Response general processing message
+    /// </summary>
+    /// <param name="title">Title</param>
+    /// <param name="message">Message</param>
+    /// <param name="footer">Footer</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public Task<IUserMessage> DeferProcessing(string title, string message, string footer);
+
+    /// <summary>
     /// Reply to the user message or command
     /// </summary>
     /// <param name="text">The message to be sent.</param>

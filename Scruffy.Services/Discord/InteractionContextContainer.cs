@@ -137,6 +137,35 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
     }
 
     /// <summary>
+    /// Response general processing message
+    /// </summary>
+    /// <param name="title">Title</param>
+    /// <param name="message">Message</param>
+    /// <param name="footer">Footer</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public async Task<IUserMessage> DeferProcessing(string title, string message, string footer)
+    {
+        try
+        {
+            var components = new ComponentBuilderV2().WithContainer(b => b.WithTextDisplay($"# {title}")
+                                                                          .WithSeparator()
+                                                                          .WithTextDisplay($"{DiscordEmoteService.GetLoadingEmote(Client)} {message}")
+                                                                          .WithSeparator()
+                                                                          .WithTextDisplay($"-# {footer}")
+                                                                          .WithAccentColor(Color.DarkPurple))
+                                                     .Build();
+
+            _deferMessage = await SendMessageAsync(components: components).ConfigureAwait(false);
+
+            return _deferMessage;
+        }
+        catch (TimeoutException)
+        {
+            throw new ScruffyAbortedException();
+        }
+    }
+
+    /// <summary>
     /// Acknowledge the interaction
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>

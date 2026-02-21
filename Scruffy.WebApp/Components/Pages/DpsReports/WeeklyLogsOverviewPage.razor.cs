@@ -146,7 +146,7 @@ public partial class WeeklyLogsOverviewPage : IAsyncDisposable
 
                 token.ThrowIfCancellationRequested();
 
-                _encounters = DpsReportReportGenerator.GetEncounters(_userId, token, _weekStart, _weekEnd);
+                _encounters = DpsReportReportGenerator.GetWeeklyEncounters(_userId, token, _weekStart, _weekEnd);
             }
         }
         catch (OperationCanceledException)

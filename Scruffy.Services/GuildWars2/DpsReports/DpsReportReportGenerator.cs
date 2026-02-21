@@ -2,13 +2,10 @@
 
 using GW2EIJSON;
 
-using Minio.DataModel.ILM;
-
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.GuildWars2.Account;
 using Scruffy.Data.Entity.Repositories.GuildWars2.DpsReports;
 using Scruffy.Data.Enumerations.DpsReport;
-using Scruffy.Data.Json.DpsReport;
 using Scruffy.Data.Services.DpsReport;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
@@ -129,7 +126,7 @@ public class DpsReportReportGenerator : LocatedServiceBase
     /// <param name="weekStart">Start of the week</param>
     /// <param name="weekEnd">End of the week</param>
     /// <returns>List of encounters with success information</returns>
-    public List<DpsReportExpansionEntry> GetEncounters(int userId, CancellationToken token, DateTime weekStart, DateTime weekEnd)
+    public List<DpsReportExpansionEntry> GetWeeklyEncounters(int userId, CancellationToken token, DateTime weekStart, DateTime weekEnd)
     {
         var encounters = DpsReportAnalyzer.GetEncounters();
 
@@ -158,6 +155,42 @@ public class DpsReportReportGenerator : LocatedServiceBase
                     boss.IsSuccessful = boss.IsSuccessful == true || isSuccessful;
                 }
             }
+        }
+
+        return encounters;
+    }
+
+    /// <summary>
+    /// Get encounters
+    /// </summary>
+    /// <param name="user">User</param>
+    /// <param name="from">From</param>
+    /// <param name="to">To</param>
+    /// <returns>Encounters</returns>
+    public Dictionary<DpsReportEncounterKey, List<DpsReportEncounterData>> GetEncounters(long user, DateTime from, DateTime to)
+    {
+        var dpsReportRepository = _repositoryFactory.GetRepository<DpsReportRepository>();
+
+        var bosses = dpsReportRepository.GetQuery()
+                                        .Where(r => r.UserId == user
+                                                        && r.EncounterTime >= from
+                                                        && r.EncounterTime < to)
+                                        .ToList();
+
+        var encounters = new Dictionary<DpsReportEncounterKey, List<DpsReportEncounterData>>();
+
+        foreach (var boss in bosses.GroupBy(boss => DpsReportEncounterKey.FromBossId(boss.BossId)))
+        {
+            var isAnySuccessfully = boss.Any(encounter => encounter.IsSuccess);
+
+            encounters[boss.Key] = boss.Where(encounter => isAnySuccessfully == false || encounter.IsSuccess)
+                                       .Select(encounter => new DpsReportEncounterData
+                                                            {
+                                                                PermaLink = encounter.PermaLink,
+                                                                EncounterTime = encounter.EncounterTime,
+                                                                IsSuccess = encounter.IsSuccess
+                                                            })
+                                       .ToList();
         }
 
         return encounters;

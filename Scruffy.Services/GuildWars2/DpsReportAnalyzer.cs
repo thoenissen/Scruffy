@@ -73,7 +73,7 @@ public static class DpsReportAnalyzer
     /// </summary>
     /// <param name="bossId">The ID of the boss to determine the group</param>
     /// <returns>report group of the boss</returns>
-    public static DpsReportGroup GetReportGroupByBossId(int bossId)
+    public static DpsReportGroupLegacy GetReportGroupByBossId(int bossId)
     {
         var targetId = SpeciesIDs.GetTargetID(bossId);
 
@@ -81,22 +81,22 @@ public static class DpsReportAnalyzer
                {
                    SpeciesIDs.TargetID.MAMA
                    or SpeciesIDs.TargetID.Siax
-                   or SpeciesIDs.TargetID.Ensolyss => DpsReportGroup.Nightmare,
+                   or SpeciesIDs.TargetID.Ensolyss => DpsReportGroupLegacy.Nightmare,
 
                    SpeciesIDs.TargetID.Skorvald
                    or SpeciesIDs.TargetID.Artsariiv
-                   or SpeciesIDs.TargetID.Arkk => DpsReportGroup.ShatteredObservatory,
+                   or SpeciesIDs.TargetID.Arkk => DpsReportGroupLegacy.ShatteredObservatory,
 
-                   SpeciesIDs.TargetID.AiKeeperOfThePeak => DpsReportGroup.SunquaPeak,
+                   SpeciesIDs.TargetID.AiKeeperOfThePeak => DpsReportGroupLegacy.SunquaPeak,
 
                    SpeciesIDs.TargetID.KanaxaiScytheOfHouseAurkusNM
-                   or SpeciesIDs.TargetID.KanaxaiScytheOfHouseAurkusCM => DpsReportGroup.SilentSurf,
+                   or SpeciesIDs.TargetID.KanaxaiScytheOfHouseAurkusCM => DpsReportGroupLegacy.SilentSurf,
 
                    SpeciesIDs.TargetID.CerusLonelyTower
                    or SpeciesIDs.TargetID.DeimosLonelyTower
-                   or SpeciesIDs.TargetID.EparchLonelyTower => DpsReportGroup.LonelyTower,
+                   or SpeciesIDs.TargetID.EparchLonelyTower => DpsReportGroupLegacy.LonelyTower,
 
-                   SpeciesIDs.TargetID.WhisperingShadow => DpsReportGroup.Kinfall,
+                   SpeciesIDs.TargetID.WhisperingShadow => DpsReportGroupLegacy.Kinfall,
 
                    SpeciesIDs.TargetID.IcebroodConstruct
                    or SpeciesIDs.TargetID.VoiceOfTheFallen
@@ -105,7 +105,7 @@ public static class DpsReportAnalyzer
                    or SpeciesIDs.TargetID.IcebroodConstructFraenir
                    or SpeciesIDs.TargetID.WhisperOfJormag
                    or SpeciesIDs.TargetID.VariniaStormsounder
-                   or SpeciesIDs.TargetID.Boneskinner => DpsReportGroup.IBSStrikes,
+                   or SpeciesIDs.TargetID.Boneskinner => DpsReportGroupLegacy.IBSStrikes,
 
                    SpeciesIDs.TargetID.MaiTrinRaid
                    or SpeciesIDs.TargetID.EchoOfScarletBriarNM
@@ -116,10 +116,10 @@ public static class DpsReportAnalyzer
                    or SpeciesIDs.TargetID.GadgetTheDragonVoid1
                    or SpeciesIDs.TargetID.GadgetTheDragonVoid2
                    or SpeciesIDs.TargetID.VoidAmalgamate
-                   or SpeciesIDs.TargetID.PrototypeVermilionCM => DpsReportGroup.EoDStrikes,
+                   or SpeciesIDs.TargetID.PrototypeVermilionCM => DpsReportGroupLegacy.EoDStrikes,
 
                    SpeciesIDs.TargetID.Dagda
-                   or SpeciesIDs.TargetID.Cerus => DpsReportGroup.SotOStrikes,
+                   or SpeciesIDs.TargetID.Cerus => DpsReportGroupLegacy.SotOStrikes,
 
                    SpeciesIDs.TargetID.MassiveGolem10M
                    or SpeciesIDs.TargetID.MassiveGolem4M
@@ -130,27 +130,27 @@ public static class DpsReportAnalyzer
                    or SpeciesIDs.TargetID.LGolem
                    or SpeciesIDs.TargetID.MedGolem
                    or SpeciesIDs.TargetID.ConditionGolem
-                   or SpeciesIDs.TargetID.PowerGolem => DpsReportGroup.TrainingArea,
+                   or SpeciesIDs.TargetID.PowerGolem => DpsReportGroupLegacy.TrainingArea,
 
                    SpeciesIDs.TargetID.ValeGuardian
                    or SpeciesIDs.TargetID.Gorseval
-                   or SpeciesIDs.TargetID.Sabetha => DpsReportGroup.SpiritVale,
+                   or SpeciesIDs.TargetID.Sabetha => DpsReportGroupLegacy.SpiritVale,
 
                    SpeciesIDs.TargetID.Slothasor
                    or SpeciesIDs.TargetID.Berg
                    or SpeciesIDs.TargetID.Zane
                    or SpeciesIDs.TargetID.Narella
-                   or SpeciesIDs.TargetID.Matthias => DpsReportGroup.SalvationPass,
+                   or SpeciesIDs.TargetID.Matthias => DpsReportGroupLegacy.SalvationPass,
 
                    SpeciesIDs.TargetID.McLeodTheSilent
                    or SpeciesIDs.TargetID.KeepConstruct
                    or SpeciesIDs.TargetID.HauntingStatue
-                   or SpeciesIDs.TargetID.Xera => DpsReportGroup.StrongholdOfTheFaithful,
+                   or SpeciesIDs.TargetID.Xera => DpsReportGroupLegacy.StrongholdOfTheFaithful,
 
                    SpeciesIDs.TargetID.Cairn
                    or SpeciesIDs.TargetID.MursaatOverseer
                    or SpeciesIDs.TargetID.Samarog
-                   or SpeciesIDs.TargetID.Deimos => DpsReportGroup.BastionOfThePenitent,
+                   or SpeciesIDs.TargetID.Deimos => DpsReportGroupLegacy.BastionOfThePenitent,
 
                    SpeciesIDs.TargetID.SoullessHorror
                    or SpeciesIDs.TargetID.Desmina
@@ -158,24 +158,24 @@ public static class DpsReportAnalyzer
                    or SpeciesIDs.TargetID.EaterOfSouls
                    or SpeciesIDs.TargetID.EyeOfJudgement
                    or SpeciesIDs.TargetID.EyeOfFate
-                   or SpeciesIDs.TargetID.Dhuum => DpsReportGroup.HallOfChains,
+                   or SpeciesIDs.TargetID.Dhuum => DpsReportGroupLegacy.HallOfChains,
 
                    SpeciesIDs.TargetID.ConjuredAmalgamate
                    or SpeciesIDs.TargetID.CARightArm
                    or SpeciesIDs.TargetID.CALeftArm
                    or SpeciesIDs.TargetID.Nikare
                    or SpeciesIDs.TargetID.Kenut
-                   or SpeciesIDs.TargetID.Qadim => DpsReportGroup.MythwrightGambit,
+                   or SpeciesIDs.TargetID.Qadim => DpsReportGroupLegacy.MythwrightGambit,
 
                    SpeciesIDs.TargetID.Adina
                    or SpeciesIDs.TargetID.Sabir
-                   or SpeciesIDs.TargetID.QadimThePeerless => DpsReportGroup.TheKeyOfAhdashim,
+                   or SpeciesIDs.TargetID.QadimThePeerless => DpsReportGroupLegacy.TheKeyOfAhdashim,
 
                    SpeciesIDs.TargetID.Decima
                    or SpeciesIDs.TargetID.Greer
-                   or SpeciesIDs.TargetID.Ura => DpsReportGroup.MountBalrior,
+                   or SpeciesIDs.TargetID.Ura => DpsReportGroupLegacy.MountBalrior,
 
-                   _ => DpsReportGroup.Unknown
+                   _ => DpsReportGroupLegacy.Unknown
                };
     }
 

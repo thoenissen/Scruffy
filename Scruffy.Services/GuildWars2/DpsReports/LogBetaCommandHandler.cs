@@ -1,8 +1,4 @@
-﻿using System.Reflection.Emit;
-
-using Discord;
-
-using Osc;
+﻿using Discord;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.GuildWars2.DpsReports;
@@ -22,6 +18,11 @@ public class LogBetaCommandHandler : LocatedServiceBase
     #region Fields
 
     /// <summary>
+    /// Web application URL
+    /// </summary>
+    private static readonly string _webbAppUrl = Environment.GetEnvironmentVariable("SCRUFFY_WEBAPP_URL");
+
+    /// <summary>
     /// User management service
     /// </summary>
     private readonly UserManagementService _userManagementService;
@@ -30,6 +31,11 @@ public class LogBetaCommandHandler : LocatedServiceBase
     /// Importer for dps.report meta data
     /// </summary>
     private readonly DpsReportsMetaImporter _importer;
+
+    /// <summary>
+    /// Report generator
+    /// </summary>
+    private readonly DpsReportReportGenerator _dpsReportReportGenerator;
 
     #endregion // Fields
 
@@ -41,11 +47,13 @@ public class LogBetaCommandHandler : LocatedServiceBase
     /// <param name="localizationService">Localization service</param>
     /// <param name="userManagementService">User management service</param>
     /// <param name="importer">dps.report meta importer</param>
-    public LogBetaCommandHandler(LocalizationService localizationService, UserManagementService userManagementService, DpsReportsMetaImporter importer)
+    /// <param name="dpsReportReportGenerator">Generator</param>
+    public LogBetaCommandHandler(LocalizationService localizationService, UserManagementService userManagementService, DpsReportsMetaImporter importer, DpsReportReportGenerator dpsReportReportGenerator)
         : base(localizationService)
     {
         _userManagementService = userManagementService;
         _importer = importer;
+        _dpsReportReportGenerator = dpsReportReportGenerator;
     }
 
     #endregion // Constructor
@@ -71,9 +79,93 @@ public class LogBetaCommandHandler : LocatedServiceBase
         await PostStatistics(context, user.Id).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Display logs of current day
+    /// </summary>
+    /// <param name="context">Context container</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task Day(IContextContainer context)
+    {
+        var message = await context.DeferProcessing(LocalizationGroup.GetText("DayTitle", "Logs of the day"),
+                                                    LocalizationGroup.GetText("ImportLogs", "Your logs are currently being imported."),
+                                                    LocalizationGroup.GetText("DayFooter", $"Visit the [website]({_webbAppUrl}) to get a more detailed summary of your logs."))
+                                   .ConfigureAwait(false);
+
+        await ImportLogs(context).ConfigureAwait(false);
+
+        var user = await _userManagementService.GetUserByDiscordAccountId(context.User)
+                                               .ConfigureAwait(false);
+
+#if DEBUG
+        var today = new DateTime(2025, 05, 23);
+#else
+        var today = DateTime.Today;
+#endif
+
+        var encounters = _dpsReportReportGenerator.GetEncounters(user.Id, today, today.AddDays(1));
+
+        var components = new ContainerBuilder().WithTextDisplay($"# {LocalizationGroup.GetText("DayTitle", "Logs of the day")}")
+                                               .WithSeparator();
+
+        foreach (var encounterGroup in encounters.GroupBy(encounter => encounter.Key.Group).OrderBy(encounter => encounter.Key))
+        {
+            var entryBuilder = new StringBuilder();
+
+            entryBuilder.Append("# ");
+            entryBuilder.AppendLine(encounterGroup.Key.ToString());
+
+            foreach (var encounterSubGroup in encounterGroup.GroupBy(group => group.Key.SubGroup))
+            {
+                entryBuilder.Append("**");
+                entryBuilder.Append(encounterSubGroup.Key.ToString());
+                entryBuilder.AppendLine("**");
+
+                foreach (var encounter in encounterSubGroup.GroupBy(encounter => encounter.Key.Encounter))
+                {
+                    entryBuilder.Append("> ");
+                    entryBuilder.AppendLine(encounter.Key.ToString());
+
+                    foreach (var report in encounter.SelectMany(entry => entry.Value))
+                    {
+                        entryBuilder.Append("> ");
+                        entryBuilder.Append(report.IsSuccess ? "<:e:1474776706677215513> " : "<:e:1474776707792896081> ");
+                        entryBuilder.Append("[");
+                        entryBuilder.Append(report.EncounterTime.ToString("t", LocalizationGroup.CultureInfo));
+                        entryBuilder.Append(" ⧉](");
+                        entryBuilder.Append(report.PermaLink);
+                        entryBuilder.AppendLine(")");
+                    }
+                }
+            }
+
+            components.WithTextDisplay(entryBuilder.ToString())
+                      .WithSeparator();
+        }
+
+        components.WithTextDisplay($"-# {LocalizationGroup.GetText("DayFooter", $"Visit the [website]({_webbAppUrl}) to get a more detailed summary of your logs.")}")
+                  .WithAccentColor(Color.DarkPurple);
+
+        await message.ModifyAsync(properties => properties.Components = new ComponentBuilderV2().AddComponent(components).Build())
+                     .ConfigureAwait(false);
+    }
+
     #endregion // Commands
 
     #region Methods
+
+    /// <summary>
+    /// Imports logs from dps.report
+    /// </summary>
+    /// <param name="context">Context container</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    private async Task ImportLogs(IContextContainer context)
+    {
+        var user = await _userManagementService.GetUserByDiscordAccountId(context.User)
+                                               .ConfigureAwait(false);
+
+        await _importer.Import(user.Id)
+                       .ConfigureAwait(false);
+    }
 
     /// <summary>
     /// Post log statistics

@@ -62,7 +62,7 @@ public class LogsSlashCommandModule : SlashCommandModuleBase
     /// <param name="count">Max count logs to search</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("history", "Shows the last (count) successful tries of (type)")]
-    public async Task LogHistory(DpsReportGroup type, int count = 5)
+    public async Task LogHistory(DpsReportGroupLegacy type, int count = 5)
     {
         await Context.DeferAsync()
                      .ConfigureAwait(false);
@@ -78,7 +78,7 @@ public class LogsSlashCommandModule : SlashCommandModuleBase
     /// <param name="count">Max count logs to search</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("chart", "Post a chart showing the last (count) of successful tries of (type)")]
-    public async Task LogChart(DpsReportGroup type, int count = 10)
+    public async Task LogChart(DpsReportGroupLegacy type, int count = 10)
     {
         await Context.DeferAsync()
                      .ConfigureAwait(false);

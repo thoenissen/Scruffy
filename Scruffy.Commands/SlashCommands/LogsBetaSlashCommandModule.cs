@@ -33,5 +33,16 @@ public class LogsBetaSlashCommandModule : SlashCommandModuleBase
                             .ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Display logs of current day
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    [SlashCommand("day", "Display logs of current day")]
+    public async Task Day()
+    {
+        await CommandHandler.Day(Context)
+                            .ConfigureAwait(false);
+    }
+
     #endregion // Commands
 }

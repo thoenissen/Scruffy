@@ -100,6 +100,12 @@ internal class DebuggingContext : IContextContainer
     }
 
     /// <inheritdoc/>
+    public Task<IUserMessage> DeferProcessing(string title, string message, string footer)
+    {
+        return Task.FromResult<IUserMessage>(null);
+    }
+
+    /// <inheritdoc/>
     public async Task<IUserMessage> ReplyAsync(string text = null, bool isTTS = false, Embed embed = null, RequestOptions options = null, AllowedMentions allowedMentions = null, MessageComponent components = null, ISticker[] stickers = null, Embed[] embeds = null, bool ephemeral = false, IEnumerable<FileAttachment> attachments = null)
     {
         return await SendMessageAsync(text, isTTS, embed, options, allowedMentions, null, components, stickers, embeds, ephemeral, attachments).ConfigureAwait(false);

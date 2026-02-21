@@ -303,7 +303,7 @@ public class LogCommandHandler : LocatedServiceBase
     /// <param name="group">Group to search for</param>
     /// <param name="count">Max count logs to search</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task PostHistory(IContextContainer context, DpsReportGroup group, int count)
+    public async Task PostHistory(IContextContainer context, DpsReportGroupLegacy group, int count)
     {
         var account = _repositoryFactory.GetRepository<DiscordAccountRepository>()
                                         .GetQuery()
@@ -419,7 +419,7 @@ public class LogCommandHandler : LocatedServiceBase
     /// <param name="group">Group to search for</param>
     /// <param name="count">Max count logs to search</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task PostChart(IContextContainer context, DpsReportGroup group, int count)
+    public async Task PostChart(IContextContainer context, DpsReportGroupLegacy group, int count)
     {
         var account = _repositoryFactory.GetRepository<DiscordAccountRepository>()
                                 .GetQuery()
@@ -593,7 +593,7 @@ public class LogCommandHandler : LocatedServiceBase
             var uploads = await _dpsReportConnector.GetUploads(account.DpsReportUserToken,
                                                                startDate,
                                                                endDate,
-                                                               upload => DpsReportAnalyzer.GetReportGroupByBossId(upload.Encounter.BossId) == DpsReportGroup.TrainingArea)
+                                                               upload => DpsReportAnalyzer.GetReportGroupByBossId(upload.Encounter.BossId) == DpsReportGroupLegacy.TrainingArea)
                                                    .ToListAsync()
                                                    .ConfigureAwait(false);
 
