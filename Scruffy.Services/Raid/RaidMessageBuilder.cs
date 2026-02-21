@@ -1,5 +1,4 @@
 ﻿using Discord;
-using Discord.WebSocket;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Raid;
@@ -24,7 +23,7 @@ public class RaidMessageBuilder : LocatedServiceBase
     /// <summary>
     /// Discord client
     /// </summary>
-    private readonly DiscordSocketClient _client;
+    private readonly IDiscordClient _client;
 
     /// <summary>
     /// Raid roles service
@@ -41,7 +40,7 @@ public class RaidMessageBuilder : LocatedServiceBase
     /// <param name="client">Discord client</param>
     /// <param name="localizationService">Localization service</param>
     /// <param name="raidRolesService">Raid roles service</param>
-    public RaidMessageBuilder(DiscordSocketClient client, LocalizationService localizationService, RaidRolesService raidRolesService)
+    public RaidMessageBuilder(IDiscordClient client, LocalizationService localizationService, RaidRolesService raidRolesService)
         : base(localizationService)
     {
         _client = client;

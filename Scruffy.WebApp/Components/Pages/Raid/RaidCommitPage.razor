@@ -1,0 +1,93 @@
+@using Microsoft.AspNetCore.Components.QuickGrid
+
+@page "/Raid/Commit"
+@inherits Scruffy.WebApp.Components.Base.LocatedComponent
+@rendermode InteractiveServer
+
+<PageTitle>@LocalizationGroup.GetText("PageTitle", "FooI - Raid - Commit")</PageTitle>
+
+<div class="page">
+    <h1>@LocalizationGroup.GetText("CommitTitle", "Raid points commit")</h1>
+
+    @if (_isCommitted)
+    {
+        <div class="commit-success">
+            @LocalizationGroup.GetText("CommitCompleted", "The raid appointment has been committed.")
+        </div>
+    }
+    else if (_appointmentId == null)
+    {
+        <div class="commit-no-appointment">
+            @LocalizationGroup.GetText("NoOpenAppointment", "There is no uncommitted appointment available.")
+        </div>
+    }
+    else
+    {
+        <div class="commit-page">
+            <h3>@LocalizationGroup.GetFormattedText("AppointmentDate", "Appointment: {0}", _appointmentTimeStamp?.ToString("f", LocalizationGroup.CultureInfo))</h3>
+
+            <div class="quickgrid-std commit-users-container mb-3">
+                <QuickGrid Items="@_users.AsQueryable()">
+                    <PropertyColumn Title="@LocalizationGroup.GetText("Name", "Name")" Property="@(u => u.Name)" Sortable="false"/>
+                    <PropertyColumn Title="@LocalizationGroup.GetText("ExperienceLevel", "Experience level")" Property="@(u => u.ExperienceLevelDescription)" Sortable="false"/>
+                    <TemplateColumn Title="@LocalizationGroup.GetText("Status", "Status")" Context="u" Sortable="false">
+                        <select value="@(u.IsSubstitute ? "substitute" : "standard")"
+                                @onchange="@(e => OnStatusChanged(u, e))"
+                                class="status-select">
+                            <option value="standard">@LocalizationGroup.GetText("PlayerStatePlayed", "Played")</option>
+                            <option value="substitute">@LocalizationGroup.GetText("PlayerStateSubstitute", "Substitute bench")</option>
+                        </select>
+                    </TemplateColumn>
+                    <TemplateColumn Title="@LocalizationGroup.GetText("Points", "Points")" Context="u" Sortable="false">
+                        @u.Points.ToString("0.0")
+                    </TemplateColumn>
+                    <TemplateColumn Context="u" Sortable="false" class="action-column">
+                        <button type="button" class="secondary-button btn-remove" @onclick="() => OnRemoveUser(u)">@LocalizationGroup.GetText("Remove", "Remove")</button>
+                    </TemplateColumn>
+                </QuickGrid>
+            </div>
+
+            <div class="commit-actions">
+                <button type="button" class="secondary-button" @onclick="OnOpenAddPlayerOverlay">
+                    @LocalizationGroup.GetText("AddPlayer", "Add player")
+                </button>
+
+                <button type="submit" class="primary-button btn-commit" @onclick="OnCommitAsync" disabled="@_isCommitting">
+                    @LocalizationGroup.GetText("Commit", "Commit")
+                </button>
+            </div>
+
+            @if (string.IsNullOrEmpty(_errorMessage) == false)
+            {
+                <div class="commit-error">@_errorMessage</div>
+            }
+        </div>
+
+        @if (_isAddPlayerOverlayVisible)
+        {
+            <div class="overlay-backdrop" @onclick="OnCloseAddPlayerOverlay"></div>
+            <div class="overlay-container">
+                <button class="overlay-close-button" @onclick="OnCloseAddPlayerOverlay" title="@LocalizationGroup.GetText("Close", "Close")">
+                    <span class="material-icons">close</span>
+                </button>
+                <div class="overlay-content">
+                    <h2>@LocalizationGroup.GetText("AddPlayer", "Add player")</h2>
+                    <input type="text"
+                           class="overlay-search-input"
+                           placeholder="@LocalizationGroup.GetText("SearchPlaceholder", "Search...")"
+                           @bind="_addPlayerSearchFilter"
+                           @bind:event="oninput"/>
+                    <div class="overlay-player-list">
+                        @foreach (var member in GetFilteredGuildMembers())
+                        {
+                            <button type="button" class="overlay-player-item" @onclick="() => OnAddPlayer(member)">
+                                <span class="overlay-player-name">@member.Name</span>
+                                <span class="overlay-player-level">@member.ExperienceLevelDescription</span>
+                            </button>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>

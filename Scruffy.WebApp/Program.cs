@@ -27,6 +27,7 @@ using Scruffy.Data.Entity.Tables.CoreData;
 using Scruffy.Data.Entity.Tables.Web;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.GuildWars2.DpsReports;
+using Scruffy.Services.Raid;
 using Scruffy.WebApp.Components;
 using Scruffy.WebApp.Components.Account;
 using Scruffy.WebApp.Components.Services.DpsReports;
@@ -127,6 +128,8 @@ public class Program
         builder.Services.AddTransient<DpsReportProcessor>();
         builder.Services.AddTransient<DpsReportsMetaImporter>();
         builder.Services.AddTransient<DpsReportReportGenerator>();
+        builder.Services.AddTransient<RaidMessageBuilder>();
+        builder.Services.AddTransient<RaidRolesService>();
 
         var locationService = new LocalizationService();
 
@@ -138,6 +141,7 @@ public class Program
                            .ConfigureAwait(false);
 
         builder.Services.AddSingleton(discordClient);
+        builder.Services.AddSingleton<IDiscordClient>(discordClient);
 
         var persistenceDirectory = Environment.GetEnvironmentVariable("SCRUFFY_PERSISTENCE_DIRECTORY");
 
