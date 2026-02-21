@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 using Discord;
 using Discord.Rest;
+using Discord.WebSocket;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
@@ -98,7 +99,7 @@ public partial class RaidLineUpPage
     /// Discord client
     /// </summary>
     [Inject]
-    private DiscordRestClient DiscordClient { get; set; }
+    private DiscordSocketClient DiscordClient { get; set; }
 
     /// <summary>
     /// Authentication state provider
@@ -379,8 +380,8 @@ public partial class RaidLineUpPage
 
                 if (discordAccountId > 0)
                 {
-                    user = await DiscordClient.GetGuildUserAsync(WebAppConfiguration.DiscordServerId, discordAccountId)
-                                              .ConfigureAwait(false);
+                    user = DiscordClient.GetGuild(WebAppConfiguration.DiscordServerId)
+                                        .GetUser(discordAccountId);
                 }
             }
         }

@@ -1,0 +1,159 @@
+@using Microsoft.AspNetCore.Components.QuickGrid
+
+@page "/Calendar/Participants"
+@inherits Scruffy.WebApp.Components.Base.LocatedComponent
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<PageTitle>@LocalizationGroup.GetText("PageTitle", "FooI - Calendar - Participants")</PageTitle>
+
+<div class="page">
+    <h1>@LocalizationGroup.GetText("Title", "Calendar participants")</h1>
+
+    @if (_isCommitted)
+    {
+        <div class="commit-success">
+            @LocalizationGroup.GetText("CommitCompleted", "The participants have been saved.")
+        </div>
+    }
+
+    @if (_appointments == null || _appointments.Count == 0)
+    {
+        <div class="no-appointments">
+            @LocalizationGroup.GetText("NoAppointments", "No appointments available.")
+        </div>
+    }
+    else
+    {
+        <div class="appointment-selection">
+            <label for="appointmentSelect">@LocalizationGroup.GetText("SelectAppointment", "Appointment")</label>
+            <select id="appointmentSelect" class="appointment-select" value="@_selectedAppointmentId" @onchange="OnAppointmentChanged">
+                <option value="">@LocalizationGroup.GetText("PleaseSelect", "-- Please select --")</option>
+                @foreach (var appointment in _appointments)
+                {
+                    <option value="@appointment.Id">@appointment.Description</option>
+                }
+            </select>
+        </div>
+
+        @if (_selectedAppointmentId != null && _participants != null)
+        {
+            <div class="participants-page">
+                <div class="quickgrid-std participants-container mb-3">
+                    <QuickGrid Items="@_participants.AsQueryable()">
+                        <TemplateColumn Title="@LocalizationGroup.GetText("Name", "Name")" Context="p" Sortable="false">
+                            <span>
+                                @p.Name
+                                @if (p.IsLeader)
+                                {
+                                    <span class="leader-star" title="@LocalizationGroup.GetText("Leader", "Leader")">⭐</span>
+                                }
+                            </span>
+                        </TemplateColumn>
+                        <TemplateColumn Context="p" Sortable="false" class="action-column">
+                            <button type="button" class="secondary-button btn-action" @onclick="() => OnToggleLeader(p)" title="@LocalizationGroup.GetText("ToggleLeader", "Toggle leader")">
+                                <span class="material-icons">star</span>
+                            </button>
+                            <button type="button" class="secondary-button btn-action btn-remove" @onclick="() => OnRemoveParticipant(p)" title="@LocalizationGroup.GetText("Remove", "Remove")">
+                                <span class="material-icons">close</span>
+                            </button>
+                        </TemplateColumn>
+                    </QuickGrid>
+                </div>
+
+                <div class="participants-actions">
+                    <button type="button" class="secondary-button" @onclick="OnOpenAddMemberOverlay">
+                        <span class="material-icons">person_add</span>
+                        @LocalizationGroup.GetText("AddMember", "Add member")
+                    </button>
+
+                    <button type="button" class="secondary-button" @onclick="OnOpenVoiceChannelOverlay">
+                        <span class="material-icons">headset</span>
+                        @LocalizationGroup.GetText("AddFromVoice", "Add from voice channel")
+                    </button>
+
+                    <button type="submit" class="primary-button btn-commit" @onclick="OnCommitAsync" disabled="@_isCommitting">
+                        @LocalizationGroup.GetText("Commit", "Save")
+                    </button>
+                </div>
+
+                @if (string.IsNullOrEmpty(_errorMessage) == false)
+                {
+                    <div class="commit-error">@_errorMessage</div>
+                }
+            </div>
+        }
+
+        @if (_isAddMemberOverlayVisible)
+        {
+            <div class="overlay-backdrop" @onclick="OnCloseAddMemberOverlay"></div>
+            <div class="overlay-container">
+                <button class="overlay-close-button" @onclick="OnCloseAddMemberOverlay" title="@LocalizationGroup.GetText("Close", "Close")">
+                    <span class="material-icons">close</span>
+                </button>
+                <div class="overlay-content">
+                    <h2>@LocalizationGroup.GetText("AddMember", "Add member")</h2>
+                    <input type="text"
+                           class="overlay-search-input"
+                           placeholder="@LocalizationGroup.GetText("SearchPlaceholder", "Search...")"
+                           @ref="_searchInput"
+                           @bind="_addMemberSearchFilter"
+                           @bind:event="oninput"/>
+                    <div class="overlay-member-list">
+                        @foreach (var member in GetFilteredGuildMembers())
+                        {
+                            <button type="button" class="overlay-member-item" @onclick="() => OnAddMember(member)">
+                                <span class="overlay-member-name">@member.Name</span>
+                            </button>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (_isVoiceChannelOverlayVisible)
+        {
+            <div class="overlay-backdrop" @onclick="OnCloseVoiceChannelOverlay"></div>
+            <div class="overlay-container">
+                <button class="overlay-close-button" @onclick="OnCloseVoiceChannelOverlay" title="@LocalizationGroup.GetText("Close", "Close")">
+                    <span class="material-icons">close</span>
+                </button>
+                <div class="overlay-content">
+                    <h2>@LocalizationGroup.GetText("VoiceChannels", "Voice channels")</h2>
+
+                    @if (_voiceChannels == null || _voiceChannels.Count == 0)
+                    {
+                        <div class="no-voice-channels">
+                            @LocalizationGroup.GetText("NoVoiceChannels", "No active voice channels found.")
+                        </div>
+                    }
+                    else
+                    {
+                        @foreach (var channel in _voiceChannels)
+                        {
+                            <div class="voice-channel-group">
+                                <div class="voice-channel-header">
+                                    <span class="voice-channel-name">
+                                        <span class="material-icons voice-channel-icon">volume_up</span>
+                                        @channel.Name
+                                    </span>
+                                    <button type="button" class="secondary-button btn-add-channel" @onclick="() => OnAddVoiceChannel(channel)" title="@LocalizationGroup.GetText("AddAll", "Add all")">
+                                        <span class="material-icons">group_add</span>
+                                    </button>
+                                </div>
+                                <div class="voice-channel-members">
+                                    @foreach (var member in channel.Members)
+                                    {
+                                        <button type="button" class="overlay-member-item" @onclick="() => OnAddVoiceChannelMember(member)">
+                                            <span class="overlay-member-name">@member.Name</span>
+                                            <span class="material-icons overlay-member-add-icon">person_add</span>
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        }
+    }
+</div>

@@ -3,7 +3,7 @@
 
 @inherits LocatedComponent
 @page "/Ranking/Top"
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <PageTitle>@LocalizationGroup.GetText("PageTitle", "FooI - Ranking - Top")</PageTitle>
 

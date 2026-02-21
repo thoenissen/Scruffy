@@ -3,7 +3,7 @@
 
 @page "/DpsReports/Today"
 @inherits Scruffy.WebApp.Components.Base.LocatedComponent
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <PageTitle>@LocalizationGroup.GetText("PageTitle", "FooI - Logs - Today")</PageTitle>
 

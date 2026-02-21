@@ -1,7 +1,7 @@
 ﻿@using Scruffy.WebApp.Components.Controls
 
 @page "/Raid/Participation"
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 @inherits Scruffy.WebApp.Components.Base.LocatedComponent
 
 <PageTitle>@LocalizationGroup.GetText("PageTitle", "FooI - Raid - Participation")</PageTitle>

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 using Discord;
 using Discord.Rest;
+using Discord.WebSocket;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -135,9 +136,15 @@ public class Program
 
         builder.Services.AddSingleton(locationService);
 
-        var discordClient = new DiscordRestClient();
+        var discordClient = new DiscordSocketClient(new DiscordSocketConfig
+                                                    {
+                                                        GatewayIntents = GatewayIntents.AllUnprivileged
+                                                    });
 
         await discordClient.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_TOKEN")!)
+                           .ConfigureAwait(false);
+
+        await discordClient.StartAsync()
                            .ConfigureAwait(false);
 
         builder.Services.AddSingleton(discordClient);

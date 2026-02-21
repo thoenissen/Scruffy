@@ -1,5 +1,5 @@
 ﻿@page "/Administration/Users"
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 @inherits Scruffy.WebApp.Components.Base.LocatedComponent
 
 @using Microsoft.AspNetCore.Components.QuickGrid

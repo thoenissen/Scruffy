@@ -2,7 +2,7 @@
 
 <div class="navigation-menu">
     <AuthorizeView Roles="Member">
-        <Authorized Context="MemberContext">
+        <Authorized Context="memberContext">
             <div class="navigation-menu-group">
                 <div class="navigation-menu-header">@LocalizationGroup.GetText("Ranking", "Ranking")</div>
                 <span class="navigation-menu-items">
@@ -91,6 +91,15 @@
                             Raid - @LocalizationGroup.GetText("Commit", "Commit")
                         </NavLink>
                     </div>
+                    <AuthorizeView Roles="PrivilegedMember">
+                        <Authorized Context="calendarContext">
+                            <div class="navigation-menu-item">
+                                <NavLink class="navigation-menu-link" href="/Calendar/Participants" Match="NavLinkMatch.Prefix">
+                                    @LocalizationGroup.GetText("CalendarParticipants", "Calendar - Participants")
+                                </NavLink>
+                            </div>
+                        </Authorized>
+                    </AuthorizeView>
                 </span>
             </div>
         </Authorized>
