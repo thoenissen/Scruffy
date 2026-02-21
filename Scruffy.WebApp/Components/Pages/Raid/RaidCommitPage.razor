@@ -75,6 +75,7 @@
                     <input type="text"
                            class="overlay-search-input"
                            placeholder="@LocalizationGroup.GetText("SearchPlaceholder", "Search...")"
+                           @ref="_searchInput"
                            @bind="_addPlayerSearchFilter"
                            @bind:event="oninput"/>
                     <div class="overlay-player-list">

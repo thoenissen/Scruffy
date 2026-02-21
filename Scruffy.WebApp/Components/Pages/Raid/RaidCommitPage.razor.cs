@@ -74,6 +74,16 @@ public partial class RaidCommitPage
     /// </summary>
     private List<RaidCommitUserDTO> _allGuildMembers;
 
+    /// <summary>
+    /// Reference to the search input element
+    /// </summary>
+    private ElementReference _searchInput;
+
+    /// <summary>
+    /// Should the search input be focused on next render?
+    /// </summary>
+    private bool _focusSearchInput;
+
     #endregion // Fields
 
     #region Properties
@@ -114,6 +124,7 @@ public partial class RaidCommitPage
     {
         _addPlayerSearchFilter = string.Empty;
         _isAddPlayerOverlayVisible = true;
+        _focusSearchInput = true;
     }
 
     /// <summary>
@@ -122,6 +133,18 @@ public partial class RaidCommitPage
     private void OnCloseAddPlayerOverlay()
     {
         _isAddPlayerOverlayVisible = false;
+    }
+
+    /// <inheritdoc />
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (_focusSearchInput)
+        {
+            _focusSearchInput = false;
+
+            await _searchInput.FocusAsync()
+                              .ConfigureAwait(false);
+        }
     }
 
     /// <summary>
@@ -362,7 +385,7 @@ public partial class RaidCommitPage
 
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
-            var now = DateTime.Now.AddDays(5);
+            var now = DateTime.Now;
 
             var appointment = dbFactory.GetRepository<RaidAppointmentRepository>()
                                        .GetQuery()
