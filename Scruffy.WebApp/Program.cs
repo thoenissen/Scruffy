@@ -29,6 +29,7 @@ using Scruffy.Services.Core.Localization;
 using Scruffy.Services.GuildWars2.DpsReports;
 using Scruffy.WebApp.Components;
 using Scruffy.WebApp.Components.Account;
+using Scruffy.WebApp.Components.Services.DpsReports;
 using Scruffy.WebApp.Services;
 
 namespace Scruffy.WebApp;
@@ -122,7 +123,8 @@ public class Program
         builder.Services.AddHybridCache();
 
         builder.Services.AddTransient<RepositoryFactory>();
-        builder.Services.AddSingleton<DpsReportProcessor>();
+        builder.Services.AddTransient<DpsReportVisualizer>();
+        builder.Services.AddTransient<DpsReportProcessor>();
         builder.Services.AddTransient<DpsReportsMetaImporter>();
         builder.Services.AddTransient<DpsReportReportGenerator>();
 

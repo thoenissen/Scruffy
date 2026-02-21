@@ -1,5 +1,7 @@
 using GW2EIEvtcParser;
 
+using Scruffy.Data.Enumerations.DpsReport;
+
 namespace Scruffy.Services.GuildWars2.DpsReports;
 
 /// <summary>

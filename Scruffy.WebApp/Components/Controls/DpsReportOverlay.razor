@@ -46,11 +46,11 @@
                         </div>
                         <div class="overlay-info-row">
                             <span class="overlay-label">@LocalizationGroup.GetText("Quickness", "Quickness")</span>
-                            <span class="@GetSkillLevelFromUptime(Report.OverallStatistics?.Quickness)">@((Report.OverallStatistics?.Quickness ?? 0).ToString("N2", LocalizationGroup.CultureInfo) + " %")</span>
+                            <span class="@DpsReportVisualizer.GetSkillLevelFromUptime(Report.OverallStatistics?.Quickness)">@((Report.OverallStatistics?.Quickness ?? 0).ToString("N2", LocalizationGroup.CultureInfo) + " %")</span>
                         </div>
                         <div class="overlay-info-row">
                             <span class="overlay-label">@LocalizationGroup.GetText("Alacrity", "Alacrity")</span>
-                            <span class="@GetSkillLevelFromUptime(Report.OverallStatistics?.Alacrity)">@((Report.OverallStatistics?.Alacrity ?? 0).ToString("N2", LocalizationGroup.CultureInfo) + " %")</span>
+                            <span class="@DpsReportVisualizer.GetSkillLevelFromUptime(Report.OverallStatistics?.Alacrity)">@((Report.OverallStatistics?.Alacrity ?? 0).ToString("N2", LocalizationGroup.CultureInfo) + " %")</span>
                         </div>
                     </LoadingContainer>
                 </div>
@@ -73,21 +73,21 @@
                     {
                         <div class="overlay-info-row">
                             <span class="overlay-label">@LocalizationGroup.GetText("PlayerDps", "DPS")</span>
-                            <span class="@GetSkillLevelFromDps(Report.PersonalStatistics.PlayerDps)">@Report.PersonalStatistics.PlayerDps.Value.ToString("N0", LocalizationGroup.CultureInfo)</span>
+                            <span class="@DpsReportVisualizer.GetSkillLevelFromDps(Report.PersonalStatistics.PlayerDps)">@Report.PersonalStatistics.PlayerDps.Value.ToString("N0", LocalizationGroup.CultureInfo)</span>
                         </div>
                     }
                     @if (Report.PersonalStatistics.Alacrity != null)
                     {
                         <div class="overlay-info-row">
                             <span class="overlay-label">@LocalizationGroup.GetText("Alacrity", "Alacrity")</span>
-                            <span class="@GetSkillLevelFromUptime(Report.PersonalStatistics.Alacrity)">@Report.PersonalStatistics.Alacrity.Value.ToString("N2", LocalizationGroup.CultureInfo) %</span>
+                            <span class="@DpsReportVisualizer.GetSkillLevelFromUptime(Report.PersonalStatistics.Alacrity)">@Report.PersonalStatistics.Alacrity.Value.ToString("N2", LocalizationGroup.CultureInfo) %</span>
                         </div>
                     }
                     @if (Report.PersonalStatistics.Quickness != null)
                     {
                         <div class="overlay-info-row">
                             <span class="overlay-label">@LocalizationGroup.GetText("Quickness", "Quickness")</span>
-                            <span class="@GetSkillLevelFromUptime(Report.PersonalStatistics.Quickness)">@Report.PersonalStatistics.Quickness.Value.ToString("N2", LocalizationGroup.CultureInfo)  %</span>
+                            <span class="@DpsReportVisualizer.GetSkillLevelFromUptime(Report.PersonalStatistics.Quickness)">@Report.PersonalStatistics.Quickness.Value.ToString("N2", LocalizationGroup.CultureInfo)  %</span>
                         </div>
                     }
                 </div>
@@ -113,7 +113,7 @@
                                 <td class="mechanic-name">@mechanic.Name</td>
                                 <td class="mechanic-name">@mechanic.FullName</td>
                                 <td class="mechanic-description">@mechanic.Description</td>
-                                <td class="mechanics-count @GetSkillLevelForMechanic(mechanic.Count)">@mechanic.Count</td>
+                                <td class="mechanics-count @DpsReportVisualizer.GetSkillLevelForMechanic(mechanic.Count)">@mechanic.Count</td>
                             </tr>
                         }
                     </tbody>

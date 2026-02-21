@@ -43,12 +43,12 @@
                 </TemplateColumn>
                 <TemplateColumn Title="@LocalizationGroup.GetText("Quickness", "Quickness")" Context="u" Align="Align.End" Sortable="false">
                     <LoadingContainer Size="LoadingIndicatorSize.Small" IsLoading="@u.IsLoadingAdditionalData">
-                        <div class="@GetSkillLevelFromUptime(u.OverallStatistics.Quickness)">@((u.OverallStatistics.Quickness ?? 0).ToString("N2", LocalizationGroup.CultureInfo) + " %")</div>
+                        <div class="@DpsReportVisualizer.GetSkillLevelFromUptime(u.OverallStatistics.Quickness)">@((u.OverallStatistics.Quickness ?? 0).ToString("N2", LocalizationGroup.CultureInfo) + " %")</div>
                     </LoadingContainer>
                 </TemplateColumn>
                 <TemplateColumn Title="@LocalizationGroup.GetText("Alacrity", "Alacrity")" Context="u" Align="Align.End" Sortable="false">
                     <LoadingContainer Size="LoadingIndicatorSize.Small" IsLoading="@u.IsLoadingAdditionalData">
-                        <div class="@GetSkillLevelFromUptime(u.OverallStatistics.Alacrity)">@((u.OverallStatistics.Alacrity ?? 0).ToString("N2", LocalizationGroup.CultureInfo) + " %")</div>
+                           <div class="@DpsReportVisualizer.GetSkillLevelFromUptime(u.OverallStatistics.Alacrity)">@((u.OverallStatistics.Alacrity ?? 0).ToString("N2", LocalizationGroup.CultureInfo) + " %")</div>
                     </LoadingContainer>
                 </TemplateColumn>
                 <TemplateColumn Title="@LocalizationGroup.GetText("Duration", "Duration")" Context="u" Align="Align.End" Sortable="false">

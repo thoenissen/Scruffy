@@ -40,5 +40,8 @@
     <Reference Include="GW2EIEvtcParser">
       <HintPath>..\libs\GW2EIEvtcParser.dll</HintPath>
     </Reference>
+    <Reference Include="GW2EIJSON">
+      <HintPath>..\libs\GW2EIJSON.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

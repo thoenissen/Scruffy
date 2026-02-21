@@ -1,4 +1,4 @@
-namespace Scruffy.Services.GuildWars2.DpsReports;
+namespace Scruffy.Data.Enumerations.DpsReport;
 
 /// <summary>
 /// Represents a single DPS log entry for a boss

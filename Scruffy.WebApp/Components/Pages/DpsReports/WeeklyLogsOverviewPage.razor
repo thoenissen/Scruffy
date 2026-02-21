@@ -13,11 +13,16 @@
     }
     else if (_encounters == null || _encounters.Count == 0)
     {
-        <label>@LocalizationGroup.GetText("NoEncounters", "No encounters are available.")</label>
+        <h3 class ="center-title">@LocalizationGroup.GetText("NoEncounters", "No encounters are available.")</h3>
     }
     else
     {
-        <h3>@LocalizationGroup.GetFormattedText("PageHeader", "Weekly Overview {0} - {1}", _weekStart.ToString("d", LocalizationGroup.CultureInfo), _weekEnd.AddDays(-1).ToString("d", LocalizationGroup.CultureInfo))</h3>
+        <h3 class ="center-title">@LocalizationGroup.GetFormattedText("PageHeader", "Weekly Overview {0} - {1}", _weekStart.ToString("d", LocalizationGroup.CultureInfo), _weekEnd.AddDays(-1).ToString("d", LocalizationGroup.CultureInfo))</h3>
+
+        @if (DateTime.Now > _weekEnd)
+        {
+            <h5 class="center-title">@LocalizationGroup.GetText("WeekNotAvailable", "For the current week there are no logs available.")</h5>
+        }
 
         <div class="encounters-container">
             @foreach (var expansion in _encounters)
@@ -47,10 +52,10 @@
                                     @foreach (var boss in encounter.Bosses)
                                     {
                                         <div class="boss-item-wrapper">
-                                            <div class="boss-item @GetBossStatusClass(boss.IsSuccessful) @(boss.IsExpanded ? "boss-item-expanded" : "")"
+                                            <div class="boss-item @DpsReportVisualizer.GetBossStatusClass(boss.IsSuccessful) @(boss.IsExpanded ? "boss-item-expanded" : "")"
                                                  @onclick="@(() => ToggleBossDetails(boss))"
                                                  style="@(boss.IsSuccessful != null ? "cursor: pointer;" : "")">
-                                                <div class="boss-success-indicator @GetIndicatorClass(boss.IsSuccessful)" title="@GetStatusTooltip(boss.IsSuccessful)"></div>
+                                                <div class="boss-success-indicator @DpsReportVisualizer.GetIndicatorClass(boss.IsSuccessful)" title="@DpsReportVisualizer.GetStatusTooltip(boss.IsSuccessful)"></div>
                                                 @if (!string.IsNullOrEmpty(boss.IconUrl))
                                                 {
                                                     <img src="@boss.IconUrl" alt="@boss.Name" class="boss-icon" />

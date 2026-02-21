@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Scruffy.WebApp.Components.Pages.DpsReports.Data;
+﻿namespace Scruffy.Data.Enumerations.DpsReport;
 
 /// <summary>
 /// Meta data

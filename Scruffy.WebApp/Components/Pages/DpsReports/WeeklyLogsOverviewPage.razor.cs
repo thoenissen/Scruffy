@@ -10,11 +10,9 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Logging;
 
-using Scruffy.Data.Entity;
-using Scruffy.Data.Entity.Repositories.GuildWars2.Account;
-using Scruffy.Data.Entity.Repositories.GuildWars2.DpsReports;
+using Scruffy.Data.Enumerations.DpsReport;
 using Scruffy.Services.GuildWars2.DpsReports;
-using Scruffy.WebApp.Components.Pages.DpsReports.Data;
+using Scruffy.WebApp.Components.Services.DpsReports;
 using Scruffy.WebApp.Services;
 
 namespace Scruffy.WebApp.Components.Pages.DpsReports;
@@ -111,34 +109,15 @@ public partial class WeeklyLogsOverviewPage : IAsyncDisposable
     [Inject]
     private DpsReportReportGenerator DpsReportReportGenerator { get; set; }
 
+    /// <summary>
+    /// Report visualizer
+    /// </summary>
+    [Inject]
+    private DpsReportVisualizer DpsReportVisualizer { get; set; }
+
     #endregion // Properties
 
     #region Methods
-
-    /// <summary>
-    /// Calculates the start of the current week (Monday 07:30 UTC)
-    /// </summary>
-    /// <returns>The start of the current week</returns>
-    private DateTime GetWeekStart()
-    {
-        var now = DateTime.UtcNow;
-        var daysUntilMonday = (int)DayOfWeek.Monday - (int)now.DayOfWeek;
-
-        if (daysUntilMonday > 0)
-        {
-            daysUntilMonday -= 7;
-        }
-
-        var monday = now.AddDays(daysUntilMonday).Date;
-        var weekStart = monday.AddHours(7).AddMinutes(30);
-
-        if (weekStart > now)
-        {
-            weekStart = weekStart.AddDays(-7);
-        }
-
-        return weekStart;
-    }
 
     /// <summary>
     /// Loads the weekly DPS reports from the database
@@ -154,28 +133,20 @@ public partial class WeeklyLogsOverviewPage : IAsyncDisposable
             var nameIdentifier = authState.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (string.IsNullOrEmpty(nameIdentifier) == false
-                && int.TryParse(nameIdentifier, out var userId))
+                && int.TryParse(nameIdentifier, out _userId))
             {
-                _userId = userId;
-                _weekStart = GetWeekStart();
-                _weekEnd = _weekStart.AddDays(7);
+                var importTask = DpsReportMetaImporter.Import(_userId);
 
-                using (var repository = RepositoryFactory.CreateInstance())
-                {
-                    _guildWarsAccountNames = repository.GetRepository<GuildWarsAccountRepository>()
-                                                       .GetQuery()
-                                                       .Where(account => account.UserId == userId)
-                                                       .Select(account => account.Name)
-                                                       .ToList();
-                }
+                (_weekStart, _weekEnd) = DpsReportReportGenerator.GetLastRaidWeek(_userId);
+                _guildWarsAccountNames = DpsReportReportGenerator.GetGuildWarsAccountNames(_userId);
 
                 token.ThrowIfCancellationRequested();
 
-                await DpsReportMetaImporter.Import(userId).ConfigureAwait(false);
+                await importTask.ConfigureAwait(false);
 
                 token.ThrowIfCancellationRequested();
 
-                _encounters = DpsReportReportGenerator.GetEncounters(userId, token, _weekStart, _weekEnd);
+                _encounters = DpsReportReportGenerator.GetEncounters(_userId, token, _weekStart, _weekEnd);
             }
         }
         catch (OperationCanceledException)
@@ -212,27 +183,7 @@ public partial class WeeklyLogsOverviewPage : IAsyncDisposable
 
             token.ThrowIfCancellationRequested();
 
-            using (var repository = RepositoryFactory.CreateInstance())
-            {
-                var dpsReportRepository = repository.GetRepository<DpsReportRepository>();
-                var bossIds= boss.BossIds.Select(id => (long)id).ToList();
-                var dpsReports = dpsReportRepository.GetQuery()
-                                                    .Where(r => r.UserId == _userId
-                                                                && bossIds.Contains(r.BossId)
-                                                                && r.EncounterTime >= _weekStart
-                                                                && r.EncounterTime < _weekEnd)
-                                                    .OrderByDescending(r => r.EncounterTime)
-                                                    .ToList();
-
-                boss.Logs = dpsReports.Select(r => new DpsReportBossLogEntry
-                                                   {
-                                                       Id = r.Id,
-                                                       PermaLink = r.PermaLink,
-                                                       EncounterTime = r.EncounterTime,
-                                                       IsSuccess = r.IsSuccess
-                                                   })
-                                           .ToList();
-            }
+            boss.Logs = DpsReportReportGenerator.GetBossLogs(_userId, boss.BossIds.Select(id => (long)id).ToList(), _weekStart, _weekEnd);
         }
         catch (OperationCanceledException)
         {
@@ -296,26 +247,11 @@ public partial class WeeklyLogsOverviewPage : IAsyncDisposable
             return;
         }
 
-        var report = new DpsReport
-                     {
-                         MetaData = new MetaData
-                                    {
-                                        Id = logEntry.Id,
-                                        IsSuccess = logEntry.IsSuccess,
-                                        PermaLink = logEntry.PermaLink,
-                                        EncounterTime = new DateTimeOffset(logEntry.EncounterTime),
-                                        Boss = "Loading...",
-                                        Duration = null
-                                    },
-                         IsLoadingAdditionalData = true
-                     };
-
-        _selectedReport = report;
-        _loadedLogs[logEntry.Id] = report;
+        _loadedLogs[logEntry.Id] = _selectedReport = new DpsReport(logEntry);
 
         await InvokeAsync(StateHasChanged).ConfigureAwait(false);
 
-        await GetAdditionalDataAsync(report).ConfigureAwait(false);
+        await GetAdditionalDataAsync(_selectedReport).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -331,10 +267,7 @@ public partial class WeeklyLogsOverviewPage : IAsyncDisposable
 
             if (report.FullReport != null)
             {
-                report.MetaData.Boss = report.FullReport.FightName;
-                report.MetaData.Duration = TimeSpan.FromMilliseconds(report.FullReport.DurationMS);
-                report.OverallStatistics = DpsReportReportGenerator.GetOverallStatistics(report.FullReport);
-                report.PersonalStatistics = DpsReportReportGenerator.GetPersonalStatistics(report.FullReport, _guildWarsAccountNames);
+                DpsReportReportGenerator.FillReportStatistics(report, _guildWarsAccountNames);
             }
         }
         catch (Exception ex)
@@ -345,51 +278,6 @@ public partial class WeeklyLogsOverviewPage : IAsyncDisposable
         report.IsLoadingAdditionalData = false;
 
         await InvokeAsync(StateHasChanged).ConfigureAwait(false);
-    }
-
-    /// <summary>
-    /// Gets the CSS class for the boss item based on its status
-    /// </summary>
-    /// <param name="isSuccessful">Success status</param>
-    /// <returns>CSS class name</returns>
-    private string GetBossStatusClass(bool? isSuccessful)
-    {
-        return isSuccessful switch
-               {
-                   true => "boss-item-success",
-                   false => "boss-item-failure",
-                   null => "boss-item-unknown"
-               };
-    }
-
-    /// <summary>
-    /// Gets the CSS class for the success indicator based on status
-    /// </summary>
-    /// <param name="isSuccessful">Success status</param>
-    /// <returns>CSS class name</returns>
-    private string GetIndicatorClass(bool? isSuccessful)
-    {
-        return isSuccessful switch
-               {
-                   true => "indicator-success",
-                   false => "indicator-failure",
-                   null => "indicator-unknown"
-               };
-    }
-
-    /// <summary>
-    /// Gets the tooltip text based on the success status
-    /// </summary>
-    /// <param name="isSuccessful">Success status</param>
-    /// <returns>Tooltip text</returns>
-    private string GetStatusTooltip(bool? isSuccessful)
-    {
-        return isSuccessful switch
-               {
-                   true => LocalizationGroup.GetText("Success", "Successfully defeated"),
-                   false => LocalizationGroup.GetText("Unsuccessful", "Unsuccessfully attempted"),
-                   null => LocalizationGroup.GetText("NotAttempted", "Not attempted")
-               };
     }
 
     /// <summary>
@@ -416,11 +304,16 @@ public partial class WeeklyLogsOverviewPage : IAsyncDisposable
 
         _isPageLoading = true;
 
-        _cancellationTokenSource?.Cancel();
-        _cancellationTokenSource?.Dispose();
+        if (_cancellationTokenSource != null)
+        {
+            await _cancellationTokenSource.CancelAsync()
+                                          .ConfigureAwait(false);
+            _cancellationTokenSource.Dispose();
+        }
         _cancellationTokenSource = new CancellationTokenSource();
 
         _loadTask = LoadWeeklyReports(_cancellationTokenSource.Token);
+
         await _loadTask.ConfigureAwait(false);
     }
 

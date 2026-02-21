@@ -1,6 +1,4 @@
-using Scruffy.Data.Enumerations.DpsReport;
-
-namespace Scruffy.Services.GuildWars2.DpsReports;
+namespace Scruffy.Data.Enumerations.DpsReport;
 
 /// <summary>
 /// Expansion entry

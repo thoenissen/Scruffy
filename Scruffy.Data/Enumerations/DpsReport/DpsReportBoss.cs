@@ -1,6 +1,6 @@
 using GW2EIEvtcParser;
 
-namespace Scruffy.Services.GuildWars2.DpsReports;
+namespace Scruffy.Data.Enumerations.DpsReport;
 
 /// <summary>
 /// Boss entry for encounter

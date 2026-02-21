@@ -7,8 +7,6 @@ using System.Threading.Tasks;
 
 using GW2EIDPSReport.DPSReportJsons;
 
-using GW2EIJSON;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -20,11 +18,10 @@ using Newtonsoft.Json;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.CoreData;
-using Scruffy.Data.Entity.Repositories.GuildWars2.Account;
-using Scruffy.Data.Json.DpsReport;
+using Scruffy.Data.Enumerations.DpsReport;
 using Scruffy.Services.Core.Extensions;
 using Scruffy.Services.GuildWars2.DpsReports;
-using Scruffy.WebApp.Components.Pages.DpsReports.Data;
+using Scruffy.WebApp.Components.Services.DpsReports;
 using Scruffy.WebApp.Services;
 
 namespace Scruffy.WebApp.Components.Pages.DpsReports;
@@ -35,20 +32,6 @@ namespace Scruffy.WebApp.Components.Pages.DpsReports;
 [Authorize(Roles = "Member")]
 public sealed partial class LogsSearchPage : IAsyncDisposable
 {
-    #region Constants
-
-    /// <summary>
-    /// ID for the alacrity buff
-    /// </summary>
-    private const int AlacrityId = 30328;
-
-    /// <summary>
-    /// ID for the quickness buff
-    /// </summary>
-    private const int QuicknessId = 1187;
-
-    #endregion // Constants
-
     #region Fields
 
     /// <summary>
@@ -143,6 +126,12 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
     /// </summary>
     [Inject]
     private DpsReportReportGenerator DpsReportReportGenerator { get; set; }
+
+    /// <summary>
+    /// Report visualizer
+    /// </summary>
+    [Inject]
+    private DpsReportVisualizer DpsReportVisualizer { get; set; }
 
     #endregion // Properties
 
@@ -268,14 +257,10 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
                 if (user != null)
                 {
                     _dpsReportToken = user.DpsReportUserToken;
-
-                    var accountRepository = repository.GetRepository<GuildWarsAccountRepository>();
-                    _guildWarsAccountNames = accountRepository.GetQuery()
-                                                              .Where(account => account.UserId == userId)
-                                                              .Select(account => account.Name)
-                                                              .ToList();
                 }
             }
+
+            _guildWarsAccountNames = DpsReportReportGenerator.GetGuildWarsAccountNames(userId);
         }
 
         _isUserDataLoaded = true;
@@ -292,10 +277,7 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
 
         if (report.FullReport != null)
         {
-            report.MetaData.Boss = report.FullReport.FightName;
-            report.MetaData.Duration = TimeSpan.FromMilliseconds(report.FullReport.DurationMS);
-            report.OverallStatistics = DpsReportReportGenerator.GetOverallStatistics(report.FullReport);
-            report.PersonalStatistics = DpsReportReportGenerator.GetPersonalStatistics(report.FullReport, _guildWarsAccountNames);
+            DpsReportReportGenerator.FillReportStatistics(report, _guildWarsAccountNames);
         }
 
         report.IsLoadingAdditionalData = false;
@@ -326,26 +308,6 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
         _selectedReport = null;
 
         InvokeAsync(StateHasChanged);
-    }
-
-    /// <summary>
-    /// Gets the skill level based on the uptime percentage
-    /// </summary>
-    /// <param name="uptime">Uptime</param>
-    /// <returns>Skill-Level CSS class</returns>
-    private string GetSkillLevelFromUptime(double? uptime)
-    {
-        if (uptime > 80.00D)
-        {
-            return "skill-level-2";
-        }
-
-        if (uptime > 50.00D)
-        {
-            return "skill-level-1";
-        }
-
-        return "skill-level-0";
     }
 
     #endregion // Methods

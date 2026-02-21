@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 
 using GW2EIDPSReport.DPSReportJsons;
 
-using GW2EIJSON;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -19,9 +17,10 @@ using Newtonsoft.Json;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.CoreData;
+using Scruffy.Data.Enumerations.DpsReport;
 using Scruffy.Services.Core.Extensions;
 using Scruffy.Services.GuildWars2.DpsReports;
-using Scruffy.WebApp.Components.Pages.DpsReports.Data;
+using Scruffy.WebApp.Components.Services.DpsReports;
 using Scruffy.WebApp.Services;
 
 namespace Scruffy.WebApp.Components.Pages.DpsReports;
@@ -32,20 +31,6 @@ namespace Scruffy.WebApp.Components.Pages.DpsReports;
 [Authorize(Roles = "Member")]
 public sealed partial class TodaysLogsOverviewPage : IAsyncDisposable
 {
-    #region Constants
-
-    /// <summary>
-    /// ID for the alacrity buff
-    /// </summary>
-    private const int AlacrityId = 30328;
-
-    /// <summary>
-    /// ID for the quickness buff
-    /// </summary>
-    private const int QuicknessId = 1187;
-
-    #endregion // Constants
-
     #region Fields
 
     /// <summary>
@@ -57,6 +42,11 @@ public sealed partial class TodaysLogsOverviewPage : IAsyncDisposable
     /// Are logs for today available?
     /// </summary>
     private DateTime? _logsDate;
+
+    /// <summary>
+    /// Guild Wars 2 account names of the user
+    /// </summary>
+    private List<string> _guildWarsAccountNames = [];
 
     /// <summary>
     /// Reports
@@ -107,6 +97,12 @@ public sealed partial class TodaysLogsOverviewPage : IAsyncDisposable
     [Inject]
     private DpsReportReportGenerator DpsReportReportGenerator { get; set; }
 
+    /// <summary>
+    /// Report visualizer
+    /// </summary>
+    [Inject]
+    private DpsReportVisualizer DpsReportVisualizer { get; set; }
+
     #endregion // Properties
 
     #region Methods
@@ -135,6 +131,7 @@ public sealed partial class TodaysLogsOverviewPage : IAsyncDisposable
                                                    .Select(user => user.DpsReportUserToken)
                                                    .FirstOrDefault();
 
+                    _guildWarsAccountNames = DpsReportReportGenerator.GetGuildWarsAccountNames(userId);
                     _reports = [];
                     _logsDate = null;
 
@@ -235,33 +232,12 @@ public sealed partial class TodaysLogsOverviewPage : IAsyncDisposable
 
         if (report.FullReport != null)
         {
-            report.MetaData.Boss = report.FullReport.FightName;
-            report.OverallStatistics = DpsReportReportGenerator.GetOverallStatistics(report.FullReport);
+            DpsReportReportGenerator.FillReportStatistics(report, _guildWarsAccountNames);
         }
 
         report.IsLoadingAdditionalData = false;
 
         await InvokeAsync(StateHasChanged).ConfigureAwait(false);
-    }
-
-    /// <summary>
-    /// Gets the skill level based on the uptime percentage
-    /// </summary>
-    /// <param name="uptime">Uptime</param>
-    /// <returns>Skill-Level CSS class</returns>
-    private string GetSkillLevelFromUptime(double? uptime)
-    {
-        if (uptime > 80.00D)
-        {
-            return "skill-level-2";
-        }
-
-        if (uptime > 50.00D)
-        {
-            return "skill-level-1";
-        }
-
-        return "skill-level-0";
     }
 
     #endregion // Methods

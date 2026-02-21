@@ -1,3 +1,7 @@
+.center-title {
+    text-align: center
+}
+
 .page-container {
     display: table-column;
     flex-direction: row;
