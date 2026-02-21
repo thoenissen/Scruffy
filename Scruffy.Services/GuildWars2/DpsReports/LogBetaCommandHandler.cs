@@ -5,6 +5,7 @@ using Discord;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.GuildWars2.DpsReports;
 using Scruffy.Data.Enumerations.GuildWars2;
+using Scruffy.Data.Extensions;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.CoreData;
@@ -118,18 +119,18 @@ public class LogBetaCommandHandler : LocatedServiceBase
                 var entryBuilder = new StringBuilder();
 
                 entryBuilder.Append("# ");
-                entryBuilder.AppendLine(encounterGroup.Key.ToString());
+                entryBuilder.AppendLine(encounterGroup.Key.ToDisplayString());
 
                 foreach (var encounterSubGroup in encounterGroup.GroupBy(group => group.Key.SubGroup))
                 {
                     entryBuilder.Append("**");
-                    entryBuilder.Append(encounterSubGroup.Key.ToString());
+                    entryBuilder.Append(encounterSubGroup.Key.ToDisplayString());
                     entryBuilder.AppendLine("**");
 
                     foreach (var encounter in encounterSubGroup.GroupBy(encounter => encounter.Key.Encounter))
                     {
                         entryBuilder.Append("> ");
-                        entryBuilder.AppendLine(encounter.Key.ToString());
+                        entryBuilder.AppendLine(encounter.Key.ToDisplayString());
 
                         foreach (var report in encounter.SelectMany(entry => entry.Value))
                         {

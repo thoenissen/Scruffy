@@ -425,7 +425,7 @@ public class DpsReportEncounterKey : IEquatable<DpsReportEncounterKey>
 
     #endregion // Methods
 
-    #region Equalitiy members
+    #region Equality members
 
     /// <inheritdoc />
     public bool Equals(DpsReportEncounterKey other)
@@ -472,5 +472,5 @@ public class DpsReportEncounterKey : IEquatable<DpsReportEncounterKey>
         return HashCode.Combine((int)Group, (int)SubGroup, (int)Encounter);
     }
 
-    #endregion // Equalitiy members
+    #endregion // Equality members
 }
