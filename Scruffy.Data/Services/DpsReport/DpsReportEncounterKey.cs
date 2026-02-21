@@ -7,24 +7,24 @@ namespace Scruffy.Data.Services.DpsReport;
 /// <summary>
 /// Encounter grouping key
 /// </summary>
-public class DpsReportEncounterKey
+public class DpsReportEncounterKey : IEquatable<DpsReportEncounterKey>
 {
     #region Properties
 
     /// <summary>
     /// Group
     /// </summary>
-    public DpsReportGroup Group { get; set; }
+    public DpsReportGroup Group { get; private init; }
 
     /// <summary>
     /// Subgroup
     /// </summary>
-    public DpsReportSubGroup SubGroup { get; set; }
+    public DpsReportSubGroup SubGroup { get; private init; }
 
     /// <summary>
     /// Encounter
     /// </summary>
-    public DpsReportEncounterTarget Encounter { get; set; }
+    public DpsReportEncounterTarget Encounter { get; private init; }
 
     #endregion // Properties
 
@@ -424,4 +424,53 @@ public class DpsReportEncounterKey
     }
 
     #endregion // Methods
+
+    #region Equalitiy members
+
+    /// <inheritdoc />
+    public bool Equals(DpsReportEncounterKey other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return Group == other.Group
+               && SubGroup == other.SubGroup
+               && Encounter == other.Encounter;
+    }
+
+    /// <inheritdoc />
+    public override bool Equals(object obj)
+    {
+        if (obj is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, obj))
+        {
+            return true;
+        }
+
+        if (obj.GetType() != GetType())
+        {
+            return false;
+        }
+
+        return Equals((DpsReportEncounterKey)obj);
+    }
+
+    /// <inheritdoc />
+    public override int GetHashCode()
+    {
+        return HashCode.Combine((int)Group, (int)SubGroup, (int)Encounter);
+    }
+
+    #endregion // Equalitiy members
 }
