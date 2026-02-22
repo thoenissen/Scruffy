@@ -352,28 +352,6 @@ namespace Scruffy.Data.Entity.Migrations
                     b.ToTable("DiscordHistoricAccountRoleAssignments");
                 });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Discord.DiscordMessageExperienceLogEntryEntity", b =>
-                {
-                    b.Property<decimal>("ServerId")
-                        .HasColumnType("decimal(20,0)");
-
-                    b.Property<decimal>("MessageId")
-                        .HasColumnType("decimal(20,0)");
-
-                    b.Property<decimal>("DiscordAccountId")
-                        .HasColumnType("decimal(20,0)");
-
-                    b.Property<int>("ExperiencePoints")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Timestamp")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("ServerId", "MessageId");
-
-                    b.ToTable("DiscordMessageExperienceLogEntries");
-                });
-
             modelBuilder.Entity("Scruffy.Data.Entity.Tables.Discord.DiscordServerMemberEntity", b =>
                 {
                     b.Property<decimal>("ServerId")
