@@ -334,9 +334,20 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
                        {
                            var cutoff = GetCutoffDate(_selectedFilter);
 
-                           BuildOverviewChart(cutoff);
-                           BuildTopUsersChart(cutoff);
-                           BuildTopChannelsChart(cutoff);
+                           HashSet<ulong> ignoredChannelIds;
+
+                           using (var repositoryFactory = RepositoryFactory.CreateInstance())
+                           {
+                               ignoredChannelIds = repositoryFactory.GetRepository<DiscordIgnoreChannelRepository>()
+                                                                    .GetQuery()
+                                                                    .Where(c => c.DiscordServerId == WebAppConfiguration.DiscordServerId)
+                                                                    .Select(c => c.DiscordChannelId)
+                                                                    .ToHashSet();
+                           }
+
+                           BuildOverviewChart(cutoff, ignoredChannelIds);
+                           BuildTopUsersChart(cutoff, ignoredChannelIds);
+                           BuildTopChannelsChart(cutoff, ignoredChannelIds);
                        })
                   .ConfigureAwait(false);
 
@@ -349,13 +360,15 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
     /// Build the overview bar chart with trend line
     /// </summary>
     /// <param name="cutoff">Optional cutoff date</param>
-    private void BuildOverviewChart(DateTime? cutoff)
+    /// <param name="ignoredChannelIds">Channel IDs to exclude</param>
+    private void BuildOverviewChart(DateTime? cutoff, HashSet<ulong> ignoredChannelIds)
     {
         using (var repositoryFactory = RepositoryFactory.CreateInstance())
         {
             var query = repositoryFactory.GetRepository<DiscordMessageRepository>()
                                          .GetQuery()
-                                         .Where(m => m.DiscordServerId == WebAppConfiguration.DiscordServerId);
+                                         .Where(m => m.DiscordServerId == WebAppConfiguration.DiscordServerId
+                                                     && ignoredChannelIds.Contains(m.DiscordChannelId) == false);
 
             if (cutoff != null)
             {
@@ -406,13 +419,15 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
     /// Build the top users pie chart
     /// </summary>
     /// <param name="cutoff">Optional cutoff date</param>
-    private void BuildTopUsersChart(DateTime? cutoff)
+    /// <param name="ignoredChannelIds">Channel IDs to exclude</param>
+    private void BuildTopUsersChart(DateTime? cutoff, HashSet<ulong> ignoredChannelIds)
     {
         using (var repositoryFactory = RepositoryFactory.CreateInstance())
         {
             var query = repositoryFactory.GetRepository<DiscordMessageRepository>()
                                          .GetQuery()
-                                         .Where(m => m.DiscordServerId == WebAppConfiguration.DiscordServerId);
+                                         .Where(m => m.DiscordServerId == WebAppConfiguration.DiscordServerId
+                                                     && ignoredChannelIds.Contains(m.DiscordChannelId) == false);
 
             if (cutoff != null)
             {
@@ -486,13 +501,15 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
     /// Build the top channels pie chart
     /// </summary>
     /// <param name="cutoff">Optional cutoff date</param>
-    private void BuildTopChannelsChart(DateTime? cutoff)
+    /// <param name="ignoredChannelIds">Channel IDs to exclude</param>
+    private void BuildTopChannelsChart(DateTime? cutoff, HashSet<ulong> ignoredChannelIds)
     {
         using (var repositoryFactory = RepositoryFactory.CreateInstance())
         {
             var query = repositoryFactory.GetRepository<DiscordMessageRepository>()
                                          .GetQuery()
-                                         .Where(m => m.DiscordServerId == WebAppConfiguration.DiscordServerId);
+                                         .Where(m => m.DiscordServerId == WebAppConfiguration.DiscordServerId
+                                                     && ignoredChannelIds.Contains(m.DiscordChannelId) == false);
 
             if (cutoff != null)
             {
