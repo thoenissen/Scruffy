@@ -79,7 +79,15 @@
                                     userRank++;
                                     <tr>
                                         <td>@userRank</td>
-                                        <td>@user.Name</td>
+                                        <td>
+                                            <div class="user-cell">
+                                                @if (string.IsNullOrEmpty(user.AvatarUrl) == false)
+                                                {
+                                                    <img class="user-avatar" src="@user.AvatarUrl" alt="" />
+                                                }
+                                                <span>@user.Name</span>
+                                            </div>
+                                        </td>
                                         <td>@user.Count.ToString("N0", LocalizationGroup.CultureInfo)</td>
                                     </tr>
                                 }
@@ -111,7 +119,7 @@
                                     channelRank++;
                                     <tr>
                                         <td>@channelRank</td>
-                                        <td>@channel.Name</td>
+                                        <td>#@channel.Name</td>
                                         <td>@channel.Count.ToString("N0", LocalizationGroup.CultureInfo)</td>
                                     </tr>
                                 }

@@ -109,7 +109,7 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
     /// <summary>
     /// All users table data
     /// </summary>
-    private List<(string Name, int Count)> _allUsersTableData;
+    private List<(string Name, string AvatarUrl, int Count)> _allUsersTableData;
 
     /// <summary>
     /// All channels table data
@@ -466,10 +466,10 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
             var nameMap = repositoryFactory.GetRepository<DiscordServerMemberRepository>()
                                            .GetQuery()
                                            .Where(m => m.ServerId == WebAppConfiguration.DiscordServerId)
-                                           .Select(m => new { m.AccountId, m.Name })
-                                           .ToDictionary(m => m.AccountId, m => m.Name);
+                                           .Select(m => new { m.AccountId, m.Name, m.AvatarUrl })
+                                           .ToDictionary(m => m.AccountId, m => new { m.Name, m.AvatarUrl });
 
-            string ResolveName(ulong accountId) => nameMap.TryGetValue(accountId, out var name) ? name : accountId.ToString();
+            string ResolveName(ulong accountId) => nameMap.TryGetValue(accountId, out var member) ? member.Name : accountId.ToString();
 
             var totalAll = allUsers.Sum(u => u.Count);
             var topEntries = allUsers.Take(TopCount)
@@ -504,7 +504,9 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
                                      ]
                                  };
 
-            _allUsersTableData = allUsers.Select(u => (Name: ResolveName(u.AccountId), u.Count))
+            _allUsersTableData = allUsers.Select(u => (Name: ResolveName(u.AccountId),
+                                                        AvatarUrl: nameMap.TryGetValue(u.AccountId, out var member) ? member.AvatarUrl : null,
+                                                        u.Count))
                                          .ToList();
         }
     }

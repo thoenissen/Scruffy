@@ -108,3 +108,17 @@
         .table-scroll tr:hover {
             background-color: var(--secondary);
         }
+
+.user-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--accent);
+}

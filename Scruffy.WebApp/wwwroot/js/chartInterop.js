@@ -13,11 +13,22 @@ export function createChart(chartId, type, data, options) {
 
    if (type === "pie" || type === "doughnut") {
       delete options.scales;
-   } else if (options?.scales?.y?.grid?.color == null) {
+
+      for (const ds of data.datasets ?? []) {
+         ds.borderColor ??= "#000000";
+      }
+   } else {
+      if (options?.scales?.y?.grid?.color == null) {
+         options.scales ??= {};
+         options.scales.y ??= {};
+         options.scales.y.grid ??= {};
+         options.scales.y.grid.color = getGridColor;
+      }
+
       options.scales ??= {};
       options.scales.y ??= {};
-      options.scales.y.grid ??= {};
-      options.scales.y.grid.color = getGridColor;
+      options.scales.y.border ??= {};
+      options.scales.y.border.display = false;
    }
 
    return new Chart(ctx, {
