@@ -1,0 +1,60 @@
+@using Scruffy.WebApp.Components.Base
+@using Scruffy.WebApp.Components.Controls
+
+@inherits LocatedComponent
+@page "/Ranking/Messages"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<PageTitle>@LocalizationGroup.GetText("PageTitle", "FooI - Ranking - Messages")</PageTitle>
+
+<div class="page">
+    <LoadingContainer IsLoading="@_isLoading"
+                      Hint="@LocalizationGroup.GetText("LoadingHint", "")">
+        @if (_entries != null)
+        {
+            <div class="table-title">@LocalizationGroup.GetText("Title", "Message Ranking")</div>
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>@LocalizationGroup.GetText("TableHeaderUser", "User")</th>
+                            <th>@LocalizationGroup.GetText("TableHeaderMessages", "Messages")</th>
+                            <th>@LocalizationGroup.GetText("TableHeaderLevel", "Level")</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ var rank = 0; }
+                        @foreach (var entry in _entries)
+                        {
+                            rank++;
+                            <tr>
+                                <td>@rank</td>
+                                <td>@entry.Name</td>
+                                <td>@entry.MessageCount.ToString("N0", LocalizationGroup.CultureInfo)</td>
+                                <td>
+                                    <div class="level-cell">
+                                        @{
+                                            const double radius = 16;
+                                            const double circumference = 2 * Math.PI * radius;
+                                            var offset = circumference - (entry.LevelProgressPercent / 100.0 * circumference);
+                                        }
+                                        <svg class="level-ring" viewBox="0 0 40 40">
+                                            <circle cx="20" cy="20" r="@radius.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                                                    class="level-ring-bg"/>
+                                            <circle cx="20" cy="20" r="@radius.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                                                    class="level-ring-progress"
+                                                    stroke-dasharray="@circumference.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                                                    stroke-dashoffset="@offset.ToString(System.Globalization.CultureInfo.InvariantCulture)"/>
+                                            <text x="20" y="20" class="level-ring-text">@entry.Level</text>
+                                        </svg>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </LoadingContainer>
+</div>

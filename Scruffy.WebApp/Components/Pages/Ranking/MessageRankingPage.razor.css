@@ -1,0 +1,86 @@
+.page {
+    width: 100%;
+    height: 100%;
+    flex: 1 0 auto;
+}
+
+.table-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.table-scroll {
+    max-height: 800px;
+    overflow-y: auto;
+    border: 2px solid var(--primary);
+    border-radius: 0.5rem;
+}
+
+    .table-scroll table {
+        width: 100%;
+        border-collapse: collapse;
+        color: var(--text);
+    }
+
+    .table-scroll thead {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+
+    .table-scroll th {
+        padding: 0.75rem 1rem;
+        text-align: left;
+        background-color: var(--primary);
+        font-weight: 600;
+    }
+
+    .table-scroll td {
+        padding: 0.5rem 1rem;
+        border-bottom: 1px solid var(--primary);
+    }
+
+    .table-scroll tr {
+        background-color: var(--background);
+    }
+
+        .table-scroll tr:hover {
+            background-color: var(--secondary);
+        }
+
+.level-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.level-ring {
+    width: 40px;
+    height: 40px;
+    transform: rotate(-90deg);
+}
+
+.level-ring-bg {
+    fill: none;
+    stroke: var(--primary);
+    stroke-width: 3;
+}
+
+.level-ring-progress {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 3;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.3s ease;
+}
+
+.level-ring-text {
+    fill: var(--text);
+    font-size: 14px;
+    font-weight: 600;
+    text-anchor: middle;
+    dominant-baseline: central;
+    transform: rotate(90deg);
+    transform-origin: 20px 20px;
+}

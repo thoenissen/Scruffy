@@ -96,6 +96,11 @@
                             @LocalizationGroup.GetText("MessageStatistics", "Message Statistics")
                         </NavLink>
                     </div>
+                    <div class="navigation-menu-item">
+                        <NavLink class="navigation-menu-link" href="/Ranking/Messages" Match="NavLinkMatch.Prefix">
+                            @LocalizationGroup.GetText("MessagesRanking", "Messages Ranking")
+                        </NavLink>
+                    </div>
                     <AuthorizeView Roles="PrivilegedMember">
                         <Authorized Context="calendarContext">
                             <div class="navigation-menu-item">
