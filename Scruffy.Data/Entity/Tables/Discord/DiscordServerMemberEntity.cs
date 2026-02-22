@@ -25,6 +25,11 @@ public class DiscordServerMemberEntity
     /// </summary>
     public string Name { get; set; }
 
+    /// <summary>
+    /// Is the account a bot?
+    /// </summary>
+    public bool IsBot { get; set; }
+
     #region Navigation properties
 
     /// <summary>

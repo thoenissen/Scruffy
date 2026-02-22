@@ -48,13 +48,13 @@ public class DiscordMemberImportJob : LocatedAsyncJob
     /// <inheritdoc/>
     public override async Task ExecuteOverrideAsync()
     {
-        var entries = new List<(ulong ServerId, ulong AccountId, string Name)>();
+        var entries = new List<(ulong ServerId, ulong AccountId, string Name, bool IsBot)>();
 
         foreach (var guild in _client.Guilds)
         {
             foreach (var user in guild.Users)
             {
-                entries.Add((guild.Id, user.Id, user.TryGetDisplayName()));
+                entries.Add((guild.Id, user.Id, user.TryGetDisplayName(), user.IsBot));
             }
         }
 

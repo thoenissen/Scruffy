@@ -34,7 +34,7 @@ public class DiscordServerMemberRepository : RepositoryBase<DiscordServerMemberQ
     /// </summary>
     /// <param name="members">Members</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task<bool> BulkInsert(List<(ulong ServerId, ulong AccountId, string Name)> members)
+    public async Task<bool> BulkInsert(List<(ulong ServerId, ulong AccountId, string Name, bool IsBot)> members)
     {
         var success = false;
 
@@ -50,10 +50,11 @@ public class DiscordServerMemberRepository : RepositoryBase<DiscordServerMemberQ
                                 .ConfigureAwait(false);
 
                 var sqlCommand = new SqlCommand(@"CREATE TABLE #DiscordServerMembers (
-                                                                       [ServerId] decimal(20,0) NOT NULL,
-                                                                       [AccountId] decimal(20,0) NOT NULL,
-                                                                       [Name] nvarchar(max) NULL
-                                                                   );",
+                                                                        [ServerId] decimal(20,0) NOT NULL,
+                                                                        [AccountId] decimal(20,0) NOT NULL,
+                                                                        [Name] nvarchar(max) NULL,
+                                                                        [IsBot] bit NOT NULL
+                                                                    );",
                                                 connection);
 
                 await using (sqlCommand.ConfigureAwait(false))
@@ -65,10 +66,11 @@ public class DiscordServerMemberRepository : RepositoryBase<DiscordServerMemberQ
                 table.Columns.Add(nameof(DiscordServerMemberEntity.ServerId), typeof(ulong));
                 table.Columns.Add(nameof(DiscordServerMemberEntity.AccountId), typeof(ulong));
                 table.Columns.Add(nameof(DiscordServerMemberEntity.Name), typeof(string));
+                table.Columns.Add(nameof(DiscordServerMemberEntity.IsBot), typeof(bool));
 
-                foreach (var (serverId, accountId, name) in members)
+                foreach (var (serverId, accountId, name, isBot) in members)
                 {
-                    table.Rows.Add(serverId, accountId, name);
+                    table.Rows.Add(serverId, accountId, name, isBot);
                 }
 
                 using (var bulk = new SqlBulkCopy(connection))
@@ -83,10 +85,13 @@ public class DiscordServerMemberRepository : RepositoryBase<DiscordServerMemberQ
                                                    USING #DiscordServerMembers AS [Source]
                                                       ON [Target].[ServerId] = [Source].[ServerId]
                                                      AND [Target].[AccountId] = [Source].[AccountId]
+                                          WHEN MATCHED THEN
+                                               UPDATE SET [Target].[Name] = [Source].[Name],
+                                                          [Target].[IsBot] = [Source].[IsBot]
                                           WHEN NOT MATCHED
                                                AND EXISTS ( SELECT TOP 1 1 FROM [DiscordAccounts] AS [Account] WHERE [Account].[Id] = [Source].[AccountId] ) THEN
-                                                  INSERT ( [ServerId], [AccountId], [Name] )
-                                                  VALUES ( [Source].[ServerId], [Source].[AccountId], [Source].[Name] )
+                                                  INSERT ( [ServerId], [AccountId], [Name], [IsBot] )
+                                                  VALUES ( [Source].[ServerId], [Source].[AccountId], [Source].[Name], [Source].[IsBot] )
                                           WHEN NOT MATCHED BY SOURCE
                                                THEN DELETE;",
                                             connection);
