@@ -151,10 +151,17 @@ public partial class MessageRankingPage : LocatedComponent
                                                  .Select(m => m.AccountId)
                                                  .ToHashSet();
 
+            var ignoreChannelIds = repositoryFactory.GetRepository<DiscordIgnoreChannelRepository>()
+                                                    .GetQuery()
+                                                    .Where(m => m.DiscordServerId== WebAppConfiguration.DiscordServerId)
+                                                    .Select(m => m.DiscordChannelId)
+                                                    .ToHashSet();
+
             var messageCounts = repositoryFactory.GetRepository<DiscordMessageRepository>()
                                                  .GetQuery()
                                                  .Where(m => m.DiscordServerId == WebAppConfiguration.DiscordServerId
-                                                             && botAccountIds.Contains(m.DiscordAccountId) == false)
+                                                             && botAccountIds.Contains(m.DiscordAccountId) == false
+                                                             && ignoreChannelIds.Contains(m.DiscordChannelId) == false)
                                                  .GroupBy(m => m.DiscordAccountId)
                                                  .Select(g => new
                                                               {
