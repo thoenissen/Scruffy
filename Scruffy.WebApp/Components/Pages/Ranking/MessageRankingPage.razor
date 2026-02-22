@@ -12,15 +12,15 @@
                       Hint="@LocalizationGroup.GetText("LoadingHint", "")">
         @if (_entries != null)
         {
-            <div class="table-title">@LocalizationGroup.GetText("Title", "Message Ranking")</div>
+            <div class="table-title">@LocalizationGroup.GetText("Title", "Messages Leaderboard")</div>
             <div class="table-scroll">
                 <table>
                     <thead>
                         <tr>
                             <th>#</th>
                             <th>@LocalizationGroup.GetText("TableHeaderUser", "User")</th>
-                            <th>@LocalizationGroup.GetText("TableHeaderMessages", "Messages")</th>
-                            <th>@LocalizationGroup.GetText("TableHeaderLevel", "Level")</th>
+                            <th class="messages-cell">@LocalizationGroup.GetText("TableHeaderMessages", "Messages")</th>
+                            <th class="level-header">@LocalizationGroup.GetText("TableHeaderLevel", "Level")</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -39,7 +39,7 @@
                                         <span>@entry.Name</span>
                                     </div>
                                 </td>
-                                <td>@entry.MessageCount.ToString("N0", LocalizationGroup.CultureInfo)</td>
+                                <td class="messages-cell">@entry.MessageCount.ToString("N0", LocalizationGroup.CultureInfo)</td>
                                 <td>
                                     <div class="level-cell">
                                         @{
@@ -51,9 +51,9 @@
                                             <circle cx="20" cy="20" r="@radius.ToString(System.Globalization.CultureInfo.InvariantCulture)"
                                                     class="level-ring-bg"/>
                                             <circle cx="20" cy="20" r="@radius.ToString(System.Globalization.CultureInfo.InvariantCulture)"
-                                                    class="level-ring-progress"
-                                                    stroke-dasharray="@circumference.ToString(System.Globalization.CultureInfo.InvariantCulture)"
-                                                    stroke-dashoffset="@offset.ToString(System.Globalization.CultureInfo.InvariantCulture)"/>
+                                                        class="level-ring-progress @GetProgressColorClass(entry.LevelProgressPercent)"
+                                                        stroke-dasharray="@circumference.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                                                        stroke-dashoffset="@offset.ToString(System.Globalization.CultureInfo.InvariantCulture)"/>
                                             <text x="20" y="20" class="level-ring-text">@entry.Level</text>
                                         </svg>
                                     </div>

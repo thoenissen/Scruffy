@@ -7,6 +7,7 @@
 .table-title {
     font-size: 1.1rem;
     font-weight: 600;
+    text-align: center;
     margin-bottom: 0.75rem;
 }
 
@@ -49,6 +50,15 @@
             background-color: var(--secondary);
         }
 
+.table-scroll th.messages-cell,
+.table-scroll td.messages-cell {
+    text-align: right;
+}
+
+.table-scroll th.level-header {
+    text-align: center;
+}
+
 .level-cell {
     display: flex;
     align-items: center;
@@ -66,6 +76,7 @@
     height: 32px;
     border-radius: 50%;
     object-fit: cover;
+    border: 2px solid var(--accent);
 }
 
 .level-ring {
@@ -82,10 +93,21 @@
 
 .level-ring-progress {
     fill: none;
-    stroke: var(--accent);
     stroke-width: 3;
     stroke-linecap: round;
-    transition: stroke-dashoffset 0.3s ease;
+    transition: stroke-dashoffset 0.3s ease, stroke 0.3s ease;
+}
+
+.level-ring-progress-low {
+    stroke: #e74c3c;
+}
+
+.level-ring-progress-mid {
+    stroke: #f1c40f;
+}
+
+.level-ring-progress-high {
+    stroke: #2ecc71;
 }
 
 .level-ring-text {

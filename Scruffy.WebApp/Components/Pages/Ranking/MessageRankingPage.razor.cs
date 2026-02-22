@@ -48,6 +48,21 @@ public partial class MessageRankingPage : LocatedComponent
     #region Methods
 
     /// <summary>
+    /// Return the CSS modifier class for the progress ring color based on the percentage
+    /// </summary>
+    /// <param name="percent">Progress percentage (0–100)</param>
+    /// <returns>CSS class name for red, yellow, or green</returns>
+    private static string GetProgressColorClass(double percent)
+    {
+        return percent switch
+               {
+                   < 33  => "level-ring-progress-low",
+                   < 66  => "level-ring-progress-mid",
+                   _     => "level-ring-progress-high"
+               };
+    }
+
+    /// <summary>
     /// Calculate the cumulative messages required to reach a given level
     /// </summary>
     /// <param name="level">Target level</param>
