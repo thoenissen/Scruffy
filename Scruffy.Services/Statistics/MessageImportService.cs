@@ -88,7 +88,7 @@ public class MessageImportService : IAsyncDisposable
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
                 await dbFactory.GetRepository<DiscordMessageRepository>()
-                               .BulkInsert(importMessages, false)
+                               .BulkInsert(importMessages)
                                .ConfigureAwait(false);
             }
         }
@@ -106,7 +106,7 @@ public class MessageImportService : IAsyncDisposable
     {
         _client.MessageReceived -= OnMessageReceived;
 
-        List<DiscordMessageBulkInsertData> importMessages = null;
+        List<DiscordMessageBulkInsertData> importMessages;
 
         lock (_lock)
         {
@@ -120,7 +120,7 @@ public class MessageImportService : IAsyncDisposable
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
                 await dbFactory.GetRepository<DiscordMessageRepository>()
-                               .BulkInsert(importMessages, false)
+                               .BulkInsert(importMessages)
                                .ConfigureAwait(false);
             }
         }

@@ -6,22 +6,27 @@
 public class DiscordMessageBulkInsertData
 {
     /// <summary>
-    /// Id of the server
+    /// ID of the server
     /// </summary>
     public ulong ServerId { get; set; }
 
     /// <summary>
-    /// Id of the channel
+    /// ID of the channel
     /// </summary>
     public ulong ChannelId { get; set; }
 
     /// <summary>
-    /// Id of the user
+    /// ID of the Thread
+    /// </summary>
+    public ulong ThreadId { get; set; }
+
+    /// <summary>
+    /// ID of the user
     /// </summary>
     public ulong UserId { get; set; }
 
     /// <summary>
-    /// Id of the message
+    /// ID of the message
     /// </summary>
     public ulong MessageId { get; set; }
 
