@@ -1,4 +1,6 @@
-﻿namespace Scruffy.Data.Json.ChartJs
+﻿using System.Text.Json.Serialization;
+
+namespace Scruffy.Data.Json.ChartJs
 {
     /// <summary>
     /// Legend plugin configuration
@@ -6,9 +8,15 @@
     public class LegendPlugin
     {
         /// <summary>
-        /// Value indicating whether the legend is enabled
+        /// Value indicating whether the legend is displayed
         /// </summary>
-        public bool Enabled { get; set; }
+        public bool Display { get; set; }
+
+        /// <summary>
+        /// Position of the legend (e.g. "top", "left", "bottom", "right")
+        /// </summary>
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string Position { get; set; }
 
         /// <summary>
         /// Labels for the legend

@@ -91,6 +91,11 @@
                             Raid - @LocalizationGroup.GetText("Commit", "Commit")
                         </NavLink>
                     </div>
+                    <div class="navigation-menu-item">
+                        <NavLink class="navigation-menu-link" href="/Statistics/Messages" Match="NavLinkMatch.Prefix">
+                            @LocalizationGroup.GetText("MessageStatistics", "Message Statistics")
+                        </NavLink>
+                    </div>
                     <AuthorizeView Roles="PrivilegedMember">
                         <Authorized Context="calendarContext">
                             <div class="navigation-menu-item">

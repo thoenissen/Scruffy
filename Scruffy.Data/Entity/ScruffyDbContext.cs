@@ -112,6 +112,7 @@ public class ScruffyDbContext : IdentityDbContext<UserEntity, RoleEntity, long, 
         modelBuilder.Entity<BlockedDiscordChannelEntity>();
         modelBuilder.Entity<DiscordHistoricAccountRoleAssignmentEntity>();
         modelBuilder.Entity<DiscordServerMemberEntity>();
+        modelBuilder.Entity<DiscordServerChannelEntity>();
 
         modelBuilder.Entity<DiscordAccountEntity>()
                     .HasMany(obj => obj.Members)
@@ -146,6 +147,13 @@ public class ScruffyDbContext : IdentityDbContext<UserEntity, RoleEntity, long, 
                                    {
                                        obj.ServerId,
                                        obj.AccountId
+                                   });
+
+        modelBuilder.Entity<DiscordServerChannelEntity>()
+                    .HasKey(obj => new
+                                   {
+                                       obj.ServerId,
+                                       obj.ChannelId
                                    });
 
         // General

@@ -11,7 +11,9 @@
 export function createChart(chartId, type, data, options) {
    const ctx = document.getElementById(chartId).getContext("2d");
 
-   if (options?.scales?.y?.grid?.color == null) {
+   if (type === "pie" || type === "doughnut") {
+      delete options.scales;
+   } else if (options?.scales?.y?.grid?.color == null) {
       options.scales ??= {};
       options.scales.y ??= {};
       options.scales.y.grid ??= {};

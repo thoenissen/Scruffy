@@ -1,0 +1,110 @@
+.page {
+    width: 100%;
+    height: 100%;
+    flex: 1 0 auto;
+}
+
+.filter-container {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.filter-button {
+    padding: 0.5rem 1rem;
+    background-color: var(--secondary);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+    .filter-button:hover {
+        background-color: var(--primary);
+    }
+
+    .filter-button.active {
+        background-color: var(--accent);
+        color: var(--background);
+    }
+
+.charts-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: minmax(400px, auto) minmax(400px, auto) auto;
+    gap: 2rem;
+    width: 100%;
+}
+
+.chart-overview {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    min-height: 400px;
+}
+
+.chart-top-users {
+    grid-column: 1;
+    grid-row: 2;
+    min-height: 500px;
+}
+
+.chart-top-channels {
+    grid-column: 2;
+    grid-row: 2;
+    min-height: 500px;
+}
+
+.table-top-users {
+    grid-column: 1;
+    grid-row: 3;
+}
+
+.table-top-channels {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+.table-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.table-scroll {
+    max-height: 500px;
+    overflow-y: auto;
+    border: 2px solid var(--primary);
+    border-radius: 0.5rem;
+}
+
+    .table-scroll table {
+        width: 100%;
+        border-collapse: collapse;
+        color: var(--text);
+    }
+
+    .table-scroll thead {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+
+    .table-scroll th {
+        padding: 0.75rem 1rem;
+        text-align: left;
+        background-color: var(--primary);
+        font-weight: 600;
+    }
+
+    .table-scroll td {
+        padding: 0.5rem 1rem;
+        border-bottom: 1px solid var(--primary);
+    }
+
+    .table-scroll tr {
+        background-color: var(--background);
+    }
+
+        .table-scroll tr:hover {
+            background-color: var(--secondary);
+        }

@@ -1,4 +1,6 @@
-﻿namespace Scruffy.Data.Json.ChartJs;
+﻿using System.Text.Json.Serialization;
+
+namespace Scruffy.Data.Json.ChartJs;
 
 /// <summary>
 /// Represents the options for configuring a chart
@@ -23,10 +25,12 @@ public class ChartOptions
     /// <summary>
     /// Index axis for the chart (eg, "x" or "y")
     /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string IndexAxis { get; set; }
 
     /// <summary>
     /// Configuration for the scales of the chart
     /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public Scales Scales { get; set; }
 }

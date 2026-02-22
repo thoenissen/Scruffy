@@ -96,7 +96,7 @@ public partial class PersonalRankingPage
                                              {
                                                  Legend = new LegendPlugin
                                                           {
-                                                              Enabled = true,
+                                                              Display = true,
                                                               Labels = new LegendLabels
                                                                        {
                                                                            Color = WebAppConfiguration.Colors.Text
