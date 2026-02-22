@@ -150,19 +150,21 @@ public partial class MessageRankingPage : LocatedComponent
                                                  .ToList();
 
             var nameMap = repositoryFactory.GetRepository<DiscordServerMemberRepository>()
-                                           .GetQuery()
-                                           .Where(m => m.ServerId == WebAppConfiguration.DiscordServerId)
-                                           .Select(m => new { m.AccountId, m.Name })
-                                           .ToDictionary(m => m.AccountId, m => m.Name);
+                                            .GetQuery()
+                                            .Where(m => m.ServerId == WebAppConfiguration.DiscordServerId)
+                                            .Select(m => new { m.AccountId, m.Name, m.AvatarUrl })
+                                            .ToDictionary(m => m.AccountId, m => new { m.Name, m.AvatarUrl });
 
             return messageCounts.Where(m => nameMap.ContainsKey(m.AccountId))
                                 .Select(m =>
                                         {
                                             var level = CalculateLevel(m.Count);
+                                            var member = nameMap[m.AccountId];
 
                                             return new MessageRankingEntry
                                                    {
-                                                       Name = nameMap[m.AccountId],
+                                                       Name = member.Name,
+                                                       AvatarUrl = member.AvatarUrl,
                                                        MessageCount = m.Count,
                                                        Level = level,
                                                        LevelProgressPercent = CalculateLevelProgress(m.Count, level)

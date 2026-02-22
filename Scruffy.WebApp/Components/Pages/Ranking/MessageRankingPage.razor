@@ -30,7 +30,15 @@
                             rank++;
                             <tr>
                                 <td>@rank</td>
-                                <td>@entry.Name</td>
+                                <td>
+                                    <div class="user-cell">
+                                        @if (string.IsNullOrEmpty(entry.AvatarUrl) == false)
+                                        {
+                                            <img class="user-avatar" src="@entry.AvatarUrl" alt="" />
+                                        }
+                                        <span>@entry.Name</span>
+                                    </div>
+                                </td>
                                 <td>@entry.MessageCount.ToString("N0", LocalizationGroup.CultureInfo)</td>
                                 <td>
                                     <div class="level-cell">

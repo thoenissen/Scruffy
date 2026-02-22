@@ -34,7 +34,7 @@ public class DiscordServerMemberRepository : RepositoryBase<DiscordServerMemberQ
     /// </summary>
     /// <param name="members">Members</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task<bool> BulkInsert(List<(ulong ServerId, ulong AccountId, string Name, bool IsBot)> members)
+    public async Task<bool> BulkInsert(List<(ulong ServerId, ulong AccountId, string Name, bool IsBot, string AvatarUrl)> members)
     {
         var success = false;
 
@@ -50,11 +50,12 @@ public class DiscordServerMemberRepository : RepositoryBase<DiscordServerMemberQ
                                 .ConfigureAwait(false);
 
                 var sqlCommand = new SqlCommand(@"CREATE TABLE #DiscordServerMembers (
-                                                                        [ServerId] decimal(20,0) NOT NULL,
-                                                                        [AccountId] decimal(20,0) NOT NULL,
-                                                                        [Name] nvarchar(max) NULL,
-                                                                        [IsBot] bit NOT NULL
-                                                                    );",
+                                                                         [ServerId] decimal(20,0) NOT NULL,
+                                                                         [AccountId] decimal(20,0) NOT NULL,
+                                                                         [Name] nvarchar(max) NULL,
+                                                                         [IsBot] bit NOT NULL,
+                                                                         [AvatarUrl] nvarchar(max) NULL
+                                                                     );",
                                                 connection);
 
                 await using (sqlCommand.ConfigureAwait(false))
@@ -67,10 +68,11 @@ public class DiscordServerMemberRepository : RepositoryBase<DiscordServerMemberQ
                 table.Columns.Add(nameof(DiscordServerMemberEntity.AccountId), typeof(ulong));
                 table.Columns.Add(nameof(DiscordServerMemberEntity.Name), typeof(string));
                 table.Columns.Add(nameof(DiscordServerMemberEntity.IsBot), typeof(bool));
+                table.Columns.Add(nameof(DiscordServerMemberEntity.AvatarUrl), typeof(string));
 
-                foreach (var (serverId, accountId, name, isBot) in members)
+                foreach (var (serverId, accountId, name, isBot, avatarUrl) in members)
                 {
-                    table.Rows.Add(serverId, accountId, name, isBot);
+                    table.Rows.Add(serverId, accountId, name, isBot, avatarUrl);
                 }
 
                 using (var bulk = new SqlBulkCopy(connection))
@@ -87,11 +89,12 @@ public class DiscordServerMemberRepository : RepositoryBase<DiscordServerMemberQ
                                                      AND [Target].[AccountId] = [Source].[AccountId]
                                           WHEN MATCHED THEN
                                                UPDATE SET [Target].[Name] = [Source].[Name],
-                                                          [Target].[IsBot] = [Source].[IsBot]
+                                                          [Target].[IsBot] = [Source].[IsBot],
+                                                          [Target].[AvatarUrl] = [Source].[AvatarUrl]
                                           WHEN NOT MATCHED
                                                AND EXISTS ( SELECT TOP 1 1 FROM [DiscordAccounts] AS [Account] WHERE [Account].[Id] = [Source].[AccountId] ) THEN
-                                                  INSERT ( [ServerId], [AccountId], [Name], [IsBot] )
-                                                  VALUES ( [Source].[ServerId], [Source].[AccountId], [Source].[Name], [Source].[IsBot] )
+                                                  INSERT ( [ServerId], [AccountId], [Name], [IsBot], [AvatarUrl] )
+                                                  VALUES ( [Source].[ServerId], [Source].[AccountId], [Source].[Name], [Source].[IsBot], [Source].[AvatarUrl] )
                                           WHEN NOT MATCHED BY SOURCE
                                                THEN DELETE;",
                                             connection);

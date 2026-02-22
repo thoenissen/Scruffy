@@ -55,6 +55,19 @@
     justify-content: center;
 }
 
+.user-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
 .level-ring {
     width: 40px;
     height: 40px;

@@ -30,6 +30,11 @@ public class DiscordServerMemberEntity
     /// </summary>
     public bool IsBot { get; set; }
 
+    /// <summary>
+    /// URL of the user's Discord avatar
+    /// </summary>
+    public string AvatarUrl { get; set; }
+
     #region Navigation properties
 
     /// <summary>

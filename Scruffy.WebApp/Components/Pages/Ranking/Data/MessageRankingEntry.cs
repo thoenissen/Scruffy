@@ -11,6 +11,11 @@ internal record MessageRankingEntry
     public string Name { get; init; }
 
     /// <summary>
+    /// URL of the user's Discord avatar
+    /// </summary>
+    public string AvatarUrl { get; init; }
+
+    /// <summary>
     /// Total message count
     /// </summary>
     public int MessageCount { get; init; }
