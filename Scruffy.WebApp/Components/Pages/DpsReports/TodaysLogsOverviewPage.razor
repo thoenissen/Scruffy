@@ -61,6 +61,9 @@
                     <a target="_blank" rel="noopener noreferrer" href="@u.MetaData.PermaLink">⧉</a>
                 </TemplateColumn>
             </QuickGrid>
+            <div class="table-footer">
+                @LocalizationGroup.GetText("LogCount", "Logs"): @_reports.Count
+            </div>
          </div>
       }
       else

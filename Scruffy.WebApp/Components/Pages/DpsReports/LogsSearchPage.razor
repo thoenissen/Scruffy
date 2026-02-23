@@ -55,6 +55,9 @@
                     <a target="_blank" rel="noopener noreferrer" href="@u.MetaData.PermaLink" @onclick:stopPropagation="true">⧉</a>
                 </TemplateColumn>
             </QuickGrid>
+            <div class="table-footer">
+                @LocalizationGroup.GetText("LogCount", "Logs"): @(_paginationState.TotalItemCount ?? 0)
+            </div>
         </div>
 
         <div class="paginator-std">

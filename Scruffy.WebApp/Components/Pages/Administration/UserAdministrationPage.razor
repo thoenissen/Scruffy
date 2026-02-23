@@ -51,6 +51,9 @@
                     }
                 </TemplateColumn>
             </QuickGrid>
+            <div class="table-footer">
+                @LocalizationGroup.GetText("UserCount", "Users"): @(_filteredUsers?.Count() ?? 0)
+            </div>
         </div>
     </div>
 </div>

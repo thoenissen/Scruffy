@@ -23,3 +23,13 @@
     .btn-edit:hover {
         color: var(--primary);
     }
+
+.table-footer {
+   padding: 1rem;
+   background-color: var(--primary);
+   color: var(--text);
+   font-weight: 600;
+   letter-spacing: 0.05em;
+   text-align: left;
+   border-radius: 0 0 0.5rem 0.5rem;
+}
