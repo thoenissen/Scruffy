@@ -77,7 +77,7 @@
                                 @foreach (var user in _allUsersTableData)
                                 {
                                     userRank++;
-                                    <tr>
+                                    <tr class="clickable-row" @onclick="() => OnUserClicked(user.AccountId, user.Name, user.AvatarUrl)">
                                         <td>@userRank</td>
                                         <td>
                                             <div class="user-cell">
@@ -117,7 +117,7 @@
                                 @foreach (var channel in _allChannelsTableData)
                                 {
                                     channelRank++;
-                                    <tr>
+                                    <tr class="clickable-row" @onclick="() => OnChannelClicked(channel.ChannelId, channel.Name)">
                                         <td>@channelRank</td>
                                         <td>#@channel.Name</td>
                                         <td>@channel.Count.ToString("N0", LocalizationGroup.CultureInfo)</td>
@@ -131,3 +131,47 @@
         </div>
     </div>
 </div>
+
+@if (_isDrilldownOpen)
+{
+    <div class="overlay-backdrop" @onclick="OnCloseDrilldown"></div>
+    <div class="overlay-container">
+        <button class="overlay-close-button" @onclick="OnCloseDrilldown" title="@LocalizationGroup.GetText("Close", "Close")">
+            <span class="material-icons">close</span>
+        </button>
+        <div class="overlay-content">
+            <div class="overlay-header">
+                @if (string.IsNullOrEmpty(_drilldownAvatarUrl) == false)
+                {
+                    <img class="overlay-avatar" src="@_drilldownAvatarUrl" alt="" />
+                }
+                <h2>@_drilldownTitle</h2>
+            </div>
+            <LoadingContainer IsLoading="@_isDrilldownLoading"
+                              Hint="@LocalizationGroup.GetText("LoadingHint", "")">
+                <div class="overlay-charts">
+                    <div class="overlay-timeline">
+                        @if (_drilldownChartData != null)
+                        {
+                            <Chart Type="bar"
+                                   Data="@_drilldownChartData"
+                                   Options="@_drilldownChartOptions"
+                                   Title="@LocalizationGroup.GetText("DrilldownChartTitle", "Messages over Time")"
+                                   Description=""/>
+                        }
+                    </div>
+                    <div class="overlay-breakdown">
+                        @if (_drilldownBreakdownChartData != null)
+                        {
+                            <Chart Type="pie"
+                                   Data="@_drilldownBreakdownChartData"
+                                   Options="@_pieChartOptions"
+                                   Title="@_drilldownBreakdownTitle"
+                                   Description=""/>
+                        }
+                    </div>
+                </div>
+            </LoadingContainer>
+        </div>
+    </div>
+}

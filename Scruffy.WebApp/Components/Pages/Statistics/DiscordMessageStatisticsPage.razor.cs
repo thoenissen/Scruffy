@@ -109,12 +109,52 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
     /// <summary>
     /// All users table data
     /// </summary>
-    private List<(string Name, string AvatarUrl, int Count)> _allUsersTableData;
+    private List<(ulong AccountId, string Name, string AvatarUrl, int Count)> _allUsersTableData;
 
     /// <summary>
     /// All channels table data
     /// </summary>
-    private List<(string Name, int Count)> _allChannelsTableData;
+    private List<(ulong ChannelId, string Name, int Count)> _allChannelsTableData;
+
+    /// <summary>
+    /// Whether the drilldown overlay is visible
+    /// </summary>
+    private bool _isDrilldownOpen;
+
+    /// <summary>
+    /// Whether the drilldown data is being loaded
+    /// </summary>
+    private bool _isDrilldownLoading;
+
+    /// <summary>
+    /// Title of the drilldown overlay
+    /// </summary>
+    private string _drilldownTitle;
+
+    /// <summary>
+    /// Avatar URL for a user drilldown (null for channel drilldown)
+    /// </summary>
+    private string _drilldownAvatarUrl;
+
+    /// <summary>
+    /// Chart data for the drilldown overlay
+    /// </summary>
+    private ChartData _drilldownChartData;
+
+    /// <summary>
+    /// Breakdown pie chart data (channels for user drilldown, users for channel drilldown)
+    /// </summary>
+    private ChartData _drilldownBreakdownChartData;
+
+    /// <summary>
+    /// Title for the breakdown pie chart
+    /// </summary>
+    private string _drilldownBreakdownTitle;
+
+    /// <summary>
+    /// Drilldown chart options (bar chart with trend)
+    /// </summary>
+    private ChartOptions _drilldownChartOptions;
 
     #endregion // Fields
 
@@ -181,6 +221,45 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
                                                       }
                                          }
                            };
+
+        _drilldownChartOptions = new ChartOptions
+                                 {
+                                     Responsive = true,
+                                     MaintainAspectRatio = false,
+                                     Plugins = new PluginsCollection
+                                               {
+                                                   Legend = new LegendPlugin
+                                                            {
+                                                                Display = true,
+                                                                Labels = new LegendLabels
+                                                                         {
+                                                                             Color = WebAppConfiguration.Colors.Text
+                                                                         }
+                                                            }
+                                               },
+                                     Scales = new Scales
+                                              {
+                                                  X = new Axes
+                                                      {
+                                                          Grid = new GridConfiguration(),
+                                                          Ticks = new AxisTicks
+                                                                  {
+                                                                      Color = WebAppConfiguration.Colors.Text
+                                                                  }
+                                                      },
+                                                  Y = new Axes
+                                                      {
+                                                          Grid = new GridConfiguration
+                                                                 {
+                                                                     Color = WebAppConfiguration.Colors.Text
+                                                                 },
+                                                          Ticks = new AxisTicks
+                                                                  {
+                                                                      Color = WebAppConfiguration.Colors.Text
+                                                                  }
+                                                      }
+                                              }
+                                 };
     }
 
     #endregion // Constructor
@@ -504,10 +583,11 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
                                      ]
                                  };
 
-            _allUsersTableData = allUsers.Select(u => (Name: ResolveName(u.AccountId),
-                                                        AvatarUrl: nameMap.TryGetValue(u.AccountId, out var member) ? member.AvatarUrl : null,
-                                                        u.Count))
-                                         .ToList();
+            _allUsersTableData = allUsers.Select(u => (u.AccountId,
+                                                       Name: ResolveName(u.AccountId),
+                                                       AvatarUrl: nameMap.TryGetValue(u.AccountId, out var member) ? member.AvatarUrl : null,
+                                                       u.Count))
+                                          .ToList();
         }
     }
 
@@ -591,9 +671,275 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
                                                    ]
                                     };
 
-            _allChannelsTableData = allChannels.Select(c => (Name: ResolveChannelName(c.ChannelId), c.Count))
-                                               .ToList();
+            _allChannelsTableData = allChannels.Select(c => (c.ChannelId, Name: ResolveChannelName(c.ChannelId), c.Count))
+                                                 .ToList();
         }
+    }
+
+    /// <summary>
+    /// Open the drilldown overlay for a specific user
+    /// </summary>
+    /// <param name="accountId">Discord account ID</param>
+    /// <param name="userName">Display name of the user</param>
+    /// <param name="avatarUrl">Avatar URL of the user</param>
+    private void OnUserClicked(ulong accountId, string userName, string avatarUrl)
+    {
+        _drilldownTitle = userName;
+        _drilldownAvatarUrl = avatarUrl;
+        _drilldownChartData = null;
+        _isDrilldownOpen = true;
+        _isDrilldownLoading = true;
+
+        Task.Run(() => LoadDrilldownAsync(accountId: accountId));
+    }
+
+    /// <summary>
+    /// Open the drilldown overlay for a specific channel
+    /// </summary>
+    /// <param name="channelId">Discord channel ID</param>
+    /// <param name="channelName">Display name of the channel</param>
+    private void OnChannelClicked(ulong channelId, string channelName)
+    {
+        _drilldownTitle = $"#{channelName}";
+        _drilldownAvatarUrl = null;
+        _drilldownChartData = null;
+        _isDrilldownOpen = true;
+        _isDrilldownLoading = true;
+
+        Task.Run(() => LoadDrilldownAsync(channelId: channelId));
+    }
+
+    /// <summary>
+    /// Load drilldown chart data for a specific user or channel
+    /// </summary>
+    /// <param name="accountId">Discord account ID (for user drilldown)</param>
+    /// <param name="channelId">Discord channel ID (for channel drilldown)</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    private async Task LoadDrilldownAsync(ulong? accountId = null, ulong? channelId = null)
+    {
+        await Task.Run(() =>
+                       {
+                           var cutoff = GetCutoffDate(_selectedFilter);
+
+                           using (var repositoryFactory = RepositoryFactory.CreateInstance())
+                           {
+                               var ignoredChannelIds = repositoryFactory.GetRepository<DiscordIgnoreChannelRepository>()
+                                                                        .GetQuery()
+                                                                        .Where(c => c.DiscordServerId == WebAppConfiguration.DiscordServerId)
+                                                                        .Select(c => c.DiscordChannelId)
+                                                                        .ToHashSet();
+
+                               var memberAccountIds = repositoryFactory.GetRepository<DiscordServerMemberRepository>()
+                                                                       .GetQuery()
+                                                                       .Where(m => m.ServerId == WebAppConfiguration.DiscordServerId
+                                                                                   && m.IsBot == false)
+                                                                       .Select(m => m.AccountId)
+                                                                       .ToHashSet();
+
+                               var query = repositoryFactory.GetRepository<DiscordMessageRepository>()
+                                                            .GetQuery()
+                                                            .Where(m => m.DiscordServerId == WebAppConfiguration.DiscordServerId
+                                                                        && ignoredChannelIds.Contains(m.DiscordChannelId) == false
+                                                                        && memberAccountIds.Contains(m.DiscordAccountId));
+
+                               if (cutoff != null)
+                               {
+                                   query = query.Where(m => m.TimeStamp >= cutoff.Value);
+                               }
+
+                               if (accountId != null)
+                               {
+                                   query = query.Where(m => m.DiscordAccountId == accountId.Value);
+                               }
+
+                               if (channelId != null)
+                               {
+                                   query = query.Where(m => m.DiscordChannelId == channelId.Value);
+                               }
+
+                               BuildDrilldownTimelineChart(query);
+                               BuildDrilldownBreakdownChart(repositoryFactory, query, accountId != null);
+                           }
+                       })
+                  .ConfigureAwait(false);
+
+        _isDrilldownLoading = false;
+
+        await InvokeAsync(StateHasChanged).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Build the timeline bar chart for the drilldown overlay
+    /// </summary>
+    /// <param name="query">Filtered message query</param>
+    private void BuildDrilldownTimelineChart(IQueryable<Data.Entity.Tables.Statistics.DiscordMessageEntity> query)
+    {
+        var grouped = GroupMessages(query, _selectedFilter);
+
+        if (grouped.Count == 0)
+        {
+            _drilldownChartData = null;
+
+            return;
+        }
+
+        var labels = grouped.Select(g => g.Label).ToArray();
+        var values = grouped.Select(g => (double)g.Count).ToArray();
+        var trendValues = CalculateTrend(values);
+
+        _drilldownChartData = new ChartData
+                              {
+                                  Labels = labels,
+                                  Datasets =
+                                  [
+                                      new DataSet
+                                      {
+                                          Label = LocalizationGroup.GetText("MessagesLabel", "Messages"),
+                                          Data = values,
+                                          BackgroundColor = values.Select(_ => WebAppConfiguration.Colors.Accent)
+                                                                  .ToArray()
+                                      },
+                                      new DataSet
+                                      {
+                                          Label = LocalizationGroup.GetText("TrendLabel", "Trend"),
+                                          Type = "line",
+                                          Data = trendValues,
+                                          BorderColor = ["#ff6384"],
+                                          BorderWidth = 2,
+                                          PointRadius = 0,
+                                          BackgroundColor = ["transparent"]
+                                      }
+                                  ]
+                              };
+    }
+
+    /// <summary>
+    /// Build the breakdown pie chart for the drilldown overlay
+    /// </summary>
+    /// <param name="repositoryFactory">Repository factory</param>
+    /// <param name="query">Filtered message query</param>
+    /// <param name="isUserDrilldown">True to show channels breakdown, false to show users breakdown</param>
+    private void BuildDrilldownBreakdownChart(RepositoryFactory repositoryFactory, IQueryable<Data.Entity.Tables.Statistics.DiscordMessageEntity> query, bool isUserDrilldown)
+    {
+        if (isUserDrilldown)
+        {
+            _drilldownBreakdownTitle = LocalizationGroup.GetText("DrilldownChannelsTitle", "Channels");
+
+            var channelGroups = query.GroupBy(m => m.DiscordChannelId)
+                                     .Select(g => new { ChannelId = g.Key, Count = g.Count() })
+                                     .OrderByDescending(g => g.Count)
+                                     .ToList();
+
+            if (channelGroups.Count == 0)
+            {
+                _drilldownBreakdownChartData = null;
+
+                return;
+            }
+
+            var channelNameMap = repositoryFactory.GetRepository<DiscordServerChannelRepository>()
+                                                  .GetQuery()
+                                                  .Where(c => c.ServerId == WebAppConfiguration.DiscordServerId)
+                                                  .Select(c => new { c.ChannelId, c.Name })
+                                                  .ToDictionary(c => c.ChannelId, c => c.Name);
+
+            string ResolveChannelName(ulong id) => channelNameMap.TryGetValue(id, out var name) ? name : id.ToString();
+
+            var totalAll = channelGroups.Sum(c => c.Count);
+            var topEntries = channelGroups.Take(TopCount)
+                                          .Select(c => new { Name = ResolveChannelName(c.ChannelId), c.Count })
+                                          .ToList();
+
+            var topSum = topEntries.Sum(e => e.Count);
+            var otherCount = totalAll - topSum;
+            var labels = topEntries.Select(e => $"#{e.Name} ({e.Count:N0})").ToList();
+            var values = topEntries.Select(e => (double)e.Count).ToList();
+
+            if (otherCount > 0)
+            {
+                labels.Add($"{LocalizationGroup.GetText("Other", "Other")} ({otherCount:N0})");
+                values.Add(otherCount);
+            }
+
+            _drilldownBreakdownChartData = new ChartData
+                                           {
+                                               Labels = labels.ToArray(),
+                                               Datasets =
+                                               [
+                                                   new DataSet
+                                                   {
+                                                       Data = values.ToArray(),
+                                                       BackgroundColor = _pieColors.Take(labels.Count).ToArray()
+                                                   }
+                                               ]
+                                           };
+        }
+        else
+        {
+            _drilldownBreakdownTitle = LocalizationGroup.GetText("DrilldownUsersTitle", "Users");
+
+            var userGroups = query.GroupBy(m => m.DiscordAccountId)
+                                  .Select(g => new { AccountId = g.Key, Count = g.Count() })
+                                  .OrderByDescending(g => g.Count)
+                                  .ToList();
+
+            if (userGroups.Count == 0)
+            {
+                _drilldownBreakdownChartData = null;
+
+                return;
+            }
+
+            var nameMap = repositoryFactory.GetRepository<DiscordServerMemberRepository>()
+                                           .GetQuery()
+                                           .Where(m => m.ServerId == WebAppConfiguration.DiscordServerId)
+                                           .Select(m => new { m.AccountId, m.Name })
+                                           .ToDictionary(m => m.AccountId, m => m.Name);
+
+            string ResolveName(ulong id) => nameMap.TryGetValue(id, out var name) ? name : id.ToString();
+
+            var totalAll = userGroups.Sum(u => u.Count);
+            var topEntries = userGroups.Take(TopCount)
+                                       .Select(u => new { Name = ResolveName(u.AccountId), u.Count })
+                                       .ToList();
+
+            var topSum = topEntries.Sum(e => e.Count);
+            var otherCount = totalAll - topSum;
+            var labels = topEntries.Select(e => $"{e.Name} ({e.Count:N0})").ToList();
+            var values = topEntries.Select(e => (double)e.Count).ToList();
+
+            if (otherCount > 0)
+            {
+                labels.Add($"{LocalizationGroup.GetText("Other", "Other")} ({otherCount:N0})");
+                values.Add(otherCount);
+            }
+
+            _drilldownBreakdownChartData = new ChartData
+                                           {
+                                               Labels = labels.ToArray(),
+                                               Datasets =
+                                               [
+                                                   new DataSet
+                                                   {
+                                                       Data = values.ToArray(),
+                                                       BackgroundColor = _pieColors.Take(labels.Count).ToArray()
+                                                   }
+                                               ]
+                                           };
+        }
+    }
+
+    /// <summary>
+    /// Close the drilldown overlay
+    /// </summary>
+    private void OnCloseDrilldown()
+    {
+        _isDrilldownOpen = false;
+        _drilldownChartData = null;
+        _drilldownBreakdownChartData = null;
+        _drilldownBreakdownTitle = null;
+        _drilldownTitle = null;
+        _drilldownAvatarUrl = null;
     }
 
     #endregion // Methods
