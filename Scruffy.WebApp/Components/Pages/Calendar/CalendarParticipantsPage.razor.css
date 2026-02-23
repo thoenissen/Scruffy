@@ -66,12 +66,13 @@
    display: flex;
    flex-direction: row;
    gap: 1rem;
-   align-items: center;
+   align-items: stretch;
 }
 
-   .participants-actions .secondary-button {
+   .participants-actions button {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 0.5rem;
    }
 

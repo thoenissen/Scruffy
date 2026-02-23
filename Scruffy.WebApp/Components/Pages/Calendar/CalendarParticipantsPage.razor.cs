@@ -476,7 +476,7 @@ public partial class CalendarParticipantsPage
 
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
-            var limit = DateTime.Now.AddMinutes(15);
+            var limit = DateTime.Now.AddMinutes(60);
 
             var raidAppointments = dbFactory.GetRepository<RaidAppointmentRepository>()
                                             .GetQuery()

@@ -137,6 +137,27 @@
       "RemoveUserCommand": "Teilnehmer entfernen",
       "SetLeaderCommand": "Terminleitung"
     },
+    "CalendarParticipantsPage": {
+      "AddAll": "Alle hinzufügen",
+      "AddFromVoice": "Aus Sprachkanal hinzufügen",
+      "AddMember": "Mitglied hinzufügen",
+      "Close": "Schließen",
+      "Commit": "Speichern",
+      "CommitCompleted": "Die Teilnehmer wurden gespeichert.",
+      "Leader": "Leitung",
+      "Name": "Name",
+      "NoAppointments": "Keine Termine verfügbar.",
+      "NoVoiceChannels": "Keine aktiven Sprachkanäle gefunden.",
+      "PageTitle": "FooI - Administratrion - Eventteilnehmer",
+      "ParticipantCount": "Teilnehmer",
+      "PleaseSelect": "-- Bitte auswählen --",
+      "Remove": "Entfernen",
+      "SearchPlaceholder": "Suchen...",
+      "SelectAppointment": "Termin",
+      "Title": "Eventteilnehmer",
+      "ToggleLeader": "Leitung umschalten",
+      "VoiceChannels": "Sprachkanäle"
+    },
     "CalendarRemoveParticipantsDialogElement": {
       "Message": "Gib bitte die Benutzer ein:"
     },
@@ -995,7 +1016,8 @@
       "Administration": "Administration",
       "Users": "Benutzer",
       "Development": "Beta-Funktionen",
-      "LineUp": "Aufstellung"
+      "LineUp": "Aufstellung",
+      "CalendarParticipants": "Eventteilnehmer"
     },
     "HomePage": {
       "PageTitle": "FooI - Willkommen",

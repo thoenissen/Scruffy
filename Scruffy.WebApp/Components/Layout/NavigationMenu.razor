@@ -54,17 +54,25 @@
             </div>
         </Authorized>
     </AuthorizeView>
-    <AuthorizeView Roles="Administrator">
-        <Authorized>
+    <AuthorizeView Roles="PrivilegedMember">
+        <Authorized Context="administrationMenu">
             <div class="navigation-menu-group">
                 <div class="navigation-menu-header">
                     @LocalizationGroup.GetText("Administration", "Administration")
                 </div>
                 <span class="navigation-menu-items">
-
+                    <AuthorizeView Roles="Administrator">
+                        <Authorized>
+                            <div class="navigation-menu-item">
+                                <NavLink class="navigation-menu-link" href="/Administration/Users" Match="NavLinkMatch.Prefix">
+                                    @LocalizationGroup.GetText("Users", "Users")
+                                </NavLink>
+                            </div>
+                        </Authorized>
+                    </AuthorizeView>
                     <div class="navigation-menu-item">
-                        <NavLink class="navigation-menu-link" href="/Administration/Users" Match="NavLinkMatch.Prefix">
-                            @LocalizationGroup.GetText("Users", "Users")
+                        <NavLink class="navigation-menu-link" href="/Calendar/Participants" Match="NavLinkMatch.Prefix">
+                            @LocalizationGroup.GetText("CalendarParticipants", "Event - Participants")
                         </NavLink>
                     </div>
                 </span>
@@ -101,15 +109,6 @@
                             @LocalizationGroup.GetText("MessagesRanking", "Messages Ranking")
                         </NavLink>
                     </div>
-                    <AuthorizeView Roles="PrivilegedMember">
-                        <Authorized Context="calendarContext">
-                            <div class="navigation-menu-item">
-                                <NavLink class="navigation-menu-link" href="/Calendar/Participants" Match="NavLinkMatch.Prefix">
-                                    @LocalizationGroup.GetText("CalendarParticipants", "Calendar - Participants")
-                                </NavLink>
-                            </div>
-                        </Authorized>
-                    </AuthorizeView>
                 </span>
             </div>
         </Authorized>
