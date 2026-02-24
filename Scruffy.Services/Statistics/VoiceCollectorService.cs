@@ -22,6 +22,11 @@ public sealed class VoiceCollectorService : SingletonLocatedServiceBase, IDispos
     #region Fields
 
     /// <summary>
+    /// Segment duration in minutes (aligned to 00, 10, 20, 30, 40, 50)
+    /// </summary>
+    private const int SegmentDurationMinutes = 10;
+
+    /// <summary>
     /// Lock factory
     /// </summary>
     private readonly LockFactory _lockFactory = new();
@@ -37,13 +42,26 @@ public sealed class VoiceCollectorService : SingletonLocatedServiceBase, IDispos
     private DiscordSocketClient _client;
 
     /// <summary>
-    /// Timer for flushing segments every hour
+    /// Timer for flushing segments periodically
     /// </summary>
     private Timer _flushTimer;
 
     #endregion // Fields
 
     #region Methods
+
+    /// <summary>
+    /// Calculate the next 10-minute boundary after the given time
+    /// </summary>
+    /// <param name="time">Reference time</param>
+    /// <returns>The next aligned boundary (e.g. :00, :10, :20, :30, :40, :50)</returns>
+    private static DateTime GetNextSegmentBoundary(DateTime time)
+    {
+        var nextBoundaryMinute = ((time.Minute / SegmentDurationMinutes) + 1) * SegmentDurationMinutes;
+        var result = new DateTime(time.Year, time.Month, time.Day, time.Hour, 0, 0, time.Kind);
+
+        return result.AddMinutes(nextBoundaryMinute);
+    }
 
     /// <summary>
     /// Start collecting voice sessions
@@ -53,11 +71,20 @@ public sealed class VoiceCollectorService : SingletonLocatedServiceBase, IDispos
     {
         await using (await _lockFactory.CreateLockAsync().ConfigureAwait(false))
         {
+            try
+            {
+                RecoverIncompleteSessions();
+            }
+            catch (Exception ex)
+            {
+                LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(VoiceCollectorService), "StartCollecting", "Error recovering incomplete sessions", null, ex);
+            }
+
             _client.UserVoiceStateUpdated += OnUserVoiceStateUpdated;
             _client.Disconnected += OnDisconnected;
             _client.Connected += OnConnected;
 
-            _flushTimer = new Timer(OnFlushTimer, null, TimeSpan.FromHours(1), TimeSpan.FromHours(1));
+            _flushTimer = new Timer(OnFlushTimer, null, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1));
 
             if (_client.ConnectionState == ConnectionState.Connected)
             {
@@ -67,7 +94,7 @@ public sealed class VoiceCollectorService : SingletonLocatedServiceBase, IDispos
                 }
                 catch (Exception ex)
                 {
-                    LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(VoiceCollectorService), "StartCollecting", "Error while starting voice collector service", null, ex);
+                    LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(VoiceCollectorService), "StartCollecting", "Error while scanning voice channels", null, ex);
                 }
             }
         }
@@ -91,7 +118,12 @@ public sealed class VoiceCollectorService : SingletonLocatedServiceBase, IDispos
                         continue;
                     }
 
-                    _activeSessions.TryAdd((guild.Id, voiceChannel.Id, user.Id), now);
+                    var key = (guild.Id, voiceChannel.Id, user.Id);
+
+                    if (_activeSessions.TryAdd(key, now))
+                    {
+                        BeginSegment(guild.Id, voiceChannel.Id, user.Id, now);
+                    }
                 }
             }
         }
@@ -149,9 +181,9 @@ public sealed class VoiceCollectorService : SingletonLocatedServiceBase, IDispos
             {
                 var key = (before.VoiceChannel.Guild.Id, before.VoiceChannel.Id, user.Id);
 
-                if (_activeSessions.TryRemove(key, out var start))
+                if (_activeSessions.TryRemove(key, out var segmentStart))
                 {
-                    SaveSegment(key.Item1, key.Item2, user.Id, start, DateTime.Now);
+                    CompleteSegment(key.Item1, key.Item2, user.Id, segmentStart, DateTime.Now);
                 }
             }
 
@@ -159,8 +191,12 @@ public sealed class VoiceCollectorService : SingletonLocatedServiceBase, IDispos
             if (after.VoiceChannel != null)
             {
                 var key = (after.VoiceChannel.Guild.Id, after.VoiceChannel.Id, user.Id);
+                var now = DateTime.Now;
 
-                _activeSessions.TryAdd(key, DateTime.Now);
+                if (_activeSessions.TryAdd(key, now))
+                {
+                    BeginSegment(key.Item1, key.Item2, user.Id, now);
+                }
             }
         }
         catch (Exception ex)
@@ -172,7 +208,7 @@ public sealed class VoiceCollectorService : SingletonLocatedServiceBase, IDispos
     }
 
     /// <summary>
-    /// Periodically flush active sessions into 1-hour segments
+    /// Periodically complete segments that have crossed a 10-minute boundary
     /// </summary>
     /// <param name="state">Timer state</param>
     private void OnFlushTimer(object state)
@@ -181,13 +217,17 @@ public sealed class VoiceCollectorService : SingletonLocatedServiceBase, IDispos
         {
             var now = DateTime.Now;
 
-            foreach (var (key, start) in _activeSessions)
+            foreach (var (key, segmentStart) in _activeSessions)
             {
-                if ((now - start).TotalHours >= 1)
+                var nextBoundary = GetNextSegmentBoundary(segmentStart);
+
+                if (now >= nextBoundary)
                 {
-                    if (_activeSessions.TryUpdate(key, now, start))
+                    if (_activeSessions.TryUpdate(key, nextBoundary, segmentStart))
                     {
-                        SaveSegments(key.ServerId, key.ChannelId, key.AccountId, start, now);
+                        CompleteSegment(key.ServerId, key.ChannelId, key.AccountId, segmentStart, nextBoundary);
+
+                        BeginSegment(key.ServerId, key.ChannelId, key.AccountId, nextBoundary);
                     }
                 }
             }
@@ -207,73 +247,171 @@ public sealed class VoiceCollectorService : SingletonLocatedServiceBase, IDispos
 
         foreach (var kvp in _activeSessions)
         {
-            if (_activeSessions.TryRemove(kvp.Key, out var start))
+            if (_activeSessions.TryRemove(kvp.Key, out var segmentStart))
             {
-                SaveSegments(kvp.Key.ServerId, kvp.Key.ChannelId, kvp.Key.AccountId, start, now);
+                CompleteSegment(kvp.Key.ServerId, kvp.Key.ChannelId, kvp.Key.AccountId, segmentStart, now);
             }
         }
     }
 
     /// <summary>
-    /// Save a time span, splitting it into segments of at most one hour
+    /// Recover incomplete sessions left over from a previous unclean shutdown
     /// </summary>
-    /// <param name="serverId">Server ID</param>
-    /// <param name="channelId">Channel ID</param>
-    /// <param name="accountId">Account ID</param>
-    /// <param name="start">Start time</param>
-    /// <param name="end">End time</param>
-    private void SaveSegments(ulong serverId, ulong channelId, ulong accountId, DateTime start, DateTime end)
+    private void RecoverIncompleteSessions()
     {
-        var current = start;
+        var activeVoiceUsers = new HashSet<(ulong ServerId, ulong ChannelId, ulong AccountId)>();
 
-        while (current < end)
+        if (_client.ConnectionState == ConnectionState.Connected)
         {
-            var segmentEnd = current.AddHours(1);
-
-            if (segmentEnd > end)
+            foreach (var guild in _client.Guilds)
             {
-                segmentEnd = end;
+                foreach (var voiceChannel in guild.VoiceChannels)
+                {
+                    foreach (var user in voiceChannel.ConnectedUsers)
+                    {
+                        if (user.IsBot == false)
+                        {
+                            activeVoiceUsers.Add((guild.Id, voiceChannel.Id, user.Id));
+                        }
+                    }
+                }
             }
+        }
 
-            SaveSegment(serverId, channelId, accountId, current, segmentEnd);
+        var now = DateTime.Now;
 
-            current = segmentEnd;
+        List<DiscordVoiceTimeSpanEntity> incompleteRecords;
+
+        using (var dbFactory = RepositoryFactory.CreateInstance())
+        {
+            incompleteRecords = dbFactory.GetRepository<DiscordVoiceTimeSpanRepository>()
+                                         .GetQuery()
+                                         .Where(e => e.IsCompleted == false)
+                                         .ToList();
+        }
+
+        foreach (var record in incompleteRecords)
+        {
+            var key = (record.DiscordServerId, record.DiscordChannelId, record.DiscordAccountId);
+            var maxEnd = record.StartTimeStamp.AddMinutes(SegmentDurationMinutes);
+            var endTime = maxEnd < now ? maxEnd : now;
+
+            CompleteSegment(record.DiscordServerId, record.DiscordChannelId, record.DiscordAccountId, record.StartTimeStamp, endTime);
+
+            if (activeVoiceUsers.Remove(key))
+            {
+                _activeSessions.TryAdd(key, now);
+                BeginSegment(key.DiscordServerId, key.DiscordChannelId, key.DiscordAccountId, now);
+            }
         }
     }
 
     /// <summary>
-    /// Save a single voice time span segment to the database
+    /// Begin a new segment by writing an incomplete record to the database
     /// </summary>
     /// <param name="serverId">Server ID</param>
     /// <param name="channelId">Channel ID</param>
     /// <param name="accountId">Account ID</param>
-    /// <param name="start">Start time</param>
-    /// <param name="end">End time</param>
-    private void SaveSegment(ulong serverId, ulong channelId, ulong accountId, DateTime start, DateTime end)
+    /// <param name="segmentStart">Start time of the segment</param>
+    private void BeginSegment(ulong serverId, ulong channelId, ulong accountId, DateTime segmentStart)
     {
         try
         {
-            using (var dbFactory = RepositoryFactory.CreateInstance())
+            using var dbFactory = RepositoryFactory.CreateInstance();
+
+            if (dbFactory.GetRepository<DiscordVoiceTimeSpanRepository>()
+                         .Add(new DiscordVoiceTimeSpanEntity
+                              {
+                                  DiscordServerId = serverId,
+                                  DiscordChannelId = channelId,
+                                  DiscordAccountId = accountId,
+                                  StartTimeStamp = segmentStart,
+                                  EndTimeStamp = segmentStart,
+                                  IsCompleted = false
+                              })
+             == false)
             {
-                if (dbFactory.GetRepository<DiscordVoiceTimeSpanRepository>()
-                             .Add(new DiscordVoiceTimeSpanEntity
-                                  {
-                                      DiscordServerId = serverId,
-                                      DiscordChannelId = channelId,
-                                      DiscordAccountId = accountId,
-                                      StartTimeStamp = start,
-                                      EndTimeStamp = end,
-                                      IsCompleted = true
-                                  })
-                 == false)
-                {
-                    LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(VoiceCollectorService), "SaveSegment", dbFactory.LastError?.Message, dbFactory.LastError?.ToString());
-                }
+                LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(VoiceCollectorService), nameof(BeginSegment), dbFactory.LastError?.Message, dbFactory.LastError?.ToString());
             }
         }
         catch (Exception ex)
         {
-            LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(VoiceCollectorService), "SaveSegment", "Error saving voice segment", null, ex);
+            LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(VoiceCollectorService), nameof(BeginSegment), "Error creating voice segment", null, ex);
+        }
+    }
+
+    /// <summary>
+    /// Complete an existing segment, splitting at 10-minute boundaries if the time span crosses them
+    /// </summary>
+    /// <param name="serverId">Server ID</param>
+    /// <param name="channelId">Channel ID</param>
+    /// <param name="accountId">Account ID</param>
+    /// <param name="segmentStart">Start time of the segment (part of the primary key)</param>
+    /// <param name="segmentEnd">End time of the segment</param>
+    private void CompleteSegment(ulong serverId, ulong channelId, ulong accountId, DateTime segmentStart, DateTime segmentEnd)
+    {
+        var nextBoundary = GetNextSegmentBoundary(segmentStart);
+
+        if (segmentEnd <= nextBoundary)
+        {
+            FinalizeSegment(serverId, channelId, accountId, segmentStart, segmentEnd);
+
+            return;
+        }
+
+        // Complete the first segment at the boundary
+        FinalizeSegment(serverId, channelId, accountId, segmentStart, nextBoundary);
+
+        // Create and complete intermediate segments for each crossed boundary
+        var current = nextBoundary;
+
+        while (current < segmentEnd)
+        {
+            var end = GetNextSegmentBoundary(current);
+
+            if (end > segmentEnd)
+            {
+                end = segmentEnd;
+            }
+
+            BeginSegment(serverId, channelId, accountId, current);
+            FinalizeSegment(serverId, channelId, accountId, current, end);
+
+            current = end;
+        }
+    }
+
+    /// <summary>
+    /// Write the completion of a single segment to the database
+    /// </summary>
+    /// <param name="serverId">Server ID</param>
+    /// <param name="channelId">Channel ID</param>
+    /// <param name="accountId">Account ID</param>
+    /// <param name="segmentStart">Start time of the segment (part of the primary key)</param>
+    /// <param name="segmentEnd">End time of the segment</param>
+    private void FinalizeSegment(ulong serverId, ulong channelId, ulong accountId, DateTime segmentStart, DateTime segmentEnd)
+    {
+        try
+        {
+            using var dbFactory = RepositoryFactory.CreateInstance();
+
+            if (dbFactory.GetRepository<DiscordVoiceTimeSpanRepository>()
+                         .Refresh(e => e.DiscordServerId == serverId
+                                       && e.DiscordChannelId == channelId
+                                       && e.DiscordAccountId == accountId
+                                       && e.StartTimeStamp == segmentStart,
+                                  e =>
+                                  {
+                                      e.EndTimeStamp = segmentEnd;
+                                      e.IsCompleted = true;
+                                  }) == false)
+            {
+                LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(VoiceCollectorService), nameof(FinalizeSegment), dbFactory.LastError?.Message, dbFactory.LastError?.ToString());
+            }
+        }
+        catch (Exception ex)
+        {
+            LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(VoiceCollectorService), nameof(FinalizeSegment), "Error completing voice segment", null, ex);
         }
     }
 
