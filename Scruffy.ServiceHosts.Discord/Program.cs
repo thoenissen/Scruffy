@@ -1,4 +1,6 @@
-﻿using Scruffy.Data.Enumerations.General;
+﻿using System.Threading;
+
+using Scruffy.Data.Enumerations.General;
 using Scruffy.ServiceHosts.Discord.Discord;
 using Scruffy.Services.Core;
 
@@ -15,6 +17,11 @@ public class Program
     /// Wait for program exit
     /// </summary>
     private static readonly TaskCompletionSource<bool> _waitForExitTaskSource = new();
+
+    /// <summary>
+    /// Signals that the shutdown has completed
+    /// </summary>
+    private static readonly ManualResetEventSlim _shutdownComplete = new(false);
 
     #endregion // Fields
 
@@ -51,6 +58,8 @@ public class Program
         finally
         {
             LoggingService.AddServiceLogEntry(LogEntryLevel.Information, nameof(Program), "End", null);
+
+            _shutdownComplete.Set();
         }
     }
 
@@ -61,9 +70,11 @@ public class Program
     /// <param name="e">Arguments</param>
     private static void OnCancelKeyPress(object sender, ConsoleCancelEventArgs e)
     {
-        e.Cancel = false;
+        LoggingService.AddServiceLogEntry(LogEntryLevel.Information, nameof(Program), "OnCancelKeyPress", null);
 
-        _waitForExitTaskSource.SetResult(true);
+        e.Cancel = true;
+
+        _waitForExitTaskSource.TrySetResult(true);
     }
 
     /// <summary>
@@ -71,7 +82,14 @@ public class Program
     /// </summary>
     /// <param name="sender">Sender</param>
     /// <param name="e">Argument</param>
-    private static void OnProcessExit(object sender, EventArgs e) => _waitForExitTaskSource.SetResult(true);
+    private static void OnProcessExit(object sender, EventArgs e)
+    {
+        LoggingService.AddServiceLogEntry(LogEntryLevel.Information, nameof(Program), "OnProcessExit", null);
+
+        _waitForExitTaskSource.TrySetResult(true);
+
+        _shutdownComplete.Wait(TimeSpan.FromSeconds(30));
+    }
 
     #endregion // Methods
 }

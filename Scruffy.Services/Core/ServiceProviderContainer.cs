@@ -42,6 +42,11 @@ public sealed class ServiceProviderContainer : IAsyncDisposable
     /// </summary>
     private IServiceScope _singletonScope;
 
+    /// <summary>
+    /// Singleton services
+    /// </summary>
+    private List<SingletonLocatedServiceBase> _singletons;
+
     #endregion // Fields
 
     #region Constructor
@@ -75,7 +80,7 @@ public sealed class ServiceProviderContainer : IAsyncDisposable
     {
         _serviceCollection = [];
 
-        var singletons = new List<SingletonLocatedServiceBase>();
+        _singletons = [];
 
         foreach (var type in Assembly.Load("Scruffy.Services")
                                      .GetTypes()
@@ -88,7 +93,7 @@ public sealed class ServiceProviderContainer : IAsyncDisposable
             {
                 _serviceCollection.AddSingleton(type, instance);
 
-                singletons.Add(instance);
+                _singletons.Add(instance);
             }
         }
 
@@ -152,7 +157,7 @@ public sealed class ServiceProviderContainer : IAsyncDisposable
         _serviceScopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
         _singletonScope = _serviceScopeFactory.CreateScope();
 
-        foreach (var singleton in singletons)
+        foreach (var singleton in _singletons)
         {
             singleton.Initialize(_singletonScope.ServiceProvider);
         }
@@ -183,6 +188,24 @@ public sealed class ServiceProviderContainer : IAsyncDisposable
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public async ValueTask DisposeAsync()
     {
+        if (_singletons != null)
+        {
+            foreach (var singleton in _singletons)
+            {
+                if (singleton is IAsyncDisposable asyncDisposable)
+                {
+                    await asyncDisposable.DisposeAsync()
+                                         .ConfigureAwait(false);
+                }
+                else if (singleton is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
+            }
+
+            _singletons = null;
+        }
+
         _singletonScope.Dispose();
 
         await _serviceProvider.DisposeAsync()
