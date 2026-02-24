@@ -1,4 +1,4 @@
-﻿namespace Scruffy.Services.Statistics.Jobs;
+﻿namespace Scruffy.Services.Statistics.Data;
 
 /// <summary>
 /// Last import

@@ -209,7 +209,7 @@ public class StatisticsVisualizerService : LocatedServiceBase
             var chartConfiguration = new ChartConfigurationData
                                      {
                                          Type = "outlabeledDoughnut",
-                                         Data = new Data.Json.QuickChart.Data
+                                         Data = new Scruffy.Data.Json.QuickChart.Data
                                                 {
                                                     DataSets = [
                                                                    new DataSet<int>
