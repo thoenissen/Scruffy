@@ -335,6 +335,70 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
     }
 
     /// <summary>
+    /// Fill gaps in a timeline so that every expected time slot is present (with count 0 if no data exists)
+    /// </summary>
+    /// <param name="grouped">Grouped data from <see cref="GroupMessages"/></param>
+    /// <param name="filter">Selected time filter</param>
+    /// <param name="startDate">Start date of the timeline range</param>
+    /// <returns>Complete timeline with zero-filled gaps</returns>
+    private List<(string Label, int Count)> FillTimelineGaps(List<(string Label, int Count)> grouped, TimeFilter filter, DateTime startDate)
+    {
+        if (grouped.Count == 0)
+        {
+            return grouped;
+        }
+
+        var today = DateTime.UtcNow.Date;
+        var lookup = grouped.ToDictionary(g => g.Label, g => g.Count);
+        var result = new List<(string Label, int Count)>();
+
+        switch (filter)
+        {
+            case TimeFilter.Days30:
+                for (var date = startDate.Date; date <= today; date = date.AddDays(1))
+                {
+                    var label = date.ToString("dd.MM", LocalizationGroup.CultureInfo);
+                    result.Add((label, lookup.GetValueOrDefault(label)));
+                }
+
+                break;
+
+            case TimeFilter.Days90:
+            case TimeFilter.Days180:
+                var seenWeeks = new HashSet<string>();
+
+                for (var date = startDate.Date; date <= today; date = date.AddDays(1))
+                {
+                    var week = ((date.DayOfYear - 1) / 7) + 1;
+                    var label = $"W{week}/{date.Year}";
+
+                    if (seenWeeks.Add(label))
+                    {
+                        result.Add((label, lookup.GetValueOrDefault(label)));
+                    }
+                }
+
+                break;
+
+            case TimeFilter.Year1:
+            default:
+                var currentMonth = new DateTime(startDate.Year, startDate.Month, 1);
+                var endMonth = new DateTime(today.Year, today.Month, 1);
+
+                while (currentMonth <= endMonth)
+                {
+                    var label = $"{currentMonth.Month:D2}/{currentMonth.Year}";
+                    result.Add((label, lookup.GetValueOrDefault(label)));
+                    currentMonth = currentMonth.AddMonths(1);
+                }
+
+                break;
+        }
+
+        return result;
+    }
+
+    /// <summary>
     /// Calculate a simple linear trend line
     /// </summary>
     /// <param name="values">Data values</param>
@@ -472,6 +536,9 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
 
                 return;
             }
+
+            var startDate = cutoff ?? query.Min(m => m.TimeStamp);
+            grouped = FillTimelineGaps(grouped, _selectedFilter, startDate);
 
             var labels = grouped.Select(g => g.Label).ToArray();
             var values = grouped.Select(g => (double)g.Count).ToArray();
@@ -757,7 +824,7 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
                                    query = query.Where(m => m.DiscordChannelId == channelId.Value);
                                }
 
-                               BuildDrilldownTimelineChart(query);
+                               BuildDrilldownTimelineChart(query, cutoff);
                                BuildDrilldownBreakdownChart(repositoryFactory, query, accountId != null);
                            }
                        })
@@ -772,7 +839,8 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
     /// Build the timeline bar chart for the drilldown overlay
     /// </summary>
     /// <param name="query">Filtered message query</param>
-    private void BuildDrilldownTimelineChart(IQueryable<Data.Entity.Tables.Statistics.DiscordMessageEntity> query)
+    /// <param name="cutoff">Optional cutoff date for gap filling</param>
+    private void BuildDrilldownTimelineChart(IQueryable<Data.Entity.Tables.Statistics.DiscordMessageEntity> query, DateTime? cutoff)
     {
         var grouped = GroupMessages(query, _selectedFilter);
 
@@ -782,6 +850,9 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
 
             return;
         }
+
+        var startDate = cutoff ?? query.Min(m => m.TimeStamp);
+        grouped = FillTimelineGaps(grouped, _selectedFilter, startDate);
 
         var labels = grouped.Select(g => g.Label).ToArray();
         var values = grouped.Select(g => (double)g.Count).ToArray();
