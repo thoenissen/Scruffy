@@ -31,11 +31,12 @@
                     <PropertyColumn Title="@LocalizationGroup.GetText("Name", "Name")" Property="@(u => u.Name)" Sortable="false"/>
                     <PropertyColumn Title="@LocalizationGroup.GetText("ExperienceLevel", "Experience level")" Property="@(u => u.ExperienceLevelDescription)" Sortable="false"/>
                     <TemplateColumn Title="@LocalizationGroup.GetText("Status", "Status")" Context="u" Sortable="false">
-                        <select value="@(u.IsSubstitute ? "substitute" : "standard")"
+                        <select value="@u.Status.ToString().ToLowerInvariant()"
                                 @onchange="@(e => OnStatusChanged(u, e))"
                                 class="status-select">
-                            <option value="standard">@LocalizationGroup.GetText("PlayerStatePlayed", "Played")</option>
+                            <option value="played">@LocalizationGroup.GetText("PlayerStatePlayed", "Played")</option>
                             <option value="substitute">@LocalizationGroup.GetText("PlayerStateSubstitute", "Substitute bench")</option>
+                            <option value="noshow">@LocalizationGroup.GetText("PlayerStateNoShow", "No-show")</option>
                         </select>
                     </TemplateColumn>
                     <TemplateColumn Title="@LocalizationGroup.GetText("Points", "Points")" Context="u" Sortable="false">

@@ -26,14 +26,20 @@ public class RaidCommitUserDTO
     public double ParticipationPoints { get; init; }
 
     /// <summary>
-    /// Is the user on the substitutes bench?
+    /// Participation status (played, substitute, or no-show)
     /// </summary>
-    public bool IsSubstitute { get; set; }
+    public RaidParticipationStatus Status { get; set; }
 
     /// <summary>
     /// Calculated points based on the participation status
     /// </summary>
-    public double Points => IsSubstitute ? ParticipationPoints * 3.0 : ParticipationPoints * 1.0;
+    public double Points => Status switch
+                            {
+                                RaidParticipationStatus.Played => ParticipationPoints * 1.0,
+                                RaidParticipationStatus.Substitute => ParticipationPoints * 3.0,
+                                RaidParticipationStatus.NoShow => ParticipationPoints * -1.0,
+                                _ => ParticipationPoints * 1.0,
+                            };
 
     /// <summary>
     /// Experience level description

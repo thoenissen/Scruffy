@@ -105,7 +105,12 @@ public partial class RaidCommitPage
     /// <param name="e">Change event args</param>
     private static void OnStatusChanged(RaidCommitUserDTO user, ChangeEventArgs e)
     {
-        user.IsSubstitute = (string)e.Value == "substitute";
+        user.Status = (string)e.Value switch
+                      {
+                          "substitute" => RaidParticipationStatus.Substitute,
+                          "noshow" => RaidParticipationStatus.NoShow,
+                          _ => RaidParticipationStatus.Played,
+                      };
     }
 
     /// <summary>
@@ -164,7 +169,7 @@ public partial class RaidCommitPage
                         DiscordAccountId = member.DiscordAccountId,
                         Name = member.Name,
                         ParticipationPoints = member.ParticipationPoints,
-                        IsSubstitute = true,
+                        Status = RaidParticipationStatus.Substitute,
                         ExperienceLevelDescription = member.ExperienceLevelDescription
                     });
 
@@ -453,7 +458,9 @@ public partial class RaidCommitPage
                                                          DiscordAccountId = entry.DiscordAccountId,
                                                          Name = entry.Name,
                                                          ParticipationPoints = experienceLevel.ParticipationPoints,
-                                                         IsSubstitute = entry.LineupExperienceLevelId is null,
+                                                         Status = entry.LineupExperienceLevelId is null
+                                                                      ? RaidParticipationStatus.Substitute
+                                                                      : RaidParticipationStatus.Played,
                                                          ExperienceLevelDescription = experienceLevel.Description
                                                      };
                                           })
@@ -461,33 +468,33 @@ public partial class RaidCommitPage
                                   .ToList();
 
                 _allGuildMembers = dbFactory.GetRepository<DiscordServerMemberRepository>()
-                                           .GetQuery()
-                                           .Where(obj => obj.ServerId == WebAppConfiguration.DiscordServerId)
-                                           .Select(obj => new
-                                                          {
-                                                              obj.AccountId,
-                                                              obj.Name,
-                                                              obj.Account.UserId,
-                                                              obj.Account.User.RaidExperienceLevelId
-                                                          })
-                                           .AsEnumerable()
-                                           .Select(obj =>
-                                                   {
-                                                       var experienceLevel = experienceLevels.FirstOrDefault(e => e.Id == obj.RaidExperienceLevelId)
-                                                                                 ?? fallbackExperienceLevel;
+                                            .GetQuery()
+                                            .Where(obj => obj.ServerId == WebAppConfiguration.DiscordServerId)
+                                            .Select(obj => new
+                                                           {
+                                                               obj.AccountId,
+                                                               obj.Name,
+                                                               obj.Account.UserId,
+                                                               obj.Account.User.RaidExperienceLevelId
+                                                           })
+                                            .AsEnumerable()
+                                            .Select(obj =>
+                                                    {
+                                                        var experienceLevel = experienceLevels.FirstOrDefault(e => e.Id == obj.RaidExperienceLevelId)
+                                                                                  ?? fallbackExperienceLevel;
 
-                                                       return new RaidCommitUserDTO
-                                                              {
-                                                                  UserId = obj.UserId,
-                                                                  DiscordAccountId = obj.AccountId,
-                                                                  Name = obj.Name,
-                                                                  ParticipationPoints = experienceLevel.ParticipationPoints,
-                                                                  IsSubstitute = true,
-                                                                  ExperienceLevelDescription = experienceLevel.Description
-                                                              };
-                                                   })
-                                           .OrderBy(obj => obj.Name)
-                                           .ToList();
+                                                        return new RaidCommitUserDTO
+                                                               {
+                                                                   UserId = obj.UserId,
+                                                                   DiscordAccountId = obj.AccountId,
+                                                                   Name = obj.Name,
+                                                                   ParticipationPoints = experienceLevel.ParticipationPoints,
+                                                                   Status = RaidParticipationStatus.Substitute,
+                                                                   ExperienceLevelDescription = experienceLevel.Description
+                                                               };
+                                                    })
+                                            .OrderBy(obj => obj.Name)
+                                            .ToList();
             }
         }
     }
