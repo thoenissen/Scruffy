@@ -29,6 +29,7 @@ using Scruffy.Data.Entity.Tables.Web;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.GuildWars2.DpsReports;
 using Scruffy.Services.Raid;
+using Scruffy.Services.WebApi;
 using Scruffy.WebApp.Components;
 using Scruffy.WebApp.Components.Account;
 using Scruffy.WebApp.Components.Services.DpsReports;
@@ -131,6 +132,16 @@ public class Program
         builder.Services.AddTransient<DpsReportReportGenerator>();
         builder.Services.AddTransient<RaidMessageBuilder>();
         builder.Services.AddTransient<RaidRolesService>();
+
+        var discordBotBaseUrl = Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_BOT_BASE_URL");
+
+        if (string.IsNullOrWhiteSpace(discordBotBaseUrl) == false)
+        {
+            builder.Services.AddHttpClient("DiscordBot",
+                                           client => client.BaseAddress = new Uri(discordBotBaseUrl));
+        }
+
+        builder.Services.AddTransient<DiscordBotConnector>();
 
         var locationService = new LocalizationService();
 

@@ -103,6 +103,7 @@ public sealed class ServiceProviderContainer : IAsyncDisposable
         _serviceCollection.AddTransient<QuickChartConnector>();
         _serviceCollection.AddTransient<DpsReportConnector>();
         _serviceCollection.AddTransient<GitHubConnector>();
+        _serviceCollection.AddTransient<DiscordBotConnector>();
 
         _serviceCollection.AddScoped<RepositoryFactory>();
 
@@ -138,6 +139,13 @@ public sealed class ServiceProviderContainer : IAsyncDisposable
                                                                     });
         _serviceCollection.AddHttpClient("GW2Wiki",
                                          obj => obj.DefaultRequestHeaders.Add("User-Agent", "Scruffy"));
+
+        var discordBotBaseUrl = Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_BOT_BASE_URL");
+
+        if (string.IsNullOrWhiteSpace(discordBotBaseUrl) == false)
+        {
+            _serviceCollection.AddHttpClient("DiscordBot", client => client.BaseAddress = new Uri(discordBotBaseUrl));
+        }
 
         _serviceCollection.AddMinio(options =>
                                     {
