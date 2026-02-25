@@ -201,7 +201,7 @@ public class Program
         }
 
         app.UseRouting();
-        app.UseStaticFiles();
+        app.MapStaticAssets();
 
         if (app.Environment.IsDevelopment())
         {

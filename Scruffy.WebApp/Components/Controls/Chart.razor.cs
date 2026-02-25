@@ -97,7 +97,7 @@ public partial class Chart : IAsyncDisposable
     {
         if (firstRender)
         {
-            _module = await Runtime.InvokeAsync<IJSObjectReference>("import", "./js/chartInterop.js")
+            _module = await Runtime.InvokeAsync<IJSObjectReference>("import", "./" + Assets["js/chartInterop.js"])
                                    .ConfigureAwait(false);
 
             if (_module != null)
