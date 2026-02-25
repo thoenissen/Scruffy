@@ -1,7 +1,8 @@
-﻿using System.Threading;
+using System.Threading;
 
 using Scruffy.Data.Enumerations.General;
 using Scruffy.ServiceHosts.Discord.Discord;
+using Scruffy.ServiceHosts.Discord.Endpoints;
 using Scruffy.Services.Core;
 
 namespace Scruffy.ServiceHosts.Discord;
@@ -48,7 +49,18 @@ public class Program
                 await discordBot.StartAsync()
                                 .ConfigureAwait(false);
 
-                await _waitForExitTaskSource.Task.ConfigureAwait(false);
+                var webApp = RestApiHost.Create();
+
+                await using (webApp.ConfigureAwait(false))
+                {
+                    await webApp.StartAsync()
+                                .ConfigureAwait(false);
+
+                    await _waitForExitTaskSource.Task.ConfigureAwait(false);
+
+                    await webApp.StopAsync()
+                                .ConfigureAwait(false);
+                }
             }
         }
         catch (Exception ex)
