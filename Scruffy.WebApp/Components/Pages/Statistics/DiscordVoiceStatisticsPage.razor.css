@@ -1,0 +1,222 @@
+.page {
+    width: 100%;
+    height: 100%;
+    flex: 1 0 auto;
+}
+
+.filter-container {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.filter-button {
+    padding: 0.5rem 1rem;
+    background-color: var(--secondary);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+    .filter-button:hover {
+        background-color: var(--primary);
+    }
+
+    .filter-button.active {
+        background-color: var(--accent);
+        color: var(--background);
+    }
+
+.charts-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: minmax(400px, auto) minmax(400px, auto) auto;
+    gap: 2rem;
+    width: 100%;
+}
+
+.chart-overview {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    min-height: 400px;
+}
+
+.chart-top-users {
+    grid-column: 1;
+    grid-row: 2;
+    min-height: 500px;
+}
+
+.chart-top-channels {
+    grid-column: 2;
+    grid-row: 2;
+    min-height: 500px;
+}
+
+.table-top-users {
+    grid-column: 1;
+    grid-row: 3;
+}
+
+.table-top-channels {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+.table-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.table-scroll {
+    max-height: 500px;
+    overflow-y: auto;
+    border: 2px solid var(--primary);
+    border-radius: 0.5rem;
+}
+
+    .table-scroll table {
+        width: 100%;
+        border-collapse: collapse;
+        color: var(--text);
+    }
+
+    .table-scroll thead {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+
+    .table-scroll th {
+        padding: 0.75rem 1rem;
+        text-align: left;
+        background-color: var(--primary);
+        font-weight: 600;
+    }
+
+    .table-scroll td {
+        padding: 0.5rem 1rem;
+        border-bottom: 1px solid var(--primary);
+    }
+
+    .table-scroll tr {
+        background-color: var(--background);
+    }
+
+        .table-scroll tr:hover {
+            background-color: var(--secondary);
+        }
+
+.user-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--accent);
+}
+
+.clickable-row {
+    cursor: pointer;
+}
+
+.overlay-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 999;
+}
+
+.overlay-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 80%;
+    background-color: var(--background);
+    border: 2px solid var(--primary);
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.overlay-close-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: var(--text);
+    cursor: pointer;
+    font-size: 1.5rem;
+    padding: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1001;
+}
+
+    .overlay-close-button:hover {
+        color: var(--primary);
+    }
+
+.overlay-content {
+    padding: 2rem;
+    padding-top: 3rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+    .overlay-content h2 {
+        margin: 0;
+        color: var(--text);
+        font-size: 1.875rem;
+    }
+
+.overlay-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.overlay-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--accent);
+}
+
+.overlay-charts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    flex: 1;
+    min-height: 0;
+}
+
+.overlay-timeline {
+    min-height: 400px;
+}
+
+.overlay-breakdown {
+    min-height: 400px;
+}

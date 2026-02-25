@@ -1,0 +1,177 @@
+@using Scruffy.WebApp.Components.Base
+@using Scruffy.WebApp.Components.Controls
+
+@inherits LocatedComponent
+@page "/Statistics/Voice"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<PageTitle>@LocalizationGroup.GetText("PageTitle", "FooI - Statistics - Voice")</PageTitle>
+
+<div class="page">
+    <div class="filter-container">
+        <button class="filter-button @(_selectedFilter == TimeFilter.Days30 ? "active" : "")" @onclick="() => OnFilterChanged(TimeFilter.Days30)">
+            @LocalizationGroup.GetText("Filter30Days", "30 Days")
+        </button>
+        <button class="filter-button @(_selectedFilter == TimeFilter.Days90 ? "active" : "")" @onclick="() => OnFilterChanged(TimeFilter.Days90)">
+            @LocalizationGroup.GetText("Filter90Days", "90 Days")
+        </button>
+        <button class="filter-button @(_selectedFilter == TimeFilter.Days180 ? "active" : "")" @onclick="() => OnFilterChanged(TimeFilter.Days180)">
+            @LocalizationGroup.GetText("Filter180Days", "180 Days")
+        </button>
+        <button class="filter-button @(_selectedFilter == TimeFilter.Year1 ? "active" : "")" @onclick="() => OnFilterChanged(TimeFilter.Year1)">
+            @LocalizationGroup.GetText("Filter1Year", "1 Year")
+        </button>
+        <button class="filter-button @(_selectedFilter == TimeFilter.All ? "active" : "")" @onclick="() => OnFilterChanged(TimeFilter.All)">
+            @LocalizationGroup.GetText("FilterAll", "All")
+        </button>
+    </div>
+
+    <div class="charts-container">
+        <div class="chart-overview">
+            <LoadingContainer IsLoading="@_isLoading"
+                              Hint="@LocalizationGroup.GetText("LoadingHint", "")">
+                <Chart Type="bar"
+                       Data="@_overviewChartData"
+                       Options="@_overviewChartOptions"
+                       Title="@LocalizationGroup.GetText("OverviewTitle", "Voice Overview")"
+                       Description="@LocalizationGroup.GetText("OverviewDescription", "")"/>
+            </LoadingContainer>
+        </div>
+        <div class="chart-top-users">
+            <LoadingContainer IsLoading="@_isLoading"
+                              Hint="@LocalizationGroup.GetText("LoadingHint", "")">
+                <Chart Type="pie"
+                       Data="@_topUsersChartData"
+                       Options="@_pieChartOptions"
+                       Title="@LocalizationGroup.GetText("TopUsersTitle", "Top Users")"
+                       Description="@LocalizationGroup.GetText("TopUsersDescription", "")"/>
+            </LoadingContainer>
+        </div>
+        <div class="chart-top-channels">
+            <LoadingContainer IsLoading="@_isLoading"
+                              Hint="@LocalizationGroup.GetText("LoadingHint", "")">
+                <Chart Type="pie"
+                       Data="@_topChannelsChartData"
+                       Options="@_pieChartOptions"
+                       Title="@LocalizationGroup.GetText("TopChannelsTitle", "Top Channels")"
+                       Description="@LocalizationGroup.GetText("TopChannelsDescription", "")"/>
+            </LoadingContainer>
+        </div>
+        <div class="table-top-users">
+            <LoadingContainer IsLoading="@_isLoading"
+                              Hint="@LocalizationGroup.GetText("LoadingHint", "")">
+                @if (_allUsersTableData != null)
+                {
+                    <div class="table-title">@LocalizationGroup.GetText("AllUsersTitle", "All Users")</div>
+                    <div class="table-scroll">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>@LocalizationGroup.GetText("TableHeaderUser", "User")</th>
+                                    <th>@LocalizationGroup.GetText("TableHeaderDuration", "Duration")</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{ var userRank = 0; }
+                                @foreach (var user in _allUsersTableData)
+                                {
+                                    userRank++;
+                                    <tr class="clickable-row" @onclick="() => OnUserClicked(user.AccountId, user.Name, user.AvatarUrl)">
+                                        <td>@userRank</td>
+                                        <td>
+                                            <div class="user-cell">
+                                                @if (string.IsNullOrEmpty(user.AvatarUrl) == false)
+                                                {
+                                                    <img class="user-avatar" src="@user.AvatarUrl" alt="" />
+                                                }
+                                                <span>@user.Name</span>
+                                            </div>
+                                        </td>
+                                        <td>@FormatDuration(user.Hours)</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </LoadingContainer>
+        </div>
+        <div class="table-top-channels">
+            <LoadingContainer IsLoading="@_isLoading"
+                              Hint="@LocalizationGroup.GetText("LoadingHint", "")">
+                @if (_allChannelsTableData != null)
+                {
+                    <div class="table-title">@LocalizationGroup.GetText("AllChannelsTitle", "All Channels")</div>
+                    <div class="table-scroll">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>@LocalizationGroup.GetText("TableHeaderChannel", "Channel")</th>
+                                    <th>@LocalizationGroup.GetText("TableHeaderDuration", "Duration")</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{ var channelRank = 0; }
+                                @foreach (var channel in _allChannelsTableData)
+                                {
+                                    channelRank++;
+                                    <tr class="clickable-row" @onclick="() => OnChannelClicked(channel.ChannelId, channel.Name)">
+                                        <td>@channelRank</td>
+                                        <td>#@channel.Name</td>
+                                        <td>@FormatDuration(channel.Hours)</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </LoadingContainer>
+        </div>
+    </div>
+</div>
+
+@if (_isDrilldownOpen)
+{
+    <div class="overlay-backdrop" @onclick="OnCloseDrilldown"></div>
+    <div class="overlay-container">
+        <button class="overlay-close-button" @onclick="OnCloseDrilldown" title="@LocalizationGroup.GetText("Close", "Close")">
+            <span class="material-icons">close</span>
+        </button>
+        <div class="overlay-content">
+            <div class="overlay-header">
+                @if (string.IsNullOrEmpty(_drilldownAvatarUrl) == false)
+                {
+                    <img class="overlay-avatar" src="@_drilldownAvatarUrl" alt="" />
+                }
+                <h2>@_drilldownTitle</h2>
+            </div>
+            <LoadingContainer IsLoading="@_isDrilldownLoading"
+                              Hint="@LocalizationGroup.GetText("LoadingHint", "")">
+                <div class="overlay-charts">
+                    <div class="overlay-timeline">
+                        @if (_drilldownChartData != null)
+                        {
+                            <Chart Type="bar"
+                                   Data="@_drilldownChartData"
+                                   Options="@_drilldownChartOptions"
+                                   Title="@LocalizationGroup.GetText("DrilldownChartTitle", "Voice Activity over Time")"
+                                   Description=""/>
+                        }
+                    </div>
+                    <div class="overlay-breakdown">
+                        @if (_drilldownBreakdownChartData != null)
+                        {
+                            <Chart Type="pie"
+                                   Data="@_drilldownBreakdownChartData"
+                                   Options="@_pieChartOptions"
+                                   Title="@_drilldownBreakdownTitle"
+                                   Description=""/>
+                        }
+                    </div>
+                </div>
+            </LoadingContainer>
+        </div>
+    </div>
+}
