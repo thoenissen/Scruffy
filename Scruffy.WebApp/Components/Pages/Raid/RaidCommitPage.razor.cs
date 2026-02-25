@@ -12,6 +12,7 @@ using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Data.Entity.Tables.Raid;
 using Scruffy.Services.Raid;
+using Scruffy.Services.WebApi;
 using Scruffy.WebApp.DTOs.Raid;
 
 namespace Scruffy.WebApp.Components.Pages.Raid;
@@ -93,6 +94,12 @@ public partial class RaidCommitPage
     /// </summary>
     [Inject]
     private RaidMessageBuilder MessageBuilder { get; set; }
+
+    /// <summary>
+    /// Discord bot connector
+    /// </summary>
+    [Inject]
+    private DiscordBotConnector DiscordBotConnector { get; set; }
 
     #endregion // Properties
 
@@ -334,6 +341,9 @@ public partial class RaidCommitPage
 
                 dbFactory.GetRepository<RaidAppointmentRepository>()
                          .Add(nextAppointment);
+
+                await DiscordBotConnector.ScheduleRaidMessageRefreshAsync(nextAppointment.ConfigurationId, nextAppointment.Deadline, nextAppointment.TimeStamp)
+                                         .ConfigureAwait(false);
 
                 var calendarAppointmentId = dbFactory.GetRepository<CalendarAppointmentRepository>()
                                                      .GetQuery()
