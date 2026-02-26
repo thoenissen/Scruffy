@@ -116,6 +116,7 @@ public partial class RaidCommitPage
                       {
                           "substitute" => RaidParticipationStatus.Substitute,
                           "noshow" => RaidParticipationStatus.NoShow,
+                          "lateregistration" => RaidParticipationStatus.LateRegistration,
                           _ => RaidParticipationStatus.Played,
                       };
     }
@@ -454,7 +455,8 @@ public partial class RaidCommitPage
                                                                      .FirstOrDefault()
                                                                 ?? obj.User.UserName,
                                                      obj.User.RaidExperienceLevelId,
-                                                     obj.LineupExperienceLevelId
+                                                     obj.LineupExperienceLevelId,
+                                                     obj.RegistrationTimeStamp
                                                  })
                                   .AsEnumerable()
                                   .Select(entry =>
@@ -462,15 +464,19 @@ public partial class RaidCommitPage
                                               var experienceLevel = experienceLevels.FirstOrDefault(obj => obj.Id == entry.RaidExperienceLevelId)
                                                                         ?? fallbackExperienceLevel;
 
+                                              var status = entry.RegistrationTimeStamp > appointment.Deadline
+                                                               ? RaidParticipationStatus.LateRegistration
+                                                               : entry.LineupExperienceLevelId is null
+                                                                   ? RaidParticipationStatus.Substitute
+                                                                   : RaidParticipationStatus.Played;
+
                                               return new RaidCommitUserDTO
                                                      {
                                                          UserId = entry.UserId,
                                                          DiscordAccountId = entry.DiscordAccountId,
                                                          Name = entry.Name,
                                                          ParticipationPoints = experienceLevel.ParticipationPoints,
-                                                         Status = entry.LineupExperienceLevelId is null
-                                                                      ? RaidParticipationStatus.Substitute
-                                                                      : RaidParticipationStatus.Played,
+                                                         Status = status,
                                                          ExperienceLevelDescription = experienceLevel.Description
                                                      };
                                           })

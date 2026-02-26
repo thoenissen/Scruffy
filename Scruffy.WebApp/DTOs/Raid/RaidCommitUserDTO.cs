@@ -26,7 +26,7 @@ public class RaidCommitUserDTO
     public double ParticipationPoints { get; init; }
 
     /// <summary>
-    /// Participation status (played, substitute, or no-show)
+    /// Participation status (played, substitute, no-show, or late registration)
     /// </summary>
     public RaidParticipationStatus Status { get; set; }
 
@@ -38,6 +38,7 @@ public class RaidCommitUserDTO
                                 RaidParticipationStatus.Played => ParticipationPoints * 1.0,
                                 RaidParticipationStatus.Substitute => ParticipationPoints * 3.0,
                                 RaidParticipationStatus.NoShow => ParticipationPoints * -1.0,
+                                RaidParticipationStatus.LateRegistration => 0.0,
                                 _ => ParticipationPoints * 1.0,
                             };
 

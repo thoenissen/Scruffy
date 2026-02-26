@@ -18,5 +18,10 @@ public enum RaidParticipationStatus
     /// <summary>
     /// The user did not show up and receives penalty points
     /// </summary>
-    NoShow
+    NoShow,
+
+    /// <summary>
+    /// The user registered after the deadline and receives 0 points
+    /// </summary>
+    LateRegistration
 }
