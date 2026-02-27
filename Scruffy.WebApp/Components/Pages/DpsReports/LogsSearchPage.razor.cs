@@ -153,13 +153,30 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
         {
             await LoadUserDataAsync().ConfigureAwait(false);
 
+            if (string.IsNullOrEmpty(_dpsReportToken))
+            {
+                _currentResult = new GridItemsProviderResult<DpsReport>
+                                 {
+                                     Items = [],
+                                     TotalItemCount = 0
+                                 };
+
+                return _currentResult;
+            }
+
             var response = await HttpClient.GetAsync($"https://dps.report/getUploads?userToken={_dpsReportToken}&page={(request.StartIndex / 25) + 1}&perPage=25",
                                                      request.CancellationToken)
                                            .ConfigureAwait(false);
 
             if (response.IsSuccessStatusCode == false)
             {
-                return default;
+                _currentResult = new GridItemsProviderResult<DpsReport>
+                                 {
+                                     Items = [],
+                                     TotalItemCount = _currentResult.TotalItemCount
+                                 };
+
+                return _currentResult;
             }
 
             var content = await response.Content
@@ -182,7 +199,13 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
 
             if ((uploads?.Uploads?.Length > 0) == false)
             {
-                return default;
+                _currentResult = new GridItemsProviderResult<DpsReport>
+                                 {
+                                     Items = [],
+                                     TotalItemCount = _currentResult.TotalItemCount
+                                 };
+
+                return _currentResult;
             }
 
             _currentItems = uploads.Uploads
@@ -227,7 +250,10 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
             Logger.LogError(ex, "An error occurred while loading today's DPS reports.");
         }
 
-        return default;
+        return new GridItemsProviderResult<DpsReport>
+               {
+                   Items = []
+               };
     }
 
     /// <summary>
