@@ -113,11 +113,14 @@ public class LogBetaCommandHandler : LocatedServiceBase
 
         if (encounters.Count > 0)
         {
-            var lineCounter = 0;
             var entryBuilder = new StringBuilder();
 
             foreach (var encounterGroup in encounters.GroupBy(encounter => encounter.Key.Group).OrderBy(encounter => encounter.Key))
             {
+                var lineCounter = 0;
+
+                entryBuilder.Clear();
+
                 entryBuilder.Append("# ");
                 entryBuilder.Append(encounterGroup.Key.ToEmote());
                 entryBuilder.AppendLine(encounterGroup.Key.ToDisplayString());
@@ -125,10 +128,10 @@ public class LogBetaCommandHandler : LocatedServiceBase
                 components.WithTextDisplay(entryBuilder.ToString())
                           .WithSeparator();
 
+                entryBuilder.Clear();
+
                 foreach (var encounterSubGroup in encounterGroup.GroupBy(group => group.Key.SubGroup))
                 {
-                    entryBuilder.Clear();
-
                     var subGroup = encounterSubGroup.Key.ToDisplayString();
 
                     if (string.IsNullOrWhiteSpace(subGroup) == false)
@@ -156,14 +159,15 @@ public class LogBetaCommandHandler : LocatedServiceBase
                             if (++lineCounter > 40)
                             {
                                 components.WithTextDisplay(entryBuilder.ToString());
-                                entryBuilder.Clear();
 
+                                entryBuilder.Clear();
                                 lineCounter = 0;
                             }
                         }
                     }
 
                     components.WithTextDisplay(entryBuilder.ToString());
+                    entryBuilder.Clear();
                 }
             }
         }
@@ -173,7 +177,6 @@ public class LogBetaCommandHandler : LocatedServiceBase
                       .WithSeparator();
         }
 
-        var firstMessage = true;
         var currentComponentsCount = 2;
         var textSize = 0;
         var currentComponents = new ContainerBuilder().WithTextDisplay($"# {dayTitle}")
@@ -194,18 +197,8 @@ public class LogBetaCommandHandler : LocatedServiceBase
                 currentComponents.WithTextDisplay($"-# {LocalizationGroup.GetText("DayFooter", $"Visit the [website]({_webbAppUrl}) to get a more detailed summary of your logs.")}")
                                  .WithAccentColor(Color.DarkPurple);
 
-                if (firstMessage)
-                {
-                    await message.ModifyAsync(properties => properties.Components = new ComponentBuilderV2().AddComponent(currentComponents).Build())
-                                 .ConfigureAwait(false);
-
-                    firstMessage = false;
-                }
-                else
-                {
-                    await context.SendMessageAsync(components: new ComponentBuilderV2().AddComponent(currentComponents).Build())
-                                 .ConfigureAwait(false);
-                }
+                await context.SendMessageAsync(components: new ComponentBuilderV2().AddComponent(currentComponents).Build())
+                             .ConfigureAwait(false);
 
                 currentComponents = new ContainerBuilder().WithTextDisplay($"# {dayTitle}")
                                                           .WithSeparator();
