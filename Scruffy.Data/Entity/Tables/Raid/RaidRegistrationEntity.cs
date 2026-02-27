@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
 using Scruffy.Data.Entity.Tables.CoreData;
+using Scruffy.Data.Enumerations.Raid;
 
 namespace Scruffy.Data.Entity.Tables.Raid;
 
@@ -52,6 +53,11 @@ public class RaidRegistrationEntity
     /// Line up role id
     /// </summary>
     public long? LineUpRoleId { get; set; }
+
+    /// <summary>
+    /// State
+    /// </summary>
+    public RegistrationState State { get; set; }
 
     #region Navigation properties
 

@@ -12,6 +12,7 @@ using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Data.Enumerations.DpsReport;
 using Scruffy.Data.Enumerations.General;
+using Scruffy.Data.Enumerations.Raid;
 using Scruffy.Data.Json.DpsReport;
 using Scruffy.Data.Json.QuickChart;
 using Scruffy.Data.Services.DpsReport;
@@ -1018,8 +1019,9 @@ public class LogCommandHandler : LocatedServiceBase
                                                            {
                                                                StartTime = obj.TimeStamp,
                                                                Tokens = obj.RaidRegistrations
-                                                                                           .Where(obj2 => obj2.LineupExperienceLevelId != null && obj2.User.DpsReportUserToken != null)
-                                                                                           .Select(obj2 => obj2.User.DpsReportUserToken)
+                                                                           .Where(obj2 => obj2.State == RegistrationState.Played
+                                                                                          && obj2.User.DpsReportUserToken != null)
+                                                                           .Select(obj2 => obj2.User.DpsReportUserToken)
                                                            })
                                             .FirstOrDefault();
 

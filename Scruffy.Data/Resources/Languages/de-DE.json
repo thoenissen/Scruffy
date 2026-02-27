@@ -1017,7 +1017,8 @@
       "Users": "Benutzer",
       "Development": "Beta-Funktionen",
       "LineUp": "Aufstellung",
-      "CalendarParticipants": "Eventteilnehmer"
+      "CalendarParticipants": "Eventteilnehmer",
+      "RaidCommit": "Raidteilnehmer"
     },
     "HomePage": {
       "PageTitle": "FooI - Willkommen",

@@ -11,6 +11,7 @@ using Scruffy.Data.Entity.Repositories.Calendar;
 using Scruffy.Data.Entity.Repositories.Discord;
 using Scruffy.Data.Entity.Repositories.Raid;
 using Scruffy.Data.Entity.Tables.Raid;
+using Scruffy.Data.Enumerations.Raid;
 using Scruffy.Services.Raid;
 using Scruffy.Services.WebApi;
 using Scruffy.WebApp.DTOs.Raid;
@@ -239,6 +240,14 @@ public partial class RaidCommitPage
                                                    obj.UserId = commitUser.UserId;
                                                }
 
+                                               obj.State = commitUser.Status switch
+                                                           {
+                                                               RaidParticipationStatus.Played => RegistrationState.Played,
+                                                               RaidParticipationStatus.Substitute => RegistrationState.Substitute,
+                                                               RaidParticipationStatus.NoShow => RegistrationState.NoShow,
+                                                               RaidParticipationStatus.LateRegistration => RegistrationState.LateRegistration,
+                                                               _ => obj.State
+                                                           };
                                                obj.Points = commitUser.Points;
                                            });
                 }

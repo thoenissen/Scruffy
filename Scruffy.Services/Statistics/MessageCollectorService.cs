@@ -330,14 +330,16 @@ public sealed class MessageCollectorService : SingletonLocatedServiceBase, IDisp
     /// <inheritdoc />
     public override Task Initialize(IServiceProvider serviceProvider)
     {
+#if RELEASE
         _client = serviceProvider.GetService<DiscordSocketClient>();
 
         Task.Run(StartCollecting);
+#endif
 
         return base.Initialize(serviceProvider);
     }
 
-    #endregion // SingletonLocatedServiceBase
+#endregion // SingletonLocatedServiceBase
 
     #region IDisposable
 
