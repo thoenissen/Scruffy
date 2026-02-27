@@ -134,6 +134,7 @@ public static class DpsReportDisplayExtensions
                    DpsReportEncounterTarget.Decima => "Decima",
                    DpsReportEncounterTarget.Greer => "Greer",
                    DpsReportEncounterTarget.Ura => "Ura",
+                   DpsReportEncounterTarget.Kela => "Kela",
                    _ => value.ToString()
                };
     }

@@ -419,6 +419,12 @@ public class DpsReportEncounterKey : IEquatable<DpsReportEncounterKey>
                                                   Encounter = DpsReportEncounterTarget.Ura
                                               },
 
+                   SpeciesIDs.TargetID.KelaSeneschalOfWavesSand => new DpsReportEncounterKey
+                                                                   {
+                                                                       Group = DpsReportGroup.VisionsOfEternity,
+                                                                       SubGroup = DpsReportSubGroup.GuardiansGlade,
+                                                                       Encounter = DpsReportEncounterTarget.Kela
+                                                                   },
                    _ => new DpsReportEncounterKey()
                };
     }

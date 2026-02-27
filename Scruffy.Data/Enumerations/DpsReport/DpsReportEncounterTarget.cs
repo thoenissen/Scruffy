@@ -298,5 +298,10 @@ public enum DpsReportEncounterTarget
     /// <summary>
     /// Ura (Wing 8)
     /// </summary>
-    Ura
+    Ura,
+
+    /// <summary>
+    /// Kela
+    /// </summary>
+    Kela,
 }
