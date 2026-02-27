@@ -109,21 +109,26 @@ public class LogBetaCommandHandler : LocatedServiceBase
 
         var encounters = _dpsReportReportGenerator.GetEncounters(user.Id, date, date.AddDays(1));
 
-        var components = new ContainerBuilder().WithTextDisplay($"# {dayTitle}")
-                                               .WithSeparator();
+        var components = new ContainerBuilder();
 
         if (encounters.Count > 0)
         {
+            var lineCounter = 0;
+            var entryBuilder = new StringBuilder();
+
             foreach (var encounterGroup in encounters.GroupBy(encounter => encounter.Key.Group).OrderBy(encounter => encounter.Key))
             {
-                var entryBuilder = new StringBuilder();
-
                 entryBuilder.Append("# ");
                 entryBuilder.Append(encounterGroup.Key.ToEmote());
                 entryBuilder.AppendLine(encounterGroup.Key.ToDisplayString());
 
+                components.WithTextDisplay(entryBuilder.ToString())
+                          .WithSeparator();
+
                 foreach (var encounterSubGroup in encounterGroup.GroupBy(group => group.Key.SubGroup))
                 {
+                    entryBuilder.Clear();
+
                     var subGroup = encounterSubGroup.Key.ToDisplayString();
 
                     if (string.IsNullOrWhiteSpace(subGroup) == false)
@@ -147,12 +152,19 @@ public class LogBetaCommandHandler : LocatedServiceBase
                             entryBuilder.Append(" ⧉](");
                             entryBuilder.Append(report.PermaLink);
                             entryBuilder.AppendLine(")");
+
+                            if (++lineCounter > 40)
+                            {
+                                components.WithTextDisplay(entryBuilder.ToString());
+                                entryBuilder.Clear();
+
+                                lineCounter = 0;
+                            }
                         }
                     }
-                }
 
-                components.WithTextDisplay(entryBuilder.ToString())
-                          .WithSeparator();
+                    components.WithTextDisplay(entryBuilder.ToString());
+                }
             }
         }
         else
@@ -161,11 +173,58 @@ public class LogBetaCommandHandler : LocatedServiceBase
                       .WithSeparator();
         }
 
-        components.WithTextDisplay($"-# {LocalizationGroup.GetText("DayFooter", $"Visit the [website]({_webbAppUrl}) to get a more detailed summary of your logs.")}")
-                  .WithAccentColor(Color.DarkPurple);
+        var firstMessage = true;
+        var currentComponentsCount = 2;
+        var textSize = 0;
+        var currentComponents = new ContainerBuilder().WithTextDisplay($"# {dayTitle}")
+                                                      .WithSeparator();
 
-        await message.ModifyAsync(properties => properties.Components = new ComponentBuilderV2().AddComponent(components).Build())
-                     .ConfigureAwait(false);
+        foreach (var component in components.Components)
+        {
+            var currentTextSize = 0;
+            currentComponentsCount++;
+
+            if (component is TextDisplayBuilder textDisplayBuilder)
+            {
+                textSize += currentTextSize = textDisplayBuilder.Content.Length;
+            }
+
+            if (textSize >= 3800 || currentComponentsCount == 39)
+            {
+                currentComponents.WithTextDisplay($"-# {LocalizationGroup.GetText("DayFooter", $"Visit the [website]({_webbAppUrl}) to get a more detailed summary of your logs.")}")
+                                 .WithAccentColor(Color.DarkPurple);
+
+                if (firstMessage)
+                {
+                    await message.ModifyAsync(properties => properties.Components = new ComponentBuilderV2().AddComponent(currentComponents).Build())
+                                 .ConfigureAwait(false);
+
+                    firstMessage = false;
+                }
+                else
+                {
+                    await context.SendMessageAsync(components: new ComponentBuilderV2().AddComponent(currentComponents).Build())
+                                 .ConfigureAwait(false);
+                }
+
+                currentComponents = new ContainerBuilder().WithTextDisplay($"# {dayTitle}")
+                                                          .WithSeparator();
+                textSize = currentTextSize;
+                currentComponentsCount = 2;
+            }
+
+            currentComponents.AddComponent(component);
+        }
+
+        if (currentComponents.Components.Count > 0)
+        {
+            currentComponents.WithSeparator()
+                             .WithTextDisplay($"-# {LocalizationGroup.GetText("DayFooter", $"Visit the [website]({_webbAppUrl}) to get a more detailed summary of your logs.")}")
+                             .WithAccentColor(Color.DarkPurple);
+
+            await context.SendMessageAsync(components: new ComponentBuilderV2().AddComponent(currentComponents).Build())
+                         .ConfigureAwait(false);
+        }
     }
 
     #endregion // Commands

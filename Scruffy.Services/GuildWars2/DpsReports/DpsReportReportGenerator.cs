@@ -182,7 +182,8 @@ public class DpsReportReportGenerator : LocatedServiceBase
 
         foreach (var boss in bosses.GroupBy(boss => DpsReportEncounterKey.FromBossId(boss.BossId)))
         {
-            var isAnySuccessfully = boss.Any(encounter => encounter.IsSuccess);
+            var isAnySuccessfully = boss.Key.Group != DpsReportGroup.Unknown
+                                    && boss.Any(encounter => encounter.IsSuccess);
 
             encounters[boss.Key] = boss.Where(encounter => isAnySuccessfully == false || encounter.IsSuccess)
                                        .Select(encounter => new DpsReportEncounterData

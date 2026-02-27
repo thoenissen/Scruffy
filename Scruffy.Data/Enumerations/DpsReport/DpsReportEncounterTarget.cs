@@ -6,292 +6,297 @@ namespace Scruffy.Data.Enumerations.DpsReport;
 public enum DpsReportEncounterTarget
 {
     /// <summary>
+    /// Unknown
+    /// </summary>
+    Unknown,
+
+    /// <summary>
     /// Trainings golem
     /// </summary>
-    TrainingsGolem = 0,
+    TrainingsGolem,
 
     /// <summary>
     /// MAMA (Nightmare CM)
     /// </summary>
-    MAMA = 1,
+    MAMA,
 
     /// <summary>
     /// Siax the Corrupted (Nightmare CM)
     /// </summary>
-    Siax = 2,
+    Siax,
 
     /// <summary>
     /// Ensolyss of the Endless Torment (Nightmare CM)
     /// </summary>
-    Ensolyss = 3,
+    Ensolyss,
 
     // Shattered Observatory (Fractals)
 
     /// <summary>
     /// Skorvald the Shattered (Shattered Observatory)
     /// </summary>
-    Skorvald = 4,
+    Skorvald,
 
     /// <summary>
     /// Artsariiv (Shattered Observatory)
     /// </summary>
-    Artsariiv = 5,
+    Artsariiv,
 
     /// <summary>
     /// Arkk (Shattered Observatory)
     /// </summary>
-    Arkk = 6,
+    Arkk,
 
     /// <summary>
     /// Ai, Keeper of the Peak (Sunqua Peak)
     /// </summary>
-    AiKeeperOfThePeak = 7,
+    AiKeeperOfThePeak,
 
     /// <summary>
     /// Kanaxai (Silent Surf)
     /// </summary>
-    Kanaxai = 8,
+    Kanaxai,
 
     // Lonely Tower (Fractals)
 
     /// <summary>
     /// Cerus (Lonely Tower)
     /// </summary>
-    CerusLonelyTower = 9,
+    CerusLonelyTower,
 
     /// <summary>
     /// Deimos (Lonely Tower)
     /// </summary>
-    DeimosLonelyTower = 10,
+    DeimosLonelyTower,
 
     /// <summary>
     /// Eparch (Lonely Tower)
     /// </summary>
-    EparchLonelyTower = 11,
+    EparchLonelyTower,
 
     // Kinfall (Fractals)
 
     /// <summary>
     /// Whispering Shadow (Kinfall)
     /// </summary>
-    WhisperingShadow = 12,
+    WhisperingShadow,
 
     /// <summary>
     /// Icebrood Construct (IBS Strike)
     /// </summary>
-    IcebroodConstruct = 13,
+    IcebroodConstruct,
 
     /// <summary>
     /// Voice and Claw of the Fallen (IBS Strike)
     /// </summary>
-    VoiceAndClawOfTheFallen = 14,
+    VoiceAndClawOfTheFallen,
 
     /// <summary>
     /// Fraenir of Jormag (IBS Strike)
     /// </summary>
-    FraenirOfJormag = 15,
+    FraenirOfJormag,
 
     /// <summary>
     /// Whisper of Jormag (IBS Strike)
     /// </summary>
-    WhisperOfJormag = 16,
+    WhisperOfJormag,
 
     /// <summary>
     /// Varinia Stormsounder (IBS Strike)
     /// </summary>
-    VariniaStormsounder = 17,
+    VariniaStormsounder,
 
     /// <summary>
     /// Boneskinner (IBS Strike)
     /// </summary>
-    Boneskinner = 18,
+    Boneskinner,
 
     /// <summary>
     /// Mai Trin (EoD Strike)
     /// </summary>
-    MaiTrin = 19,
+    MaiTrin,
 
     /// <summary>
     /// Ankka (EoD Strike)
     /// </summary>
-    Ankka = 20,
+    Ankka,
 
     /// <summary>
     /// Minister Li (EoD Strike)
     /// </summary>
-    MinisterLi = 21,
+    MinisterLi,
 
     /// <summary>
     /// Void Amalgamate (EoD Strike)
     /// </summary>
-    VoidAmalgamate = 22,
+    VoidAmalgamate,
 
     /// <summary>
     /// Prototype Vermilion (EoD Strike)
     /// </summary>
-    PrototypeVermilion = 23,
+    PrototypeVermilion,
 
     /// <summary>
     /// Dagda (SotO Strike)
     /// </summary>
-    Dagda = 24,
+    Dagda,
 
     /// <summary>
     /// Cerus (SotO Strike)
     /// </summary>
-    Cerus = 25,
+    Cerus,
 
     // Wing 1 (Spirit Vale)
 
     /// <summary>
     /// Vale Guardian (Wing 1)
     /// </summary>
-    ValeGuardian = 26,
+    ValeGuardian,
 
     /// <summary>
     /// Gorseval the Multifarious (Wing 1)
     /// </summary>
-    Gorseval = 27,
+    Gorseval,
 
     /// <summary>
     /// Sabetha the Saboteur (Wing 1)
     /// </summary>
-    Sabetha = 28,
+    Sabetha,
 
     // Wing 2 (Salvation Pass)
 
     /// <summary>
     /// Slothasor (Wing 2)
     /// </summary>
-    Slothasor = 29,
+    Slothasor,
 
     /// <summary>
     /// Bandit Trio (Wing 2)
     /// </summary>
-    BanditTrio = 30,
+    BanditTrio,
 
     /// <summary>
     /// Matthias Gabrel (Wing 2)
     /// </summary>
-    Matthias = 31,
+    Matthias,
 
     /// <summary>
     /// McLeod the Silent (Wing 3)
     /// </summary>
-    McLeodTheSilent = 32,
+    McLeodTheSilent,
 
     /// <summary>
     /// Keep Construct (Wing 3)
     /// </summary>
-    KeepConstruct = 33,
+    KeepConstruct,
 
     /// <summary>
     /// Haunting Statue / Twisted Castle (Wing 3)
     /// </summary>
-    HauntingStatue = 34,
+    HauntingStatue,
 
     /// <summary>
     /// Xera (Wing 3)
     /// </summary>
-    Xera = 35,
+    Xera,
 
     /// <summary>
     /// Cairn the Indomitable (Wing 4)
     /// </summary>
-    Cairn = 36,
+    Cairn,
 
     /// <summary>
     /// Mursaat Overseer (Wing 4)
     /// </summary>
-    MursaatOverseer = 37,
+    MursaatOverseer,
 
     /// <summary>
     /// Samarog (Wing 4)
     /// </summary>
-    Samarog = 38,
+    Samarog,
 
     /// <summary>
     /// Deimos (Wing 4)
     /// </summary>
-    Deimos = 39,
+    Deimos,
 
     /// <summary>
     /// Soulless Horror (Wing 5)
     /// </summary>
-    SoullessHorror = 40,
+    SoullessHorror,
 
     /// <summary>
     /// Desmina (Wing 5)
     /// </summary>
-    Desmina = 41,
+    Desmina,
 
     /// <summary>
     /// Eye of Judgement (Wing 5)
     /// </summary>
-    EyeOfJudgement = 42,
+    EyeOfJudgement,
 
     /// <summary>
     /// Eye of Fate (Wing 5)
     /// </summary>
-    EyeOfFate = 43,
+    EyeOfFate,
 
     /// <summary>
     /// Eater of Souls (Wing 5)
     /// </summary>
-    EaterOfSouls = 44,
+    EaterOfSouls,
 
     /// <summary>
     /// Broken King (Wing 5)
     /// </summary>
-    BrokenKing = 45,
+    BrokenKing,
 
     /// <summary>
     /// Dhuum (Wing 5)
     /// </summary>
-    Dhuum = 46,
+    Dhuum,
 
     /// <summary>
     /// Conjured Amalgamate (Wing 6)
     /// </summary>
-    ConjuredAmalgamate = 47,
+    ConjuredAmalgamate,
 
     /// <summary>
     /// Twin Largos (Wing 6)
     /// </summary>
-    TwinLargos = 48,
+    TwinLargos,
 
     /// <summary>
     /// Qadim (Wing 6)
     /// </summary>
-    Qadim = 49,
+    Qadim,
 
     /// <summary>
     /// Cardinal Adina (Wing 7)
     /// </summary>
-    Adina = 50,
+    Adina,
 
     /// <summary>
     /// Cardinal Sabir (Wing 7)
     /// </summary>
-    Sabir = 51,
+    Sabir,
 
     /// <summary>
     /// Qadim the Peerless (Wing 7)
     /// </summary>
-    QadimThePeerless = 52,
+    QadimThePeerless,
 
     /// <summary>
     /// Decima (Wing 8)
     /// </summary>
-    Decima = 53,
+    Decima,
 
     /// <summary>
     /// Greer (Wing 8)
     /// </summary>
-    Greer = 54,
+    Greer,
 
     /// <summary>
     /// Ura (Wing 8)
     /// </summary>
-    Ura = 55,
+    Ura
 }

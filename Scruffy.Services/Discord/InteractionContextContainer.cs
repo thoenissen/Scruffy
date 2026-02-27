@@ -326,7 +326,11 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
                                                                           if (text == null
                                                                            && embed == null)
                                                                           {
-                                                                              obj.Content = "\u200b";
+                                                                              if (components == null
+                                                                                  || components.Components.Any(component => component.Type == ComponentType.Container) == false)
+                                                                              {
+                                                                                  obj.Content = "\u200b";
+                                                                              }
                                                                           }
                                                                           else
                                                                           {
@@ -412,9 +416,13 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
                     await deferMessage.ModifyAsync(obj =>
                                                    {
                                                        if (text == null
-                                                        && embed == null)
+                                                            && embed == null)
                                                        {
-                                                           obj.Content = "\u200b";
+                                                           if (components == null
+                                                               || components.Components.Any(component => component.Type == ComponentType.Container) == false)
+                                                           {
+                                                               obj.Content = "\u200b";
+                                                           }
                                                        }
                                                        else
                                                        {

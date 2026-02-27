@@ -6,52 +6,57 @@ namespace Scruffy.Data.Enumerations.DpsReport;
 public enum DpsReportGroup
 {
     /// <summary>
+    /// Unknown group
+    /// </summary>
+    Unknown,
+
+    /// <summary>
     /// Training Area
     /// </summary>
-    TrainingArea = 0,
+    TrainingArea,
 
     /// <summary>
     /// Fractals
     /// </summary>
-    Fractals = 1,
+    Fractals,
 
     /// <summary>
     /// Core Game
     /// </summary>
-    CoreGame = 2,
+    CoreGame,
 
     /// <summary>
     /// Heart of Thorns
     /// </summary>
-    HeartsOfThorns = 3,
+    HeartsOfThorns,
 
     /// <summary>
     /// Path of Fire
     /// </summary>
-    PathOfFire = 4,
+    PathOfFire,
 
     /// <summary>
     /// Icebrood Saga
     /// </summary>
-    IcebroodSaga = 5,
+    IcebroodSaga,
 
     /// <summary>
     /// End of Dragons
     /// </summary>
-    EndOfDragons = 6,
+    EndOfDragons,
 
     /// <summary>
     /// Secrets of the Obscure
     /// </summary>
-    SecretsOfTheObscure = 7,
+    SecretsOfTheObscure,
 
     /// <summary>
     /// Janthir Wilds
     /// </summary>
-    JanthirWilds = 8,
+    JanthirWilds,
 
     /// <summary>
     /// Visions of Eternity
     /// </summary>
-    VisionsOfEternity = 9
+    VisionsOfEternity
 }
