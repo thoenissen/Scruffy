@@ -28,7 +28,10 @@ public class GuildSpecialRankGrantThresholdDialogElement : DialogMessageElementB
     #region DialogMessageElementBase<string>
 
     /// <inheritdoc/>
-    public override string GetMessage() => LocalizationGroup.GetText("Message", "Please enter the grant threshold which should be used.");
+    public override string GetMessage()
+    {
+        return LocalizationGroup.GetText("Message", "Please enter the grant threshold which should be used.");
+    }
 
     /// <inheritdoc/>
     public override double ConvertMessage(IUserMessage message)

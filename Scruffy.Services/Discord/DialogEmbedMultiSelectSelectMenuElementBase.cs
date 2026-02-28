@@ -43,7 +43,10 @@ public abstract class DialogEmbedMultiSelectSelectMenuElementBase<TData> : Inter
     /// Returns the select menu entries which should be added to the message
     /// </summary>
     /// <returns>Reactions</returns>
-    public virtual IReadOnlyList<SelectMenuOptionData> GetEntries() => null;
+    public virtual IReadOnlyList<SelectMenuOptionData> GetEntries()
+    {
+        return null;
+    }
 
     /// <summary>
     /// Return the message of element
@@ -55,7 +58,10 @@ public abstract class DialogEmbedMultiSelectSelectMenuElementBase<TData> : Inter
     /// Returning the placeholder
     /// </summary>
     /// <returns>Placeholder</returns>
-    public virtual string GetPlaceholder() => null;
+    public virtual string GetPlaceholder()
+    {
+        return null;
+    }
 
     /// <inheritdoc/>
     public override async Task<List<TData>> Run()
@@ -115,7 +121,10 @@ public abstract class DialogEmbedMultiSelectSelectMenuElementBase<TData> : Inter
     /// </summary>
     /// <param name="selectedValue">Selected value</param>
     /// <returns>Converted value</returns>
-    protected virtual TData ConvertSelectedValue(string selectedValue) => (TData)Convert.ChangeType(selectedValue, typeof(TData));
+    protected virtual TData ConvertSelectedValue(string selectedValue)
+    {
+        return (TData)Convert.ChangeType(selectedValue, typeof(TData));
+    }
 
     #endregion // Methods
 }

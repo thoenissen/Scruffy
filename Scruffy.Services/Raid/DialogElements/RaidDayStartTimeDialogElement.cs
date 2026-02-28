@@ -28,7 +28,10 @@ public class RaidDayStartTimeDialogElement : DialogMessageElementBase<TimeSpan>
     #region DialogMessageElementBase<string>
 
     /// <inheritdoc/>
-    public override string GetMessage() => LocalizationGroup.GetText("Message", "Please enter the start time (hh:mm):");
+    public override string GetMessage()
+    {
+        return LocalizationGroup.GetText("Message", "Please enter the start time (hh:mm):");
+    }
 
     /// <inheritdoc/>
     public override TimeSpan ConvertMessage(IUserMessage message)

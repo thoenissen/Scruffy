@@ -37,7 +37,10 @@ public class RaidExperienceLevelDeletionDialogElement : DialogReactionElementBas
     #region DialogReactionElementBase<bool>
 
     /// <inheritdoc/>
-    public override string GetMessage() => LocalizationGroup.GetText("DeleteLevelPrompt", "Are you sure you want to delete the level?");
+    public override string GetMessage()
+    {
+        return LocalizationGroup.GetText("DeleteLevelPrompt", "Are you sure you want to delete the level?");
+    }
 
     /// <inheritdoc/>
     public override IReadOnlyList<ReactionData<bool>> GetReactions()
@@ -72,7 +75,10 @@ public class RaidExperienceLevelDeletionDialogElement : DialogReactionElementBas
     }
 
     /// <inheritdoc/>
-    protected override bool DefaultFunc(IReaction reaction) => false;
+    protected override bool DefaultFunc(IReaction reaction)
+    {
+        return false;
+    }
 
     #endregion // DialogReactionElementBase<bool>
 }

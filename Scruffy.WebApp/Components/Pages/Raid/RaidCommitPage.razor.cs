@@ -257,7 +257,7 @@ public partial class RaidCommitPage
                 var users = dbFactory.GetRepository<RaidRegistrationRepository>()
                                      .GetQuery()
                                      .Where(obj => obj.Points != null
-                                                && obj.RaidAppointment.TimeStamp > dateLimit)
+                                                   && obj.RaidAppointment.TimeStamp > dateLimit)
                                      .Select(obj => new
                                                     {
                                                         obj.UserId,
@@ -415,7 +415,7 @@ public partial class RaidCommitPage
             var appointment = dbFactory.GetRepository<RaidAppointmentRepository>()
                                        .GetQuery()
                                        .Where(obj => obj.TimeStamp < now
-                                                  && obj.IsCommitted == false)
+                                                     && obj.IsCommitted == false)
                                        .OrderByDescending(obj => obj.TimeStamp)
                                        .Select(obj => new
                                                       {

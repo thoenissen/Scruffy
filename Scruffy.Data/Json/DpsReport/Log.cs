@@ -78,23 +78,23 @@ public class Log
                 // Fake targets
                 if (target.IsFake == false
 
-                 && target.EnemyPlayer == false
+                    && target.EnemyPlayer == false
 
-                 // CC targets
-                 // Aetherblade Hideout
-                 && target.Id != 23656
+                    // CC targets
+                    // Aetherblade Hideout
+                    && target.Id != 23656
 
-                 // Hearts in Dragonvoid
-                 && target.Id != -23
+                    // Hearts in Dragonvoid
+                    && target.Id != -23
 
-                 // Dhuum Reaper
-                 && target.Id != 19831)
+                    // Dhuum Reaper
+                    && target.Id != 19831)
                 {
                     totalHealth += target.TotalHealth;
 
                     // The last 10% of Captain Mai Trin never gets removed
                     if (target.Id != 24033
-                     || target.HealthPercentBurned < 90.0)
+                        || target.HealthPercentBurned < 90.0)
                     {
                         remainingHealth += target.FinalHealth;
                     }

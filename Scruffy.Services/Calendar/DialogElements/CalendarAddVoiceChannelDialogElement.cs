@@ -45,7 +45,10 @@ public class CalendarAddVoiceChannelDialogElement : DialogEmbedSelectMenuElement
     }
 
     /// <inheritdoc/>
-    protected override List<IGuildUser> DefaultFunc() => [];
+    protected override List<IGuildUser> DefaultFunc()
+    {
+        return [];
+    }
 
     /// <inheritdoc/>
     public override IReadOnlyList<SelectMenuEntryData<List<IGuildUser>>> GetEntries()

@@ -26,7 +26,10 @@ public class RaidTemplateThumbnailDialogElement : DialogMessageElementBase<strin
     #region DialogMessageElementBase<string>
 
     /// <inheritdoc/>
-    public override string GetMessage() => LocalizationGroup.GetText("Message", "Please enter the link to the thumbnail which should be used.");
+    public override string GetMessage()
+    {
+        return LocalizationGroup.GetText("Message", "Please enter the link to the thumbnail which should be used.");
+    }
 
     /// <inheritdoc/>
     public override string ConvertMessage(IUserMessage message)

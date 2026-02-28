@@ -56,14 +56,20 @@ public class GuildWars2SlashCommandModule : SlashCommandModuleBase
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("quaggan", "Posting random quaggan GIFs")]
-    public Task Quaggan() => CommandHandler.Quaggan(Context);
+    public Task Quaggan()
+    {
+        return CommandHandler.Quaggan(Context);
+    }
 
     /// <summary>
     /// Next update
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("update", "Display information about the next Guild Wars 2 update")]
-    public Task Update() => CommandHandler.Update(Context);
+    public Task Update()
+    {
+        return CommandHandler.Update(Context);
+    }
 
     /// <summary>
     /// Guides

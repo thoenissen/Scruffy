@@ -58,7 +58,7 @@ public class CalendarTemplateSetupDialogElement : DialogEmbedReactionElementBase
                 _templates = dbFactory.GetRepository<CalendarAppointmentTemplateRepository>()
                                       .GetQuery()
                                       .Where(obj => obj.DiscordServerId == serverId
-                                                 && obj.IsDeleted == false)
+                                                    && obj.IsDeleted == false)
                                       .Select(obj => obj.Description)
                                       .ToList();
             }
@@ -187,7 +187,10 @@ public class CalendarTemplateSetupDialogElement : DialogEmbedReactionElementBase
     }
 
     /// <inheritdoc/>
-    protected override string GetCommandTitle() => LocalizationGroup.GetText("CommandTitle", "Commands");
+    protected override string GetCommandTitle()
+    {
+        return LocalizationGroup.GetText("CommandTitle", "Commands");
+    }
 
     /// <inheritdoc/>
     protected override bool DefaultFunc()

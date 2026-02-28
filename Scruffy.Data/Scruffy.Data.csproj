@@ -44,4 +44,7 @@
       <HintPath>..\libs\GW2EIJSON.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="Reihitsu.Analyzer" Version="0.11.1" />
+  </ItemGroup>
 </Project>

@@ -17,7 +17,7 @@ public static class CommandInfoExtensions
         var builder = new StringBuilder();
 
         if (commandInfo.Name != null
-         && (commandInfo.Aliases == null || commandInfo.Aliases[0] != commandInfo.Module.Name))
+            && (commandInfo.Aliases == null || commandInfo.Aliases[0] != commandInfo.Module.Name))
         {
             builder.Insert(0, commandInfo.Name);
         }

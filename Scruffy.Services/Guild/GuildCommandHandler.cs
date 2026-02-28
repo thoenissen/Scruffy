@@ -148,21 +148,30 @@ public class GuildCommandHandler : LocatedServiceBase
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task GuildBankCheck(InteractionContextContainer context) => _bankService.Check(context);
+    public Task GuildBankCheck(InteractionContextContainer context)
+    {
+        return _bankService.Check(context);
+    }
 
     /// <summary>
     /// Check of all dyes which are stored in the guild bank are unlocked
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task GuildBankUnlocksDyes(InteractionContextContainer context) => _bankService.CheckUnlocksDyes(context);
+    public Task GuildBankUnlocksDyes(InteractionContextContainer context)
+    {
+        return _bankService.CheckUnlocksDyes(context);
+    }
 
     /// <summary>
     /// Post a guild ranking overview
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task PostRankingOverview(InteractionContextContainer context) => _rankVisualizationService.PostOverview(context, null);
+    public Task PostRankingOverview(InteractionContextContainer context)
+    {
+        return _rankVisualizationService.PostOverview(context, null);
+    }
 
     /// <summary>
     /// Post a personal guild ranking overview
@@ -170,7 +179,10 @@ public class GuildCommandHandler : LocatedServiceBase
     /// <param name="context">Command context</param>
     /// <param name="user">User</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task PostPersonalRankingOverview(InteractionContextContainer context, IGuildUser user) => _rankVisualizationService.PostPersonalOverview(context, user);
+    public Task PostPersonalRankingOverview(InteractionContextContainer context, IGuildUser user)
+    {
+        return _rankVisualizationService.PostPersonalOverview(context, user);
+    }
 
     /// <summary>
     /// Post a personal guild ranking compare overview
@@ -179,7 +191,10 @@ public class GuildCommandHandler : LocatedServiceBase
     /// <param name="user">User</param>
     /// <param name="compareUser">Compare user</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task PostPersonalCompareOverview(InteractionContextContainer context, IGuildUser user, IGuildUser compareUser) => _rankVisualizationService.PostPersonalCompareOverview(context, user, compareUser);
+    public Task PostPersonalCompareOverview(InteractionContextContainer context, IGuildUser user, IGuildUser compareUser)
+    {
+        return _rankVisualizationService.PostPersonalCompareOverview(context, user, compareUser);
+    }
 
     /// <summary>
     /// Post a personal guild ranking history overview
@@ -187,14 +202,20 @@ public class GuildCommandHandler : LocatedServiceBase
     /// <param name="context">Command context</param>
     /// <param name="user">User</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task PostPersonalRankingHistoryTypeOverview(InteractionContextContainer context, IGuildUser user) => _rankVisualizationService.PostPersonalHistoryTypeOverview(context, user);
+    public Task PostPersonalRankingHistoryTypeOverview(InteractionContextContainer context, IGuildUser user)
+    {
+        return _rankVisualizationService.PostPersonalHistoryTypeOverview(context, user);
+    }
 
     /// <summary>
     /// Create guild configuration
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task ConfigureGuild(IContextContainer context) => _configurationService.CreateGuildConfiguration(context);
+    public Task ConfigureGuild(IContextContainer context)
+    {
+        return _configurationService.CreateGuildConfiguration(context);
+    }
 
     /// <summary>
     /// Voice activity roles configuration
@@ -344,14 +365,20 @@ public class GuildCommandHandler : LocatedServiceBase
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task ConfigureItem(IContextContainer context) => _itemsService.ConfigureItem(context);
+    public Task ConfigureItem(IContextContainer context)
+    {
+        return _itemsService.ConfigureItem(context);
+    }
 
     /// <summary>
     /// Configure user
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task ConfigureUser(IContextContainer context) => _userConfigurationService.ConfigureUser(context);
+    public Task ConfigureUser(IContextContainer context)
+    {
+        return _userConfigurationService.ConfigureUser(context);
+    }
 
     /// <summary>
     /// Rank configuration
@@ -392,56 +419,80 @@ public class GuildCommandHandler : LocatedServiceBase
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task PostSpecialRankOverview(InteractionContextContainer context) => _specialRankService.PostOverview(context);
+    public Task PostSpecialRankOverview(InteractionContextContainer context)
+    {
+        return _specialRankService.PostOverview(context);
+    }
 
     /// <summary>
     /// Special rank overview
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task PostWorldsOverview(InteractionContextContainer context) => _worldsService.PostWorldsOverview(context);
+    public Task PostWorldsOverview(InteractionContextContainer context)
+    {
+        return _worldsService.PostWorldsOverview(context);
+    }
 
     /// <summary>
     /// Export login activity
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task ExportLoginActivity(InteractionContextContainer context) => _exportService.ExportLoginActivityLog(context);
+    public Task ExportLoginActivity(InteractionContextContainer context)
+    {
+        return _exportService.ExportLoginActivityLog(context);
+    }
 
     /// <summary>
     /// Export representation state
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task ExportRepresentation(InteractionContextContainer context) => _exportService.ExportRepresentation(context);
+    public Task ExportRepresentation(InteractionContextContainer context)
+    {
+        return _exportService.ExportRepresentation(context);
+    }
 
     /// <summary>
     /// Export members
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task ExportMembers(InteractionContextContainer context) => _exportService.ExportGuildMembers(context);
+    public Task ExportMembers(InteractionContextContainer context)
+    {
+        return _exportService.ExportGuildMembers(context);
+    }
 
     /// <summary>
     /// Export roles
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task ExportRoles(InteractionContextContainer context) => _exportService.ExportGuildRoles(context);
+    public Task ExportRoles(InteractionContextContainer context)
+    {
+        return _exportService.ExportGuildRoles(context);
+    }
 
     /// <summary>
     /// Export items
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task ExportItems(InteractionContextContainer context) => _itemsService.ExportCustomValues(context);
+    public Task ExportItems(InteractionContextContainer context)
+    {
+        return _itemsService.ExportCustomValues(context);
+    }
 
     /// <summary>
     /// Export rank assignments
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task ExportAssignments(InteractionContextContainer context) => _exportService.ExportGuildRankAssignments(context);
+    public Task ExportAssignments(InteractionContextContainer context)
+    {
+        return _exportService.ExportGuildRankAssignments(context);
+    }
 
     /// <summary>
     /// Export stash
@@ -568,14 +619,20 @@ public class GuildCommandHandler : LocatedServiceBase
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task CheckApiKeys(InteractionContextContainer context) => _accountAdministrationService.Validate(context);
+    public Task CheckApiKeys(InteractionContextContainer context)
+    {
+        return _accountAdministrationService.Validate(context);
+    }
 
     /// <summary>
     /// Checking unknown users of the given guild
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task CheckUnknownUsers(InteractionContextContainer context) => _accountAdministrationService.CheckUnknownUsers(context);
+    public Task CheckUnknownUsers(InteractionContextContainer context)
+    {
+        return _accountAdministrationService.CheckUnknownUsers(context);
+    }
 
     /// <summary>
     /// Navigate to guild ranking overview page
@@ -584,7 +641,10 @@ public class GuildCommandHandler : LocatedServiceBase
     /// <param name="page">Page number</param>
     /// <param name="pointType">Point type</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task NavigateToPageGuildRanking(InteractionContextContainer context, int page, GuildRankPointType? pointType) => _rankVisualizationService.RefreshOverview(context.Guild.Id, context.Channel.Id, context.Message.Id, page, pointType, false);
+    public Task NavigateToPageGuildRanking(InteractionContextContainer context, int page, GuildRankPointType? pointType)
+    {
+        return _rankVisualizationService.RefreshOverview(context.Guild.Id, context.Channel.Id, context.Message.Id, page, pointType, false);
+    }
 
     /// <summary>
     /// Calculate item

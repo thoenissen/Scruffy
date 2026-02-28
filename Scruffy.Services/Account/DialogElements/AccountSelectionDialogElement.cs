@@ -77,7 +77,7 @@ public class AccountSelectionDialogElement : DialogEmbedMessageElementBase<strin
     public override Task<string> ConvertMessage(IUserMessage message)
     {
         return Task.FromResult(int.TryParse(message.Content, out var index)
-                            && _accounts.TryGetValue(index, out var selectedAccount)
+                               && _accounts.TryGetValue(index, out var selectedAccount)
                                    ? selectedAccount
                                    : throw new InvalidOperationException());
     }

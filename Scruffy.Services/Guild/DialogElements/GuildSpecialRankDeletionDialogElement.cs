@@ -37,7 +37,10 @@ public class GuildSpecialRankDeletionDialogElement : DialogReactionElementBase<b
     #region DialogReactionElementBase<bool>
 
     /// <inheritdoc/>
-    public override string GetMessage() => LocalizationGroup.GetText("DeletePrompt", "Are you sure you want to delete the special rank?");
+    public override string GetMessage()
+    {
+        return LocalizationGroup.GetText("DeletePrompt", "Are you sure you want to delete the special rank?");
+    }
 
     /// <inheritdoc/>
     public override IReadOnlyList<ReactionData<bool>> GetReactions()
@@ -69,7 +72,10 @@ public class GuildSpecialRankDeletionDialogElement : DialogReactionElementBase<b
     }
 
     /// <inheritdoc/>
-    protected override bool DefaultFunc(IReaction reaction) => false;
+    protected override bool DefaultFunc(IReaction reaction)
+    {
+        return false;
+    }
 
     #endregion // DialogReactionElementBase<bool>
 }

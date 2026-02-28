@@ -24,7 +24,10 @@ public class RaidExperienceLevelAliasNameDialogElement : DialogMessageElementBas
     #region DialogMessageElementBase<string>
 
     /// <inheritdoc/>
-    public override string GetMessage() => LocalizationGroup.GetText("Message", "Please enter the alias name which should be used.");
+    public override string GetMessage()
+    {
+        return LocalizationGroup.GetText("Message", "Please enter the alias name which should be used.");
+    }
 
     #endregion // DialogMessageElementBase<string>
 }

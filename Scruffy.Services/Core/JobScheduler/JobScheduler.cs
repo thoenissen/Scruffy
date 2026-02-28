@@ -97,8 +97,8 @@ public sealed class JobScheduler : SingletonLocatedServiceBase,
             foreach (var entry in dbFactory.GetRepository<CalendarAppointmentRepository>()
                                            .GetQuery()
                                            .Where(obj => obj.TimeStamp > from
-                                                      && obj.TimeStamp < to
-                                                      && obj.CalendarAppointmentTemplate.ReminderTime != null)
+                                                         && obj.TimeStamp < to
+                                                         && obj.CalendarAppointmentTemplate.ReminderTime != null)
                                            .Select(obj => new
                                                           {
                                                               obj.Id,
@@ -109,8 +109,8 @@ public sealed class JobScheduler : SingletonLocatedServiceBase,
                                            .ToList())
             {
                 if (entry.DiscordMessageId == null
-                 && entry.TimeStamp > DateTime.Now
-                 && entry.ReminderTime != null)
+                    && entry.TimeStamp > DateTime.Now
+                    && entry.ReminderTime != null)
                 {
                     JobManager.AddJob(new CalendarReminderPostJob(entry.Id), obj => obj.ToRunOnceAt(DateTime.Today.Add(entry.ReminderTime.Value)));
                 }
@@ -158,7 +158,7 @@ public sealed class JobScheduler : SingletonLocatedServiceBase,
         var postTimeStamp = DateTime.Today.Add(postTime);
 
         while (postTimeStamp < DateTime.Now
-            || postTimeStamp.DayOfWeek != dayOfWeek)
+               || postTimeStamp.DayOfWeek != dayOfWeek)
         {
             postTimeStamp = postTimeStamp.AddDays(1);
         }
@@ -169,7 +169,7 @@ public sealed class JobScheduler : SingletonLocatedServiceBase,
         var deletionTimeStamp = DateTime.Today.Add(deletionTime);
 
         while (deletionTimeStamp < DateTime.Now
-            || deletionTimeStamp.DayOfWeek != dayOfWeek)
+               || deletionTimeStamp.DayOfWeek != dayOfWeek)
         {
             deletionTimeStamp = deletionTimeStamp.AddDays(1);
         }

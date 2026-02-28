@@ -26,10 +26,16 @@ public class RaidExperienceLevelEmojiDialogElement : DialogReactionElementBase<u
     #region DialogReactionElementBase<bool>
 
     /// <inheritdoc/>
-    public override string GetMessage() => LocalizationGroup.GetText("EmojiPrompt", "Please react with emoji which should be used.");
+    public override string GetMessage()
+    {
+        return LocalizationGroup.GetText("EmojiPrompt", "Please react with emoji which should be used.");
+    }
 
     /// <inheritdoc/>
-    protected override ulong DefaultFunc(IReaction reaction) => (reaction.Emote as ISnowflakeEntity)?.Id ?? throw new InvalidOperationException();
+    protected override ulong DefaultFunc(IReaction reaction)
+    {
+        return (reaction.Emote as ISnowflakeEntity)?.Id ?? throw new InvalidOperationException();
+    }
 
     #endregion // DialogReactionElementBase<bool>
 }

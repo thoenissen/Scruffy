@@ -64,7 +64,7 @@ public class AccountOverviewDialogElement : DialogEmbedSelectMenuElementBase<boo
         var guildWarsAccounts = _repositoryFactory.GetRepository<GuildWarsAccountRepository>()
                                                   .GetQuery()
                                                   .Where(obj => discordAccountsQuery.Any(obj2 => obj2.UserId == obj.UserId
-                                                                                              && obj2.Id == CommandContext.User.Id))
+                                                                                                 && obj2.Id == CommandContext.User.Id))
                                                   .Select(obj => obj.Name)
                                                   .ToList();
 
@@ -130,97 +130,110 @@ public class AccountOverviewDialogElement : DialogEmbedSelectMenuElementBase<boo
     }
 
     /// <inheritdoc/>
-    public override string GetPlaceholder() => LocalizationGroup.GetText("Placeholder", "Please choose which data do you like to edit...");
+    public override string GetPlaceholder()
+    {
+        return LocalizationGroup.GetText("Placeholder", "Please choose which data do you like to edit...");
+    }
 
     /// <inheritdoc/>
-    public override IReadOnlyList<SelectMenuEntryData<bool>> GetEntries() => [
-                                                                                 new()
-                                                                                 {
-                                                                                     CommandText = "Guild Wars 2",
-                                                                                     Emote = DiscordEmoteService.GetGuildWars2Emote(CommandContext.Client),
-                                                                                     Response = RunSubElement<AccountGuildWarsConfigurationDialogElement, bool>
-                                                                                 },
-                                                                                 new()
-                                                                                 {
-                                                                                     CommandText = "GW2 DPS Report",
-                                                                                     Emote = DiscordEmoteService.GetDpsReportEmote(CommandContext.Client),
-                                                                                     InteractionResponse = async obj =>
-                                                                                                           {
-                                                                                                               await obj.RespondWithModalAsync<DpsReportUserTokenModal>(DpsReportUserTokenModal.CustomId)
-                                                                                                                        .ConfigureAwait(false);
+    public override IReadOnlyList<SelectMenuEntryData<bool>> GetEntries()
+    {
+        return
+        [
+            new()
+            {
+                CommandText = "Guild Wars 2",
+                Emote = DiscordEmoteService.GetGuildWars2Emote(CommandContext.Client),
+                Response = RunSubElement<AccountGuildWarsConfigurationDialogElement, bool>
+            },
+            new()
+            {
+                CommandText = "GW2 DPS Report",
+                Emote = DiscordEmoteService.GetDpsReportEmote(CommandContext.Client),
+                InteractionResponse = async obj =>
+                {
+                    await obj.RespondWithModalAsync<DpsReportUserTokenModal>(DpsReportUserTokenModal.CustomId)
+                        .ConfigureAwait(false);
 
-                                                                                                               return false;
-                                                                                                           }
-                                                                                 },
-                                                                                 new()
-                                                                                 {
-                                                                                     CommandText = "GitHub",
-                                                                                     Emote = DiscordEmoteService.GetGitHubEmote(CommandContext.Client),
-                                                                                     InteractionResponse = async obj =>
-                                                                                                           {
-                                                                                                               await obj.RespondWithModalAsync<GitHubAccountModal>(GitHubAccountModal.CustomId)
-                                                                                                                        .ConfigureAwait(false);
+                    return false;
+                }
+            },
+            new()
+            {
+                CommandText = "GitHub",
+                Emote = DiscordEmoteService.GetGitHubEmote(CommandContext.Client),
+                InteractionResponse = async obj =>
+                {
+                    await obj.RespondWithModalAsync<GitHubAccountModal>(GitHubAccountModal.CustomId)
+                        .ConfigureAwait(false);
 
-                                                                                                               return false;
-                                                                                                           }
-                                                                                 },
-                                                                                 new()
-                                                                                 {
-                                                                                     CommandText = LocalizationGroup.GetText("PersonalData", "Personal data"),
-                                                                                     Emote = new Emoji("👤"),
-                                                                                     InteractionResponse = async obj =>
-                                                                                                           {
-                                                                                                               await obj.RespondWithModalAsync<PersonalDataModal>(PersonalDataModal.CustomId)
-                                                                                                                        .ConfigureAwait(false);
+                    return false;
+                }
+            },
+            new()
+            {
+                CommandText = LocalizationGroup.GetText("PersonalData", "Personal data"),
+                Emote = new Emoji("👤"),
+                InteractionResponse = async obj =>
+                {
+                    await obj.RespondWithModalAsync<PersonalDataModal>(PersonalDataModal.CustomId)
+                        .ConfigureAwait(false);
 
-                                                                                                               return false;
-                                                                                                           }
-                                                                                 },
-                                                                                 new()
-                                                                                 {
-                                                                                     CommandText = LocalizationGroup.GetText("DataProcessing", "Data processing"),
-                                                                                     Emote = new Emoji("🛡"),
-                                                                                     Response = async () =>
-                                                                                                {
-                                                                                                    var isExtendedDataStorageAccepted = false;
+                    return false;
+                }
+            },
+            new()
+            {
+                CommandText = LocalizationGroup.GetText("DataProcessing", "Data processing"),
+                Emote = new Emoji("🛡"),
+                Response = async () =>
+                {
+                    var isExtendedDataStorageAccepted = false;
 
-                                                                                                    var isDataStorageAccepted = await RunSubElement<AccountDataProcessingTermsDialogElement, bool>().ConfigureAwait(false);
+                    var isDataStorageAccepted = await RunSubElement<AccountDataProcessingTermsDialogElement, bool>()
+                        .ConfigureAwait(false);
 
-                                                                                                    if (isDataStorageAccepted)
-                                                                                                    {
-                                                                                                        isExtendedDataStorageAccepted = await RunSubElement<AccountGuildStatisticsTermsDialogElement, bool>().ConfigureAwait(false);
-                                                                                                    }
+                    if (isDataStorageAccepted)
+                    {
+                        isExtendedDataStorageAccepted =
+                            await RunSubElement<AccountGuildStatisticsTermsDialogElement, bool>().ConfigureAwait(false);
+                    }
 
-                                                                                                    var discordQuery = _repositoryFactory.GetRepository<DiscordAccountRepository>()
-                                                                                                                                         .GetQuery()
-                                                                                                                                         .Select(obj => obj);
+                    var discordQuery = _repositoryFactory.GetRepository<DiscordAccountRepository>()
+                        .GetQuery()
+                        .Select(obj => obj);
 
-                                                                                                    if (_repositoryFactory.GetRepository<UserRepository>()
-                                                                                                                          .Refresh(obj => discordQuery.Any(obj2 => obj2.UserId == obj.Id
-                                                                                                                                                                && obj2.Id == CommandContext.User.Id),
-                                                                                                                                   obj =>
-                                                                                                                                   {
-                                                                                                                                       obj.IsDataStorageAccepted = isDataStorageAccepted;
-                                                                                                                                       obj.IsExtendedDataStorageAccepted = isExtendedDataStorageAccepted;
-                                                                                                                                   }) == false)
-                                                                                                    {
-                                                                                                        throw _repositoryFactory.LastError;
-                                                                                                    }
+                    if (_repositoryFactory.GetRepository<UserRepository>()
+                            .Refresh(obj => discordQuery.Any(obj2 => obj2.UserId == obj.Id
+                                                                     && obj2.Id == CommandContext.User.Id),
+                                obj =>
+                                {
+                                    obj.IsDataStorageAccepted = isDataStorageAccepted;
+                                    obj.IsExtendedDataStorageAccepted = isExtendedDataStorageAccepted;
+                                }) == false)
+                    {
+                        throw _repositoryFactory.LastError;
+                    }
 
-                                                                                                    if (isDataStorageAccepted == false)
-                                                                                                    {
-                                                                                                        await CommandContext.Channel
-                                                                                                                            .SendMessageAsync(LocalizationGroup.GetText("DataDeletion", "A request to delete all of your data was send and will be executed soon."))
-                                                                                                                            .ConfigureAwait(false);
-                                                                                                    }
+                    if (isDataStorageAccepted == false)
+                    {
+                        await CommandContext.Channel
+                            .SendMessageAsync(LocalizationGroup.GetText("DataDeletion",
+                                "A request to delete all of your data was send and will be executed soon."))
+                            .ConfigureAwait(false);
+                    }
 
-                                                                                                    return isDataStorageAccepted;
-                                                                                                }
-                                                                                 },
-                                                                             ];
+                    return isDataStorageAccepted;
+                }
+            },
+        ];
+    }
 
     /// <inheritdoc/>
-    protected override bool DefaultFunc() => false;
+    protected override bool DefaultFunc()
+    {
+        return false;
+    }
 
     #endregion // DialogEmbedSelectMenuElementBase<bool>
 }

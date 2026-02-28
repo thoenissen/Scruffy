@@ -27,7 +27,10 @@ public class CalendarScheduleMonthSelectionDialogElement : DialogMultiSelectSele
     protected override int MaxValues => 12;
 
     /// <inheritdoc/>
-    public override Task<string> GetMessage() => Task.FromResult(LocalizationGroup.GetText("Message", "Please select the months:"));
+    public override Task<string> GetMessage()
+    {
+        return Task.FromResult(LocalizationGroup.GetText("Message", "Please select the months:"));
+    }
 
     /// <inheritdoc/>
     public override IReadOnlyList<SelectMenuOptionData> GetEntries()

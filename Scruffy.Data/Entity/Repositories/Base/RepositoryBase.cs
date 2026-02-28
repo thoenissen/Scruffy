@@ -345,7 +345,10 @@ public abstract class RepositoryBase<TQueryable, TEntity> : RepositoryBase
     /// Returning the internal DbContext
     /// </summary>
     /// <returns>DbContext</returns>
-    protected ScruffyDbContext GetDbContext() => _dbContext;
+    protected ScruffyDbContext GetDbContext()
+    {
+        return _dbContext;
+    }
 
     #endregion // Methods
 }

@@ -73,26 +73,26 @@ public class GuildRankAssignmentJob : LocatedAsyncJob
             var users = _repositoryFactory.GetRepository<GuildRankCurrentPointsRepository>()
                                           .GetQuery()
                                           .Where(obj => obj.Date >= limit
-                                                     && obj.Date < today
-                                                     && obj.GuildId == guildId
-                                                     && accountsQuery.Any(obj2 => obj2.UserId == obj.UserId
-                                                                               && guildMemberQuery.Any(obj3 => obj3.Name == obj2.Name
-                                                                                                            && obj3.GuildId == obj.GuildId
-                                                                                                            && obj3.Date == today))
-                                                     && userConfiguration.Any(obj2 => obj2.UserId == obj.UserId
-                                                                                   && obj2.GuildId == guildId
-                                                                                   && obj2.IsFixedRank) == false)
+                                                        && obj.Date < today
+                                                        && obj.GuildId == guildId
+                                                        && accountsQuery.Any(obj2 => obj2.UserId == obj.UserId
+                                                                                     && guildMemberQuery.Any(obj3 => obj3.Name == obj2.Name
+                                                                                                                     && obj3.GuildId == obj.GuildId
+                                                                                                                     && obj3.Date == today))
+                                                        && userConfiguration.Any(obj2 => obj2.UserId == obj.UserId
+                                                                                         && obj2.GuildId == guildId
+                                                                                         && obj2.IsFixedRank) == false)
                                           .GroupBy(obj => obj.UserId)
                                           .Select(obj => new
                                                          {
                                                              UserId = obj.Key,
                                                              Points = obj.Sum(obj2 => obj2.Points),
                                                              CurrentRankId = rankAssignments.Where(obj2 => obj2.GuildId == guildId
-                                                                                                        && obj2.UserId == obj.Key)
+                                                                                                           && obj2.UserId == obj.Key)
                                                                                             .Select(obj2 => (int?)obj2.RankId)
                                                                                             .FirstOrDefault(),
                                                              CurrentRankAssignment = rankAssignments.Where(obj2 => obj2.GuildId == guildId
-                                                                                                                && obj2.UserId == obj.Key)
+                                                                                                                   && obj2.UserId == obj.Key)
                                                                                                     .Select(obj2 => (DateTime?)obj2.TimeStamp)
                                                                                                     .FirstOrDefault()
                                                          })
@@ -127,19 +127,19 @@ public class GuildRankAssignmentJob : LocatedAsyncJob
             foreach (var user in users)
             {
                 if (currentAssignment.Slots <= 0
-                 && ranks.Count > 0)
+                    && ranks.Count > 0)
                 {
                     currentAssignment = ranksStack.Pop();
                     currentAssignment = ranksStack.Peek();
                 }
 
                 if (user.CurrentRankId != currentAssignment.RankId
-                 && (user.CurrentRankAssignment == null
-                  || DateTime.Now - user.CurrentRankAssignment > TimeSpan.FromDays(7)))
+                    && (user.CurrentRankAssignment == null
+                        || DateTime.Now - user.CurrentRankAssignment > TimeSpan.FromDays(7)))
                 {
                     if (_repositoryFactory.GetRepository<GuildRankAssignmentRepository>()
                                           .AddOrRefresh(obj => obj.UserId == user.UserId
-                                                            && obj.GuildId == guildId,
+                                                               && obj.GuildId == guildId,
                                                         obj =>
                                                         {
                                                             obj.GuildId = guildId;
@@ -150,7 +150,7 @@ public class GuildRankAssignmentJob : LocatedAsyncJob
                                                             if (obj.RankId == inactiveRankId)
                                                             {
                                                                 isAssignmentAllowed = loginQuery.Any(obj2 => obj2.Account.UserId == obj.UserId
-                                                                                                          && obj2.Date > inactivityLimit);
+                                                                                                             && obj2.Date > inactivityLimit);
                                                             }
 
                                                             if (isAssignmentAllowed)
@@ -203,7 +203,7 @@ public class GuildRankAssignmentJob : LocatedAsyncJob
             foreach (var userId in _repositoryFactory.GetRepository<GuildWarsGuildHistoricMemberRepository>()
                                                    .GetQuery()
                                                    .Where(obj => obj.GuildId == guildId
-                                                              && obj.Date == today)
+                                                                 && obj.Date == today)
                                                    .Join(accountsQuery,
                                                          obj => obj.Name,
                                                          obj => obj.Name,
@@ -239,17 +239,17 @@ public class GuildRankAssignmentJob : LocatedAsyncJob
                                                                       LastLogin = obj.Max(obj2 => obj2.LastLogin)
                                                                   })
                                                    .Where(obj => obj.RankId == lastRankId
-                                                              && obj.LastLogin < inactivityLimit
-                                                              && assignmentLimit > obj.AssignmentTimeStamp
-                                                              && userConfiguration.Any(obj2 => obj2.UserId == obj.UserId
-                                                                                            && obj2.GuildId == guildId
-                                                                                            && obj2.IsInactive) == false)
+                                                                 && obj.LastLogin < inactivityLimit
+                                                                 && assignmentLimit > obj.AssignmentTimeStamp
+                                                                 && userConfiguration.Any(obj2 => obj2.UserId == obj.UserId
+                                                                                                  && obj2.GuildId == guildId
+                                                                                                  && obj2.IsInactive) == false)
                                                    .Select(obj => obj.UserId)
                                                    .ToList())
             {
                 _repositoryFactory.GetRepository<GuildRankAssignmentRepository>()
                                   .AddOrRefresh(obj => obj.UserId == userId
-                                                    && obj.GuildId == guildId,
+                                                       && obj.GuildId == guildId,
                                                 obj =>
                                                 {
                                                     obj.GuildId = guildId;
@@ -263,9 +263,9 @@ public class GuildRankAssignmentJob : LocatedAsyncJob
 
             _repositoryFactory.GetRepository<GuildRankAssignmentRepository>()
                               .RemoveRange(obj => accountsQuery.Any(obj2 => obj2.UserId == obj.UserId
-                                                                         && guildMemberQuery.Any(obj3 => obj3.Name == obj2.Name
-                                                                                                      && obj3.GuildId == obj.GuildId
-                                                                                                      && obj3.Date == today)) == false);
+                                                                            && guildMemberQuery.Any(obj3 => obj3.Name == obj2.Name
+                                                                                                            && obj3.GuildId == obj.GuildId
+                                                                                                            && obj3.Date == today)) == false);
         }
 
         return Task.CompletedTask;

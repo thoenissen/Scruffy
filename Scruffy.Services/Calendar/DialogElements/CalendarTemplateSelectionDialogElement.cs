@@ -53,7 +53,7 @@ public class CalendarTemplateSelectionDialogElement : DialogEmbedMessageElementB
             var mainRoles = dbFactory.GetRepository<CalendarAppointmentTemplateRepository>()
                                      .GetQuery()
                                      .Where(obj => obj.IsDeleted == false
-                                                && obj.DiscordServerId == serverId)
+                                                   && obj.DiscordServerId == serverId)
                                      .Select(obj => new
                                                     {
                                                         obj.Id,

@@ -71,7 +71,7 @@ public class CalendarMessageBuilderService : LocatedServiceBase
                                               .Select(obj => new
                                                              {
                                                                  Channel = channels.Where(obj2 => obj2.GuildId == obj.Id
-                                                                                               && obj2.Type == GuildChannelConfigurationType.CalendarMessageOfTheDay)
+                                                                                                  && obj2.Type == GuildChannelConfigurationType.CalendarMessageOfTheDay)
                                                                                    .Select(obj2 => new
                                                                                                    {
                                                                                                        ChannelId = obj2.DiscordChannelId,
@@ -81,8 +81,8 @@ public class CalendarMessageBuilderService : LocatedServiceBase
                                                                  Appointments = templates.Where(obj2 => obj2.DiscordServerId == obj.DiscordServerId)
                                                                                          .SelectMany(obj2 => obj2.CalendarAppointments
                                                                                                                  .Where(obj3 => obj3.TimeStamp > now
-                                                                                                                             && obj2.CalendarAppointments.Any(obj4 => obj4.TimeStamp > now
-                                                                                                                                                                   && obj4.TimeStamp < obj3.TimeStamp) == false)
+                                                                                                                                && obj2.CalendarAppointments.Any(obj4 => obj4.TimeStamp > now
+                                                                                                                                                                         && obj4.TimeStamp < obj3.TimeStamp) == false)
                                                                                                                  .Select(obj3 => new
                                                                                                                                  {
                                                                                                                                      obj3.TimeStamp,
@@ -163,7 +163,7 @@ public class CalendarMessageBuilderService : LocatedServiceBase
                                                              {
                                                                  obj.DiscordServerId,
                                                                  Channel = channels.Where(obj2 => obj2.GuildId == obj.Id
-                                                                                               && obj2.Type == GuildChannelConfigurationType.CalendarOverview)
+                                                                                                  && obj2.Type == GuildChannelConfigurationType.CalendarOverview)
                                                                                    .Select(obj2 => new
                                                                                                    {
                                                                                                        ChannelId = obj2.DiscordChannelId,
@@ -229,8 +229,8 @@ public class CalendarMessageBuilderService : LocatedServiceBase
                         }
 
                         if (currentMonth != appointment.TimeStamp.Month
-                         || currentWeekOfYear != appointment.TimeStamp.GetIso8601WeekOfYear()
-                         || stringBuilder.Length + currentLine.Length > 1024)
+                            || currentWeekOfYear != appointment.TimeStamp.GetIso8601WeekOfYear()
+                            || stringBuilder.Length + currentLine.Length > 1024)
                         {
                             builder.AddField(currentFieldTitle, stringBuilder.ToString());
 
@@ -260,7 +260,7 @@ public class CalendarMessageBuilderService : LocatedServiceBase
                     }
 
                     if (fieldCounter < 6
-                     && stringBuilder.Length > 0)
+                        && stringBuilder.Length > 0)
                     {
                         builder.AddField(currentFieldTitle, stringBuilder.ToString());
                     }

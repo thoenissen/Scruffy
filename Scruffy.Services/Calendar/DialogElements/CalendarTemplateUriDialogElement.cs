@@ -35,7 +35,10 @@ public class CalendarTemplateUriDialogElement : DialogReactionElementBase<string
     #region DialogReactionElementBase<bool>
 
     /// <inheritdoc/>
-    public override string GetMessage() => LocalizationGroup.GetText("Prompt", "Do you want to add link?");
+    public override string GetMessage()
+    {
+        return LocalizationGroup.GetText("Prompt", "Do you want to add link?");
+    }
 
     /// <inheritdoc/>
     public override IReadOnlyList<ReactionData<string>> GetReactions()
@@ -55,7 +58,10 @@ public class CalendarTemplateUriDialogElement : DialogReactionElementBase<string
     }
 
     /// <inheritdoc/>
-    protected override string DefaultFunc(IReaction reaction) => null;
+    protected override string DefaultFunc(IReaction reaction)
+    {
+        return null;
+    }
 
     #endregion // DialogReactionElementBase<bool>
 }

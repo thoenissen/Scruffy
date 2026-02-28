@@ -27,7 +27,10 @@ public class InformationSlashCommandModule : SlashCommandModuleBase
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("info", "Information about Scruffy")]
-    public Task Info() => CommandHandler.Info(Context);
+    public Task Info()
+    {
+        return CommandHandler.Info(Context);
+    }
 
     #endregion // Methods
 }

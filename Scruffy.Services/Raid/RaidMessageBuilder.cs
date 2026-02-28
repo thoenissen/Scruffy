@@ -67,7 +67,7 @@ public class RaidMessageBuilder : LocatedServiceBase
             var appointment = dbFactory.GetRepository<RaidAppointmentRepository>()
                                        .GetQuery()
                                        .Where(obj => obj.ConfigurationId == configurationId
-                                                  && obj.IsCommitted == false)
+                                                     && obj.IsCommitted == false)
                                        .OrderByDescending(obj => obj.TimeStamp)
                                        .Select(obj => new
                                                       {
@@ -177,7 +177,7 @@ public class RaidMessageBuilder : LocatedServiceBase
                                 lineBuilder.Append($" {discordUser.Mention}");
 
                                 if (registration.LineupExperienceLevelId != registration.ExperienceLevelId
-                                 && registration.ExperienceLevelDiscordEmote != null)
+                                    && registration.ExperienceLevelDiscordEmote != null)
                                 {
                                     lineBuilder.Append(' ');
                                     lineBuilder.Append(DiscordEmoteService.GetGuildEmote(_client, registration.ExperienceLevelDiscordEmote.Value));
@@ -287,7 +287,7 @@ public class RaidMessageBuilder : LocatedServiceBase
                                                      appointment.TimeStamp <= DateTime.Now);
 
                         if (appointment.Deadline > DateTime.Now
-                         && appointment.TimeStamp > DateTime.Now)
+                            && appointment.TimeStamp > DateTime.Now)
                         {
                             componentsBuilder.WithSelectMenu($"raid;select_roles;{configurationId}",
                                                              GetRaidRoleOptions(),

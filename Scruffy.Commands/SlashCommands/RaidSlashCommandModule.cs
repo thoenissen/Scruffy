@@ -32,14 +32,20 @@ public class RaidSlashCommandModule : SlashCommandModuleBase
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("roles", "Manage your prepared raid roles")]
-    public Task Roles() => CommandHandler.ConfigureRoles(Context);
+    public Task Roles()
+    {
+        return CommandHandler.ConfigureRoles(Context);
+    }
 
     /// <summary>
     /// Configure your prepared special raid roles
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("special-roles", "Manage your prepared special raid roles")]
-    public Task SpecialRoles() => CommandHandler.ConfigureSpecialRoles(Context);
+    public Task SpecialRoles()
+    {
+        return CommandHandler.ConfigureSpecialRoles(Context);
+    }
 
     #endregion // Commands
 
@@ -72,8 +78,8 @@ public class RaidSlashCommandModule : SlashCommandModuleBase
                    .Select(obj =>
                            {
                                if (obj.Options.IsSpecified
-                                && obj.Name.IsSpecified
-                                && obj.Name.Value == "raid")
+                                   && obj.Name.IsSpecified
+                                   && obj.Name.Value == "raid")
                                {
                                    foreach (var option in obj.Options.Value.Where(option => option.Name is "join" or "leave"))
                                    {

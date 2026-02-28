@@ -33,7 +33,11 @@ public class AccountGuildStatisticsTermsDialogElement : DialogButtonElementBase<
     #region DialogButtonElementBase<bool>
 
     /// <inheritdoc/>
-    public override string GetMessage() => LocalizationGroup.GetFormattedText("AcceptTerms", "Do you agree to allow to use your data to use then in statistical visualisations?");
+    public override string GetMessage()
+    {
+        return LocalizationGroup.GetFormattedText("AcceptTerms",
+            "Do you agree to allow to use your data to use then in statistical visualisations?");
+    }
 
     /// <inheritdoc/>
     public override IReadOnlyList<ButtonData<bool>> GetButtons()
@@ -55,7 +59,10 @@ public class AccountGuildStatisticsTermsDialogElement : DialogButtonElementBase<
     }
 
     /// <inheritdoc/>
-    protected override bool DefaultFunc() => false;
+    protected override bool DefaultFunc()
+    {
+        return false;
+    }
 
     #endregion // DialogButtonElementBase<bool>
 }

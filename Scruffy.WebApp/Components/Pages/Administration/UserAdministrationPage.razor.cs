@@ -146,8 +146,8 @@ public sealed partial class UserAdministrationPage : IDisposable
                                            .Where(member => member.Date == DateTime.Today
                                                             && member.GuildId == guildId
                                                             && guildWarsAccounts.Any(guildWarsAccount => guildWarsAccount.Name == member.Name
-                                                                                     && discordAccounts.Any(discordAccount => discordAccount.UserId == guildWarsAccount.UserId
-                                                                                                                              && discordMembers.Any(discordMember => discordMember.AccountId == discordAccount.Id))) == false)
+                                                                                                         && discordAccounts.Any(discordAccount => discordAccount.UserId == guildWarsAccount.UserId
+                                                                                                                                                  && discordMembers.Any(discordMember => discordMember.AccountId == discordAccount.Id))) == false)
                                            .Select(member => new UserDTO
                                                              {
                                                                  DiscordAccountName = string.Empty,

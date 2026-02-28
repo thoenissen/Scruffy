@@ -36,7 +36,10 @@ public abstract class DialogMessageElementBase<TData> : DialogElementBase<TData>
     /// </summary>
     /// <param name="message">Message</param>
     /// <returns>Result</returns>
-    public virtual TData ConvertMessage(IUserMessage message) => (TData)Convert.ChangeType(message.Content, typeof(TData));
+    public virtual TData ConvertMessage(IUserMessage message)
+    {
+        return (TData)Convert.ChangeType(message.Content, typeof(TData));
+    }
 
     /// <inheritdoc/>
     public override async Task<TData> Run()
@@ -48,7 +51,7 @@ public abstract class DialogMessageElementBase<TData> : DialogElementBase<TData>
 
         var currentUserResponse = await CommandContext.Interactivity
                                                       .WaitForMessageAsync(obj => obj.Author.Id == CommandContext.User.Id
-                                                                          && obj.Channel.Id == CommandContext.Channel.Id)
+                                                                                  && obj.Channel.Id == CommandContext.Channel.Id)
                                                       .ConfigureAwait(false);
 
         DialogContext.Messages.Add(currentUserResponse);

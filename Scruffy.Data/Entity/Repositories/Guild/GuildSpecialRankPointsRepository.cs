@@ -49,11 +49,11 @@ public class GuildSpecialRankPointsRepository : RepositoryBase<GuildSpecialRankP
 
             var userPoints = await dbContext.Set<GuildSpecialRankPointsEntity>()
                                             .FirstOrDefaultAsync(obj => obj.ConfigurationId == configurationId
-                                                                     && obj.UserId == userId)
+                                                                        && obj.UserId == userId)
                                             .ConfigureAwait(false);
 
             if (pointsToAdd > 0
-             || userPoints != null)
+                || userPoints != null)
             {
                 foreach (var points in pointsList)
                 {

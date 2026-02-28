@@ -129,7 +129,7 @@ public class LookingForGroupMessageService : LocatedServiceBase
                         var line = "> " + _discordClient.GetUser(participant.UserId).Mention;
 
                         if (participantCounter > 0
-                         && participantCounter % 10 == 0)
+                            && participantCounter % 10 == 0)
                         {
                             embedBuilder.AddField(GetParticipantTitle(participantCounter == 10, appointmentData.Participants.Count, appointmentData.ParticipantCount), participantsBuilder.ToString(), true);
 

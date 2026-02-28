@@ -27,7 +27,10 @@ public class AccountSlashCommandModule : SlashCommandModuleBase
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("account", "Account configuration")]
-    public Task ConfigureAccount() => CommandHandler.ConfigureAccount(Context);
+    public Task ConfigureAccount()
+    {
+        return CommandHandler.ConfigureAccount(Context);
+    }
 
     #endregion // Methods
 }

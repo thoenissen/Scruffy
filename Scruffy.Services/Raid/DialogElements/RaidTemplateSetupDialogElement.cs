@@ -179,7 +179,10 @@ public class RaidTemplateSetupDialogElement : DialogEmbedReactionElementBase<boo
     }
 
     /// <inheritdoc/>
-    protected override string GetCommandTitle() => LocalizationGroup.GetText("CommandTitle", "Commands");
+    protected override string GetCommandTitle()
+    {
+        return LocalizationGroup.GetText("CommandTitle", "Commands");
+    }
 
     /// <inheritdoc/>
     protected override bool DefaultFunc()

@@ -37,7 +37,10 @@ public class CalendarTemplateDeletionDialogElement : DialogReactionElementBase<b
     #region DialogReactionElementBase<bool>
 
     /// <inheritdoc/>
-    public override string GetMessage() => LocalizationGroup.GetText("DeletePrompt", "Are you sure you want to delete the template?");
+    public override string GetMessage()
+    {
+        return LocalizationGroup.GetText("DeletePrompt", "Are you sure you want to delete the template?");
+    }
 
     /// <inheritdoc/>
     public override IReadOnlyList<ReactionData<bool>> GetReactions()
@@ -59,7 +62,7 @@ public class CalendarTemplateDeletionDialogElement : DialogReactionElementBase<b
 
                                                          dbFactory.GetRepository<CalendarAppointmentRepository>()
                                                                   .RemoveRange(obj => obj.CalendarAppointmentTemplateId == templateId
-                                                                                   && obj.TimeStamp > now);
+                                                                                      && obj.TimeStamp > now);
                                                      }
                                                  }
 
@@ -75,7 +78,10 @@ public class CalendarTemplateDeletionDialogElement : DialogReactionElementBase<b
     }
 
     /// <inheritdoc/>
-    protected override bool DefaultFunc(IReaction reaction) => false;
+    protected override bool DefaultFunc(IReaction reaction)
+    {
+        return false;
+    }
 
     #endregion // DialogReactionElementBase<bool>
 }

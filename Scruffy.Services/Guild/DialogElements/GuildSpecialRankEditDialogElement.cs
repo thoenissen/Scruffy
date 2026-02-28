@@ -225,7 +225,7 @@ public class GuildSpecialRankEditDialogElement : DialogEmbedReactionElementBase<
 
                                                      dbFactory.GetRepository<GuildSpecialRankRoleAssignmentRepository>()
                                                               .AddOrRefresh(obj => obj.ConfigurationId == rankId
-                                                                                && obj.DiscordRoleId == assignmentData.DiscordRoleId,
+                                                                                   && obj.DiscordRoleId == assignmentData.DiscordRoleId,
                                                                             obj =>
                                                                             {
                                                                                 obj.ConfigurationId = rankId;
@@ -251,7 +251,7 @@ public class GuildSpecialRankEditDialogElement : DialogEmbedReactionElementBase<
 
                                                      dbFactory.GetRepository<GuildSpecialRankRoleAssignmentRepository>()
                                                               .Remove(obj => obj.ConfigurationId == rankId
-                                                                          && obj.DiscordRoleId == roleId);
+                                                                             && obj.DiscordRoleId == roleId);
                                                  }
 
                                                  return true;
@@ -271,7 +271,7 @@ public class GuildSpecialRankEditDialogElement : DialogEmbedReactionElementBase<
 
                                                      dbFactory.GetRepository<GuildSpecialRankIgnoreRoleAssignmentRepository>()
                                                               .AddOrRefresh(obj => obj.ConfigurationId == rankId
-                                                                                && obj.DiscordRoleId == discordId,
+                                                                                   && obj.DiscordRoleId == discordId,
                                                                             obj =>
                                                                             {
                                                                                 obj.ConfigurationId = rankId;
@@ -296,7 +296,7 @@ public class GuildSpecialRankEditDialogElement : DialogEmbedReactionElementBase<
 
                                                      dbFactory.GetRepository<GuildSpecialRankRoleAssignmentRepository>()
                                                               .Remove(obj => obj.ConfigurationId == rankId
-                                                                          && obj.DiscordRoleId == discordId);
+                                                                             && obj.DiscordRoleId == discordId);
                                                  }
 
                                                  return true;

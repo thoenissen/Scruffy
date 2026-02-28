@@ -77,7 +77,7 @@ public class CalendarScheduleScheduleDialogElement : DialogEmbedMessageElementBa
         var data = new CalenderScheduleData();
 
         if (int.TryParse(message.Content, out var index)
-         && _types.TryGetValue(index, out var type))
+            && _types.TryGetValue(index, out var type))
         {
             object additionalData;
 

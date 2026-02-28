@@ -27,7 +27,10 @@ public class LookingForGroupCommandModule : SlashCommandModuleBase
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("create", "Creation of an new lfg appointment")]
-    public Task Create() => CommandHandler.StartCreation(Context);
+    public Task Create()
+    {
+        return CommandHandler.StartCreation(Context);
+    }
 
     #endregion // Methods
 }

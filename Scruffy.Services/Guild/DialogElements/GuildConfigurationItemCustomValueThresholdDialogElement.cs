@@ -33,7 +33,10 @@ public class GuildConfigurationItemCustomValueThresholdDialogElement : DialogBut
     #region DialogReactionElementBase<bool>
 
     /// <inheritdoc/>
-    public override string GetMessage() => LocalizationGroup.GetText("Message", "Should the threshold be considered for this item?");
+    public override string GetMessage()
+    {
+        return LocalizationGroup.GetText("Message", "Should the threshold be considered for this item?");
+    }
 
     /// <inheritdoc/>
     public override IReadOnlyList<ButtonData<bool>> GetButtons()
@@ -55,7 +58,10 @@ public class GuildConfigurationItemCustomValueThresholdDialogElement : DialogBut
     }
 
     /// <inheritdoc/>
-    protected override bool DefaultFunc() => false;
+    protected override bool DefaultFunc()
+    {
+        return false;
+    }
 
     #endregion // DialogReactionElementBase<bool>
 }

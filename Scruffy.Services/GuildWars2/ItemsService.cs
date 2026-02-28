@@ -57,7 +57,7 @@ public class ItemsService : LocatedServiceBase
                 return await dbFactory.GetRepository<GuildWarsItemRepository>()
                                       .BulkInsert(items)
                                       .ConfigureAwait(false)
-                    && await dbFactory.GetRepository<GuildWarsItemGuildUpgradeConversionRepository>()
+                       && await dbFactory.GetRepository<GuildWarsItemGuildUpgradeConversionRepository>()
                                       .BulkInsert(items.Where(obj => obj.Details?.GuildUpgradeId > 0)
                                                        .Select(obj => new KeyValuePair<int, long>(obj.Id, obj.Details.GuildUpgradeId))
                                                        .ToList())

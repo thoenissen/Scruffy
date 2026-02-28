@@ -127,8 +127,8 @@ public sealed class InteractivityService : SingletonLocatedServiceBase, IDisposa
 
         var waitEntry = new InteractionWaitEntry<IReaction>(taskSource,
                                                             obj => obj is SocketReaction socketReaction
-                                                                && socketReaction.MessageId == message.Id
-                                                                && socketReaction.UserId == user.Id);
+                                                                   && socketReaction.MessageId == message.Id
+                                                                   && socketReaction.UserId == user.Id);
 
         lock (_waitForReaction)
         {

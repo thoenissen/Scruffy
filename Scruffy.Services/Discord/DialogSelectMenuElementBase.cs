@@ -29,7 +29,10 @@ public abstract class DialogSelectMenuElementBase<TData> : DialogElementBase<TDa
     /// Returns the select menu entries which should be added to the message
     /// </summary>
     /// <returns>Reactions</returns>
-    public virtual IReadOnlyList<SelectMenuEntryData<TData>> GetEntries() => null;
+    public virtual IReadOnlyList<SelectMenuEntryData<TData>> GetEntries()
+    {
+        return null;
+    }
 
     /// <summary>
     /// Returning the message
@@ -41,7 +44,10 @@ public abstract class DialogSelectMenuElementBase<TData> : DialogElementBase<TDa
     /// Returning the placeholder
     /// </summary>
     /// <returns>Placeholder</returns>
-    public virtual string GetPlaceholder() => null;
+    public virtual string GetPlaceholder()
+    {
+        return null;
+    }
 
     /// <summary>
     /// Default case if none of the given buttons is used
@@ -93,7 +99,7 @@ public abstract class DialogSelectMenuElementBase<TData> : DialogElementBase<TDa
                     disabledComponentBuilder.WithSelectMenu(selectMenuComponent.ToBuilder()
                                                                                .WithOptions(selectMenuComponent.Options
                                                                                                                .Where(obj => selectedValue == null
-                                                                                                                          || obj.Value == selectedValue)
+                                                                                                                             || obj.Value == selectedValue)
                                                                                                                .Select(obj => new SelectMenuOptionBuilder().WithLabel(obj.Label)
                                                                                                                                                            .WithValue(obj.Value)
                                                                                                                                                            .WithEmote(obj.Emote)

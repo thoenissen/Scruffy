@@ -97,7 +97,7 @@ public class GuildConfigurationService : LocatedServiceBase
             {
                 dbFactory.GetRepository<GuildChannelConfigurationRepository>()
                          .AddOrRefresh(obj => obj.GuildId == guildId
-                                           && obj.Type == type,
+                                              && obj.Type == type,
                                        obj =>
                                        {
                                            obj.GuildId = guildId;
@@ -132,7 +132,7 @@ public class GuildConfigurationService : LocatedServiceBase
             {
                 if (dbFactory.GetRepository<GuildChannelConfigurationRepository>()
                              .AddOrRefresh(obj => obj.GuildId == guildId
-                                               && obj.Type == GuildChannelConfigurationType.CalendarMessageOfTheDay,
+                                                  && obj.Type == GuildChannelConfigurationType.CalendarMessageOfTheDay,
                                            obj =>
                                            {
                                                obj.Type = GuildChannelConfigurationType.CalendarMessageOfTheDay;
@@ -178,7 +178,7 @@ public class GuildConfigurationService : LocatedServiceBase
                 {
                     if (dbFactory.GetRepository<GuildChannelConfigurationRepository>()
                                  .AddOrRefresh(obj => obj.GuildId == guildId
-                                                   && obj.Type == GuildChannelConfigurationType.CalendarOverview,
+                                                      && obj.Type == GuildChannelConfigurationType.CalendarOverview,
                                                obj =>
                                                {
                                                    obj.GuildId = guildId;

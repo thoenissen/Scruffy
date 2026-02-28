@@ -99,7 +99,10 @@ public abstract class DialogElementBase<TData> : DialogElementBase
     #region Methods
 
     /// <inheritdoc/>
-    internal sealed override async Task<object> InternalRun() => await Run().ConfigureAwait(false);
+    internal sealed override async Task<object> InternalRun()
+    {
+        return await Run().ConfigureAwait(false);
+    }
 
     /// <summary>
     /// Execution of the element

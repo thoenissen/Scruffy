@@ -37,7 +37,10 @@ public class RaidTemplateDeletionElementBase : DialogReactionElementBase<bool>
     #region DialogReactionElementBase<bool>
 
     /// <inheritdoc/>
-    public override string GetMessage() => LocalizationGroup.GetText("DeleteRolePrompt", "Are you sure you want to delete the template?");
+    public override string GetMessage()
+    {
+        return LocalizationGroup.GetText("DeleteRolePrompt", "Are you sure you want to delete the template?");
+    }
 
     /// <inheritdoc/>
     public override IReadOnlyList<ReactionData<bool>> GetReactions()
@@ -68,7 +71,10 @@ public class RaidTemplateDeletionElementBase : DialogReactionElementBase<bool>
     }
 
     /// <inheritdoc/>
-    protected override bool DefaultFunc(IReaction reaction) => false;
+    protected override bool DefaultFunc(IReaction reaction)
+    {
+        return false;
+    }
 
     #endregion // DialogReactionElementBase<bool>
 }

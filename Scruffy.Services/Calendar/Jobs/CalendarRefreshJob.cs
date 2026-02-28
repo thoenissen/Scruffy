@@ -47,8 +47,8 @@ public class CalendarRefreshJob : LocatedAsyncJob
                 foreach (var entry in dbFactory.GetRepository<CalendarAppointmentRepository>()
                                                .GetQuery()
                                                .Where(obj => obj.TimeStamp > from
-                                                          && obj.TimeStamp < to
-                                                          && obj.CalendarAppointmentTemplate.ReminderTime != null)
+                                                             && obj.TimeStamp < to
+                                                             && obj.CalendarAppointmentTemplate.ReminderTime != null)
                                                .Select(obj => new
                                                               {
                                                                   obj.Id,

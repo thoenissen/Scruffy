@@ -40,7 +40,10 @@ public class AccountWantToDeleteDialogElement : DialogButtonElementBase<bool>
     #region DialogButtonElementBase<bool>
 
     /// <inheritdoc/>
-    public override string GetMessage() => LocalizationGroup.GetFormattedText("Prompt", "Are you sure you want to delete the account '{0}'?", _name);
+    public override string GetMessage()
+    {
+        return LocalizationGroup.GetFormattedText("Prompt", "Are you sure you want to delete the account '{0}'?", _name);
+    }
 
     /// <inheritdoc/>
     public override IReadOnlyList<ButtonData<bool>> GetButtons()
@@ -62,7 +65,10 @@ public class AccountWantToDeleteDialogElement : DialogButtonElementBase<bool>
     }
 
     /// <inheritdoc/>
-    protected override bool DefaultFunc() => false;
+    protected override bool DefaultFunc()
+    {
+        return false;
+    }
 
     #endregion // DialogButtonElementBase<bool>
 }

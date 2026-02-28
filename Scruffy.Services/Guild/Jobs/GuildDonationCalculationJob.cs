@@ -65,9 +65,9 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
         foreach (var logEntry in await _dbFactory.GetRepository<GuildLogEntryRepository>()
                                                  .GetQuery()
                                                  .Where(obj => obj.IsProcessed == false
-                                                            && obj.Type == GuildLogEntryEntity.Types.Stash
-                                                            && (obj.ItemId == null
-                                                             || obj.ItemId == 0))
+                                                               && obj.Type == GuildLogEntryEntity.Types.Stash
+                                                               && (obj.ItemId == null
+                                                                   || obj.ItemId == 0))
                                                  .Select(obj => new
                                                                 {
                                                                     obj.GuildId,
@@ -90,7 +90,7 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
             {
                 _dbFactory.GetRepository<GuildLogEntryRepository>()
                           .Refresh(obj => obj.GuildId == logEntry.GuildId
-                                       && obj.Id == logEntry.Id,
+                                          && obj.Id == logEntry.Id,
                                    obj => obj.IsProcessed = true);
             }
         }
@@ -105,8 +105,8 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
         var itemLogEntries = await _dbFactory.GetRepository<GuildLogEntryRepository>()
                                              .GetQuery()
                                              .Where(obj => obj.IsProcessed == false
-                                                        && obj.Type == GuildLogEntryEntity.Types.Stash
-                                                        && obj.ItemId > 0)
+                                                           && obj.Type == GuildLogEntryEntity.Types.Stash
+                                                           && obj.ItemId > 0)
                                              .Select(obj => new
                                                             {
                                                                 obj.GuildId,
@@ -175,7 +175,7 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
                 {
                     _dbFactory.GetRepository<GuildLogEntryRepository>()
                               .Refresh(obj => obj.GuildId == itemLogEntry.GuildId
-                                           && obj.Id == itemLogEntry.Id,
+                                              && obj.Id == itemLogEntry.Id,
                                        obj => obj.IsProcessed = true);
                 }
             }
@@ -195,8 +195,8 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
         var upgradeLogEntries = await _dbFactory.GetRepository<GuildLogEntryRepository>()
                                                 .GetQuery()
                                                 .Where(obj => obj.IsProcessed == false
-                                                           && obj.Type == GuildLogEntryEntity.Types.Upgrade
-                                                           && obj.Action == GuildLogEntryEntity.Actions.Completed)
+                                                              && obj.Type == GuildLogEntryEntity.Types.Upgrade
+                                                              && obj.Action == GuildLogEntryEntity.Actions.Completed)
                                                 .Select(obj => new
                                                                {
                                                                    obj.GuildId,
@@ -411,7 +411,7 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
                 {
                     _dbFactory.GetRepository<GuildLogEntryRepository>()
                               .Refresh(obj => obj.GuildId == upgradeLogEntry.GuildId
-                                           && obj.Id == upgradeLogEntry.Id,
+                                              && obj.Id == upgradeLogEntry.Id,
                                        obj => obj.IsProcessed = true);
                 }
             }
@@ -425,21 +425,21 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
         foreach (var entry in await _dbFactory.GetRepository<GuildLogEntryRepository>()
                                               .GetQuery()
                                               .Where(obj => obj.IsProcessed == false
-                                                         && obj.Type == GuildLogEntryEntity.Types.Upgrade
-                                                         && obj.Action == GuildLogEntryEntity.Actions.Queued
-                                                         && (obj.User == null
-                                                          || logEntries.Any(obj2 => obj2.Time >= obj.Time
-                                                                                 && obj2.UpgradeId == obj.UpgradeId
-                                                                                 && obj2.Type == GuildLogEntryEntity.Types.Upgrade
-                                                                                 && (obj2.Action == GuildLogEntryEntity.Actions.Completed
-                                                                                  || obj2.Action == GuildLogEntryEntity.Actions.Complete)
-                                                                                 && obj2.IsProcessed)))
+                                                            && obj.Type == GuildLogEntryEntity.Types.Upgrade
+                                                            && obj.Action == GuildLogEntryEntity.Actions.Queued
+                                                            && (obj.User == null
+                                                                || logEntries.Any(obj2 => obj2.Time >= obj.Time
+                                                                                          && obj2.UpgradeId == obj.UpgradeId
+                                                                                          && obj2.Type == GuildLogEntryEntity.Types.Upgrade
+                                                                                          && (obj2.Action == GuildLogEntryEntity.Actions.Completed
+                                                                                              || obj2.Action == GuildLogEntryEntity.Actions.Complete)
+                                                                                          && obj2.IsProcessed)))
                                               .ToListAsync()
                                               .ConfigureAwait(false))
         {
             _dbFactory.GetRepository<GuildLogEntryRepository>()
                       .Refresh(obj => obj.GuildId == entry.GuildId
-                                   && obj.Id == entry.Id,
+                                      && obj.Id == entry.Id,
                                obj => obj.IsProcessed = true);
         }
 
@@ -447,14 +447,14 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
         foreach (var entry in await _dbFactory.GetRepository<GuildLogEntryRepository>()
                                               .GetQuery()
                                               .Where(obj => obj.IsProcessed == false
-                                                         && obj.Type == GuildLogEntryEntity.Types.Upgrade
-                                                         && obj.Action == GuildLogEntryEntity.Actions.Complete)
+                                                            && obj.Type == GuildLogEntryEntity.Types.Upgrade
+                                                            && obj.Action == GuildLogEntryEntity.Actions.Complete)
                                               .ToListAsync()
                                               .ConfigureAwait(false))
         {
             _dbFactory.GetRepository<GuildLogEntryRepository>()
                       .Refresh(obj => obj.GuildId == entry.GuildId
-                                   && obj.Id == entry.Id,
+                                      && obj.Id == entry.Id,
                                obj => obj.IsProcessed = true);
         }
 
@@ -462,9 +462,9 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
         foreach (var upgradeLogEntry in await _dbFactory.GetRepository<GuildLogEntryRepository>()
                                                         .GetQuery()
                                                         .Where(obj => obj.IsProcessed == false
-                                                                   && obj.Type == GuildLogEntryEntity.Types.Upgrade
-                                                                   && obj.Action == GuildLogEntryEntity.Actions.Queued
-                                                                   && _upgradesWithoutCompleted.Contains(obj.UpgradeId ?? 0))
+                                                                      && obj.Type == GuildLogEntryEntity.Types.Upgrade
+                                                                      && obj.Action == GuildLogEntryEntity.Actions.Queued
+                                                                      && _upgradesWithoutCompleted.Contains(obj.UpgradeId ?? 0))
                                                         .Select(obj => new
                                                                        {
                                                                            obj.GuildId,
@@ -493,7 +493,7 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
                 {
                     _dbFactory.GetRepository<GuildLogEntryRepository>()
                               .Refresh(obj => obj.GuildId == upgradeLogEntry.GuildId
-                                           && obj.Id == upgradeLogEntry.Id,
+                                              && obj.Id == upgradeLogEntry.Id,
                                        obj => obj.IsProcessed = true);
                 }
             }

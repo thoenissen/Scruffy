@@ -60,7 +60,7 @@ public class CalendarReminderPostJob : LocatedAsyncJob
                                     .Select(obj => new
                                                    {
                                                        ChannelId = channels.Where(obj2 => obj2.Guild.DiscordServerId == obj.CalendarAppointmentTemplate.DiscordServerId
-                                                                                       && obj2.Type == GuildChannelConfigurationType.CalendarReminder)
+                                                                                          && obj2.Type == GuildChannelConfigurationType.CalendarReminder)
                                                                            .Select(obj2 => obj2.DiscordChannelId)
                                                                            .FirstOrDefault(),
                                                        obj.DiscordChannelId,
@@ -127,7 +127,7 @@ public class CalendarReminderPostJob : LocatedAsyncJob
                         var sendMessage = true;
 
                         if (data.DiscordChannelId != null
-                         && data.DiscordMessageId != null)
+                            && data.DiscordMessageId != null)
                         {
                             var message = await messageChannel.GetMessageAsync(data.DiscordMessageId.Value)
                                                               .ConfigureAwait(false);

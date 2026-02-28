@@ -91,7 +91,7 @@ public class CalendarScheduleService : LocatedServiceBase
             foreach (var schedule in await dbFactory.GetRepository<CalendarAppointmentScheduleRepository>()
                                                     .GetQuery()
                                                     .Where(obj => obj.IsDeleted == false
-                                                               && (serverId == null || obj.CalendarAppointmentTemplate.DiscordServerId == serverId))
+                                                                  && (serverId == null || obj.CalendarAppointmentTemplate.DiscordServerId == serverId))
                                                     .Select(obj => new
                                                                    {
                                                                        obj.Id,
@@ -156,7 +156,7 @@ public class CalendarScheduleService : LocatedServiceBase
                                     {
                                         dbFactory.GetRepository<CalendarAppointmentRepository>()
                                                  .AddOrRefresh(obj => obj.TimeStamp == appointmentTimeStamp
-                                                                   && obj.CalendarAppointmentScheduleId == schedule.Id,
+                                                                      && obj.CalendarAppointmentScheduleId == schedule.Id,
                                                                obj =>
                                                                {
                                                                    obj.TimeStamp = appointmentTimeStamp;
@@ -184,7 +184,7 @@ public class CalendarScheduleService : LocatedServiceBase
                                         {
                                             dbFactory.GetRepository<CalendarAppointmentRepository>()
                                                      .AddOrRefresh(obj => obj.TimeStamp == appointmentTimeStamp
-                                                                       && obj.CalendarAppointmentScheduleId == schedule.Id,
+                                                                          && obj.CalendarAppointmentScheduleId == schedule.Id,
                                                                    obj =>
                                                                    {
                                                                        obj.TimeStamp = appointmentTimeStamp;
@@ -239,11 +239,11 @@ public class CalendarScheduleService : LocatedServiceBase
                                                              {
                                                                  ServerId = obj.DiscordServerId,
                                                                  Appointments = templates.Where(obj2 => obj2.DiscordServerId == obj.DiscordServerId
-                                                                                                     && obj2.DiscordVoiceChannel != null)
+                                                                                                        && obj2.DiscordVoiceChannel != null)
                                                                                          .SelectMany(obj2 => obj2.CalendarAppointments
                                                                                                                  .Where(obj3 => obj3.TimeStamp > now
-                                                                                                                             && obj2.CalendarAppointments.Any(obj4 => obj4.TimeStamp > now
-                                                                                                                                                                   && obj4.TimeStamp < obj3.TimeStamp) == false)
+                                                                                                                                && obj2.CalendarAppointments.Any(obj4 => obj4.TimeStamp > now
+                                                                                                                                                                         && obj4.TimeStamp < obj3.TimeStamp) == false)
                                                                                                                  .Select(obj3 => new
                                                                                                                  {
                                                                                                                      obj3.Id,

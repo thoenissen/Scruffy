@@ -91,7 +91,10 @@ public class RaidPreparedSpecialRolesSelectDialogElement : DialogEmbedMultiSelec
     }
 
     /// <inheritdoc/>
-    public override string GetPlaceholder() => LocalizationGroup.GetText("RoleSelectionPlaceHolder", "Choose your roles...");
+    public override string GetPlaceholder()
+    {
+        return LocalizationGroup.GetText("RoleSelectionPlaceHolder", "Choose your roles...");
+    }
 
     /// <inheritdoc/>
     public override IReadOnlyList<SelectMenuOptionData> GetEntries()

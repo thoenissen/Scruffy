@@ -102,7 +102,7 @@ public class GuildRankSuperiorRankDialogElement : DialogEmbedMessageElementBase<
     public override Task<int?> ConvertMessage(IUserMessage message)
     {
         return Task.FromResult(int.TryParse(message.Content, out var index)
-                            && _ranks.TryGetValue(index, out var selectedRank)
+                               && _ranks.TryGetValue(index, out var selectedRank)
                                    ? selectedRank
                                    : null);
     }

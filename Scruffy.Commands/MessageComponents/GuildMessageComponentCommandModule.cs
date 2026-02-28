@@ -57,7 +57,7 @@ public class GuildMessageComponentCommandModule : LocatedInteractionModuleBase
         var pointType = default(GuildRankPointType?);
 
         if (pointTypeRaw >= 0
-         && Enum.IsDefined(typeof(GuildRankPointType), pointTypeRaw.Value))
+            && Enum.IsDefined(typeof(GuildRankPointType), pointTypeRaw.Value))
         {
             pointType = (GuildRankPointType)pointTypeRaw;
         }
@@ -82,7 +82,7 @@ public class GuildMessageComponentCommandModule : LocatedInteractionModuleBase
         if (int.TryParse(type, out var typeRaw))
         {
             if (typeRaw >= 0
-             && Enum.IsDefined(typeof(GuildRankPointType), typeRaw))
+                && Enum.IsDefined(typeof(GuildRankPointType), typeRaw))
             {
                 pointType = (GuildRankPointType)typeRaw;
             }

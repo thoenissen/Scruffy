@@ -48,7 +48,15 @@ public abstract class LocatedAsyncJob : IServiceScopeSupport, IAsyncJob, IDispos
     /// <summary>
     /// Localized group
     /// </summary>
-    public LocalizationGroup LocalizationGroup => field ??= ServiceProviderContainer.Current.GetServiceProvider().GetRequiredService<LocalizationService>().GetGroup(GetType().Name);
+    public LocalizationGroup LocalizationGroup
+    {
+        get
+        {
+            return field ??= ServiceProviderContainer.Current.GetServiceProvider()
+                .GetRequiredService<LocalizationService>()
+                .GetGroup(GetType().Name);
+        }
+    }
 
     #endregion // Properties
 

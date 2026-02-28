@@ -70,7 +70,10 @@ public class AccountGuildWarsConfigurationDialogElement : DialogEmbedSelectMenuE
     }
 
     /// <inheritdoc/>
-    public override string GetPlaceholder() => LocalizationGroup.GetText("Placeholder", "Please choose one of the following options...");
+    public override string GetPlaceholder()
+    {
+        return LocalizationGroup.GetText("Placeholder", "Please choose one of the following options...");
+    }
 
     /// <inheritdoc/>
     public override IReadOnlyList<SelectMenuEntryData<bool>> GetEntries()
@@ -96,7 +99,7 @@ public class AccountGuildWarsConfigurationDialogElement : DialogEmbedSelectMenuE
         var guildWarsAccounts = _repositoryFactory.GetRepository<GuildWarsAccountRepository>()
                                                   .GetQuery()
                                                   .Where(obj => discordAccountsQuery.Any(obj2 => obj2.UserId == obj.UserId
-                                                                                              && obj2.Id == CommandContext.User.Id))
+                                                                                                 && obj2.Id == CommandContext.User.Id))
                                                   .Select(obj => obj.Name)
                                                   .ToList();
 
@@ -114,10 +117,10 @@ public class AccountGuildWarsConfigurationDialogElement : DialogEmbedSelectMenuE
 
                                             if (_repositoryFactory.GetRepository<GuildWarsAccountDailyLoginCheckRepository>()
                                                                   .RemoveRange(obj => obj.Account.UserId == userData.Id
-                                                                                   && obj.Name == guildWarsAccount)
-                                             && _repositoryFactory.GetRepository<GuildWarsAccountRepository>()
+                                                                                      && obj.Name == guildWarsAccount)
+                                                && _repositoryFactory.GetRepository<GuildWarsAccountRepository>()
                                                                   .Remove(obj => obj.UserId == userData.Id
-                                                                              && obj.Name == guildWarsAccount))
+                                                                                 && obj.Name == guildWarsAccount))
                                             {
                                                 await CommandContext.Channel
                                                                     .SendMessageAsync(LocalizationGroup.GetText("AccountDeleted", "Your account has been successfully deleted."))
@@ -138,7 +141,10 @@ public class AccountGuildWarsConfigurationDialogElement : DialogEmbedSelectMenuE
     }
 
     /// <inheritdoc/>
-    protected override bool DefaultFunc() => false;
+    protected override bool DefaultFunc()
+    {
+        return false;
+    }
 
     #endregion // DialogEmbedSelectMenuElementBase<bool>
 }

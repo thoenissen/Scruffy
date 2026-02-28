@@ -40,5 +40,8 @@ public class AddLinkModalData : IModal
     /// <param name="channelId">Channel id</param>
     /// <param name="messageId">message id</param>
     /// <returns>Custom id</returns>
-    public static string GetCustomId(ulong channelId, ulong messageId) => $"{CustomIdPrefix};{channelId};{messageId}";
+    public static string GetCustomId(ulong channelId, ulong messageId)
+    {
+        return $"{CustomIdPrefix};{channelId};{messageId}";
+    }
 }

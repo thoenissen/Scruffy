@@ -30,14 +30,20 @@ public abstract class DialogEmbedReactionElementBase<TData> : DialogElementBase<
     /// Returns the reactions which should be added to the message
     /// </summary>
     /// <returns>Reactions</returns>
-    public virtual IReadOnlyList<ReactionData<TData>> GetReactions() => null;
+    public virtual IReadOnlyList<ReactionData<TData>> GetReactions()
+    {
+        return null;
+    }
 
     /// <summary>
     /// Editing the embedded message
     /// </summary>
     /// <param name="builder">Builder</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public virtual Task EditMessage(EmbedBuilder builder) => Task.CompletedTask;
+    public virtual Task EditMessage(EmbedBuilder builder)
+    {
+        return Task.CompletedTask;
+    }
 
     /// <summary>
     /// Returns the title of the commands

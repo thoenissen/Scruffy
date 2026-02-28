@@ -36,7 +36,10 @@ internal class GuildOverviewMessageConfigurationSelectDialogElement : DialogSele
     #region DialogSelectMenuElementBase
 
     /// <inheritdoc/>
-    public override string GetMessage() => LocalizationGroup.GetText("Message", "Please select of the following types:");
+    public override string GetMessage()
+    {
+        return LocalizationGroup.GetText("Message", "Please select of the following types:");
+    }
 
     /// <inheritdoc/>
     public override IReadOnlyList<SelectMenuEntryData<MessageType?>> GetEntries()
@@ -52,7 +55,10 @@ internal class GuildOverviewMessageConfigurationSelectDialogElement : DialogSele
     }
 
     /// <inheritdoc/>
-    protected override MessageType? DefaultFunc() => null;
+    protected override MessageType? DefaultFunc()
+    {
+        return null;
+    }
 
     #endregion // DialogSelectMenuElementBase
 }

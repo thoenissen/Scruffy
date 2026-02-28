@@ -24,7 +24,10 @@ public class GuildCalendarDescriptionDialogElement : DialogMessageElementBase<st
     #region DialogMessageElementBase<string>
 
     /// <inheritdoc/>
-    public override string GetMessage() => LocalizationGroup.GetText("Message", "Please enter the description.");
+    public override string GetMessage()
+    {
+        return LocalizationGroup.GetText("Message", "Please enter the description.");
+    }
 
     #endregion // DialogMessageElementBase<string>
 }

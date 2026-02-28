@@ -51,7 +51,7 @@ public class GuildSpecialRankSelectionDialogElement : DialogEmbedMessageElementB
             var mainRoles = dbFactory.GetRepository<GuildSpecialRankConfigurationRepository>()
                                      .GetQuery()
                                      .Where(obj => obj.Guild.DiscordServerId == CommandContext.Guild.Id
-                                                && obj.IsDeleted == false)
+                                                   && obj.IsDeleted == false)
                                      .Select(obj => new
                                                     {
                                                         obj.Id,

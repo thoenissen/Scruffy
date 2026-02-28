@@ -49,7 +49,10 @@ public class PlayerDTO
     #region Object
 
     /// <inheritdoc />
-    public override string ToString() => Name;
+    public override string ToString()
+    {
+        return Name;
+    }
 
     #endregion // Object
 }

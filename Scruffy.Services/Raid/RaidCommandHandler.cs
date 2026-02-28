@@ -157,7 +157,7 @@ public class RaidCommandHandler : LocatedServiceBase
             var appointmentTimeStamp = DateTime.Today.Add(data.StartTime);
 
             while (appointmentTimeStamp < DateTime.Now
-                || appointmentTimeStamp.DayOfWeek != data.Day)
+                   || appointmentTimeStamp.DayOfWeek != data.Day)
             {
                 appointmentTimeStamp = appointmentTimeStamp.AddDays(1);
             }
@@ -225,7 +225,7 @@ public class RaidCommandHandler : LocatedServiceBase
             var appointment = await dbFactory.GetRepository<RaidAppointmentRepository>()
                                              .GetQuery()
                                              .Where(obj => obj.TimeStamp > DateTime.Now
-                                                        && obj.RaidDayConfiguration.AliasName == name)
+                                                           && obj.RaidDayConfiguration.AliasName == name)
                                              .Select(obj => new
                                              {
                                                  obj.Id,
@@ -282,7 +282,7 @@ public class RaidCommandHandler : LocatedServiceBase
             var appointment = await dbFactory.GetRepository<RaidAppointmentRepository>()
                                          .GetQuery()
                                          .Where(obj => obj.TimeStamp > DateTime.Now
-                                                    && obj.ConfigurationId == configurationId)
+                                                       && obj.ConfigurationId == configurationId)
                                          .Select(obj => new
                                                         {
                                                             obj.Id,
@@ -349,7 +349,7 @@ public class RaidCommandHandler : LocatedServiceBase
             var appointment = await dbFactory.GetRepository<RaidAppointmentRepository>()
                                              .GetQuery()
                                              .Where(obj => obj.TimeStamp > DateTime.Now
-                                                        && obj.RaidDayConfiguration.AliasName == name)
+                                                           && obj.RaidDayConfiguration.AliasName == name)
                                              .Select(obj => new
                                                             {
                                                                 obj.Id,
@@ -393,7 +393,7 @@ public class RaidCommandHandler : LocatedServiceBase
             var appointment = await dbFactory.GetRepository<RaidAppointmentRepository>()
                                              .GetQuery()
                                              .Where(obj => obj.TimeStamp > DateTime.Now
-                                                        && obj.RaidDayConfiguration.AliasName == name)
+                                                           && obj.RaidDayConfiguration.AliasName == name)
                                              .Select(obj => new
                                                             {
                                                                 obj.Id,
@@ -438,7 +438,7 @@ public class RaidCommandHandler : LocatedServiceBase
             var appointment = await dbFactory.GetRepository<RaidAppointmentRepository>()
                                              .GetQuery()
                                              .Where(obj => obj.TimeStamp > DateTime.Now
-                                                        && obj.RaidDayConfiguration.AliasName == name)
+                                                           && obj.RaidDayConfiguration.AliasName == name)
                                              .Select(obj => new
                                                             {
                                                                 obj.Id,
@@ -480,7 +480,7 @@ public class RaidCommandHandler : LocatedServiceBase
             var appointment = await dbFactory.GetRepository<RaidAppointmentRepository>()
                                              .GetQuery()
                                              .Where(obj => obj.TimeStamp > DateTime.Now
-                                                        && obj.RaidDayConfiguration.AliasName == name)
+                                                           && obj.RaidDayConfiguration.AliasName == name)
                                              .Select(obj => new
                                                             {
                                                                 obj.Id,
@@ -523,7 +523,7 @@ public class RaidCommandHandler : LocatedServiceBase
             var appointment = await dbFactory.GetRepository<RaidAppointmentRepository>()
                                              .GetQuery()
                                              .Where(obj => obj.TimeStamp > DateTime.Now
-                                                        && obj.RaidDayConfiguration.AliasName == name)
+                                                           && obj.RaidDayConfiguration.AliasName == name)
                                              .Select(obj => new
                                                             {
                                                                 obj.Id,
@@ -637,8 +637,8 @@ public class RaidCommandHandler : LocatedServiceBase
                 var appointments = dbFactory.GetRepository<RaidAppointmentRepository>()
                                             .GetQuery()
                                             .Where(obj => obj.IsCommitted == false
-                                                       && obj.TimeStamp > now
-                                                       && obj.RaidRegistrations.Any(obj2 => obj2.User.DiscordAccounts.Any(obj3 => discordUserIds.Contains(obj3.Id))))
+                                                          && obj.TimeStamp > now
+                                                          && obj.RaidRegistrations.Any(obj2 => obj2.User.DiscordAccounts.Any(obj3 => discordUserIds.Contains(obj3.Id))))
                                             .Select(obj => new
                                                            {
                                                                obj.Id,

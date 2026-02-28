@@ -33,14 +33,20 @@ public class RaidCommitUserDTO
     /// <summary>
     /// Calculated points based on the participation status
     /// </summary>
-    public double Points => Status switch
-                            {
-                                RaidParticipationStatus.Played => ParticipationPoints * 1.0,
-                                RaidParticipationStatus.Substitute => ParticipationPoints * 3.0,
-                                RaidParticipationStatus.NoShow => ParticipationPoints * -1.0,
-                                RaidParticipationStatus.LateRegistration => 0.0,
-                                _ => ParticipationPoints * 1.0,
-                            };
+    public double Points
+    {
+        get
+        {
+            return Status switch
+            {
+                RaidParticipationStatus.Played => ParticipationPoints * 1.0,
+                RaidParticipationStatus.Substitute => ParticipationPoints * 3.0,
+                RaidParticipationStatus.NoShow => ParticipationPoints * -1.0,
+                RaidParticipationStatus.LateRegistration => 0.0,
+                _ => ParticipationPoints * 1.0,
+            };
+        }
+    }
 
     /// <summary>
     /// Experience level description

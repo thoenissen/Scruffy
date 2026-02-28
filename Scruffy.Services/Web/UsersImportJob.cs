@@ -61,7 +61,7 @@ public class UsersImportJob : LocatedAsyncJob
         var developerRole = Environment.GetEnvironmentVariable("SCURFFY_DEVELOPER_ROLE");
 
         if (ulong.TryParse(developmentServer, out var developmentServerId)
-         && ulong.TryParse(developerRole, out var developerRoleId))
+            && ulong.TryParse(developerRole, out var developerRoleId))
         {
             var guild = _discordSocketClient.GetGuild(developmentServerId);
 

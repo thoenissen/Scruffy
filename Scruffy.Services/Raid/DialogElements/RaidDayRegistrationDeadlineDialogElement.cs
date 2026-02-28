@@ -28,7 +28,10 @@ public class RaidDayRegistrationDeadlineDialogElement : DialogMessageElementBase
     #region DialogMessageElementBase<string>
 
     /// <inheritdoc/>
-    public override string GetMessage() => LocalizationGroup.GetText("Message", "Please enter the registration deadline (hh:mm):");
+    public override string GetMessage()
+    {
+        return LocalizationGroup.GetText("Message", "Please enter the registration deadline (hh:mm):");
+    }
 
     /// <inheritdoc/>
     public override TimeSpan ConvertMessage(IUserMessage message)

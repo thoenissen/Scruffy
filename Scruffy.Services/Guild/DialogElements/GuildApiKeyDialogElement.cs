@@ -26,7 +26,10 @@ public class GuildApiKeyDialogElement : DialogMessageElementBase<string>
     #region DialogMessageElementBase<string>
 
     /// <inheritdoc/>
-    public override string GetMessage() => LocalizationGroup.GetText("Message", "Please enter the api key.");
+    public override string GetMessage()
+    {
+        return LocalizationGroup.GetText("Message", "Please enter the api key.");
+    }
 
     /// <inheritdoc/>
     public override string ConvertMessage(IUserMessage message)

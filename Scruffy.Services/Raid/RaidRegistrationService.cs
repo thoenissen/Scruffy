@@ -70,7 +70,7 @@ public class RaidRegistrationService : LocatedServiceBase
             if (dbFactory.GetRepository<RaidAppointmentRepository>()
                          .GetQuery()
                          .Any(obj => obj.Id == appointmentId
-                                  && obj.RaidDayTemplate.RaidExperienceAssignments.Any(obj2 => obj2.RaidExperienceLevel.Rank >= user.ExperienceLevelRank)))
+                                     && obj.RaidDayTemplate.RaidExperienceAssignments.Any(obj2 => obj2.RaidExperienceLevel.Rank >= user.ExperienceLevelRank)))
             {
                 var success = true;
 
@@ -80,7 +80,7 @@ public class RaidRegistrationService : LocatedServiceBase
                 {
                     if (dbFactory.GetRepository<RaidRegistrationRepository>()
                                  .AddOrRefresh(obj => obj.AppointmentId == appointmentId
-                                                   && obj.UserId == user.Id,
+                                                      && obj.UserId == user.Id,
                                                obj =>
                                                {
                                                    if (obj.Id == 0)
@@ -97,7 +97,7 @@ public class RaidRegistrationService : LocatedServiceBase
                                                obj => registrationId = obj.Id))
                     {
                         if (registrationId != null
-                         && isAlreadyRegistered == false)
+                            && isAlreadyRegistered == false)
                         {
                             var registration = dbFactory.GetRepository<RaidRegistrationRepository>()
                                                         .GetQuery()
@@ -188,7 +188,7 @@ public class RaidRegistrationService : LocatedServiceBase
                 var registration = dbFactory.GetRepository<RaidRegistrationRepository>()
                                             .GetQuery()
                                             .Where(obj => obj.AppointmentId == appointmentId
-                                                       && obj.UserId == userId)
+                                                          && obj.UserId == userId)
                                             .Select(obj => new
                                                            {
                                                                obj.Id,
@@ -392,7 +392,7 @@ public class RaidRegistrationService : LocatedServiceBase
             foreach (var registration in appointment.Registrations.Where(obj => obj.IsBevorDeadline))
             {
                 var slot = slots.FirstOrDefault(obj => obj.SlotCount > obj.Registrations.Count
-                                                    && obj.Rank >= (registration.Rank ?? defaultRank));
+                                                       && obj.Rank >= (registration.Rank ?? defaultRank));
 
                 if (slot != null)
                 {
@@ -436,7 +436,7 @@ public class RaidRegistrationService : LocatedServiceBase
             }
 
             if (success
-             && substitutesBench.Count > 0)
+                && substitutesBench.Count > 0)
             {
                 success = dbFactory.GetRepository<RaidRegistrationRepository>()
                                    .RefreshRange(obj => substitutesBench.Contains(obj.Id),

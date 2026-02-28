@@ -28,7 +28,10 @@ public class GuildUserConfigurationUserDialogElement : DialogMessageElementBase<
     #region DialogMessageElementBase
 
     /// <inheritdoc/>
-    public override string GetMessage() => LocalizationGroup.GetText("Message", "Please enter the member:");
+    public override string GetMessage()
+    {
+        return LocalizationGroup.GetText("Message", "Please enter the member:");
+    }
 
     /// <inheritdoc/>
     public override IGuildUser ConvertMessage(IUserMessage message)

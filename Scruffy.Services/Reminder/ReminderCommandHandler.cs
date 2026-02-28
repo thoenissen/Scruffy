@@ -127,14 +127,14 @@ public class ReminderCommandHandler : LocatedServiceBase
         if (string.IsNullOrWhiteSpace(date) == false)
         {
             if (new Regex(@"\d\d\d\d-\d\d-\d\d").IsMatch(date)
-             && DateTime.TryParseExact(date,
+                && DateTime.TryParseExact(date,
                                        "yyyy-MM-dd",
                                        null,
                                        DateTimeStyles.None,
                                        out var parsedDate)
-             && string.IsNullOrWhiteSpace(time) == false
-             && new Regex(@"\d\d:\d\d").IsMatch(time)
-             && TimeSpan.TryParseExact(time, "hh\\:mm", null, out var parsedDateTime))
+                && string.IsNullOrWhiteSpace(time) == false
+                && new Regex(@"\d\d:\d\d").IsMatch(time)
+                && TimeSpan.TryParseExact(time, "hh\\:mm", null, out var parsedDateTime))
             {
                 timeStamp = parsedDate.Add(parsedDateTime);
             }
@@ -142,7 +142,7 @@ public class ReminderCommandHandler : LocatedServiceBase
         else
         {
             if (new Regex(@"\d\d:\d\d").IsMatch(time)
-             && TimeSpan.TryParseExact(time, "hh\\:mm", null, out var parsedTime))
+                && TimeSpan.TryParseExact(time, "hh\\:mm", null, out var parsedTime))
             {
                 timeStamp = DateTime.Today.Add(parsedTime);
 

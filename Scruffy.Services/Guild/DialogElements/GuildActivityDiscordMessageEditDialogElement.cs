@@ -40,7 +40,7 @@ public class GuildActivityDiscordMessageEditDialogElement : DiscordRoleSelection
                     var existingRoles = dbFactory.GetRepository<GuildDiscordActivityPointsAssignmentRepository>()
                                                  .GetQuery()
                                                  .Where(obj => obj.Guild.DiscordServerId == CommandContext.Guild.Id
-                                                            && obj.Type == DiscordActivityPointsType.Message)
+                                                               && obj.Type == DiscordActivityPointsType.Message)
                                                  .Select(obj => obj.RoleId)
                                                  .ToList();
 

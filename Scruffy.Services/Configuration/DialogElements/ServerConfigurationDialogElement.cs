@@ -40,7 +40,10 @@ public class ServerConfigurationDialogElement : DialogEmbedSelectMenuElementBase
     }
 
     /// <inheritdoc/>
-    public override string GetPlaceholder() => LocalizationGroup.GetText("ChooseAction", "Choose one of the following options...");
+    public override string GetPlaceholder()
+    {
+        return LocalizationGroup.GetText("ChooseAction", "Choose one of the following options...");
+    }
 
     /// <inheritdoc/>
     public override IReadOnlyList<SelectMenuEntryData<bool>> GetEntries()
@@ -63,7 +66,7 @@ public class ServerConfigurationDialogElement : DialogEmbedSelectMenuElementBase
                                   foreach (var type in Assembly.Load("Scruffy.Commands")
                                                                .GetTypes()
                                                                .Where(obj => typeof(SlashCommandModuleBase).IsAssignableFrom(obj)
-                                                                          && obj.IsAbstract == false))
+                                                                             && obj.IsAbstract == false))
                                   {
                                       var commandModule = (SlashCommandModuleBase)Activator.CreateInstance(type);
 
@@ -76,7 +79,7 @@ public class ServerConfigurationDialogElement : DialogEmbedSelectMenuElementBase
                                   foreach (var type in Assembly.Load("Scruffy.Commands")
                                                                .GetTypes()
                                                                .Where(obj => typeof(MessageCommandModuleBase).IsAssignableFrom(obj)
-                                                                          && obj.IsAbstract == false))
+                                                                             && obj.IsAbstract == false))
                                   {
                                       var commandModule = (MessageCommandModuleBase)Activator.CreateInstance(type);
 
@@ -112,7 +115,10 @@ public class ServerConfigurationDialogElement : DialogEmbedSelectMenuElementBase
     }
 
     /// <inheritdoc/>
-    protected override bool DefaultFunc() => false;
+    protected override bool DefaultFunc()
+    {
+        return false;
+    }
 
     #endregion // DialogSelectMenuElementBase<bool>
 }

@@ -18,4 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Scruffy.Services\Scruffy.Services.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="Reihitsu.Analyzer" Version="0.11.1" />
+  </ItemGroup>
 </Project>

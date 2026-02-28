@@ -28,7 +28,11 @@ public class CalendarTemplateGuildPointsPointsDialogElement : DialogMessageEleme
     #region DialogMessageElementBase<string>
 
     /// <inheritdoc/>
-    public override string GetMessage() => LocalizationGroup.GetText("Message", "Please enter the number of guild points which can be earned by this event.");
+    public override string GetMessage()
+    {
+        return LocalizationGroup.GetText("Message",
+            "Please enter the number of guild points which can be earned by this event.");
+    }
 
     /// <inheritdoc/>
     public override double ConvertMessage(IUserMessage message)

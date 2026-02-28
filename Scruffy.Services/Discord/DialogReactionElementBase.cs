@@ -29,7 +29,10 @@ public abstract class DialogReactionElementBase<TData> : DialogElementBase<TData
     /// Returns the reactions which should be added to the message
     /// </summary>
     /// <returns>Reactions</returns>
-    public virtual IReadOnlyList<ReactionData<TData>> GetReactions() => null;
+    public virtual IReadOnlyList<ReactionData<TData>> GetReactions()
+    {
+        return null;
+    }
 
     /// <summary>
     /// Editing the embedded message

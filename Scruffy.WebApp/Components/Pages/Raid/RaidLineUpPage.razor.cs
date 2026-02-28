@@ -491,7 +491,7 @@ public partial class RaidLineUpPage
             var appointment = dbFactory.GetRepository<RaidAppointmentRepository>()
                                        .GetQuery()
                                        .Where(appointment => appointment.IsCommitted == false
-                                                              && appointment.TimeStamp > now)
+                                                             && appointment.TimeStamp > now)
                                        .Select(obj => new
                                                {
                                                    obj.Id,

@@ -91,7 +91,7 @@ public class StatisticsVisualizerService : LocatedServiceBase
             var mostActive = dbFactory.GetRepository<DiscordMessageRepository>()
                                       .GetQuery()
                                       .Where(obj => obj.DiscordServerId == commandContext.Guild.Id
-                                                 && obj.DiscordAccountId == commandContext.User.Id)
+                                                    && obj.DiscordAccountId == commandContext.User.Id)
                                       .GroupBy(obj => obj.DiscordChannelId)
                                       .Select(obj => new
                                                      {
@@ -131,8 +131,8 @@ public class StatisticsVisualizerService : LocatedServiceBase
             stringBuilder.Append(Format.Code(dbFactory.GetRepository<DiscordMessageRepository>()
                                                       .GetQuery()
                                                       .Count(obj => obj.DiscordServerId == commandContext.Guild.Id
-                                                                 && obj.DiscordAccountId == commandContext.User.Id
-                                                                 && obj.TimeStamp > limit)
+                                                                    && obj.DiscordAccountId == commandContext.User.Id
+                                                                    && obj.TimeStamp > limit)
                                                       .ToString()
                                                     + ' '
                                                     + LocalizationGroup.GetText("MeOverviewMessages", "messages")));
@@ -143,8 +143,8 @@ public class StatisticsVisualizerService : LocatedServiceBase
             stringBuilder.Append(Format.Code(dbFactory.GetRepository<DiscordMessageRepository>()
                                                       .GetQuery()
                                                       .Count(obj => obj.DiscordServerId == commandContext.Guild.Id
-                                                                 && obj.DiscordAccountId == commandContext.User.Id
-                                                                 && obj.TimeStamp > limit)
+                                                                    && obj.DiscordAccountId == commandContext.User.Id
+                                                                    && obj.TimeStamp > limit)
                                                       .ToString()
                                            + ' '
                                            + LocalizationGroup.GetText("MeOverviewMessages", "messages")));
@@ -155,8 +155,8 @@ public class StatisticsVisualizerService : LocatedServiceBase
             stringBuilder.Append(Format.Code(dbFactory.GetRepository<DiscordMessageRepository>()
                                                          .GetQuery()
                                                          .Count(obj => obj.DiscordServerId == commandContext.Guild.Id
-                                                                    && obj.DiscordAccountId == commandContext.User.Id
-                                                                    && obj.TimeStamp > limit)
+                                                                       && obj.DiscordAccountId == commandContext.User.Id
+                                                                       && obj.TimeStamp > limit)
                                                          .ToString()
                                               + ' '
                                               + LocalizationGroup.GetText("MeOverviewMessages", "messages")));
@@ -167,7 +167,7 @@ public class StatisticsVisualizerService : LocatedServiceBase
             var messageChannels = dbFactory.GetRepository<DiscordMessageRepository>()
                                            .GetQuery()
                                            .Where(obj => obj.DiscordServerId == commandContext.Guild.Id
-                                                      && obj.DiscordAccountId == commandContext.User.Id)
+                                                         && obj.DiscordAccountId == commandContext.User.Id)
                                            .GroupBy(obj => obj.DiscordChannelId)
                                            .Select(obj => new
                                                           {

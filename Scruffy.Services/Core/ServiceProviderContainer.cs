@@ -85,7 +85,7 @@ public sealed class ServiceProviderContainer : IAsyncDisposable
         foreach (var type in Assembly.Load("Scruffy.Services")
                                      .GetTypes()
                                      .Where(obj => typeof(SingletonLocatedServiceBase).IsAssignableFrom(obj)
-                                                && obj.IsAbstract == false))
+                                                   && obj.IsAbstract == false))
         {
             var instance = (SingletonLocatedServiceBase)Activator.CreateInstance(type);
 
@@ -110,8 +110,8 @@ public sealed class ServiceProviderContainer : IAsyncDisposable
         foreach (var type in Assembly.Load("Scruffy.Services")
                                      .GetTypes()
                                      .Where(obj => (typeof(DialogElementBase).IsAssignableFrom(obj)
-                                                 || typeof(LocatedServiceBase).IsAssignableFrom(obj))
-                                                && obj.IsAbstract == false))
+                                                    || typeof(LocatedServiceBase).IsAssignableFrom(obj))
+                                                   && obj.IsAbstract == false))
         {
             _serviceCollection.AddTransient(type);
         }
@@ -119,7 +119,7 @@ public sealed class ServiceProviderContainer : IAsyncDisposable
         foreach (var type in Assembly.Load("Scruffy.Services")
                                      .GetTypes()
                                      .Where(obj => typeof(LocatedAsyncJob).IsAssignableFrom(obj)
-                                                && obj.IsAbstract == false))
+                                                   && obj.IsAbstract == false))
         {
             _serviceCollection.AddTransient(type);
         }
@@ -184,7 +184,10 @@ public sealed class ServiceProviderContainer : IAsyncDisposable
     /// Creates a new service scope
     /// </summary>
     /// <returns>Newly created scope.</returns>
-    public IServiceScope CreateScope() => _serviceScopeFactory.CreateScope();
+    public IServiceScope CreateScope()
+    {
+        return _serviceScopeFactory.CreateScope();
+    }
 
     #endregion // Methods
 

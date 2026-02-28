@@ -56,7 +56,7 @@ public class BlockedChannelService : SingletonLocatedServiceBase
     public bool IsChannelBlocked(ICommandContext commandContext)
     {
         var isBlocked = commandContext.Channel is IGuildChannel guildChannel
-                     && _blockedChannels.ContainsKey((guildChannel.GuildId, guildChannel.Id));
+                        && _blockedChannels.ContainsKey((guildChannel.GuildId, guildChannel.Id));
 
         if (isBlocked)
         {
@@ -76,7 +76,7 @@ public class BlockedChannelService : SingletonLocatedServiceBase
         try
         {
             var isBlocked = commandContext.Channel is IGuildChannel guildChannel
-                         && _blockedChannels.ContainsKey((guildChannel.GuildId, guildChannel.Id));
+                            && _blockedChannels.ContainsKey((guildChannel.GuildId, guildChannel.Id));
 
             if (isBlocked)
             {
@@ -131,7 +131,7 @@ public class BlockedChannelService : SingletonLocatedServiceBase
         {
             success = dbFactory.GetRepository<BlockedDiscordChannelRepository>()
                                .Remove(obj => obj.ServerId == channel.GuildId
-                                           && obj.ChannelId == channel.Id);
+                                              && obj.ChannelId == channel.Id);
 
             if (success)
             {

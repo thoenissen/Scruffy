@@ -33,7 +33,11 @@ public class AccountDataProcessingTermsDialogElement : DialogButtonElementBase<b
     #region DialogButtonElementBase<bool>
 
     /// <inheritdoc/>
-    public override string GetMessage() => LocalizationGroup.GetText("AcceptStorage", "To use this feature, you must agree to the processing and storage of your data to provide the functionalities of this bot. The command `/info` can be used to display a detailed list of the data that will be stored and processed. Do you agree to this processing and storage?");
+    public override string GetMessage()
+    {
+        return LocalizationGroup.GetText("AcceptStorage",
+            "To use this feature, you must agree to the processing and storage of your data to provide the functionalities of this bot. The command `/info` can be used to display a detailed list of the data that will be stored and processed. Do you agree to this processing and storage?");
+    }
 
     /// <inheritdoc/>
     public override IReadOnlyList<ButtonData<bool>> GetButtons()
@@ -55,7 +59,10 @@ public class AccountDataProcessingTermsDialogElement : DialogButtonElementBase<b
     }
 
     /// <inheritdoc/>
-    protected override bool DefaultFunc() => false;
+    protected override bool DefaultFunc()
+    {
+        return false;
+    }
 
     #endregion // DialogButtonElementBase<bool>
 }

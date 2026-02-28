@@ -160,7 +160,7 @@ public partial class PersonalRankingPage
             var guildMemberQuery = repositoryFactory.GetRepository<GuildWarsGuildHistoricMemberRepository>()
                                                     .GetQuery()
                                                     .Where(member => guildMemberSubQuery.Any(checkMember => checkMember.GuildId == member.GuildId
-                                                                     && checkMember.Date > member.Date) == false);
+                                                                                                            && checkMember.Date > member.Date) == false);
             var accountsQuery = repositoryFactory.GetRepository<GuildWarsAccountRepository>()
                                                  .GetQuery();
 
@@ -175,7 +175,7 @@ public partial class PersonalRankingPage
                                                                   && rankPoint.UserId == userId
                                                                   && accountsQuery.Any(account => account.UserId == rankPoint.UserId
                                                                                                   && guildMemberQuery.Any(member => member.Name == account.Name
-                                                                                                      && member.GuildId == rankPoint.GuildId))
+                                                                                                                                    && member.GuildId == rankPoint.GuildId))
                                                                   && userConfiguration.Any(configuration => configuration.UserId == rankPoint.UserId
                                                                                                             && configuration.GuildId == rankPoint.GuildId
                                                                                                             && configuration.IsInactive) == false)

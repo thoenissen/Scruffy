@@ -52,8 +52,8 @@ public class AdministrationPermissionsValidationService : SingletonLocatedServic
     public Task<bool> CheckPermissions(IContextContainer commandContext)
     {
         var result = commandContext.User.Id == commandContext.Guild?.OwnerId
-                  || commandContext.Member?.GuildPermissions.Administrator == true
-                  || (commandContext.Member != null && commandContext.Guild != null && _roles.TryGetValue(commandContext.Guild.Id, out var roleId) && commandContext.Member.RoleIds.Any(obj => obj == roleId));
+                     || commandContext.Member?.GuildPermissions.Administrator == true
+                     || (commandContext.Member != null && commandContext.Guild != null && _roles.TryGetValue(commandContext.Guild.Id, out var roleId) && commandContext.Member.RoleIds.Any(obj => obj == roleId));
 
         return Task.FromResult(result);
     }

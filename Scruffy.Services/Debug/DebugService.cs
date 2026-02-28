@@ -256,11 +256,11 @@ public class DebugService
             var logEntries = dbFactory.GetRepository<LogEntryRepository>()
                                       .GetQuery()
                                       .Where(obj => obj.TimeStamp >= dayStart
-                                                 && obj.TimeStamp < dayEnd)
+                                                    && obj.TimeStamp < dayEnd)
                                       .ToList();
 
             if (suppressEmpty == false
-             || logEntries.Count > 0)
+                || logEntries.Count > 0)
             {
                 var builder = new EmbedBuilder().WithTitle("Bot state report")
                                                 .WithColor(Color.Green)
@@ -302,9 +302,9 @@ public class DebugService
                 foreach (var type in dbFactory.GetRepository<GuildLogEntryRepository>()
                                               .GetQuery()
                                               .Where(obj => obj.IsProcessed == false
-                                                         && (obj.Type == GuildLogEntryEntity.Types.Stash
-                                                          || obj.Type == GuildLogEntryEntity.Types.Upgrade)
-                                                         && obj.Time < today)
+                                                            && (obj.Type == GuildLogEntryEntity.Types.Stash
+                                                                || obj.Type == GuildLogEntryEntity.Types.Upgrade)
+                                                            && obj.Time < today)
                                               .GroupBy(obj => obj.Type)
                                               .Select(obj => new
                                                              {

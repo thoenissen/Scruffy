@@ -113,7 +113,10 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("join-user", "Register a user to an appointment")]
     public Task Join([Summary("User")]IGuildUser user,
-                     [Summary("Name", "Name of the appointment")]string name) => CommandHandler.Join(Context, user, name);
+                     [Summary("Name", "Name of the appointment")]string name)
+    {
+        return CommandHandler.Join(Context, user, name);
+    }
 
     /// <summary>
     /// Leaving an appointment
@@ -141,7 +144,10 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
     /// <param name="name">Alias name</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("set-template", "Set raid template")]
-    public Task SetTemplate([Summary("Name", "Name of the appointment")]string name) => CommandHandler.SetTemplate(Context, name);
+    public Task SetTemplate([Summary("Name", "Name of the appointment")]string name)
+    {
+        return CommandHandler.SetTemplate(Context, name);
+    }
 
     /// <summary>
     /// Commiting the current raid appointment
@@ -168,7 +174,10 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("set-experience-level", "Assign a experience to the given users.")]
     public Task SetExperienceLevel([Summary("Role", "The role which should be assigned")]string role,
-                                   [Summary("User", "The user who should be assigned the role.")]IGuildUser user) => CommandHandler.SetExperienceLevel(Context, role, user);
+                                   [Summary("User", "The user who should be assigned the role.")]IGuildUser user)
+    {
+        return CommandHandler.SetExperienceLevel(Context, role, user);
+    }
 
     /// <summary>
     /// Commiting the current raid appointment
@@ -176,7 +185,10 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
     /// <param name="name">Alias name</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("commit", "Commit raid appointment")]
-    public Task Commit([Summary("Name", "Name of the appointment")]string name) => CommandHandler.Commit(Context, name);
+    public Task Commit([Summary("Name", "Name of the appointment")]string name)
+    {
+        return CommandHandler.Commit(Context, name);
+    }
 
     /// <summary>
     /// Post a overview of the selected type
@@ -272,8 +284,8 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
                    .Select(obj =>
                    {
                        if (obj.Options.IsSpecified
-                        && obj.Name.IsSpecified
-                        && obj.Name.Value == "raid-admin")
+                           && obj.Name.IsSpecified
+                           && obj.Name.Value == "raid-admin")
                        {
                            foreach (var option in obj.Options.Value)
                            {

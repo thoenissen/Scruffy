@@ -28,7 +28,10 @@ public class GuildModals : LocatedInteractionModuleBase
     /// <param name="modal">Modal input</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [ModalInteraction(GuildExportStashModalData.CustomId)]
-    public Task ExportStash(GuildExportStashModalData modal) => CommandHandler.ExportStash(Context, modal.Mode, modal.SinceDate, modal.SinceTime);
+    public Task ExportStash(GuildExportStashModalData modal)
+    {
+        return CommandHandler.ExportStash(Context, modal.Mode, modal.SinceDate, modal.SinceTime);
+    }
 
     /// <summary>
     /// Export upgrades
@@ -36,7 +39,10 @@ public class GuildModals : LocatedInteractionModuleBase
     /// <param name="modal">Modal input</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [ModalInteraction(GuildExportUpgradesModalData.CustomId)]
-    public Task ExportUpgrades(GuildExportUpgradesModalData modal) => CommandHandler.ExportUpgrades(Context, modal.Mode, modal.SinceDate, modal.SinceTime);
+    public Task ExportUpgrades(GuildExportUpgradesModalData modal)
+    {
+        return CommandHandler.ExportUpgrades(Context, modal.Mode, modal.SinceDate, modal.SinceTime);
+    }
 
     /// <summary>
     /// Export current points
@@ -44,7 +50,10 @@ public class GuildModals : LocatedInteractionModuleBase
     /// <param name="modal">Modal input</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [ModalInteraction(GuildExportCurrentPointsModalData.CustomId)]
-    public Task ExportCurrentPoints(GuildExportCurrentPointsModalData modal) => CommandHandler.ExportCurrentPoints(Context, modal.SinceDate);
+    public Task ExportCurrentPoints(GuildExportCurrentPointsModalData modal)
+    {
+        return CommandHandler.ExportCurrentPoints(Context, modal.SinceDate);
+    }
 
     #endregion // Methods
 }

@@ -89,28 +89,40 @@ public class CalendarCommandHandler : LocatedServiceBase
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task SetParticipants(IContextContainer context) => _calendarParticipantsService.EditParticipants(context);
+    public Task SetParticipants(IContextContainer context)
+    {
+        return _calendarParticipantsService.EditParticipants(context);
+    }
 
     /// <summary>
     /// Templates configuration
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task ConfigureTemplates(IContextContainer context) => _calendarTemplateService.RunAssistantAsync(context);
+    public Task ConfigureTemplates(IContextContainer context)
+    {
+        return _calendarTemplateService.RunAssistantAsync(context);
+    }
 
     /// <summary>
     /// Schedules configuration
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task ConfigureSchedules(IContextContainer context) => _calendarScheduleService.RunAssistantAsync(context);
+    public Task ConfigureSchedules(IContextContainer context)
+    {
+        return _calendarScheduleService.RunAssistantAsync(context);
+    }
 
     /// <summary>
     /// Add a one time event
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task AddOneTimeEvent(IContextContainer context) => _calendarScheduleService.AddOneTimeEvent(context);
+    public Task AddOneTimeEvent(IContextContainer context)
+    {
+        return _calendarScheduleService.AddOneTimeEvent(context);
+    }
 
     /// <summary>
     /// Appointment lead configuration
@@ -138,9 +150,9 @@ public class CalendarCommandHandler : LocatedServiceBase
                 foreach (var appointment in dbFactory.GetRepository<CalendarAppointmentRepository>()
                                                      .GetQuery()
                                                      .Where(obj => obj.TimeStamp > now
-                                                                && obj.CalendarAppointmentTemplate.DiscordVoiceChannel != null
-                                                                && (obj.LeaderId == null
-                                                                 || obj.LeaderId == user.Id))
+                                                                   && obj.CalendarAppointmentTemplate.DiscordVoiceChannel != null
+                                                                   && (obj.LeaderId == null
+                                                                       || obj.LeaderId == user.Id))
                                                      .Select(obj => new
                                                                     {
                                                                         obj.Id,
@@ -191,8 +203,8 @@ public class CalendarCommandHandler : LocatedServiceBase
 
             dbFactory.GetRepository<CalendarAppointmentRepository>()
                      .RefreshRange(obj => obj.TimeStamp > now
-                                       && obj.LeaderId == user.Id
-                                       && selectedAppointments.Contains(obj.Id) == false,
+                                          && obj.LeaderId == user.Id
+                                          && selectedAppointments.Contains(obj.Id) == false,
                                    obj =>
                                    {
                                        obj.LeaderId = null;
@@ -205,8 +217,8 @@ public class CalendarCommandHandler : LocatedServiceBase
 
             dbFactory.GetRepository<CalendarAppointmentRepository>()
                      .RefreshRange(obj => obj.TimeStamp > now
-                                       && obj.LeaderId == null
-                                       && selectedAppointments.Contains(obj.Id),
+                                          && obj.LeaderId == null
+                                          && selectedAppointments.Contains(obj.Id),
                                    obj =>
                                    {
                                        obj.LeaderId = user.Id;

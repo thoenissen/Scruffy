@@ -34,28 +34,40 @@ public class UserRoleRepository : RepositoryBase<UserRoleQueryable, UserRoleEnti
     /// </summary>
     /// <param name="developers">Developers</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task<bool> BulkInsertDevelopers(List<long> developers) => BulkInsertRoles(developers, 1);
+    public Task<bool> BulkInsertDevelopers(List<long> developers)
+    {
+        return BulkInsertRoles(developers, 1);
+    }
 
     /// <summary>
     /// Bulk insert administrators
     /// </summary>
     /// <param name="administrators">Administrators</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task<bool> BulkInsertAdministrators(List<long> administrators) => BulkInsertRoles(administrators, 2);
+    public Task<bool> BulkInsertAdministrators(List<long> administrators)
+    {
+        return BulkInsertRoles(administrators, 2);
+    }
 
     /// <summary>
     /// Bulk insert members
     /// </summary>
     /// <param name="members">Members</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task<bool> BulkInsertMembers(List<long> members) => BulkInsertRoles(members, 3);
+    public Task<bool> BulkInsertMembers(List<long> members)
+    {
+        return BulkInsertRoles(members, 3);
+    }
 
     /// <summary>
     /// Bulk insert privileged members
     /// </summary>
     /// <param name="privilegedMembers">Privileged members</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task<bool> BulkInsertPrivilegedMembers(List<long> privilegedMembers) => BulkInsertRoles(privilegedMembers, 4);
+    public Task<bool> BulkInsertPrivilegedMembers(List<long> privilegedMembers)
+    {
+        return BulkInsertRoles(privilegedMembers, 4);
+    }
 
     /// <summary>
     /// Bulk insert role assignments

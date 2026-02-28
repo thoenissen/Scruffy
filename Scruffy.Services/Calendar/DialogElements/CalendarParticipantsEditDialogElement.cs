@@ -169,7 +169,10 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedSelectMenuElemen
     }
 
     /// <inheritdoc/>
-    protected override bool DefaultFunc() => false;
+    protected override bool DefaultFunc()
+    {
+        return false;
+    }
 
     /// <inheritdoc/>
     public override IReadOnlyList<SelectMenuEntryData<bool>> GetEntries()

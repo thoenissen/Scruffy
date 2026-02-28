@@ -47,7 +47,10 @@ public class CalendarAppointmentSelectionDialogElement : DialogEmbedSelectMenuEl
     }
 
     /// <inheritdoc/>
-    protected override long DefaultFunc() => 0;
+    protected override long DefaultFunc()
+    {
+        return 0;
+    }
 
     /// <inheritdoc/>
     public override IReadOnlyList<SelectMenuEntryData<long>> GetEntries()

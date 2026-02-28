@@ -20,6 +20,6 @@ public class SecondsTimeSpanConverter : JsonConverter<TimeSpan>
     /// <inheritdoc/>
     public override void WriteJson(JsonWriter writer, TimeSpan value, JsonSerializer serializer)
     {
-        throw new NotImplementedException();
+        throw new NotSupportedException();
     }
 }

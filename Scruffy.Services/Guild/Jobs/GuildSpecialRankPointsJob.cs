@@ -146,7 +146,7 @@ public class GuildSpecialRankPointsJob : LocatedAsyncJob
                                                                           obj.Guild.DiscordServerId,
                                                                           obj.DiscordRoleId,
                                                                           ChannelId = channels.Where(obj2 => obj2.GuildId == obj.GuildId
-                                                                                                          && obj2.Type == GuildChannelConfigurationType.SpecialRankRankChange)
+                                                                                                             && obj2.Type == GuildChannelConfigurationType.SpecialRankRankChange)
                                                                                               .Select(obj2 => (ulong?)obj2.DiscordChannelId)
                                                                                               .FirstOrDefault(),
                                                                           Users = obj.GuildSpecialRankPoints

@@ -74,15 +74,17 @@ internal static class CommandExtensions
     /// </summary>
     /// <param name="commandInfo">Command info</param>
     /// <returns>Converter object</returns>
-    public static ApplicationCommandOptionProperties ToApplicationCommandOptionProps(this SlashCommandInfo commandInfo) =>
-        new()
-        {
-            Name = commandInfo.Name,
-            Description = commandInfo.Description,
-            Type = ApplicationCommandOptionType.SubCommand,
-            IsRequired = false,
-            Options = commandInfo.FlattenedParameters?.Select(x => x.ToApplicationCommandOptionProps()).ToList()
-        };
+    public static ApplicationCommandOptionProperties ToApplicationCommandOptionProps(this SlashCommandInfo commandInfo)
+    {
+        return new ApplicationCommandOptionProperties
+               {
+                   Name = commandInfo.Name,
+                   Description = commandInfo.Description,
+                   Type = ApplicationCommandOptionType.SubCommand,
+                   IsRequired = false,
+                   Options = commandInfo.FlattenedParameters?.Select(x => x.ToApplicationCommandOptionProps()).ToList()
+               };
+    }
 
     /// <summary>
     /// Convert to <see cref="ApplicationCommandProperties"/>
@@ -90,7 +92,8 @@ internal static class CommandExtensions
     /// <param name="commandInfo">Command information</param>
     /// <returns>Converted object</returns>
     public static ApplicationCommandProperties ToApplicationCommandProps(this ContextCommandInfo commandInfo)
-        => commandInfo.CommandType switch
+    {
+        return commandInfo.CommandType switch
         {
             ApplicationCommandType.Message => new MessageCommandBuilder
                                               {
@@ -98,8 +101,8 @@ internal static class CommandExtensions
                                                   IsDefaultPermission = commandInfo.DefaultPermission,
                                                   DefaultMemberPermissions = (commandInfo.DefaultMemberPermissions ?? 0) | (commandInfo.Module.DefaultMemberPermissions ?? 0),
                                                   ContextTypes = commandInfo.IsEnabledInDm
-                                                      ? [InteractionContextType.Guild, InteractionContextType.PrivateChannel, InteractionContextType.BotDm]
-                                                      : [InteractionContextType.Guild, InteractionContextType.PrivateChannel]
+                                                                     ? [InteractionContextType.Guild, InteractionContextType.PrivateChannel, InteractionContextType.BotDm]
+                                                                     : [InteractionContextType.Guild, InteractionContextType.PrivateChannel]
                                               }.Build(),
             ApplicationCommandType.User => new UserCommandBuilder
                                            {
@@ -107,11 +110,12 @@ internal static class CommandExtensions
                                                IsDefaultPermission = commandInfo.DefaultPermission,
                                                DefaultMemberPermissions = (commandInfo.DefaultMemberPermissions ?? 0) | (commandInfo.Module.DefaultMemberPermissions ?? 0),
                                                ContextTypes = commandInfo.IsEnabledInDm
-                                                   ? [InteractionContextType.Guild, InteractionContextType.PrivateChannel, InteractionContextType.BotDm]
-                                                   : [InteractionContextType.Guild, InteractionContextType.PrivateChannel]
+                                                                  ? [InteractionContextType.Guild, InteractionContextType.PrivateChannel, InteractionContextType.BotDm]
+                                                                  : [InteractionContextType.Guild, InteractionContextType.PrivateChannel]
                                            }.Build(),
             _ => throw new InvalidOperationException($"{commandInfo.CommandType} isn't a supported command type.")
         };
+    }
 
     /// <summary>
     /// Convert to <see cref="ApplicationCommandProperties"/>

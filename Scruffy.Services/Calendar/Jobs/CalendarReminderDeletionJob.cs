@@ -59,7 +59,7 @@ public class CalendarReminderDeletionJob : LocatedAsyncJob
                                     .FirstOrDefault();
 
                 if (data?.ReminderChannelId != null
-                 && data.ReminderMessageId != null)
+                    && data.ReminderMessageId != null)
                 {
                     var discordClient = serviceProvider.GetRequiredService<DiscordSocketClient>();
 

@@ -48,10 +48,18 @@ public class RaidPreparedRolesFirstTimeSelectDialogElement : DialogMultiSelectSe
     protected override int MaxValues => 9;
 
     /// <inheritdoc/>
-    public override Task<string> GetMessage() => Task.FromResult(LocalizationGroup.GetFormattedText("Message", "{0}, to participate in a raid you must first select the roles you have prepared for it. You can customize your roles at any time using the `/raid roles` command. Please choose your roles in the following selection: ", CommandContext.User.Mention));
+    public override Task<string> GetMessage()
+    {
+        return Task.FromResult(LocalizationGroup.GetFormattedText("Message",
+            "{0}, to participate in a raid you must first select the roles you have prepared for it. You can customize your roles at any time using the `/raid roles` command. Please choose your roles in the following selection: ",
+            CommandContext.User.Mention));
+    }
 
     /// <inheritdoc/>
-    public override string GetPlaceholder() => LocalizationGroup.GetText("RoleSelectionPlaceHolder", "Choose your roles...");
+    public override string GetPlaceholder()
+    {
+        return LocalizationGroup.GetText("RoleSelectionPlaceHolder", "Choose your roles...");
+    }
 
     /// <inheritdoc/>
     public override IReadOnlyList<SelectMenuOptionData> GetEntries()

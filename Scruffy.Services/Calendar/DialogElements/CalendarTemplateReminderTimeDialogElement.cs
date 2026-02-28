@@ -28,7 +28,10 @@ public class CalendarTemplateReminderTimeDialogElement : DialogMessageElementBas
     #region DialogMessageElementBase<string>
 
     /// <inheritdoc/>
-    public override string GetMessage() => LocalizationGroup.GetText("Message", "Please enter the reminder time (hh:mm):");
+    public override string GetMessage()
+    {
+        return LocalizationGroup.GetText("Message", "Please enter the reminder time (hh:mm):");
+    }
 
     /// <inheritdoc/>
     public override TimeSpan ConvertMessage(IUserMessage message)

@@ -209,7 +209,7 @@ public partial class RaidRolesPage
         var users = _repositoryFactory.GetRepository<RaidRegistrationRepository>()
                                       .GetQuery()
                                       .Where(obj => obj.Points != null
-                                                 && obj.RaidAppointment.TimeStamp > dateLimit)
+                                                    && obj.RaidAppointment.TimeStamp > dateLimit)
                                       .Select(obj => new
                                                      {
                                                          obj.UserId,

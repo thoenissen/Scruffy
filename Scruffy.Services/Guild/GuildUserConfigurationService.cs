@@ -75,7 +75,7 @@ public class GuildUserConfigurationService : LocatedServiceBase
         var userConfiguration = _repositoryFactory.GetRepository<GuildUserConfigurationRepository>()
                                                   .GetQuery()
                                                   .FirstOrDefault(obj => obj.UserId == user.Id
-                                                                      && obj.GuildId == guildId)
+                                                                         && obj.GuildId == guildId)
                              ?? new GuildUserConfigurationEntity
                                 {
                                     GuildId = guildId,
@@ -159,7 +159,7 @@ public class GuildUserConfigurationService : LocatedServiceBase
 
                 continueEdit = _repositoryFactory.GetRepository<GuildUserConfigurationRepository>()
                                                  .AddOrRefresh(obj => obj.UserId == user.Id
-                                                                   && obj.Guild.DiscordServerId == member.GuildId,
+                                                                      && obj.Guild.DiscordServerId == member.GuildId,
                                                                obj =>
                                                                {
                                                                    obj.GuildId = userConfiguration.GuildId;
@@ -169,7 +169,7 @@ public class GuildUserConfigurationService : LocatedServiceBase
                                                                });
 
                 if (continueEdit
-                 && userConfiguration.IsInactive)
+                    && userConfiguration.IsInactive)
                 {
                     var ranks = _repositoryFactory.GetRepository<GuildRankRepository>()
                                                   .GetQuery()
@@ -202,7 +202,7 @@ public class GuildUserConfigurationService : LocatedServiceBase
             finally
             {
                 if (continueEdit == false
-                 && message != null)
+                    && message != null)
                 {
                     await message.ModifyAsync(obj => obj.Components = new ComponentBuilder().Build())
                                  .ConfigureAwait(false);

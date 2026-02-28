@@ -107,17 +107,11 @@ public partial class QuickGridPaginator
     {
         base.OnParametersSet();
 
-        if (_lastState != null)
-        {
-            _lastState.TotalItemCountChanged -= OnTotalItemCountChanged;
-        }
+        _lastState?.TotalItemCountChanged -= OnTotalItemCountChanged;
 
         _lastState = State;
 
-        if (State != null)
-        {
-            State.TotalItemCountChanged += OnTotalItemCountChanged;
-        }
+        State?.TotalItemCountChanged += OnTotalItemCountChanged;
     }
 
     /// <inheritdoc/>

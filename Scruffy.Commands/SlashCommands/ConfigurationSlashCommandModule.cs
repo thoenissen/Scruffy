@@ -29,7 +29,10 @@ public class ConfigurationSlashCommandModule : SlashCommandModuleBase
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("configuration", "Server configuration")]
-    public Task Configure() => CommandHandler.Configure(Context);
+    public Task Configure()
+    {
+        return CommandHandler.Configure(Context);
+    }
 
     #endregion // Methods
 }

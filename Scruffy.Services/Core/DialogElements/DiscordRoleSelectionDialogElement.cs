@@ -44,10 +44,16 @@ public class DiscordRoleSelectionDialogElement : DialogSelectMenuElementBase<ulo
     #region DialogEmbedMessageElementBase<long?>
 
     /// <inheritdoc/>
-    public override string GetMessage() => LocalizationGroup.GetText("ChooseRoleTitle", "Role selection");
+    public override string GetMessage()
+    {
+        return LocalizationGroup.GetText("ChooseRoleTitle", "Role selection");
+    }
 
     /// <inheritdoc/>
-    public override string GetPlaceholder() => LocalizationGroup.GetText("ChooseRoleDescription", "Please choose one of the following roles...");
+    public override string GetPlaceholder()
+    {
+        return LocalizationGroup.GetText("ChooseRoleDescription", "Please choose one of the following roles...");
+    }
 
     /// <inheritdoc/>
     public override IReadOnlyList<SelectMenuEntryData<ulong>> GetEntries()
@@ -59,7 +65,7 @@ public class DiscordRoleSelectionDialogElement : DialogSelectMenuElementBase<ulo
             foreach (var role in CommandContext.Guild
                                                .Roles
                                                .Where(obj => obj.IsManaged == false
-                                                          && obj.Id != obj.Guild.Id)
+                                                             && obj.Id != obj.Guild.Id)
                                                .OrderByDescending(obj => obj.Position))
             {
                 if (RoleFilter?.Invoke(role) != false)
@@ -80,7 +86,10 @@ public class DiscordRoleSelectionDialogElement : DialogSelectMenuElementBase<ulo
     }
 
     /// <inheritdoc/>
-    protected override ulong DefaultFunc() => throw new InvalidOperationException();
+    protected override ulong DefaultFunc()
+    {
+        throw new InvalidOperationException();
+    }
 
     #endregion // DialogEmbedMessageElementBase<long?>
 }

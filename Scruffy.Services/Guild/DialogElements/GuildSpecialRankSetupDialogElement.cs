@@ -57,7 +57,7 @@ public class GuildSpecialRankSetupDialogElement : DialogEmbedReactionElementBase
                 _ranks = dbFactory.GetRepository<GuildSpecialRankConfigurationRepository>()
                                   .GetQuery()
                                   .Where(obj => obj.Guild.DiscordServerId == CommandContext.Guild.Id
-                                             && obj.IsDeleted == false)
+                                                && obj.IsDeleted == false)
                                   .Select(obj => new GuildSpecialRankData
                                                  {
                                                      Id = obj.Id,
@@ -206,7 +206,10 @@ public class GuildSpecialRankSetupDialogElement : DialogEmbedReactionElementBase
     }
 
     /// <inheritdoc/>
-    protected override string GetCommandTitle() => LocalizationGroup.GetText("CommandTitle", "Commands");
+    protected override string GetCommandTitle()
+    {
+        return LocalizationGroup.GetText("CommandTitle", "Commands");
+    }
 
     /// <inheritdoc/>
     protected override bool DefaultFunc()

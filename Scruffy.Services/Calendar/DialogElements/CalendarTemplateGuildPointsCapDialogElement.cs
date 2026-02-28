@@ -35,7 +35,10 @@ public class CalendarTemplateGuildPointsCapDialogElement : DialogReactionElement
     #region DialogReactionElementBase<bool>
 
     /// <inheritdoc/>
-    public override string GetMessage() => LocalizationGroup.GetText("Prompt", "Is the guild points cap raised by this event?");
+    public override string GetMessage()
+    {
+        return LocalizationGroup.GetText("Prompt", "Is the guild points cap raised by this event?");
+    }
 
     /// <inheritdoc/>
     public override IReadOnlyList<ReactionData<bool>> GetReactions()
@@ -55,7 +58,10 @@ public class CalendarTemplateGuildPointsCapDialogElement : DialogReactionElement
     }
 
     /// <inheritdoc/>
-    protected override bool DefaultFunc(IReaction reaction) => false;
+    protected override bool DefaultFunc(IReaction reaction)
+    {
+        return false;
+    }
 
     #endregion // DialogReactionElementBase<bool>
 }

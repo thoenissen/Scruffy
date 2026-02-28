@@ -123,9 +123,9 @@ public class AccountCommandHandler : LocatedServiceBase
                                                       .ConfigureAwait(false);
 
                 if (tokenInformation?.Permissions != null
-                 && tokenInformation.Permissions.Contains(TokenInformation.Permission.Account)
-                 && tokenInformation.Permissions.Contains(TokenInformation.Permission.Characters)
-                 && tokenInformation.Permissions.Contains(TokenInformation.Permission.Progression))
+                    && tokenInformation.Permissions.Contains(TokenInformation.Permission.Account)
+                    && tokenInformation.Permissions.Contains(TokenInformation.Permission.Characters)
+                    && tokenInformation.Permissions.Contains(TokenInformation.Permission.Progression))
                 {
                     var accountInformation = await connector.GetAccountInformationAsync()
                                                             .ConfigureAwait(false);
@@ -139,7 +139,7 @@ public class AccountCommandHandler : LocatedServiceBase
 
                         if (dbFactory.GetRepository<AccountRepository>()
                                      .AddOrRefresh(obj => obj.UserId == user.Id
-                                                       && obj.Name == accountInformation.Name,
+                                                          && obj.Name == accountInformation.Name,
                                                    obj =>
                                                    {
                                                        isNewAccount = obj.UserId == 0;
@@ -198,7 +198,7 @@ public class AccountCommandHandler : LocatedServiceBase
 
         if (_repositoryFactory.GetRepository<UserRepository>()
                               .Refresh(obj => discordQuery.Any(obj2 => obj2.UserId == obj.Id
-                                                                    && obj2.Id == context.User.Id),
+                                                                       && obj2.Id == context.User.Id),
                                        obj => obj.DpsReportUserToken = string.IsNullOrWhiteSpace(userToken) ? null : userToken))
         {
             await AccountOverview(context).ConfigureAwait(false);
@@ -226,7 +226,7 @@ public class AccountCommandHandler : LocatedServiceBase
 
         if (_repositoryFactory.GetRepository<UserRepository>()
                               .Refresh(obj => discordQuery.Any(obj2 => obj2.UserId == obj.Id
-                                                                    && obj2.Id == context.User.Id),
+                                                                       && obj2.Id == context.User.Id),
                                        obj => obj.GitHubAccount = string.IsNullOrWhiteSpace(accountName) ? null : accountName))
         {
             await AccountOverview(context).ConfigureAwait(false);
@@ -255,13 +255,13 @@ public class AccountCommandHandler : LocatedServiceBase
 
         if (_repositoryFactory.GetRepository<UserRepository>()
                               .Refresh(obj => discordQuery.Any(obj2 => obj2.UserId == obj.Id
-                                                                    && obj2.Id == context.User.Id),
+                                                                       && obj2.Id == context.User.Id),
                                        obj =>
                                        {
                                            obj.Name = string.IsNullOrWhiteSpace(name) ? null : name;
 
                                            if (string.IsNullOrWhiteSpace(birthday) == false
-                                            && DateTime.TryParseExact(birthday, "yyyy-MM-dd", null, DateTimeStyles.None, out var day))
+                                               && DateTime.TryParseExact(birthday, "yyyy-MM-dd", null, DateTimeStyles.None, out var day))
                                            {
                                                obj.Birthday = day;
                                            }

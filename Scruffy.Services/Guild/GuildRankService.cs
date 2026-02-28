@@ -66,7 +66,7 @@ public class GuildRankService : LocatedServiceBase
             foreach (var guild in dbFactory.GetRepository<GuildRepository>()
                                            .GetQuery()
                                            .Where(obj => guildId == null
-                                                      || obj.Id == guildId)
+                                                         || obj.Id == guildId)
                                            .Select(obj => new
                                                           {
                                                               obj.Id,
@@ -95,7 +95,7 @@ public class GuildRankService : LocatedServiceBase
                         members = dbFactory.GetRepository<GuildWarsGuildHistoricMemberRepository>()
                                            .GetQuery()
                                            .Where(obj => obj.Date == yesterday
-                                                      && obj.GuildId == guild.Id)
+                                                         && obj.GuildId == guild.Id)
                                            .Select(obj => new GuildMember
                                                           {
                                                               Name = obj.Name,
@@ -130,8 +130,8 @@ public class GuildRankService : LocatedServiceBase
 
             dbFactory.GetRepository<GuildWarsGuildHistoricMemberRepository>()
                      .AddOrRefresh(obj => obj.GuildId == guildId
-                                       && obj.Name == accountName
-                                       && obj.Date == today,
+                                          && obj.Name == accountName
+                                          && obj.Date == today,
                                    obj =>
                                    {
                                        obj.GuildId = guildId;
@@ -188,7 +188,7 @@ public class GuildRankService : LocatedServiceBase
                                                                                obj2.Name,
                                                                            })
                                                      .Join(guildMemberQuery.Where(obj => guildMemberQuery.Any(obj2 => obj2.GuildId == obj.GuildId
-                                                                                                                   && obj2.Date > obj.Date) == false),
+                                                                                                                      && obj2.Date > obj.Date) == false),
                                                            obj => obj.Name,
                                                            obj => obj.Name,
                                                            (obj1, obj2) => new
@@ -217,7 +217,7 @@ public class GuildRankService : LocatedServiceBase
                                                                            {
                                                                                DiscordUserId = obj2.Id,
                                                                                DiscordRoleId = guildRankQuery.Where(obj => obj.GuildId == guild.Id
-                                                                                                                        && obj.Order == obj1.Order)
+                                                                                                                           && obj.Order == obj1.Order)
                                                                                                              .Select(obj => obj.DiscordRoleId)
                                                                                                              .FirstOrDefault()
                                                                            })
@@ -231,7 +231,7 @@ public class GuildRankService : LocatedServiceBase
                         foreach (var role in member.Roles.ToList())
                         {
                             if (user.DiscordRoleId != role.Id
-                             && guild.Roles.Contains(role.Id))
+                                && guild.Roles.Contains(role.Id))
                             {
                                 await member.RemoveRoleAsync(role)
                                             .ConfigureAwait(false);
@@ -279,7 +279,7 @@ public class GuildRankService : LocatedServiceBase
             foreach (var guild in dbFactory.GetRepository<GuildRepository>()
                                            .GetQuery()
                                            .Where(obj => guildId == null
-                                                      || obj.Id == guildId)
+                                                         || obj.Id == guildId)
                                            .Select(obj => new
                                                           {
                                                               obj.Id,
@@ -291,8 +291,8 @@ public class GuildRankService : LocatedServiceBase
                                            .ToList())
             {
                 var users = guildMemberQuery.Where(obj => obj.GuildId == guild.Id
-                                                       && guildMemberQuery.Any(obj2 => obj2.GuildId == obj.GuildId
-                                                                                    && obj2.Date > obj.Date) == false)
+                                                          && guildMemberQuery.Any(obj2 => obj2.GuildId == obj.GuildId
+                                                                                          && obj2.Date > obj.Date) == false)
                                             .Join(guildWarsAccountQuery,
                                                   obj => obj.Name,
                                                   obj => obj.Name,
@@ -322,7 +322,7 @@ public class GuildRankService : LocatedServiceBase
                                                                   {
                                                                       DiscordUserId = obj2.Id,
                                                                       DiscordRoleId = guildRankQuery.Where(obj => obj.GuildId == guild.Id
-                                                                                                               && obj.Order == obj1.Order)
+                                                                                                                  && obj.Order == obj1.Order)
                                                                                                     .Select(obj => obj.DiscordRoleId)
                                                                                                     .FirstOrDefault()
                                                                   })
@@ -347,7 +347,7 @@ public class GuildRankService : LocatedServiceBase
                         foreach (var roleId in member.RoleIds)
                         {
                             if (assignedRoleId != roleId
-                             && guild.Roles.Contains(roleId))
+                                && guild.Roles.Contains(roleId))
                             {
                                 await member.RemoveRoleAsync(roleId)
                                             .ConfigureAwait(false);
@@ -355,7 +355,7 @@ public class GuildRankService : LocatedServiceBase
                         }
 
                         if (assignedRoleId != null
-                         && member.RoleIds.Any(obj => obj == assignedRoleId) == false)
+                            && member.RoleIds.Any(obj => obj == assignedRoleId) == false)
                         {
                             await member.AddRoleAsync(discordServer.GetRole(assignedRoleId.Value))
                                         .ConfigureAwait(false);
@@ -381,7 +381,7 @@ public class GuildRankService : LocatedServiceBase
             foreach (var guild in dbFactory.GetRepository<GuildRepository>()
                                            .GetQuery()
                                            .Where(obj => guildId == null
-                                                      || obj.Id == guildId)
+                                                         || obj.Id == guildId)
                                            .Select(obj => new
                                                           {
                                                               obj.Id
@@ -1117,7 +1117,7 @@ public class GuildRankService : LocatedServiceBase
             currentRanks = _repositoryFactory.GetRepository<GuildWarsGuildHistoricMemberRepository>()
                                               .GetQuery()
                                               .Where(obj => obj.Date == today
-                                                         && obj.GuildId == guildId)
+                                                            && obj.GuildId == guildId)
                                               .ToDictionary(obj => obj.Name, obj => obj.Rank);
         }
 

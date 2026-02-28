@@ -67,7 +67,7 @@ public class LoggingService
         var openSearchUrl = Environment.GetEnvironmentVariable("SCRUFFY_OPENSEARCH");
 
         if (string.IsNullOrWhiteSpace(_environment) == false
-         && string.IsNullOrWhiteSpace(openSearchUrl) == false)
+            && string.IsNullOrWhiteSpace(openSearchUrl) == false)
         {
             var node = new Uri(openSearchUrl);
             var settings = new ConnectionSettings(node);
@@ -271,7 +271,7 @@ public class LoggingService
             }
 
             if (++_limitCounter < 120
-             && (int)level >= (int)LogEntryLevel.Warning)
+                && (int)level >= (int)LogEntryLevel.Warning)
             {
                 using (var dbFactory = RepositoryFactory.CreateInstance())
                 {

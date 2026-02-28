@@ -47,7 +47,10 @@ public abstract class DialogEmbedMessageElementBase<TData> : DialogElementBase<T
     /// </summary>
     /// <param name="message">Message</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public virtual Task<TData> ConvertMessage(IUserMessage message) => Task.FromResult((TData)Convert.ChangeType(message.Content, typeof(TData)));
+    public virtual Task<TData> ConvertMessage(IUserMessage message)
+    {
+        return Task.FromResult((TData)Convert.ChangeType(message.Content, typeof(TData)));
+    }
 
     /// <inheritdoc/>
     public override async Task<TData> Run()
@@ -63,7 +66,7 @@ public abstract class DialogEmbedMessageElementBase<TData> : DialogElementBase<T
 
             var currentUserResponse = await CommandContext.Interactivity
                                                           .WaitForMessageAsync(obj => obj.Author.Id == CommandContext.User.Id
-                                                                              && obj.Channel.Id == CommandContext.Channel.Id)
+                                                                                      && obj.Channel.Id == CommandContext.Channel.Id)
                                                           .ConfigureAwait(false);
 
             if (currentUserResponse != null)

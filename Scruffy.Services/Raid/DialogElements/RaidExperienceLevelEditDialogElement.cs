@@ -105,7 +105,7 @@ public class RaidExperienceLevelEditDialogElement : DialogEmbedReactionElementBa
                                                      {
                                                          if (dbFactory.GetRepository<RaidExperienceLevelRepository>()
                                                                       .RefreshRange(obj =>  obj.SuperiorExperienceLevelId == newSuperiorLevelId
-                                                                                         && obj.Id != levelId,
+                                                                                            && obj.Id != levelId,
                                                                                     obj => obj.SuperiorExperienceLevelId = levelId))
                                                          {
                                                              dbFactory.GetRepository<RaidExperienceLevelRepository>()

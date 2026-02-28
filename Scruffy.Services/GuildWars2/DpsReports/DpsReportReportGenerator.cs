@@ -174,8 +174,8 @@ public class DpsReportReportGenerator : LocatedServiceBase
         var timeTo = to.ToDateTime(TimeOnly.MinValue);
         var bosses = dpsReportRepository.GetQuery()
                                         .Where(r => r.UserId == user
-                                                        && r.EncounterTime >= timeFrom
-                                                        && r.EncounterTime < timeTo)
+                                                    && r.EncounterTime >= timeFrom
+                                                    && r.EncounterTime < timeTo)
                                         .ToList();
 
         var encounters = new Dictionary<DpsReportEncounterKey, List<DpsReportEncounterData>>();

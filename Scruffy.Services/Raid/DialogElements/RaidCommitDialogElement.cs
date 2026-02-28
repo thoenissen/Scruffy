@@ -208,7 +208,7 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
 
                                                          dbFactory.GetRepository<RaidRegistrationRepository>()
                                                                   .AddOrRefresh(obj => obj.AppointmentId == _commitData.AppointmentId
-                                                                                    && obj.UserId == user.Id,
+                                                                                       && obj.UserId == user.Id,
                                                                                 obj =>
                                                                                 {
                                                                                     if (obj.Id == 0)
@@ -227,7 +227,7 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
                                                      var users = dbFactory.GetRepository<RaidRegistrationRepository>()
                                                                           .GetQuery()
                                                                           .Where(obj => obj.Points != null
-                                                                                     && obj.RaidAppointment.TimeStamp > dateLimit)
+                                                                                        && obj.RaidAppointment.TimeStamp > dateLimit)
                                                                           .Select(obj => new
                                                                                          {
                                                                                              obj.UserId,
@@ -339,10 +339,16 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
     }
 
     /// <inheritdoc/>
-    protected override string GetCommandTitle() => LocalizationGroup.GetText("CommandTitle", "Commands");
+    protected override string GetCommandTitle()
+    {
+        return LocalizationGroup.GetText("CommandTitle", "Commands");
+    }
 
     /// <inheritdoc/>
-    protected override bool DefaultFunc() => false;
+    protected override bool DefaultFunc()
+    {
+        return false;
+    }
 
     #endregion // DialogEmbedReactionElementBase<bool>
 }

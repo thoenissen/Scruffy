@@ -45,7 +45,10 @@ public class AdministrationSlashCommandModule : SlashCommandModuleBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("rename-member", "Renaming a user")]
     public Task RenameMember([Summary("Member", "Member")]IGuildUser member,
-                             [Summary("Name", "New nickname")]string name) => CommandHandler.RenameMember(Context, member, name);
+                             [Summary("Name", "New nickname")]string name)
+    {
+        return CommandHandler.RenameMember(Context, member, name);
+    }
 
     /// <summary>
     /// Renaming a role
@@ -55,7 +58,10 @@ public class AdministrationSlashCommandModule : SlashCommandModuleBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("rename-role", "Renaming a user")]
     public Task RenameRole([Summary("Role", "Role")]IRole member,
-                           [Summary("Name", "New name")]string name) => CommandHandler.RenameRole(Context, member, name);
+                           [Summary("Name", "New name")]string name)
+    {
+        return CommandHandler.RenameRole(Context, member, name);
+    }
 
     /// <summary>
     /// Moves users
@@ -65,7 +71,10 @@ public class AdministrationSlashCommandModule : SlashCommandModuleBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("move", "Move users from one channel to another")]
     public Task MoveUsers([Summary("Source", "Source channel")] IVoiceChannel source,
-                          [Summary("Destination", "Destination channel")] IVoiceChannel destination) => CommandHandler.MoveUsers(Context, source, destination);
+                          [Summary("Destination", "Destination channel")] IVoiceChannel destination)
+    {
+        return CommandHandler.MoveUsers(Context, source, destination);
+    }
 
     #endregion // Methods
 }

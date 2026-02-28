@@ -48,10 +48,17 @@ public class RaidRoleSelectionDialogElement : DialogMultiSelectSelectMenuElement
     protected override int MaxValues => 9;
 
     /// <inheritdoc/>
-    public override Task<string> GetMessage() => Task.FromResult(CommandContext.User.Mention + " " + LocalizationGroup.GetText("ChooseMainRoleTitle", "Role selection"));
+    public override Task<string> GetMessage()
+    {
+        return Task.FromResult(CommandContext.User.Mention + " " +
+                               LocalizationGroup.GetText("ChooseMainRoleTitle", "Role selection"));
+    }
 
     /// <inheritdoc/>
-    public override string GetPlaceholder() => LocalizationGroup.GetText("ChooseRoleDescription", "Choose your roles...");
+    public override string GetPlaceholder()
+    {
+        return LocalizationGroup.GetText("ChooseRoleDescription", "Choose your roles...");
+    }
 
     /// <inheritdoc/>
     public override IReadOnlyList<SelectMenuOptionData> GetEntries()

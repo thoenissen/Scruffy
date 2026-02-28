@@ -28,7 +28,10 @@ public class AccountModals : LocatedInteractionModuleBase
     /// <param name="modal">Modal input</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [ModalInteraction(GuildWarsAccountModal.CustomId)]
-    public Task AddOrRefreshGuildWarsAccount(GuildWarsAccountModal modal) => CommandHandler.AddOrRefreshGuildWarsAccount(Context, modal.APIKey);
+    public Task AddOrRefreshGuildWarsAccount(GuildWarsAccountModal modal)
+    {
+        return CommandHandler.AddOrRefreshGuildWarsAccount(Context, modal.APIKey);
+    }
 
     /// <summary>
     /// Add or refresh a GW2 DPS Report user token
@@ -36,7 +39,10 @@ public class AccountModals : LocatedInteractionModuleBase
     /// <param name="modal">Modal input</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [ModalInteraction(DpsReportUserTokenModal.CustomId)]
-    public Task AddOrRefreshDpsReportUserToken(DpsReportUserTokenModal modal) => CommandHandler.AddOrRefreshDpsReportUserToken(Context, modal.UserToken);
+    public Task AddOrRefreshDpsReportUserToken(DpsReportUserTokenModal modal)
+    {
+        return CommandHandler.AddOrRefreshDpsReportUserToken(Context, modal.UserToken);
+    }
 
     /// <summary>
     /// Add or refresh a GitHub account
@@ -44,7 +50,10 @@ public class AccountModals : LocatedInteractionModuleBase
     /// <param name="modal">Modal input</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [ModalInteraction(GitHubAccountModal.CustomId)]
-    public Task AddOrRefreshGitHubAccount(GitHubAccountModal modal) => CommandHandler.AddOrRefreshGitHubAccount(Context, modal.AccountName);
+    public Task AddOrRefreshGitHubAccount(GitHubAccountModal modal)
+    {
+        return CommandHandler.AddOrRefreshGitHubAccount(Context, modal.AccountName);
+    }
 
     /// <summary>
     /// Add or refresh a personal data
@@ -52,7 +61,10 @@ public class AccountModals : LocatedInteractionModuleBase
     /// <param name="modal">Modal input</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [ModalInteraction(PersonalDataModal.CustomId)]
-    public Task AddOrRefreshPersonalData(PersonalDataModal modal) => CommandHandler.AddOrRefreshPersonalData(Context, modal.Name, modal.Birthday);
+    public Task AddOrRefreshPersonalData(PersonalDataModal modal)
+    {
+        return CommandHandler.AddOrRefreshPersonalData(Context, modal.Name, modal.Birthday);
+    }
 
     #endregion // Methods
 }

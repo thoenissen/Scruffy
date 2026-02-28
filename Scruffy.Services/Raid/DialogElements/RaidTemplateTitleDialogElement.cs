@@ -24,7 +24,10 @@ public class RaidTemplateTitleDialogElement : DialogMessageElementBase<string>
     #region DialogMessageElementBase<string>
 
     /// <inheritdoc/>
-    public override string GetMessage() => LocalizationGroup.GetText("Message", "Please enter the title which should be used.");
+    public override string GetMessage()
+    {
+        return LocalizationGroup.GetText("Message", "Please enter the title which should be used.");
+    }
 
     #endregion // DialogMessageElementBase<string>
 }

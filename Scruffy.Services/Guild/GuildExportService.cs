@@ -56,8 +56,8 @@ public class GuildExportService : LocatedServiceBase
             var logEntries = await dbFactory.GetRepository<GuildLogEntryRepository>()
                                             .GetQuery()
                                             .Where(obj => obj.Time > sinceDate
-                                                       && obj.Type == "stash"
-                                                       && obj.Guild.DiscordServerId == commandContext.Guild.Id)
+                                                          && obj.Type == "stash"
+                                                          && obj.Guild.DiscordServerId == commandContext.Guild.Id)
                                             .OrderBy(obj => obj.Time)
                                             .Select(obj => new
                                                            {
@@ -76,8 +76,8 @@ public class GuildExportService : LocatedServiceBase
             var customValues = await dbFactory.GetRepository<GuildWarsItemRepository>()
                                               .GetQuery()
                                               .Where(obj => (obj.CustomValueValidDate == null
-                                                          || obj.CustomValueValidDate > now)
-                                                         && obj.CustomValue != null)
+                                                             || obj.CustomValueValidDate > now)
+                                                            && obj.CustomValue != null)
                                               .ToDictionaryAsync(obj => obj.ItemId,
                                                                  obj => obj.CustomValue)
                                               .ConfigureAwait(false);
@@ -114,7 +114,7 @@ public class GuildExportService : LocatedServiceBase
                             var tradingPostPrice = tradingsPostValues.FirstOrDefault(obj => obj.Id == entry.ItemId);
 
                             if (entry.ItemId == null
-                             || customValues.TryGetValue(entry.ItemId.Value, out var customValue) == false)
+                                || customValues.TryGetValue(entry.ItemId.Value, out var customValue) == false)
                             {
                                 customValue = null;
                             }
@@ -152,8 +152,8 @@ public class GuildExportService : LocatedServiceBase
             var logEntries = await dbFactory.GetRepository<GuildLogEntryRepository>()
                                             .GetQuery()
                                             .Where(obj => obj.Time > sinceDate
-                                                       && obj.Type == "stash"
-                                                       && obj.Guild.DiscordServerId == commandContext.Guild.Id)
+                                                          && obj.Type == "stash"
+                                                          && obj.Guild.DiscordServerId == commandContext.Guild.Id)
                                             .GroupBy(obj => new
                                                             {
                                                                 obj.User,
@@ -178,8 +178,8 @@ public class GuildExportService : LocatedServiceBase
             var customValues = await dbFactory.GetRepository<GuildWarsItemRepository>()
                                               .GetQuery()
                                               .Where(obj => (obj.CustomValueValidDate == null
-                                                          || obj.CustomValueValidDate > now)
-                                                         && obj.CustomValue != null)
+                                                             || obj.CustomValueValidDate > now)
+                                                            && obj.CustomValue != null)
                                               .ToDictionaryAsync(obj => obj.ItemId,
                                                                  obj => obj.CustomValue)
                                               .ConfigureAwait(false);
@@ -216,7 +216,7 @@ public class GuildExportService : LocatedServiceBase
                             var tradingPostPrice = tradingsPostValues.FirstOrDefault(obj => obj.Id == entry.ItemId);
 
                             if (entry.ItemId == null
-                             || customValues.TryGetValue(entry.ItemId.Value, out var customValue) == false)
+                                || customValues.TryGetValue(entry.ItemId.Value, out var customValue) == false)
                             {
                                 customValue = null;
                             }
@@ -258,16 +258,16 @@ public class GuildExportService : LocatedServiceBase
             var logEntries = await dbFactory.GetRepository<GuildLogEntryRepository>()
                                             .GetQuery()
                                             .Where(obj => obj.Time > sinceDate
-                                                       && obj.User != null
-                                                       && obj.Type == "upgrade"
-                                                       && (obj.Action == "completed"
+                                                          && obj.User != null
+                                                          && obj.Type == "upgrade"
+                                                          && (obj.Action == "completed"
 
-                                                           // Cause of some items, who don't generate 'completed' we have to check also the 'queued' entries.
-                                                        || (obj.Action == "queued"
-                                                         && logEntriesQuery.Any(obj2 => obj2.Type == "upgrade"
-                                                                                     && obj2.UpgradeId == obj.UpgradeId
-                                                                                     && obj2.Action == "completed") == false))
-                                                       && obj.Guild.DiscordServerId == commandContext.Guild.Id)
+                                                              // Cause of some items, who don't generate 'completed' we have to check also the 'queued' entries.
+                                                              || (obj.Action == "queued"
+                                                                  && logEntriesQuery.Any(obj2 => obj2.Type == "upgrade"
+                                                                                                 && obj2.UpgradeId == obj.UpgradeId
+                                                                                                 && obj2.Action == "completed") == false))
+                                                          && obj.Guild.DiscordServerId == commandContext.Guild.Id)
                                             .OrderBy(obj => obj.Time)
                                             .Select(obj => new
                                                            {
@@ -285,8 +285,8 @@ public class GuildExportService : LocatedServiceBase
             var customValues = await dbFactory.GetRepository<GuildWarsItemRepository>()
                                               .GetQuery()
                                               .Where(obj => (obj.CustomValueValidDate == null
-                                                          || obj.CustomValueValidDate > now)
-                                                         && obj.CustomValue != null)
+                                                             || obj.CustomValueValidDate > now)
+                                                            && obj.CustomValue != null)
                                               .ToDictionaryAsync(obj => obj.ItemId,
                                                                  obj => obj.CustomValue)
                                               .ConfigureAwait(false);
@@ -297,7 +297,7 @@ public class GuildExportService : LocatedServiceBase
                                     .ToList();
 
             var upgradeIds = logEntries.Where(obj => obj.ItemId == null
-                                                  && obj.UpgradeId != null)
+                                                     && obj.UpgradeId != null)
                                        .Select(obj => obj.UpgradeId)
                                        .Distinct()
                                        .ToList();
@@ -336,7 +336,7 @@ public class GuildExportService : LocatedServiceBase
                                                : item?.Name;
 
                             if (entry.ItemId == null
-                             || customValues.TryGetValue(entry.ItemId.Value, out var customValue) == false)
+                                || customValues.TryGetValue(entry.ItemId.Value, out var customValue) == false)
                             {
                                 customValue = null;
                             }
@@ -378,16 +378,16 @@ public class GuildExportService : LocatedServiceBase
             var logEntries = await dbFactory.GetRepository<GuildLogEntryRepository>()
                                             .GetQuery()
                                             .Where(obj => obj.Time > sinceDate
-                                                       && obj.User != null
-                                                       && obj.Type == "upgrade"
-                                                       && (obj.Action == "completed"
+                                                          && obj.User != null
+                                                          && obj.Type == "upgrade"
+                                                          && (obj.Action == "completed"
 
-                                                           // Cause of some items, who don't generate 'completed' we have to check also the 'queued' entries.
-                                                        || (obj.Action == "queued"
-                                                         && logEntriesQuery.Any(obj2 => obj2.Type == "upgrade"
-                                                                                     && obj2.UpgradeId == obj.UpgradeId
-                                                                                     && obj2.Action == "completed") == false))
-                                                       && obj.Guild.DiscordServerId == commandContext.Guild.Id)
+                                                              // Cause of some items, who don't generate 'completed' we have to check also the 'queued' entries.
+                                                              || (obj.Action == "queued"
+                                                                  && logEntriesQuery.Any(obj2 => obj2.Type == "upgrade"
+                                                                                                 && obj2.UpgradeId == obj.UpgradeId
+                                                                                                 && obj2.Action == "completed") == false))
+                                                          && obj.Guild.DiscordServerId == commandContext.Guild.Id)
                                             .GroupBy(obj => new
                                                             {
                                                                 obj.User,
@@ -411,8 +411,8 @@ public class GuildExportService : LocatedServiceBase
             var customValues = await dbFactory.GetRepository<GuildWarsItemRepository>()
                                               .GetQuery()
                                               .Where(obj => (obj.CustomValueValidDate == null
-                                                          || obj.CustomValueValidDate > now)
-                                                         && obj.CustomValue != null)
+                                                             || obj.CustomValueValidDate > now)
+                                                            && obj.CustomValue != null)
                                               .ToDictionaryAsync(obj => obj.ItemId,
                                                                  obj => obj.CustomValue)
                                               .ConfigureAwait(false);
@@ -423,7 +423,7 @@ public class GuildExportService : LocatedServiceBase
                                     .ToList();
 
             var upgradeIds = logEntries.Where(obj => obj.ItemId == null
-                                                  && obj.UpgradeId != null)
+                                                     && obj.UpgradeId != null)
                                        .Select(obj => obj.UpgradeId)
                                        .Distinct()
                                        .ToList();
@@ -462,7 +462,7 @@ public class GuildExportService : LocatedServiceBase
                                                : item?.Name;
 
                             if (entry.ItemId == null
-                             || customValues.TryGetValue(entry.ItemId.Value, out var customValue) == false)
+                                || customValues.TryGetValue(entry.ItemId.Value, out var customValue) == false)
                             {
                                 customValue = null;
                             }
@@ -571,10 +571,10 @@ public class GuildExportService : LocatedServiceBase
                                                                                   .Select(obj2 => obj2.Id)
                                                                                   .FirstOrDefault(),
                                                             CharactersCount = characters.Count(obj2 => obj2.Date == today
-                                                                                                    && obj2.AccountName == obj.Name),
+                                                                                                       && obj2.AccountName == obj.Name),
                                                             CharactersRepresentationCount = characters.Count(obj2 => obj2.Date == today
-                                                                                                                  && obj2.AccountName == obj.Name
-                                                                                                                  && obj2.GuildId == guildId)
+                                                                                                                     && obj2.AccountName == obj.Name
+                                                                                                                     && obj2.GuildId == guildId)
                                                         })
                                          .ToListAsync()
                                          .ConfigureAwait(false);
@@ -803,8 +803,8 @@ public class GuildExportService : LocatedServiceBase
                     foreach (var entry in dbFactory.GetRepository<GuildRankCurrentPointsRepository>()
                                                    .GetQuery()
                                                    .Where(obj => obj.Date >= sinceDate
-                                                              && obj.Guild.DiscordServerId == commandContext.Guild.Id
-                                                              && obj.Type == GuildRankPointType.Login)
+                                                                 && obj.Guild.DiscordServerId == commandContext.Guild.Id
+                                                                 && obj.Type == GuildRankPointType.Login)
                                                    .Select(obj => new
                                                    {
                                                        obj.Date,

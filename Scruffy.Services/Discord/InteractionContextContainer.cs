@@ -324,7 +324,7 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
                 return await _interaction.ModifyOriginalResponseAsync(obj =>
                                                                       {
                                                                           if (text == null
-                                                                           && embed == null)
+                                                                              && embed == null)
                                                                           {
                                                                               if (components == null
                                                                                   || components.Components.Any(component => component.Type == ComponentType.Container) == false)
@@ -416,7 +416,7 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
                     await deferMessage.ModifyAsync(obj =>
                                                    {
                                                        if (text == null
-                                                            && embed == null)
+                                                           && embed == null)
                                                        {
                                                            if (components == null
                                                                || components.Components.Any(component => component.Type == ComponentType.Container) == false)
@@ -562,7 +562,10 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
     /// Sets the <see cref="P:IRouteMatchContainer.SegmentMatches" /> property of this container.
     /// </summary>
     /// <param name="segmentMatches">The collection of captured route segments.</param>
-    void IRouteMatchContainer.SetSegmentMatches(IEnumerable<IRouteSegmentMatch> segmentMatches) => _segmentMatches = segmentMatches.ToImmutableArray();
+    void IRouteMatchContainer.SetSegmentMatches(IEnumerable<IRouteSegmentMatch> segmentMatches)
+    {
+        _segmentMatches = segmentMatches.ToImmutableArray();
+    }
 
     /// <summary>
     /// Gets the collection of captured route segments in this container.

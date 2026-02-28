@@ -50,7 +50,7 @@ public class GuildLogImportJob : LocatedAsyncJob
                                                                                       .OrderByDescending(obj2 => obj2)
                                                                                       .FirstOrDefault(),
                                                    ChannelId = channels.Where(obj2 => obj2.GuildId == obj.Id
-                                                                                   && obj2.Type == GuildChannelConfigurationType.GuildLogNotification)
+                                                                                      && obj2.Type == GuildChannelConfigurationType.GuildLogNotification)
                                                                                       .Select(obj2 => (ulong?)obj2.DiscordChannelId)
                                                                                       .FirstOrDefault()
                                                })

@@ -53,14 +53,20 @@ public class GuildWars2CommandHandler : LocatedServiceBase
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task Quaggan(IContextContainer context) => _quagganService.PostRandomQuaggan(context);
+    public Task Quaggan(IContextContainer context)
+    {
+        return _quagganService.PostRandomQuaggan(context);
+    }
 
     /// <summary>
     /// Next update
     /// </summary>
     /// <param name="context">Command context</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public Task Update(IContextContainer context) => _updateService.PostUpdateOverview(context);
+    public Task Update(IContextContainer context)
+    {
+        return _updateService.PostUpdateOverview(context);
+    }
 
     /// <summary>
     /// Post raid guides overview

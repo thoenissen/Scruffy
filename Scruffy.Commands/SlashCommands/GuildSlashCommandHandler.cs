@@ -52,7 +52,10 @@ public class GuildSlashCommandHandler : SlashCommandModuleBase
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("bank-check", "Execution of some guild bank checks")]
-    public Task BankCheck() => CommandHandler.GuildBankCheck(Context);
+    public Task BankCheck()
+    {
+        return CommandHandler.GuildBankCheck(Context);
+    }
 
     /// <summary>
     /// Check if everything of the given type stored in the guild bank is unlocked

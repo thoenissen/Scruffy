@@ -69,8 +69,8 @@ public class GuildCheckUnknownUsersJob : LocatedAsyncJob
             var unknownUsers = _repositoryFactory.GetRepository<GuildWarsGuildHistoricMemberRepository>()
                                                  .GetQuery()
                                                  .Where(obj => obj.Date == today
-                                                            && obj.GuildId == guild.GuildId
-                                                            && guildWarsAccounts.Any(obj2 => obj2.Name == obj.Name) == false)
+                                                               && obj.GuildId == guild.GuildId
+                                                               && guildWarsAccounts.Any(obj2 => obj2.Name == obj.Name) == false)
                                                  .Select(obj => new
                                                                 {
                                                                     obj.Name,

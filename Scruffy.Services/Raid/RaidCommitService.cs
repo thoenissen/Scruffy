@@ -83,8 +83,8 @@ public class RaidCommitService : LocatedServiceBase
             var appointment = await dbFactory.GetRepository<RaidAppointmentRepository>()
                                              .GetQuery()
                                              .Where(obj => obj.TimeStamp < now
-                                                        && obj.IsCommitted == false
-                                                        && obj.RaidDayConfiguration.AliasName == aliasName)
+                                                           && obj.IsCommitted == false
+                                                           && obj.RaidDayConfiguration.AliasName == aliasName)
                                              .Select(obj => new
                                                             {
                                                                 obj.Id,
@@ -189,7 +189,7 @@ public class RaidCommitService : LocatedServiceBase
                         {
                             dbFactory.GetRepository<CalendarAppointmentParticipantRepository>()
                                      .AddOrRefresh(obj => obj.AppointmentId == calendarAppointmentId
-                                                       && obj.UserId == userId,
+                                                          && obj.UserId == userId,
                                                    obj =>
                                                    {
                                                        obj.AppointmentId = calendarAppointmentId;

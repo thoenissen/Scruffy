@@ -8,9 +8,15 @@ namespace Scruffy.Data.Entity.Migrations
     public partial class Update63 : Migration
     {
         /// <inheritdoc/>
-        protected override void Up(MigrationBuilder migrationBuilder) => migrationBuilder.AddColumn<decimal>(name: "NewUserDiscordRoleId", table: "Guilds", type: "decimal(20,0)", nullable: true);
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.AddColumn<decimal>(name: "NewUserDiscordRoleId", table: "Guilds", type: "decimal(20,0)", nullable: true);
+        }
 
         /// <inheritdoc/>
-        protected override void Down(MigrationBuilder migrationBuilder) => migrationBuilder.DropColumn(name: "NewUserDiscordRoleId", table: "Guilds");
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropColumn(name: "NewUserDiscordRoleId", table: "Guilds");
+        }
     }
 }

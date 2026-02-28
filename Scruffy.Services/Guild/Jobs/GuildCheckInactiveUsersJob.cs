@@ -82,11 +82,11 @@ public class GuildCheckInactiveUsersJob : LocatedAsyncJob
             var inactiveUsers = _repositoryFactory.GetRepository<GuildRankAssignmentRepository>()
                                                   .GetQuery()
                                                   .Where(obj => obj.GuildId == guild.GuildId
-                                                             && obj.RankId == ranks.OrderByDescending(obj2 => obj2.Order)
+                                                                && obj.RankId == ranks.OrderByDescending(obj2 => obj2.Order)
                                                                                    .Select(obj2 => obj2.Id)
                                                                                    .FirstOrDefault()
-                                                             && loginQuery.Any(obj2 => obj2.Account.UserId == obj.UserId
-                                                                                    && obj2.Date > inactivityLimit) == false)
+                                                                && loginQuery.Any(obj2 => obj2.Account.UserId == obj.UserId
+                                                                                          && obj2.Date > inactivityLimit) == false)
                                                   .Join(accounts,
                                                         obj => obj.UserId,
                                                         obj => obj.UserId,
@@ -96,8 +96,8 @@ public class GuildCheckInactiveUsersJob : LocatedAsyncJob
                                                                             obj1.TimeStamp
                                                                         })
                                                   .Where(obj => members.Any(obj2 => obj2.GuildId == guild.GuildId
-                                                                                 && obj2.Date == today
-                                                                                 && obj2.Name == obj.Name))
+                                                                                    && obj2.Date == today
+                                                                                    && obj2.Name == obj.Name))
                                                   .ToList();
 
             if (inactiveUsers.Count > 0)

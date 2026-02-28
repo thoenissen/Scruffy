@@ -80,7 +80,7 @@ public class RaidLineUpService : LocatedServiceBase
                                                               obj.TimeStamp,
                                                               Registrations = obj.RaidRegistrations
                                                                                  .Where(obj2 => obj2.Group > 0
-                                                                                             && obj2.LineUpRoleId != null)
+                                                                                                && obj2.LineUpRoleId != null)
                                                                                  .Select(obj2 => new
                                                                                                  {
                                                                                                      obj2.Group,
@@ -95,7 +95,7 @@ public class RaidLineUpService : LocatedServiceBase
                                            .ConfigureAwait(false);
 
         if (data != null
-         && data.Registrations.Count > 0)
+            && data.Registrations.Count > 0)
         {
             if (await _discordClient.GetChannelAsync(data.DiscordChannelId)
                                     .ConfigureAwait(false) is ITextChannel channel)
@@ -119,9 +119,9 @@ public class RaidLineUpService : LocatedServiceBase
                                               .ThenByDescending(obj => obj.LineUpRole.IsHealer))
                     {
                         var isSupport = user.LineUpRole.IsProvidingAlacrity
-                                     || user.LineUpRole.IsProvidingQuickness
-                                     || user.LineUpRole.IsHealer
-                                     || user.LineUpRole.IsTank;
+                                        || user.LineUpRole.IsProvidingQuickness
+                                        || user.LineUpRole.IsHealer
+                                        || user.LineUpRole.IsTank;
 
                         var line = _raidRoleService.GetDescriptionAsEmoji(user.LineUpRole, isSupport);
 

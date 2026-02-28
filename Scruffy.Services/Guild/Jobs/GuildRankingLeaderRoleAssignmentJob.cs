@@ -79,8 +79,8 @@ public class GuildRankingLeaderRoleAssignmentJob : LocatedAsyncJob
                                                           && obj.GuildId == guildId
                                                           && accountsQuery.Any(obj2 => obj2.UserId == obj.UserId
                                                                                        && guildMemberQuery.Any(obj3 => obj3.Name == obj2.Name
-                                                                                           && obj3.GuildId == obj.GuildId
-                                                                                           && obj3.Date == today)))
+                                                                                                                       && obj3.GuildId == obj.GuildId
+                                                                                                                       && obj3.Date == today)))
                                             .GroupBy(obj => obj.UserId)
                                             .Select(obj => new
                                                            {

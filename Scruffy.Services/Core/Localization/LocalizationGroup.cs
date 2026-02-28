@@ -79,7 +79,10 @@ public class LocalizationGroup
     /// <param name="key">Key</param>
     /// <param name="value">Value</param>
     /// <returns>Could a value be determined?</returns>
-    public bool TryGetText(string key, out string value) => _texts.TryGetValue(key, out value);
+    public bool TryGetText(string key, out string value)
+    {
+        return _texts.TryGetValue(key, out value);
+    }
 
     /// <summary>
     /// Get a text by the given key

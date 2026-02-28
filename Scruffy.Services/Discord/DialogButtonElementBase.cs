@@ -29,7 +29,10 @@ public abstract class DialogButtonElementBase<TData> : DialogElementBase<TData>
     /// Returns the buttons which should be added to the message
     /// </summary>
     /// <returns>Reactions</returns>
-    public virtual IReadOnlyList<ButtonData<TData>> GetButtons() => null;
+    public virtual IReadOnlyList<ButtonData<TData>> GetButtons()
+    {
+        return null;
+    }
 
     /// <summary>
     /// Returning the message

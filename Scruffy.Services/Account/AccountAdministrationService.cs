@@ -201,8 +201,8 @@ public class AccountAdministrationService : LocatedServiceBase
             var unknownUsers = dbFactory.GetRepository<GuildWarsGuildHistoricMemberRepository>()
                                         .GetQuery()
                                         .Where(obj => obj.Date == today
-                                                   && obj.Guild.DiscordServerId == context.Guild.Id
-                                                   && guildWarsAccounts.Any(obj2 => obj2.Name == obj.Name) == false)
+                                                      && obj.Guild.DiscordServerId == context.Guild.Id
+                                                      && guildWarsAccounts.Any(obj2 => obj2.Name == obj.Name) == false)
                                         .Select(obj => new
                                                        {
                                                            obj.Name,

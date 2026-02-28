@@ -226,8 +226,8 @@ public class GuildBankService : LocatedServiceBase
                                 var fieldCounter = 1;
 
                                 foreach (var item in items.Where(obj => obj.Type == "Consumable"
-                                                                     && obj.Details?.Type == "Unlock"
-                                                                     && obj.Details?.UnlockType == "Dye")
+                                                                        && obj.Details?.Type == "Unlock"
+                                                                        && obj.Details?.UnlockType == "Dye")
                                                           .OrderBy(obj => obj.Name))
                                 {
                                     var currentLine = dyes.Contains(item.Details.ColorId ?? 0)

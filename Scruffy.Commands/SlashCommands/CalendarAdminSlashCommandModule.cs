@@ -46,7 +46,10 @@ public class CalendarAdminSlashCommandModule : SlashCommandModuleBase
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("participants", "Set the participants of a event")]
-    public Task SetParticipants() => CommandHandler.SetParticipants(Context);
+    public Task SetParticipants()
+    {
+        return CommandHandler.SetParticipants(Context);
+    }
 
     /// <summary>
     /// Configuration

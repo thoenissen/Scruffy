@@ -71,7 +71,7 @@ public sealed class GuildUserService : SingletonLocatedServiceBase, IDisposable
             {
                 dbFactory.GetRepository<GuildChannelConfigurationRepository>()
                          .AddOrRefresh(obj => obj.GuildId == guildId
-                                           && obj.Type ==  GuildChannelConfigurationType.UserNotification,
+                                              && obj.Type ==  GuildChannelConfigurationType.UserNotification,
                                        obj =>
                                        {
                                            obj.GuildId = guildId;
@@ -88,7 +88,10 @@ public sealed class GuildUserService : SingletonLocatedServiceBase, IDisposable
     /// <param name="user">User</param>
     /// <param name="guild">Guild</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private Task OnUserUnbanned(SocketUser user, SocketGuild guild) => SendNotificationMessage(user, guild, "UserUnbanned");
+    private Task OnUserUnbanned(SocketUser user, SocketGuild guild)
+    {
+        return SendNotificationMessage(user, guild, "UserUnbanned");
+    }
 
     /// <summary>
     /// User banned
@@ -96,7 +99,10 @@ public sealed class GuildUserService : SingletonLocatedServiceBase, IDisposable
     /// <param name="user">User</param>
     /// <param name="guild">Guild</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private Task OnUserBanned(SocketUser user, SocketGuild guild) => SendNotificationMessage(user, guild, "UserBanned");
+    private Task OnUserBanned(SocketUser user, SocketGuild guild)
+    {
+        return SendNotificationMessage(user, guild, "UserBanned");
+    }
 
     /// <summary>
     /// User left
@@ -104,7 +110,10 @@ public sealed class GuildUserService : SingletonLocatedServiceBase, IDisposable
     /// <param name="guild">Guild</param>
     /// <param name="user">User</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private Task OnUserLeft(SocketGuild guild, SocketUser user) => SendNotificationMessage(user, guild, "UserLeft");
+    private Task OnUserLeft(SocketGuild guild, SocketUser user)
+    {
+        return SendNotificationMessage(user, guild, "UserLeft");
+    }
 
     /// <summary>
     /// User joined
@@ -166,7 +175,7 @@ public sealed class GuildUserService : SingletonLocatedServiceBase, IDisposable
                     var guildWarsAccounts = await dbFactory.GetRepository<GuildWarsAccountRepository>()
                                                            .GetQuery()
                                                            .Where(obj => discordAccounts.Any(obj2 => obj2.UserId == obj.UserId
-                                                                                                  && obj2.Id == user.Id))
+                                                                                                     && obj2.Id == user.Id))
                                                            .Select(obj => obj.Name)
                                                            .ToListAsync()
                                                            .ConfigureAwait(false);

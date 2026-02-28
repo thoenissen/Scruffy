@@ -40,8 +40,12 @@ public class RaidRoleSelectionNextDialogElement : DialogButtonElementBase<bool>
     #region DialogReactionElementBase<bool>
 
     /// <inheritdoc/>
-    public override string GetMessage() => _first ? LocalizationGroup.GetText("MessageFirst", "Do you want to add role preference?")
-                                               : LocalizationGroup.GetText("MessageNext", "Do you want to add another role preference?");
+    public override string GetMessage()
+    {
+        return _first
+            ? LocalizationGroup.GetText("MessageFirst", "Do you want to add role preference?")
+            : LocalizationGroup.GetText("MessageNext", "Do you want to add another role preference?");
+    }
 
     /// <inheritdoc/>
     public override IReadOnlyList<ButtonData<bool>> GetButtons()
@@ -63,7 +67,10 @@ public class RaidRoleSelectionNextDialogElement : DialogButtonElementBase<bool>
     }
 
     /// <inheritdoc/>
-    protected override bool DefaultFunc() => false;
+    protected override bool DefaultFunc()
+    {
+        return false;
+    }
 
     #endregion // DialogReactionElementBase<bool>
 }

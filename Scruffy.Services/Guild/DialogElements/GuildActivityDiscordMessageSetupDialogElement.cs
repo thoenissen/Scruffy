@@ -58,7 +58,7 @@ public class GuildActivityDiscordMessageSetupDialogElement : DialogEmbedReaction
                 var roles = dbFactory.GetRepository<GuildDiscordActivityPointsAssignmentRepository>()
                                      .GetQuery()
                                      .Where(obj => obj.Guild.DiscordServerId == CommandContext.Guild.Id
-                                                && obj.Type == DiscordActivityPointsType.Message)
+                                                   && obj.Type == DiscordActivityPointsType.Message)
                                      .Select(obj => new
                                      {
                                          obj.RoleId,
@@ -86,7 +86,10 @@ public class GuildActivityDiscordMessageSetupDialogElement : DialogEmbedReaction
     #region DialogEmbedReactionElementBase<bool>
 
     /// <inheritdoc/>
-    protected override string GetCommandTitle() => LocalizationGroup.GetText("CommandTitle", "Commands");
+    protected override string GetCommandTitle()
+    {
+        return LocalizationGroup.GetText("CommandTitle", "Commands");
+    }
 
     /// <inheritdoc/>
     public override Task EditMessage(EmbedBuilder builder)
@@ -134,8 +137,8 @@ public class GuildActivityDiscordMessageSetupDialogElement : DialogEmbedReaction
                                             {
                                                 if (dbFactory.GetRepository<GuildDiscordActivityPointsAssignmentRepository>()
                                                              .AddOrRefresh(obj => obj.Guild.DiscordServerId == CommandContext.Guild.Id
-                                                                               && obj.Type == DiscordActivityPointsType.Message
-                                                                               && obj.RoleId == data.RoleId,
+                                                                                  && obj.Type == DiscordActivityPointsType.Message
+                                                                                  && obj.RoleId == data.RoleId,
                                                                            obj =>
                                                                            {
                                                                                if (obj.GuildId == default)
@@ -181,8 +184,8 @@ public class GuildActivityDiscordMessageSetupDialogElement : DialogEmbedReaction
                                        {
                                            if (dbFactory.GetRepository<GuildDiscordActivityPointsAssignmentRepository>()
                                                         .AddOrRefresh(obj => obj.Guild.DiscordServerId == CommandContext.Guild.Id
-                                                                          && obj.Type == DiscordActivityPointsType.Message
-                                                                          && obj.RoleId == data.RoleId,
+                                                                             && obj.Type == DiscordActivityPointsType.Message
+                                                                             && obj.RoleId == data.RoleId,
                                                                       obj =>
                                                                       {
                                                                           if (obj.GuildId == default)
@@ -252,7 +255,10 @@ public class GuildActivityDiscordMessageSetupDialogElement : DialogEmbedReaction
     }
 
     /// <inheritdoc/>
-    protected override bool DefaultFunc() => false;
+    protected override bool DefaultFunc()
+    {
+        return false;
+    }
 
     #endregion // DialogEmbedReactionElementBase<bool>
 }

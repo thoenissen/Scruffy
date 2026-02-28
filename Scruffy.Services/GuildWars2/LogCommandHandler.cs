@@ -267,7 +267,7 @@ public class LogCommandHandler : LocatedServiceBase
                                                                startDate,
                                                                endDate,
                                                                filter: upload => (type == DpsReportType.All && _dpsReportConnector.GetReportType(upload.Encounter.BossId) != DpsReportType.Other)
-                                                                              || type == _dpsReportConnector.GetReportType(upload.Encounter.BossId))
+                                                                                 || type == _dpsReportConnector.GetReportType(upload.Encounter.BossId))
                                                    .ToListAsync()
                                                    .ConfigureAwait(false);
 
@@ -440,7 +440,7 @@ public class LogCommandHandler : LocatedServiceBase
                                                                upload =>
                                                                {
                                                                    if (upload.Encounter.Success
-                                                                    && DpsReportAnalyzer.GetReportGroupByBossId(upload.Encounter.BossId) == group)
+                                                                       && DpsReportAnalyzer.GetReportGroupByBossId(upload.Encounter.BossId) == group)
                                                                    {
                                                                        if (counts.TryGetValue(upload.FightName, out var fightCount))
                                                                        {
@@ -959,9 +959,9 @@ public class LogCommandHandler : LocatedServiceBase
                     }
 
                     var hasNormalTries = isFractal
-                                      || bossGroup.Any(obj => obj.Encounter.IsChallengeMode == false);
+                                         || bossGroup.Any(obj => obj.Encounter.IsChallengeMode == false);
                     var hasChallengeTries = isFractal == false
-                                         && bossGroup.Any(obj => obj.Encounter.IsChallengeMode);
+                                            && bossGroup.Any(obj => obj.Encounter.IsChallengeMode);
 
                     foreach (var boss in bossGroup.GroupBy(obj => obj.Encounter.IsChallengeMode)
                                                   .OrderBy(obj => obj.Key)
@@ -991,7 +991,7 @@ public class LogCommandHandler : LocatedServiceBase
 
                             // Enrich the logs with the remaining health
                             var hasSuccessTry = summarize
-                                             && groupUploads.Value.Any(obj => obj.Encounter.Success);
+                                                && groupUploads.Value.Any(obj => obj.Encounter.Success);
 
                             var fullLogs = await LoadRemainingHealths(groupUploads.Value, upload => hasSuccessTry && upload.Encounter.Success == false).ConfigureAwait(false);
 
@@ -1104,9 +1104,9 @@ public class LogCommandHandler : LocatedServiceBase
                         }
 
                         var hasNormalTries = isFractal
-                                          || bossGroup.Any(obj => obj.Encounter.IsChallengeMode == false);
+                                             || bossGroup.Any(obj => obj.Encounter.IsChallengeMode == false);
                         var hasChallengeTries = isFractal == false
-                                             && bossGroup.Any(obj => obj.Encounter.IsChallengeMode);
+                                                && bossGroup.Any(obj => obj.Encounter.IsChallengeMode);
 
                         foreach (var boss in bossGroup.GroupBy(obj => obj.Encounter.IsChallengeMode)
                                                       .OrderBy(obj => obj.Key)
@@ -1191,7 +1191,7 @@ public class LogCommandHandler : LocatedServiceBase
             if (shouldSkip(upload) == false)
             {
                 if (upload.Encounter.Success == false
-                 && upload.Encounter.JsonAvailable)
+                    && upload.Encounter.JsonAvailable)
                 {
                     var log = await logs[upload.Id].ConfigureAwait(false);
 
@@ -1231,7 +1231,7 @@ public class LogCommandHandler : LocatedServiceBase
         }
 
         if (isFractal == false
-         && encounter.IsChallengeMode)
+            && encounter.IsChallengeMode)
         {
             if (hasNormalTries == false)
             {

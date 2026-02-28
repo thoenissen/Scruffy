@@ -26,7 +26,10 @@ public class RaidCommitUserDialogElement : DialogMessageElementBase<IUser>
     #region DialogMessageElementBase
 
     /// <inheritdoc/>
-    public override string GetMessage() => LocalizationGroup.GetText("Message", "Please input the user.");
+    public override string GetMessage()
+    {
+        return LocalizationGroup.GetText("Message", "Please input the user.");
+    }
 
     /// <inheritdoc/>
     public override IUser ConvertMessage(IUserMessage message)
