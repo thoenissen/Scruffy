@@ -45,10 +45,7 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
         Levels,
 
         [ChoiceDisplay("Logs")]
-        Logs,
-
-        [ChoiceDisplay("Current line up")]
-        CurrentLineUp,
+        Logs
     }
 
     #endregion // Enumerations
@@ -222,13 +219,6 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
                 {
                     await LogCommandHandler.PostGuildRaidSummary(Context, raidWeekDay)
                                            .ConfigureAwait(false);
-                }
-                break;
-
-            case OverviewType.CurrentLineUp:
-                {
-                    await CommandHandler.PostCurrentLineUp(Context)
-                                        .ConfigureAwait(false);
                 }
                 break;
 

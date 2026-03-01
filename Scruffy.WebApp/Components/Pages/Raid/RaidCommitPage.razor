@@ -43,6 +43,12 @@
                     <TemplateColumn Title="@LocalizationGroup.GetText("Points", "Points")" Context="u" Sortable="false">
                         @u.Points.ToString("0.0")
                     </TemplateColumn>
+                    <TemplateColumn Title="@LocalizationGroup.GetText("RoleWishFulfilled", "Role wish")" Context="u" Sortable="false">
+                        @if (u.IsRoleWishFulfilled.HasValue)
+                        {
+                            <input type="checkbox" checked="@u.IsRoleWishFulfilled.Value" @onchange="@(e => u.IsRoleWishFulfilled = (bool?)e.Value)" class="role-wish-checkbox" />
+                        }
+                    </TemplateColumn>
                     <TemplateColumn Context="u" Sortable="false" class="action-column">
                         <button type="button" class="secondary-button btn-remove" @onclick="() => OnRemoveUser(u)">@LocalizationGroup.GetText("Remove", "Remove")</button>
                     </TemplateColumn>

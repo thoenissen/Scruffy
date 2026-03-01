@@ -32,6 +32,13 @@
    font-size: 0.85rem;
 }
 
+.role-wish-checkbox {
+   cursor: pointer;
+   width: 1.1rem;
+   height: 1.1rem;
+   accent-color: var(--primary);
+}
+
 .commit-actions {
    display: flex;
    flex-direction: row;

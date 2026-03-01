@@ -52,4 +52,9 @@ public class RaidCommitUserDTO
     /// Experience level description
     /// </summary>
     public string ExperienceLevelDescription { get; init; }
+
+    /// <summary>
+    /// Has the role wish been fulfilled? Null if the user had no role wish.
+    /// </summary>
+    public bool? IsRoleWishFulfilled { get; set; }
 }

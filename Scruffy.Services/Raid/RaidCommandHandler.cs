@@ -75,11 +75,6 @@ public class RaidCommandHandler : LocatedServiceBase
     /// </summary>
     private readonly LocalizationService _localizationService;
 
-    /// <summary>
-    /// Raid line up service
-    /// </summary>
-    private readonly RaidLineUpService _lineUpService;
-
     #endregion // Fields
 
     #region Constructor
@@ -96,7 +91,6 @@ public class RaidCommandHandler : LocatedServiceBase
     /// <param name="experienceLevelsService">Experience levels service</param>
     /// <param name="userManagementService">User management service</param>
     /// <param name="rolesService">Roles Service connector</param>
-    /// <param name="lineUpService">Line up service</param>
     public RaidCommandHandler(LocalizationService localizationService,
                               RaidMessageBuilder messageBuilder,
                               RaidCommitService commitService,
@@ -105,8 +99,7 @@ public class RaidCommandHandler : LocatedServiceBase
                               RaidOverviewService overviewService,
                               RaidExperienceLevelsService experienceLevelsService,
                               UserManagementService userManagementService,
-                              RaidRolesService rolesService,
-                              RaidLineUpService lineUpService)
+                              RaidRolesService rolesService)
         : base(localizationService)
     {
         _localizationService = localizationService;
@@ -118,7 +111,6 @@ public class RaidCommandHandler : LocatedServiceBase
         _experienceLevelsService = experienceLevelsService;
         _userManagementService = userManagementService;
         _raidRolesService = rolesService;
-        _lineUpService = lineUpService;
     }
 
     #endregion // Constructor
@@ -280,17 +272,17 @@ public class RaidCommandHandler : LocatedServiceBase
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
             var appointment = await dbFactory.GetRepository<RaidAppointmentRepository>()
-                                         .GetQuery()
-                                         .Where(obj => obj.TimeStamp > DateTime.Now
-                                                       && obj.ConfigurationId == configurationId)
-                                         .Select(obj => new
-                                                        {
-                                                            obj.Id,
-                                                            obj.ConfigurationId,
-                                                            obj.Deadline
-                                                        })
-                                         .FirstOrDefaultAsync()
-                                         .ConfigureAwait(false);
+                                             .GetQuery()
+                                             .Where(obj => obj.TimeStamp > DateTime.Now
+                                                           && obj.ConfigurationId == configurationId)
+                                             .Select(obj => new
+                                                            {
+                                                                obj.Id,
+                                                                obj.ConfigurationId,
+                                                                obj.Deadline
+                                                            })
+                                             .FirstOrDefaultAsync()
+                                             .ConfigureAwait(false);
 
             if (appointment != null)
             {
@@ -809,89 +801,6 @@ public class RaidCommandHandler : LocatedServiceBase
 
             await dialogHandler.DeleteMessages()
                                .ConfigureAwait(false);
-        }
-    }
-
-    /// <summary>
-    /// First time role selection
-    /// </summary>
-    /// <param name="context">Command context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    private async Task ConfigureRolesFirstTime(IContextContainer context)
-    {
-        var dialogHandler = new DialogHandler(context);
-
-        await using (dialogHandler.ConfigureAwait(false))
-        {
-            try
-            {
-                var user = await _userManagementService.GetUserByDiscordAccountId(context.User)
-                                                       .ConfigureAwait(false);
-
-                var selectedRoles = await dialogHandler.Run<RaidPreparedRolesFirstTimeSelectDialogElement, List<long>>(new RaidPreparedRolesFirstTimeSelectDialogElement(_localizationService, _raidRolesService))
-                                                       .ConfigureAwait(false);
-
-                using (var dbFactory = RepositoryFactory.CreateInstance())
-                {
-                    dbFactory.GetRepository<RaidUserRoleRepository>()
-                             .RemoveRange(obj => obj.UserId == user.Id);
-
-                    foreach (var roleId in selectedRoles)
-                    {
-                        dbFactory.GetRepository<RaidUserRoleRepository>()
-                                 .Add(new RaidUserRoleEntity
-                                      {
-                                          UserId = user.Id,
-                                          RoleId = roleId
-                                      });
-                    }
-                }
-            }
-            finally
-            {
-                await dialogHandler.DeleteMessages()
-                                   .ConfigureAwait(false);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Post current line up
-    /// </summary>
-    /// <param name="context">Command context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task PostCurrentLineUp(InteractionContextContainer context)
-    {
-        var success = false;
-
-        var message = await context.DeferProcessing()
-                                   .ConfigureAwait(false);
-
-        using (var dbFactory = RepositoryFactory.CreateInstance())
-        {
-            var appointmentId = dbFactory.GetRepository<RaidAppointmentRepository>()
-                                         .GetQuery()
-                                         .Where(obj => obj.IsCommitted == false)
-                                         .OrderBy(obj => obj.TimeStamp)
-                                         .Select(obj => obj.Id)
-                                         .FirstOrDefault();
-
-            if (appointmentId > 0)
-            {
-                success = await _lineUpService.PostLineUp(appointmentId)
-                                              .ConfigureAwait(false);
-            }
-        }
-
-        if (success)
-        {
-            await message.DeleteAsync()
-                         .ConfigureAwait(false);
-        }
-        else
-        {
-            await context.ReplyAsync(LocalizationGroup.GetText("NoLineUpFound", "Current there is no line up to post."))
-                         .ConfigureAwait(false);
         }
     }
 

@@ -241,14 +241,15 @@ public partial class RaidCommitPage
                                                }
 
                                                obj.State = commitUser.Status switch
-                                                           {
-                                                               RaidParticipationStatus.Played => RegistrationState.Played,
-                                                               RaidParticipationStatus.Substitute => RegistrationState.Substitute,
-                                                               RaidParticipationStatus.NoShow => RegistrationState.NoShow,
-                                                               RaidParticipationStatus.LateRegistration => RegistrationState.LateRegistration,
-                                                               _ => obj.State
-                                                           };
+                                                               {
+                                                                   RaidParticipationStatus.Played => RegistrationState.Played,
+                                                                   RaidParticipationStatus.Substitute => RegistrationState.Substitute,
+                                                                   RaidParticipationStatus.NoShow => RegistrationState.NoShow,
+                                                                   RaidParticipationStatus.LateRegistration => RegistrationState.LateRegistration,
+                                                                   _ => obj.State
+                                                               };
                                                obj.Points = commitUser.Points;
+                                               obj.IsRoleWishFulfilled = commitUser.IsRoleWishFulfilled;
                                            });
                 }
 
@@ -465,7 +466,8 @@ public partial class RaidCommitPage
                                                                 ?? obj.User.UserName,
                                                      obj.User.RaidExperienceLevelId,
                                                      obj.LineupExperienceLevelId,
-                                                     obj.RegistrationTimeStamp
+                                                     obj.RegistrationTimeStamp,
+                                                     HasRoleWish = obj.RaidRegistrationRoleAssignments.Any()
                                                  })
                                   .AsEnumerable()
                                   .Select(entry =>
@@ -486,7 +488,8 @@ public partial class RaidCommitPage
                                                          Name = entry.Name,
                                                          ParticipationPoints = experienceLevel.ParticipationPoints,
                                                          Status = status,
-                                                         ExperienceLevelDescription = experienceLevel.Description
+                                                         ExperienceLevelDescription = experienceLevel.Description,
+                                                         IsRoleWishFulfilled = entry.HasRoleWish ? false : null
                                                      };
                                           })
                                   .OrderByDescending(obj => obj.Points)
