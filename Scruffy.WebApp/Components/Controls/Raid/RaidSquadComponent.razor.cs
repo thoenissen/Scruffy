@@ -201,6 +201,131 @@ public partial class RaidSquadComponent
     }
 
     /// <summary>
+    /// Clear all player assignments
+    /// </summary>
+    public void ClearAssignments()
+    {
+        SelectedTankRole = null;
+        SelectedDpsSupport1 = null;
+        SelectedHealerRole = null;
+        SelectedDpsSupport2 = null;
+        SelectedDps1 = null;
+        SelectedDps2 = null;
+        SelectedDps3 = null;
+        SelectedDps4 = null;
+        SelectedDps5 = null;
+        SelectedDps6 = null;
+
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Fill the support role slots (Tank, DPS Support 1, Healer, DPS Support 2).
+    /// Players on the substitutes bench and already assigned players are excluded.
+    /// </summary>
+    public void AutoFillSupportRoles()
+    {
+        SelectedTankRole = PickBest(_tankRoles);
+        SelectedDpsSupport1 = PickBest(FilterComplementarySupport(_dpsSupportRoles, SelectedTankRole, isForTank: true));
+        SelectedHealerRole = PickBest(_healerRoles);
+        SelectedDpsSupport2 = PickBest(FilterComplementarySupport(_dpsSupportRoles, SelectedHealerRole, isForTank: false));
+
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Fill the next empty DPS slot with the best available candidate.
+    /// Players on the substitutes bench and already assigned players are excluded.
+    /// </summary>
+    /// <returns><c>true</c> if a player was assigned; <c>false</c> if no slot or candidate is available.</returns>
+    public bool AutoFillNextDps()
+    {
+        if (SelectedDps1 == null)
+        {
+            SelectedDps1 = PickBest(_dpsRoles);
+
+            return SelectedDps1 != null;
+        }
+
+        if (SelectedDps2 == null)
+        {
+            SelectedDps2 = PickBest(_dpsRoles);
+
+            return SelectedDps2 != null;
+        }
+
+        if (SelectedDps3 == null)
+        {
+            SelectedDps3 = PickBest(_dpsRoles);
+
+            return SelectedDps3 != null;
+        }
+
+        if (SelectedDps4 == null)
+        {
+            SelectedDps4 = PickBest(_dpsRoles);
+
+            return SelectedDps4 != null;
+        }
+
+        if (SelectedDps5 == null)
+        {
+            SelectedDps5 = PickBest(_dpsRoles);
+
+            return SelectedDps5 != null;
+        }
+
+        if (SelectedDps6 == null)
+        {
+            SelectedDps6 = PickBest(_dpsRoles);
+
+            return SelectedDps6 != null;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Pick the best candidate from the list, preferring players who wished for the role
+    /// </summary>
+    /// <param name="candidates">Candidates</param>
+    /// <returns>Best matching player role or <c>null</c></returns>
+    private static PlayerRoleDTO PickBest(List<PlayerRoleDTO> candidates)
+    {
+        var available = candidates.Where(r => r.Player.IsOnSubstitutesBench == false
+                                              && r.Player.IsAssigned == false)
+                                  .ToList();
+
+        return available.FirstOrDefault(r => r.Player.RegistrationRoles.HasFlag(r.Role))
+                   ?? available.FirstOrDefault();
+    }
+
+    /// <summary>
+    /// Filter DPS support candidates to complement the paired role's boon type
+    /// </summary>
+    /// <param name="dpsSupportRoles">DPS support role candidates</param>
+    /// <param name="pairedRole">The tank or healer role to complement</param>
+    /// <param name="isForTank">Whether the paired role is a tank</param>
+    /// <returns>Filtered candidates</returns>
+    private static List<PlayerRoleDTO> FilterComplementarySupport(List<PlayerRoleDTO> dpsSupportRoles, PlayerRoleDTO pairedRole, bool isForTank)
+    {
+        if (pairedRole == null)
+        {
+            return dpsSupportRoles;
+        }
+
+        var requiredRole = isForTank
+                               ? pairedRole.Role == RaidRole.AlacrityTankHealer
+                                     ? RaidRole.QuicknessDamageDealer
+                                     : RaidRole.AlacrityDamageDealer
+                               : pairedRole.Role == RaidRole.AlacrityHealer
+                                     ? RaidRole.QuicknessDamageDealer
+                                     : RaidRole.AlacrityDamageDealer;
+
+        return dpsSupportRoles.Where(r => r.Role == requiredRole).ToList();
+    }
+
+    /// <summary>
     /// Set the selected role
     /// </summary>
     /// <param name="field">Field</param>

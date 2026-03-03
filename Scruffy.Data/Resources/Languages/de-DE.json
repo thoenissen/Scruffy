@@ -1078,6 +1078,7 @@
       "Name": "Name",
       "RoleRequests": "Rollenwünsche",
       "Commit": "Bestätigen",
+      "AutoFill": "Vorbelegung",
       "Remarks": "Anmerkungen",
       "CreatedBy": "Erstellt von {0}"
     },

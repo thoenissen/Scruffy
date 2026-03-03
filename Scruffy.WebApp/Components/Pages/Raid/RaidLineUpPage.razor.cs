@@ -253,6 +253,42 @@ public partial class RaidLineUpPage
     }
 
     /// <summary>
+    /// Automatically fill all squads based on player wishes and available roles.
+    /// Players on the substitutes bench are excluded.
+    /// Support roles are filled per squad, DPS slots are distributed round-robin across all squads.
+    /// </summary>
+    private void OnAutoFill()
+    {
+        foreach (var squad in _squads.Values)
+        {
+            squad.ClearAssignments();
+        }
+
+        foreach (var squad in _squads.Values)
+        {
+            squad.AutoFillSupportRoles();
+        }
+
+        bool anyFilled;
+
+        do
+        {
+            anyFilled = false;
+
+            foreach (var squad in _squads.Values)
+            {
+                if (squad.AutoFillNextDps())
+                {
+                    anyFilled = true;
+                }
+            }
+        }
+        while (anyFilled);
+
+        StateHasChanged();
+    }
+
+    /// <summary>
     /// Commit line up
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
