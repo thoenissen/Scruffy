@@ -27,6 +27,11 @@ public partial class RaidCommitPage
     #region Fields
 
     /// <summary>
+    /// Available appointments for selection
+    /// </summary>
+    private List<RaidAppointmentDTO> _appointments;
+
+    /// <summary>
     /// Appointment ID
     /// </summary>
     private long? _appointmentId;
@@ -45,6 +50,11 @@ public partial class RaidCommitPage
     /// Commit users
     /// </summary>
     private List<RaidCommitUserDTO> _users;
+
+    /// <summary>
+    /// Is the selected appointment already committed (readonly)?
+    /// </summary>
+    private bool _isReadOnly;
 
     /// <summary>
     /// Is the commit completed?
@@ -183,6 +193,26 @@ public partial class RaidCommitPage
                     });
 
         _isAddPlayerOverlayVisible = false;
+    }
+
+    /// <summary>
+    /// Handle appointment selection change
+    /// </summary>
+    /// <param name="e">Change event args</param>
+    private void OnAppointmentChanged(ChangeEventArgs e)
+    {
+        if (long.TryParse((string)e.Value, out var selectedId))
+        {
+            var appointment = _appointments?.FirstOrDefault(a => a.Id == selectedId);
+
+            if (appointment != null)
+            {
+                _isCommitted = false;
+                _errorMessage = null;
+
+                LoadAppointmentData(appointment);
+            }
+        }
     }
 
     /// <summary>
@@ -413,40 +443,115 @@ public partial class RaidCommitPage
         {
             var now = DateTime.Now;
 
-            var appointment = dbFactory.GetRepository<RaidAppointmentRepository>()
-                                       .GetQuery()
-                                       .Where(obj => obj.TimeStamp < now
-                                                     && obj.IsCommitted == false)
-                                       .OrderByDescending(obj => obj.TimeStamp)
-                                       .Select(obj => new
-                                                      {
-                                                          obj.Id,
-                                                          obj.ConfigurationId,
-                                                          obj.TimeStamp,
-                                                          obj.Deadline
-                                                      })
-                                       .FirstOrDefault();
+            _appointments = dbFactory.GetRepository<RaidAppointmentRepository>()
+                                     .GetQuery()
+                                     .Where(obj => obj.TimeStamp < now)
+                                     .OrderByDescending(obj => obj.TimeStamp)
+                                     .Take(10)
+                                     .Select(obj => new RaidAppointmentDTO
+                                                    {
+                                                        Id = obj.Id,
+                                                        ConfigurationId = obj.ConfigurationId,
+                                                        TimeStamp = obj.TimeStamp,
+                                                        Deadline = obj.Deadline,
+                                                        IsCommitted = obj.IsCommitted
+                                                    })
+                                     .ToList();
 
-            if (appointment?.Id > 0)
+            var selectedAppointment = _appointments.FirstOrDefault(a => a.IsCommitted == false)
+                                          ?? _appointments.FirstOrDefault();
+
+            if (selectedAppointment != null)
             {
-                _appointmentId = appointment.Id;
-                _configurationId = appointment.ConfigurationId;
-                _appointmentTimeStamp = appointment.TimeStamp;
+                LoadAppointmentData(selectedAppointment);
+            }
+        }
+    }
 
-                var experienceLevels = dbFactory.GetRepository<RaidExperienceLevelRepository>()
-                                                .GetQuery()
-                                                .Select(obj => new
-                                                               {
-                                                                   obj.Id,
-                                                                   obj.Description,
-                                                                   obj.Rank,
-                                                                   obj.ParticipationPoints
-                                                               })
-                                                .ToList();
+    /// <summary>
+    /// Load the user data for the given appointment
+    /// </summary>
+    /// <param name="appointment">Appointment to load</param>
+    private void LoadAppointmentData(RaidAppointmentDTO appointment)
+    {
+        _appointmentId = appointment.Id;
+        _configurationId = appointment.ConfigurationId;
+        _appointmentTimeStamp = appointment.TimeStamp;
+        _isReadOnly = appointment.IsCommitted;
 
-                var fallbackExperienceLevel = experienceLevels.OrderByDescending(obj => obj.Rank)
-                                                              .First();
+        using (var dbFactory = RepositoryFactory.CreateInstance())
+        {
+            var experienceLevels = dbFactory.GetRepository<RaidExperienceLevelRepository>()
+                                            .GetQuery()
+                                            .Select(obj => new
+                                                           {
+                                                               obj.Id,
+                                                               obj.Description,
+                                                               obj.Rank,
+                                                               obj.ParticipationPoints
+                                                           })
+                                            .ToList();
 
+            var fallbackExperienceLevel = experienceLevels.OrderByDescending(obj => obj.Rank)
+                                                          .First();
+
+            if (_isReadOnly)
+            {
+                _users = dbFactory.GetRepository<RaidRegistrationRepository>()
+                                  .GetQuery()
+                                  .Where(obj => obj.AppointmentId == appointment.Id)
+                                  .Select(obj => new
+                                                 {
+                                                     obj.UserId,
+                                                     DiscordAccountId = obj.User
+                                                                           .DiscordAccounts
+                                                                           .Select(obj2 => obj2.Id)
+                                                                           .FirstOrDefault(),
+                                                     Name = obj.User.DiscordAccounts
+                                                                     .Select(account => account.Members
+                                                                                                .Where(member => member.ServerId == WebAppConfiguration.DiscordServerId)
+                                                                                                .Select(member => member.Name)
+                                                                                                .FirstOrDefault())
+                                                                     .FirstOrDefault()
+                                                                ?? obj.User.UserName,
+                                                     obj.User.RaidExperienceLevelId,
+                                                     obj.State,
+                                                     obj.Points,
+                                                     obj.IsRoleWishFulfilled
+                                                 })
+                                  .AsEnumerable()
+                                  .Select(entry =>
+                                          {
+                                              var experienceLevel = experienceLevels.FirstOrDefault(obj => obj.Id == entry.RaidExperienceLevelId)
+                                                                        ?? fallbackExperienceLevel;
+
+                                              var status = entry.State switch
+                                                           {
+                                                               RegistrationState.Played => RaidParticipationStatus.Played,
+                                                               RegistrationState.Substitute => RaidParticipationStatus.Substitute,
+                                                               RegistrationState.NoShow => RaidParticipationStatus.NoShow,
+                                                               RegistrationState.LateRegistration => RaidParticipationStatus.LateRegistration,
+                                                               _ => RaidParticipationStatus.Played,
+                                                           };
+
+                                              return new RaidCommitUserDTO
+                                                     {
+                                                         UserId = entry.UserId,
+                                                         DiscordAccountId = entry.DiscordAccountId,
+                                                         Name = entry.Name,
+                                                         ParticipationPoints = experienceLevel.ParticipationPoints,
+                                                         Status = status,
+                                                         ExperienceLevelDescription = experienceLevel.Description,
+                                                         IsRoleWishFulfilled = entry.IsRoleWishFulfilled
+                                                     };
+                                          })
+                                  .OrderByDescending(obj => obj.Points)
+                                  .ToList();
+
+                _allGuildMembers = null;
+            }
+            else
+            {
                 _users = dbFactory.GetRepository<RaidRegistrationRepository>()
                                   .GetQuery()
                                   .Where(obj => obj.AppointmentId == appointment.Id)

@@ -9,6 +9,26 @@
 <div class="page">
     <h1>@LocalizationGroup.GetText("CommitTitle", "Raid points commit")</h1>
 
+    @if (_appointments is { Count: > 0 })
+    {
+        <div class="appointment-selector">
+            <label>@LocalizationGroup.GetText("SelectAppointment", "Appointment:")</label>
+            <select value="@_appointmentId?.ToString()" @onchange="OnAppointmentChanged" class="appointment-select">
+                @foreach (var appointment in _appointments)
+                {
+                    var label = appointment.TimeStamp.ToString("f", LocalizationGroup.CultureInfo);
+
+                    if (appointment.IsCommitted)
+                    {
+                        label += " ✓";
+                    }
+
+                    <option value="@appointment.Id">@label</option>
+                }
+            </select>
+        </div>
+    }
+
     @if (_isCommitted)
     {
         <div class="commit-success">
@@ -24,8 +44,6 @@
     else
     {
         <div class="commit-page">
-            <h3>@LocalizationGroup.GetFormattedText("AppointmentDate", "Appointment: {0}", _appointmentTimeStamp?.ToString("f", LocalizationGroup.CultureInfo))</h3>
-
             <div class="quickgrid-std commit-users-container mb-3">
                 <QuickGrid Items="@_users.AsQueryable()">
                     <PropertyColumn Title="@LocalizationGroup.GetText("Name", "Name")" Property="@(u => u.Name)" Sortable="false"/>
@@ -33,7 +51,8 @@
                     <TemplateColumn Title="@LocalizationGroup.GetText("Status", "Status")" Context="u" Sortable="false">
                         <select value="@u.Status.ToString().ToLowerInvariant()"
                                 @onchange="@(e => OnStatusChanged(u, e))"
-                                class="status-select">
+                                class="status-select"
+                                disabled="@_isReadOnly">
                             <option value="played">@LocalizationGroup.GetText("PlayerStatePlayed", "Played")</option>
                             <option value="substitute">@LocalizationGroup.GetText("PlayerStateSubstitute", "Substitute bench")</option>
                             <option value="noshow">@LocalizationGroup.GetText("PlayerStateNoShow", "No-show")</option>
@@ -46,24 +65,30 @@
                     <TemplateColumn Title="@LocalizationGroup.GetText("RoleWishFulfilled", "Role wish")" Context="u" Sortable="false">
                         @if (u.IsRoleWishFulfilled.HasValue)
                         {
-                            <input type="checkbox" checked="@u.IsRoleWishFulfilled.Value" @onchange="@(e => u.IsRoleWishFulfilled = (bool?)e.Value)" class="role-wish-checkbox" />
+                            <input type="checkbox" checked="@u.IsRoleWishFulfilled.Value" @onchange="@(e => u.IsRoleWishFulfilled = (bool?)e.Value)" class="role-wish-checkbox" disabled="@_isReadOnly" />
                         }
                     </TemplateColumn>
-                    <TemplateColumn Context="u" Sortable="false" class="action-column">
-                        <button type="button" class="secondary-button btn-remove" @onclick="() => OnRemoveUser(u)">@LocalizationGroup.GetText("Remove", "Remove")</button>
-                    </TemplateColumn>
+                    @if (_isReadOnly == false)
+                    {
+                        <TemplateColumn Context="u" Sortable="false" class="action-column">
+                            <button type="button" class="secondary-button btn-remove" @onclick="() => OnRemoveUser(u)">@LocalizationGroup.GetText("Remove", "Remove")</button>
+                        </TemplateColumn>
+                    }
                 </QuickGrid>
             </div>
 
-            <div class="commit-actions">
-                <button type="button" class="secondary-button" @onclick="OnOpenAddPlayerOverlay">
-                    @LocalizationGroup.GetText("AddPlayer", "Add player")
-                </button>
+            @if (_isReadOnly == false)
+            {
+                <div class="commit-actions">
+                    <button type="button" class="secondary-button" @onclick="OnOpenAddPlayerOverlay">
+                        @LocalizationGroup.GetText("AddPlayer", "Add player")
+                    </button>
 
-                <button type="submit" class="primary-button btn-commit" @onclick="OnCommitAsync" disabled="@_isCommitting">
-                    @LocalizationGroup.GetText("Commit", "Commit")
-                </button>
-            </div>
+                    <button type="submit" class="primary-button btn-commit" @onclick="OnCommitAsync" disabled="@_isCommitting">
+                        @LocalizationGroup.GetText("Commit", "Commit")
+                    </button>
+                </div>
+            }
 
             @if (string.IsNullOrEmpty(_errorMessage) == false)
             {
