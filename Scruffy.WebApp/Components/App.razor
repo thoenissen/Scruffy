@@ -8,7 +8,8 @@
        <link rel="stylesheet" href="@Assets["app.css"]"/>
        <link rel="stylesheet" href="@Assets["css/quickgrid.css"]"/>
        <link rel="stylesheet" href="@Assets["Scruffy.WebApp.styles.css"]"/>
-       <link rel="icon" type="image/png" href="favicon.png"/>  
+       <link rel="icon" type="image/png" href="favicon.png"/>
+       <title>FooI</title>
    
        <!-- Fonts -->
        <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,7 +21,7 @@
        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.js"></script>
        <script src="https://cdn.jsdelivr.net/npm/html2canvas"></script>
 
-       <HeadOutlet/>
+       <HeadOutlet @rendermode="InteractiveServer"/>
    </head>
    <body>
       <Routes/>

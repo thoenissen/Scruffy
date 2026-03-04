@@ -133,6 +133,36 @@ public partial class RaidCommitPage
     }
 
     /// <summary>
+    /// Convert the role wish value to a string for the select element
+    /// </summary>
+    /// <param name="isRoleWishFulfilled">Role wish fulfilled value</param>
+    /// <returns>String representation</returns>
+    private static string RoleWishToString(bool? isRoleWishFulfilled)
+    {
+        return isRoleWishFulfilled switch
+               {
+                   true => "fulfilled",
+                   false => "notfulfilled",
+                   null => "none",
+               };
+    }
+
+    /// <summary>
+    /// Handle role wish change for a user
+    /// </summary>
+    /// <param name="user">User</param>
+    /// <param name="e">Change event args</param>
+    private static void OnRoleWishChanged(RaidCommitUserDTO user, ChangeEventArgs e)
+    {
+        user.IsRoleWishFulfilled = (string)e.Value switch
+                                   {
+                                       "fulfilled" => true,
+                                       "notfulfilled" => false,
+                                       _ => null,
+                                   };
+    }
+
+    /// <summary>
     /// Remove a user from the commit list
     /// </summary>
     /// <param name="user">User to remove</param>

@@ -37,6 +37,16 @@
    flex-direction: column;
 }
 
+.commit-footer {
+   padding: 1rem;
+   background-color: var(--primary);
+   color: var(--text);
+   font-weight: 600;
+   letter-spacing: 0.05em;
+   text-align: left;
+   border-radius: 0 0 0.5rem 0.5rem;
+}
+
 .status-select {
    background-color: var(--background);
    color: var(--text);
@@ -55,11 +65,13 @@
    font-size: 0.85rem;
 }
 
-.role-wish-checkbox {
+.role-wish-select {
+   background-color: var(--background);
+   color: var(--text);
+   border: 1px solid var(--secondary);
+   padding: 0.25rem 0.5rem;
+   border-radius: 4px;
    cursor: pointer;
-   width: 1.1rem;
-   height: 1.1rem;
-   accent-color: var(--primary);
 }
 
 .commit-actions {

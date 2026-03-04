@@ -768,6 +768,31 @@
     "RaidCommitUserDialogElement": {
       "Message": "Gib den Benutzer ein:"
     },
+    "RaidCommitPage": {
+      "PageTitle": "FooI - Raid - Fortschreibung",
+      "CommitTitle": "Fortschreibung Raidteilnehmer",
+      "SelectAppointment": "Termin:",
+      "CommitCompleted": "Der Raid-Termin wurde fortgeschrieben.",
+      "NoOpenAppointment": "Es ist kein offener Termin zur Fortschreibung verfügbar.",
+      "Name": "Name",
+      "ExperienceLevel": "Erfahrungslevel",
+      "Status": "Status",
+      "PlayerStatePlayed": "Teilgenommen",
+      "PlayerStateSubstitute": "Ausgesetzt",
+      "PlayerStateNoShow": "Nicht erschienen",
+      "PlayerStateLateRegistration": "Anmeldeschluss überschritten",
+      "Points": "Punkte",
+      "RoleWishFulfilled": "Rollenwunsch",
+      "RoleWishNone": "Kein Rollenwunsch",
+      "RoleWishFulfilled_Yes": "Erfüllt",
+      "RoleWishNotFulfilled": "Nicht erfüllt",
+      "Remove": "Entfernen",
+      "AddPlayer": "Spieler hinzufügen",
+      "Commit": "Fortschreiben",
+      "Close": "Schließen",
+      "SearchPlaceholder": "Suchen...",
+      "PlayerCount": "Spieler"
+    },
     "RaidDayDayOfWeekDialogElement": {
       "Description": "Wähle die gewünschten Wochentage aus:",
       "Reactions": "Tage",

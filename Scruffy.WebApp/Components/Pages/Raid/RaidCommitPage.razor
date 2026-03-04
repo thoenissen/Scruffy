@@ -16,11 +16,15 @@
             <select value="@_appointmentId?.ToString()" @onchange="OnAppointmentChanged" class="appointment-select">
                 @foreach (var appointment in _appointments)
                 {
-                    var label = appointment.TimeStamp.ToString("f", LocalizationGroup.CultureInfo);
+                    string label;
 
                     if (appointment.IsCommitted)
                     {
-                        label += " ✓";
+                        label = "✓ " + appointment.TimeStamp.ToString("f", LocalizationGroup.CultureInfo);
+                    }
+                    else
+                    {
+                        label = appointment.TimeStamp.ToString("f", LocalizationGroup.CultureInfo);
                     }
 
                     <option value="@appointment.Id">@label</option>
@@ -65,7 +69,13 @@
                     <TemplateColumn Title="@LocalizationGroup.GetText("RoleWishFulfilled", "Role wish")" Context="u" Sortable="false">
                         @if (u.IsRoleWishFulfilled.HasValue)
                         {
-                            <input type="checkbox" checked="@u.IsRoleWishFulfilled.Value" @onchange="@(e => u.IsRoleWishFulfilled = (bool?)e.Value)" class="role-wish-checkbox" disabled="@_isReadOnly" />
+                            <select value="@RoleWishToString(u.IsRoleWishFulfilled)"
+                                    @onchange="@(e => OnRoleWishChanged(u, e))"
+                                    class="role-wish-select"
+                                    disabled="@_isReadOnly">
+                                <option value="fulfilled">@LocalizationGroup.GetText("RoleWishFulfilled_Yes", "Fulfilled")</option>
+                                <option value="notfulfilled">@LocalizationGroup.GetText("RoleWishNotFulfilled", "Not fulfilled")</option>
+                            </select>
                         }
                     </TemplateColumn>
                     @if (_isReadOnly == false)
@@ -75,6 +85,9 @@
                         </TemplateColumn>
                     }
                 </QuickGrid>
+                <div class="commit-footer">
+                    @LocalizationGroup.GetText("PlayerCount", "Players"): @_users.Count
+                </div>
             </div>
 
             @if (_isReadOnly == false)
