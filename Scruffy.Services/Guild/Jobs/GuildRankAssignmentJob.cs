@@ -48,9 +48,9 @@ public class GuildRankAssignmentJob : LocatedAsyncJob
                                                   .Select(obj => obj.Id)
                                                   .ToList())
         {
-            var userConfiguration = _repositoryFactory.GetRepository<GuildUserConfigurationRepository>()
-                                                      .GetQuery()
-                                                      .Select(obj => obj);
+            var userConfigurations = _repositoryFactory.GetRepository<GuildUserConfigurationRepository>()
+                                                       .GetQuery()
+                                                       .Select(obj => obj);
 
             var guildMemberQuery = _repositoryFactory.GetRepository<GuildWarsGuildHistoricMemberRepository>()
                                                      .GetQuery()
@@ -79,9 +79,9 @@ public class GuildRankAssignmentJob : LocatedAsyncJob
                                                                                      && guildMemberQuery.Any(obj3 => obj3.Name == obj2.Name
                                                                                                                      && obj3.GuildId == obj.GuildId
                                                                                                                      && obj3.Date == today))
-                                                        && userConfiguration.Any(obj2 => obj2.UserId == obj.UserId
-                                                                                         && obj2.GuildId == guildId
-                                                                                         && obj2.IsFixedRank) == false)
+                                                        && userConfigurations.Any(obj2 => obj2.UserId == obj.UserId
+                                                                                          && obj2.GuildId == guildId
+                                                                                          && obj2.IsFixedRank) == false)
                                           .GroupBy(obj => obj.UserId)
                                           .Select(obj => new
                                                          {
@@ -150,7 +150,10 @@ public class GuildRankAssignmentJob : LocatedAsyncJob
                                                             if (obj.RankId == inactiveRankId)
                                                             {
                                                                 isAssignmentAllowed = loginQuery.Any(obj2 => obj2.Account.UserId == obj.UserId
-                                                                                                             && obj2.Date > inactivityLimit);
+                                                                                                             && obj2.Date > inactivityLimit)
+                                                                                      || userConfigurations.Any(userConfiguration => userConfiguration.UserId == obj.UserId
+                                                                                                                                     && userConfiguration.GuildId == guildId
+                                                                                                                                     && userConfiguration.IsInactive);
                                                             }
 
                                                             if (isAssignmentAllowed)
@@ -201,51 +204,51 @@ public class GuildRankAssignmentJob : LocatedAsyncJob
             var assignmentLimit = DateTime.Now.AddDays(-7);
 
             foreach (var userId in _repositoryFactory.GetRepository<GuildWarsGuildHistoricMemberRepository>()
-                                                   .GetQuery()
-                                                   .Where(obj => obj.GuildId == guildId
-                                                                 && obj.Date == today)
-                                                   .Join(accountsQuery,
-                                                         obj => obj.Name,
-                                                         obj => obj.Name,
-                                                         (obj1, obj2) => new
-                                                                         {
-                                                                             obj2.UserId,
-                                                                             obj2.Name
-                                                                         })
-                                                   .Join(loginQuery.DefaultIfEmpty(),
-                                                         obj => obj.Name,
-                                                         obj => obj.Name,
-                                                         (obj1, obj2) => new
-                                                                         {
-                                                                             obj1.UserId,
-                                                                             LastLogin = (DateTime?)obj2.Date
-                                                                         })
-                                                   .Join(rankAssignmentQuery,
-                                                         obj => obj.UserId,
-                                                         obj => obj.UserId,
-                                                         (obj1, obj2) => new
-                                                                         {
-                                                                             obj1.UserId,
-                                                                             obj1.LastLogin,
-                                                                             obj2.RankId,
-                                                                             obj2.TimeStamp
-                                                                         })
-                                                   .GroupBy(obj => obj.UserId)
-                                                   .Select(obj => new
-                                                                  {
-                                                                      UserId = obj.Key,
-                                                                      RankId = obj.Max(obj2 => obj2.RankId),
-                                                                      AssignmentTimeStamp = obj.Max(obj2 => obj2.TimeStamp),
-                                                                      LastLogin = obj.Max(obj2 => obj2.LastLogin)
-                                                                  })
-                                                   .Where(obj => obj.RankId == lastRankId
-                                                                 && obj.LastLogin < inactivityLimit
-                                                                 && assignmentLimit > obj.AssignmentTimeStamp
-                                                                 && userConfiguration.Any(obj2 => obj2.UserId == obj.UserId
-                                                                                                  && obj2.GuildId == guildId
-                                                                                                  && obj2.IsInactive) == false)
-                                                   .Select(obj => obj.UserId)
-                                                   .ToList())
+                                                     .GetQuery()
+                                                     .Where(obj => obj.GuildId == guildId
+                                                                   && obj.Date == today)
+                                                     .Join(accountsQuery,
+                                                           obj => obj.Name,
+                                                           obj => obj.Name,
+                                                           (obj1, obj2) => new
+                                                                           {
+                                                                               obj2.UserId,
+                                                                               obj2.Name
+                                                                           })
+                                                     .Join(loginQuery.DefaultIfEmpty(),
+                                                           obj => obj.Name,
+                                                           obj => obj.Name,
+                                                           (obj1, obj2) => new
+                                                                           {
+                                                                               obj1.UserId,
+                                                                               LastLogin = (DateTime?)obj2.Date
+                                                                           })
+                                                     .Join(rankAssignmentQuery,
+                                                           obj => obj.UserId,
+                                                           obj => obj.UserId,
+                                                           (obj1, obj2) => new
+                                                                           {
+                                                                               obj1.UserId,
+                                                                               obj1.LastLogin,
+                                                                               obj2.RankId,
+                                                                               obj2.TimeStamp
+                                                                           })
+                                                     .GroupBy(obj => obj.UserId)
+                                                     .Select(obj => new
+                                                                    {
+                                                                        UserId = obj.Key,
+                                                                        RankId = obj.Max(obj2 => obj2.RankId),
+                                                                        AssignmentTimeStamp = obj.Max(obj2 => obj2.TimeStamp),
+                                                                        LastLogin = obj.Max(obj2 => obj2.LastLogin)
+                                                                    })
+                                                     .Where(obj => obj.RankId == lastRankId
+                                                                   && obj.LastLogin < inactivityLimit
+                                                                   && assignmentLimit > obj.AssignmentTimeStamp
+                                                                   && userConfigurations.Any(obj2 => obj2.UserId == obj.UserId
+                                                                                                     && obj2.GuildId == guildId
+                                                                                                     && obj2.IsInactive) == false)
+                                                     .Select(obj => obj.UserId)
+                                                     .ToList())
             {
                 _repositoryFactory.GetRepository<GuildRankAssignmentRepository>()
                                   .AddOrRefresh(obj => obj.UserId == userId
