@@ -398,7 +398,7 @@ public class DpsReportConnector
             try
             {
                 using (var response = await client.GetAsync($"https://dps.report/getJson?id={id}")
-                           .ConfigureAwait(false))
+                                                  .ConfigureAwait(false))
                 {
                     var jsonResult = await response.Content
                                                    .ReadAsStringAsync()

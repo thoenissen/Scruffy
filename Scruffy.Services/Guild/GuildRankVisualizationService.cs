@@ -545,22 +545,22 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                           .Select(obj => obj);
 
         var currentPoints = _dbFactory.GetRepository<GuildRankCurrentPointsRepository>()
-                                          .GetQuery()
-                                          .Where(obj => obj.UserId == user.Id
-                                                        && obj.Date >= from
-                                                        && obj.Date <= to
-                                                        && obj.Points != 0
-                                                        && obj.Guild.DiscordServerId == context.Guild.Id
-                                                        && userConfiguration.Any(obj2 => obj2.UserId == obj.UserId
-                                                                                         && obj2.GuildId == obj.GuildId
-                                                                                         && obj2.IsInactive) == false)
-                                          .Select(obj => new
-                                                         {
-                                                             obj.Date,
-                                                             obj.Type,
-                                                             obj.Points
-                                                         })
-                                          .ToList();
+                                      .GetQuery()
+                                      .Where(obj => obj.UserId == user.Id
+                                                    && obj.Date >= from
+                                                    && obj.Date <= to
+                                                    && obj.Points != 0
+                                                    && obj.Guild.DiscordServerId == context.Guild.Id
+                                                    && userConfiguration.Any(obj2 => obj2.UserId == obj.UserId
+                                                                                     && obj2.GuildId == obj.GuildId
+                                                                                     && obj2.IsInactive) == false)
+                                      .Select(obj => new
+                                                     {
+                                                         obj.Date,
+                                                         obj.Type,
+                                                         obj.Points
+                                                     })
+                                      .ToList();
 
         if (currentPoints.Count > 0)
         {
@@ -578,7 +578,8 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                  Label = LocalizationGroup.GetText(type.ToString(), type.ToString()),
                                  BackgroundColor = [type.GetColor()],
                                  Data = dates.Select(obj => currentPoints.FirstOrDefault(obj2 => obj2.Date == obj
-                                                                                                 && obj2.Type == type)?.Points
+                                                                                                 && obj2.Type == type)
+                                                                         ?.Points
                                                          ?? 0.0)
                                              .ToList(),
                                  Fill = false,

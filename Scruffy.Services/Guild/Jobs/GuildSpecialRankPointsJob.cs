@@ -102,9 +102,9 @@ public class GuildSpecialRankPointsJob : LocatedAsyncJob
                                                       .ToList();
 
                     var accounts = dbFactory.GetRepository<DiscordAccountRepository>()
-                                         .GetQuery()
-                                         .Where(obj => discordUserAccountIds.Contains(obj.Id))
-                                         .ToDictionary(obj => obj.Id, obj => obj.UserId);
+                                            .GetQuery()
+                                            .Where(obj => discordUserAccountIds.Contains(obj.Id))
+                                            .ToDictionary(obj => obj.Id, obj => obj.UserId);
 
                     foreach (var pointsPerUser in points.GroupBy(obj => obj.UserId))
                     {

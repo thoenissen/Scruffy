@@ -153,7 +153,7 @@ public class AccountOverviewDialogElement : DialogEmbedSelectMenuElementBase<boo
                 InteractionResponse = async obj =>
                 {
                     await obj.RespondWithModalAsync<DpsReportUserTokenModal>(DpsReportUserTokenModal.CustomId)
-                        .ConfigureAwait(false);
+                             .ConfigureAwait(false);
 
                     return false;
                 }
@@ -165,7 +165,7 @@ public class AccountOverviewDialogElement : DialogEmbedSelectMenuElementBase<boo
                 InteractionResponse = async obj =>
                 {
                     await obj.RespondWithModalAsync<GitHubAccountModal>(GitHubAccountModal.CustomId)
-                        .ConfigureAwait(false);
+                             .ConfigureAwait(false);
 
                     return false;
                 }
@@ -177,7 +177,7 @@ public class AccountOverviewDialogElement : DialogEmbedSelectMenuElementBase<boo
                 InteractionResponse = async obj =>
                 {
                     await obj.RespondWithModalAsync<PersonalDataModal>(PersonalDataModal.CustomId)
-                        .ConfigureAwait(false);
+                             .ConfigureAwait(false);
 
                     return false;
                 }
@@ -200,17 +200,17 @@ public class AccountOverviewDialogElement : DialogEmbedSelectMenuElementBase<boo
                     }
 
                     var discordQuery = _repositoryFactory.GetRepository<DiscordAccountRepository>()
-                        .GetQuery()
-                        .Select(obj => obj);
+                                                         .GetQuery()
+                                                         .Select(obj => obj);
 
                     if (_repositoryFactory.GetRepository<UserRepository>()
-                            .Refresh(obj => discordQuery.Any(obj2 => obj2.UserId == obj.Id
-                                                                     && obj2.Id == CommandContext.User.Id),
-                                obj =>
-                                {
-                                    obj.IsDataStorageAccepted = isDataStorageAccepted;
-                                    obj.IsExtendedDataStorageAccepted = isExtendedDataStorageAccepted;
-                                }) == false)
+                                          .Refresh(obj => discordQuery.Any(obj2 => obj2.UserId == obj.Id
+                                                                                   && obj2.Id == CommandContext.User.Id),
+                                                   obj =>
+                                                   {
+                                                       obj.IsDataStorageAccepted = isDataStorageAccepted;
+                                                       obj.IsExtendedDataStorageAccepted = isExtendedDataStorageAccepted;
+                                                   }) == false)
                     {
                         throw _repositoryFactory.LastError;
                     }
@@ -218,9 +218,8 @@ public class AccountOverviewDialogElement : DialogEmbedSelectMenuElementBase<boo
                     if (isDataStorageAccepted == false)
                     {
                         await CommandContext.Channel
-                            .SendMessageAsync(LocalizationGroup.GetText("DataDeletion",
-                                "A request to delete all of your data was send and will be executed soon."))
-                            .ConfigureAwait(false);
+                                            .SendMessageAsync(LocalizationGroup.GetText("DataDeletion", "A request to delete all of your data was send and will be executed soon."))
+                                            .ConfigureAwait(false);
                     }
 
                     return isDataStorageAccepted;

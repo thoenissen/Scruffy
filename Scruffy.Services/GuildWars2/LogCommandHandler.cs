@@ -115,10 +115,10 @@ public class LogCommandHandler : LocatedServiceBase
     public async Task CheckLogs(IContextContainer context, IUser user, int count)
     {
         var account = _repositoryFactory.GetRepository<DiscordAccountRepository>()
-                                      .GetQuery()
-                                      .Where(obj => obj.Id == user.Id)
-                                      .Select(obj => new { obj.User.GuildWarsAccounts.FirstOrDefault().Name, obj.User.DpsReportUserToken })
-                                      .FirstOrDefault();
+                                        .GetQuery()
+                                        .Where(obj => obj.Id == user.Id)
+                                        .Select(obj => new { obj.User.GuildWarsAccounts.FirstOrDefault().Name, obj.User.DpsReportUserToken })
+                                        .FirstOrDefault();
 
         if (string.IsNullOrWhiteSpace(account?.DpsReportUserToken))
         {
@@ -423,14 +423,14 @@ public class LogCommandHandler : LocatedServiceBase
     public async Task PostChart(IContextContainer context, DpsReportGroupLegacy group, int count)
     {
         var account = _repositoryFactory.GetRepository<DiscordAccountRepository>()
-                                .GetQuery()
-                                .Where(obj => obj.Id == context.User.Id)
-                                .Select(obj => new
-                                               {
-                                                   obj.User.GuildWarsAccounts.FirstOrDefault().Name,
-                                                   obj.User.DpsReportUserToken
-                                               })
-                                .FirstOrDefault();
+                                        .GetQuery()
+                                        .Where(obj => obj.Id == context.User.Id)
+                                        .Select(obj => new
+                                                       {
+                                                           obj.User.GuildWarsAccounts.FirstOrDefault().Name,
+                                                           obj.User.DpsReportUserToken
+                                                       })
+                                        .FirstOrDefault();
 
         if (string.IsNullOrEmpty(account?.DpsReportUserToken) == false)
         {
@@ -650,7 +650,7 @@ public class LogCommandHandler : LocatedServiceBase
                 foreach (var builder in embeds)
                 {
                     await context.SendMessageAsync(embed: builder.Build())
-                        .ConfigureAwait(false);
+                                 .ConfigureAwait(false);
                 }
 
                 if (string.IsNullOrWhiteSpace(_webbAppUrl) == false)
@@ -1329,7 +1329,8 @@ public class LogCommandHandler : LocatedServiceBase
         var filteredUploads = uploads.Count > 0
                               && summarize
                               && uploads.Any(obj => obj.Item1.Encounter.Success) == false
-                                     ? uploads.OrderBy(obj => obj.Item2).Take(3)
+                                     ? uploads.OrderBy(obj => obj.Item2)
+                                              .Take(3)
                                               .OrderByDescending(obj => obj.Item2)
                                               .ToList()
                                      : uploads;

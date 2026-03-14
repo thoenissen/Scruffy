@@ -299,9 +299,9 @@ public class LookingForGroupCommandHandler : LocatedServiceBase
     {
         if (context.User is IGuildUser { GuildPermissions.Administrator: true }
             || _repositoryFactory.GetRepository<LookingForGroupAppointmentRepository>()
-                              .GetQuery()
-                              .Any(obj => obj.Id == appointmentId
-                                          && obj.CreationUser.DiscordAccounts.Any(obj2 => obj2.Id == context.User.Id)))
+                                 .GetQuery()
+                                 .Any(obj => obj.Id == appointmentId
+                                             && obj.CreationUser.DiscordAccounts.Any(obj2 => obj2.Id == context.User.Id)))
         {
             var embedBuilder = new EmbedBuilder().WithTitle(LocalizationGroup.GetText("ConfigurationTitle", "Configuration assistant"))
                                                  .WithDescription(LocalizationGroup.GetText("ConfigurationDescription", "With the following assistant you can configure the existing appoint. You can dismiss this message, if you don't want to edit anything anymore."))

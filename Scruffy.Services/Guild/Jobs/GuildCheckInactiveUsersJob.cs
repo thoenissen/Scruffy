@@ -83,8 +83,8 @@ public class GuildCheckInactiveUsersJob : LocatedAsyncJob
                                                   .GetQuery()
                                                   .Where(obj => obj.GuildId == guild.GuildId
                                                                 && obj.RankId == ranks.OrderByDescending(obj2 => obj2.Order)
-                                                                                   .Select(obj2 => obj2.Id)
-                                                                                   .FirstOrDefault()
+                                                                                      .Select(obj2 => obj2.Id)
+                                                                                      .FirstOrDefault()
                                                                 && loginQuery.Any(obj2 => obj2.Account.UserId == obj.UserId
                                                                                           && obj2.Date > inactivityLimit) == false)
                                                   .Join(accounts,

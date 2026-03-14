@@ -23,6 +23,10 @@
     <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.3" />
     <PackageReference Include="Minio" Version="7.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="Reihitsu.Analyzer" Version="0.12.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="System.Linq.Async" Version="7.0.0">
         <ExcludeAssets>compile</ExcludeAssets>
     </PackageReference>
@@ -46,8 +50,5 @@
       <Reference Include="GW2EIJSON">
           <HintPath>..\libs\GW2EIJSON.dll</HintPath>
       </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Update="Reihitsu.Analyzer" Version="0.11.1" />
   </ItemGroup>
 </Project>

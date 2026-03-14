@@ -87,7 +87,7 @@ public sealed partial class UserAdministrationPage : IDisposable
                                    .GetQuery()
                                    .Where(e => e.ServerId == WebAppConfiguration.DiscordServerId)
                                    .GroupJoin(_repositoryFactory.GetRepository<DiscordAccountRepository>()
-                                                                 .GetQuery(),
+                                                                .GetQuery(),
                                                member => member.AccountId,
                                                account => account.Id,
                                                (member, accounts) => new
@@ -104,7 +104,7 @@ public sealed partial class UserAdministrationPage : IDisposable
                                                                                     : null,
                                                                    })
                                    .GroupJoin(_repositoryFactory.GetRepository<GuildWarsAccountRepository>()
-                                                                 .GetQuery(),
+                                                                .GetQuery(),
                                                member => member.UserId,
                                                account => account.UserId,
                                                (member, accounts) => new
@@ -132,39 +132,39 @@ public sealed partial class UserAdministrationPage : IDisposable
                                    .ToList();
 
         var guildWarsAccounts = _repositoryFactory.GetRepository<GuildWarsAccountRepository>()
-                                                   .GetQuery();
+                                                  .GetQuery();
 
         var discordAccounts = _repositoryFactory.GetRepository<DiscordAccountRepository>()
-                                                 .GetQuery();
+                                                .GetQuery();
 
         var discordMembers = _repositoryFactory.GetRepository<DiscordServerMemberRepository>()
-                                                .GetQuery()
-                                                .Where(member => member.ServerId == WebAppConfiguration.DiscordServerId);
+                                               .GetQuery()
+                                               .Where(member => member.ServerId == WebAppConfiguration.DiscordServerId);
 
         _users.AddRange(_repositoryFactory.GetRepository<GuildWarsGuildHistoricMemberRepository>()
-                                           .GetQuery()
-                                           .Where(member => member.Date == DateTime.Today
-                                                            && member.GuildId == guildId
-                                                            && guildWarsAccounts.Any(guildWarsAccount => guildWarsAccount.Name == member.Name
-                                                                                                         && discordAccounts.Any(discordAccount => discordAccount.UserId == guildWarsAccount.UserId
-                                                                                                                                                  && discordMembers.Any(discordMember => discordMember.AccountId == discordAccount.Id))) == false)
-                                           .Select(member => new UserDTO
-                                                             {
-                                                                 DiscordAccountName = string.Empty,
-                                                                 GuildWarsAccountName = member.Name,
-                                                                 IsGuildMember = true,
-                                                                 IsApiKeyValid = guildWarsAccounts.Any(guildWarsAccount => guildWarsAccount.Name == member.Name
-                                                                                                                           && (guildWarsAccount.Permissions.HasFlag(GuildWars2ApiPermission.RequiredPermissions)
-                                                                                                                               || guildWarsAccount.ApiKey == "Free-To-Play")),
-                                                                 UserId = guildWarsAccounts.Where(guildWarsAccount => guildWarsAccount.Name == member.Name)
-                                                                                           .Select(guildWarsAccount => (long?)guildWarsAccount.UserId)
-                                                                                           .FirstOrDefault(),
-                                                                 GuildId = guildId,
-                                                                 GuildWarsAccountApiKey = guildWarsAccounts.Where(guildWarsAccount => guildWarsAccount.Name == member.Name)
-                                                                                                           .Select(guildWarsAccount => guildWarsAccount.ApiKey)
-                                                                                                           .FirstOrDefault()
-                                                             })
-                                           .ToList());
+                                          .GetQuery()
+                                          .Where(member => member.Date == DateTime.Today
+                                                           && member.GuildId == guildId
+                                                           && guildWarsAccounts.Any(guildWarsAccount => guildWarsAccount.Name == member.Name
+                                                                                                        && discordAccounts.Any(discordAccount => discordAccount.UserId == guildWarsAccount.UserId
+                                                                                                                                                 && discordMembers.Any(discordMember => discordMember.AccountId == discordAccount.Id))) == false)
+                                          .Select(member => new UserDTO
+                                                            {
+                                                                DiscordAccountName = string.Empty,
+                                                                GuildWarsAccountName = member.Name,
+                                                                IsGuildMember = true,
+                                                                IsApiKeyValid = guildWarsAccounts.Any(guildWarsAccount => guildWarsAccount.Name == member.Name
+                                                                                                                          && (guildWarsAccount.Permissions.HasFlag(GuildWars2ApiPermission.RequiredPermissions)
+                                                                                                                              || guildWarsAccount.ApiKey == "Free-To-Play")),
+                                                                UserId = guildWarsAccounts.Where(guildWarsAccount => guildWarsAccount.Name == member.Name)
+                                                                                          .Select(guildWarsAccount => (long?)guildWarsAccount.UserId)
+                                                                                          .FirstOrDefault(),
+                                                                GuildId = guildId,
+                                                                GuildWarsAccountApiKey = guildWarsAccounts.Where(guildWarsAccount => guildWarsAccount.Name == member.Name)
+                                                                                                          .Select(guildWarsAccount => guildWarsAccount.ApiKey)
+                                                                                                          .FirstOrDefault()
+                                                            })
+                                          .ToList());
 
         var configurations = _repositoryFactory.GetRepository<GuildUserConfigurationRepository>()
                                                .GetQuery()

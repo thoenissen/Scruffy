@@ -61,9 +61,9 @@ public class GuildRankDeletionDialogElement : DialogReactionElementBase<bool>
                                                          var order = 0;
 
                                                          foreach (var currentRankId in dbFactory.GetRepository<GuildRankRepository>()
-                                                                                         .GetQuery()
-                                                                                         .OrderBy(obj => obj.Order)
-                                                                                         .Select(obj => obj.Id))
+                                                                                                .GetQuery()
+                                                                                                .OrderBy(obj => obj.Order)
+                                                                                                .Select(obj => obj.Id))
                                                          {
                                                              dbFactory.GetRepository<GuildRankRepository>()
                                                                       .Refresh(obj => obj.Id == currentRankId,

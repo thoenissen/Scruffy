@@ -508,7 +508,7 @@ public class GuildRankService : LocatedServiceBase
                                                        new SqlParameter("@from", from),
                                                        new SqlParameter("@to", to),
                                                        new SqlParameter("@guildId", guild.Id))
-                               .ConfigureAwait(false)
+                                   .ConfigureAwait(false)
                  == null)
                 {
                     LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(GuildRankService), "Representation points", null, dbFactory.LastError);
@@ -584,7 +584,7 @@ public class GuildRankService : LocatedServiceBase
                                                        new SqlParameter("@from", from),
                                                        new SqlParameter("@to", to),
                                                        new SqlParameter("@guildId", guild.Id))
-                               .ConfigureAwait(false)
+                                   .ConfigureAwait(false)
                  == null)
                 {
                     LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(GuildRankService), "Achievement points", null, dbFactory.LastError);
@@ -653,7 +653,7 @@ public class GuildRankService : LocatedServiceBase
                                                        new SqlParameter("@from", from),
                                                        new SqlParameter("@to", to),
                                                        new SqlParameter("@guildId", guild.Id))
-                               .ConfigureAwait(false)
+                                   .ConfigureAwait(false)
                  == null)
                 {
                     LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(GuildRankService), "Membership points", null, dbFactory.LastError);
@@ -773,7 +773,7 @@ public class GuildRankService : LocatedServiceBase
                                                        new SqlParameter("@from", from),
                                                        new SqlParameter("@to", to),
                                                        new SqlParameter("@guildId", guild.Id))
-                               .ConfigureAwait(false)
+                                   .ConfigureAwait(false)
                  == null)
                 {
                     LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(GuildRankService), "Donations", null, dbFactory.LastError);
@@ -836,7 +836,7 @@ public class GuildRankService : LocatedServiceBase
                                                        new SqlParameter("@from", from),
                                                        new SqlParameter("@to", to),
                                                        new SqlParameter("@guildId", guild.Id))
-                               .ConfigureAwait(false)
+                                   .ConfigureAwait(false)
                  == null)
                 {
                     LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(GuildRankService), "Discord voice activity points", null, dbFactory.LastError);
@@ -899,7 +899,7 @@ public class GuildRankService : LocatedServiceBase
                                                        new SqlParameter("@from", from),
                                                        new SqlParameter("@to", to),
                                                        new SqlParameter("@guildId", guild.Id))
-                               .ConfigureAwait(false)
+                                   .ConfigureAwait(false)
                  == null)
                 {
                     LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(GuildRankService), "Discord message activity points", null, dbFactory.LastError);
@@ -984,7 +984,7 @@ public class GuildRankService : LocatedServiceBase
                                                        new SqlParameter("@from", from),
                                                        new SqlParameter("@to", to),
                                                        new SqlParameter("@guildId", guild.Id))
-                               .ConfigureAwait(false)
+                                   .ConfigureAwait(false)
                  == null)
                 {
                     LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(GuildRankService), "Event points", null, dbFactory.LastError);
@@ -1069,7 +1069,7 @@ public class GuildRankService : LocatedServiceBase
                                                        new SqlParameter("@from", from),
                                                        new SqlParameter("@to", to),
                                                        new SqlParameter("@guildId", guild.Id))
-                               .ConfigureAwait(false)
+                                   .ConfigureAwait(false)
                  == null)
                 {
                     LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(GuildRankService), "Development points", null, dbFactory.LastError);
@@ -1115,10 +1115,10 @@ public class GuildRankService : LocatedServiceBase
             var today = DateTime.Today;
 
             currentRanks = _repositoryFactory.GetRepository<GuildWarsGuildHistoricMemberRepository>()
-                                              .GetQuery()
-                                              .Where(obj => obj.Date == today
-                                                            && obj.GuildId == guildId)
-                                              .ToDictionary(obj => obj.Name, obj => obj.Rank);
+                                             .GetQuery()
+                                             .Where(obj => obj.Date == today
+                                                           && obj.GuildId == guildId)
+                                             .ToDictionary(obj => obj.Name, obj => obj.Rank);
         }
 
         var guildWarsAccounts = _repositoryFactory.GetRepository<GuildWarsAccountRepository>()

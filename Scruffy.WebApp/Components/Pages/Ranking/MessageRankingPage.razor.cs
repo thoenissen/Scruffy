@@ -172,10 +172,10 @@ public partial class MessageRankingPage : LocatedComponent
                                                  .ToList();
 
             var nameMap = repositoryFactory.GetRepository<DiscordServerMemberRepository>()
-                                            .GetQuery()
-                                            .Where(m => m.ServerId == WebAppConfiguration.DiscordServerId)
-                                            .Select(m => new { m.AccountId, m.Name, m.AvatarUrl })
-                                            .ToDictionary(m => m.AccountId, m => new { m.Name, m.AvatarUrl });
+                                           .GetQuery()
+                                           .Where(m => m.ServerId == WebAppConfiguration.DiscordServerId)
+                                           .Select(m => new { m.AccountId, m.Name, m.AvatarUrl })
+                                           .ToDictionary(m => m.AccountId, m => new { m.Name, m.AvatarUrl });
 
             return messageCounts.Where(m => nameMap.ContainsKey(m.AccountId))
                                 .Select(m =>

@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+#pragma warning disable RH0201
+
+using Microsoft.EntityFrameworkCore.Migrations;
 
 using Scruffy.Data.Enumerations.CoreData;
 
@@ -67,7 +69,7 @@ namespace Scruffy.Data.Entity.Migrations
                                          table => new
                                          {
                                              Id = table.Column<long>("bigint", nullable: false)
-                                                                .Annotation("SqlServer:Identity", "1, 1"),
+                                                       .Annotation("SqlServer:Identity", "1, 1"),
                                              CreationTimeStamp = table.Column<DateTime>("datetime2", nullable: false),
                                              Type = table.Column<UserType>("int", nullable: false),
                                              RaidExperienceLevelId = table.Column<long?>("bigint", nullable: true)

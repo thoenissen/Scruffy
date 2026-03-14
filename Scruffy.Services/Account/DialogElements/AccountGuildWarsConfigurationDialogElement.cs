@@ -119,8 +119,8 @@ public class AccountGuildWarsConfigurationDialogElement : DialogEmbedSelectMenuE
                                                                   .RemoveRange(obj => obj.Account.UserId == userData.Id
                                                                                       && obj.Name == guildWarsAccount)
                                                 && _repositoryFactory.GetRepository<GuildWarsAccountRepository>()
-                                                                  .Remove(obj => obj.UserId == userData.Id
-                                                                                 && obj.Name == guildWarsAccount))
+                                                                     .Remove(obj => obj.UserId == userData.Id
+                                                                                    && obj.Name == guildWarsAccount))
                                             {
                                                 await CommandContext.Channel
                                                                     .SendMessageAsync(LocalizationGroup.GetText("AccountDeleted", "Your account has been successfully deleted."))

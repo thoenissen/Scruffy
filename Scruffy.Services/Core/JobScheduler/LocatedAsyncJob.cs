@@ -52,9 +52,10 @@ public abstract class LocatedAsyncJob : IServiceScopeSupport, IAsyncJob, IDispos
     {
         get
         {
-            return field ??= ServiceProviderContainer.Current.GetServiceProvider()
-                .GetRequiredService<LocalizationService>()
-                .GetGroup(GetType().Name);
+            return field ??= ServiceProviderContainer.Current
+                                                     .GetServiceProvider()
+                                                     .GetRequiredService<LocalizationService>()
+                                                     .GetGroup(GetType().Name);
         }
     }
 

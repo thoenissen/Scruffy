@@ -613,7 +613,7 @@ public class GuildExportService : LocatedServiceBase
                                 .ConfigureAwait(false);
 
                     foreach (var (user, accountName, charactersCount, representationCount) in accounts.OrderBy(obj => obj.User)
-                                                                                            .ThenBy(obj => obj.AccountName))
+                                                                                                      .ThenBy(obj => obj.AccountName))
                     {
                         await writer.WriteLineAsync($"{user};{accountName};{charactersCount};{representationCount};{(charactersCount != 0 ? representationCount / (double)charactersCount : 0)}")
                                     .ConfigureAwait(false);
@@ -809,8 +809,8 @@ public class GuildExportService : LocatedServiceBase
                                                    {
                                                        obj.Date,
                                                        DiscordUserId = discordAccounts.Where(obj2 => obj2.UserId == obj.UserId)
-                                                                                                     .Select(obj2 => (ulong?)obj2.Id)
-                                                                                                     .FirstOrDefault(),
+                                                                                      .Select(obj2 => (ulong?)obj2.Id)
+                                                                                      .FirstOrDefault(),
                                                        obj.Points
                                                    })
                                                    .ToList())

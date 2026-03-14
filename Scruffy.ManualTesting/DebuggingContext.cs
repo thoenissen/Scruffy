@@ -116,9 +116,9 @@ internal class DebuggingContext : IContextContainer
     {
         return attachments == null
             ? await Channel.SendMessageAsync(text, isTTS, embed, options, allowedMentions, null, components, stickers, embeds)
-                .ConfigureAwait(false)
+                           .ConfigureAwait(false)
             : await Channel.SendFilesAsync(attachments, text, isTTS, embed, options, allowedMentions, null, components, stickers, embeds)
-                .ConfigureAwait(false);
+                           .ConfigureAwait(false);
     }
 
     /// <inheritdoc/>

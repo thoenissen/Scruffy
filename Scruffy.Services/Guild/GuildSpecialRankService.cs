@@ -67,7 +67,8 @@ public class GuildSpecialRankService : LocatedServiceBase
                                                                       obj.DiscordRoleId,
                                                                       obj.GrantThreshold,
                                                                       obj.RemoveThreshold,
-                                                                      Users = obj.GuildSpecialRankPoints.Where(obj2 => obj2.Points > 0)
+                                                                      Users = obj.GuildSpecialRankPoints
+                                                                                 .Where(obj2 => obj2.Points > 0)
                                                                                  .Select(obj2 => new
                                                                                                  {
                                                                                                      UserId = obj2.User

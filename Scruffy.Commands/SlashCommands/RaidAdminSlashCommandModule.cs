@@ -267,7 +267,7 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
                                                                 Value = obj.AliasName,
                                                                 Name = buildContext.CultureInfo.DateTimeFormat.GetDayName(obj.Day)
                                                             })
-                                       .ToList();
+                                             .ToList();
 
         return base.GetCommands(buildContext)
                    .OfType<SlashCommandProperties>()

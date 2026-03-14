@@ -16,11 +16,12 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.3" />
+    <PackageReference Include="Reihitsu.Analyzer" Version="0.12.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Scruffy.Services\Scruffy.Services.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Update="Reihitsu.Analyzer" Version="0.11.1" />
   </ItemGroup>
 </Project>

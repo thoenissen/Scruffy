@@ -106,7 +106,8 @@ public class UtilityCommandHandler : LocatedServiceBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public async Task AddLink(InteractionContextContainer context, ulong channelId, ulong messageId, string name, string link)
     {
-        if (await context.Client.GetChannelAsync(channelId)
+        if (await context.Client
+                         .GetChannelAsync(channelId)
                          .ConfigureAwait(false) is ITextChannel channel)
         {
             if (await channel.GetMessageAsync(messageId)

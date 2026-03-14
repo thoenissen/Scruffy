@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+#pragma warning disable RH0201
+
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations
 {
@@ -15,7 +17,7 @@ namespace Scruffy.Data.Entity.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                              .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreationUserId = table.Column<long>(type: "bigint", nullable: false),

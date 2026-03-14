@@ -78,26 +78,26 @@ public class Program
                                                                                        otlpOptions.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
                                                                                    });
                                          })
-                .WithMetrics(meterProviderBuilder =>
-                             {
-                                 meterProviderBuilder.SetResourceBuilder(resourceBuilder)
-                                                     .AddAspNetCoreInstrumentation()
-                                                     .AddHttpClientInstrumentation()
-                                                     .AddOtlpExporter(otlpOptions =>
-                                                                      {
-                                                                          otlpOptions.Endpoint = new Uri(openTelemetryEndpoint);
-                                                                          otlpOptions.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
-                                                                      });
-                             })
-                .WithLogging(loggingProviderBuilder =>
-                             {
-                                 loggingProviderBuilder.SetResourceBuilder(resourceBuilder)
-                                                       .AddOtlpExporter(otlpOptions =>
-                                                                       {
-                                                                           otlpOptions.Endpoint = new Uri(openTelemetryEndpoint);
-                                                                           otlpOptions.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
-                                                                       });
-                             });
+                            .WithMetrics(meterProviderBuilder =>
+                                         {
+                                             meterProviderBuilder.SetResourceBuilder(resourceBuilder)
+                                                                 .AddAspNetCoreInstrumentation()
+                                                                 .AddHttpClientInstrumentation()
+                                                                 .AddOtlpExporter(otlpOptions =>
+                                                                                  {
+                                                                                      otlpOptions.Endpoint = new Uri(openTelemetryEndpoint);
+                                                                                      otlpOptions.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
+                                                                                  });
+                                         })
+                            .WithLogging(loggingProviderBuilder =>
+                                         {
+                                             loggingProviderBuilder.SetResourceBuilder(resourceBuilder)
+                                                                   .AddOtlpExporter(otlpOptions =>
+                                                                                   {
+                                                                                       otlpOptions.Endpoint = new Uri(openTelemetryEndpoint);
+                                                                                       otlpOptions.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
+                                                                                   });
+                                         });
         }
 
         builder.Services.AddMinio(options =>

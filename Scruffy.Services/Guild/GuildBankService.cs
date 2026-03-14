@@ -218,9 +218,9 @@ public class GuildBankService : LocatedServiceBase
                                                                  .ConfigureAwait(false);
 
                                 var builder = new EmbedBuilder().WithTitle(LocalizationGroup.GetFormattedText("DyeUnlocksTitle", "Dye unlocks {0}", apiKey.Name))
-                                                                       .WithColor(Color.Green)
-                                                                       .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
-                                                                       .WithTimestamp(DateTime.Now);
+                                                                .WithColor(Color.Green)
+                                                                .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
+                                                                .WithTimestamp(DateTime.Now);
 
                                 var fieldBuilder = new StringBuilder();
                                 var fieldCounter = 1;

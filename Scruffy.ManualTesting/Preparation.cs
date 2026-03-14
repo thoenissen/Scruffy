@@ -62,10 +62,10 @@ internal static class Preparation
         DiscordClient = new DiscordSocketClient(config);
 
         await DiscordClient.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_TOKEN"))
-                            .ConfigureAwait(false);
+                           .ConfigureAwait(false);
 
         await DiscordClient.StartAsync()
-                            .ConfigureAwait(false);
+                           .ConfigureAwait(false);
     }
 
     /// <summary>

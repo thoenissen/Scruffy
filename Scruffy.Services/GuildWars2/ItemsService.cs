@@ -58,10 +58,10 @@ public class ItemsService : LocatedServiceBase
                                       .BulkInsert(items)
                                       .ConfigureAwait(false)
                        && await dbFactory.GetRepository<GuildWarsItemGuildUpgradeConversionRepository>()
-                                      .BulkInsert(items.Where(obj => obj.Details?.GuildUpgradeId > 0)
-                                                       .Select(obj => new KeyValuePair<int, long>(obj.Id, obj.Details.GuildUpgradeId))
-                                                       .ToList())
-                                      .ConfigureAwait(false);
+                                         .BulkInsert(items.Where(obj => obj.Details?.GuildUpgradeId > 0)
+                                                          .Select(obj => new KeyValuePair<int, long>(obj.Id, obj.Details.GuildUpgradeId))
+                                                          .ToList())
+                                         .ConfigureAwait(false);
             }
         }
     }
@@ -78,7 +78,7 @@ public class ItemsService : LocatedServiceBase
         await using (dialogHandler.ConfigureAwait(false))
         {
             var data = await dialogHandler.RunForm<ItemConfigurationFormData>()
-                                      .ConfigureAwait(false);
+                                          .ConfigureAwait(false);
 
             if (data != null)
             {
@@ -143,19 +143,19 @@ public class ItemsService : LocatedServiceBase
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
             var items = await dbFactory.GetRepository<GuildWarsItemRepository>()
-                                            .GetQuery()
-                                            .Where(obj => obj.CustomValue != null)
-                                            .Select(obj => new
-                                            {
-                                                obj.ItemId,
-                                                obj.Name,
-                                                obj.CustomValue,
-                                                obj.CustomValueValidDate,
-                                                obj.IsCustomValueThresholdActivated
-                                            })
-                                            .OrderBy(obj => obj.ItemId)
-                                            .ToListAsync()
-                                            .ConfigureAwait(false);
+                                       .GetQuery()
+                                       .Where(obj => obj.CustomValue != null)
+                                       .Select(obj => new
+                                                      {
+                                                          obj.ItemId,
+                                                          obj.Name,
+                                                          obj.CustomValue,
+                                                          obj.CustomValueValidDate,
+                                                          obj.IsCustomValueThresholdActivated
+                                                      })
+                                       .OrderBy(obj => obj.ItemId)
+                                       .ToListAsync()
+                                       .ConfigureAwait(false);
 
             var memoryStream = new MemoryStream();
 

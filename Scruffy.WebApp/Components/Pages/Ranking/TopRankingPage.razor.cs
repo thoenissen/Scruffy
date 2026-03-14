@@ -137,7 +137,7 @@ public partial class TopRankingPage : LocatedComponent
                               if (_maxPointsChart != null)
                               {
                                   await _maxPointsChart.Update()
-                                      .ConfigureAwait(true);
+                                                       .ConfigureAwait(true);
                               }
 
                               StateHasChanged();
@@ -153,10 +153,10 @@ public partial class TopRankingPage : LocatedComponent
         using (var repositoryFactory = RepositoryFactory.CreateInstance())
         {
             var currentPointsQuery = repositoryFactory.GetRepository<GuildRankCurrentPointsRepository>()
-                                                 .GetQuery();
+                                                      .GetQuery();
 
             var discordMembers = repositoryFactory.GetRepository<DiscordServerMemberRepository>()
-                                                   .GetQuery();
+                                                  .GetQuery();
 
             return repositoryFactory.GetRepository<GuildRankCurrentPointsRepository>()
                                     .GetQuery()

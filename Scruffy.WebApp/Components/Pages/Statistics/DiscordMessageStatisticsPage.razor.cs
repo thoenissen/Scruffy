@@ -654,7 +654,7 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
                                                        Name: ResolveName(u.AccountId),
                                                        AvatarUrl: nameMap.TryGetValue(u.AccountId, out var member) ? member.AvatarUrl : null,
                                                        u.Count))
-                                          .ToList();
+                                         .ToList();
         }
     }
 
@@ -739,7 +739,7 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
                                     };
 
             _allChannelsTableData = allChannels.Select(c => (c.ChannelId, Name: ResolveChannelName(c.ChannelId), c.Count))
-                                                 .ToList();
+                                               .ToList();
         }
     }
 

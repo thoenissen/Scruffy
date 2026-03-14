@@ -66,7 +66,8 @@ public sealed class JobScheduler : SingletonLocatedServiceBase,
                                                                      obj.Id,
                                                                      obj.TimeStamp
                                                                  })
-                                                  .ToListAsync().ConfigureAwait(false);
+                                                  .ToListAsync()
+                                                  .ConfigureAwait(false);
 
             foreach (var oneTimeReminder in oneTimeReminders)
             {
@@ -83,7 +84,8 @@ public sealed class JobScheduler : SingletonLocatedServiceBase,
                                                                     obj.PostTime,
                                                                     obj.DeletionTime
                                                                 })
-                                                 .ToListAsync().ConfigureAwait(false);
+                                                 .ToListAsync()
+                                                 .ConfigureAwait(false);
 
             foreach (var weeklyReminder in weeklyReminders)
             {

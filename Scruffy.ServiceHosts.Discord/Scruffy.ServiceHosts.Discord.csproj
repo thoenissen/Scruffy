@@ -16,13 +16,14 @@
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="10.0.3" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.3" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
+    <PackageReference Include="Reihitsu.Analyzer" Version="0.12.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Scruffy.Commands\Scruffy.Commands.csproj" />
     <ProjectReference Include="..\Scruffy.Data\Scruffy.Data.csproj" />
     <ProjectReference Include="..\Scruffy.Services\Scruffy.Services.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Update="Reihitsu.Analyzer" Version="0.11.1" />
   </ItemGroup>
 </Project>

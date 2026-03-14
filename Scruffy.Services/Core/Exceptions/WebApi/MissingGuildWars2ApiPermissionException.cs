@@ -49,7 +49,8 @@ public class MissingGuildWars2ApiPermissionException : ScruffyUserMessageExcepti
             }
             else
             {
-                foreach (var permission in Enum.GetValues(typeof(GuildWars2ApiPermission)).OfType<GuildWars2ApiPermission>()
+                foreach (var permission in Enum.GetValues(typeof(GuildWars2ApiPermission))
+                                               .OfType<GuildWars2ApiPermission>()
                                                .Skip(1))
                 {
                     if (_permission.HasFlag(permission))

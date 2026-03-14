@@ -51,7 +51,7 @@ public class ConfigurationCommandHandler : LocatedServiceBase
             await using (dialogHandler.ConfigureAwait(false))
             {
                 await dialogHandler.Run<ServerConfigurationDialogElement, bool>()
-                                          .ConfigureAwait(false);
+                                   .ConfigureAwait(false);
 
                 await dialogHandler.DeleteMessages()
                                    .ConfigureAwait(false);

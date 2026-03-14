@@ -256,7 +256,8 @@ public partial class PersonalRankingPage
                                       {
                                           Label = GetDescription(type),
                                           Data = dates.Select(date => currentPoints.FirstOrDefault(rankPoint => rankPoint.Date == date
-                                                                                                                && rankPoint.Type == type)?.Points
+                                                                                                                && rankPoint.Type == type)
+                                                                                   ?.Points
                                                                           ?? 0.0)
                                                       .ToArray(),
                                           BackgroundColor = [type.GetColor()],
@@ -268,7 +269,7 @@ public partial class PersonalRankingPage
                                     {
                                         Datasets = dataSets,
                                         Labels = dates.Select(obj => obj.ToString("dd.MM.yyyy"))
-                                                      .ToArray().ToArray()
+                                                      .ToArray()
                                     };
             }
         }

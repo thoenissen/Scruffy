@@ -49,16 +49,16 @@ public class GuildRankEditDialogElement : DialogEmbedReactionElementBase<bool>
             var rankId = DialogContext.GetValue<int>("RankId");
 
             var data = await dbFactory.GetRepository<GuildRankRepository>()
-                                       .GetQuery()
-                                       .Where(obj => obj.Id == rankId)
-                                       .Select(obj => new
-                                       {
-                                           obj.InGameName,
-                                           obj.DiscordRoleId,
-                                           obj.Percentage
-                                       })
-                                       .FirstAsync()
-                                       .ConfigureAwait(false);
+                                      .GetQuery()
+                                      .Where(obj => obj.Id == rankId)
+                                      .Select(obj => new
+                                                     {
+                                                         obj.InGameName,
+                                                         obj.DiscordRoleId,
+                                                         obj.Percentage
+                                                     })
+                                      .FirstAsync()
+                                      .ConfigureAwait(false);
 
             var fieldBuilder = new StringBuilder();
             fieldBuilder.AppendLine($"{Format.Bold(LocalizationGroup.GetText("InGameName", "In game name"))}: {data.InGameName}");

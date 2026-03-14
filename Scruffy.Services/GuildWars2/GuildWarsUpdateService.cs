@@ -62,7 +62,8 @@ public class GuildWarsUpdateService : LocatedServiceBase
             field.Append(LocalizationGroup.GetText("Release", "Release"));
             field.Append(": ");
 
-            field.Append(Format.Url(data.When.ToLocalTime()
+            field.Append(Format.Url(data.When
+                                        .ToLocalTime()
                                         .ToString("G", LocalizationGroup.CultureInfo),
                                     "https://thatshaman.com/tools/countdown"));
             field.Append(Environment.NewLine);

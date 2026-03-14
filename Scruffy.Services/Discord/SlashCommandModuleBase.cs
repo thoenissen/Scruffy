@@ -21,10 +21,10 @@ public abstract class SlashCommandModuleBase : LocatedInteractionModuleBase
     public virtual IEnumerable<ApplicationCommandProperties> GetCommands(SlashCommandBuildContext buildContext)
     {
         return buildContext.ServiceProvider
-            .GetRequiredService<InteractionService>()
-            .Modules
-            .FirstOrDefault(obj => obj.Name == GetType().Name)
-            ?.ToApplicationCommandProps();
+                           .GetRequiredService<InteractionService>()
+                           .Modules
+                           .FirstOrDefault(obj => obj.Name == GetType().Name)
+                           ?.ToApplicationCommandProps();
     }
 
     #endregion // LocatedInteractionModuleBase

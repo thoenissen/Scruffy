@@ -122,7 +122,7 @@ public partial class RaidRolesPage
     private async Task OnExport()
     {
         var module = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./" + Assets["js/html2canvasInterop.js"])
-                                .ConfigureAwait(false);
+                                    .ConfigureAwait(false);
 
         await using (module.ConfigureAwait(false))
         {

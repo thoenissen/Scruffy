@@ -153,11 +153,11 @@ public class StatisticsVisualizerService : LocatedServiceBase
             stringBuilder.Append(' ');
             limit = now.AddDays(-1);
             stringBuilder.Append(Format.Code(dbFactory.GetRepository<DiscordMessageRepository>()
-                                                         .GetQuery()
-                                                         .Count(obj => obj.DiscordServerId == commandContext.Guild.Id
-                                                                       && obj.DiscordAccountId == commandContext.User.Id
-                                                                       && obj.TimeStamp > limit)
-                                                         .ToString()
+                                                      .GetQuery()
+                                                      .Count(obj => obj.DiscordServerId == commandContext.Guild.Id
+                                                                    && obj.DiscordAccountId == commandContext.User.Id
+                                                                    && obj.TimeStamp > limit)
+                                                      .ToString()
                                               + ' '
                                               + LocalizationGroup.GetText("MeOverviewMessages", "messages")));
             stringBuilder.Append(Environment.NewLine);

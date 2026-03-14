@@ -653,7 +653,8 @@ public class ScruffyDbContext : IdentityDbContext<UserEntity, RoleEntity, long, 
                                        });
 
         // Disabling cascade on delete
-        foreach (var foreignKey in modelBuilder.Model.GetEntityTypes()
+        foreach (var foreignKey in modelBuilder.Model
+                                               .GetEntityTypes()
                                                .SelectMany(obj => obj.GetForeignKeys())
                                                .Where(obj => obj.IsOwnership == false && obj.DeleteBehavior == DeleteBehavior.Cascade))
         {

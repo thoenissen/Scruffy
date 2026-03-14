@@ -595,12 +595,12 @@ public class GuildCommandHandler : LocatedServiceBase
     public async Task CheckRankAssignments(IContextContainer context)
     {
         var embed = await _rankService.CheckCurrentAssignments(_repositoryFactory.GetRepository<GuildRepository>()
-                                                                                     .GetQuery()
-                                                                                     .Where(obj => obj.DiscordServerId == context.Guild.Id)
-                                                                                     .Select(obj => obj.Id)
-                                                                                     .First(),
+                                                                                 .GetQuery()
+                                                                                 .Where(obj => obj.DiscordServerId == context.Guild.Id)
+                                                                                 .Select(obj => obj.Id)
+                                                                                 .First(),
                                                                true)
-                                          .ConfigureAwait(false);
+                                      .ConfigureAwait(false);
 
         if (embed != null)
         {
