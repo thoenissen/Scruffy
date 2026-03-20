@@ -64,7 +64,7 @@
                         </select>
                     </TemplateColumn>
                     <TemplateColumn Title="@LocalizationGroup.GetText("Points", "Points")" Context="u" Sortable="false">
-                        @u.Points.ToString("0.0")
+                        @u.Points?.ToString("0.0")
                     </TemplateColumn>
                     <TemplateColumn Title="@LocalizationGroup.GetText("RoleWishFulfilled", "Role wish")" Context="u" Sortable="false">
                         @if (u.IsRoleWishFulfilled.HasValue)
