@@ -301,17 +301,27 @@ public partial class RaidCommitPage
                                                }
 
                                                obj.State = commitUser.Status switch
-                                                               {
-                                                                   RaidParticipationStatus.Played => RegistrationState.Played,
-                                                                   RaidParticipationStatus.Substitute => RegistrationState.Substitute,
-                                                                   RaidParticipationStatus.NoShow => RegistrationState.NoShow,
-                                                                   RaidParticipationStatus.LateRegistration => RegistrationState.LateRegistration,
-                                                                   _ => obj.State
-                                                               };
+                                                                {
+                                                                    RaidParticipationStatus.Played => RegistrationState.Played,
+                                                                    RaidParticipationStatus.Substitute => RegistrationState.Substitute,
+                                                                    RaidParticipationStatus.NoShow => RegistrationState.NoShow,
+                                                                    RaidParticipationStatus.LateRegistration => RegistrationState.LateRegistration,
+                                                                    RaidParticipationStatus.Removed => RegistrationState.Removed,
+                                                                    _ => obj.State
+                                                                };
                                                obj.Points = commitUser.Points;
                                                obj.IsRoleWishFulfilled = commitUser.IsRoleWishFulfilled;
                                            });
                 }
+
+                dbFactory.GetRepository<RaidRegistrationRepository>()
+                         .RefreshRange(obj => obj.AppointmentId == _appointmentId.Value
+                                              && obj.Points == null,
+                                       obj =>
+                                       {
+                                           obj.Points = 0;
+                                           obj.State = RegistrationState.Removed;
+                                       });
 
                 var dateLimit = _appointmentTimeStamp.Value.AddDays(-7 * 15);
 
@@ -529,7 +539,8 @@ public partial class RaidCommitPage
             {
                 _users = dbFactory.GetRepository<RaidRegistrationRepository>()
                                   .GetQuery()
-                                  .Where(obj => obj.AppointmentId == appointment.Id)
+                                  .Where(obj => obj.AppointmentId == appointment.Id
+                                                && obj.State != RegistrationState.Removed)
                                   .Select(obj => new
                                                  {
                                                      obj.UserId,
@@ -561,6 +572,7 @@ public partial class RaidCommitPage
                                                                RegistrationState.Substitute => RaidParticipationStatus.Substitute,
                                                                RegistrationState.NoShow => RaidParticipationStatus.NoShow,
                                                                RegistrationState.LateRegistration => RaidParticipationStatus.LateRegistration,
+                                                               RegistrationState.Removed => RaidParticipationStatus.Removed,
                                                                _ => RaidParticipationStatus.Played,
                                                            };
 

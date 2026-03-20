@@ -28,5 +28,10 @@ public enum RegistrationState
     /// <summary>
     /// The user registered after the registration deadline
     /// </summary>
-    LateRegistration
+    LateRegistration,
+
+    /// <summary>
+    /// The user was removed from the raid and receives 0 points
+    /// </summary>
+    Removed
 }

@@ -23,5 +23,10 @@ public enum RaidParticipationStatus
     /// <summary>
     /// The user registered after the deadline and receives 0 points
     /// </summary>
-    LateRegistration
+    LateRegistration,
+
+    /// <summary>
+    /// The user was removed from the raid and receives 0 points
+    /// </summary>
+    Removed
 }
