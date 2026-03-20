@@ -31,22 +31,23 @@ public class RaidCommitUserDTO
     public RaidParticipationStatus Status { get; set; }
 
     /// <summary>
-    /// Calculated points based on the participation status
+    /// Calculated points based on the participation status or overridden with the database value
     /// </summary>
-    public double Points
+    public double? Points
     {
         get
         {
-            return Status switch
-            {
-                RaidParticipationStatus.Played => ParticipationPoints * 1.0,
-                RaidParticipationStatus.Substitute => ParticipationPoints * 3.0,
-                RaidParticipationStatus.NoShow => ParticipationPoints * -1.0,
-                RaidParticipationStatus.LateRegistration => 0.0,
-                RaidParticipationStatus.Removed => 0.0,
-                _ => ParticipationPoints * 1.0,
-            };
+            return field ?? Status switch
+                            {
+                                RaidParticipationStatus.Played => ParticipationPoints * 1.0,
+                                RaidParticipationStatus.Substitute => ParticipationPoints * 3.0,
+                                RaidParticipationStatus.NoShow => ParticipationPoints * -1.0,
+                                RaidParticipationStatus.LateRegistration => 0.0,
+                                RaidParticipationStatus.Removed => 0.0,
+                                _ => ParticipationPoints * 1.0,
+                            };
         }
+        set;
     }
 
     /// <summary>

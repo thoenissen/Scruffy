@@ -583,6 +583,7 @@ public partial class RaidCommitPage
                                                          Name = entry.Name,
                                                          ParticipationPoints = experienceLevel.ParticipationPoints,
                                                          Status = status,
+                                                         Points = entry.Points,
                                                          ExperienceLevelDescription = experienceLevel.Description,
                                                          IsRoleWishFulfilled = entry.IsRoleWishFulfilled
                                                      };
