@@ -67,50 +67,50 @@ namespace Scruffy.Data.Entity.Migrations
 
             migrationBuilder.CreateTable("Users",
                                          table => new
-                                         {
-                                             Id = table.Column<long>("bigint", nullable: false)
-                                                       .Annotation("SqlServer:Identity", "1, 1"),
-                                             CreationTimeStamp = table.Column<DateTime>("datetime2", nullable: false),
-                                             Type = table.Column<UserType>("int", nullable: false),
-                                             RaidExperienceLevelId = table.Column<long?>("bigint", nullable: true)
-                                         },
+                                                  {
+                                                      Id = table.Column<long>("bigint", nullable: false)
+                                                                .Annotation("SqlServer:Identity", "1, 1"),
+                                                      CreationTimeStamp = table.Column<DateTime>("datetime2", nullable: false),
+                                                      Type = table.Column<UserType>("int", nullable: false),
+                                                      RaidExperienceLevelId = table.Column<long?>("bigint", nullable: true)
+                                                  },
                                          constraints: table => table.PrimaryKey("PK_Users", x => x.Id));
             migrationBuilder.CreateTable(name: "DiscordAccounts",
                                          columns: table => new
-                                         {
-                                             Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                                             UserId = table.Column<long>(type: "bigint", nullable: false)
-                                         },
+                                                           {
+                                                               Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                                                               UserId = table.Column<long>(type: "bigint", nullable: false)
+                                                           },
                                          constraints: table =>
-                                         {
-                                             table.PrimaryKey("PK_DiscordAccounts", x => x.Id);
+                                                      {
+                                                          table.PrimaryKey("PK_DiscordAccounts", x => x.Id);
 
-                                             table.ForeignKey(name: "FK_DiscordAccounts_Users_UserId",
-                                                              column: x => x.UserId,
-                                                              principalTable: "Users",
-                                                              principalColumn: "Id",
-                                                              onDelete: ReferentialAction.Restrict);
-                                         });
+                                                          table.ForeignKey(name: "FK_DiscordAccounts_Users_UserId",
+                                                                           column: x => x.UserId,
+                                                                           principalTable: "Users",
+                                                                           principalColumn: "Id",
+                                                                           onDelete: ReferentialAction.Restrict);
+                                                      });
             migrationBuilder.CreateTable(name: "GuildWarsAccounts",
                                          columns: table => new
-                                         {
-                                             Name = table.Column<string>(type: "nvarchar(42)", maxLength: 42, nullable: false),
-                                             UserId = table.Column<long>(type: "bigint", nullable: false),
-                                             DpsReportUserToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                                             ApiKey = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                                             LastAge = table.Column<long>(type: "bigint", nullable: false),
-                                             WorldId = table.Column<long>(type: "bigint", nullable: true)
-                                         },
+                                                           {
+                                                               Name = table.Column<string>(type: "nvarchar(42)", maxLength: 42, nullable: false),
+                                                               UserId = table.Column<long>(type: "bigint", nullable: false),
+                                                               DpsReportUserToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                                                               ApiKey = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                                                               LastAge = table.Column<long>(type: "bigint", nullable: false),
+                                                               WorldId = table.Column<long>(type: "bigint", nullable: true)
+                                                           },
                                          constraints: table =>
-                                         {
-                                             table.PrimaryKey("PK_GuildWarsAccounts", x => x.Name);
+                                                      {
+                                                          table.PrimaryKey("PK_GuildWarsAccounts", x => x.Name);
 
-                                             table.ForeignKey(name: "FK_GuildWarsAccounts_Users_UserId",
-                                                              column: x => x.UserId,
-                                                              principalTable: "Users",
-                                                              principalColumn: "Id",
-                                                              onDelete: ReferentialAction.Restrict);
-                                         });
+                                                          table.ForeignKey(name: "FK_GuildWarsAccounts_Users_UserId",
+                                                                           column: x => x.UserId,
+                                                                           principalTable: "Users",
+                                                                           principalColumn: "Id",
+                                                                           onDelete: ReferentialAction.Restrict);
+                                                      });
 
             migrationBuilder.CreateTable(name: "GuildWarsAccountDailyLoginChecks",
                                          columns: table => new

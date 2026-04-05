@@ -219,11 +219,11 @@ public class RaidCommandHandler : LocatedServiceBase
                                              .Where(obj => obj.TimeStamp > DateTime.Now
                                                            && obj.RaidDayConfiguration.AliasName == name)
                                              .Select(obj => new
-                                             {
-                                                 obj.Id,
-                                                 obj.ConfigurationId,
-                                                 obj.Deadline
-                                             })
+                                                            {
+                                                                obj.Id,
+                                                                obj.ConfigurationId,
+                                                                obj.Deadline
+                                                            })
                                              .FirstOrDefaultAsync()
                                              .ConfigureAwait(false);
 
@@ -595,7 +595,7 @@ public class RaidCommandHandler : LocatedServiceBase
 
                                               obj.RaidExperienceLevelId = experienceLevelId;
                                           })
-                     == false)
+                        == false)
                     {
                         var user = new UserEntity
                                    {
@@ -659,11 +659,11 @@ public class RaidCommandHandler : LocatedServiceBase
                 var experienceLevels = dbFactory.GetRepository<RaidExperienceLevelRepository>()
                                                 .GetQuery()
                                                 .Select(obj => new
-                                                {
-                                                    obj.Id,
-                                                    obj.Description,
-                                                    obj.Rank
-                                                })
+                                                               {
+                                                                   obj.Id,
+                                                                   obj.Description,
+                                                                   obj.Rank
+                                                               })
                                                 .ToList();
 
                 foreach (var (user, oldExperienceLevelId, newExperienceLevelId) in changedRanks.Where(obj => obj.NewExperienceLevelId != obj.OldExperienceLevelId))

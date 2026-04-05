@@ -73,6 +73,7 @@
     <Rule Id="IDE0028" Action="Error" />
     <Rule Id="IDE0044" Action="None" />
     <Rule Id="IDE0049" Action="None" />
+    <Rule Id="IDE1006" Action="None" />
   </Rules>
   <Rules AnalyzerId="Reihitsu.Analyzer" RuleNamespace="Reihitsu.Analyzer">
     <Rule Id="RH0001" Action="Error" />

@@ -41,19 +41,19 @@ public class GuildLogImportJob : LocatedAsyncJob
                 foreach (var guild in dbFactory.GetRepository<GuildRepository>()
                                                .GetQuery()
                                                .Select(obj => new
-                                               {
-                                                   obj.Id,
-                                                   obj.ApiKey,
-                                                   obj.GuildId,
-                                                   LastLogEntryId = obj.GuildLogEntries
-                                                                       .Select(obj2 => obj2.Id)
-                                                                       .OrderByDescending(obj2 => obj2)
-                                                                       .FirstOrDefault(),
-                                                   ChannelId = channels.Where(obj2 => obj2.GuildId == obj.Id
-                                                                                      && obj2.Type == GuildChannelConfigurationType.GuildLogNotification)
-                                                                       .Select(obj2 => (ulong?)obj2.DiscordChannelId)
-                                                                       .FirstOrDefault()
-                                               })
+                                                              {
+                                                                  obj.Id,
+                                                                  obj.ApiKey,
+                                                                  obj.GuildId,
+                                                                  LastLogEntryId = obj.GuildLogEntries
+                                                                                      .Select(obj2 => obj2.Id)
+                                                                                      .OrderByDescending(obj2 => obj2)
+                                                                                      .FirstOrDefault(),
+                                                                  ChannelId = channels.Where(obj2 => obj2.GuildId == obj.Id
+                                                                                                     && obj2.Type == GuildChannelConfigurationType.GuildLogNotification)
+                                                                                      .Select(obj2 => (ulong?)obj2.DiscordChannelId)
+                                                                                      .FirstOrDefault()
+                                                              })
                                                .ToList())
                 {
                     var discordChannel = guild.ChannelId != null

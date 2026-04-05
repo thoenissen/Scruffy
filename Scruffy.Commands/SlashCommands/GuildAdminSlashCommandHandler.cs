@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using Discord.Interactions;
 
 using Scruffy.Services.Discord;
@@ -21,22 +21,57 @@ public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
     /// </summary>
     public enum ConfigurationType
     {
+        /// <summary>
+        /// General configuration
+        /// </summary>
         [ChoiceDisplay("General")]
         General,
+
+        /// <summary>
+        /// Guild Wars 2 item configuration
+        /// </summary>
         [ChoiceDisplay("Guild Wars 2 item")]
         GuildWarsItems,
+
+        /// <summary>
+        /// User configuration
+        /// </summary>
         [ChoiceDisplay("User")]
         User,
+
+        /// <summary>
+        /// Rank configuration
+        /// </summary>
         [ChoiceDisplay("Ranks")]
         Ranks,
+
+        /// <summary>
+        /// Special rank configuration
+        /// </summary>
         [ChoiceDisplay("Special ranks")]
         SpecialRanks,
+
+        /// <summary>
+        /// Message activity roles configuration
+        /// </summary>
         [ChoiceDisplay("Message activity roles")]
         MessageActivity,
+
+        /// <summary>
+        /// Voice activity roles configuration
+        /// </summary>
         [ChoiceDisplay("Voice activity roles")]
         VoiceActivity,
+
+        /// <summary>
+        /// Notification channels configuration
+        /// </summary>
         [ChoiceDisplay("Notification channels")]
         NotificationChannels,
+
+        /// <summary>
+        /// Overview messages configuration
+        /// </summary>
         [ChoiceDisplay("Overview")]
         Overviews
     }
@@ -46,10 +81,21 @@ public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
     /// </summary>
     public enum OverviewType
     {
+        /// <summary>
+        /// Ranking overview
+        /// </summary>
         [ChoiceDisplay("Ranking")]
         Ranking,
+
+        /// <summary>
+        /// Special ranks overview
+        /// </summary>
         [ChoiceDisplay("Special ranks")]
         SpecialRanks,
+
+        /// <summary>
+        /// Worlds overview
+        /// </summary>
         [ChoiceDisplay("Worlds")]
         Worlds
     }
@@ -59,22 +105,57 @@ public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
     /// </summary>
     public enum DataType
     {
+        /// <summary>
+        /// Stash
+        /// </summary>
         [ChoiceDisplay("Stash")]
         Stash,
+
+        /// <summary>
+        /// Upgrades
+        /// </summary>
         [ChoiceDisplay("Upgrades")]
         Upgrades,
+
+        /// <summary>
+        /// Login activity
+        /// </summary>
         [ChoiceDisplay("Login activity")]
         LoginActivity,
+
+        /// <summary>
+        /// Representation
+        /// </summary>
         [ChoiceDisplay("Representation")]
         Representation,
+
+        /// <summary>
+        /// Representation
+        /// </summary>
         [ChoiceDisplay("Members")]
         Members,
+
+        /// <summary>
+        /// Roles
+        /// </summary>
         [ChoiceDisplay("Roles")]
         Roles,
+
+        /// <summary>
+        /// Points
+        /// </summary>
         [ChoiceDisplay("Points")]
         Points,
+
+        /// <summary>
+        /// Items
+        /// </summary>
         [ChoiceDisplay("Items")]
         Items,
+
+        /// <summary>
+        /// Assignments
+        /// </summary>
         [ChoiceDisplay("Assignments")]
         Assignments
     }
@@ -84,10 +165,21 @@ public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
     /// </summary>
     public enum CheckType
     {
+        /// <summary>
+        /// Rank assignments
+        /// </summary>
         [ChoiceDisplay("In game rank assignments")]
         RankAssignment,
+
+        /// <summary>
+        /// API keys
+        /// </summary>
         [ChoiceDisplay("API Keys")]
         ApiKeys,
+
+        /// <summary>
+        /// Unknown users
+        /// </summary>
         [ChoiceDisplay("Unknown users")]
         UnknownUsers,
     }
@@ -97,8 +189,15 @@ public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
     /// </summary>
     public enum GuildRankingVisualizationType
     {
+        /// <summary>
+        /// Current
+        /// </summary>
         [ChoiceDisplay("Current points")]
         Current,
+
+        /// <summary>
+        /// History per type
+        /// </summary>
         [ChoiceDisplay("History per type")]
         HistoryTypes
     }
@@ -190,7 +289,9 @@ public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
                 break;
 
             default:
-                throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                {
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                }
         }
     }
 
@@ -226,7 +327,9 @@ public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
                 break;
 
             default:
-                throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                {
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                }
         }
     }
 
@@ -304,7 +407,9 @@ public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
                 break;
 
             default:
-                throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                {
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                }
         }
     }
 
@@ -335,7 +440,9 @@ public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
                 break;
 
             default:
-                throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                {
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                }
         }
     }
 
@@ -347,7 +454,7 @@ public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("compare-of", "Personal guild ranking compare overview")]
     public Task PostPersonalRankingCompareOverview([Summary("UserOne", "First user")] IGuildUser user,
-                                                         [Summary("UserTwo", "Second user")] IGuildUser compareUser)
+                                                   [Summary("UserTwo", "Second user")] IGuildUser compareUser)
     {
         return CommandHandler.PostPersonalCompareOverview(Context, user, compareUser);
     }
@@ -384,7 +491,9 @@ public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
                 break;
 
             default:
-                throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                {
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                }
         }
     }
 

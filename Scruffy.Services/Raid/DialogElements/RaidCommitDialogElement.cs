@@ -53,9 +53,9 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
     /// <summary>
     /// Constructor
     /// </summary>
-    /// <param name="commitData">Commit data</param>
-    /// <param name="userManagementService">User management service</param>
     /// <param name="localizationService">Localization service</param>
+    /// <param name="userManagementService">User management service</param>
+    /// <param name="commitData">Commit data</param>
     /// <param name="jobScheduler">Job scheduler</param>
     public RaidCommitDialogElement(LocalizationService localizationService, UserManagementService userManagementService, RaidCommitContainer commitData, JobScheduler jobScheduler)
         : base(localizationService)
@@ -268,7 +268,7 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
 
                                                                                                                      return points;
                                                                                                                  })
-                                                                                               / 66.147532745646117;
+                                                                                                 / 66.147532745646117;
 
                                                                                     users.Remove(user);
                                                                                 }
@@ -297,7 +297,7 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
 
                                                                                                         return points;
                                                                                                     })
-                                                                                  / 66.147532745646117
+                                                                                    / 66.147532745646117
                                                                        });
                                                      }
 

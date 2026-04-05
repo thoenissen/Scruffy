@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 
 using Discord;
 using Discord.Interactions;
@@ -126,7 +126,7 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
                                                                   .GetFormattedText("Processing",
                                                                                     "{0} The action is being processed.",
                                                                                     DiscordEmoteService.GetLoadingEmote(Client)),
-                                                                                    ephemeral: ephemeral).ConfigureAwait(false);
+                                                   ephemeral: ephemeral).ConfigureAwait(false);
 
             return _deferMessage;
         }

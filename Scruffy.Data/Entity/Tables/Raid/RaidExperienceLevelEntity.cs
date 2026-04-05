@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations.Schema;
 
 using Scruffy.Data.Entity.Tables.CoreData;
 
@@ -41,7 +41,7 @@ public class RaidExperienceLevelEntity
     /// <summary>
     /// Alias name
     /// </summary>
-    public string AliasName { get; set;  }
+    public string AliasName { get; set; }
 
     /// <summary>
     /// Discord emoji

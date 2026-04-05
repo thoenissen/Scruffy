@@ -247,8 +247,8 @@ public class CalendarMessageBuilderService : LocatedServiceBase
                             currentFieldTitle = currentMonth != appointment.TimeStamp.Month
                                                     ? $"{LocalizationGroup.CultureInfo.DateTimeFormat.GetMonthName(appointment.TimeStamp.Month)} {appointment.TimeStamp.Year}\n\n{LocalizationGroup.GetText("WeekNumber", "Week")} {appointment.TimeStamp.GetIso8601WeekOfYear()}"
                                                     : currentWeekOfYear == appointment.TimeStamp.GetIso8601WeekOfYear()
-                                                        ? "\u200B"
-                                                        : $"{LocalizationGroup.GetText("WeekNumber", "Week")} {appointment.TimeStamp.GetIso8601WeekOfYear()}";
+                                                          ? "\u200B"
+                                                          : $"{LocalizationGroup.GetText("WeekNumber", "Week")} {appointment.TimeStamp.GetIso8601WeekOfYear()}";
                         }
                         else
                         {

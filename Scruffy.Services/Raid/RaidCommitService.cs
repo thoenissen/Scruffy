@@ -208,5 +208,4 @@ public class RaidCommitService : LocatedServiceBase
     }
 
     #endregion // Methods
-
 }

@@ -1,4 +1,4 @@
-﻿using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Account.DialogElements;
@@ -36,7 +36,7 @@ public class AccountDataProcessingTermsDialogElement : DialogButtonElementBase<b
     public override string GetMessage()
     {
         return LocalizationGroup.GetText("AcceptStorage",
-            "To use this feature, you must agree to the processing and storage of your data to provide the functionalities of this bot. The command `/info` can be used to display a detailed list of the data that will be stored and processed. Do you agree to this processing and storage?");
+                                         "To use this feature, you must agree to the processing and storage of your data to provide the functionalities of this bot. The command `/info` can be used to display a detailed list of the data that will be stored and processed. Do you agree to this processing and storage?");
     }
 
     /// <inheritdoc/>

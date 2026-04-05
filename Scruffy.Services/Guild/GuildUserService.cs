@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 
 using Discord;
 using Discord.WebSocket;
@@ -71,7 +71,7 @@ public sealed class GuildUserService : SingletonLocatedServiceBase, IDisposable
             {
                 dbFactory.GetRepository<GuildChannelConfigurationRepository>()
                          .AddOrRefresh(obj => obj.GuildId == guildId
-                                              && obj.Type ==  GuildChannelConfigurationType.UserNotification,
+                                              && obj.Type == GuildChannelConfigurationType.UserNotification,
                                        obj =>
                                        {
                                            obj.GuildId = guildId;

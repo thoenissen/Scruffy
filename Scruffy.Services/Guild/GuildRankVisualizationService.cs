@@ -31,19 +31,19 @@ public class GuildRankVisualizationService : LocatedServiceBase
     #region Fields
 
     /// <summary>
-    /// Lock (Accessing <see cref="_overviews"/>)
+    /// Lock (Accessing <see cref="Overviews"/>)
     /// </summary>
-    private static readonly LockFactory _overviewsLock = new();
+    private static readonly LockFactory OverviewsLock = new();
 
     /// <summary>
     /// Lock (Modifying the message)
     /// </summary>
-    private static readonly LockFactory _modifyLock = new();
+    private static readonly LockFactory ModifyLock = new();
 
     /// <summary>
     /// Guild overviews
     /// </summary>
-    private static readonly Dictionary<(ulong DiscordServerId, GuildRankPointType? PointType), GuildRankingOverviewData> _overviews = [];
+    private static readonly Dictionary<(ulong DiscordServerId, GuildRankPointType? PointType), GuildRankingOverviewData> Overviews = [];
 
     /// <summary>
     /// Repository factory
@@ -207,7 +207,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                                     Points = obj.Sum(obj2 => obj2.Points)
                                                 })
                                  .Count(obj => obj.Points > summedPoints)
-                     + 1;
+                       + 1;
 
             var descriptionBuilder = new StringBuilder();
 
@@ -230,7 +230,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
                 descriptionBuilder.Append(' ');
                 descriptionBuilder.Append(DiscordEmoteService.GetGuildWars2SilverEmote(context.Client));
             }
-            else if (rank  == 3)
+            else if (rank == 3)
             {
                 descriptionBuilder.Append(' ');
                 descriptionBuilder.Append(DiscordEmoteService.GetGuildWars2CopperEmote(context.Client));
@@ -243,14 +243,13 @@ public class GuildRankVisualizationService : LocatedServiceBase
             descriptionBuilder.Append(summedPoints.ToString("0.00", LocalizationGroup.CultureInfo));
             descriptionBuilder.Append(Environment.NewLine);
 
-            var embedBuilder = new EmbedBuilder()
-                               .WithTitle($"{LocalizationGroup.GetText("RankingPersonalOverview", "Guild ranking personal points overview")}")
-                               .WithDescription(descriptionBuilder.ToString())
-                               .WithColor(Color.DarkBlue)
-                               .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
-                               .WithTimestamp(DateTime.Now)
-                               .WithImageUrl("attachment://chart.png")
-                               .AddField("\u200b", LocalizationGroup.GetText("RankingPersonalOverviewFooter", "\u200b"));
+            var embedBuilder = new EmbedBuilder().WithTitle($"{LocalizationGroup.GetText("RankingPersonalOverview", "Guild ranking personal points overview")}")
+                                                 .WithDescription(descriptionBuilder.ToString())
+                                                 .WithColor(Color.DarkBlue)
+                                                 .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
+                                                 .WithTimestamp(DateTime.Now)
+                                                 .WithImageUrl("attachment://chart.png")
+                                                 .AddField("\u200b", LocalizationGroup.GetText("RankingPersonalOverviewFooter", "\u200b"));
 
             var chartConfiguration = new ChartConfigurationData
                                      {
@@ -434,13 +433,12 @@ public class GuildRankVisualizationService : LocatedServiceBase
             descriptionBuilder.Append(compareUserPoints.Sum(obj => obj.Points).ToString("0.00", LocalizationGroup.CultureInfo));
             descriptionBuilder.Append(Environment.NewLine);
 
-            var embedBuilder = new EmbedBuilder()
-                               .WithTitle($"{LocalizationGroup.GetText("RankingCompareOverview", "Guild ranking points compare overview")}")
-                               .WithDescription(descriptionBuilder.ToString())
-                               .WithColor(Color.DarkBlue)
-                               .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
-                               .WithTimestamp(DateTime.Now)
-                               .WithImageUrl("attachment://chart.png");
+            var embedBuilder = new EmbedBuilder().WithTitle($"{LocalizationGroup.GetText("RankingCompareOverview", "Guild ranking points compare overview")}")
+                                                 .WithDescription(descriptionBuilder.ToString())
+                                                 .WithColor(Color.DarkBlue)
+                                                 .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
+                                                 .WithTimestamp(DateTime.Now)
+                                                 .WithImageUrl("attachment://chart.png");
 
             var chartConfiguration = new ChartConfigurationData
                                      {
@@ -580,7 +578,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
                                  Data = dates.Select(obj => currentPoints.FirstOrDefault(obj2 => obj2.Date == obj
                                                                                                  && obj2.Type == type)
                                                                          ?.Points
-                                                         ?? 0.0)
+                                                                ?? 0.0)
                                              .ToList(),
                                  Fill = false,
                                  PointRadius = 0.0
@@ -687,8 +685,8 @@ public class GuildRankVisualizationService : LocatedServiceBase
     {
         GuildRankingOverviewData data = null;
 
-        var scopeLock = await _overviewsLock.CreateLockAsync()
-                                            .ConfigureAwait(false);
+        var scopeLock = await OverviewsLock.CreateLockAsync()
+                                           .ConfigureAwait(false);
 
         await using (scopeLock.ConfigureAwait(false))
         {
@@ -696,18 +694,18 @@ public class GuildRankVisualizationService : LocatedServiceBase
             {
                 if (pointType == null)
                 {
-                    foreach (var overview in _overviews.Where(obj => obj.Key.DiscordServerId == discordServerId).ToList())
+                    foreach (var overview in Overviews.Where(obj => obj.Key.DiscordServerId == discordServerId).ToList())
                     {
-                        _overviews.Remove(overview.Key);
+                        Overviews.Remove(overview.Key);
                     }
                 }
                 else
                 {
-                    _overviews.Remove((discordServerId, pointType.Value));
+                    Overviews.Remove((discordServerId, pointType.Value));
                 }
             }
 
-            if (_overviews.TryGetValue((discordServerId, pointType), out data) == false)
+            if (Overviews.TryGetValue((discordServerId, pointType), out data) == false)
             {
                 data = new GuildRankingOverviewData();
 
@@ -847,7 +845,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
 
                 data.UserCount = users.Count;
 
-                _overviews[(discordServerId, pointType)] = data;
+                Overviews[(discordServerId, pointType)] = data;
             }
         }
 
@@ -1006,8 +1004,8 @@ public class GuildRankVisualizationService : LocatedServiceBase
             {
                 if (await channel.GetMessageAsync(messageId).ConfigureAwait(false) is IUserMessage message)
                 {
-                    var scopeLock = await _modifyLock.CreateLockAsync()
-                                                     .ConfigureAwait(false);
+                    var scopeLock = await ModifyLock.CreateLockAsync()
+                                                    .ConfigureAwait(false);
 
                     await using (scopeLock.ConfigureAwait(false))
                     {
@@ -1033,5 +1031,5 @@ public class GuildRankVisualizationService : LocatedServiceBase
         }
     }
 
-#endregion // Private methods
+    #endregion // Private methods
 }

@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
 
@@ -247,7 +247,7 @@ public class LoggingService
     /// <typeparam name="T">Custom data type</typeparam>
     private long? WriteLine<T>(LogEntryType type, LogEntryLevel level, string source, string subSource, string message, string additionalInformation, Exception ex, T customData)
     {
-        Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss} {level}] [{source}{(string.IsNullOrWhiteSpace(subSource) ? string.Empty : "|")}{(string.IsNullOrWhiteSpace(subSource) ? string.Empty : subSource)}]: {message}{(string.IsNullOrWhiteSpace(additionalInformation) ? null : " - ")}{additionalInformation}{(ex != null ? " - " +  ex : string.Empty)}");
+        Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss} {level}] [{source}{(string.IsNullOrWhiteSpace(subSource) ? string.Empty : "|")}{(string.IsNullOrWhiteSpace(subSource) ? string.Empty : subSource)}]: {message}{(string.IsNullOrWhiteSpace(additionalInformation) ? null : " - ")}{additionalInformation}{(ex != null ? " - " + ex : string.Empty)}");
 
         long? logEntryId = null;
 

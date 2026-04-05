@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using Discord.WebSocket;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -216,7 +216,8 @@ public sealed class MessageCollectorService : SingletonLocatedServiceBase, IDisp
         var lastImport = _lastImports.FirstOrDefault(obj => obj.ServerId == serverId
                                                             && obj.ChannelId == channelId
                                                             && obj.ThreadId == threadId)
-                                     ?.TimeStamp.AddHours(-1);
+                                     ?.TimeStamp
+                                     .AddHours(-1);
 
         if (_importLimit < lastImport)
         {

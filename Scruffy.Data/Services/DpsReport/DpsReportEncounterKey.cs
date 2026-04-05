@@ -89,12 +89,12 @@ public class DpsReportEncounterKey : IEquatable<DpsReportEncounterKey>
 
                    // Fractals - Silent Surf
                    SpeciesIDs.TargetID.KanaxaiScytheOfHouseAurkusNM
-                       or SpeciesIDs.TargetID.KanaxaiScytheOfHouseAurkusCM => new DpsReportEncounterKey
-                                                                              {
-                                                                                  Group = DpsReportGroup.Fractals,
-                                                                                  SubGroup = DpsReportSubGroup.SilentSurf,
-                                                                                  Encounter = DpsReportEncounterTarget.Kanaxai
-                                                                              },
+                   or SpeciesIDs.TargetID.KanaxaiScytheOfHouseAurkusCM => new DpsReportEncounterKey
+                                                                          {
+                                                                              Group = DpsReportGroup.Fractals,
+                                                                              SubGroup = DpsReportSubGroup.SilentSurf,
+                                                                              Encounter = DpsReportEncounterTarget.Kanaxai
+                                                                          },
 
                    // Fractals - Lonely Tower
                    SpeciesIDs.TargetID.CerusLonelyTower => new DpsReportEncounterKey

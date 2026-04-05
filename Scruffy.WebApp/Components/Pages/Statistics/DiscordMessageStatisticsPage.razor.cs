@@ -65,7 +65,7 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
     /// <summary>
     /// Pie chart color palette
     /// </summary>
-    private static readonly string[] _pieColors = ["#f1d083", "#7b68ee", "#ff6384", "#36a2eb", "#4bc0c0", "#9966ff", "#ff9f40", "#c9cbcf", "#e7e9ed", "#8ac926", "#6a4c93"];
+    private static readonly string[] PieColors = ["#f1d083", "#7b68ee", "#ff6384", "#36a2eb", "#4bc0c0", "#9966ff", "#ff9f40", "#c9cbcf", "#e7e9ed", "#8ac926", "#6a4c93"];
 
     #endregion // Constants
 
@@ -294,38 +294,78 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
         return filter switch
                {
                    TimeFilter.Days30 => query.GroupBy(m => m.TimeStamp.Date)
-                                             .Select(g => new { Date = g.Key, Count = g.Count() })
+                                             .Select(g => new
+                                                          {
+                                                              Date = g.Key,
+                                                              Count = g.Count()
+                                                          })
                                              .OrderBy(g => g.Date)
                                              .ToList()
                                              .Select(g => (g.Date.ToString("dd.MM", LocalizationGroup.CultureInfo), g.Count))
                                              .ToList(),
 
-                   TimeFilter.Days90 => query.GroupBy(m => new { m.TimeStamp.Year, Week = ((m.TimeStamp.DayOfYear - 1) / 7) + 1 })
-                                             .Select(g => new { g.Key.Year, g.Key.Week, Count = g.Count() })
+                   TimeFilter.Days90 => query.GroupBy(m => new
+                                                           {
+                                                               m.TimeStamp.Year,
+                                                               Week = ((m.TimeStamp.DayOfYear - 1) / 7) + 1
+                                                           })
+                                             .Select(g => new
+                                                          {
+                                                              g.Key.Year,
+                                                              g.Key.Week,
+                                                              Count = g.Count()
+                                                          })
                                              .OrderBy(g => g.Year)
                                              .ThenBy(g => g.Week)
                                              .ToList()
                                              .Select(g => ($"W{g.Week}/{g.Year}", g.Count))
                                              .ToList(),
 
-                   TimeFilter.Days180 => query.GroupBy(m => new { m.TimeStamp.Year, Week = ((m.TimeStamp.DayOfYear - 1) / 7) + 1 })
-                                              .Select(g => new { g.Key.Year, g.Key.Week, Count = g.Count() })
+                   TimeFilter.Days180 => query.GroupBy(m => new
+                                                            {
+                                                                m.TimeStamp.Year,
+                                                                Week = ((m.TimeStamp.DayOfYear - 1) / 7) + 1
+                                                            })
+                                              .Select(g => new
+                                                           {
+                                                               g.Key.Year,
+                                                               g.Key.Week,
+                                                               Count = g.Count()
+                                                           })
                                               .OrderBy(g => g.Year)
                                               .ThenBy(g => g.Week)
                                               .ToList()
                                               .Select(g => ($"W{g.Week}/{g.Year}", g.Count))
                                               .ToList(),
 
-                   TimeFilter.Year1 => query.GroupBy(m => new { m.TimeStamp.Year, m.TimeStamp.Month })
-                                            .Select(g => new { g.Key.Year, g.Key.Month, Count = g.Count() })
+                   TimeFilter.Year1 => query.GroupBy(m => new
+                                                          {
+                                                              m.TimeStamp.Year,
+                                                              m.TimeStamp.Month
+                                                          })
+                                            .Select(g => new
+                                                         {
+                                                             g.Key.Year,
+                                                             g.Key.Month,
+                                                             Count = g.Count()
+                                                         })
                                             .OrderBy(g => g.Year)
                                             .ThenBy(g => g.Month)
                                             .ToList()
                                             .Select(g => ($"{g.Month:D2}/{g.Year}", g.Count))
                                             .ToList(),
 
-                   _ => query.GroupBy(m => new { m.TimeStamp.Year, m.TimeStamp.Month })
-                             .Select(g => new { g.Key.Year, g.Key.Month, Count = g.Count() })
+                   _ => query.GroupBy(m => new
+                                           {
+                                               m.TimeStamp.Year,
+                                               m.TimeStamp.Month
+                                           })
+                             .Select(g => new
+                                          {
+                                              g.Key.Year,
+                                              g.Key.Month,
+                                              Count = g.Count()
+                                          })
                              .OrderBy(g => g.Year)
                              .ThenBy(g => g.Month)
                              .ToList()
@@ -355,43 +395,46 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
         switch (filter)
         {
             case TimeFilter.Days30:
-                for (var date = startDate.Date; date <= today; date = date.AddDays(1))
                 {
-                    var label = date.ToString("dd.MM", LocalizationGroup.CultureInfo);
-                    result.Add((label, lookup.GetValueOrDefault(label)));
+                    for (var date = startDate.Date; date <= today; date = date.AddDays(1))
+                    {
+                        var label = date.ToString("dd.MM", LocalizationGroup.CultureInfo);
+                        result.Add((label, lookup.GetValueOrDefault(label)));
+                    }
                 }
-
                 break;
 
             case TimeFilter.Days90:
             case TimeFilter.Days180:
-                var seenWeeks = new HashSet<string>();
-
-                for (var date = startDate.Date; date <= today; date = date.AddDays(1))
                 {
-                    var week = ((date.DayOfYear - 1) / 7) + 1;
-                    var label = $"W{week}/{date.Year}";
+                    var seenWeeks = new HashSet<string>();
 
-                    if (seenWeeks.Add(label))
+                    for (var date = startDate.Date; date <= today; date = date.AddDays(1))
                     {
-                        result.Add((label, lookup.GetValueOrDefault(label)));
+                        var week = ((date.DayOfYear - 1) / 7) + 1;
+                        var label = $"W{week}/{date.Year}";
+
+                        if (seenWeeks.Add(label))
+                        {
+                            result.Add((label, lookup.GetValueOrDefault(label)));
+                        }
                     }
                 }
-
                 break;
 
             case TimeFilter.Year1:
             default:
-                var currentMonth = new DateTime(startDate.Year, startDate.Month, 1);
-                var endMonth = new DateTime(today.Year, today.Month, 1);
-
-                while (currentMonth <= endMonth)
                 {
-                    var label = $"{currentMonth.Month:D2}/{currentMonth.Year}";
-                    result.Add((label, lookup.GetValueOrDefault(label)));
-                    currentMonth = currentMonth.AddMonths(1);
-                }
+                    var currentMonth = new DateTime(startDate.Year, startDate.Month, 1);
+                    var endMonth = new DateTime(today.Year, today.Month, 1);
 
+                    while (currentMonth <= endMonth)
+                    {
+                        var label = $"{currentMonth.Month:D2}/{currentMonth.Year}";
+                        result.Add((label, lookup.GetValueOrDefault(label)));
+                        currentMonth = currentMonth.AddMonths(1);
+                    }
+                }
                 break;
         }
 
@@ -547,26 +590,25 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
             _overviewChartData = new ChartData
                                  {
                                      Labels = labels,
-                                     Datasets =
-                                     [
-                                         new DataSet
-                                         {
-                                             Label = LocalizationGroup.GetText("MessagesLabel", "Messages"),
-                                             Data = values,
-                                             BackgroundColor = values.Select(_ => WebAppConfiguration.Colors.Accent)
-                                                                     .ToArray()
-                                         },
-                                         new DataSet
-                                         {
-                                             Label = LocalizationGroup.GetText("TrendLabel", "Trend"),
-                                             Type = "line",
-                                             Data = trendValues,
-                                             BorderColor = ["#ff6384"],
-                                             BorderWidth = 2,
-                                             PointRadius = 0,
-                                             BackgroundColor = ["transparent"]
-                                         }
-                                     ]
+                                     Datasets = [
+                                                    new DataSet
+                                                    {
+                                                        Label = LocalizationGroup.GetText("MessagesLabel", "Messages"),
+                                                        Data = values,
+                                                        BackgroundColor = values.Select(_ => WebAppConfiguration.Colors.Accent)
+                                                                                .ToArray()
+                                                    },
+                                                    new DataSet
+                                                    {
+                                                        Label = LocalizationGroup.GetText("TrendLabel", "Trend"),
+                                                        Type = "line",
+                                                        Data = trendValues,
+                                                        BorderColor = ["#ff6384"],
+                                                        BorderWidth = 2,
+                                                        PointRadius = 0,
+                                                        BackgroundColor = ["transparent"]
+                                                    }
+                                                ]
                                  };
         }
     }
@@ -612,10 +654,23 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
             var nameMap = repositoryFactory.GetRepository<DiscordServerMemberRepository>()
                                            .GetQuery()
                                            .Where(m => m.ServerId == WebAppConfiguration.DiscordServerId)
-                                           .Select(m => new { m.AccountId, m.Name, m.AvatarUrl })
-                                           .ToDictionary(m => m.AccountId, m => new { m.Name, m.AvatarUrl });
+                                           .Select(m => new
+                                                        {
+                                                            m.AccountId,
+                                                            m.Name,
+                                                            m.AvatarUrl
+                                                        })
+                                           .ToDictionary(m => m.AccountId,
+                                                         m => new
+                                                              {
+                                                                  m.Name,
+                                                                  m.AvatarUrl
+                                                              });
 
-            string ResolveName(ulong accountId) => nameMap.TryGetValue(accountId, out var member) ? member.Name : accountId.ToString();
+            string ResolveName(ulong accountId)
+            {
+                return nameMap.TryGetValue(accountId, out var member) ? member.Name : accountId.ToString();
+            }
 
             var totalAll = allUsers.Sum(u => u.Count);
             var topEntries = allUsers.Take(TopCount)
@@ -640,14 +695,13 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
             _topUsersChartData = new ChartData
                                  {
                                      Labels = labels.ToArray(),
-                                     Datasets =
-                                     [
-                                         new DataSet
-                                         {
-                                             Data = values.ToArray(),
-                                             BackgroundColor = _pieColors.Take(labels.Count).ToArray()
-                                         }
-                                     ]
+                                     Datasets = [
+                                                    new DataSet
+                                                    {
+                                                        Data = values.ToArray(),
+                                                        BackgroundColor = PieColors.Take(labels.Count).ToArray()
+                                                    }
+                                                ]
                                  };
 
             _allUsersTableData = allUsers.Select(u => (u.AccountId,
@@ -681,10 +735,10 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
 
             var allChannels = query.GroupBy(m => m.DiscordChannelId)
                                    .Select(g => new
-                                   {
-                                       ChannelId = g.Key,
-                                       Count = g.Count()
-                                   })
+                                                {
+                                                    ChannelId = g.Key,
+                                                    Count = g.Count()
+                                                })
                                    .OrderByDescending(g => g.Count)
                                    .ToList();
 
@@ -699,10 +753,17 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
             var channelNameMap = repositoryFactory.GetRepository<DiscordServerChannelRepository>()
                                                   .GetQuery()
                                                   .Where(c => c.ServerId == WebAppConfiguration.DiscordServerId)
-                                                  .Select(c => new { c.ChannelId, c.Name })
+                                                  .Select(c => new
+                                                               {
+                                                                   c.ChannelId,
+                                                                   c.Name
+                                                               })
                                                   .ToDictionary(c => c.ChannelId, c => c.Name);
 
-            string ResolveChannelName(ulong channelId) => channelNameMap.TryGetValue(channelId, out var name) ? name : channelId.ToString();
+            string ResolveChannelName(ulong channelId)
+            {
+                return channelNameMap.TryGetValue(channelId, out var name) ? name : channelId.ToString();
+            }
 
             var totalAll = allChannels.Sum(c => c.Count);
 
@@ -733,7 +794,7 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
                                                        new DataSet
                                                        {
                                                            Data = values.ToArray(),
-                                                           BackgroundColor = _pieColors.Take(labels.Count).ToArray()
+                                                           BackgroundColor = PieColors.Take(labels.Count).ToArray()
                                                        }
                                                    ]
                                     };
@@ -861,26 +922,25 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
         _drilldownChartData = new ChartData
                               {
                                   Labels = labels,
-                                  Datasets =
-                                  [
-                                      new DataSet
-                                      {
-                                          Label = LocalizationGroup.GetText("MessagesLabel", "Messages"),
-                                          Data = values,
-                                          BackgroundColor = values.Select(_ => WebAppConfiguration.Colors.Accent)
-                                                                  .ToArray()
-                                      },
-                                      new DataSet
-                                      {
-                                          Label = LocalizationGroup.GetText("TrendLabel", "Trend"),
-                                          Type = "line",
-                                          Data = trendValues,
-                                          BorderColor = ["#ff6384"],
-                                          BorderWidth = 2,
-                                          PointRadius = 0,
-                                          BackgroundColor = ["transparent"]
-                                      }
-                                  ]
+                                  Datasets = [
+                                                 new DataSet
+                                                 {
+                                                     Label = LocalizationGroup.GetText("MessagesLabel", "Messages"),
+                                                     Data = values,
+                                                     BackgroundColor = values.Select(_ => WebAppConfiguration.Colors.Accent)
+                                                                             .ToArray()
+                                                 },
+                                                 new DataSet
+                                                 {
+                                                     Label = LocalizationGroup.GetText("TrendLabel", "Trend"),
+                                                     Type = "line",
+                                                     Data = trendValues,
+                                                     BorderColor = ["#ff6384"],
+                                                     BorderWidth = 2,
+                                                     PointRadius = 0,
+                                                     BackgroundColor = ["transparent"]
+                                                 }
+                                             ]
                               };
     }
 
@@ -897,7 +957,11 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
             _drilldownBreakdownTitle = LocalizationGroup.GetText("DrilldownChannelsTitle", "Channels");
 
             var channelGroups = query.GroupBy(m => m.DiscordChannelId)
-                                     .Select(g => new { ChannelId = g.Key, Count = g.Count() })
+                                     .Select(g => new
+                                                  {
+                                                      ChannelId = g.Key,
+                                                      Count = g.Count()
+                                                  })
                                      .OrderByDescending(g => g.Count)
                                      .ToList();
 
@@ -911,14 +975,25 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
             var channelNameMap = repositoryFactory.GetRepository<DiscordServerChannelRepository>()
                                                   .GetQuery()
                                                   .Where(c => c.ServerId == WebAppConfiguration.DiscordServerId)
-                                                  .Select(c => new { c.ChannelId, c.Name })
+                                                  .Select(c => new
+                                                               {
+                                                                   c.ChannelId,
+                                                                   c.Name
+                                                               })
                                                   .ToDictionary(c => c.ChannelId, c => c.Name);
 
-            string ResolveChannelName(ulong id) => channelNameMap.TryGetValue(id, out var name) ? name : id.ToString();
+            string ResolveChannelName(ulong id)
+            {
+                return channelNameMap.TryGetValue(id, out var name) ? name : id.ToString();
+            }
 
             var totalAll = channelGroups.Sum(c => c.Count);
             var topEntries = channelGroups.Take(TopCount)
-                                          .Select(c => new { Name = ResolveChannelName(c.ChannelId), c.Count })
+                                          .Select(c => new
+                                                       {
+                                                           Name = ResolveChannelName(c.ChannelId),
+                                                           c.Count
+                                                       })
                                           .ToList();
 
             var topSum = topEntries.Sum(e => e.Count);
@@ -935,14 +1010,13 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
             _drilldownBreakdownChartData = new ChartData
                                            {
                                                Labels = labels.ToArray(),
-                                               Datasets =
-                                               [
-                                                   new DataSet
-                                                   {
-                                                       Data = values.ToArray(),
-                                                       BackgroundColor = _pieColors.Take(labels.Count).ToArray()
-                                                   }
-                                               ]
+                                               Datasets = [
+                                                              new DataSet
+                                                              {
+                                                                  Data = values.ToArray(),
+                                                                  BackgroundColor = PieColors.Take(labels.Count).ToArray()
+                                                              }
+                                                          ]
                                            };
         }
         else
@@ -950,7 +1024,11 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
             _drilldownBreakdownTitle = LocalizationGroup.GetText("DrilldownUsersTitle", "Users");
 
             var userGroups = query.GroupBy(m => m.DiscordAccountId)
-                                  .Select(g => new { AccountId = g.Key, Count = g.Count() })
+                                  .Select(g => new
+                                               {
+                                                   AccountId = g.Key,
+                                                   Count = g.Count()
+                                               })
                                   .OrderByDescending(g => g.Count)
                                   .ToList();
 
@@ -964,14 +1042,25 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
             var nameMap = repositoryFactory.GetRepository<DiscordServerMemberRepository>()
                                            .GetQuery()
                                            .Where(m => m.ServerId == WebAppConfiguration.DiscordServerId)
-                                           .Select(m => new { m.AccountId, m.Name })
+                                           .Select(m => new
+                                                        {
+                                                            m.AccountId,
+                                                            m.Name
+                                                        })
                                            .ToDictionary(m => m.AccountId, m => m.Name);
 
-            string ResolveName(ulong id) => nameMap.TryGetValue(id, out var name) ? name : id.ToString();
+            string ResolveName(ulong id)
+            {
+                return nameMap.TryGetValue(id, out var name) ? name : id.ToString();
+            }
 
             var totalAll = userGroups.Sum(u => u.Count);
             var topEntries = userGroups.Take(TopCount)
-                                       .Select(u => new { Name = ResolveName(u.AccountId), u.Count })
+                                       .Select(u => new
+                                                    {
+                                                        Name = ResolveName(u.AccountId),
+                                                        u.Count
+                                                    })
                                        .ToList();
 
             var topSum = topEntries.Sum(e => e.Count);
@@ -988,14 +1077,13 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
             _drilldownBreakdownChartData = new ChartData
                                            {
                                                Labels = labels.ToArray(),
-                                               Datasets =
-                                               [
-                                                   new DataSet
-                                                   {
-                                                       Data = values.ToArray(),
-                                                       BackgroundColor = _pieColors.Take(labels.Count).ToArray()
-                                                   }
-                                               ]
+                                               Datasets = [
+                                                              new DataSet
+                                                              {
+                                                                  Data = values.ToArray(),
+                                                                  BackgroundColor = PieColors.Take(labels.Count).ToArray()
+                                                              }
+                                                          ]
                                            };
         }
     }

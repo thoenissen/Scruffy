@@ -20,7 +20,14 @@ public class AdministrationSlashCommandModule : SlashCommandModuleBase
     /// </summary>
     public enum ChannelConfigurationType
     {
+        /// <summary>
+        /// Block
+        /// </summary>
         Block,
+
+        /// <summary>
+        /// Unblock
+        /// </summary>
         Unblock
     }
 

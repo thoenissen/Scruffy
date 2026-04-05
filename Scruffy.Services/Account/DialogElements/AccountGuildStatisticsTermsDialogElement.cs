@@ -1,4 +1,4 @@
-﻿using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Account.DialogElements;
@@ -36,7 +36,7 @@ public class AccountGuildStatisticsTermsDialogElement : DialogButtonElementBase<
     public override string GetMessage()
     {
         return LocalizationGroup.GetFormattedText("AcceptTerms",
-            "Do you agree to allow to use your data to use then in statistical visualisations?");
+                                                  "Do you agree to allow to use your data to use then in statistical visualisations?");
     }
 
     /// <inheritdoc/>

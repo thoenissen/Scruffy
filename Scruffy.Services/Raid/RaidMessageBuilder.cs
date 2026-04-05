@@ -95,22 +95,22 @@ public class RaidMessageBuilder : LocatedServiceBase
 
                                                           Registrations = obj.RaidRegistrations
                                                                              .Select(obj3 => new
-                                                                             {
-                                                                                 UserId = obj3.User
-                                                                                              .DiscordAccounts
-                                                                                              .Select(obj4 => obj4.Id)
-                                                                                              .FirstOrDefault(),
-                                                                                 Points = currentRaidPoints.Where(obj4 => obj4.UserId == obj3.UserId)
-                                                                                                           .Select(obj4 => obj4.Points)
-                                                                                                           .FirstOrDefault(),
-                                                                                 obj3.LineupExperienceLevelId,
-                                                                                 ExperienceLevelId = (int?)obj3.User.RaidExperienceLevel.Id,
-                                                                                 ExperienceLevelDiscordEmote = (ulong?)obj3.User.RaidExperienceLevel.DiscordEmoji,
-                                                                                 Roles = obj3.RaidRegistrationRoleAssignments
-                                                                                             .Select(obj4 => obj4.Role)
-                                                                                             .ToList(),
-                                                                                 obj3.RegistrationTimeStamp
-                                                                             })
+                                                                                             {
+                                                                                                 UserId = obj3.User
+                                                                                                              .DiscordAccounts
+                                                                                                              .Select(obj4 => obj4.Id)
+                                                                                                              .FirstOrDefault(),
+                                                                                                 Points = currentRaidPoints.Where(obj4 => obj4.UserId == obj3.UserId)
+                                                                                                                           .Select(obj4 => obj4.Points)
+                                                                                                                           .FirstOrDefault(),
+                                                                                                 obj3.LineupExperienceLevelId,
+                                                                                                 ExperienceLevelId = (int?)obj3.User.RaidExperienceLevel.Id,
+                                                                                                 ExperienceLevelDiscordEmote = (ulong?)obj3.User.RaidExperienceLevel.DiscordEmoji,
+                                                                                                 Roles = obj3.RaidRegistrationRoleAssignments
+                                                                                                             .Select(obj4 => obj4.Role)
+                                                                                                             .ToList(),
+                                                                                                 obj3.RegistrationTimeStamp
+                                                                                             })
                                                                              .ToList()
                                                       })
                                        .FirstOrDefault();
@@ -279,8 +279,8 @@ public class RaidMessageBuilder : LocatedServiceBase
 
                         componentsBuilder.WithButton(LocalizationGroup.GetText("Join", "Join"),
                                                      InteractivityService.GetPermanentCustomId("raid",
-                                                                                                 "join",
-                                                                                                 appointment.AliasName),
+                                                                                               "join",
+                                                                                               appointment.AliasName),
                                                      ButtonStyle.Secondary,
                                                      DiscordEmoteService.GetCheckEmote(_client),
                                                      null,
@@ -298,8 +298,8 @@ public class RaidMessageBuilder : LocatedServiceBase
 
                         componentsBuilder.WithButton(LocalizationGroup.GetText("Leave", "Leave"),
                                                      InteractivityService.GetPermanentCustomId("raid",
-                                                                                                 "leave",
-                                                                                                 appointment.AliasName),
+                                                                                               "leave",
+                                                                                               appointment.AliasName),
                                                      ButtonStyle.Secondary,
                                                      DiscordEmoteService.GetCrossEmote(_client),
                                                      null,

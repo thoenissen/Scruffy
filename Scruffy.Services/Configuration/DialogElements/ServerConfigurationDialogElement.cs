@@ -53,63 +53,63 @@ public class ServerConfigurationDialogElement : DialogEmbedSelectMenuElementBase
                    {
                        CommandText = LocalizationGroup.GetText("InstallCommands", "Command installation"),
                        Response = async () =>
-                              {
-                                  IEnumerable<ApplicationCommandProperties> commands = null;
-
-                                  var buildContext = new SlashCommandBuildContext
-                                                     {
-                                                         Guild = CommandContext.Guild,
-                                                         ServiceProvider = CommandContext.ServiceProvider,
-                                                         CultureInfo = LocalizationGroup.CultureInfo
-                                                     };
-
-                                  foreach (var type in Assembly.Load("Scruffy.Commands")
-                                                               .GetTypes()
-                                                               .Where(obj => typeof(SlashCommandModuleBase).IsAssignableFrom(obj)
-                                                                             && obj.IsAbstract == false))
                                   {
-                                      var commandModule = (SlashCommandModuleBase)Activator.CreateInstance(type);
+                                      IEnumerable<ApplicationCommandProperties> commands = null;
 
-                                      if (commandModule != null)
+                                      var buildContext = new SlashCommandBuildContext
+                                                         {
+                                                             Guild = CommandContext.Guild,
+                                                             ServiceProvider = CommandContext.ServiceProvider,
+                                                             CultureInfo = LocalizationGroup.CultureInfo
+                                                         };
+
+                                      foreach (var type in Assembly.Load("Scruffy.Commands")
+                                                                   .GetTypes()
+                                                                   .Where(obj => typeof(SlashCommandModuleBase).IsAssignableFrom(obj)
+                                                                                 && obj.IsAbstract == false))
                                       {
-                                          commands = commands?.Concat(commandModule.GetCommands(buildContext)) ?? commandModule.GetCommands(buildContext);
+                                          var commandModule = (SlashCommandModuleBase)Activator.CreateInstance(type);
+
+                                          if (commandModule != null)
+                                          {
+                                              commands = commands?.Concat(commandModule.GetCommands(buildContext)) ?? commandModule.GetCommands(buildContext);
+                                          }
                                       }
-                                  }
 
-                                  foreach (var type in Assembly.Load("Scruffy.Commands")
-                                                               .GetTypes()
-                                                               .Where(obj => typeof(MessageCommandModuleBase).IsAssignableFrom(obj)
-                                                                             && obj.IsAbstract == false))
-                                  {
-                                      var commandModule = (MessageCommandModuleBase)Activator.CreateInstance(type);
-
-                                      if (commandModule != null)
+                                      foreach (var type in Assembly.Load("Scruffy.Commands")
+                                                                   .GetTypes()
+                                                                   .Where(obj => typeof(MessageCommandModuleBase).IsAssignableFrom(obj)
+                                                                                 && obj.IsAbstract == false))
                                       {
-                                          commands = commands?.Concat(commandModule.GetCommands(buildContext)) ?? commandModule.GetCommands(buildContext);
+                                          var commandModule = (MessageCommandModuleBase)Activator.CreateInstance(type);
+
+                                          if (commandModule != null)
+                                          {
+                                              commands = commands?.Concat(commandModule.GetCommands(buildContext)) ?? commandModule.GetCommands(buildContext);
+                                          }
                                       }
-                                  }
 
-                                  if (commands != null)
-                                  {
-                                      await CommandContext.Guild
-                                                          .BulkOverwriteApplicationCommandsAsync(commands.ToArray())
-                                                          .ConfigureAwait(false);
-                                  }
+                                      if (commands != null)
+                                      {
+                                          await CommandContext.Guild
+                                                              .BulkOverwriteApplicationCommandsAsync(commands.ToArray())
+                                                              .ConfigureAwait(false);
+                                      }
 
-                                  return true;
-                              }
+                                      return true;
+                                  }
                    },
                    new SelectMenuEntryData<bool>
                    {
                        CommandText = LocalizationGroup.GetText("UninstallCommands", "Command uninstallation"),
                        Response = async () =>
-                              {
-                                  await CommandContext.Guild
-                                                      .BulkOverwriteApplicationCommandsAsync([])
-                                                      .ConfigureAwait(false);
+                                  {
+                                      await CommandContext.Guild
+                                                          .BulkOverwriteApplicationCommandsAsync([])
+                                                          .ConfigureAwait(false);
 
-                                  return true;
-                              }
+                                      return true;
+                                  }
                    }
                ];
     }

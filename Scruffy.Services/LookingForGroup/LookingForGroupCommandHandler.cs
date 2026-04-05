@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 
 using Discord;
 
@@ -359,25 +359,25 @@ public class LookingForGroupCommandHandler : LocatedServiceBase
                 case "edit":
                     {
                         await context.RespondWithModalAsync<LookingForGroupEditModalData>($"{LookingForGroupEditModalData.CustomId};{appointmentId}",
-                                                                                         builder =>
-                                                                                         {
-                                                                                             builder.UpdateTextInput(nameof(LookingForGroupEditModalData.AppointmentTitle), appointment.Title);
+                                                                                          builder =>
+                                                                                          {
+                                                                                              builder.UpdateTextInput(nameof(LookingForGroupEditModalData.AppointmentTitle), appointment.Title);
 
-                                                                                             if (appointment.Date != null)
-                                                                                             {
-                                                                                                 builder.UpdateTextInput(nameof(LookingForGroupEditModalData.AppointmentTime), appointment.Date!.Value.ToString("dd.MM.yyyy HH:mm"));
-                                                                                             }
+                                                                                              if (appointment.Date != null)
+                                                                                              {
+                                                                                                  builder.UpdateTextInput(nameof(LookingForGroupEditModalData.AppointmentTime), appointment.Date!.Value.ToString("dd.MM.yyyy HH:mm"));
+                                                                                              }
 
-                                                                                             if (appointment.ParticipantCount != null)
-                                                                                             {
-                                                                                                 builder.UpdateTextInput(nameof(LookingForGroupEditModalData.AppointmentParticipantCount), appointment.ParticipantCount!.Value.ToString());
-                                                                                             }
+                                                                                              if (appointment.ParticipantCount != null)
+                                                                                              {
+                                                                                                  builder.UpdateTextInput(nameof(LookingForGroupEditModalData.AppointmentParticipantCount), appointment.ParticipantCount!.Value.ToString());
+                                                                                              }
 
-                                                                                             if (string.IsNullOrEmpty(appointment.Description) == false)
-                                                                                             {
-                                                                                                 builder.UpdateTextInput(nameof(LookingForGroupEditModalData.AppointmentDescription), appointment.Description);
-                                                                                             }
-                                                                                         })
+                                                                                              if (string.IsNullOrEmpty(appointment.Description) == false)
+                                                                                              {
+                                                                                                  builder.UpdateTextInput(nameof(LookingForGroupEditModalData.AppointmentDescription), appointment.Description);
+                                                                                              }
+                                                                                          })
                                      .ConfigureAwait(false);
 
                         await context.DeleteOriginalResponse()
@@ -394,11 +394,11 @@ public class LookingForGroupCommandHandler : LocatedServiceBase
                                                      .GetQuery()
                                                      .Where(obj => obj.Id == appointmentId)
                                                      .Select(obj => new
-                                                     {
-                                                         obj.ChannelId,
-                                                         obj.MessageId,
-                                                         obj.ThreadId
-                                                     })
+                                                                    {
+                                                                        obj.ChannelId,
+                                                                        obj.MessageId,
+                                                                        obj.ThreadId
+                                                                    })
                                                      .FirstOrDefault();
 
                         if (data != null)

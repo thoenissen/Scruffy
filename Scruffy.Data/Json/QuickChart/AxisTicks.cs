@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace Scruffy.Data.Json.QuickChart;
 
@@ -18,7 +18,8 @@ public class AxisTicks
 /// Ticks
 /// </summary>
 /// <typeparam name="T">Type</typeparam>
-public class AxisTicks<T> : AxisTicks where T : struct
+public class AxisTicks<T> : AxisTicks
+    where T : struct
 {
     /// <summary>
     /// Minimum value

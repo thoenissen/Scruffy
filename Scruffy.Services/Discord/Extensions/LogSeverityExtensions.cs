@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 
 using Scruffy.Data.Enumerations.General;
 
@@ -17,14 +17,14 @@ internal static class LogSeverityExtensions
     public static LogEntryLevel ToLogEntryLevel(this LogSeverity severity)
     {
         return severity switch
-        {
-            LogSeverity.Critical => LogEntryLevel.CriticalError,
-            LogSeverity.Error => LogEntryLevel.Error,
-            LogSeverity.Warning => LogEntryLevel.Warning,
-            LogSeverity.Info => LogEntryLevel.Information,
-            LogSeverity.Verbose => LogEntryLevel.Verbose,
-            LogSeverity.Debug => LogEntryLevel.Debug,
-            _ => LogEntryLevel.Warning
-        };
+               {
+                   LogSeverity.Critical => LogEntryLevel.CriticalError,
+                   LogSeverity.Error => LogEntryLevel.Error,
+                   LogSeverity.Warning => LogEntryLevel.Warning,
+                   LogSeverity.Info => LogEntryLevel.Information,
+                   LogSeverity.Verbose => LogEntryLevel.Verbose,
+                   LogSeverity.Debug => LogEntryLevel.Debug,
+                   _ => LogEntryLevel.Warning
+               };
     }
 }

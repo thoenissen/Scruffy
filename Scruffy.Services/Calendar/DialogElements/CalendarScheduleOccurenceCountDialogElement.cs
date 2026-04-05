@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord;
@@ -29,8 +29,8 @@ public class CalendarScheduleOccurenceCountDialogElement : DialogMessageElementB
     public override string GetMessage()
     {
         return LocalizationGroup.GetFormattedText("Message",
-            "Please enter on which {0} of the month the appointment should be created or zero if it should be created every week.",
-            LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DialogContext.GetValue<DayOfWeek>("DayOfWeek")));
+                                                  "Please enter on which {0} of the month the appointment should be created or zero if it should be created every week.",
+                                                  LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DialogContext.GetValue<DayOfWeek>("DayOfWeek")));
     }
 
     /// <inheritdoc/>

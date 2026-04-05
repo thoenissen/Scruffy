@@ -42,6 +42,7 @@ public sealed class JobScheduler : SingletonLocatedServiceBase,
         await Task.Run(JobManager.Start).ConfigureAwait(false);
 
 #if RELEASE
+
         // Daily
         JobManager.AddJob<CalendarRefreshJob>(obj => obj.ToRunEvery(1).Days().At(0, 0));
         JobManager.AddJob<LogOverviewJob>(obj => obj.ToRunEvery(1).Days().At(1, 0));

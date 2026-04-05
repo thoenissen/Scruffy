@@ -12,12 +12,17 @@ public partial class Update89 : Migration
     {
         migrationBuilder.CreateTable(name: "DiscordServerChannels",
                                      columns: table => new
-                                     {
-                                         ServerId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                                         ChannelId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                                         Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                                     },
-                                     constraints: table => table.PrimaryKey("PK_DiscordServerChannels", x => new { x.ServerId, x.ChannelId }));
+                                                       {
+                                                           ServerId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                                                           ChannelId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                                                           Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                                                       },
+                                     constraints: table => table.PrimaryKey("PK_DiscordServerChannels",
+                                                                            x => new
+                                                                                 {
+                                                                                     x.ServerId,
+                                                                                     x.ChannelId
+                                                                                 }));
     }
 
     /// <inheritdoc />

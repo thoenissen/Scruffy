@@ -29,7 +29,12 @@ public partial class Update78 : Migration
                                               },
                                      constraints: table =>
                                                   {
-                                                      table.PrimaryKey("PK_RaidAppointmentLineUpSquads", x => new { x.AppointmentId, x.GroupNumber });
+                                                      table.PrimaryKey("PK_RaidAppointmentLineUpSquads",
+                                                                       x => new
+                                                                            {
+                                                                                x.AppointmentId,
+                                                                                x.GroupNumber
+                                                                            });
                                                       table.ForeignKey("FK_RaidAppointmentLineUpSquads_RaidAppointments_AppointmentId", x => x.AppointmentId, "RaidAppointments", "Id", onDelete: ReferentialAction.Restrict);
                                                       table.ForeignKey("FK_RaidAppointmentLineUpSquads_Users_Dps1UserId", x => x.Dps1UserId, "Users", "Id");
                                                       table.ForeignKey("FK_RaidAppointmentLineUpSquads_Users_Dps2UserId", x => x.Dps2UserId, "Users", "Id");

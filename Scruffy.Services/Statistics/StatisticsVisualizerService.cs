@@ -114,8 +114,8 @@ public class StatisticsVisualizerService : LocatedServiceBase
                     stringBuilder.Append(textChannel.Mention);
                     stringBuilder.Append(' ');
                     stringBuilder.Append(Format.Code(mostActive.Count.ToString()
-                                                   + ' '
-                                                   + LocalizationGroup.GetText("MeOverviewMessages", "messages")));
+                                                     + ' '
+                                                     + LocalizationGroup.GetText("MeOverviewMessages", "messages")));
                 }
             }
 
@@ -134,8 +134,8 @@ public class StatisticsVisualizerService : LocatedServiceBase
                                                                     && obj.DiscordAccountId == commandContext.User.Id
                                                                     && obj.TimeStamp > limit)
                                                       .ToString()
-                                                    + ' '
-                                                    + LocalizationGroup.GetText("MeOverviewMessages", "messages")));
+                                             + ' '
+                                             + LocalizationGroup.GetText("MeOverviewMessages", "messages")));
             stringBuilder.Append(Environment.NewLine);
             stringBuilder.Append(LocalizationGroup.GetText("MeOverview7Days", "7 Days:"));
             stringBuilder.Append(' ');
@@ -146,8 +146,8 @@ public class StatisticsVisualizerService : LocatedServiceBase
                                                                     && obj.DiscordAccountId == commandContext.User.Id
                                                                     && obj.TimeStamp > limit)
                                                       .ToString()
-                                           + ' '
-                                           + LocalizationGroup.GetText("MeOverviewMessages", "messages")));
+                                             + ' '
+                                             + LocalizationGroup.GetText("MeOverviewMessages", "messages")));
             stringBuilder.Append(Environment.NewLine);
             stringBuilder.Append(LocalizationGroup.GetText("MeOverview24Hours", "24 Hours:"));
             stringBuilder.Append(' ');
@@ -158,8 +158,8 @@ public class StatisticsVisualizerService : LocatedServiceBase
                                                                     && obj.DiscordAccountId == commandContext.User.Id
                                                                     && obj.TimeStamp > limit)
                                                       .ToString()
-                                              + ' '
-                                              + LocalizationGroup.GetText("MeOverviewMessages", "messages")));
+                                             + ' '
+                                             + LocalizationGroup.GetText("MeOverviewMessages", "messages")));
             stringBuilder.Append(Environment.NewLine);
 
             embedBuilder.AddField(LocalizationGroup.GetText("MeOverviewMessagesField", "Messages"), stringBuilder.ToString());

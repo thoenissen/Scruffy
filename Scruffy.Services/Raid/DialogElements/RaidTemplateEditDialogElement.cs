@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -84,8 +84,7 @@ public class RaidTemplateEditDialogElement : DialogEmbedReactionElementBase<bool
                                       CommandText = LocalizationGroup.GetFormattedText("EditAliasCommand", "{0} Edit alias name", DiscordEmoteService.GetEditEmote(CommandContext.Client)),
                                       Func = async () =>
                                              {
-                                                 var aliasName = await RunSubElement<RaidTemplateAliasNameDialogElement, string>()
-                                                                     .ConfigureAwait(false);
+                                                 var aliasName = await RunSubElement<RaidTemplateAliasNameDialogElement, string>().ConfigureAwait(false);
 
                                                  using (var dbFactory = RepositoryFactory.CreateInstance())
                                                  {
@@ -104,8 +103,7 @@ public class RaidTemplateEditDialogElement : DialogEmbedReactionElementBase<bool
                                       CommandText = LocalizationGroup.GetFormattedText("EditTitleCommand", "{0} Edit title", DiscordEmoteService.GetEdit2Emote(CommandContext.Client)),
                                       Func = async () =>
                                              {
-                                                 var title = await RunSubElement<RaidTemplateTitleDialogElement, string>()
-                                                                 .ConfigureAwait(false);
+                                                 var title = await RunSubElement<RaidTemplateTitleDialogElement, string>().ConfigureAwait(false);
 
                                                  using (var dbFactory = RepositoryFactory.CreateInstance())
                                                  {
@@ -124,8 +122,7 @@ public class RaidTemplateEditDialogElement : DialogEmbedReactionElementBase<bool
                                       CommandText = LocalizationGroup.GetFormattedText("EditDescriptionCommand", "{0} Edit description", DiscordEmoteService.GetEdit3Emote(CommandContext.Client)),
                                       Func = async () =>
                                              {
-                                                 var description = await RunSubElement<RaidTemplateDescriptionDialogElement, string>()
-                                                                       .ConfigureAwait(false);
+                                                 var description = await RunSubElement<RaidTemplateDescriptionDialogElement, string>().ConfigureAwait(false);
 
                                                  using (var dbFactory = RepositoryFactory.CreateInstance())
                                                  {
@@ -144,8 +141,7 @@ public class RaidTemplateEditDialogElement : DialogEmbedReactionElementBase<bool
                                       CommandText = LocalizationGroup.GetFormattedText("EditThumbnailCommand", "{0} Edit thumbnail", DiscordEmoteService.GetImageEmote(CommandContext.Client)),
                                       Func = async () =>
                                              {
-                                                 var thumbnail = await RunSubElement<RaidTemplateThumbnailDialogElement, string>()
-                                                                     .ConfigureAwait(false);
+                                                 var thumbnail = await RunSubElement<RaidTemplateThumbnailDialogElement, string>().ConfigureAwait(false);
 
                                                  using (var dbFactory = RepositoryFactory.CreateInstance())
                                                  {

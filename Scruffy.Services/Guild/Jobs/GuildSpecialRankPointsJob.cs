@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 
 using Discord;
 using Discord.WebSocket;
@@ -203,17 +203,15 @@ public class GuildSpecialRankPointsJob : LocatedAsyncJob
                                 {
                                     if (isGrant)
                                     {
-                                        await user
-                                                    .AddRoleAsync(role)
-                                                    .ConfigureAwait(false);
+                                        await user.AddRoleAsync(role)
+                                                  .ConfigureAwait(false);
 
                                         LoggingService.AddJobLogEntry(LogEntryLevel.Warning, nameof(GuildSpecialRankPointsJob), $"Role granted: configuration {configuration.Id}; user: {user.Id}; role: {role.Id}");
                                     }
                                     else
                                     {
-                                        await user
-                                                    .RemoveRoleAsync(role)
-                                                    .ConfigureAwait(false);
+                                        await user.RemoveRoleAsync(role)
+                                                  .ConfigureAwait(false);
 
                                         LoggingService.AddJobLogEntry(LogEntryLevel.Warning, nameof(GuildSpecialRankPointsJob), $"Role revoked: configuration {configuration.Id}; user: {user.Id}; role: {role.Id}");
                                     }

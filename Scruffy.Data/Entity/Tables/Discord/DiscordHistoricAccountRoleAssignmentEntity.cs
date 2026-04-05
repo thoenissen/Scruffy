@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Scruffy.Data.Entity.Tables.Discord;
 
@@ -23,7 +23,7 @@ public class DiscordHistoricAccountRoleAssignmentEntity
     /// <summary>
     /// Id of the role
     /// </summary>
-    public ulong RoleId  { get; set; }
+    public ulong RoleId { get; set; }
 
     /// <summary>
     /// Id of the account

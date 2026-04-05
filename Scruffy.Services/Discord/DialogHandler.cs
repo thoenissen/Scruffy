@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -62,7 +62,8 @@ public sealed class DialogHandler : IAsyncDisposable, IDisposable
     /// <param name="commandContext">Current command context</param>
     /// <param name="onInitialize">Initialization</param>
     /// <returns>Result</returns>
-    public static async Task<TData> Run<T, TData>(IContextContainer commandContext, Action<DialogContext> onInitialize = null) where T : DialogElementBase<TData>
+    public static async Task<TData> Run<T, TData>(IContextContainer commandContext, Action<DialogContext> onInitialize = null)
+        where T : DialogElementBase<TData>
     {
         var serviceProvider = ServiceProviderContainer.Current.GetServiceProvider();
 
@@ -88,7 +89,8 @@ public sealed class DialogHandler : IAsyncDisposable, IDisposable
     /// <param name="context">Current command context</param>
     /// <param name="deleteMessages">Should the creation message be deleted?</param>
     /// <returns>Result</returns>
-    public static async Task<TData> RunForm<TData>(IContextContainer context, bool deleteMessages) where TData : new()
+    public static async Task<TData> RunForm<TData>(IContextContainer context, bool deleteMessages)
+        where TData : new()
     {
         var serviceProvider = ServiceProviderContainer.Current.GetServiceProvider();
 
@@ -136,7 +138,8 @@ public sealed class DialogHandler : IAsyncDisposable, IDisposable
     /// <typeparam name="T">Type of the element</typeparam>
     /// <typeparam name="TData">Type of the element result</typeparam>
     /// <returns>Result</returns>
-    public async Task<TData> Run<T, TData>() where T : DialogElementBase<TData>
+    public async Task<TData> Run<T, TData>()
+        where T : DialogElementBase<TData>
     {
         var element = _serviceProvider.GetService<T>();
 
@@ -153,7 +156,8 @@ public sealed class DialogHandler : IAsyncDisposable, IDisposable
     /// <typeparam name="TData">Type of the element result</typeparam>
     /// <param name="element">Dialog element</param>
     /// <returns>Result</returns>
-    public async Task<TData> Run<T, TData>(T element) where T : DialogElementBase<TData>
+    public async Task<TData> Run<T, TData>(T element)
+        where T : DialogElementBase<TData>
     {
         element.Initialize(_commandContext, _serviceProvider, DialogContext);
 
@@ -166,7 +170,8 @@ public sealed class DialogHandler : IAsyncDisposable, IDisposable
     /// </summary>
     /// <typeparam name="TData">Type of the element result</typeparam>
     /// <returns>Result</returns>
-    public async Task<TData> RunForm<TData>() where TData : new()
+    public async Task<TData> RunForm<TData>()
+        where TData : new()
     {
         var data = new TData();
 

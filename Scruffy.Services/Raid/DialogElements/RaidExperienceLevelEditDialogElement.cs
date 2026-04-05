@@ -88,8 +88,7 @@ public class RaidExperienceLevelEditDialogElement : DialogEmbedReactionElementBa
                                       CommandText = LocalizationGroup.GetFormattedText("EditSuperiorRoleCommand", "{0} Edit superior role", DiscordEmoteService.GetEditEmote(CommandContext.Client)),
                                       Func = async () =>
                                              {
-                                                 var newSuperiorLevelId = await RunSubElement<RaidExperienceLevelSuperiorLevelDialogElement, long?>()
-                                                                              .ConfigureAwait(false);
+                                                 var newSuperiorLevelId = await RunSubElement<RaidExperienceLevelSuperiorLevelDialogElement, long?>().ConfigureAwait(false);
 
                                                  using (var dbFactory = RepositoryFactory.CreateInstance())
                                                  {
@@ -100,12 +99,12 @@ public class RaidExperienceLevelEditDialogElement : DialogEmbedReactionElementBa
                                                                        obj => obj.SuperiorExperienceLevelId = obj.SuperiorRaidExperienceLevel.SuperiorExperienceLevelId);
 
                                                      if (dbFactory.GetRepository<RaidExperienceLevelRepository>()
-                                                                  .RefreshRange(obj =>  obj.Id != levelId,
+                                                                  .RefreshRange(obj => obj.Id != levelId,
                                                                                 obj => obj.SuperiorExperienceLevelId = newSuperiorLevelId))
                                                      {
                                                          if (dbFactory.GetRepository<RaidExperienceLevelRepository>()
-                                                                      .RefreshRange(obj =>  obj.SuperiorExperienceLevelId == newSuperiorLevelId
-                                                                                            && obj.Id != levelId,
+                                                                      .RefreshRange(obj => obj.SuperiorExperienceLevelId == newSuperiorLevelId
+                                                                                           && obj.Id != levelId,
                                                                                     obj => obj.SuperiorExperienceLevelId = levelId))
                                                          {
                                                              dbFactory.GetRepository<RaidExperienceLevelRepository>()
@@ -123,8 +122,7 @@ public class RaidExperienceLevelEditDialogElement : DialogEmbedReactionElementBa
                                       CommandText = LocalizationGroup.GetFormattedText("EditDescriptionCommand", "{0} Edit description", DiscordEmoteService.GetEdit2Emote(CommandContext.Client)),
                                       Func = async () =>
                                              {
-                                                 var description = await RunSubElement<RaidExperienceLevelDescriptionDialogElement, string>()
-                                                                       .ConfigureAwait(false);
+                                                 var description = await RunSubElement<RaidExperienceLevelDescriptionDialogElement, string>().ConfigureAwait(false);
 
                                                  using (var dbFactory = RepositoryFactory.CreateInstance())
                                                  {
@@ -143,8 +141,7 @@ public class RaidExperienceLevelEditDialogElement : DialogEmbedReactionElementBa
                                       CommandText = LocalizationGroup.GetFormattedText("EditAliasNameCommand", "{0} Edit alias name", DiscordEmoteService.GetEdit3Emote(CommandContext.Client)),
                                       Func = async () =>
                                              {
-                                                 var aliasName = await RunSubElement<RaidExperienceLevelAliasNameDialogElement, string>()
-                                                                     .ConfigureAwait(false);
+                                                 var aliasName = await RunSubElement<RaidExperienceLevelAliasNameDialogElement, string>().ConfigureAwait(false);
 
                                                  using (var dbFactory = RepositoryFactory.CreateInstance())
                                                  {
@@ -163,8 +160,7 @@ public class RaidExperienceLevelEditDialogElement : DialogEmbedReactionElementBa
                                       CommandText = LocalizationGroup.GetFormattedText("EditRoleCommand", "{0} Edit role", DiscordEmoteService.GetEdit4Emote(CommandContext.Client)),
                                       Func = async () =>
                                              {
-                                                 var role = await RunSubElement<RaidExperienceLevelRoleDialogElement, ulong?>()
-                                                                .ConfigureAwait(false);
+                                                 var role = await RunSubElement<RaidExperienceLevelRoleDialogElement, ulong?>().ConfigureAwait(false);
 
                                                  using (var dbFactory = RepositoryFactory.CreateInstance())
                                                  {
@@ -183,8 +179,7 @@ public class RaidExperienceLevelEditDialogElement : DialogEmbedReactionElementBa
                                       CommandText = LocalizationGroup.GetFormattedText("EditEmojiCommand", "{0} Edit emoji", DiscordEmoteService.GetEmojiEmote(CommandContext.Client)),
                                       Func = async () =>
                                              {
-                                                 var emoji = await RunSubElement<RaidExperienceLevelEmojiDialogElement, ulong>()
-                                                                 .ConfigureAwait(false);
+                                                 var emoji = await RunSubElement<RaidExperienceLevelEmojiDialogElement, ulong>().ConfigureAwait(false);
 
                                                  using (var dbFactory = RepositoryFactory.CreateInstance())
                                                  {

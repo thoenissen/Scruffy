@@ -88,30 +88,30 @@ public sealed partial class UserAdministrationPage : IDisposable
                                    .Where(e => e.ServerId == WebAppConfiguration.DiscordServerId)
                                    .GroupJoin(_repositoryFactory.GetRepository<DiscordAccountRepository>()
                                                                 .GetQuery(),
-                                               member => member.AccountId,
-                                               account => account.Id,
-                                               (member, accounts) => new
-                                                                     {
-                                                                         Member = member,
-                                                                         Accounts = accounts
-                                                                     })
+                                              member => member.AccountId,
+                                              account => account.Id,
+                                              (member, accounts) => new
+                                                                    {
+                                                                        Member = member,
+                                                                        Accounts = accounts
+                                                                    })
                                    .SelectMany(join => join.Accounts.DefaultIfEmpty(),
                                                (join, account) => new
-                                                                   {
-                                                                       join.Member.Name,
-                                                                       UserId = account != null
-                                                                                    ? (long?)account.UserId
-                                                                                    : null,
-                                                                   })
+                                                                  {
+                                                                      join.Member.Name,
+                                                                      UserId = account != null
+                                                                                   ? (long?)account.UserId
+                                                                                   : null,
+                                                                  })
                                    .GroupJoin(_repositoryFactory.GetRepository<GuildWarsAccountRepository>()
                                                                 .GetQuery(),
-                                               member => member.UserId,
-                                               account => account.UserId,
-                                               (member, accounts) => new
-                                                                     {
-                                                                         Member = member,
-                                                                         Accounts = accounts
-                                                                     })
+                                              member => member.UserId,
+                                              account => account.UserId,
+                                              (member, accounts) => new
+                                                                    {
+                                                                        Member = member,
+                                                                        Accounts = accounts
+                                                                    })
                                    .SelectMany(join => join.Accounts.DefaultIfEmpty(),
                                                (join, account) => new UserDTO
                                                                   {

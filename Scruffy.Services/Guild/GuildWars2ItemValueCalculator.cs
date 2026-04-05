@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.GuildWars2.GameData;
@@ -215,8 +215,7 @@ namespace Scruffy.Services.Guild
                             {
                                 foreach (var ingredient in recipe.Ingredients)
                                 {
-                                    var subItem = await GetValue(ingredient.ItemId, itemValues)
-                                                      .ConfigureAwait(false);
+                                    var subItem = await GetValue(ingredient.ItemId, itemValues).ConfigureAwait(false);
 
                                     subItem.Count = ingredient.Count;
                                 }
@@ -237,8 +236,7 @@ namespace Scruffy.Services.Guild
 
                                     if (upgradeItemId != null)
                                     {
-                                        var subItem = await GetValue(upgradeItemId.Value, itemValues)
-                                                          .ConfigureAwait(false);
+                                        var subItem = await GetValue(upgradeItemId.Value, itemValues).ConfigureAwait(false);
 
                                         subItem.Count = ingredient.Count;
                                     }

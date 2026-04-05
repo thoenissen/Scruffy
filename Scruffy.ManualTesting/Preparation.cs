@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -46,17 +46,17 @@ internal static class Preparation
                          LogLevel = LogSeverity.Info,
                          MessageCacheSize = 100,
                          GatewayIntents = GatewayIntents.Guilds
-                                        | GatewayIntents.GuildMembers
-                                        | GatewayIntents.GuildEmojis
-                                        | GatewayIntents.GuildIntegrations
-                                        | GatewayIntents.GuildVoiceStates
-                                        | GatewayIntents.GuildPresences
-                                        | GatewayIntents.GuildMessages
-                                        | GatewayIntents.GuildMessageReactions
-                                        | GatewayIntents.DirectMessages
-                                        | GatewayIntents.DirectMessageReactions
-                                        | GatewayIntents.MessageContent
-                                        | GatewayIntents.GuildScheduledEvents
+                                          | GatewayIntents.GuildMembers
+                                          | GatewayIntents.GuildEmojis
+                                          | GatewayIntents.GuildIntegrations
+                                          | GatewayIntents.GuildVoiceStates
+                                          | GatewayIntents.GuildPresences
+                                          | GatewayIntents.GuildMessages
+                                          | GatewayIntents.GuildMessageReactions
+                                          | GatewayIntents.DirectMessages
+                                          | GatewayIntents.DirectMessageReactions
+                                          | GatewayIntents.MessageContent
+                                          | GatewayIntents.GuildScheduledEvents
                      };
 
         DiscordClient = new DiscordSocketClient(config);

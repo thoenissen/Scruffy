@@ -35,12 +35,12 @@ public class LogCommandHandler : LocatedServiceBase
     /// <summary>
     /// Formats for parsing an input date
     /// </summary>
-    private static readonly string[] _dateFormats = ["dd.MM", "dd.MM.yyyy", "MM-dd", "yyyy-MM-dd"];
+    private static readonly string[] DateFormats = ["dd.MM", "dd.MM.yyyy", "MM-dd", "yyyy-MM-dd"];
 
     /// <summary>
     /// Web application URL
     /// </summary>
-    private static readonly string _webbAppUrl = Environment.GetEnvironmentVariable("SCRUFFY_WEBAPP_URL");
+    private static readonly string WebbAppUrl = Environment.GetEnvironmentVariable("SCRUFFY_WEBAPP_URL");
 
     /// <summary>
     /// Discord socket client
@@ -75,10 +75,10 @@ public class LogCommandHandler : LocatedServiceBase
     /// <param name="dpsReportConnector">DPS-Report connector</param>
     /// <param name="quickChartConnector">QuickChart.io connector</param>
     public LogCommandHandler(LocalizationService localizationService,
-                              DiscordSocketClient client,
-                              RepositoryFactory repositoryFactory,
-                              DpsReportConnector dpsReportConnector,
-                              QuickChartConnector quickChartConnector)
+                             DiscordSocketClient client,
+                             RepositoryFactory repositoryFactory,
+                             DpsReportConnector dpsReportConnector,
+                             QuickChartConnector quickChartConnector)
         : base(localizationService)
     {
         _client = client;
@@ -117,7 +117,11 @@ public class LogCommandHandler : LocatedServiceBase
         var account = _repositoryFactory.GetRepository<DiscordAccountRepository>()
                                         .GetQuery()
                                         .Where(obj => obj.Id == user.Id)
-                                        .Select(obj => new { obj.User.GuildWarsAccounts.FirstOrDefault().Name, obj.User.DpsReportUserToken })
+                                        .Select(obj => new
+                                                       {
+                                                           obj.User.GuildWarsAccounts.FirstOrDefault().Name,
+                                                           obj.User.DpsReportUserToken
+                                                       })
                                         .FirstOrDefault();
 
         if (string.IsNullOrWhiteSpace(account?.DpsReportUserToken))
@@ -255,7 +259,11 @@ public class LogCommandHandler : LocatedServiceBase
         var account = _repositoryFactory.GetRepository<DiscordAccountRepository>()
                                         .GetQuery()
                                         .Where(obj => obj.Id == context.User.Id)
-                                        .Select(obj => new { obj.User.GuildWarsAccounts.FirstOrDefault().Name, obj.User.DpsReportUserToken })
+                                        .Select(obj => new
+                                                       {
+                                                           obj.User.GuildWarsAccounts.FirstOrDefault().Name,
+                                                           obj.User.DpsReportUserToken
+                                                       })
                                         .FirstOrDefault();
 
         var startDate = ParseStartDate(dayString);
@@ -653,13 +661,13 @@ public class LogCommandHandler : LocatedServiceBase
                                  .ConfigureAwait(false);
                 }
 
-                if (string.IsNullOrWhiteSpace(_webbAppUrl) == false)
+                if (string.IsNullOrWhiteSpace(WebbAppUrl) == false)
                 {
                     var webAppEmbed = new EmbedBuilder().WithColor(Color.Green)
                                                         .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
                                                         .WithColor(Color.Green)
                                                         .WithTimestamp(DateTime.Now)
-                                                        .WithDescription(LocalizationGroup.GetFormattedText("WebAppGolemHint", "Would you like more information about a log? Then check out the new [website]({0}).", _webbAppUrl + "/DpsReports/Today"));
+                                                        .WithDescription(LocalizationGroup.GetFormattedText("WebAppGolemHint", "Would you like more information about a log? Then check out the new [website]({0}).", WebbAppUrl + "/DpsReports/Today"));
 
                     await context.SendMessageAsync(embed: webAppEmbed.Build())
                                  .ConfigureAwait(false);
@@ -704,7 +712,11 @@ public class LogCommandHandler : LocatedServiceBase
         var appointments = _repositoryFactory.GetRepository<RaidAppointmentRepository>()
                                              .GetQuery()
                                              .Where(obj => obj.TimeStamp > startOfWeek && obj.TimeStamp < endOfWeek)
-                                             .Select(obj => new { obj.Id, obj.TimeStamp })
+                                             .Select(obj => new
+                                                            {
+                                                                obj.Id,
+                                                                obj.TimeStamp
+                                                            })
                                              .ToList();
 
         // Search for appointments of last week
@@ -716,7 +728,11 @@ public class LogCommandHandler : LocatedServiceBase
             appointments = _repositoryFactory.GetRepository<RaidAppointmentRepository>()
                                              .GetQuery()
                                              .Where(obj => obj.TimeStamp > startOfWeek && obj.TimeStamp < endOfWeek)
-                                             .Select(obj => new { obj.Id, obj.TimeStamp })
+                                             .Select(obj => new
+                                                            {
+                                                                obj.Id,
+                                                                obj.TimeStamp
+                                                            })
                                              .ToList();
         }
 
@@ -816,7 +832,11 @@ public class LogCommandHandler : LocatedServiceBase
         var account = _repositoryFactory.GetRepository<DiscordAccountRepository>()
                                         .GetQuery()
                                         .Where(obj => obj.Id == context.User.Id)
-                                        .Select(obj => new { obj.User.GuildWarsAccounts.FirstOrDefault().Name, obj.User.DpsReportUserToken })
+                                        .Select(obj => new
+                                                       {
+                                                           obj.User.GuildWarsAccounts.FirstOrDefault().Name,
+                                                           obj.User.DpsReportUserToken
+                                                       })
                                         .FirstOrDefault();
 
         if (string.IsNullOrEmpty(account?.DpsReportUserToken) == false)
@@ -874,7 +894,7 @@ public class LogCommandHandler : LocatedServiceBase
     {
         if (string.IsNullOrWhiteSpace(dayString) == false)
         {
-            return DateOnly.TryParseExact(dayString, _dateFormats, null, DateTimeStyles.None, out day);
+            return DateOnly.TryParseExact(dayString, DateFormats, null, DateTimeStyles.None, out day);
         }
 
         day = default;
@@ -949,7 +969,11 @@ public class LogCommandHandler : LocatedServiceBase
                 var hasMultipleGroups = GroupUploads(ref knownGroups, reportGroup, false).Count() > 1;
                 var reports = new StringBuilder();
 
-                foreach (var bossGroup in reportGroup.GroupBy(obj => new { obj.Encounter.BossId, obj.Encounter.Boss }))
+                foreach (var bossGroup in reportGroup.GroupBy(obj => new
+                                                                     {
+                                                                         obj.Encounter.BossId,
+                                                                         obj.Encounter.Boss
+                                                                     }))
                 {
                     // Start a new field, when we don't have enough space for some logs
                     if (reports.Length > 768)
@@ -1034,7 +1058,7 @@ public class LogCommandHandler : LocatedServiceBase
 
             foreach (var token in appointment.Tokens)
             {
-                await foreach (var upload in _dpsReportConnector.GetUploads(token, startDate, endDate,  filter: upload => _dpsReportConnector.GetReportType(upload.Encounter.BossId) == DpsReportType.Raid).ConfigureAwait(false))
+                await foreach (var upload in _dpsReportConnector.GetUploads(token, startDate, endDate, filter: upload => _dpsReportConnector.GetReportType(upload.Encounter.BossId) == DpsReportType.Raid).ConfigureAwait(false))
                 {
                     result.Add(upload);
                 }
@@ -1094,7 +1118,11 @@ public class LogCommandHandler : LocatedServiceBase
 
                     var reports = new StringBuilder();
 
-                    foreach (var bossGroup in groupUploads.Value.GroupBy(obj => new { obj.Encounter.BossId, obj.Encounter.Boss }))
+                    foreach (var bossGroup in groupUploads.Value.GroupBy(obj => new
+                                                                                {
+                                                                                    obj.Encounter.BossId,
+                                                                                    obj.Encounter.Boss
+                                                                                }))
                     {
                         // Start a new field, when we don't have enough space for some logs
                         if (reports.Length > 896)
@@ -1329,11 +1357,11 @@ public class LogCommandHandler : LocatedServiceBase
         var filteredUploads = uploads.Count > 0
                               && summarize
                               && uploads.Any(obj => obj.Item1.Encounter.Success) == false
-                                     ? uploads.OrderBy(obj => obj.Item2)
-                                              .Take(3)
-                                              .OrderByDescending(obj => obj.Item2)
-                                              .ToList()
-                                     : uploads;
+                                  ? uploads.OrderBy(obj => obj.Item2)
+                                           .Take(3)
+                                           .OrderByDescending(obj => obj.Item2)
+                                           .ToList()
+                                  : uploads;
 
         foreach (var (upload, remainingHealth) in filteredUploads)
         {

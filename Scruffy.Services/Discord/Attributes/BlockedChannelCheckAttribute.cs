@@ -16,7 +16,7 @@ public class BlockedChannelCheckAttribute : PreconditionAttribute
     /// <summary>
     /// Service
     /// </summary>
-    private static readonly BlockedChannelService _service;
+    private static readonly BlockedChannelService Service;
 
     #endregion // Fields
 
@@ -27,7 +27,7 @@ public class BlockedChannelCheckAttribute : PreconditionAttribute
     /// </summary>
     static BlockedChannelCheckAttribute()
     {
-        _service = ServiceProviderContainer.Current.GetServiceProvider().GetService<BlockedChannelService>();
+        Service = ServiceProviderContainer.Current.GetServiceProvider().GetService<BlockedChannelService>();
     }
 
     #endregion // Constructor
@@ -37,7 +37,7 @@ public class BlockedChannelCheckAttribute : PreconditionAttribute
     /// <inheritdoc/>
     public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
     {
-        return Task.FromResult(_service.IsChannelBlocked(context) == false
+        return Task.FromResult(Service.IsChannelBlocked(context) == false
                                    ? PreconditionResult.FromSuccess()
                                    : PreconditionResult.FromError("The channel is blocked for commands."));
     }

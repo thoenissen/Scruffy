@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord.Attributes;
@@ -116,7 +116,8 @@ public abstract class DialogElementBase<TData> : DialogElementBase
     /// <typeparam name="T">Type of the element</typeparam>
     /// <typeparam name="TSubData">Type of the element result</typeparam>
     /// <returns>Result</returns>
-    public async Task<TSubData> RunSubElement<T, TSubData>() where T : DialogElementBase<TSubData>
+    public async Task<TSubData> RunSubElement<T, TSubData>()
+        where T : DialogElementBase<TSubData>
     {
         var service = ServiceProvider.GetService<T>();
 
@@ -133,7 +134,8 @@ public abstract class DialogElementBase<TData> : DialogElementBase
     /// <typeparam name="T">Type of the element</typeparam>
     /// <typeparam name="TSubData">Type of the element result</typeparam>
     /// <returns>Result</returns>
-    public async Task<TSubData> RunSubElement<T, TSubData>(T element) where T : DialogElementBase<TSubData>
+    public async Task<TSubData> RunSubElement<T, TSubData>(T element)
+        where T : DialogElementBase<TSubData>
     {
         element.Initialize(CommandContext, ServiceProvider, DialogContext);
 
@@ -146,7 +148,8 @@ public abstract class DialogElementBase<TData> : DialogElementBase
     /// </summary>
     /// <typeparam name="TSubData">Type of the element result</typeparam>
     /// <returns>Result</returns>
-    public async Task<TSubData> RunSubForm<TSubData>() where TSubData : new()
+    public async Task<TSubData> RunSubForm<TSubData>()
+        where TSubData : new()
     {
         var data = new TSubData();
 

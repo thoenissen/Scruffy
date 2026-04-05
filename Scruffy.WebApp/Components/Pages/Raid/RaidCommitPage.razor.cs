@@ -301,14 +301,14 @@ public partial class RaidCommitPage
                                                }
 
                                                obj.State = commitUser.Status switch
-                                                                {
-                                                                    RaidParticipationStatus.Played => RegistrationState.Played,
-                                                                    RaidParticipationStatus.Substitute => RegistrationState.Substitute,
-                                                                    RaidParticipationStatus.NoShow => RegistrationState.NoShow,
-                                                                    RaidParticipationStatus.LateRegistration => RegistrationState.LateRegistration,
-                                                                    RaidParticipationStatus.Removed => RegistrationState.Removed,
-                                                                    _ => obj.State
-                                                                };
+                                                           {
+                                                               RaidParticipationStatus.Played => RegistrationState.Played,
+                                                               RaidParticipationStatus.Substitute => RegistrationState.Substitute,
+                                                               RaidParticipationStatus.NoShow => RegistrationState.NoShow,
+                                                               RaidParticipationStatus.LateRegistration => RegistrationState.LateRegistration,
+                                                               RaidParticipationStatus.Removed => RegistrationState.Removed,
+                                                               _ => obj.State
+                                                           };
                                                obj.Points = commitUser.Points;
                                                obj.IsRoleWishFulfilled = commitUser.IsRoleWishFulfilled;
                                            });
@@ -369,7 +369,7 @@ public partial class RaidCommitPage
 
                                                                                 return points;
                                                                             })
-                                                          / 66.147532745646117;
+                                                            / 66.147532745646117;
 
                                                users.Remove(user);
                                            }
@@ -398,7 +398,7 @@ public partial class RaidCommitPage
 
                                                                    return points;
                                                                })
-                                                 / 66.147532745646117
+                                               / 66.147532745646117
                                   });
                 }
 
@@ -549,11 +549,11 @@ public partial class RaidCommitPage
                                                                            .Select(obj2 => obj2.Id)
                                                                            .FirstOrDefault(),
                                                      Name = obj.User.DiscordAccounts
-                                                                     .Select(account => account.Members
-                                                                                                .Where(member => member.ServerId == WebAppConfiguration.DiscordServerId)
-                                                                                                .Select(member => member.Name)
-                                                                                                .FirstOrDefault())
-                                                                     .FirstOrDefault()
+                                                               .Select(account => account.Members
+                                                                                         .Where(member => member.ServerId == WebAppConfiguration.DiscordServerId)
+                                                                                         .Select(member => member.Name)
+                                                                                         .FirstOrDefault())
+                                                               .FirstOrDefault()
                                                                 ?? obj.User.UserName,
                                                      obj.User.RaidExperienceLevelId,
                                                      obj.State,
@@ -606,11 +606,11 @@ public partial class RaidCommitPage
                                                                            .Select(obj2 => obj2.Id)
                                                                            .FirstOrDefault(),
                                                      Name = obj.User.DiscordAccounts
-                                                                     .Select(account => account.Members
-                                                                                                .Where(member => member.ServerId == WebAppConfiguration.DiscordServerId)
-                                                                                                .Select(member => member.Name)
-                                                                                                .FirstOrDefault())
-                                                                     .FirstOrDefault()
+                                                               .Select(account => account.Members
+                                                                                         .Where(member => member.ServerId == WebAppConfiguration.DiscordServerId)
+                                                                                         .Select(member => member.Name)
+                                                                                         .FirstOrDefault())
+                                                               .FirstOrDefault()
                                                                 ?? obj.User.UserName,
                                                      obj.User.RaidExperienceLevelId,
                                                      obj.LineupExperienceLevelId,
@@ -626,8 +626,8 @@ public partial class RaidCommitPage
                                               var status = entry.RegistrationTimeStamp > appointment.Deadline
                                                                ? RaidParticipationStatus.LateRegistration
                                                                : entry.LineupExperienceLevelId is null
-                                                                   ? RaidParticipationStatus.Substitute
-                                                                   : RaidParticipationStatus.Played;
+                                                                     ? RaidParticipationStatus.Substitute
+                                                                     : RaidParticipationStatus.Played;
 
                                               return new RaidCommitUserDTO
                                                      {
@@ -637,7 +637,9 @@ public partial class RaidCommitPage
                                                          ParticipationPoints = experienceLevel.ParticipationPoints,
                                                          Status = status,
                                                          ExperienceLevelDescription = experienceLevel.Description,
-                                                         IsRoleWishFulfilled = entry.HasRoleWish ? false : null
+                                                         IsRoleWishFulfilled = entry.HasRoleWish
+                                                                                   ? false
+                                                                                   : null
                                                      };
                                           })
                                   .OrderByDescending(obj => obj.Points)

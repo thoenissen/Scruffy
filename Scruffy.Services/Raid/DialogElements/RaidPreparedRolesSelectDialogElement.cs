@@ -141,5 +141,4 @@ public class RaidPreparedRolesSelectDialogElement : DialogEmbedMultiSelectSelect
         return _entries;
     }
 }
-
 #endregion // DialogEmbedMultiSelectSelectMenuElementBase<long>

@@ -18,10 +18,21 @@ public class GuildWars2SlashCommandModule : SlashCommandModuleBase
     /// </summary>
     public enum GuideType
     {
+        /// <summary>
+        /// Raids
+        /// </summary>
         [ChoiceDisplay("Raids")]
         Raids,
+
+        /// <summary>
+        /// Strike Missions
+        /// </summary>
         [ChoiceDisplay("Strike Missions")]
         StrikeMissions,
+
+        /// <summary>
+        /// Fractals of the Mists
+        /// </summary>
         [ChoiceDisplay("Fractals of the Mists")]
         Fractals
     }
@@ -103,7 +114,9 @@ public class GuildWars2SlashCommandModule : SlashCommandModuleBase
                 break;
 
             default:
-                throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                {
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                }
         }
     }
 
@@ -125,7 +138,9 @@ public class GuildWars2SlashCommandModule : SlashCommandModuleBase
                 break;
 
             default:
-                throw new ArgumentOutOfRangeException(nameof(command), command, null);
+                {
+                    throw new ArgumentOutOfRangeException(nameof(command), command, null);
+                }
         }
     }
 

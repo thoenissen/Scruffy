@@ -50,8 +50,8 @@ public class RaidRoleSelectionDialogElement : DialogMultiSelectSelectMenuElement
     /// <inheritdoc/>
     public override Task<string> GetMessage()
     {
-        return Task.FromResult(CommandContext.User.Mention + " " +
-                               LocalizationGroup.GetText("ChooseMainRoleTitle", "Role selection"));
+        return Task.FromResult(CommandContext.User.Mention + " "
+                               + LocalizationGroup.GetText("ChooseMainRoleTitle", "Role selection"));
     }
 
     /// <inheritdoc/>

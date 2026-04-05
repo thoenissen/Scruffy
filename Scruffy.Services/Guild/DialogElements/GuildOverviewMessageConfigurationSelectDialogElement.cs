@@ -15,7 +15,10 @@ internal class GuildOverviewMessageConfigurationSelectDialogElement : DialogSele
     /// </summary>
     public enum MessageType
     {
-        Ranking,
+        /// <summary>
+        /// General
+        /// </summary>
+        Ranking
     }
 
     #endregion // Enumerations

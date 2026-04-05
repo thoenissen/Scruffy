@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Reflection;
 using System.Text;
 
@@ -98,17 +98,17 @@ public sealed class DiscordBot : IAsyncDisposable
                          LogLevel = LogSeverity.Info,
                          MessageCacheSize = 100,
                          GatewayIntents = GatewayIntents.Guilds
-                                        | GatewayIntents.GuildMembers
-                                        | GatewayIntents.GuildEmojis
-                                        | GatewayIntents.GuildIntegrations
-                                        | GatewayIntents.GuildVoiceStates
-                                        | GatewayIntents.GuildPresences
-                                        | GatewayIntents.GuildMessages
-                                        | GatewayIntents.GuildMessageReactions
-                                        | GatewayIntents.DirectMessages
-                                        | GatewayIntents.DirectMessageReactions
-                                        | GatewayIntents.MessageContent
-                                        | GatewayIntents.GuildScheduledEvents
+                                          | GatewayIntents.GuildMembers
+                                          | GatewayIntents.GuildEmojis
+                                          | GatewayIntents.GuildIntegrations
+                                          | GatewayIntents.GuildVoiceStates
+                                          | GatewayIntents.GuildPresences
+                                          | GatewayIntents.GuildMessages
+                                          | GatewayIntents.GuildMessageReactions
+                                          | GatewayIntents.DirectMessages
+                                          | GatewayIntents.DirectMessageReactions
+                                          | GatewayIntents.MessageContent
+                                          | GatewayIntents.GuildScheduledEvents
                      };
 
         _discordClient = new DiscordSocketClient(config);
@@ -269,7 +269,7 @@ public sealed class DiscordBot : IAsyncDisposable
             || ex.InnerException is ScruffyException)
         {
             var userException = ex as ScruffyUserMessageException
-                                ?? ex.InnerException as ScruffyUserMessageException;
+                                    ?? ex.InnerException as ScruffyUserMessageException;
 
             if (userException != null)
             {
@@ -339,6 +339,8 @@ public sealed class DiscordBot : IAsyncDisposable
                         case InteractionCommandError.Unsuccessful:
                         case null:
                         default:
+                            {
+                            }
                             break;
                     }
                 }
@@ -385,6 +387,8 @@ public sealed class DiscordBot : IAsyncDisposable
                         case InteractionCommandError.Unsuccessful:
                         case null:
                         default:
+                            {
+                            }
                             break;
                     }
                 }
@@ -431,6 +435,8 @@ public sealed class DiscordBot : IAsyncDisposable
                         case InteractionCommandError.Unsuccessful:
                         case null:
                         default:
+                            {
+                            }
                             break;
                     }
                 }

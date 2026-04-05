@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Scruffy.Data.Entity.Tables.CoreData;
 using Scruffy.Data.Enumerations.GuildWars2;
@@ -43,7 +43,7 @@ public class GuildWarsAccountEntity
     /// <summary>
     /// Daily achievement points
     /// </summary>
-    public int? DailyAchievementPoints { get; set;  }
+    public int? DailyAchievementPoints { get; set; }
 
     /// <summary>
     /// Monthly achievements points

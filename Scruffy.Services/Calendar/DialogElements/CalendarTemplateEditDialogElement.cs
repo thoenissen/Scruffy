@@ -97,8 +97,7 @@ public class CalendarTemplateEditDialogElement : DialogEmbedReactionElementBase<
                                       CommandText = LocalizationGroup.GetFormattedText("EditDescriptionCommand", "{0} Edit description", DiscordEmoteService.GetEditEmote(CommandContext.Client)),
                                       Func = async () =>
                                              {
-                                                 var description = await RunSubElement<CalendarTemplateDescriptionDialogElement, string>()
-                                                                       .ConfigureAwait(false);
+                                                 var description = await RunSubElement<CalendarTemplateDescriptionDialogElement, string>().ConfigureAwait(false);
 
                                                  using (var dbFactory = RepositoryFactory.CreateInstance())
                                                  {
@@ -117,8 +116,7 @@ public class CalendarTemplateEditDialogElement : DialogEmbedReactionElementBase<
                                       CommandText = LocalizationGroup.GetFormattedText("EditUriCommand", "{0} Edit link", DiscordEmoteService.GetEdit2Emote(CommandContext.Client)),
                                       Func = async () =>
                                              {
-                                                 var uri = await RunSubElement<CalendarTemplateUriDialogElement, string>()
-                                                               .ConfigureAwait(false);
+                                                 var uri = await RunSubElement<CalendarTemplateUriDialogElement, string>().ConfigureAwait(false);
 
                                                  using (var dbFactory = RepositoryFactory.CreateInstance())
                                                  {
@@ -137,8 +135,7 @@ public class CalendarTemplateEditDialogElement : DialogEmbedReactionElementBase<
                                       CommandText = LocalizationGroup.GetFormattedText("EditAppointmentTimeCommand", "{0} Edit appointment time", DiscordEmoteService.GetEdit3Emote(CommandContext.Client)),
                                       Func = async () =>
                                              {
-                                                 var time = await RunSubElement<CalendarTemplateAppointmentTimeDialogElement, TimeSpan>()
-                                                                .ConfigureAwait(false);
+                                                 var time = await RunSubElement<CalendarTemplateAppointmentTimeDialogElement, TimeSpan>().ConfigureAwait(false);
 
                                                  using (var dbFactory = RepositoryFactory.CreateInstance())
                                                  {

@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using Discord.Interactions;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -25,10 +25,21 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
     /// </summary>
     public enum ConfigurationType
     {
+        /// <summary>
+        /// Appointments
+        /// </summary>
         [ChoiceDisplay("Appointments")]
         Appointments,
+
+        /// <summary>
+        /// Experience levels
+        /// </summary>
         [ChoiceDisplay("Experience levels")]
         ExperienceLevels,
+
+        /// <summary>
+        /// Templates
+        /// </summary>
         [ChoiceDisplay("Templates")]
         Templates
     }
@@ -38,12 +49,21 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
     /// </summary>
     public enum OverviewType
     {
+        /// <summary>
+        /// Participation overview
+        /// </summary>
         [ChoiceDisplay("Participation")]
         Participation,
 
+        /// <summary>
+        /// Experience levels overview
+        /// </summary>
         [ChoiceDisplay("Levels")]
         Levels,
 
+        /// <summary>
+        /// Logs overview
+        /// </summary>
         [ChoiceDisplay("Logs")]
         Logs
     }
@@ -98,7 +118,9 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
                 break;
 
             default:
-                throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                {
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                }
         }
     }
 
@@ -223,7 +245,9 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
                 break;
 
             default:
-                throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                {
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                }
         }
     }
 
@@ -272,36 +296,36 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
         return base.GetCommands(buildContext)
                    .OfType<SlashCommandProperties>()
                    .Select(obj =>
-                   {
-                       if (obj.Options.IsSpecified
-                           && obj.Name.IsSpecified
-                           && obj.Name.Value == "raid-admin")
-                       {
-                           foreach (var option in obj.Options.Value)
                            {
-                               if (option.Name is "commit"
-                                               or "set-template"
-                                               or "set-group-count"
-                                               or "join-user"
-                                               or "leave-user")
+                               if (obj.Options.IsSpecified
+                                   && obj.Name.IsSpecified
+                                   && obj.Name.Value == "raid-admin")
                                {
-                                   foreach (var innerOption in option.Options.Where(obj2 => obj2.Name == "name"))
+                                   foreach (var option in obj.Options.Value)
                                    {
-                                       innerOption.Choices = appointmentChoices;
+                                       if (option.Name is "commit"
+                                                       or "set-template"
+                                                       or "set-group-count"
+                                                       or "join-user"
+                                                       or "leave-user")
+                                       {
+                                           foreach (var innerOption in option.Options.Where(obj2 => obj2.Name == "name"))
+                                           {
+                                               innerOption.Choices = appointmentChoices;
+                                           }
+                                       }
+                                       else if (option.Name is "set-experience-level")
+                                       {
+                                           foreach (var innerOption in option.Options.Where(obj2 => obj2.Name == "role"))
+                                           {
+                                               innerOption.Choices = levelChoices;
+                                           }
+                                       }
                                    }
                                }
-                               else if (option.Name is "set-experience-level")
-                               {
-                                   foreach (var innerOption in option.Options.Where(obj2 => obj2.Name == "role"))
-                                   {
-                                       innerOption.Choices = levelChoices;
-                                   }
-                               }
-                           }
-                       }
 
-                       return obj;
-                   });
+                               return obj;
+                           });
     }
 
     #endregion // SlashCommandModuleBase

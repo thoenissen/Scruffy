@@ -56,9 +56,9 @@ public partial class MessageRankingPage : LocatedComponent
     {
         return percent switch
                {
-                   < 33  => "level-ring-progress-low",
-                   < 66  => "level-ring-progress-mid",
-                   _     => "level-ring-progress-high"
+                   < 33 => "level-ring-progress-low",
+                   < 66 => "level-ring-progress-mid",
+                   _ => "level-ring-progress-high"
                };
     }
 
@@ -73,7 +73,7 @@ public partial class MessageRankingPage : LocatedComponent
 
         for (var n = 1; n <= level; n++)
         {
-            total += ((n-1) / 2 * (55 + ((n-2) * 10) + 55)) + 100;
+            total += ((n - 1) / 2 * (55 + ((n - 2) * 10) + 55)) + 100;
         }
 
         return total / 10;
@@ -153,7 +153,7 @@ public partial class MessageRankingPage : LocatedComponent
 
             var ignoreChannelIds = repositoryFactory.GetRepository<DiscordIgnoreChannelRepository>()
                                                     .GetQuery()
-                                                    .Where(m => m.DiscordServerId== WebAppConfiguration.DiscordServerId)
+                                                    .Where(m => m.DiscordServerId == WebAppConfiguration.DiscordServerId)
                                                     .Select(m => m.DiscordChannelId)
                                                     .ToHashSet();
 
@@ -174,8 +174,18 @@ public partial class MessageRankingPage : LocatedComponent
             var nameMap = repositoryFactory.GetRepository<DiscordServerMemberRepository>()
                                            .GetQuery()
                                            .Where(m => m.ServerId == WebAppConfiguration.DiscordServerId)
-                                           .Select(m => new { m.AccountId, m.Name, m.AvatarUrl })
-                                           .ToDictionary(m => m.AccountId, m => new { m.Name, m.AvatarUrl });
+                                           .Select(m => new
+                                                        {
+                                                            m.AccountId,
+                                                            m.Name,
+                                                            m.AvatarUrl
+                                                        })
+                                           .ToDictionary(m => m.AccountId,
+                                                         m => new
+                                                              {
+                                                                  m.Name,
+                                                                  m.AvatarUrl
+                                                              });
 
             return messageCounts.Where(m => nameMap.ContainsKey(m.AccountId))
                                 .Select(m =>

@@ -20,10 +20,21 @@ public class CalendarAdminSlashCommandModule : SlashCommandModuleBase
     /// </summary>
     public enum CalendarConfigurationType
     {
+        /// <summary>
+        /// Templates
+        /// </summary>
         [ChoiceDisplay("Templates")]
         Templates,
+
+        /// <summary>
+        /// Schedules
+        /// </summary>
         [ChoiceDisplay("Schedules")]
         Schedules,
+
+        /// <summary>
+        /// One time event
+        /// </summary>
         [ChoiceDisplay("One time event")]
         OneTimeEvent
     }
@@ -83,7 +94,9 @@ public class CalendarAdminSlashCommandModule : SlashCommandModuleBase
                 break;
 
             default:
-                throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                {
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                }
         }
     }
 

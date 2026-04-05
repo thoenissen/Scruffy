@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Scruffy.Data.Entity.Tables.GuildWars2.GameData;
 
@@ -21,5 +21,5 @@ public class GuildWarsCustomRecipeEntryEntity
     /// <summary>
     /// Count
     /// </summary>
-    public int IngredientCount  { get; set; }
+    public int IngredientCount { get; set; }
 }

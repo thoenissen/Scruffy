@@ -123,13 +123,13 @@ public class DpsReportsMetaImporter : LocatedServiceBase
                                                                                        {
                                                                                            Converters = { new IntOrBoolConverter() },
                                                                                            Error = (_, e) =>
-                                                                                           {
-                                                                                               // Sometimes 'foundUploads' is a bool and the deserialization to int? fails
-                                                                                               if (e.ErrorContext.Path == "foundUploads")
-                                                                                               {
-                                                                                                   e.ErrorContext.Handled = true;
-                                                                                               }
-                                                                                           }
+                                                                                                   {
+                                                                                                       // Sometimes 'foundUploads' is a bool and the deserialization to int? fails
+                                                                                                       if (e.ErrorContext.Path == "foundUploads")
+                                                                                                       {
+                                                                                                           e.ErrorContext.Handled = true;
+                                                                                                       }
+                                                                                                   }
                                                                                        });
 
                     if ((uploads?.Uploads?.Length > 0) == false)

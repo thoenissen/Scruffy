@@ -62,7 +62,16 @@ public sealed class LockFactory : IDisposable
     /// </summary>
     private sealed class LockContainer : IAsyncDisposable, IDisposable
     {
+        #region Fields
+
+        /// <summary>
+        /// Semaphore
+        /// </summary>
         private readonly SemaphoreSlim _semaphore;
+
+        #endregion // Fields
+
+        #region Constructor
 
         /// <summary>
         /// Constructor
@@ -72,6 +81,8 @@ public sealed class LockFactory : IDisposable
         {
             _semaphore = semaphore;
         }
+
+        #endregion // Constructor
 
         #region IDisposable
 

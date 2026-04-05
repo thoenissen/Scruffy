@@ -81,7 +81,7 @@ public partial class Chart : IAsyncDisposable
     public async Task Update()
     {
         if (_module != null
-            && _instance != null            )
+            && _instance != null)
         {
             await _module.InvokeVoidAsync("updateChart", _instance, Type, Data, Options)
                          .ConfigureAwait(false);

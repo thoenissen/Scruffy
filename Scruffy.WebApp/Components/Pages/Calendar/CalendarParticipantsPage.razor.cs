@@ -144,11 +144,11 @@ public partial class CalendarParticipantsPage
                                                                               .Select(obj2 => obj2.Id)
                                                                               .FirstOrDefault(),
                                                         Name = obj.User.DiscordAccounts
-                                                                       .Select(account => account.Members
-                                                                                                  .Where(member => member.ServerId == WebAppConfiguration.DiscordServerId)
-                                                                                                  .Select(member => member.Name)
-                                                                                                  .FirstOrDefault())
-                                                                       .FirstOrDefault()
+                                                                  .Select(account => account.Members
+                                                                                            .Where(member => member.ServerId == WebAppConfiguration.DiscordServerId)
+                                                                                            .Select(member => member.Name)
+                                                                                            .FirstOrDefault())
+                                                                  .FirstOrDefault()
                                                                    ?? obj.User.UserName,
                                                         obj.IsLeader
                                                     })
@@ -176,11 +176,11 @@ public partial class CalendarParticipantsPage
                                                                                  .Select(obj2 => obj2.Id)
                                                                                  .FirstOrDefault(),
                                                            Name = obj.Leader.DiscordAccounts
-                                                                            .Select(account => account.Members
-                                                                                                       .Where(member => member.ServerId == WebAppConfiguration.DiscordServerId)
-                                                                                                       .Select(member => member.Name)
-                                                                                                       .FirstOrDefault())
-                                                                            .FirstOrDefault()
+                                                                     .Select(account => account.Members
+                                                                                               .Where(member => member.ServerId == WebAppConfiguration.DiscordServerId)
+                                                                                               .Select(member => member.Name)
+                                                                                               .FirstOrDefault())
+                                                                     .FirstOrDefault()
                                                                       ?? obj.Leader.UserName
                                                        })
                                         .FirstOrDefault();
@@ -502,11 +502,11 @@ public partial class CalendarParticipantsPage
                                         .GetQuery()
                                         .Where(member => member.ServerId == WebAppConfiguration.DiscordServerId)
                                         .Select(member => new
-                                                       {
-                                                           member.AccountId,
-                                                           member.Name,
-                                                           member.Account.UserId
-                                                       })
+                                                          {
+                                                              member.AccountId,
+                                                              member.Name,
+                                                              member.Account.UserId
+                                                          })
                                         .AsEnumerable()
                                         .Select(participant => new CalendarParticipantDTO
                                                                {

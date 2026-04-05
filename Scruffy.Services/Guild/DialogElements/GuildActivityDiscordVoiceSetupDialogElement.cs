@@ -68,7 +68,7 @@ public class GuildActivityDiscordVoiceSetupDialogElement : DialogEmbedReactionEl
 
                 _roles = roles.Select(obj => new
                                              {
-                                                 Role = CommandContext.Guild.Roles.FirstOrDefault(obj2 => obj2.Id  == obj.RoleId),
+                                                 Role = CommandContext.Guild.Roles.FirstOrDefault(obj2 => obj2.Id == obj.RoleId),
                                                  obj.Points
                                              })
                               .Where(obj => obj.Role != null)
@@ -154,7 +154,7 @@ public class GuildActivityDiscordVoiceSetupDialogElement : DialogEmbedReactionEl
 
                                                                                obj.Points = data.Points;
                                                                            })
-                                                 == false)
+                                                    == false)
                                                 {
                                                     LoggingService.AddInteractionLogEntry(LogEntryLevel.Error,
                                                                                           CommandContext.CustomId,
@@ -201,7 +201,7 @@ public class GuildActivityDiscordVoiceSetupDialogElement : DialogEmbedReactionEl
 
                                                                                  obj.Points = data.Points;
                                                                              })
-                                                   == false)
+                                                      == false)
                                                   {
                                                       LoggingService.AddInteractionLogEntry(LogEntryLevel.Error,
                                                                                             CommandContext.CustomId,
@@ -221,14 +221,13 @@ public class GuildActivityDiscordVoiceSetupDialogElement : DialogEmbedReactionEl
                                    CommandText = LocalizationGroup.GetFormattedText("DeleteCommand", "{0} Delete role", DiscordEmoteService.GetTrashCanEmote(CommandContext.Client)),
                                    Func = async () =>
                                           {
-                                              var roleId = await RunSubElement<GuildActivityDiscordVoiceRemoveDialogElement, ulong>()
-                                                               .ConfigureAwait(false);
+                                              var roleId = await RunSubElement<GuildActivityDiscordVoiceRemoveDialogElement, ulong>().ConfigureAwait(false);
 
                                               using (var dbFactory = RepositoryFactory.CreateInstance())
                                               {
                                                   if (dbFactory.GetRepository<GuildDiscordActivityPointsAssignmentRepository>()
                                                                .Remove(obj => obj.Guild.DiscordServerId == CommandContext.Guild.Id && obj.Type == DiscordActivityPointsType.Voice && obj.RoleId == roleId)
-                                                   == false)
+                                                      == false)
                                                   {
                                                       LoggingService.AddInteractionLogEntry(LogEntryLevel.Error,
                                                                                             CommandContext.CustomId,

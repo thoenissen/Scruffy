@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Scruffy.Data.Entity.Tables.Guild;
 
@@ -36,7 +36,7 @@ public class GuildUserConfigurationEntity
     /// Guild
     /// </summary>
     [ForeignKey(nameof(GuildId))]
-    public  virtual GuildEntity Guild { get; set; }
+    public virtual GuildEntity Guild { get; set; }
 
     #endregion // Navigation properties
 

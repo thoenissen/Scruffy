@@ -313,6 +313,8 @@ public class GuildCommandHandler : LocatedServiceBase
 
                 case null:
                 default:
+                    {
+                    }
                     break;
             }
 
@@ -352,6 +354,8 @@ public class GuildCommandHandler : LocatedServiceBase
 
                 case null:
                 default:
+                    {
+                    }
                     break;
             }
 

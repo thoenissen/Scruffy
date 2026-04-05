@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -95,7 +95,7 @@ public class DiscordMessageRepository : RepositoryBase<DiscordMessageQueryable, 
                                               WHEN NOT MATCHED THEN
                                                   INSERT ( [DiscordServerId], [DiscordChannelId], [DiscordThreadId], [DiscordMessageId], [DiscordAccountId], [TimeStamp])
                                                   VALUES ( [Source].[DiscordServerId], [Source].[DiscordChannelId], [Source].[DiscordThreadId], [Source].[DiscordMessageId], [Source].[DiscordAccountId], [Source].[TimeStamp]); ",
-                    connection);
+                                            connection);
 
                 await using (sqlCommand.ConfigureAwait(false))
                 {

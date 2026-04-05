@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations.Schema;
 
 using Scruffy.Data.Entity.Tables.Discord;
 
@@ -16,7 +16,7 @@ public class OneTimeReminderEntity
     /// Id
     /// </summary>
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public long Id { get; set;  }
+    public long Id { get; set; }
 
     /// <summary>
     /// Id of the user

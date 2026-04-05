@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -71,7 +71,8 @@ public sealed class RepositoryFactory : IDisposable
     /// </summary>
     /// <typeparam name="TRepository">Type of the repository to be created</typeparam>
     /// <returns><see cref="RepositoryBase"/>-object</returns>
-    public TRepository GetRepository<TRepository>() where TRepository : RepositoryBase
+    public TRepository GetRepository<TRepository>()
+        where TRepository : RepositoryBase
     {
         if (_repositories.TryGetValue(typeof(TRepository), out var repository) == false)
         {
@@ -157,8 +158,8 @@ public sealed class RepositoryFactory : IDisposable
     {
         return _dbContext.Set<DateValue>()
                          .FromSqlRaw(@"SELECT [Value] FROM GetDateRange(@from, @to)",
-                                                      new SqlParameter("@from", from),
-                                                      new SqlParameter("@to", to));
+                                     new SqlParameter("@from", from),
+                                     new SqlParameter("@to", to));
     }
 
     #endregion // Query

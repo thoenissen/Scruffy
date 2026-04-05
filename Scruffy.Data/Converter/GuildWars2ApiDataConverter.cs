@@ -1,4 +1,4 @@
-﻿using Scruffy.Data.Enumerations.GuildWars2;
+using Scruffy.Data.Enumerations.GuildWars2;
 using Scruffy.Data.Json.GuildWars2.Core;
 
 namespace Scruffy.Data.Converter;
@@ -16,28 +16,28 @@ public static class GuildWars2ApiDataConverter
     public static GuildWars2ApiPermission ToPermission(IEnumerable<string> permissions)
     {
         return permissions?.Aggregate(GuildWars2ApiPermission.None,
-                                     (combinedPermissions, permissionString) =>
-                                     {
-                                         var permission = permissionString switch
-                                         {
-                                             TokenInformation.Permission.Account => GuildWars2ApiPermission.Account,
-                                             TokenInformation.Permission.Builds => GuildWars2ApiPermission.Builds,
-                                             TokenInformation.Permission.Characters => GuildWars2ApiPermission.Characters,
-                                             TokenInformation.Permission.Guilds => GuildWars2ApiPermission.Guilds,
-                                             TokenInformation.Permission.Inventories => GuildWars2ApiPermission.Inventories,
-                                             TokenInformation.Permission.Progression => GuildWars2ApiPermission.Progression,
-                                             TokenInformation.Permission.PvP => GuildWars2ApiPermission.PvP,
-                                             TokenInformation.Permission.TradingPost => GuildWars2ApiPermission.TradingPost,
-                                             TokenInformation.Permission.Unlocks => GuildWars2ApiPermission.Unlocks,
-                                             TokenInformation.Permission.Wallet => GuildWars2ApiPermission.Wallet,
-                                             _ => GuildWars2ApiPermission.None
-                                         };
+                                      (combinedPermissions, permissionString) =>
+                                      {
+                                          var permission = permissionString switch
+                                                           {
+                                                               TokenInformation.Permission.Account => GuildWars2ApiPermission.Account,
+                                                               TokenInformation.Permission.Builds => GuildWars2ApiPermission.Builds,
+                                                               TokenInformation.Permission.Characters => GuildWars2ApiPermission.Characters,
+                                                               TokenInformation.Permission.Guilds => GuildWars2ApiPermission.Guilds,
+                                                               TokenInformation.Permission.Inventories => GuildWars2ApiPermission.Inventories,
+                                                               TokenInformation.Permission.Progression => GuildWars2ApiPermission.Progression,
+                                                               TokenInformation.Permission.PvP => GuildWars2ApiPermission.PvP,
+                                                               TokenInformation.Permission.TradingPost => GuildWars2ApiPermission.TradingPost,
+                                                               TokenInformation.Permission.Unlocks => GuildWars2ApiPermission.Unlocks,
+                                                               TokenInformation.Permission.Wallet => GuildWars2ApiPermission.Wallet,
+                                                               _ => GuildWars2ApiPermission.None
+                                                           };
 
-                                         combinedPermissions |= permission;
+                                          combinedPermissions |= permission;
 
-                                         return combinedPermissions;
-                                     })
-            ?? GuildWars2ApiPermission.None;
+                                          return combinedPermissions;
+                                      })
+                   ?? GuildWars2ApiPermission.None;
     }
 
     /// <summary>

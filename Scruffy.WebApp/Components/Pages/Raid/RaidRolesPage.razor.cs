@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -45,6 +45,9 @@ public partial class RaidRolesPage
     /// </summary>
     private ElementReference _rolesElement;
 
+    /// <summary>
+    /// Show only active players
+    /// </summary>
     private bool _showOnlyActivePlayers = true;
 
     #endregion // Fields
@@ -235,26 +238,26 @@ public partial class RaidRolesPage
                                                           Roles = user.Roles.Aggregate(RaidRole.None,
                                                                                        (current, role) => current
                                                                                                           | role switch
-                                                                                                          {
-                                                                                                              1 => RaidRole.DamageDealer,
-                                                                                                              2 => RaidRole.AlacrityDamageDealer,
-                                                                                                              3 => RaidRole.QuicknessDamageDealer,
-                                                                                                              4 => RaidRole.AlacrityHealer,
-                                                                                                              5 => RaidRole.QuicknessHealer,
-                                                                                                              8 => RaidRole.AlacrityTankHealer,
-                                                                                                              9 => RaidRole.QuicknessTankHealer,
-                                                                                                              _ => current
-                                                                                                          }),
+                                                                                                            {
+                                                                                                                1 => RaidRole.DamageDealer,
+                                                                                                                2 => RaidRole.AlacrityDamageDealer,
+                                                                                                                3 => RaidRole.QuicknessDamageDealer,
+                                                                                                                4 => RaidRole.AlacrityHealer,
+                                                                                                                5 => RaidRole.QuicknessHealer,
+                                                                                                                8 => RaidRole.AlacrityTankHealer,
+                                                                                                                9 => RaidRole.QuicknessTankHealer,
+                                                                                                                _ => current
+                                                                                                            }),
                                                           SpecialRoles = user.SpecialRoles.Aggregate(RaidSpecialRole.None,
                                                                                                      (current, role) => current
                                                                                                                         | role switch
-                                                                                                                        {
-                                                                                                                            1 => RaidSpecialRole.HandKiter,
-                                                                                                                            2 => RaidSpecialRole.SoullessHorrorPusher,
-                                                                                                                            3 => RaidSpecialRole.Quadim1Kiter,
-                                                                                                                            4 => RaidSpecialRole.Quadim2Kiter,
-                                                                                                                            _ => current
-                                                                                                                        })
+                                                                                                                          {
+                                                                                                                              1 => RaidSpecialRole.HandKiter,
+                                                                                                                              2 => RaidSpecialRole.SoullessHorrorPusher,
+                                                                                                                              3 => RaidSpecialRole.Quadim1Kiter,
+                                                                                                                              4 => RaidSpecialRole.Quadim2Kiter,
+                                                                                                                              _ => current
+                                                                                                                          })
                                                       })
                                       .ToList();
 

@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 using Discord;
@@ -80,12 +80,12 @@ public class ReminderCommandHandler : LocatedServiceBase
                                          DiscordAccountId = context.User.Id,
                                          DiscordChannelId = context.Channel.Id,
                                          TimeStamp = timeSpan[^1..] switch
-                                         {
-                                             "h" => DateTime.Now.AddHours(amount),
-                                             "m" => DateTime.Now.AddMinutes(amount),
-                                             "s" => DateTime.Now.AddSeconds(amount),
-                                             _ => throw new InvalidOperationException()
-                                         },
+                                                     {
+                                                         "h" => DateTime.Now.AddHours(amount),
+                                                         "m" => DateTime.Now.AddMinutes(amount),
+                                                         "s" => DateTime.Now.AddSeconds(amount),
+                                                         _ => throw new InvalidOperationException()
+                                                     },
                                          Message = message
                                      };
 
@@ -128,10 +128,10 @@ public class ReminderCommandHandler : LocatedServiceBase
         {
             if (new Regex(@"\d\d\d\d-\d\d-\d\d").IsMatch(date)
                 && DateTime.TryParseExact(date,
-                                       "yyyy-MM-dd",
-                                       null,
-                                       DateTimeStyles.None,
-                                       out var parsedDate)
+                                          "yyyy-MM-dd",
+                                          null,
+                                          DateTimeStyles.None,
+                                          out var parsedDate)
                 && string.IsNullOrWhiteSpace(time) == false
                 && new Regex(@"\d\d:\d\d").IsMatch(time)
                 && TimeSpan.TryParseExact(time, "hh\\:mm", null, out var parsedDateTime))

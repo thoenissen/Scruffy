@@ -58,8 +58,8 @@ public class CalendarCommandHandler : LocatedServiceBase
     /// </summary>
     /// <param name="localizationService">Localization service</param>
     /// <param name="calendarParticipantsService">Participants service</param>
-    /// <param name="calendarScheduleService">Schedules service</param>
     /// <param name="calendarTemplateService">Templates service</param>
+    /// <param name="calendarScheduleService">Schedules service</param>
     /// <param name="calendarMessageBuilderService">Calendar message builder service</param>
     /// <param name="userManagementService">User management service</param>
     /// <param name="jobScheduler">Job scheduler</param>

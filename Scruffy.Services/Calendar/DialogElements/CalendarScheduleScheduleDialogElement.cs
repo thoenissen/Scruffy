@@ -99,13 +99,17 @@ public class CalendarScheduleScheduleDialogElement : DialogEmbedMessageElementBa
                                              DayOfWeek = typeData.DayOfWeek,
                                              OccurenceCount = typeData.OccurenceCount,
                                              Options = typeData.Options,
-                                             OptionsData = optionsData != null ? JsonConvert.SerializeObject(optionsData) : null
+                                             OptionsData = optionsData != null
+                                                               ? JsonConvert.SerializeObject(optionsData)
+                                                               : null
                                          };
                     }
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    {
+                        throw new ArgumentOutOfRangeException();
+                    }
             }
 
             data.AdditionalData = JsonConvert.SerializeObject(additionalData);

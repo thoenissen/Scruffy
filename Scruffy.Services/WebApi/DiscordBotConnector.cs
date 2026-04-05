@@ -43,7 +43,12 @@ public sealed class DiscordBotConnector
     {
         using (var client = _httpClientFactory.CreateClient("DiscordBot"))
         {
-            var payload = new { ConfigurationId = configurationId, Deadline = deadline, TimeStamp = timeStamp };
+            var payload = new
+                          {
+                              ConfigurationId = configurationId,
+                              Deadline = deadline,
+                              TimeStamp = timeStamp
+                          };
 
             using (var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json"))
             {

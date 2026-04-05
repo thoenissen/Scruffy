@@ -21,12 +21,11 @@ internal static class CommandExtensions
                         Description = parameterInfo.Description,
                         Type = parameterInfo.DiscordOptionType ?? ApplicationCommandOptionType.String,
                         IsRequired = parameterInfo.IsRequired,
-                        Choices = parameterInfo.Choices?
-                                               .Select(obj => new ApplicationCommandOptionChoiceProperties
-                                                              {
-                                                                  Name = obj.Name,
-                                                                  Value = obj.Value
-                                                              })
+                        Choices = parameterInfo.Choices?.Select(obj => new ApplicationCommandOptionChoiceProperties
+                                                                       {
+                                                                           Name = obj.Name,
+                                                                           Value = obj.Value
+                                                                       })
                                                .ToList(),
                         ChannelTypes = parameterInfo.ChannelTypes?.ToList(),
                         IsAutocomplete = parameterInfo.IsAutocomplete,
@@ -61,10 +60,9 @@ internal static class CommandExtensions
             throw new InvalidOperationException($"Slash Commands cannot have more than {SlashCommandBuilder.MaxOptionsCount} command parameters");
         }
 
-        props.Options = commandInfo.FlattenedParameters
-                                   ?.Select(x => x.ToApplicationCommandOptionProps())
+        props.Options = commandInfo.FlattenedParameters?.Select(x => x.ToApplicationCommandOptionProps())
                                    .ToList()
-                     ?? Optional<List<ApplicationCommandOptionProperties>>.Unspecified;
+                            ?? Optional<List<ApplicationCommandOptionProperties>>.Unspecified;
 
         return props;
     }
@@ -94,27 +92,27 @@ internal static class CommandExtensions
     public static ApplicationCommandProperties ToApplicationCommandProps(this ContextCommandInfo commandInfo)
     {
         return commandInfo.CommandType switch
-        {
-            ApplicationCommandType.Message => new MessageCommandBuilder
-                                              {
-                                                  Name = commandInfo.Name,
-                                                  IsDefaultPermission = commandInfo.DefaultPermission,
-                                                  DefaultMemberPermissions = (commandInfo.DefaultMemberPermissions ?? 0) | (commandInfo.Module.DefaultMemberPermissions ?? 0),
-                                                  ContextTypes = commandInfo.IsEnabledInDm
-                                                                     ? [InteractionContextType.Guild, InteractionContextType.PrivateChannel, InteractionContextType.BotDm]
-                                                                     : [InteractionContextType.Guild, InteractionContextType.PrivateChannel]
-                                              }.Build(),
-            ApplicationCommandType.User => new UserCommandBuilder
-                                           {
-                                               Name = commandInfo.Name,
-                                               IsDefaultPermission = commandInfo.DefaultPermission,
-                                               DefaultMemberPermissions = (commandInfo.DefaultMemberPermissions ?? 0) | (commandInfo.Module.DefaultMemberPermissions ?? 0),
-                                               ContextTypes = commandInfo.IsEnabledInDm
-                                                                  ? [InteractionContextType.Guild, InteractionContextType.PrivateChannel, InteractionContextType.BotDm]
-                                                                  : [InteractionContextType.Guild, InteractionContextType.PrivateChannel]
-                                           }.Build(),
-            _ => throw new InvalidOperationException($"{commandInfo.CommandType} isn't a supported command type.")
-        };
+               {
+                   ApplicationCommandType.Message => new MessageCommandBuilder
+                                                     {
+                                                         Name = commandInfo.Name,
+                                                         IsDefaultPermission = commandInfo.DefaultPermission,
+                                                         DefaultMemberPermissions = (commandInfo.DefaultMemberPermissions ?? 0) | (commandInfo.Module.DefaultMemberPermissions ?? 0),
+                                                         ContextTypes = commandInfo.IsEnabledInDm
+                                                                            ? [InteractionContextType.Guild, InteractionContextType.PrivateChannel, InteractionContextType.BotDm]
+                                                                            : [InteractionContextType.Guild, InteractionContextType.PrivateChannel]
+                                                     }.Build(),
+                   ApplicationCommandType.User => new UserCommandBuilder
+                                                  {
+                                                      Name = commandInfo.Name,
+                                                      IsDefaultPermission = commandInfo.DefaultPermission,
+                                                      DefaultMemberPermissions = (commandInfo.DefaultMemberPermissions ?? 0) | (commandInfo.Module.DefaultMemberPermissions ?? 0),
+                                                      ContextTypes = commandInfo.IsEnabledInDm
+                                                                         ? [InteractionContextType.Guild, InteractionContextType.PrivateChannel, InteractionContextType.BotDm]
+                                                                         : [InteractionContextType.Guild, InteractionContextType.PrivateChannel]
+                                                  }.Build(),
+                   _ => throw new InvalidOperationException($"{commandInfo.CommandType} isn't a supported command type.")
+               };
     }
 
     /// <summary>

@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 
 using Discord;
 using Discord.WebSocket;
@@ -245,14 +245,14 @@ public class CalendarScheduleService : LocatedServiceBase
                                                                                                                                 && obj2.CalendarAppointments.Any(obj4 => obj4.TimeStamp > now
                                                                                                                                                                          && obj4.TimeStamp < obj3.TimeStamp) == false)
                                                                                                                  .Select(obj3 => new
-                                                                                                                 {
-                                                                                                                     obj3.Id,
-                                                                                                                     obj3.TimeStamp,
-                                                                                                                     obj3.DiscordEventId,
-                                                                                                                     obj2.Description,
-                                                                                                                     obj2.DiscordVoiceChannel,
-                                                                                                                     obj2.DiscordEventDescription,
-                                                                                                                 }))
+                                                                                                                                 {
+                                                                                                                                     obj3.Id,
+                                                                                                                                     obj3.TimeStamp,
+                                                                                                                                     obj3.DiscordEventId,
+                                                                                                                                     obj2.Description,
+                                                                                                                                     obj2.DiscordVoiceChannel,
+                                                                                                                                     obj2.DiscordEventDescription,
+                                                                                                                                 }))
                                                                                          .Where(obj3 => obj3.DiscordEventId == null)
                                                                                          .OrderBy(obj2 => obj2.TimeStamp)
                                                                                          .ToList()

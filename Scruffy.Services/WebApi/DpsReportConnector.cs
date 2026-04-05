@@ -28,10 +28,10 @@ public class DpsReportConnector
     /// <summary>
     /// JSON serializer settings
     /// </summary>
-    private static readonly JsonSerializerSettings _settings = new()
-                                                   {
-                                                       NullValueHandling = NullValueHandling.Ignore,
-                                                   };
+    private static readonly JsonSerializerSettings Settings = new()
+                                                              {
+                                                                  NullValueHandling = NullValueHandling.Ignore,
+                                                              };
 
     /// <summary>
     /// Client factory
@@ -79,7 +79,7 @@ public class DpsReportConnector
                                                .ReadAsStringAsync()
                                                .ConfigureAwait(false);
 
-                return JsonConvert.DeserializeObject<Page>(jsonResult, _settings);
+                return JsonConvert.DeserializeObject<Page>(jsonResult, Settings);
             }
         }
     }
@@ -119,7 +119,10 @@ public class DpsReportConnector
 
             if (shouldAbort == null)
             {
-                var pageTasks = new List<Task<Page>> { Task.FromResult(firstPage) };
+                var pageTasks = new List<Task<Page>>
+                                {
+                                    Task.FromResult(firstPage)
+                                };
 
                 for (var i = 2; i <= firstPage.Pages; i++)
                 {
@@ -220,7 +223,7 @@ public class DpsReportConnector
 
         using var response = await client.GetAsync(url).ConfigureAwait(false);
         var jsonResult = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-        var parsedPage = JsonConvert.DeserializeObject<Page>(jsonResult, _settings);
+        var parsedPage = JsonConvert.DeserializeObject<Page>(jsonResult, Settings);
 
         if (endTime != null && parsedPage?.Uploads != null)
         {
@@ -318,7 +321,7 @@ public class DpsReportConnector
     public async Task<Log> GetLog(string id)
     {
         return await TryGetLogFromCache(id).ConfigureAwait(false)
-               ?? await GetLogFromDpsReport(id).ConfigureAwait(false);
+                   ?? await GetLogFromDpsReport(id).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -370,7 +373,7 @@ public class DpsReportConnector
                     {
                         var logContent = await reader.ReadToEndAsync().ConfigureAwait(false);
 
-                        log = JsonConvert.DeserializeObject<Log>(logContent, _settings);
+                        log = JsonConvert.DeserializeObject<Log>(logContent, Settings);
                     }
                 }
             }
@@ -406,7 +409,7 @@ public class DpsReportConnector
 
                     await UploadToCache(jsonResult, id).ConfigureAwait(false);
 
-                    return JsonConvert.DeserializeObject<Log>(jsonResult, _settings);
+                    return JsonConvert.DeserializeObject<Log>(jsonResult, Settings);
                 }
             }
             catch (Exception ex)

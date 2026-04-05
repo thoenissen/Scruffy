@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.GuildWars2.Account;
@@ -277,8 +277,8 @@ public class GuildWars2CommandHandler : LocatedServiceBase
                                          .ToList();
 
                     var maxCount = materials.Count > 0
-                                      ? materials.Max(item => item.Count)
-                                      : 0;
+                                       ? materials.Max(item => item.Count)
+                                       : 0;
 
                     var embed = new EmbedBuilder().WithTitle(LocalizationGroup.GetText("FullMaterialTitle", "Full material storage slots"))
                                                   .WithDescription(LocalizationGroup.GetFormattedText("FullMaterialDescription", "**Account:** {0}\n**Assumed Slot count:** {1}", account.Name, maxCount == 0 ? "-" : maxCount.ToString()))

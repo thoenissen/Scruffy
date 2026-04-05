@@ -49,27 +49,27 @@ public class GuildSpecialRankEditDialogElement : DialogEmbedReactionElementBase<
         {
             var rankId = DialogContext.GetValue<long>("RankId");
 
-            var data = await  dbFactory.GetRepository<GuildSpecialRankConfigurationRepository>()
-                                       .GetQuery()
-                                       .Where(obj => obj.Id == rankId)
-                                       .Select(obj => new
-                                                      {
-                                                          obj.Description,
-                                                          obj.DiscordRoleId,
-                                                          obj.MaximumPoints,
-                                                          obj.GrantThreshold,
-                                                          obj.RemoveThreshold,
-                                                          Roles = obj.GuildSpecialRankRoleAssignments
-                                                                     .Select(obj2 => new
-                                                                                     {
-                                                                                         obj2.DiscordRoleId,
-                                                                                         obj2.Points
-                                                                                     }),
-                                                          IgnoreRoles = obj.GuildSpecialRankIgnoreRoleAssignments
-                                                                           .Select(obj => obj.DiscordRoleId)
-                                                      })
-                                       .FirstAsync()
-                                       .ConfigureAwait(false);
+            var data = await dbFactory.GetRepository<GuildSpecialRankConfigurationRepository>()
+                                      .GetQuery()
+                                      .Where(obj => obj.Id == rankId)
+                                      .Select(obj => new
+                                                     {
+                                                         obj.Description,
+                                                         obj.DiscordRoleId,
+                                                         obj.MaximumPoints,
+                                                         obj.GrantThreshold,
+                                                         obj.RemoveThreshold,
+                                                         Roles = obj.GuildSpecialRankRoleAssignments
+                                                                    .Select(obj2 => new
+                                                                                    {
+                                                                                        obj2.DiscordRoleId,
+                                                                                        obj2.Points
+                                                                                    }),
+                                                         IgnoreRoles = obj.GuildSpecialRankIgnoreRoleAssignments
+                                                                          .Select(obj => obj.DiscordRoleId)
+                                                     })
+                                      .FirstAsync()
+                                      .ConfigureAwait(false);
 
             var fieldBuilder = new StringBuilder();
             fieldBuilder.AppendLine($"{Format.Bold(LocalizationGroup.GetText("Description", "Description"))}: {data.Description}");

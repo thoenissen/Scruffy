@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Guild;
@@ -56,11 +56,11 @@ public class GuildRankSuperiorRankDialogElement : DialogEmbedMessageElementBase<
                                  .Where(obj => obj.Guild.DiscordServerId == CommandContext.Guild.Id)
                                  .OrderBy(obj => obj.Order)
                                  .Select(obj => new
-                                 {
-                                     obj.Id,
-                                     obj.InGameName,
-                                     obj.DiscordRoleId
-                                 })
+                                                {
+                                                    obj.Id,
+                                                    obj.InGameName,
+                                                    obj.DiscordRoleId
+                                                })
                                  .ToList();
 
             stringBuilder.Append("`0` - ");

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Security.Claims;
 
@@ -233,11 +233,11 @@ public partial class PersonalRankingPage
                                                                                                                && configuration.GuildId == rankPoint.GuildId
                                                                                                                && configuration.IsInactive) == false)
                                                  .Select(rankPoint => new
-                                                         {
-                                                             rankPoint.Date,
-                                                             rankPoint.Type,
-                                                             rankPoint.Points
-                                                         })
+                                                                      {
+                                                                          rankPoint.Date,
+                                                                          rankPoint.Type,
+                                                                          rankPoint.Points
+                                                                      })
                                                  .ToList();
 
             if (currentPoints.Count > 0)

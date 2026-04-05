@@ -1,4 +1,4 @@
-﻿using Scruffy.Services.Core.Localization;
+using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord;
 
 namespace Scruffy.Services.Raid.DialogElements;
@@ -43,8 +43,8 @@ public class RaidRoleSelectionNextDialogElement : DialogButtonElementBase<bool>
     public override string GetMessage()
     {
         return _first
-            ? LocalizationGroup.GetText("MessageFirst", "Do you want to add role preference?")
-            : LocalizationGroup.GetText("MessageNext", "Do you want to add another role preference?");
+                   ? LocalizationGroup.GetText("MessageFirst", "Do you want to add role preference?")
+                   : LocalizationGroup.GetText("MessageNext", "Do you want to add another role preference?");
     }
 
     /// <inheritdoc/>

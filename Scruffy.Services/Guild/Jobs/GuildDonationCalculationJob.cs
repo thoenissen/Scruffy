@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Guild;
@@ -22,7 +22,7 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
     /// <summary>
     /// Upgrades which don't generate a 'completed' entry
     /// </summary>
-    private static readonly List<int> _upgradesWithoutCompleted = [73, 100, 144, 190, 219, 239, 277, 332, 333, 372, 400, 409, 414, 457, 463, 471, 475, 503, 508, 537, 549, 560, 599, 676, 699, 703, 730, 837, 846, 862, 864, 935, 963, 1067, 1121, 1143, 1202];
+    private static readonly List<int> UpgradesWithoutCompleted = [73, 100, 144, 190, 219, 239, 277, 332, 333, 372, 400, 409, 414, 457, 463, 471, 475, 503, 508, 537, 549, 560, 599, 676, 699, 703, 730, 837, 846, 862, 864, 935, 963, 1067, 1121, 1143, 1202];
 
     /// <summary>
     /// Repository factory
@@ -157,7 +157,7 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
             else
             {
                 value = (long?)tradingsPostValues.FirstOrDefault(obj => obj.Id == itemLogEntry.ItemId)?.TradingPostSellValue?.UnitPrice
-                     ?? items.FirstOrDefault(obj => obj.Id == itemLogEntry.ItemId)?.VendorValue;
+                            ?? items.FirstOrDefault(obj => obj.Id == itemLogEntry.ItemId)?.VendorValue;
             }
 
             if (value != null)
@@ -202,9 +202,9 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
                                                                    obj.GuildId,
                                                                    obj.Id,
                                                                    ItemId = obj.ItemId
-                                                                         ?? conversionsQuery.Where(obj2 => obj2.UpgradeId == obj.UpgradeId)
-                                                                                            .Select(obj2 => (int?)obj2.ItemId)
-                                                                                            .FirstOrDefault(),
+                                                                                ?? conversionsQuery.Where(obj2 => obj2.UpgradeId == obj.UpgradeId)
+                                                                                                   .Select(obj2 => (int?)obj2.ItemId)
+                                                                                                   .FirstOrDefault(),
                                                                    Count = obj.Count.Value
                                                                })
                                                 .Where(obj => obj.ItemId > 0)
@@ -273,10 +273,9 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
 
                         if (item == null)
                         {
-                            var itemEntity = _dbFactory
-                                             .GetRepository<GuildWarsItemRepository>()
-                                             .GetQuery()
-                                             .FirstOrDefault(obj => obj.ItemId == itemId);
+                            var itemEntity = _dbFactory.GetRepository<GuildWarsItemRepository>()
+                                                       .GetQuery()
+                                                       .FirstOrDefault(obj => obj.ItemId == itemId);
 
                             if (itemEntity != null)
                             {
@@ -464,7 +463,7 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
                                                         .Where(obj => obj.IsProcessed == false
                                                                       && obj.Type == GuildLogEntryEntity.Types.Upgrade
                                                                       && obj.Action == GuildLogEntryEntity.Actions.Queued
-                                                                      && _upgradesWithoutCompleted.Contains(obj.UpgradeId ?? 0))
+                                                                      && UpgradesWithoutCompleted.Contains(obj.UpgradeId ?? 0))
                                                         .Select(obj => new
                                                                        {
                                                                            obj.GuildId,

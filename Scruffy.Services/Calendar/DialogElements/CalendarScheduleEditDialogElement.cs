@@ -79,8 +79,7 @@ public class CalendarScheduleEditDialogElement : DialogEmbedReactionElementBase<
                                       CommandText = LocalizationGroup.GetFormattedText("EditDescriptionCommand", "{0} Edit description", DiscordEmoteService.GetEditEmote(CommandContext.Client)),
                                       Func = async () =>
                                              {
-                                                 var description = await RunSubElement<CalendarScheduleDescriptionDialogElement, string>()
-                                                                       .ConfigureAwait(false);
+                                                 var description = await RunSubElement<CalendarScheduleDescriptionDialogElement, string>().ConfigureAwait(false);
 
                                                  using (var dbFactory = RepositoryFactory.CreateInstance())
                                                  {
@@ -99,19 +98,19 @@ public class CalendarScheduleEditDialogElement : DialogEmbedReactionElementBase<
                                       CommandText = LocalizationGroup.GetFormattedText("EditScheduleCommand", "{0} Edit schedule", DiscordEmoteService.GetEdit2Emote(CommandContext.Client)),
                                       Func = async () =>
                                              {
-                                                 var data = await RunSubElement<CalendarScheduleScheduleDialogElement, CalenderScheduleData>()
-                                                                .ConfigureAwait(false);
+                                                 var data = await RunSubElement<CalendarScheduleScheduleDialogElement, CalenderScheduleData>().ConfigureAwait(false);
 
                                                  using (var dbFactory = RepositoryFactory.CreateInstance())
                                                  {
                                                      var scheduleId = DialogContext.GetValue<long>("CalendarScheduleId");
 
                                                      dbFactory.GetRepository<CalendarAppointmentScheduleRepository>()
-                                                              .Refresh(obj => obj.Id == scheduleId, obj =>
-                                                                                                    {
-                                                                                                        obj.Type = data.Type;
-                                                                                                        obj.AdditionalData = data.AdditionalData;
-                                                                                                    });
+                                                              .Refresh(obj => obj.Id == scheduleId,
+                                                                       obj =>
+                                                                       {
+                                                                           obj.Type = data.Type;
+                                                                           obj.AdditionalData = data.AdditionalData;
+                                                                       });
                                                  }
 
                                                  return true;
@@ -123,8 +122,7 @@ public class CalendarScheduleEditDialogElement : DialogEmbedReactionElementBase<
                                       CommandText = LocalizationGroup.GetFormattedText("EditTemplateCommand", "{0} Edit template", DiscordEmoteService.GetEdit3Emote(CommandContext.Client)),
                                       Func = async () =>
                                              {
-                                                 var templateId = await RunSubElement<CalendarTemplateSelectionDialogElement, long>()
-                                                                      .ConfigureAwait(false);
+                                                 var templateId = await RunSubElement<CalendarTemplateSelectionDialogElement, long>().ConfigureAwait(false);
 
                                                  using (var dbFactory = RepositoryFactory.CreateInstance())
                                                  {

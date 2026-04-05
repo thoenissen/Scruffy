@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 
 namespace Scruffy.Services.Core.Extensions;
 
@@ -15,7 +15,7 @@ public static class IGuildUserExtension
     public static string TryGetDisplayName(this IGuildUser member)
     {
         return string.IsNullOrWhiteSpace(member?.Nickname)
-            ? member?.Username
-            : member.Nickname;
+                   ? member?.Username
+                   : member.Nickname;
     }
 }

@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.Calendar;
@@ -130,7 +130,7 @@ public class CalendarScheduleSetupDialogElement : DialogEmbedReactionElementBase
                                             return true;
                                         }
                              }
-                          ];
+                         ];
 
             if (GetSchedules().Count > 0)
             {

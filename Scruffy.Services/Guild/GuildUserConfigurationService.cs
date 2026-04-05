@@ -76,11 +76,11 @@ public class GuildUserConfigurationService : LocatedServiceBase
                                                   .GetQuery()
                                                   .FirstOrDefault(obj => obj.UserId == user.Id
                                                                          && obj.GuildId == guildId)
-                             ?? new GuildUserConfigurationEntity
-                                {
-                                    GuildId = guildId,
-                                    UserId = user.Id
-                                };
+                                    ?? new GuildUserConfigurationEntity
+                                       {
+                                           GuildId = guildId,
+                                           UserId = user.Id
+                                       };
         var continueEdit = false;
 
         IUserMessage message = null;

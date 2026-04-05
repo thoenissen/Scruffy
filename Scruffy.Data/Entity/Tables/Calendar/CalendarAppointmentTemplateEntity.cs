@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations.Schema;
 
 using Scruffy.Data.Entity.Tables.CoreData;
 
@@ -61,7 +61,7 @@ public class CalendarAppointmentTemplateEntity
     /// <summary>
     /// Guild points
     /// </summary>
-    public double? GuildPoints { get; set;  }
+    public double? GuildPoints { get; set; }
 
     /// <summary>
     /// Does this event raise the maximum cap of guild points per week?

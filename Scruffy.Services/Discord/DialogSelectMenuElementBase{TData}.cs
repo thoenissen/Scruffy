@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 
 using Scruffy.Services.Core.Localization;
 
@@ -146,8 +146,7 @@ public abstract class DialogSelectMenuElementBase<TData> : DialogElementBase<TDa
                 }
             }
 
-            await DisableComponents()
-                .ConfigureAwait(false);
+            await DisableComponents().ConfigureAwait(false);
 
             await component.DeferAsync()
                            .ConfigureAwait(false);

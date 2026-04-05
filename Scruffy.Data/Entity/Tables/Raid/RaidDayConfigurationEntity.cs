@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Scruffy.Data.Entity.Tables.Raid;
@@ -36,7 +36,7 @@ public class RaidDayConfigurationEntity
     /// <summary>
     /// Start of the raid
     /// </summary>
-    public  TimeSpan StartTime { get; set; }
+    public TimeSpan StartTime { get; set; }
 
     /// <summary>
     /// Discord channel

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace Scruffy.Data.Converter;
 
@@ -11,10 +11,10 @@ public class SecondsTimeSpanConverter : JsonConverter<TimeSpan>
     public override TimeSpan ReadJson(JsonReader reader, Type objectType, TimeSpan existingValue, bool hasExistingValue, JsonSerializer serializer)
     {
         return reader.Value != null
-            ? reader.ValueType == typeof(long)
-                ? TimeSpan.FromSeconds((long)reader.Value)
-                : TimeSpan.FromSeconds((double)reader.Value)
-            : TimeSpan.Zero;
+                   ? reader.ValueType == typeof(long)
+                         ? TimeSpan.FromSeconds((long)reader.Value)
+                         : TimeSpan.FromSeconds((double)reader.Value)
+                   : TimeSpan.Zero;
     }
 
     /// <inheritdoc/>

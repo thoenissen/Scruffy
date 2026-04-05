@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
@@ -569,10 +569,10 @@ public class ScruffyDbContext : IdentityDbContext<UserEntity, RoleEntity, long, 
                               "IX_UserId_UploadTime");
         modelBuilder.Entity<DpsReportEntity>()
                     .HasIndex(obj => new
-                              {
-                                  obj.UserId,
-                                  obj.EncounterTime
-                              },
+                                     {
+                                         obj.UserId,
+                                         obj.EncounterTime
+                                     },
                               "IX_UserId_EncounterTime");
 
         // Statistics

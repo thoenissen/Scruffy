@@ -25,12 +25,11 @@ namespace Scruffy.Data.Entity.Migrations
                                          constraints: table =>
                                                       {
                                                           table.PrimaryKey("PK_LookingForGroupAppointments", x => x.Id);
-                                                          table.ForeignKey(
-                                                              "FK_LookingForGroupAppointments_Users_CreationUserId",
-                                                              column: x => x.CreationUserId,
-                                                              principalTable: "Users",
-                                                              principalColumn: "Id",
-                                                              onDelete: ReferentialAction.Restrict);
+                                                          table.ForeignKey("FK_LookingForGroupAppointments_Users_CreationUserId",
+                                                                           column: x => x.CreationUserId,
+                                                                           principalTable: "Users",
+                                                                           principalColumn: "Id",
+                                                                           onDelete: ReferentialAction.Restrict);
                                                       });
 
             migrationBuilder.CreateTable("LookingForGroupParticipants",
@@ -41,19 +40,24 @@ namespace Scruffy.Data.Entity.Migrations
                                                                RegistrationTimeStamp = table.Column<DateTime>("datetime2", nullable: false)
                                                            },
                                          constraints: table =>
-                                         {
-                                             table.PrimaryKey("PK_LookingForGroupParticipants", x => new { x.AppointmentId, x.UserId });
-                                             table.ForeignKey("FK_LookingForGroupParticipants_LookingForGroupAppointments_AppointmentId",
-                                                              column: x => x.AppointmentId,
-                                                              principalTable: "LookingForGroupAppointments",
-                                                              principalColumn: "Id",
-                                                              onDelete: ReferentialAction.Restrict);
-                                             table.ForeignKey("FK_LookingForGroupParticipants_Users_UserId",
-                                                              column: x => x.UserId,
-                                                              principalTable: "Users",
-                                                              principalColumn: "Id",
-                                                              onDelete: ReferentialAction.Restrict);
-                                         });
+                                                      {
+                                                          table.PrimaryKey("PK_LookingForGroupParticipants",
+                                                                           x => new
+                                                                                {
+                                                                                    x.AppointmentId,
+                                                                                    x.UserId
+                                                                                });
+                                                          table.ForeignKey("FK_LookingForGroupParticipants_LookingForGroupAppointments_AppointmentId",
+                                                                           column: x => x.AppointmentId,
+                                                                           principalTable: "LookingForGroupAppointments",
+                                                                           principalColumn: "Id",
+                                                                           onDelete: ReferentialAction.Restrict);
+                                                          table.ForeignKey("FK_LookingForGroupParticipants_Users_UserId",
+                                                                           column: x => x.UserId,
+                                                                           principalTable: "Users",
+                                                                           principalColumn: "Id",
+                                                                           onDelete: ReferentialAction.Restrict);
+                                                      });
 
             migrationBuilder.CreateIndex("IX_LookingForGroupAppointments_CreationUserId",
                                          "LookingForGroupAppointments",

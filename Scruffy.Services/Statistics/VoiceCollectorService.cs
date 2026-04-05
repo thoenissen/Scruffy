@@ -329,7 +329,7 @@ public sealed class VoiceCollectorService : SingletonLocatedServiceBase, IDispos
                                   EndTimeStamp = segmentStart,
                                   IsCompleted = false
                               })
-             == false)
+                == false)
             {
                 LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(VoiceCollectorService), nameof(BeginSegment), dbFactory.LastError?.Message, dbFactory.LastError?.ToString());
             }

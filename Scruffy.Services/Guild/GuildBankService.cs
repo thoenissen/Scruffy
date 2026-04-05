@@ -76,8 +76,8 @@ public class GuildBankService : LocatedServiceBase
 
                 await using (connector.ConfigureAwait(false))
                 {
-                    var vault =  await connector.GetGuildVault(guild.GuildId)
-                                                .ConfigureAwait(false);
+                    var vault = await connector.GetGuildVault(guild.GuildId)
+                                               .ConfigureAwait(false);
 
                     foreach (var stash in vault)
                     {

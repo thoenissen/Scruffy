@@ -108,8 +108,7 @@ public sealed partial class UserConfigurationOverlay : IDisposable
         finally
         {
             _isSaving = false;
-            await InvokeAsync(StateHasChanged)
-                .ConfigureAwait(false);
+            await InvokeAsync(StateHasChanged).ConfigureAwait(false);
         }
     }
 
@@ -133,8 +132,7 @@ public sealed partial class UserConfigurationOverlay : IDisposable
         finally
         {
             _isSaving = false;
-            await InvokeAsync(StateHasChanged)
-                .ConfigureAwait(false);
+            await InvokeAsync(StateHasChanged).ConfigureAwait(false);
         }
     }
 

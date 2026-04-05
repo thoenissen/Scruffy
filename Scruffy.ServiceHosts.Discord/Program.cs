@@ -17,12 +17,12 @@ public class Program
     /// <summary>
     /// Wait for program exit
     /// </summary>
-    private static readonly TaskCompletionSource<bool> _waitForExitTaskSource = new();
+    private static readonly TaskCompletionSource<bool> WaitForExitTaskSource = new();
 
     /// <summary>
     /// Signals that the shutdown has completed
     /// </summary>
-    private static readonly ManualResetEventSlim _shutdownComplete = new(false);
+    private static readonly ManualResetEventSlim ShutdownComplete = new(false);
 
     #endregion // Fields
 
@@ -56,7 +56,7 @@ public class Program
                     await webApp.StartAsync()
                                 .ConfigureAwait(false);
 
-                    await _waitForExitTaskSource.Task.ConfigureAwait(false);
+                    await WaitForExitTaskSource.Task.ConfigureAwait(false);
 
                     await webApp.StopAsync()
                                 .ConfigureAwait(false);
@@ -71,7 +71,7 @@ public class Program
         {
             LoggingService.AddServiceLogEntry(LogEntryLevel.Information, nameof(Program), "End", null);
 
-            _shutdownComplete.Set();
+            ShutdownComplete.Set();
         }
     }
 
@@ -86,7 +86,7 @@ public class Program
 
         e.Cancel = true;
 
-        _waitForExitTaskSource.TrySetResult(true);
+        WaitForExitTaskSource.TrySetResult(true);
     }
 
     /// <summary>
@@ -98,9 +98,9 @@ public class Program
     {
         LoggingService.AddServiceLogEntry(LogEntryLevel.Information, nameof(Program), "OnProcessExit", null);
 
-        _waitForExitTaskSource.TrySetResult(true);
+        WaitForExitTaskSource.TrySetResult(true);
 
-        _shutdownComplete.Wait(TimeSpan.FromSeconds(30));
+        ShutdownComplete.Wait(TimeSpan.FromSeconds(30));
     }
 
     #endregion // Methods

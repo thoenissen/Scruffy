@@ -1,4 +1,4 @@
-﻿namespace Scruffy.Data.Services.CoreData;
+namespace Scruffy.Data.Services.CoreData;
 
 /// <summary>
 /// User data
@@ -13,7 +13,7 @@ public class UserData
     /// <summary>
     /// Experience level rank
     /// </summary>
-    public  int ExperienceLevelRank { get; set; }
+    public int ExperienceLevelRank { get; set; }
 
     /// <summary>
     /// Are the data storage terms accepted?

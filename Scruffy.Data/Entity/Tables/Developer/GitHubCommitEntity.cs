@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Scruffy.Data.Entity.Tables.Developer;
@@ -13,7 +13,7 @@ public class GitHubCommitEntity
     /// SHA checksum
     /// </summary>
     [StringLength(40)]
-    public string Sha {  get; set; }
+    public string Sha { get; set; }
 
     /// <summary>
     /// Author

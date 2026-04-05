@@ -25,13 +25,13 @@ internal sealed class IdentityRedirectManager
     /// <summary>
     /// Status cookie builder
     /// </summary>
-    private static readonly CookieBuilder _statusCookieBuilder = new()
-                                                                 {
-                                                                     SameSite = SameSiteMode.Strict,
-                                                                     HttpOnly = true,
-                                                                     IsEssential = true,
-                                                                     MaxAge = TimeSpan.FromSeconds(5),
-                                                                 };
+    private static readonly CookieBuilder StatusCookieBuilder = new()
+                                                                {
+                                                                    SameSite = SameSiteMode.Strict,
+                                                                    HttpOnly = true,
+                                                                    IsEssential = true,
+                                                                    MaxAge = TimeSpan.FromSeconds(5),
+                                                                };
 
     /// <summary>
     /// Navigation manager
@@ -86,7 +86,7 @@ internal sealed class IdentityRedirectManager
     [DoesNotReturn]
     public void RedirectToWithStatus(string uri, string message, HttpContext context)
     {
-        context.Response.Cookies.Append(StatusCookieName, message, _statusCookieBuilder.Build(context));
+        context.Response.Cookies.Append(StatusCookieName, message, StatusCookieBuilder.Build(context));
 
         RedirectTo(uri);
     }

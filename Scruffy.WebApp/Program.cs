@@ -93,10 +93,10 @@ public class Program
                                          {
                                              loggingProviderBuilder.SetResourceBuilder(resourceBuilder)
                                                                    .AddOtlpExporter(otlpOptions =>
-                                                                                   {
-                                                                                       otlpOptions.Endpoint = new Uri(openTelemetryEndpoint);
-                                                                                       otlpOptions.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
-                                                                                   });
+                                                                                    {
+                                                                                        otlpOptions.Endpoint = new Uri(openTelemetryEndpoint);
+                                                                                        otlpOptions.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
+                                                                                    });
                                          });
         }
 
@@ -176,17 +176,17 @@ public class Program
                                                options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
                                            })
                         .AddDiscord(options =>
-                                           {
-                                               options.ClientId = Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_OAUTH_CLIENT_ID")!;
-                                               options.ClientSecret = Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_OAUTH_CLIENT_SECRET")!;
-                                               options.Events.OnRemoteFailure = context =>
-                                                                                {
-                                                                                    context.Response.Redirect("/");
-                                                                                    context.HandleResponse();
+                                    {
+                                        options.ClientId = Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_OAUTH_CLIENT_ID")!;
+                                        options.ClientSecret = Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_OAUTH_CLIENT_SECRET")!;
+                                        options.Events.OnRemoteFailure = context =>
+                                                                         {
+                                                                             context.Response.Redirect("/");
+                                                                             context.HandleResponse();
 
-                                                                                    return Task.CompletedTask;
-                                                                                };
-                                           })
+                                                                             return Task.CompletedTask;
+                                                                         };
+                                    })
                         .AddIdentityCookies();
         builder.Services.AddDbContext<ScruffyDbContext>();
         builder.Services.AddQuickGridEntityFrameworkAdapter();

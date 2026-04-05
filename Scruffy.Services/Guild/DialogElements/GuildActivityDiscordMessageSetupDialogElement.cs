@@ -60,17 +60,17 @@ public class GuildActivityDiscordMessageSetupDialogElement : DialogEmbedReaction
                                      .Where(obj => obj.Guild.DiscordServerId == CommandContext.Guild.Id
                                                    && obj.Type == DiscordActivityPointsType.Message)
                                      .Select(obj => new
-                                     {
-                                         obj.RoleId,
-                                         obj.Points
-                                     })
+                                                    {
+                                                        obj.RoleId,
+                                                        obj.Points
+                                                    })
                                      .ToList();
 
                 _roles = roles.Select(obj => new
-                {
-                    Role = CommandContext.Guild.Roles.FirstOrDefault(obj2 => obj2.Id == obj.RoleId),
-                    obj.Points
-                })
+                                             {
+                                                 Role = CommandContext.Guild.Roles.FirstOrDefault(obj2 => obj2.Id == obj.RoleId),
+                                                 obj.Points
+                                             })
                               .Where(obj => obj.Role != null)
                               .OrderByDescending(obj => obj.Role.Position)
                               .Select(obj => (obj.Role.Mention, obj.Points))
@@ -154,7 +154,7 @@ public class GuildActivityDiscordMessageSetupDialogElement : DialogEmbedReaction
 
                                                                                obj.Points = data.Points;
                                                                            })
-                                                 == false)
+                                                    == false)
                                                 {
                                                     LoggingService.AddInteractionLogEntry(LogEntryLevel.Error,
                                                                                           CommandContext.CustomId,
@@ -176,43 +176,43 @@ public class GuildActivityDiscordMessageSetupDialogElement : DialogEmbedReaction
                                    Emote = DiscordEmoteService.GetEditEmote(CommandContext.Client),
                                    CommandText = LocalizationGroup.GetFormattedText("EditCommand", "{0} Edit role", DiscordEmoteService.GetEditEmote(CommandContext.Client)),
                                    Func = async () =>
-                                   {
-                                       var data = await DialogHandler.RunForm<GuildActivityDiscordMessageEditFormData>(CommandContext, false)
-                                                                     .ConfigureAwait(false);
+                                          {
+                                              var data = await DialogHandler.RunForm<GuildActivityDiscordMessageEditFormData>(CommandContext, false)
+                                                                            .ConfigureAwait(false);
 
-                                       using (var dbFactory = RepositoryFactory.CreateInstance())
-                                       {
-                                           if (dbFactory.GetRepository<GuildDiscordActivityPointsAssignmentRepository>()
-                                                        .AddOrRefresh(obj => obj.Guild.DiscordServerId == CommandContext.Guild.Id
-                                                                             && obj.Type == DiscordActivityPointsType.Message
-                                                                             && obj.RoleId == data.RoleId,
-                                                                      obj =>
-                                                                      {
-                                                                          if (obj.GuildId == default)
-                                                                          {
-                                                                              obj.GuildId = dbFactory.GetRepository<GuildRepository>()
-                                                                                                     .GetQuery()
-                                                                                                     .Where(obj2 => obj2.DiscordServerId == CommandContext.Guild.Id)
-                                                                                                     .Select(obj2 => obj2.Id)
-                                                                                                     .First();
-                                                                              obj.Type = DiscordActivityPointsType.Message;
-                                                                              obj.RoleId = data.RoleId;
-                                                                          }
+                                              using (var dbFactory = RepositoryFactory.CreateInstance())
+                                              {
+                                                  if (dbFactory.GetRepository<GuildDiscordActivityPointsAssignmentRepository>()
+                                                               .AddOrRefresh(obj => obj.Guild.DiscordServerId == CommandContext.Guild.Id
+                                                                                    && obj.Type == DiscordActivityPointsType.Message
+                                                                                    && obj.RoleId == data.RoleId,
+                                                                             obj =>
+                                                                             {
+                                                                                 if (obj.GuildId == default)
+                                                                                 {
+                                                                                     obj.GuildId = dbFactory.GetRepository<GuildRepository>()
+                                                                                                            .GetQuery()
+                                                                                                            .Where(obj2 => obj2.DiscordServerId == CommandContext.Guild.Id)
+                                                                                                            .Select(obj2 => obj2.Id)
+                                                                                                            .First();
+                                                                                     obj.Type = DiscordActivityPointsType.Message;
+                                                                                     obj.RoleId = data.RoleId;
+                                                                                 }
 
-                                                                          obj.Points = data.Points;
-                                                                      })
-                                            == false)
-                                           {
-                                               LoggingService.AddInteractionLogEntry(LogEntryLevel.Error,
-                                                                                     CommandContext.CustomId,
-                                                                                     nameof(GuildActivityDiscordMessageEditFormData),
-                                                                                     null,
-                                                                                     dbFactory.LastError);
-                                           }
-                                       }
+                                                                                 obj.Points = data.Points;
+                                                                             })
+                                                      == false)
+                                                  {
+                                                      LoggingService.AddInteractionLogEntry(LogEntryLevel.Error,
+                                                                                            CommandContext.CustomId,
+                                                                                            nameof(GuildActivityDiscordMessageEditFormData),
+                                                                                            null,
+                                                                                            dbFactory.LastError);
+                                                  }
+                                              }
 
-                                       return true;
-                                   }
+                                              return true;
+                                          }
                                });
 
                 _reactions.Add(new ReactionData<bool>
@@ -220,26 +220,25 @@ public class GuildActivityDiscordMessageSetupDialogElement : DialogEmbedReaction
                                    Emote = DiscordEmoteService.GetTrashCanEmote(CommandContext.Client),
                                    CommandText = LocalizationGroup.GetFormattedText("DeleteCommand", "{0} Delete role", DiscordEmoteService.GetTrashCanEmote(CommandContext.Client)),
                                    Func = async () =>
-                                   {
-                                       var roleId = await RunSubElement<GuildActivityDiscordMessageRemoveDialogElement, ulong>()
-                                                        .ConfigureAwait(false);
+                                          {
+                                              var roleId = await RunSubElement<GuildActivityDiscordMessageRemoveDialogElement, ulong>().ConfigureAwait(false);
 
-                                       using (var dbFactory = RepositoryFactory.CreateInstance())
-                                       {
-                                           if (dbFactory.GetRepository<GuildDiscordActivityPointsAssignmentRepository>()
-                                                        .Remove(obj => obj.Guild.DiscordServerId == CommandContext.Guild.Id && obj.Type == DiscordActivityPointsType.Message && obj.RoleId == roleId)
-                                            == false)
-                                           {
-                                               LoggingService.AddInteractionLogEntry(LogEntryLevel.Error,
-                                                                                     CommandContext.CustomId,
-                                                                                     nameof(GuildActivityDiscordMessagePointsDialogElement),
-                                                                                     null,
-                                                                                     dbFactory.LastError);
-                                           }
-                                       }
+                                              using (var dbFactory = RepositoryFactory.CreateInstance())
+                                              {
+                                                  if (dbFactory.GetRepository<GuildDiscordActivityPointsAssignmentRepository>()
+                                                               .Remove(obj => obj.Guild.DiscordServerId == CommandContext.Guild.Id && obj.Type == DiscordActivityPointsType.Message && obj.RoleId == roleId)
+                                                      == false)
+                                                  {
+                                                      LoggingService.AddInteractionLogEntry(LogEntryLevel.Error,
+                                                                                            CommandContext.CustomId,
+                                                                                            nameof(GuildActivityDiscordMessagePointsDialogElement),
+                                                                                            null,
+                                                                                            dbFactory.LastError);
+                                                  }
+                                              }
 
-                                       return true;
-                                   }
+                                              return true;
+                                          }
                                });
             }
 

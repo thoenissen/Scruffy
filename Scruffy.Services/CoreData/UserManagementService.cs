@@ -123,19 +123,19 @@ public class UserManagementService
 
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
-            var userData =  await dbFactory.GetRepository<DiscordAccountRepository>()
-                                           .GetQuery()
-                                           .Where(obj => obj.Id == discordUser.Id)
-                                           .Select(obj => new UserData
-                                                          {
-                                                              Id = obj.UserId,
-                                                              ExperienceLevelRank = obj.User.RaidExperienceLevel != null
-                                                                                        ? obj.User.RaidExperienceLevel.Rank
-                                                                                        : 0,
-                                                              IsDataStorageAccepted = obj.User.IsDataStorageAccepted
-                                                          })
-                                           .FirstAsync()
-                                           .ConfigureAwait(false);
+            var userData = await dbFactory.GetRepository<DiscordAccountRepository>()
+                                          .GetQuery()
+                                          .Where(obj => obj.Id == discordUser.Id)
+                                          .Select(obj => new UserData
+                                                         {
+                                                             Id = obj.UserId,
+                                                             ExperienceLevelRank = obj.User.RaidExperienceLevel != null
+                                                                                       ? obj.User.RaidExperienceLevel.Rank
+                                                                                       : 0,
+                                                             IsDataStorageAccepted = obj.User.IsDataStorageAccepted
+                                                         })
+                                          .FirstAsync()
+                                          .ConfigureAwait(false);
 
             if (userData.ExperienceLevelRank == 0)
             {

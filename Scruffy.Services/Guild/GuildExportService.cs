@@ -331,8 +331,8 @@ public class GuildExportService : LocatedServiceBase
                             var item = items.FirstOrDefault(obj => obj.Id == entry.ItemId);
                             var tradingPostPrice = tradingsPostValues.FirstOrDefault(obj => obj.Id == entry.ItemId);
 
-                            var itemName = entry.ItemId == null ?
-                                               upgrades.FirstOrDefault(obj => obj.Id == entry.UpgradeId)?.Name
+                            var itemName = entry.ItemId == null
+                                               ? upgrades.FirstOrDefault(obj => obj.Id == entry.UpgradeId)?.Name
                                                : item?.Name;
 
                             if (entry.ItemId == null
@@ -457,8 +457,8 @@ public class GuildExportService : LocatedServiceBase
                             var item = items.FirstOrDefault(obj => obj.Id == entry.ItemId);
                             var tradingPostPrice = tradingsPostValues.FirstOrDefault(obj => obj.Id == entry.ItemId);
 
-                            var itemName = entry.ItemId == null ?
-                                               upgrades.FirstOrDefault(obj => obj.Id == entry.UpgradeId)?.Name
+                            var itemName = entry.ItemId == null
+                                               ? upgrades.FirstOrDefault(obj => obj.Id == entry.UpgradeId)?.Name
                                                : item?.Name;
 
                             if (entry.ItemId == null
@@ -806,13 +806,13 @@ public class GuildExportService : LocatedServiceBase
                                                                  && obj.Guild.DiscordServerId == commandContext.Guild.Id
                                                                  && obj.Type == GuildRankPointType.Login)
                                                    .Select(obj => new
-                                                   {
-                                                       obj.Date,
-                                                       DiscordUserId = discordAccounts.Where(obj2 => obj2.UserId == obj.UserId)
-                                                                                      .Select(obj2 => (ulong?)obj2.Id)
-                                                                                      .FirstOrDefault(),
-                                                       obj.Points
-                                                   })
+                                                                  {
+                                                                      obj.Date,
+                                                                      DiscordUserId = discordAccounts.Where(obj2 => obj2.UserId == obj.UserId)
+                                                                                                     .Select(obj2 => (ulong?)obj2.Id)
+                                                                                                     .FirstOrDefault(),
+                                                                      obj.Points
+                                                                  })
                                                    .ToList())
                     {
                         await writer.WriteLineAsync($"{entry.Date:yyyy-MM-dd};{(members.TryGetValue(entry.DiscordUserId ?? 0, out var userDisplayName) ? userDisplayName : "Unknown")};{entry.Points}")

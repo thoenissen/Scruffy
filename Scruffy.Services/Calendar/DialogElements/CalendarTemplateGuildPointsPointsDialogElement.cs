@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 
 using Discord;
 
@@ -31,7 +31,7 @@ public class CalendarTemplateGuildPointsPointsDialogElement : DialogMessageEleme
     public override string GetMessage()
     {
         return LocalizationGroup.GetText("Message",
-            "Please enter the number of guild points which can be earned by this event.");
+                                         "Please enter the number of guild points which can be earned by this event.");
     }
 
     /// <inheritdoc/>

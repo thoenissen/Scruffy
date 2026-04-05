@@ -439,7 +439,7 @@ public class GuildRankService : LocatedServiceBase
                                                        new SqlParameter("@to", to),
                                                        new SqlParameter("@guildId", guild.Id))
                                    .ConfigureAwait(false)
-                 == null)
+                    == null)
                 {
                     LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(GuildRankService), "Daily login", null, dbFactory.LastError);
                 }
@@ -509,7 +509,7 @@ public class GuildRankService : LocatedServiceBase
                                                        new SqlParameter("@to", to),
                                                        new SqlParameter("@guildId", guild.Id))
                                    .ConfigureAwait(false)
-                 == null)
+                    == null)
                 {
                     LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(GuildRankService), "Representation points", null, dbFactory.LastError);
                 }
@@ -585,7 +585,7 @@ public class GuildRankService : LocatedServiceBase
                                                        new SqlParameter("@to", to),
                                                        new SqlParameter("@guildId", guild.Id))
                                    .ConfigureAwait(false)
-                 == null)
+                    == null)
                 {
                     LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(GuildRankService), "Achievement points", null, dbFactory.LastError);
                 }
@@ -654,7 +654,7 @@ public class GuildRankService : LocatedServiceBase
                                                        new SqlParameter("@to", to),
                                                        new SqlParameter("@guildId", guild.Id))
                                    .ConfigureAwait(false)
-                 == null)
+                    == null)
                 {
                     LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(GuildRankService), "Membership points", null, dbFactory.LastError);
                 }
@@ -774,7 +774,7 @@ public class GuildRankService : LocatedServiceBase
                                                        new SqlParameter("@to", to),
                                                        new SqlParameter("@guildId", guild.Id))
                                    .ConfigureAwait(false)
-                 == null)
+                    == null)
                 {
                     LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(GuildRankService), "Donations", null, dbFactory.LastError);
                 }
@@ -837,7 +837,7 @@ public class GuildRankService : LocatedServiceBase
                                                        new SqlParameter("@to", to),
                                                        new SqlParameter("@guildId", guild.Id))
                                    .ConfigureAwait(false)
-                 == null)
+                    == null)
                 {
                     LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(GuildRankService), "Discord voice activity points", null, dbFactory.LastError);
                 }
@@ -900,7 +900,7 @@ public class GuildRankService : LocatedServiceBase
                                                        new SqlParameter("@to", to),
                                                        new SqlParameter("@guildId", guild.Id))
                                    .ConfigureAwait(false)
-                 == null)
+                    == null)
                 {
                     LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(GuildRankService), "Discord message activity points", null, dbFactory.LastError);
                 }
@@ -985,7 +985,7 @@ public class GuildRankService : LocatedServiceBase
                                                        new SqlParameter("@to", to),
                                                        new SqlParameter("@guildId", guild.Id))
                                    .ConfigureAwait(false)
-                 == null)
+                    == null)
                 {
                     LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(GuildRankService), "Event points", null, dbFactory.LastError);
                 }
@@ -1070,7 +1070,7 @@ public class GuildRankService : LocatedServiceBase
                                                        new SqlParameter("@to", to),
                                                        new SqlParameter("@guildId", guild.Id))
                                    .ConfigureAwait(false)
-                 == null)
+                    == null)
                 {
                     LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(GuildRankService), "Development points", null, dbFactory.LastError);
                 }
