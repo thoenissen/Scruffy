@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.QuickChart;
 /// </summary>
 public class ScalesCollection
 {
+    #region Properties
+
     /// <summary>
     /// X-Axes
     /// </summary>
@@ -18,4 +20,6 @@ public class ScalesCollection
     /// </summary>
     [JsonProperty("xAxes")]
     public List<XAxis> XAxes { get; set; }
+
+    #endregion // Properties
 }

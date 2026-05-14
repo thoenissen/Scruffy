@@ -114,7 +114,7 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
     /// Response general processing message
     /// </summary>
     /// <param name="ephemeral">Ephemeral response</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<IUserMessage> DeferProcessing(bool ephemeral = false)
     {
         try
@@ -142,7 +142,7 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
     /// <param name="title">Title</param>
     /// <param name="message">Message</param>
     /// <param name="footer">Footer</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<IUserMessage> DeferProcessing(string title, string message, string footer)
     {
         try
@@ -168,7 +168,7 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
     /// <summary>
     /// Acknowledge the interaction
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task DeferAsync()
     {
         try
@@ -188,7 +188,7 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
     /// <param name="customId">Custom ID</param>
     /// <param name="modifyModal">Modal modification</param>
     /// <typeparam name="TModal">Modal data</typeparam>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task RespondWithModalAsync<TModal>(string customId, Action<ModalBuilder> modifyModal = null)
         where TModal : class, IModal
     {
@@ -206,7 +206,7 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
     /// <summary>
     /// Delete original response
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task DeleteOriginalResponse()
     {
         try
@@ -251,17 +251,17 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
     /// <summary>
     /// Reply to the user message or command
     /// </summary>
-    /// <param name="text">The message to be sent.</param>
-    /// <param name="isTTS">Determines whether the message should be read aloud by Discord or not.</param>
-    /// <param name="embed">The <see cref="EmbedType.Rich"/> <see cref="Embed"/> to be sent.</param>
-    /// <param name="options">The options to be used when sending the request.</param>
+    /// <param name="text">The message to be sent</param>
+    /// <param name="isTTS">Determines whether the message should be read aloud by Discord or not</param>
+    /// <param name="embed">The <see cref="EmbedType.Rich"/> <see cref="Embed"/> to be sent</param>
+    /// <param name="options">The options to be used when sending the request</param>
     /// <param name="allowedMentions">Specifies if notifications are sent for mentioned users and roles in the message <paramref name="text"/>. If <c>null</c>, all mentioned roles and users will be notified./// </param>
-    /// <param name="components">The message components to be included with this message. Used for interactions.</param>
-    /// <param name="stickers">A collection of stickers to send with the message.</param>
-    /// <param name="embeds">A array of <see cref="Embed"/>s to send with this response. Max 10.</param>
+    /// <param name="components">The message components to be included with this message. Used for interactions</param>
+    /// <param name="stickers">A collection of stickers to send with the message</param>
+    /// <param name="embeds">A array of <see cref="Embed"/>s to send with this response. Max 10</param>
     /// <param name="ephemeral">Should the message be posted ephemeral if possible?</param>
     /// <param name="attachments">File attachments</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<IUserMessage> ReplyAsync(string text = null, bool isTTS = false, Embed embed = null, RequestOptions options = null, AllowedMentions allowedMentions = null, MessageComponent components = null, ISticker[] stickers = null, Embed[] embeds = null, bool ephemeral = false, IEnumerable<FileAttachment> attachments = null)
     {
         try
@@ -361,18 +361,18 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
     /// <summary>
     /// Reply to the user message or command
     /// </summary>
-    /// <param name="text">The message to be sent.</param>
-    /// <param name="isTTS">Determines whether the message should be read aloud by Discord or not.</param>
-    /// <param name="embed">The <see cref="EmbedType.Rich"/> <see cref="Embed"/> to be sent.</param>
-    /// <param name="options">The options to be used when sending the request.</param>
+    /// <param name="text">The message to be sent</param>
+    /// <param name="isTTS">Determines whether the message should be read aloud by Discord or not</param>
+    /// <param name="embed">The <see cref="EmbedType.Rich"/> <see cref="Embed"/> to be sent</param>
+    /// <param name="options">The options to be used when sending the request</param>
     /// <param name="allowedMentions">Specifies if notifications are sent for mentioned users and roles in the message <paramref name="text"/>. If <c>null</c>, all mentioned roles and users will be notified./// </param>
-    /// <param name="messageReference">The message references to be included. Used to reply to specific messages.</param>
-    /// <param name="components">The message components to be included with this message. Used for interactions.</param>
-    /// <param name="stickers">A collection of stickers to send with the message.</param>
-    /// <param name="embeds">A array of <see cref="Embed"/>s to send with this response. Max 10.</param>
+    /// <param name="messageReference">The message references to be included. Used to reply to specific messages</param>
+    /// <param name="components">The message components to be included with this message. Used for interactions</param>
+    /// <param name="stickers">A collection of stickers to send with the message</param>
+    /// <param name="embeds">A array of <see cref="Embed"/>s to send with this response. Max 10</param>
     /// <param name="ephemeral">Should the message be posted ephemeral if possible?</param>
     /// <param name="attachments">File attachments</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<IUserMessage> SendMessageAsync(string text = null, bool isTTS = false, Embed embed = null, RequestOptions options = null, AllowedMentions allowedMentions = null, MessageReference messageReference = null, MessageComponent components = null, ISticker[] stickers = null, Embed[] embeds = null, bool ephemeral = false, IEnumerable<FileAttachment> attachments = null)
     {
         try
@@ -464,7 +464,7 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
     /// </summary>
     /// <param name="message">Message</param>
     /// <param name="func">Properties</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task ModifyMessageAsync(IUserMessage message, Action<MessageProperties> func)
     {
         if (_interaction != null
@@ -484,7 +484,7 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
     /// Delete messages
     /// </summary>
     /// <param name="messages">Messages</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task DeleteMessages(List<IMessage> messages)
     {
         if (Channel is ITextChannel textChannel)
@@ -511,33 +511,33 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
     #region IInteractionContext
 
     /// <summary>
-    /// Gets the <see cref="DiscordSocketClient" /> that the command is executed with.
+    /// Gets the <see cref="DiscordSocketClient" /> that the command is executed with
     /// </summary>
     public DiscordSocketClient Client { get; }
 
     /// <summary>
-    /// Gets the <see cref="IDiscordClient" /> that the command is executed with.
+    /// Gets the <see cref="IDiscordClient" /> that the command is executed with
     /// </summary>
     IDiscordClient IInteractionContext.Client => Client;
 
     /// <summary>
-    /// Gets the guild the interaction originated from.
+    /// Gets the guild the interaction originated from
     /// </summary>
-    /// <remarks> Will be <see langword="null" /> if the interaction originated from a DM channel or the interaction was a Context Command interaction. </remarks>
+    /// <remarks> Will be <see langword="null" /> if the interaction originated from a DM channel or the interaction was a Context Command interaction </remarks>
     public IGuild Guild { get; private set; }
 
     /// <summary>
-    /// Gets the channel the interaction originated from.
+    /// Gets the channel the interaction originated from
     /// </summary>
     public IMessageChannel Channel { get; private set; }
 
     /// <summary>
-    /// Gets the user who invoked the interaction event.
+    /// Gets the user who invoked the interaction event
     /// </summary>
     public IUser User { get; private set; }
 
     /// <summary>
-    /// Gets the underlying interaction.
+    /// Gets the underlying interaction
     /// </summary>
     IDiscordInteraction IInteractionContext.Interaction => _interaction;
 
@@ -559,18 +559,18 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
     #region IRouteMatchContainer
 
     /// <summary>
-    /// Sets the <see cref="P:IRouteMatchContainer.SegmentMatches" /> property of this container.
+    /// Sets the <see cref="P:IRouteMatchContainer.SegmentMatches" /> property of this container
     /// </summary>
-    /// <param name="segmentMatches">The collection of captured route segments.</param>
+    /// <param name="segmentMatches">The collection of captured route segments</param>
     void IRouteMatchContainer.SetSegmentMatches(IEnumerable<IRouteSegmentMatch> segmentMatches)
     {
         _segmentMatches = segmentMatches.ToImmutableArray();
     }
 
     /// <summary>
-    /// Gets the collection of captured route segments in this container.
+    /// Gets the collection of captured route segments in this container
     /// </summary>
-    /// <returns>A collection of captured route segments.</returns>
+    /// <returns>A collection of captured route segments</returns>
     IEnumerable<IRouteSegmentMatch> IRouteMatchContainer.SegmentMatches => _segmentMatches;
 
     #endregion // IRouteMatchContainer

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+
 using Scruffy.Data.Enumerations.GuildWars2;
 
 namespace Scruffy.Data.Entity.Tables.GuildWars2.GameData;
@@ -10,6 +11,8 @@ namespace Scruffy.Data.Entity.Tables.GuildWars2.GameData;
 [Table("GuildWarsItems")]
 public class GuildWarsItemEntity
 {
+    #region Properties
+
     /// <summary>
     /// Id of the item
     /// </summary>
@@ -43,7 +46,9 @@ public class GuildWarsItemEntity
     public DateTime? CustomValueValidDate { get; set; }
 
     /// <summary>
-    /// Should the value be reduced after n inserts.
+    /// Should the value be reduced after n inserts
     /// </summary>
     public bool IsCustomValueThresholdActivated { get; set; }
+
+    #endregion // Properties
 }

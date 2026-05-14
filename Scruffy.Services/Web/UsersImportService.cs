@@ -54,7 +54,7 @@ public class UsersImportService : LocatedServiceBase
     /// Import discord users
     /// </summary>
     /// <param name="discordServer">Discord server</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task ImportDiscordUsers(IGuild discordServer)
     {
         var serverConfiguration = _dbFactory.GetRepository<ServerConfigurationRepository>()
@@ -132,7 +132,7 @@ public class UsersImportService : LocatedServiceBase
     /// </summary>
     /// <param name="discordServer">Discord server</param>
     /// <param name="roleId">Role id</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task ImportDevelopers(IGuild discordServer, ulong roleId)
     {
         var developers = new List<long>();

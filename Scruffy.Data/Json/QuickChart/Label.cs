@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.QuickChart;
 /// </summary>
 public class Label
 {
+    #region Properties
+
     /// <summary>
     /// Color
     /// </summary>
@@ -18,4 +20,6 @@ public class Label
     /// </summary>
     [JsonProperty("text")]
     public string Text { get; set; }
+
+    #endregion // Properties
 }

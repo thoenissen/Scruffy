@@ -5,7 +5,7 @@ using Scruffy.Data.Services.DpsReport;
 namespace Scruffy.Data.Enumerations.DpsReport;
 
 /// <summary>
-/// Represents a single DPS report entry for a raid or encounter.
+/// Represents a single DPS report entry for a raid or encounter
 /// </summary>
 public class DpsReport
 {

@@ -7,14 +7,16 @@ namespace Scruffy.Data.Json.GuildWars2.Guild;
 /// </summary>
 public class GuildLogEntry
 {
+    #region Properties
+
     /// <summary>
-    /// An ID to uniquely identify the log entry within the scope of the guild. Not globally unique.
+    /// An ID to uniquely identify the log entry within the scope of the guild. Not globally unique
     /// </summary>
     [JsonProperty("id")]
     public int Id { get; set; }
 
     /// <summary>
-    /// ISO-8601 standard timestamp for when the log entry was created.
+    /// ISO-8601 standard timestamp for when the log entry was created
     /// </summary>
     [JsonProperty("time")]
     public DateTime Time { get; set; }
@@ -54,25 +56,25 @@ public class GuildLogEntry
     /// - influence — Additional fields include:
     ///   - activity(string) — Activity that generated influence for the guild.Possible values: daily_login, gifted
     ///   - total_participants (number) — Number of members.
-    ///   - participants (array of strings) — An array of account names of participants.Strings may be null.
+    ///   - participants (array of strings) — An array of account names of participants.Strings may be null
     /// </summary>
     [JsonProperty("type")]
     public string Type { get; set; }
 
     /// <summary>
-    /// The account name of the guild member who generated this log entry.
+    /// The account name of the guild member who generated this log entry
     /// </summary>
     [JsonProperty("user")]
     public string User { get; set; }
 
     /// <summary>
-    ///  Account name of the guild member which kicked the player.
+    ///  Account name of the guild member which kicked the player
     /// </summary>
     [JsonProperty("kicked_by")]
     public string KickedBy { get; set; }
 
     /// <summary>
-    /// Account name of the guild member which invited the player.
+    /// Account name of the guild member which invited the player
     /// </summary>
     [JsonProperty("invited_by")]
     public string InvitedBy { get; set; }
@@ -87,49 +89,49 @@ public class GuildLogEntry
     public string Operation { get; set; }
 
     /// <summary>
-    /// The item ID that was deposited into the treasury.
+    /// The item ID that was deposited into the treasury
     /// </summary>
     [JsonProperty("item_id")]
     public int? ItemId { get; set; }
 
     /// <summary>
-    /// How many of the specified item was deposited.
+    /// How many of the specified item was deposited
     /// </summary>
     [JsonProperty("count")]
     public int? Count { get; set; }
 
     /// <summary>
-    /// How many coins (in copper) were deposited.
+    /// How many coins (in copper) were deposited
     /// </summary>
     [JsonProperty("coins")]
     public int? Coins { get; set; }
 
     /// <summary>
-    /// Account name of the guild member which changed the player rank.
+    /// Account name of the guild member which changed the player rank
     /// </summary>
     [JsonProperty("changed_by")]
     public string ChangedBy { get; set; }
 
     /// <summary>
-    /// Old rank name.
+    /// Old rank name
     /// </summary>
     [JsonProperty("old_rank")]
     public string OldRank { get; set; }
 
     /// <summary>
-    /// New rank name.
+    /// New rank name
     /// </summary>
     [JsonProperty("new_rank")]
     public string NewRank { get; set; }
 
     /// <summary>
-    /// The upgrade ID which was completed.
+    /// The upgrade ID which was completed
     /// </summary>
     [JsonProperty("upgrade_id")]
     public int? UpgradeId { get; set; }
 
     /// <summary>
-    /// May be added if the upgrade was created through a scribe station by a scribe.
+    /// May be added if the upgrade was created through a scribe station by a scribe
     /// </summary>
     [JsonProperty("recipe_id ")]
     public int? RecipeId { get; set; }
@@ -151,20 +153,22 @@ public class GuildLogEntry
     public string Activity { get; set; }
 
     /// <summary>
-    /// Number of members.
+    /// Number of members
     /// </summary>
     [JsonProperty("total_participants")]
     public int? TotalParticipants { get; set; }
 
     /// <summary>
-    /// An array of account names of participants. Strings may be null.
+    /// An array of account names of participants. Strings may be null
     /// </summary>
     [JsonProperty("participants")]
     public List<string> Participants { get; set; }
 
     /// <summary>
-    /// The new MOTD.
+    /// The new MOTD
     /// </summary>
     [JsonProperty("motd")]
     public string MessageOfTheDay { get; set; }
+
+    #endregion // Properties
 }

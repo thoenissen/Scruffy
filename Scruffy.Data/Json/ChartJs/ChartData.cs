@@ -5,6 +5,8 @@
 /// </summary>
 public class ChartData
 {
+    #region Properties
+
     /// <summary>
     /// Datasets used in the chart
     /// </summary>
@@ -14,4 +16,6 @@ public class ChartData
     /// Labels for the chart
     /// </summary>
     public string[] Labels { get; set; }
+
+    #endregion // Properties
 }

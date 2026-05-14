@@ -40,7 +40,7 @@ public class GitHubConnector
     /// </summary>
     /// <param name="user">User</param>
     /// <param name="repository">Repository</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<List<GitHubBranch>> GetBranches(string user, string repository)
     {
         using (var response = await _clientFactory.CreateClient("GitHub")
@@ -61,7 +61,7 @@ public class GitHubConnector
     /// <param name="user">User</param>
     /// <param name="repository">Repository</param>
     /// <param name="startCommitSha">SHA of first commit</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<List<GitHubCommit>> GetCommits(string user, string repository, string startCommitSha)
     {
         using (var response = await _clientFactory.CreateClient("GitHub")

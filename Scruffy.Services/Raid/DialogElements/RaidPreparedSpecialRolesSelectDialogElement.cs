@@ -133,5 +133,6 @@ public class RaidPreparedSpecialRolesSelectDialogElement : DialogEmbedMultiSelec
 
         return _entries;
     }
+
+    #endregion // DialogEmbedMultiSelectSelectMenuElementBase<long>
 }
-#endregion // DialogEmbedMultiSelectSelectMenuElementBase<long>

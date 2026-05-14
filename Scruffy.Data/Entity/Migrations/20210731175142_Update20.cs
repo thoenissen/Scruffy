@@ -9,6 +9,8 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update20 : Migration
     {
+        #region Migration
+
         /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -42,5 +44,7 @@ namespace Scruffy.Data.Entity.Migrations
                                                oldType: "bigint",
                                                oldNullable: true);
         }
+
+        #endregion // Migration
     }
 }

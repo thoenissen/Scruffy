@@ -7,6 +7,8 @@ namespace Scruffy.Data.Entity.Migrations;
 /// <inheritdoc />
 public partial class Update85 : Migration
 {
+    #region Migration
+
     /// <inheritdoc />
     protected override void Up(MigrationBuilder migrationBuilder)
     {
@@ -66,4 +68,6 @@ public partial class Update85 : Migration
         migrationBuilder.DropTable("DpsReports");
         migrationBuilder.DropTable("UserDpsReportsConfigurations");
     }
+
+    #endregion // Migration
 }

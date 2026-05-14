@@ -47,7 +47,7 @@ public class GuildMessageComponentCommandModule : LocatedInteractionModuleBase
     /// <param name="page">Page number</param>
     /// <param name="unused">unused</param>
     /// <param name="pointTypeRaw">Point type</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [ComponentInteraction($"{Group};{CommandNavigateToPageGuildRanking};*;*;*")]
     public async Task NavigateToPageGuildRanking(int page, string unused, int? pointTypeRaw)
     {
@@ -70,7 +70,7 @@ public class GuildMessageComponentCommandModule : LocatedInteractionModuleBase
     /// Change the type
     /// </summary>
     /// <param name="type">Type</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [ComponentInteraction($"{Group};{CommandNavigateToPageGuildRanking};")]
     public async Task ChangeTypeOfGuildRanking(string type)
     {

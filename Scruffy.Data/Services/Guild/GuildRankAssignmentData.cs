@@ -5,6 +5,8 @@
 /// </summary>
 public class GuildRankAssignmentData
 {
+    #region Properties
+
     /// <summary>
     /// Id of the rank
     /// </summary>
@@ -19,4 +21,6 @@ public class GuildRankAssignmentData
     /// Slots
     /// </summary>
     public int Slots { get; set; }
+
+    #endregion // Properties
 }

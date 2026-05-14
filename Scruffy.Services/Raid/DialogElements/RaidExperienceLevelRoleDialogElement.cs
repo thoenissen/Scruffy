@@ -38,10 +38,12 @@ public class RaidExperienceLevelRoleDialogElement : DialogEmbedMessageElementBas
     public override EmbedBuilder GetMessage()
     {
         var builder = new EmbedBuilder();
+
         builder.WithTitle(LocalizationGroup.GetText("ChooseLevelTitle", "Raid experience level role selection"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseLevelDescription", "Please choose one of the following roles:"));
 
         _levels = [];
+
         var levelsFieldsText = new StringBuilder();
 
         levelsFieldsText.Append('`');

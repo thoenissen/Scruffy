@@ -43,10 +43,12 @@ public class CalendarScheduleScheduleDialogElement : DialogEmbedMessageElementBa
     public override EmbedBuilder GetMessage()
     {
         var builder = new EmbedBuilder();
+
         builder.WithTitle(LocalizationGroup.GetText("ChooseTypeTitle", "Type selection"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseTypeDescription", "Please choose one of the following types:"));
 
         _types = [];
+
         var typesField = new StringBuilder();
 
         var i = 1;

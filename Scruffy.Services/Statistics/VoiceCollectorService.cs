@@ -66,7 +66,7 @@ public sealed class VoiceCollectorService : SingletonLocatedServiceBase, IDispos
     /// <summary>
     /// Start collecting voice sessions
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task StartCollecting()
     {
         await using (await _lockFactory.CreateLockAsync().ConfigureAwait(false))
@@ -132,7 +132,7 @@ public sealed class VoiceCollectorService : SingletonLocatedServiceBase, IDispos
     /// <summary>
     /// Client connected
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task OnConnected()
     {
         try
@@ -152,7 +152,7 @@ public sealed class VoiceCollectorService : SingletonLocatedServiceBase, IDispos
     /// Client disconnected
     /// </summary>
     /// <param name="arg">Arguments</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private Task OnDisconnected(Exception arg)
     {
         FlushAllSessions();
@@ -166,7 +166,7 @@ public sealed class VoiceCollectorService : SingletonLocatedServiceBase, IDispos
     /// <param name="user">User</param>
     /// <param name="before">State before</param>
     /// <param name="after">State after</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private Task OnUserVoiceStateUpdated(SocketUser user, SocketVoiceState before, SocketVoiceState after)
     {
         if (user.IsBot)

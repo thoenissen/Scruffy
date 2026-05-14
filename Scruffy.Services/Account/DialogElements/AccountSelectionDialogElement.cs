@@ -40,10 +40,12 @@ public class AccountSelectionDialogElement : DialogEmbedMessageElementBase<strin
     public override EmbedBuilder GetMessage()
     {
         var builder = new EmbedBuilder();
+
         builder.WithTitle(LocalizationGroup.GetText("ChooseTitle", "Account selection"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseDescription", "Please choose one of the following accounts:"));
 
         _accounts = [];
+
         var typesField = new StringBuilder();
 
         var i = 1;

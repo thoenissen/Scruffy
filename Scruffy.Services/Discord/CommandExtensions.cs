@@ -205,6 +205,7 @@ internal static class CommandExtensions
         args.AddRange(moduleInfo.ContextCommands?.Select(x => x.ToApplicationCommandProps()));
 
         var options = new List<ApplicationCommandOptionProperties>();
+
         options.AddRange(moduleInfo.SubModules?.SelectMany(x => x.ParseSubModule(args)));
 
         foreach (var command in moduleInfo.SlashCommands)

@@ -7,6 +7,8 @@ namespace Scruffy.Data.Entity.Migrations;
 /// <inheritdoc />
 public partial class Update93 : Migration
 {
+    #region Migration
+
     /// <inheritdoc />
     protected override void Up(MigrationBuilder migrationBuilder)
     {
@@ -26,4 +28,6 @@ public partial class Update93 : Migration
         migrationBuilder.CreateIndex(name: "IX_RaidRegistrations_LineUpRoleId", table: "RaidRegistrations", column: "LineUpRoleId");
         migrationBuilder.AddForeignKey(name: "FK_RaidRegistrations_RaidRoles_LineUpRoleId", table: "RaidRegistrations", column: "LineUpRoleId", principalTable: "RaidRoles", principalColumn: "Id");
     }
+
+    #endregion // Migration
 }

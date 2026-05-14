@@ -9,6 +9,8 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update40 : Migration
     {
+        #region Migration
+
         /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -22,5 +24,7 @@ namespace Scruffy.Data.Entity.Migrations
             migrationBuilder.DropColumn(name: "DailyAchievementPoints", table: "GuildWarsAccounts");
             migrationBuilder.DropColumn(name: "MonthlyAchievementPoints", table: "GuildWarsAccounts");
         }
+
+        #endregion // Migration
     }
 }

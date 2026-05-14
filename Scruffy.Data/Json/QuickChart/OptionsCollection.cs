@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.QuickChart;
 /// </summary>
 public class OptionsCollection
 {
+    #region Properties
+
     /// <summary>
     /// Annotations
     /// </summary>
@@ -36,4 +38,6 @@ public class OptionsCollection
     /// </summary>
     [JsonProperty("legend")]
     public ChartLegendConfiguration Legend { get; set; }
+
+    #endregion // Properties
 }

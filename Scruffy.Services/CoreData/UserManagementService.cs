@@ -24,7 +24,7 @@ public class UserManagementService
     /// Checks the given user and creates a new entry of the user doesn't exists
     /// </summary>
     /// <param name="discordUser">Discord user</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task CheckDiscordAccountAsync(IUser discordUser)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
@@ -60,7 +60,7 @@ public class UserManagementService
     /// Get user raid experience rank
     /// </summary>
     /// <param name="discordUser">Discord user</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<int> GetRaidExperienceLevelRankByDiscordUserId(IUser discordUser)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
@@ -116,7 +116,7 @@ public class UserManagementService
     /// Get user data
     /// </summary>
     /// <param name="discordUser">Discord user</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<UserData> GetUserByDiscordAccountId(IUser discordUser)
     {
         await CheckDiscordAccountAsync(discordUser).ConfigureAwait(false);

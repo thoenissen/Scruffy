@@ -40,10 +40,12 @@ public class CalendarScheduleSelectionDialogElement : DialogEmbedMessageElementB
     public override EmbedBuilder GetMessage()
     {
         var builder = new EmbedBuilder();
+
         builder.WithTitle(LocalizationGroup.GetText("ChooseScheduleTitle", "Calendar schedule selection"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseScheduleDescription", "Please choose one of the following calendar schedules:"));
 
         _schedules = [];
+
         var levelsFieldsText = new StringBuilder();
 
         using (var dbFactory = RepositoryFactory.CreateInstance())

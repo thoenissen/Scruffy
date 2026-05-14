@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.QuickChart;
 /// </summary>
 public class OutLabelsCollection
 {
+    #region Properties
+
     /// <summary>
     /// Text
     /// </summary>
@@ -18,4 +20,6 @@ public class OutLabelsCollection
     /// </summary>
     [JsonProperty("stretch")]
     public int Stretch { get; set; }
+
+    #endregion // Properties
 }

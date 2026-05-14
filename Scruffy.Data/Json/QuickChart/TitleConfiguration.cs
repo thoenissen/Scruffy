@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.QuickChart;
 /// </summary>
 public class TitleConfiguration
 {
+    #region Properties
+
     /// <summary>
     /// Display
     /// </summary>
@@ -30,4 +32,6 @@ public class TitleConfiguration
     /// </summary>
     [JsonProperty("fontSize")]
     public int FontSize { get; set; }
+
+    #endregion // Properties
 }

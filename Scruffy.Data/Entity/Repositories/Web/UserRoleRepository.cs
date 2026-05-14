@@ -33,7 +33,7 @@ public class UserRoleRepository : RepositoryBase<UserRoleQueryable, UserRoleEnti
     /// Bulk insert developers
     /// </summary>
     /// <param name="developers">Developers</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<bool> BulkInsertDevelopers(List<long> developers)
     {
         return BulkInsertRoles(developers, 1);
@@ -43,7 +43,7 @@ public class UserRoleRepository : RepositoryBase<UserRoleQueryable, UserRoleEnti
     /// Bulk insert administrators
     /// </summary>
     /// <param name="administrators">Administrators</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<bool> BulkInsertAdministrators(List<long> administrators)
     {
         return BulkInsertRoles(administrators, 2);
@@ -53,7 +53,7 @@ public class UserRoleRepository : RepositoryBase<UserRoleQueryable, UserRoleEnti
     /// Bulk insert members
     /// </summary>
     /// <param name="members">Members</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<bool> BulkInsertMembers(List<long> members)
     {
         return BulkInsertRoles(members, 3);
@@ -63,7 +63,7 @@ public class UserRoleRepository : RepositoryBase<UserRoleQueryable, UserRoleEnti
     /// Bulk insert privileged members
     /// </summary>
     /// <param name="privilegedMembers">Privileged members</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<bool> BulkInsertPrivilegedMembers(List<long> privilegedMembers)
     {
         return BulkInsertRoles(privilegedMembers, 4);
@@ -74,7 +74,7 @@ public class UserRoleRepository : RepositoryBase<UserRoleQueryable, UserRoleEnti
     /// </summary>
     /// <param name="users">Users</param>
     /// <param name="roleId">Role id</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task<bool> BulkInsertRoles(List<long> users, long roleId)
     {
         var success = false;
@@ -101,6 +101,7 @@ public class UserRoleRepository : RepositoryBase<UserRoleQueryable, UserRoleEnti
                 }
 
                 var table = new DataTable();
+
                 table.Columns.Add(nameof(UserRoleEntity.UserId), typeof(long));
                 table.Columns.Add(nameof(UserRoleEntity.RoleId), typeof(long));
 

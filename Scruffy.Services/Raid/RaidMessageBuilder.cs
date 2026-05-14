@@ -55,7 +55,7 @@ public class RaidMessageBuilder : LocatedServiceBase
     /// Refresh the message
     /// </summary>
     /// <param name="configurationId">Id of the configuration</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task RefreshMessageAsync(long configurationId)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
@@ -149,6 +149,7 @@ public class RaidMessageBuilder : LocatedServiceBase
                                                                .ConfigureAwait(false);
 
                                 var lineBuilder = new StringBuilder();
+
                                 lineBuilder.Append(" > ");
 
                                 if (registration.Roles.Count > 0)
@@ -220,6 +221,7 @@ public class RaidMessageBuilder : LocatedServiceBase
                                                            .ConfigureAwait(false);
 
                             var lineBuilder = new StringBuilder();
+
                             lineBuilder.Append(" > ");
 
                             if (entry.Roles?.Count > 0)

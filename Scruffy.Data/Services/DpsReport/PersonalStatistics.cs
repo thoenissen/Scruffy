@@ -7,6 +7,8 @@ namespace Scruffy.Data.Services.DpsReport;
 /// </summary>
 public class PersonalStatistics
 {
+    #region Properties
+
     /// <summary>
     /// Character name of the own player in this encounter
     /// </summary>
@@ -36,4 +38,6 @@ public class PersonalStatistics
     /// Mechanics data for the own player
     /// </summary>
     public List<Mechanic> Mechanics { get; set; } = [];
+
+    #endregion // Properties
 }

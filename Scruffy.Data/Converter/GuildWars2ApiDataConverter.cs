@@ -8,6 +8,8 @@ namespace Scruffy.Data.Converter;
 /// </summary>
 public static class GuildWars2ApiDataConverter
 {
+    #region Methods
+
     /// <summary>
     /// Get the permissions of the api key
     /// </summary>
@@ -70,4 +72,6 @@ public static class GuildWars2ApiDataConverter
 
         return type;
     }
+
+    #endregion // Methods
 }

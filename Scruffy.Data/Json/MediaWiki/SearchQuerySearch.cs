@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.MediaWiki;
 /// </summary>
 public class SearchQuerySearch
 {
+    #region Properties
+
     /// <summary>
     /// Ns
     /// </summary>
@@ -48,4 +50,6 @@ public class SearchQuerySearch
     /// </summary>
     [JsonProperty("timestamp")]
     public DateTime Timestamp { get; set; }
+
+    #endregion // Properties
 }

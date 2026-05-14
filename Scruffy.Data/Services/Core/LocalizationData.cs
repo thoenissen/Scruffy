@@ -5,6 +5,8 @@
 /// </summary>
 public class LocalizationData
 {
+    #region Properties
+
     /// <summary>
     /// Culture
     /// </summary>
@@ -19,4 +21,6 @@ public class LocalizationData
     /// Groups
     /// </summary>
     public Dictionary<string, Dictionary<string, string>> TranslationGroups { get; set; }
+
+    #endregion // Properties
 }

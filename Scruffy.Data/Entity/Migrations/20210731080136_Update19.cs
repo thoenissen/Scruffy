@@ -9,6 +9,8 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update19 : Migration
     {
+        #region Migration
+
         /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -127,5 +129,7 @@ namespace Scruffy.Data.Entity.Migrations
                                                    oldClrType: typeof(TimeSpan),
                                                    oldType: "time");
         }
+
+        #endregion // Migration
     }
 }

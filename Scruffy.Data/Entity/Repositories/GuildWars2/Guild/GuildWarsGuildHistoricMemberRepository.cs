@@ -34,7 +34,7 @@ public class GuildWarsGuildHistoricMemberRepository : RepositoryBase<GuildWarsGu
     /// </summary>
     /// <param name="guildId">Id of the guild</param>
     /// <param name="members">Members</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<bool> BulkInsert(long guildId, IEnumerable<(string Name, string Rank, DateTime? Joined)> members)
     {
         var success = false;
@@ -65,6 +65,7 @@ public class GuildWarsGuildHistoricMemberRepository : RepositoryBase<GuildWarsGu
                 }
 
                 var dataTable = new DataTable();
+
                 dataTable.Columns.Add(nameof(GuildWarsGuildHistoricMemberEntity.Date), typeof(DateTime));
                 dataTable.Columns.Add(nameof(GuildWarsGuildHistoricMemberEntity.GuildId), typeof(long));
                 dataTable.Columns.Add(nameof(GuildWarsGuildHistoricMemberEntity.Name), typeof(string));

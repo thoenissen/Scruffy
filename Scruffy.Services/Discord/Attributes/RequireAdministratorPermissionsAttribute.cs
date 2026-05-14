@@ -17,7 +17,7 @@ public class RequireAdministratorPermissionsAttribute : PreconditionAttribute
     /// <summary>
     /// Service
     /// </summary>
-    private static readonly AdministrationPermissionsValidationService Service;
+    private static readonly AdministrationPermissionsValidationService _service;
 
     #endregion // Fields
 
@@ -28,7 +28,7 @@ public class RequireAdministratorPermissionsAttribute : PreconditionAttribute
     /// </summary>
     static RequireAdministratorPermissionsAttribute()
     {
-        Service = ServiceProviderContainer.Current.GetServiceProvider().GetService<AdministrationPermissionsValidationService>();
+        _service = ServiceProviderContainer.Current.GetServiceProvider().GetService<AdministrationPermissionsValidationService>();
     }
 
     #endregion // Constructor
@@ -38,8 +38,8 @@ public class RequireAdministratorPermissionsAttribute : PreconditionAttribute
     /// <inheritdoc/>
     public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
     {
-        return await Service.CheckPermissions(context as IContextContainer)
-                            .ConfigureAwait(false)
+        return await _service.CheckPermissions(context as IContextContainer)
+                             .ConfigureAwait(false)
                    ? PreconditionResult.FromSuccess()
                    : PreconditionResult.FromError("Invalid permission.");
     }

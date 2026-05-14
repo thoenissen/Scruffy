@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.GuildWars2.Guild;
 /// </summary>
 public class GuildEmblemBackground
 {
+    #region Properties
+
     /// <summary>
     /// Id
     /// </summary>
@@ -14,8 +16,10 @@ public class GuildEmblemBackground
     public int Id { get; set; }
 
     /// <summary>
-    /// An array of numbers containing the id of each color used.
+    /// An array of numbers containing the id of each color used
     /// </summary>
     [JsonProperty("colors")]
     public List<int> Colors { get; set; }
+
+    #endregion // Properties
 }

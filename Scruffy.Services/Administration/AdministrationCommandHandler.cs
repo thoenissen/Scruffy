@@ -33,7 +33,7 @@ public class AdministrationCommandHandler : LocatedServiceBase
     /// <param name="context">Command context</param>
     /// <param name="user">User</param>
     /// <param name="name">Name</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task RenameMember(IContextContainer context, IGuildUser user, string name)
     {
         try
@@ -57,7 +57,7 @@ public class AdministrationCommandHandler : LocatedServiceBase
     /// <param name="context">Command context</param>
     /// <param name="role">Role</param>
     /// <param name="name">Name</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task RenameRole(IContextContainer context, IRole role, string name)
     {
         try
@@ -81,7 +81,7 @@ public class AdministrationCommandHandler : LocatedServiceBase
     /// <param name="context">Context</param>
     /// <param name="source">Source</param>
     /// <param name="destination">Destination</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task MoveUsers(InteractionContextContainer context, IVoiceChannel source, IVoiceChannel destination)
     {
         var message = await context.DeferProcessing()

@@ -48,7 +48,7 @@ public class RaidOverviewService : LocatedServiceBase
     /// Participation points overview
     /// </summary>
     /// <param name="commandContext">Command context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task PostParticipationOverview(IContextContainer commandContext)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
@@ -69,6 +69,7 @@ public class RaidOverviewService : LocatedServiceBase
             if (users.Count > 0)
             {
                 var embedBuilder = new EmbedBuilder();
+
                 embedBuilder.WithTitle(LocalizationGroup.GetText("ParticipationOverview", "Participation points overview"));
                 embedBuilder.WithColor(Color.DarkBlue);
                 embedBuilder.WithImageUrl("attachment://chart.png");

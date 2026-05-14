@@ -5,6 +5,8 @@
 /// </summary>
 public class RaidCommitUserData
 {
+    #region Properties
+
     /// <summary>
     /// Id of the user
     /// </summary>
@@ -19,4 +21,6 @@ public class RaidCommitUserData
     /// Emoji
     /// </summary>
     public ulong DiscordEmoji { get; set; }
+
+    #endregion // Properties
 }

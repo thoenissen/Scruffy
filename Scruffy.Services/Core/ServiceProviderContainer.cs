@@ -183,7 +183,7 @@ public sealed class ServiceProviderContainer : IAsyncDisposable
     /// <summary>
     /// Creates a new service scope
     /// </summary>
-    /// <returns>Newly created scope.</returns>
+    /// <returns>Newly created scope</returns>
     public IServiceScope CreateScope()
     {
         return _serviceScopeFactory.CreateScope();
@@ -194,9 +194,9 @@ public sealed class ServiceProviderContainer : IAsyncDisposable
     #region IDisposable
 
     /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async ValueTask DisposeAsync()
     {
         if (_singletons != null)

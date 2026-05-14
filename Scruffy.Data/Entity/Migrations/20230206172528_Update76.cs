@@ -9,6 +9,8 @@ namespace Scruffy.Data.Entity.Migrations;
 /// </summary>
 public partial class Update76 : Migration
 {
+    #region Migration
+
     /// <inheritdoc/>
     protected override void Up(MigrationBuilder migrationBuilder)
     {
@@ -40,4 +42,6 @@ public partial class Update76 : Migration
         migrationBuilder.DropColumn(name: "LeaderId",
                                     table: "CalendarAppointments");
     }
+
+    #endregion // Migration
 }

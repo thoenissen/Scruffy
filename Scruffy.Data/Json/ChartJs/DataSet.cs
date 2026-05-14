@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.ChartJs;
 /// </summary>
 public class DataSet
 {
+    #region Properties
+
     /// <summary>
     /// Label
     /// </summary>
@@ -53,4 +55,6 @@ public class DataSet
     /// Data points
     /// </summary>
     public double[] Data { get; set; }
+
+    #endregion // Properties
 }

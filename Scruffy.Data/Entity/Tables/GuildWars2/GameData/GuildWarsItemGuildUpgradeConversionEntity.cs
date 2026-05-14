@@ -13,7 +13,8 @@ public class GuildWarsItemGuildUpgradeConversionEntity
     /// <summary>
     /// Id of the item
     /// </summary>
-    public int ItemId { get; set; }
+    public int ItemId
+    { get; set; }
 
     /// <summary>
     /// Id of the upgrade

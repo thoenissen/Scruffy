@@ -41,12 +41,12 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <summary>
     /// Lock
     /// </summary>
-    private static readonly object Lock = new();
+    private static readonly object _lock = new();
 
     /// <summary>
     /// Current minute
     /// </summary>
-    private static readonly Stopwatch StopWatch = Stopwatch.StartNew();
+    private static readonly Stopwatch _stopWatch = Stopwatch.StartNew();
 
     /// <summary>
     /// Current count
@@ -104,7 +104,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <summary>
     /// Request the token information
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<TokenInformation> GetTokenInformationAsync()
     {
         return Invoke(async () =>
@@ -123,7 +123,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <summary>
     /// Request the account information
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<AccountInformation> GetAccountInformationAsync()
     {
         return Invoke(async () =>
@@ -142,7 +142,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <summary>
     /// Request the characters information
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<List<Character>> GetCharactersAsync()
     {
         return Invoke(async () =>
@@ -163,7 +163,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <summary>
     /// Request the character names
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<List<string>> GetCharacterNamesAsync()
     {
         return Invoke(async () =>
@@ -183,7 +183,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// Request the character information
     /// </summary>
     /// <param name="characterName">Character name</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<Character> GetCharacterAsync(string characterName)
     {
         return Invoke(async () =>
@@ -202,7 +202,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <summary>
     /// Get colors
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<List<int>> GetDyes()
     {
         return Invoke(async () =>
@@ -222,7 +222,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// Request the guild information
     /// </summary>
     /// <param name="id">Id of the guild</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<GuildInformation> GetGuildInformation(string id)
     {
         return Invoke(async () =>
@@ -243,7 +243,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// </summary>
     /// <param name="guildId">Id of the log</param>
     /// <param name="sinceId">Since id</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<List<GuildLogEntry>> GetGuildLogEntries(string guildId, long sinceId)
     {
         return Invoke(async () =>
@@ -263,7 +263,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// Request the guild members
     /// </summary>
     /// <param name="guildId">Id of the log</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<List<GuildMember>> GetGuildMembers(string guildId)
     {
         return Invoke(async () =>
@@ -285,7 +285,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// Request the guild ranks
     /// </summary>
     /// <param name="guildId">Id of the guild</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<List<GuildRank>> GetGuildRanks(string guildId)
     {
         return Invoke(async () =>
@@ -304,7 +304,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <summary>
     /// Request all available guild emblem foregrounds
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<List<long>> GetGuildEmblemForegrounds()
     {
         return Invoke(async () =>
@@ -323,7 +323,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <summary>
     /// Request all available guild emblem backgrounds
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<List<long>> GetGuildEmblemBackgrounds()
     {
         return Invoke(async () =>
@@ -343,7 +343,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// Request the layers of a guild emblem background
     /// </summary>
     /// <param name="id">Id</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<GuildEmblemLayerData> GetGuildEmblemBackgroundLayer(long id)
     {
         return Invoke(async () =>
@@ -364,7 +364,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// Request the layers of a guild emblem foreground
     /// </summary>
     /// <param name="id">Id</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<GuildEmblemLayerData> GetGuildEmblemForegroundLayer(long id)
     {
         return Invoke(async () =>
@@ -385,7 +385,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// Request the guild stash
     /// </summary>
     /// <param name="guildId">Id of the guild</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<List<GuildStash>> GetGuildVault(string guildId)
     {
         return Invoke(async () =>
@@ -404,7 +404,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <summary>
     /// Request the list of all items
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<List<int>> GetAllItemIds()
     {
         return Invoke(async () =>
@@ -424,7 +424,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// Request the item data
     /// </summary>
     /// <param name="itemId">Id of the item</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<Item> GetItem(int itemId)
     {
         return Invoke(async () =>
@@ -451,7 +451,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// Get items
     /// </summary>
     /// <param name="itemIds">Item ids</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<List<Item>> GetItems(List<int?> itemIds)
     {
         return Invoke(async () =>
@@ -488,7 +488,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// Returns the first recipe
     /// </summary>
     /// <param name="itemId">Item id</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<ItemRecipe> GetRecipe(int itemId)
     {
         return Invoke(async () =>
@@ -524,7 +524,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// Get upgrades
     /// </summary>
     /// <param name="upgradeIds">Upgrade ids</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<List<Upgrade>> GetUpgrades(List<int?> upgradeIds)
     {
         return Invoke(async () =>
@@ -554,7 +554,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <summary>
     /// Request the list of quaggans
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<List<string>> GetQuaggans()
     {
         return Invoke(async () =>
@@ -574,7 +574,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// Request the quaggan data
     /// </summary>
     /// <param name="name">Name</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<QuagganData> GetQuaggan(string name)
     {
         return Invoke(async () =>
@@ -593,7 +593,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <summary>
     /// Request the worlds
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<List<WorldData>> GetWorlds()
     {
         return Invoke(async () =>
@@ -613,7 +613,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// Get trading post values
     /// </summary>
     /// <param name="itemIds">Item ids</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<List<TradingPostItemPrice>> GetTradingPostPrices(List<int?> itemIds)
     {
         return Invoke(async () =>
@@ -649,7 +649,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <summary>
     /// Request the list of all achievements
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<List<int>> GetAllAchievementIds()
     {
         return Invoke(async () =>
@@ -669,7 +669,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// Get achievements
     /// </summary>
     /// <param name="itemIds">Item ids</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<List<Achievement>> GetAchievements(List<int> itemIds)
     {
         return Invoke(async () =>
@@ -699,7 +699,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <summary>
     /// Get account achievements
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<List<AccountAchievement>> GetAccountAchievements()
     {
         return Invoke(async () =>
@@ -718,7 +718,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <summary>
     /// Gets the account materials
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<List<AccountMaterial>> GetAccountMaterials()
     {
         return Invoke(async () =>
@@ -738,7 +738,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// Gets the materials
     /// </summary>
     /// <param name="ids">IDs</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<List<MaterialCategory>> GetMaterialCategory(IEnumerable<int> ids)
     {
         return Invoke(async () =>
@@ -759,7 +759,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// </summary>
     /// <typeparam name="T">Type</typeparam>
     /// <param name="func">Response</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private static async Task<T> Invoke<T>(Func<Task<T>> func)
     {
         await CheckRateLimit().ConfigureAwait(false);
@@ -770,16 +770,16 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     /// <summary>
     /// Checking the rate limit
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private static Task CheckRateLimit()
     {
         return Task.Run(() =>
                         {
-                            lock (Lock)
+                            lock (_lock)
                             {
-                                if (StopWatch.ElapsedMilliseconds >= 60_000)
+                                if (_stopWatch.ElapsedMilliseconds >= 60_000)
                                 {
-                                    StopWatch.Restart();
+                                    _stopWatch.Restart();
                                     _currentCount = 0;
                                 }
                                 else
@@ -917,9 +917,9 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     #region IAsyncDisposable
 
     /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously.
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously
     /// </summary>
-    /// <returns>A task that represents the asynchronous dispose operation.</returns>
+    /// <returns>A task that represents the asynchronous dispose operation</returns>
     public async ValueTask DisposeAsync()
     {
         if (_serviceProvider != null)
@@ -936,7 +936,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     #region IDisposable
 
     /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources
     /// </summary>
     public void Dispose()
     {

@@ -8,6 +8,8 @@ namespace Scruffy.Data.Entity.Tables.GuildWars2.GameData;
 [Table("GuildWarsCustomRecipeEntries")]
 public class GuildWarsCustomRecipeEntryEntity
 {
+    #region Properties
+
     /// <summary>
     /// Item id
     /// </summary>
@@ -22,4 +24,6 @@ public class GuildWarsCustomRecipeEntryEntity
     /// Count
     /// </summary>
     public int IngredientCount { get; set; }
+
+    #endregion // Properties
 }

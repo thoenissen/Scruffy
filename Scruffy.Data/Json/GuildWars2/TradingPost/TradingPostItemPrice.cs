@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.GuildWars2.TradingPost;
 /// </summary>
 public class TradingPostItemPrice
 {
+    #region Properties
+
     /// <summary>
     /// Id
     /// </summary>
@@ -30,4 +32,6 @@ public class TradingPostItemPrice
     /// </summary>
     [JsonProperty("sells")]
     public TradingPostSellValue TradingPostSellValue { get; set; }
+
+    #endregion // Properties
 }

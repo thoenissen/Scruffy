@@ -29,7 +29,7 @@ public class GuildWarsAccountRankingDataRepository : RepositoryBase<GuildWarsAcc
     /// <summary>
     /// Insert current achievement points
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task InsertCurrentAchievementPoints()
     {
         return GetDbContext().Database

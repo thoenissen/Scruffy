@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.ThatShaman;
 /// </summary>
 public class NextUpdateData
 {
+    #region Properties
+
     /// <summary>
     /// Is the update confirmed?
     /// </summary>
@@ -24,4 +26,6 @@ public class NextUpdateData
     /// </summary>
     [JsonProperty("when")]
     public DateTime When { get; set; }
+
+    #endregion // Properties
 }

@@ -54,7 +54,7 @@ public sealed class MessageCollectorService : SingletonLocatedServiceBase, IDisp
     /// <summary>
     /// Start collecting
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task StartCollecting()
     {
         await using (await _lockFactory.CreateLockAsync().ConfigureAwait(false))
@@ -104,7 +104,7 @@ public sealed class MessageCollectorService : SingletonLocatedServiceBase, IDisp
     /// <summary>
     /// Client connected
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task OnConnected()
     {
         try
@@ -126,7 +126,7 @@ public sealed class MessageCollectorService : SingletonLocatedServiceBase, IDisp
     /// Client disconnected
     /// </summary>
     /// <param name="arg">Arguments</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private Task OnDisconnected(Exception arg)
     {
         _importLimit = DateTime.Now.AddMinutes(-15);
@@ -137,7 +137,7 @@ public sealed class MessageCollectorService : SingletonLocatedServiceBase, IDisp
     /// <summary>
     /// Import messages
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task ImportMessages()
     {
         var serviceProvider = ServiceProviderContainer.Current.GetServiceProvider();
@@ -288,7 +288,7 @@ public sealed class MessageCollectorService : SingletonLocatedServiceBase, IDisp
     /// Message received
     /// </summary>
     /// <param name="e">Message</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private Task OnMessageReceived(SocketMessage e)
     {
         if (e is IUserMessage)
@@ -340,7 +340,7 @@ public sealed class MessageCollectorService : SingletonLocatedServiceBase, IDisp
         return base.Initialize(serviceProvider);
     }
 
-#endregion // SingletonLocatedServiceBase
+    #endregion // SingletonLocatedServiceBase
 
     #region IDisposable
 

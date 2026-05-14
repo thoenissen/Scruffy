@@ -67,7 +67,7 @@ public class CalendarScheduleService : LocatedServiceBase
     /// Managing the Schedules
     /// </summary>
     /// <param name="commandContext">Command context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task RunAssistantAsync(IContextContainer commandContext)
     {
         bool repeat;
@@ -83,7 +83,7 @@ public class CalendarScheduleService : LocatedServiceBase
     /// Create new appointments
     /// </summary>
     /// <param name="serverId">Id of the server</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task CreateAppointments(ulong? serverId)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
@@ -221,7 +221,7 @@ public class CalendarScheduleService : LocatedServiceBase
     /// Create events
     /// </summary>
     /// <param name="serverId">Id of the discord server</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task CreateEvents(ulong? serverId)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
@@ -287,7 +287,7 @@ public class CalendarScheduleService : LocatedServiceBase
     /// Adding a one time event
     /// </summary>
     /// <param name="commandContext">Command context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task AddOneTimeEvent(IContextContainer commandContext)
     {
         var data = await DialogHandler.RunForm<CreateOneTimeEventFormData>(commandContext, false)

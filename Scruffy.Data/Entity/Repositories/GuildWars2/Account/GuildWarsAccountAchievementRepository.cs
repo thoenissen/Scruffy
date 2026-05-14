@@ -35,7 +35,7 @@ public class GuildWarsAccountAchievementRepository : RepositoryBase<GuildWarsAcc
     /// </summary>
     /// <param name="accountName">Account name</param>
     /// <param name="entries">Entries</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<bool> BulkInsert(string accountName, List<AccountAchievement> entries)
     {
         var success = false;
@@ -75,6 +75,7 @@ public class GuildWarsAccountAchievementRepository : RepositoryBase<GuildWarsAcc
                 }
 
                 var achievementsTable = new DataTable();
+
                 achievementsTable.Columns.Add(nameof(GuildWarsAccountAchievementEntity.AccountName), typeof(string));
                 achievementsTable.Columns.Add(nameof(GuildWarsAccountAchievementEntity.AchievementId), typeof(int));
                 achievementsTable.Columns.Add(nameof(GuildWarsAccountAchievementEntity.Current), typeof(int));
@@ -84,6 +85,7 @@ public class GuildWarsAccountAchievementRepository : RepositoryBase<GuildWarsAcc
                 achievementsTable.Columns.Add(nameof(GuildWarsAccountAchievementEntity.IsUnlocked), typeof(bool));
 
                 var bitsTable = new DataTable();
+
                 bitsTable.Columns.Add(nameof(GuildWarsAccountAchievementBitEntity.AccountName), typeof(string));
                 bitsTable.Columns.Add(nameof(GuildWarsAccountAchievementBitEntity.AchievementId), typeof(int));
                 bitsTable.Columns.Add(nameof(GuildWarsAccountAchievementBitEntity.Bit), typeof(int));

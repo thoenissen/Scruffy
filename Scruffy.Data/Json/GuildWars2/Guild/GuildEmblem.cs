@@ -7,14 +7,16 @@ namespace Scruffy.Data.Json.GuildWars2.Guild;
 /// </summary>
 public class GuildEmblem
 {
+    #region Properties
+
     /// <summary>
-    /// An array containing information of the background of the guild emblem.
+    /// An array containing information of the background of the guild emblem
     /// </summary>
     [JsonProperty("background")]
     public GuildEmblemBackground Background { get; set; }
 
     /// <summary>
-    ///  An array containing information of the foreground of the guild emblem.
+    ///  An array containing information of the foreground of the guild emblem
     /// </summary>
     [JsonProperty("foreground")]
     public GuildEmblemForeground Foreground { get; set; }
@@ -26,4 +28,6 @@ public class GuildEmblem
     /// </summary>
     [JsonProperty("flags")]
     public List<string> Flags { get; set; }
+
+    #endregion // Properties
 }

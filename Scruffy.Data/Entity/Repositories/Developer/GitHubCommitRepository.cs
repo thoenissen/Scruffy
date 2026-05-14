@@ -33,7 +33,7 @@ public class GitHubCommitRepository : RepositoryBase<GitHubCommitQueryable, GitH
     /// Bulk insert
     /// </summary>
     /// <param name="entries">Entries</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<bool> BulkInsert(IEnumerable<(string Sha, string Author, string Committer, DateTime TimeStamp)> entries)
     {
         var success = false;
@@ -62,6 +62,7 @@ public class GitHubCommitRepository : RepositoryBase<GitHubCommitQueryable, GitH
                 }
 
                 var table = new DataTable();
+
                 table.Columns.Add(nameof(GitHubCommitEntity.Sha), typeof(string));
                 table.Columns.Add(nameof(GitHubCommitEntity.Author), typeof(string));
                 table.Columns.Add(nameof(GitHubCommitEntity.Committer), typeof(string));

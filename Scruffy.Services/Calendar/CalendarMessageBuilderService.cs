@@ -50,7 +50,7 @@ public class CalendarMessageBuilderService : LocatedServiceBase
     /// Refreshing all calendars
     /// </summary>
     /// <param name="serverId">Id of the server</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task RefreshMotds(ulong? serverId)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
@@ -137,7 +137,7 @@ public class CalendarMessageBuilderService : LocatedServiceBase
     /// Refreshing all calendars
     /// </summary>
     /// <param name="serverId">Id of the server</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task RefreshMessages(ulong? serverId)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())

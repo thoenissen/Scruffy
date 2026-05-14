@@ -255,7 +255,7 @@ public partial class RaidLineUpPage
     /// <summary>
     /// Automatically fill all squads based on player wishes and available roles.
     /// Players on the substitutes bench are excluded.
-    /// Support roles are filled per squad, DPS slots are distributed round-robin across all squads.
+    /// Support roles are filled per squad, DPS slots are distributed round-robin across all squads
     /// </summary>
     private void OnAutoFill()
     {
@@ -291,7 +291,7 @@ public partial class RaidLineUpPage
     /// <summary>
     /// Commit line up
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task OnCommit()
     {
         if (_appointmentId == null || _timeStamp == null || _channelId == null)
@@ -314,7 +314,7 @@ public partial class RaidLineUpPage
     /// Delete current line up
     /// </summary>
     /// <param name="textChannel">text Channel</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task DeleteCurrentLineUp(ITextChannel textChannel)
     {
         using (var repositoryFactory = new RepositoryFactory())
@@ -347,7 +347,7 @@ public partial class RaidLineUpPage
     /// </summary>
     /// <param name="textChannel">Text channel</param>
     /// <param name="squad">Squad</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task SendSquadMessage(ITextChannel textChannel, KeyValuePair<int, RaidSquadComponent> squad)
     {
         var embed = new EmbedBuilder().WithTitle(LocalizationGroup.GetFormattedText("SquadTitle", "Line up - {0} - {1}", LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(_timeStamp!.Value.DayOfWeek), _timeStamp.Value.ToString("g", LocalizationGroup.CultureInfo)))
@@ -394,7 +394,7 @@ public partial class RaidLineUpPage
     /// <summary>
     /// Get current user
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task<IGuildUser> GetCurrentUser()
     {
         IGuildUser user = null;

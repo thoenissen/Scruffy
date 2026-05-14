@@ -9,6 +9,7 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update68 : Migration
     {
+        #region Migration
         #region Methods
 
         /// <inheritdoc/>
@@ -24,5 +25,6 @@ namespace Scruffy.Data.Entity.Migrations
         }
 
         #endregion // Methods
+        #endregion // Migration
     }
 }

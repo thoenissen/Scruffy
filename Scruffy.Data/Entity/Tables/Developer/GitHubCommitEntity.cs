@@ -9,6 +9,8 @@ namespace Scruffy.Data.Entity.Tables.Developer;
 [Table("GitHubCommits")]
 public class GitHubCommitEntity
 {
+    #region Properties
+
     /// <summary>
     /// SHA checksum
     /// </summary>
@@ -29,4 +31,6 @@ public class GitHubCommitEntity
     /// Timestamp
     /// </summary>
     public DateTime TimeStamp { get; set; }
+
+    #endregion // Properties
 }

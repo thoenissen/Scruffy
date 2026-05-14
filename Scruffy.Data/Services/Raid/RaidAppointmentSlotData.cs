@@ -5,6 +5,8 @@
 /// </summary>
 public class RaidAppointmentSlotData
 {
+    #region Properties
+
     /// <summary>
     /// Rank
     /// </summary>
@@ -24,4 +26,6 @@ public class RaidAppointmentSlotData
     /// Experience level id
     /// </summary>
     public long ExperienceLevelId { get; set; }
+
+    #endregion // Properties
 }

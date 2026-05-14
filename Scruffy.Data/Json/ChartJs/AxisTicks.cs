@@ -5,9 +5,13 @@
     /// </summary>
     public class AxisTicks
     {
+        #region Properties
+
         /// <summary>
         /// Color of the grid lines
         /// </summary>
         public string Color { get; set; }
+
+        #endregion // Properties
     }
 }

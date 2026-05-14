@@ -33,7 +33,7 @@ public class GuildWarsItemGuildUpgradeConversionRepository : RepositoryBase<Guil
     /// Bulk insert items
     /// </summary>
     /// <param name="entries">Items</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<bool> BulkInsert(List<KeyValuePair<int, long>> entries)
     {
         var success = false;
@@ -61,6 +61,7 @@ public class GuildWarsItemGuildUpgradeConversionRepository : RepositoryBase<Guil
                 }
 
                 var dataTable = new DataTable();
+
                 dataTable.Columns.Add(nameof(GuildWarsItemGuildUpgradeConversionEntity.ItemId), typeof(int));
                 dataTable.Columns.Add(nameof(GuildWarsItemGuildUpgradeConversionEntity.UpgradeId), typeof(long));
 

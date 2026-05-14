@@ -59,7 +59,7 @@ public class ReminderCommandHandler : LocatedServiceBase
     /// </summary>
     /// <param name="context">Context</param>
     /// <param name="message">Message of the reminder</param>
-    /// <param name="timeSpan">Timespan until the reminder should be executed.</param>
+    /// <param name="timeSpan">Timespan until the reminder should be executed</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task ReminderIn(IContextContainer context, string message, string timeSpan)
     {

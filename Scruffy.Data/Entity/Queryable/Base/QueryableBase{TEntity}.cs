@@ -34,18 +34,18 @@ public class QueryableBase<TEntity> : IQueryable<TEntity>
     #region IEnumerable
 
     /// <summary>
-    /// Returns an enumerator that iterates through the collection.
+    /// Returns an enumerator that iterates through the collection
     /// </summary>
-    /// <returns>An enumerator that can be used to iterate through the collection.</returns>
+    /// <returns>An enumerator that can be used to iterate through the collection</returns>
     public IEnumerator<TEntity> GetEnumerator()
     {
         return InternalQueryable.GetEnumerator();
     }
 
     /// <summary>
-    /// Returns an enumerator that iterates through a collection.
+    /// Returns an enumerator that iterates through a collection
     /// </summary>
-    /// <returns>An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the collection.</returns>
+    /// <returns>An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the collection</returns>
     IEnumerator IEnumerable.GetEnumerator()
     {
         return ((IEnumerable)InternalQueryable).GetEnumerator();
@@ -56,19 +56,21 @@ public class QueryableBase<TEntity> : IQueryable<TEntity>
     #region IQueryable
 
     /// <summary>
-    /// Gets the type of the element(s) that are returned when the expression tree associated with this instance of <see cref="T:System.Linq.IQueryable" /> is executed.
+    /// Gets the type of the element(s) that are returned when the expression tree associated with this instance of <see cref="T:System.Linq.IQueryable" /> is executed
     /// </summary>
-    /// <returns>A <see cref="T:System.Type" /> that represents the type of the element(s) that are returned when the expression tree associated with this object is executed.</returns>
+    /// <returns>A <see cref="T:System.Type" /> that represents the type of the element(s) that are returned when the expression tree associated with this object is executed</returns>
     public Type ElementType => InternalQueryable.ElementType;
 
     /// <summary>
-    /// Gets the expression tree that is associated with the instance of <see cref="T:System.Linq.IQueryable" />.
+    /// Gets the expression tree that is associated with the instance of <see cref="T:System.Linq.IQueryable" />
     /// </summary>
-    /// <returns>The <see cref="T:System.Linq.Expressions.Expression" /> that is associated with this instance of <see cref="T:System.Linq.IQueryable" />.</returns>
+    /// <returns>The <see cref="T:System.Linq.Expressions.Expression" /> that is associated with this instance of <see cref="T:System.Linq.IQueryable" /></returns>
     public Expression Expression => InternalQueryable.Expression;
 
-    /// <summary>Gets the query provider that is associated with this data source.</summary>
-    /// <returns>The <see cref="T:System.Linq.IQueryProvider" /> that is associated with this data source.</returns>
+    /// <summary>
+    /// Gets the query provider that is associated with this data source
+    /// </summary>
+    /// <returns>The <see cref="T:System.Linq.IQueryProvider" /> that is associated with this data source</returns>
     public IQueryProvider Provider => InternalQueryable.Provider;
 
     #endregion // IQueryable

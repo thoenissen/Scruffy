@@ -30,7 +30,7 @@ public class CalendarTemplateService : LocatedServiceBase
     /// Managing the templates
     /// </summary>
     /// <param name="commandContext">Command context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task RunAssistantAsync(IContextContainer commandContext)
     {
         bool repeat;

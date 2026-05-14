@@ -68,6 +68,7 @@ public class DpsReportRepository : RepositoryBase<DpsReportQueryable, DpsReportE
                 }
 
                 var table = new DataTable();
+
                 table.Columns.Add(nameof(DpsReportEntity.UserId), typeof(long));
                 table.Columns.Add(nameof(DpsReportEntity.Id), typeof(string));
                 table.Columns.Add(nameof(DpsReportEntity.PermaLink), typeof(string));

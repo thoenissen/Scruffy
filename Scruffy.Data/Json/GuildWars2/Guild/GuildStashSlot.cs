@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.GuildWars2.Guild;
 /// </summary>
 public class GuildStashSlot
 {
+    #region Properties
+
     /// <summary>
     /// Id of the item
     /// </summary>
@@ -18,4 +20,6 @@ public class GuildStashSlot
     /// </summary>
     [JsonProperty("count")]
     public int Count { get; set; }
+
+    #endregion // Properties
 }

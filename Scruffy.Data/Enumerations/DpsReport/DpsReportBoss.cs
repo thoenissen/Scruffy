@@ -7,6 +7,8 @@ namespace Scruffy.Data.Enumerations.DpsReport;
 /// </summary>
 public class DpsReportBoss
 {
+    #region Properties
+
     /// <summary>
     /// Boss ID
     /// </summary>
@@ -41,4 +43,6 @@ public class DpsReportBoss
     /// Indicates whether logs are currently being loaded for this boss
     /// </summary>
     public bool IsLoadingLogs { get; set; }
+
+    #endregion // Properties
 }

@@ -3,10 +3,12 @@ using Newtonsoft.Json;
 namespace Scruffy.Data.Converter;
 
 /// <summary>
-/// Converter to convert seconds (double) to a <see cref="TimeSpan"/>.
+/// Converter to convert seconds (double) to a <see cref="TimeSpan"/>
 /// </summary>
 public class SecondsTimeSpanConverter : JsonConverter<TimeSpan>
 {
+    #region JsonConverter
+
     /// <inheritdoc/>
     public override TimeSpan ReadJson(JsonReader reader, Type objectType, TimeSpan existingValue, bool hasExistingValue, JsonSerializer serializer)
     {
@@ -22,4 +24,6 @@ public class SecondsTimeSpanConverter : JsonConverter<TimeSpan>
     {
         throw new NotSupportedException();
     }
+
+    #endregion // JsonConverter
 }

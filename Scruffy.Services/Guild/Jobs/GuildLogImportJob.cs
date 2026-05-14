@@ -137,7 +137,7 @@ public class GuildLogImportJob : LocatedAsyncJob
     /// </summary>
     /// <param name="discordChannel">Discord channel</param>
     /// <param name="entry">Entry</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task<bool> OnJoined(IMessageChannel discordChannel, GuildLogEntry entry)
     {
         if (discordChannel != null)
@@ -154,7 +154,7 @@ public class GuildLogImportJob : LocatedAsyncJob
     /// </summary>
     /// <param name="discordChannel">Discord channel</param>
     /// <param name="entry">Entry</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task<bool> OnKick(IMessageChannel discordChannel, GuildLogEntry entry)
     {
         if (discordChannel != null)
@@ -181,7 +181,7 @@ public class GuildLogImportJob : LocatedAsyncJob
     /// <param name="guildRankService">Guild rank service</param>
     /// <param name="guildId">Id of the guild</param>
     /// <param name="entry">Entry</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task<bool> OnRankChanged(IMessageChannel discordChannel, GuildRankService guildRankService, long guildId, GuildLogEntry entry)
     {
         var refreshTask = guildRankService.RefreshDiscordRank(guildId, entry.User, entry.NewRank);

@@ -5,6 +5,8 @@
     /// </summary>
     public class CustomValueData
     {
+        #region Properties
+
         /// <summary>
         /// Item id
         /// </summary>
@@ -19,5 +21,7 @@
         /// Custom value threshold
         /// </summary>
         public bool IsCustomValueThresholdActivated { get; set; }
+
+        #endregion // Properties
     }
 }

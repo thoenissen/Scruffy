@@ -57,7 +57,7 @@ public class GuildUserConfigurationService : LocatedServiceBase
     /// Configuration of an user
     /// </summary>
     /// <param name="context">Context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task ConfigureUser(IContextContainer context)
     {
         var member = await DialogHandler.Run<GuildUserConfigurationUserDialogElement, IGuildUser>(context)
@@ -97,6 +97,7 @@ public class GuildUserConfigurationService : LocatedServiceBase
                 builder.AddField(LocalizationGroup.GetText("User", "User"), member.Mention);
 
                 var stringBuilder = new StringBuilder();
+
                 stringBuilder.AppendLine($"{LocalizationGroup.GetText(nameof(userConfiguration.IsFixedRank), "Excluded from ranking changes")}: {(userConfiguration.IsFixedRank ? DiscordEmoteService.GetCheckEmote(context.Client) : DiscordEmoteService.GetCrossEmote(context.Client))}");
                 stringBuilder.AppendLine($"{LocalizationGroup.GetText(nameof(userConfiguration.IsInactive), "Inactive")}: {(userConfiguration.IsInactive ? DiscordEmoteService.GetCheckEmote(context.Client) : DiscordEmoteService.GetCrossEmote(context.Client))}");
                 builder.AddField(LocalizationGroup.GetText("Configuration", "Configuration"), stringBuilder);

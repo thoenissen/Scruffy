@@ -54,7 +54,7 @@ public class RaidMessageComponentCommandModule : LocatedInteractionModuleBase
     /// Joining an appointment
     /// </summary>
     /// <param name="name">Name of the appointment</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [ComponentInteraction($"{Group};{CommandJoin};*")]
     public async Task Join(string name)
     {
@@ -69,7 +69,7 @@ public class RaidMessageComponentCommandModule : LocatedInteractionModuleBase
     /// Joining an appointment
     /// </summary>
     /// <param name="name">Name of the appointment</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [ComponentInteraction($"{Group};{CommandRoleSelection};*")]
     public async Task RoleSelection(string name)
     {
@@ -84,7 +84,7 @@ public class RaidMessageComponentCommandModule : LocatedInteractionModuleBase
     /// Leaving an appointment
     /// </summary>
     /// <param name="name">Name of the appointment</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [ComponentInteraction($"{Group};{CommandLeave};*")]
     public async Task Leave(string name)
     {
@@ -100,7 +100,7 @@ public class RaidMessageComponentCommandModule : LocatedInteractionModuleBase
     /// </summary>
     /// <param name="configurationId">Id of the configuration</param>
     /// <param name="values">Values</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [ComponentInteraction($"{Group};{CommandSelectRoles};*")]
     public async Task SelectRoles(long configurationId, string[] values)
     {

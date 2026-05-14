@@ -5,6 +5,8 @@
 /// </summary>
 public class GuildRankData
 {
+    #region Properties
+
     /// <summary>
     /// Id
     /// </summary>
@@ -19,4 +21,6 @@ public class GuildRankData
     /// Id of the discord role
     /// </summary>
     public ulong DiscordRoleId { get; set; }
+
+    #endregion // Properties
 }

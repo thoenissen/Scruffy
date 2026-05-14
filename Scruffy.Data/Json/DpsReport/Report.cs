@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.DpsReport;
 /// </summary>
 public class Report
 {
+    #region Properties
+
     /// <summary>
     /// Is anonymous?
     /// </summary>
@@ -18,4 +20,6 @@ public class Report
     /// </summary>
     [JsonProperty("detailed")]
     public bool Detailed { get; set; }
+
+    #endregion // Properties
 }

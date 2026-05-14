@@ -46,7 +46,7 @@ public class GuildBankService : LocatedServiceBase
     /// Validation the guild bank
     /// </summary>
     /// <param name="commandContext">Command context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task Check(InteractionContextContainer commandContext)
     {
         await commandContext.DeferProcessing()
@@ -67,6 +67,7 @@ public class GuildBankService : LocatedServiceBase
             if (string.IsNullOrWhiteSpace(guild?.ApiKey) == false)
             {
                 var msg = new EmbedBuilder();
+
                 msg.WithTitle(LocalizationGroup.GetText("BankValidation", "Guild bank validation"));
                 msg.WithDescription(LocalizationGroup.GetText("BankValidationResult", "In the following message you can see the results of the bank validation."));
                 msg.WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64");
@@ -155,7 +156,7 @@ public class GuildBankService : LocatedServiceBase
     /// Validation the guild bank
     /// </summary>
     /// <param name="commandContext">Command context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task CheckUnlocksDyes(InteractionContextContainer commandContext)
     {
         await commandContext.DeferProcessing()

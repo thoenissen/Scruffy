@@ -7,9 +7,13 @@ namespace Scruffy.Data.Json.QuickChart;
 /// </summary>
 public class ChartLegendConfiguration
 {
+    #region Properties
+
     /// <summary>
     /// Position
     /// </summary>
     [JsonProperty("position")]
     public string Position { get; set; }
+
+    #endregion // Properties
 }

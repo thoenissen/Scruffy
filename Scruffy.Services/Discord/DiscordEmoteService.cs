@@ -20,12 +20,12 @@ public static class DiscordEmoteService
     /// <summary>
     /// Emotes
     /// </summary>
-    private static readonly ConcurrentDictionary<string, ulong> Emotes;
+    private static readonly ConcurrentDictionary<string, ulong> _emotes;
 
     /// <summary>
     /// Emote cache
     /// </summary>
-    private static readonly ConcurrentDictionary<ulong, IEmote> EmoteCache;
+    private static readonly ConcurrentDictionary<ulong, IEmote> _emoteCache;
 
     #endregion // Fields
 
@@ -36,8 +36,8 @@ public static class DiscordEmoteService
     /// </summary>
     static DiscordEmoteService()
     {
-        Emotes = new ConcurrentDictionary<string, ulong>(JsonConvert.DeserializeObject<Dictionary<string, ulong>>(new StreamReader(Assembly.Load("Scruffy.Data").GetManifestResourceStream("Scruffy.Data.Resources.Emotes.json")).ReadToEnd()));
-        EmoteCache = new ConcurrentDictionary<ulong, IEmote>();
+        _emotes = new ConcurrentDictionary<string, ulong>(JsonConvert.DeserializeObject<Dictionary<string, ulong>>(new StreamReader(Assembly.Load("Scruffy.Data").GetManifestResourceStream("Scruffy.Data.Resources.Emotes.json")).ReadToEnd()));
+        _emoteCache = new ConcurrentDictionary<ulong, IEmote>();
     }
 
     #endregion // Constructor
@@ -48,7 +48,7 @@ public static class DiscordEmoteService
     /// Build emote cache
     /// </summary>
     /// <param name="client">Client</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public static async Task BuildEmoteCache(DiscordRestClient client)
     {
         foreach (var guild in await client.GetGuildsAsync()
@@ -56,7 +56,7 @@ public static class DiscordEmoteService
         {
             foreach (var emote in guild.Emotes)
             {
-                EmoteCache.TryAdd(emote.Id, emote);
+                _emoteCache.TryAdd(emote.Id, emote);
             }
         }
     }
@@ -431,7 +431,7 @@ public static class DiscordEmoteService
             }
             else
             {
-                EmoteCache.TryGetValue(id, out emote);
+                _emoteCache.TryGetValue(id, out emote);
             }
         }
         catch
@@ -453,7 +453,7 @@ public static class DiscordEmoteService
 
         try
         {
-            if (Emotes.TryGetValue(key, out var emojiId))
+            if (_emotes.TryGetValue(key, out var emojiId))
             {
                 emote = GetGuildEmote(client, emojiId);
             }

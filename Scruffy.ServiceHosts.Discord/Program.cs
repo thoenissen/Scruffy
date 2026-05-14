@@ -17,12 +17,12 @@ public class Program
     /// <summary>
     /// Wait for program exit
     /// </summary>
-    private static readonly TaskCompletionSource<bool> WaitForExitTaskSource = new();
+    private static readonly TaskCompletionSource<bool> _waitForExitTaskSource = new();
 
     /// <summary>
     /// Signals that the shutdown has completed
     /// </summary>
-    private static readonly ManualResetEventSlim ShutdownComplete = new(false);
+    private static readonly ManualResetEventSlim _shutdownComplete = new(false);
 
     #endregion // Fields
 
@@ -56,7 +56,7 @@ public class Program
                     await webApp.StartAsync()
                                 .ConfigureAwait(false);
 
-                    await WaitForExitTaskSource.Task.ConfigureAwait(false);
+                    await _waitForExitTaskSource.Task.ConfigureAwait(false);
 
                     await webApp.StopAsync()
                                 .ConfigureAwait(false);
@@ -71,7 +71,7 @@ public class Program
         {
             LoggingService.AddServiceLogEntry(LogEntryLevel.Information, nameof(Program), "End", null);
 
-            ShutdownComplete.Set();
+            _shutdownComplete.Set();
         }
     }
 
@@ -86,11 +86,11 @@ public class Program
 
         e.Cancel = true;
 
-        WaitForExitTaskSource.TrySetResult(true);
+        _waitForExitTaskSource.TrySetResult(true);
     }
 
     /// <summary>
-    /// Occurs when the default application domain's parent process exits.
+    /// Occurs when the default application domain's parent process exits
     /// </summary>
     /// <param name="sender">Sender</param>
     /// <param name="e">Argument</param>
@@ -98,9 +98,9 @@ public class Program
     {
         LoggingService.AddServiceLogEntry(LogEntryLevel.Information, nameof(Program), "OnProcessExit", null);
 
-        WaitForExitTaskSource.TrySetResult(true);
+        _waitForExitTaskSource.TrySetResult(true);
 
-        ShutdownComplete.Wait(TimeSpan.FromSeconds(30));
+        _shutdownComplete.Wait(TimeSpan.FromSeconds(30));
     }
 
     #endregion // Methods

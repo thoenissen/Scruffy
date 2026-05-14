@@ -40,10 +40,12 @@ public class GuildSpecialRankRoleAssignmentSelectionDialog : DialogEmbedMessageE
     public override EmbedBuilder GetMessage()
     {
         var builder = new EmbedBuilder();
+
         builder.WithTitle(LocalizationGroup.GetText("ChooseAssignmentTitle", "Assignment selection"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseAssignmentDescription", "Please choose one of the following assignments:"));
 
         _ranks = [];
+
         var levelsFieldsText = new StringBuilder();
 
         using (var dbFactory = RepositoryFactory.CreateInstance())

@@ -5,6 +5,8 @@
 /// </summary>
 public class GuildRankingOverviewData
 {
+    #region Properties
+
     /// <summary>
     /// Creation time stamp
     /// </summary>
@@ -19,4 +21,6 @@ public class GuildRankingOverviewData
     /// Pages
     /// </summary>
     public List<List<OverviewUserPointsData>> Pages { get; set; }
+
+    #endregion // Properties
 }

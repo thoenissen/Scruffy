@@ -36,11 +36,11 @@ public class DpsReportReportGenerator : LocatedServiceBase
     /// <summary>
     /// Relevant encounter bosses
     /// </summary>
-    private static readonly long[] EncounterBosses = DpsReportAnalyzer.GetEncounters()
-                                                                      .SelectMany(expansion => expansion.Encounters.SelectMany(encounter => encounter.Bosses))
-                                                                      .SelectMany(boss => boss.BossIds)
-                                                                      .Select(id => (long)id)
-                                                                      .ToArray();
+    private static readonly long[] _encounterBosses = DpsReportAnalyzer.GetEncounters()
+                                                                       .SelectMany(expansion => expansion.Encounters.SelectMany(encounter => encounter.Bosses))
+                                                                       .SelectMany(boss => boss.BossIds)
+                                                                       .Select(id => (long)id)
+                                                                       .ToArray();
 
     /// <summary>
     /// Repository factory
@@ -76,7 +76,7 @@ public class DpsReportReportGenerator : LocatedServiceBase
         var lastEncounter = _repositoryFactory.GetRepository<DpsReportRepository>()
                                               .GetQuery()
                                               .Where(r => r.UserId == userId
-                                                          && EncounterBosses.Contains(r.BossId))
+                                                          && _encounterBosses.Contains(r.BossId))
                                               .OrderByDescending(r => r.EncounterTime)
                                               .Select(r => (DateTime?)r.EncounterTime)
                                               .FirstOrDefault()

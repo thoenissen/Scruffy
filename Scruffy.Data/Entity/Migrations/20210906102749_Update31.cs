@@ -9,6 +9,8 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update31 : Migration
     {
+        #region Migration
+
         /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -38,5 +40,7 @@ namespace Scruffy.Data.Entity.Migrations
                                            principalColumn: "Id",
                                            onDelete: ReferentialAction.Restrict);
         }
+
+        #endregion // Migration
     }
 }

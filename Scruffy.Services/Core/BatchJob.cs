@@ -27,7 +27,7 @@ public abstract class BatchJob : LocatedAsyncJob
     /// Constructor
     /// </summary>
     /// <param name="types">Jobs</param>
-    /// <remarks>Jobs will be executed in the given order.</remarks>
+    /// <remarks>Jobs will be executed in the given order</remarks>
     protected BatchJob(IEnumerable<Type> types)
     {
         _jobTypes = types.ToList();

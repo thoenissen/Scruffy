@@ -55,7 +55,7 @@ public class RaidRegistrationService : LocatedServiceBase
     /// <param name="commandContext">Command context</param>
     /// <param name="appointmentId">Id of the appointment</param>
     /// <param name="discordUser">User</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<long?> Join(IContextContainer commandContext, long appointmentId, IUser discordUser)
     {
         long? registrationId = null;
@@ -172,7 +172,7 @@ public class RaidRegistrationService : LocatedServiceBase
     /// </summary>
     /// <param name="appointmentId">Id of the appointment</param>
     /// <param name="userId">User id</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<bool> Leave(long appointmentId, long userId)
     {
         var success = false;
@@ -246,7 +246,7 @@ public class RaidRegistrationService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <param name="appointmentId">Id of the appointment</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<bool> SetTemplate(IContextContainer commandContext, long appointmentId)
     {
         var success = false;
@@ -293,7 +293,7 @@ public class RaidRegistrationService : LocatedServiceBase
     /// </summary>
     /// <param name="appointmentId">Id of the appointment</param>
     /// <param name="groupCount">Group count</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<bool> SetGroupCount(long appointmentId, int groupCount)
     {
         var success = false;
@@ -329,7 +329,7 @@ public class RaidRegistrationService : LocatedServiceBase
     /// </summary>
     /// <param name="dbFactory">Repository factory</param>
     /// <param name="appointmentId">Id of the appointment</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<bool> RefreshAppointment(RepositoryFactory dbFactory, long appointmentId)
     {
         var success = false;

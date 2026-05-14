@@ -20,7 +20,7 @@ internal static class Preparation
     /// <summary>
     /// Setting up environment variables
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     internal static async Task SetEnvironmentVariables()
     {
         var configurationFile = EnvironmentSettings.UseProductiveConfiguration
@@ -38,7 +38,7 @@ internal static class Preparation
     /// <summary>
     /// Setting up discord client
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     internal static async Task SetUpDiscordClient()
     {
         var config = new DiscordSocketConfig
@@ -71,7 +71,7 @@ internal static class Preparation
     /// <summary>
     /// Installation of global commands
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     internal static async Task InstallGlobalCommands()
     {
         var config = new SlashCommandBuilder().WithName("configuration")

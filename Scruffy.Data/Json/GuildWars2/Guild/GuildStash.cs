@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.GuildWars2.Guild;
 /// </summary>
 public class GuildStash
 {
+    #region Properties
+
     /// <summary>
     /// Id of the uprgrade
     /// </summary>
@@ -36,4 +38,6 @@ public class GuildStash
     /// </summary>
     [JsonProperty("inventory")]
     public List<GuildStashSlot> Slots { get; set; }
+
+    #endregion // Properties
 }

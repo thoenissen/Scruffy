@@ -40,10 +40,12 @@ public class GuildSpecialRankSelectionDialogElement : DialogEmbedMessageElementB
     public override EmbedBuilder GetMessage()
     {
         var builder = new EmbedBuilder();
+
         builder.WithTitle(LocalizationGroup.GetText("ChooseSpecialRankTitle", "Special rank selection"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseSpecialRankDescription", "Please choose one of the following special ranks:"));
 
         _ranks = [];
+
         var levelsFieldsText = new StringBuilder();
 
         using (var dbFactory = RepositoryFactory.CreateInstance())

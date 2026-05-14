@@ -64,6 +64,7 @@ public class LoggingService
     private LoggingService()
     {
         _environment = Environment.GetEnvironmentVariable("SCRUFFY_ENVIRONMENT")?.ToLowerInvariant();
+
         var openSearchUrl = Environment.GetEnvironmentVariable("SCRUFFY_OPENSEARCH");
 
         if (string.IsNullOrWhiteSpace(_environment) == false

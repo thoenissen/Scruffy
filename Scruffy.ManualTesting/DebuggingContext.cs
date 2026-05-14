@@ -67,7 +67,7 @@ internal class DebuggingContext : IContextContainer
     /// </summary>
     /// <param name="channelId">Channel ID</param>
     /// <param name="userId">User ID</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task InitializeFromChannel(ulong channelId, ulong userId)
     {
         Channel = await Client.GetChannelAsync(channelId).ConfigureAwait(false) as IMessageChannel;

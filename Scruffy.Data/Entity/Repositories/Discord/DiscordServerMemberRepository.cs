@@ -33,7 +33,7 @@ public class DiscordServerMemberRepository : RepositoryBase<DiscordServerMemberQ
     /// Bulk import of all discord members
     /// </summary>
     /// <param name="members">Members</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<bool> BulkInsert(List<(ulong ServerId, ulong AccountId, string Name, bool IsBot, string AvatarUrl)> members)
     {
         var success = false;
@@ -64,6 +64,7 @@ public class DiscordServerMemberRepository : RepositoryBase<DiscordServerMemberQ
                 }
 
                 var table = new DataTable();
+
                 table.Columns.Add(nameof(DiscordServerMemberEntity.ServerId), typeof(ulong));
                 table.Columns.Add(nameof(DiscordServerMemberEntity.AccountId), typeof(ulong));
                 table.Columns.Add(nameof(DiscordServerMemberEntity.Name), typeof(string));

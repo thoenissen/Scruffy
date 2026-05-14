@@ -10,7 +10,7 @@ using Scruffy.Data.Entity.Repositories.Base;
 namespace Scruffy.Data.Entity;
 
 /// <summary>
-/// Factory for creating repositories.
+/// Factory for creating repositories
 /// </summary>
 public sealed class RepositoryFactory : IDisposable
 {
@@ -169,7 +169,7 @@ public sealed class RepositoryFactory : IDisposable
     #region IDisposable
 
     /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources
     /// </summary>
     public void Dispose()
     {

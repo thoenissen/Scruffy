@@ -5,6 +5,8 @@ namespace Scruffy.Data.Services.DpsReport;
 /// </summary>
 public class DpsReportEncounterData
 {
+    #region Properties
+
     /// <summary>
     /// Permalink
     /// </summary>
@@ -19,4 +21,6 @@ public class DpsReportEncounterData
     /// Is the encounter successful?
     /// </summary>
     public bool IsSuccess { get; set; }
+
+    #endregion // Properties
 }

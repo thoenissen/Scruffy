@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.GuildWars2.Account;
 /// </summary>
 public class AccountAchievement
 {
+    #region Properties
+
     /// <summary>
     /// Id
     /// </summary>
@@ -48,4 +50,6 @@ public class AccountAchievement
     /// </summary>
     [JsonProperty("unlocked")]
     public bool? IsUnlocked { get; set; }
+
+    #endregion // Properties
 }

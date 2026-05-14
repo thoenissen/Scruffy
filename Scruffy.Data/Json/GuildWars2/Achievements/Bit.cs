@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.GuildWars2.Achievements;
 /// </summary>
 public class Bit
 {
+    #region Properties
+
     /// <summary>
     /// Id
     /// </summary>
@@ -24,4 +26,6 @@ public class Bit
     /// </summary>
     [JsonProperty("text")]
     public string Text { get; set; }
+
+    #endregion // Properties
 }

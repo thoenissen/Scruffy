@@ -41,10 +41,12 @@ public class GuildRankInGameNameDialogElement : DialogEmbedMessageElementBase<st
     public override EmbedBuilder GetMessage()
     {
         var builder = new EmbedBuilder();
+
         builder.WithTitle(LocalizationGroup.GetText("ChooseTitle", "In game rank selection"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseDescription", "Please choose one of the following ranks:"));
 
         _ranks = [];
+
         var stringBuilder = new StringBuilder();
 
         var ranksCounter = 1;

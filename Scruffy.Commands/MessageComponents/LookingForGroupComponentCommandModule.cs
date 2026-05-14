@@ -58,7 +58,7 @@ public class LookingForGroupComponentCommandModule : LocatedInteractionModuleBas
     /// <summary>
     /// Joining an appointment
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [ComponentInteraction($"{Group};{CommandCreate};")]
     public async Task Create()
     {
@@ -70,7 +70,7 @@ public class LookingForGroupComponentCommandModule : LocatedInteractionModuleBas
     /// Joining an appointment
     /// </summary>
     /// <param name="appointmentId">Id of the appointment</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [ComponentInteraction($"{Group};{CommandJoin};*")]
     public async Task Join(int appointmentId)
     {
@@ -85,7 +85,7 @@ public class LookingForGroupComponentCommandModule : LocatedInteractionModuleBas
     /// Leaving an appointment
     /// </summary>
     /// <param name="appointmentId">Id of the appointment</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [ComponentInteraction($"{Group};{CommandLeave};*")]
     public async Task Leave(int appointmentId)
     {
@@ -100,7 +100,7 @@ public class LookingForGroupComponentCommandModule : LocatedInteractionModuleBas
     /// Leaving an appointment
     /// </summary>
     /// <param name="appointmentId">Id of the appointment</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [ComponentInteraction($"{Group};{CommandConfiguration};*")]
     public async Task Configure(int appointmentId)
     {
@@ -116,7 +116,7 @@ public class LookingForGroupComponentCommandModule : LocatedInteractionModuleBas
     /// </summary>
     /// <param name="appointmentId">Id of the configuration</param>
     /// <param name="value">Value</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [ComponentInteraction($"{Group};{CommandConfigureMenu};*")]
     public async Task SelectRoles(int appointmentId, string value)
     {

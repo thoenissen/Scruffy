@@ -111,7 +111,7 @@ public sealed partial class TodaysLogsOverviewPage : IAsyncDisposable
     /// Loads the reports for today from dps.report
     /// </summary>
     /// <param name="token">Token</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task LoadReports(CancellationToken token)
     {
         try
@@ -225,7 +225,7 @@ public sealed partial class TodaysLogsOverviewPage : IAsyncDisposable
     /// Gets additional data for the report, like DPS, alacrity and quickness
     /// </summary>
     /// <param name="report">Report</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task GetAdditionalDataAsync(DpsReport report)
     {
         report.FullReport = await DpsReportProcessor.Get(report.MetaData.Id).ConfigureAwait(false);

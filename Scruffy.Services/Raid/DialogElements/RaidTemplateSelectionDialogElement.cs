@@ -40,10 +40,12 @@ public class RaidTemplateSelectionDialogElement : DialogEmbedMessageElementBase<
     public override EmbedBuilder GetMessage()
     {
         var builder = new EmbedBuilder();
+
         builder.WithTitle(LocalizationGroup.GetText("ChooseTemplateTitle", "Raid template selection"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseTemplateDescription", "Please choose one of the following templates:"));
 
         _templates = [];
+
         var templatesFieldText = new StringBuilder();
 
         using (var dbFactory = RepositoryFactory.CreateInstance())

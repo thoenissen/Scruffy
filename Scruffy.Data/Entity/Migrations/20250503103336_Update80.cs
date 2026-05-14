@@ -7,6 +7,8 @@ namespace Scruffy.Data.Entity.Migrations
     /// <inheritdoc />
     public partial class Update80 : Migration
     {
+        #region Migration
+
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -74,5 +76,7 @@ namespace Scruffy.Data.Entity.Migrations
             migrationBuilder.DropTable("LookingForGroupParticipants");
             migrationBuilder.DropTable("LookingForGroupAppointments");
         }
+
+        #endregion // Migration
     }
 }

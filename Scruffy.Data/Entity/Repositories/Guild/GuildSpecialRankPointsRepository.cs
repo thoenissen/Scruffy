@@ -34,7 +34,7 @@ public class GuildSpecialRankPointsRepository : RepositoryBase<GuildSpecialRankP
     /// <param name="maximumPoints">Maximum points</param>
     /// <param name="userId">Id of the user</param>
     /// <param name="pointsList">Points list</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<bool> AddPoints(long configurationId, double maximumPoints, long userId, ICollection<double> pointsList)
     {
         var success = false;

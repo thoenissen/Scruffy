@@ -77,7 +77,7 @@ public partial class Chart : IAsyncDisposable
     /// <summary>
     /// Update
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task Update()
     {
         if (_module != null

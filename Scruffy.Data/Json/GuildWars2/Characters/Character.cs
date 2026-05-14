@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.GuildWars2.Characters;
 /// </summary>
 public class Character
 {
+    #region Properties
+
     /// <summary>
     /// Name
     /// </summary>
@@ -72,4 +74,6 @@ public class Character
     /// </summary>
     [JsonProperty("title")]
     public int Title { get; set; }
+
+    #endregion // Properties
 }

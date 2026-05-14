@@ -81,7 +81,7 @@ public sealed partial class UserConfigurationOverlay : IDisposable
     /// <summary>
     /// Called when the overlay close button is clicked
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task OnCloseOverlay()
     {
         await OnCloseRequested.InvokeAsync()
@@ -91,7 +91,7 @@ public sealed partial class UserConfigurationOverlay : IDisposable
     /// <summary>
     /// Toggles the fixed rank setting
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task OnToggleFixedRank()
     {
         _isSaving = true;
@@ -115,7 +115,7 @@ public sealed partial class UserConfigurationOverlay : IDisposable
     /// <summary>
     /// Toggles the inactive setting
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task OnToggleInactive()
     {
         _isSaving = true;
@@ -160,7 +160,7 @@ public sealed partial class UserConfigurationOverlay : IDisposable
     /// <summary>
     /// Validates the API key against the Guild Wars 2 API
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task OnValidateApiKey()
     {
         _isValidating = true;

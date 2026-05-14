@@ -9,6 +9,8 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update35 : Migration
     {
+        #region Migration
+
         /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -26,5 +28,7 @@ namespace Scruffy.Data.Entity.Migrations
             migrationBuilder.RenameColumn(name: "SubSource", table: "LogEntries", newName: "QualifiedCommandName");
             migrationBuilder.RenameColumn(name: "Source", table: "LogEntries", newName: "LastUserCommand");
         }
+
+        #endregion // Migration
     }
 }

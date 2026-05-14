@@ -36,11 +36,10 @@ public sealed class JobScheduler : SingletonLocatedServiceBase,
     /// <summary>
     /// Starting the job server
     /// </summary>
-    /// <returns>A task that represents the asynchronous dispose operation.</returns>
+    /// <returns>A task that represents the asynchronous dispose operation</returns>
     public async Task StartAsync()
     {
         await Task.Run(JobManager.Start).ConfigureAwait(false);
-
 #if RELEASE
 
         // Daily
@@ -226,7 +225,7 @@ public sealed class JobScheduler : SingletonLocatedServiceBase,
     #region IJobFactory
 
     /// <summary>
-    /// Instantiate a job of the given type.
+    /// Instantiate a job of the given type
     /// </summary>
     /// <typeparam name="T">Type of the job to instantiate</typeparam>
     /// <returns>The instantiated job</returns>
@@ -250,9 +249,9 @@ public sealed class JobScheduler : SingletonLocatedServiceBase,
     #region IAsyncDisposable
 
     /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously.
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously
     /// </summary>
-    /// <returns> A task that represents the asynchronous dispose operation.</returns>
+    /// <returns> A task that represents the asynchronous dispose operation</returns>
     async ValueTask IAsyncDisposable.DisposeAsync()
     {
         await Task.Run(JobManager.StopAndBlock).ConfigureAwait(false);

@@ -89,5 +89,6 @@ public class RaidPreparedRolesFirstTimeSelectDialogElement : DialogMultiSelectSe
 
         return _entries;
     }
+
+    #endregion // DialogEmbedMultiSelectSelectMenuElementBase<long>
 }
-#endregion // DialogEmbedMultiSelectSelectMenuElementBase<long>

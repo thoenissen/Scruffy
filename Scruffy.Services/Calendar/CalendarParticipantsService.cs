@@ -52,7 +52,7 @@ public class CalendarParticipantsService : LocatedServiceBase
     /// Editing the participants
     /// </summary>
     /// <param name="commandContext">Command Context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task EditParticipants(IContextContainer commandContext)
     {
         var dialogHandler = new DialogHandler(commandContext);

@@ -1,4 +1,4 @@
-﻿#pragma warning disable RH0201
+#pragma warning disable RH0201
 
 using Microsoft.EntityFrameworkCore.Migrations;
 
@@ -9,6 +9,8 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update1 : Migration
     {
+        #region Migration
+
         /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -59,5 +61,7 @@ namespace Scruffy.Data.Entity.Migrations
             migrationBuilder.DropTable("FractalRegistrations");
             migrationBuilder.DropTable("FractalLfgConfigurations");
         }
+
+        #endregion // Migration
     }
 }

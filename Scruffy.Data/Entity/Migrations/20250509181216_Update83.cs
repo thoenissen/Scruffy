@@ -7,6 +7,8 @@ namespace Scruffy.Data.Entity.Migrations
     /// <inheritdoc />
     public partial class Update83 : Migration
     {
+        #region Migration
+
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -18,5 +20,7 @@ namespace Scruffy.Data.Entity.Migrations
         {
             migrationBuilder.AlterColumn<decimal>("ParticipantCount", "LookingForGroupAppointments", "decimal(20,0)", nullable: true, oldClrType: typeof(int), oldType: "int", oldNullable: true);
         }
+
+        #endregion // Migration
     }
 }

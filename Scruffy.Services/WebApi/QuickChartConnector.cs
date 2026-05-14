@@ -41,7 +41,7 @@ public sealed class QuickChartConnector : IDisposable,
     /// Request the account information
     /// </summary>
     /// <param name="data">Data</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<Stream> GetChartAsStream(ChartData data)
     {
         var client = _httpClientFactory.CreateClient();
@@ -79,7 +79,9 @@ public sealed class QuickChartConnector : IDisposable,
 
     #region IDisposable
 
-    /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+    /// <summary>
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources
+    /// </summary>
     public void Dispose()
     {
     }
@@ -88,8 +90,10 @@ public sealed class QuickChartConnector : IDisposable,
 
     #region IAsyncDisposable
 
-    /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously.</summary>
-    /// <returns>A task that represents the asynchronous dispose operation.</returns>
+    /// <summary>
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously
+    /// </summary>
+    /// <returns>A task that represents the asynchronous dispose operation</returns>
     public ValueTask DisposeAsync()
     {
         return ValueTask.CompletedTask;

@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.GuildWars2.Guild;
 /// </summary>
 public class GuildMember
 {
+    #region Properties
+
     /// <summary>
     /// Name
     /// </summary>
@@ -24,4 +26,6 @@ public class GuildMember
     /// </summary>
     [JsonProperty("joined")]
     public DateTime? Joined { get; set; }
+
+    #endregion // Properties
 }

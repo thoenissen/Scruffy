@@ -23,12 +23,12 @@ public class LogBetaCommandHandler : LocatedServiceBase
     /// <summary>
     /// Web application URL
     /// </summary>
-    private static readonly string WebbAppUrl = Environment.GetEnvironmentVariable("SCRUFFY_WEBAPP_URL");
+    private static readonly string _webbAppUrl = Environment.GetEnvironmentVariable("SCRUFFY_WEBAPP_URL");
 
     /// <summary>
     /// Formats for parsing an input date
     /// </summary>
-    private static readonly string[] DateFormats = ["dd.MM", "dd.MM.yyyy", "yyyy-MM-dd"];
+    private static readonly string[] _dateFormats = ["dd.MM", "dd.MM.yyyy", "yyyy-MM-dd"];
 
     /// <summary>
     /// User management service
@@ -99,7 +99,7 @@ public class LogBetaCommandHandler : LocatedServiceBase
         var dayTitle = LocalizationGroup.GetFormattedText("DayTitle", "Logs {0}", date.ToString("d", LocalizationGroup.CultureInfo));
         var message = await context.DeferProcessing(dayTitle,
                                                     LocalizationGroup.GetText("ImportLogs", "Your logs are currently being imported."),
-                                                    LocalizationGroup.GetText("DayFooter", $"Visit the [website]({WebbAppUrl}) to get a more detailed summary of your logs."))
+                                                    LocalizationGroup.GetText("DayFooter", $"Visit the [website]({_webbAppUrl}) to get a more detailed summary of your logs."))
                                    .ConfigureAwait(false);
 
         await ImportLogs(context).ConfigureAwait(false);
@@ -185,6 +185,7 @@ public class LogBetaCommandHandler : LocatedServiceBase
         foreach (var component in components.Components)
         {
             var currentTextSize = 0;
+
             currentComponentsCount++;
 
             if (component is TextDisplayBuilder textDisplayBuilder)
@@ -194,7 +195,7 @@ public class LogBetaCommandHandler : LocatedServiceBase
 
             if (textSize >= 3800 || currentComponentsCount == 39)
             {
-                currentComponents.WithTextDisplay($"-# {LocalizationGroup.GetText("DayFooter", $"Visit the [website]({WebbAppUrl}) to get a more detailed summary of your logs.")}")
+                currentComponents.WithTextDisplay($"-# {LocalizationGroup.GetText("DayFooter", $"Visit the [website]({_webbAppUrl}) to get a more detailed summary of your logs.")}")
                                  .WithAccentColor(Color.DarkPurple);
 
                 await context.SendMessageAsync(components: new ComponentBuilderV2().AddComponent(currentComponents).Build())
@@ -212,7 +213,7 @@ public class LogBetaCommandHandler : LocatedServiceBase
         if (currentComponents.Components.Count > 0)
         {
             currentComponents.WithSeparator()
-                             .WithTextDisplay($"-# {LocalizationGroup.GetText("DayFooter", $"Visit the [website]({WebbAppUrl}) to get a more detailed summary of your logs.")}")
+                             .WithTextDisplay($"-# {LocalizationGroup.GetText("DayFooter", $"Visit the [website]({_webbAppUrl}) to get a more detailed summary of your logs.")}")
                              .WithAccentColor(Color.DarkPurple);
 
             await context.SendMessageAsync(components: new ComponentBuilderV2().AddComponent(currentComponents).Build())
@@ -225,14 +226,14 @@ public class LogBetaCommandHandler : LocatedServiceBase
     #region Methods
 
     /// <summary>
-    /// Parses the day from the given dayString.
+    /// Parses the day from the given dayString
     /// </summary>
     /// <param name="dayString">Day to parse</param>
     /// <returns>Parsed day</returns>
     private DateOnly ParseDay(string dayString)
     {
         if (string.IsNullOrWhiteSpace(dayString) == false
-            && DateOnly.TryParseExact(dayString, DateFormats, null, DateTimeStyles.None, out var day))
+            && DateOnly.TryParseExact(dayString, _dateFormats, null, DateTimeStyles.None, out var day))
         {
             return day;
         }

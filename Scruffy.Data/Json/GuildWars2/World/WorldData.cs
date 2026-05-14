@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.GuildWars2.World;
 /// </summary>
 public class WorldData
 {
+    #region Properties
+
     /// <summary>
     /// id
     /// </summary>
@@ -24,4 +26,6 @@ public class WorldData
     /// </summary>
     [JsonProperty("population")]
     public string Population { get; set; }
+
+    #endregion // Properties
 }

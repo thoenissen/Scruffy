@@ -221,7 +221,7 @@ public partial class RaidSquadComponent
 
     /// <summary>
     /// Fill the support role slots (Tank, DPS Support 1, Healer, DPS Support 2).
-    /// Players on the substitutes bench and already assigned players are excluded.
+    /// Players on the substitutes bench and already assigned players are excluded
     /// </summary>
     public void AutoFillSupportRoles()
     {
@@ -235,9 +235,9 @@ public partial class RaidSquadComponent
 
     /// <summary>
     /// Fill the next empty DPS slot with the best available candidate.
-    /// Players on the substitutes bench and already assigned players are excluded.
+    /// Players on the substitutes bench and already assigned players are excluded
     /// </summary>
-    /// <returns><c>true</c> if a player was assigned; <c>false</c> if no slot or candidate is available.</returns>
+    /// <returns><c>true</c> if a player was assigned; <c>false</c> if no slot or candidate is available</returns>
     public bool AutoFillNextDps()
     {
         if (SelectedDps1 == null)

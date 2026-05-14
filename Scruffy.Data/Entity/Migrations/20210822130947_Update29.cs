@@ -9,6 +9,8 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update29 : Migration
     {
+        #region Migration
+
         /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -87,5 +89,7 @@ namespace Scruffy.Data.Entity.Migrations
             migrationBuilder.AddColumn<decimal>("NotificationChannelId", "Guilds", "decimal(20,0)", nullable: true);
             migrationBuilder.AddColumn<decimal>("ReminderChannelId", "Guilds", "decimal(20,0)", nullable: true);
         }
+
+        #endregion // Migration
     }
 }

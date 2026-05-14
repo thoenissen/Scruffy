@@ -51,7 +51,7 @@ public class LocalizationService : SingletonLocatedServiceBase
     /// Return a group by the given key
     /// </summary>
     /// <param name="key">Key</param>
-    /// <returns>The <see cref="LocalizationGroup"/> matching the given key.</returns>
+    /// <returns>The <see cref="LocalizationGroup"/> matching the given key</returns>
     public LocalizationGroup GetGroup(string key)
     {
         if (_groups.TryGetValue(key, out var group) == false)

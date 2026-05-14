@@ -33,7 +33,7 @@ public class DiscordServerChannelRepository : RepositoryBase<DiscordServerChanne
     /// Bulk import of all discord channels
     /// </summary>
     /// <param name="channels">Channels</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<bool> BulkInsert(List<(ulong ServerId, ulong ChannelId, string Name)> channels)
     {
         var success = false;
@@ -62,6 +62,7 @@ public class DiscordServerChannelRepository : RepositoryBase<DiscordServerChanne
                 }
 
                 var table = new DataTable();
+
                 table.Columns.Add(nameof(DiscordServerChannelEntity.ServerId), typeof(ulong));
                 table.Columns.Add(nameof(DiscordServerChannelEntity.ChannelId), typeof(ulong));
                 table.Columns.Add(nameof(DiscordServerChannelEntity.Name), typeof(string));

@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.GitHub;
 /// </summary>
 public class GitCommit
 {
+    #region Properties
+
     /// <summary>
     /// Author
     /// </summary>
@@ -18,4 +20,6 @@ public class GitCommit
     /// </summary>
     [JsonProperty("committer")]
     public GitCommitter Committer { get; set; }
+
+    #endregion // Properties
 }

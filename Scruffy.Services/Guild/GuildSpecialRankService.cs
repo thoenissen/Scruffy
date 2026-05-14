@@ -48,7 +48,7 @@ public class GuildSpecialRankService : LocatedServiceBase
     /// Post a overview of the current points
     /// </summary>
     /// <param name="commandContext">Command context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task PostOverview(InteractionContextContainer commandContext)
     {
         await commandContext.DeferProcessing()

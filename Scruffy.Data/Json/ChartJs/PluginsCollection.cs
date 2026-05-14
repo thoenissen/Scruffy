@@ -5,8 +5,12 @@
 /// </summary>
 public class PluginsCollection
 {
+    #region Properties
+
     /// <summary>
     /// Value indicating whether the legend plugin is enabled
     /// </summary>
     public LegendPlugin Legend { get; set; }
+
+    #endregion // Properties
 }

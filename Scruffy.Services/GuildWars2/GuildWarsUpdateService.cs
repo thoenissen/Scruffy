@@ -44,7 +44,7 @@ public class GuildWarsUpdateService : LocatedServiceBase
     /// Post update overview
     /// </summary>
     /// <param name="commandContext">Command context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task PostUpdateOverview(IContextContainer commandContext)
     {
         var now = DateTime.Now;
@@ -58,6 +58,7 @@ public class GuildWarsUpdateService : LocatedServiceBase
         void AddField(string fieldName, NextUpdateData data)
         {
             var field = new StringBuilder();
+
             field.Append("> ");
             field.Append(LocalizationGroup.GetText("Release", "Release"));
             field.Append(": ");

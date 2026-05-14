@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.QuickChart;
 /// </summary>
 public class PluginsCollection
 {
+    #region Properties
+
     /// <summary>
     /// Legend
     /// </summary>
@@ -24,4 +26,6 @@ public class PluginsCollection
     /// </summary>
     [JsonProperty("doughnutlabel")]
     public DoughnutLabelCollection DoughnutLabel { get; set; }
+
+    #endregion // Properties
 }

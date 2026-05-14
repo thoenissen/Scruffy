@@ -5,18 +5,22 @@ namespace Scruffy.Data.Services.DpsReport;
 /// </summary>
 public class OverallStatistics
 {
+    #region Properties
+
     /// <summary>
-    /// The DPS (damage per second) value for the encounter.
+    /// The DPS (damage per second) value for the encounter
     /// </summary>
     public int? Dps { get; set; }
 
     /// <summary>
-    /// The average alacrity uptime percentage during the encounter.
+    /// The average alacrity uptime percentage during the encounter
     /// </summary>
     public double? Alacrity { get; set; }
 
     /// <summary>
-    /// The average quickness uptime percentage during the encounter.
+    /// The average quickness uptime percentage during the encounter
     /// </summary>
     public double? Quickness { get; set; }
+
+    #endregion // Properties
 }

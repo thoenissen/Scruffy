@@ -5,6 +5,8 @@ namespace Scruffy.Data.Enumerations.DpsReport;
 /// </summary>
 public class DpsReportBossLogEntry
 {
+    #region Properties
+
     /// <summary>
     /// Log ID
     /// </summary>
@@ -24,4 +26,6 @@ public class DpsReportBossLogEntry
     /// Indicates whether the encounter was successful
     /// </summary>
     public bool IsSuccess { get; set; }
+
+    #endregion // Properties
 }

@@ -38,7 +38,7 @@ public class AccountAdministrationService : LocatedServiceBase
     /// Editing a existing account
     /// </summary>
     /// <param name="context">Command context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task Validate(InteractionContextContainer context)
     {
         await context.DeferProcessing()
@@ -116,6 +116,7 @@ public class AccountAdministrationService : LocatedServiceBase
                 if (invalidPermissions.Count > 0)
                 {
                     var sb = new StringBuilder();
+
                     sb.AppendLine(LocalizationGroup.GetText("ListOfInvalidAccountsPermissions", "The following accounts are invalid or have missing permissions:"));
                     sb.Append("```");
 
@@ -136,6 +137,7 @@ public class AccountAdministrationService : LocatedServiceBase
                 if (invalidNames.Count > 0)
                 {
                     var sb = new StringBuilder();
+
                     sb.AppendLine(LocalizationGroup.GetText("ListOfInvalidAccountsNewNames", "The following accounts are renamed"));
                     sb.Append("```");
 
@@ -155,6 +157,7 @@ public class AccountAdministrationService : LocatedServiceBase
                 if (unknownError.Count > 0)
                 {
                     var sb = new StringBuilder();
+
                     sb.AppendLine(LocalizationGroup.GetText("ListOfUnknownErrors", "The following accounts could not be checked"));
                     sb.Append("```");
 

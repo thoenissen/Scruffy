@@ -33,7 +33,7 @@ public class DiscordHistoricAccountRoleAssignmentRepository : RepositoryBase<Dis
     /// Bulk insert
     /// </summary>
     /// <param name="entries">Entries</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<bool> BulkInsert(List<(ulong ServerId, ulong UserId, ulong RoleId)> entries)
     {
         var success = false;
@@ -63,6 +63,7 @@ public class DiscordHistoricAccountRoleAssignmentRepository : RepositoryBase<Dis
                 }
 
                 var table = new DataTable();
+
                 table.Columns.Add(nameof(DiscordHistoricAccountRoleAssignmentEntity.Date), typeof(DateTime));
                 table.Columns.Add(nameof(DiscordHistoricAccountRoleAssignmentEntity.ServerId), typeof(long));
                 table.Columns.Add(nameof(DiscordHistoricAccountRoleAssignmentEntity.AccountId), typeof(long));

@@ -65,7 +65,7 @@ public class AccountCommandHandler : LocatedServiceBase
     /// Configuration of the user account
     /// </summary>
     /// <param name="context">Command context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task ConfigureAccount(IContextContainer context)
     {
         if (context.Channel is not IDMChannel)
@@ -107,7 +107,7 @@ public class AccountCommandHandler : LocatedServiceBase
     /// </summary>
     /// <param name="context">Command context</param>
     /// <param name="apiKey">API key</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task AddOrRefreshGuildWarsAccount(InteractionContextContainer context, string apiKey)
     {
         var deferMessage = await context.DeferProcessing()
@@ -186,7 +186,7 @@ public class AccountCommandHandler : LocatedServiceBase
     /// </summary>
     /// <param name="context">Command context</param>
     /// <param name="userToken">User token</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task AddOrRefreshDpsReportUserToken(InteractionContextContainer context, string userToken)
     {
         await context.DeferProcessing()
@@ -214,7 +214,7 @@ public class AccountCommandHandler : LocatedServiceBase
     /// </summary>
     /// <param name="context">Command context</param>
     /// <param name="accountName">Account name</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task AddOrRefreshGitHubAccount(InteractionContextContainer context, string accountName)
     {
         await context.DeferProcessing()
@@ -243,7 +243,7 @@ public class AccountCommandHandler : LocatedServiceBase
     /// <param name="context">Command context</param>
     /// <param name="name">Name</param>
     /// <param name="birthday">Birthday</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task AddOrRefreshPersonalData(InteractionContextContainer context, string name, string birthday)
     {
         await context.DeferProcessing()
@@ -287,7 +287,7 @@ public class AccountCommandHandler : LocatedServiceBase
     /// Account overview
     /// </summary>
     /// <param name="context">Command context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task AccountOverview(IContextContainer context)
     {
         try

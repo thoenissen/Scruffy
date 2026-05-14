@@ -26,10 +26,14 @@ namespace Scruffy.Data.Entity;
 /// </summary>
 public class ScruffyDbContext : IdentityDbContext<UserEntity, RoleEntity, long, UserClaimEntity, UserRoleEntity, UserLoginEntity, RoleClaimEntity, UserTokenEntity>
 {
+    #region Fields
+
     /// <summary>
     /// Connection string
     /// </summary>
     private static string _connectionString;
+
+    #endregion // Fields
 
     #region Properties
 

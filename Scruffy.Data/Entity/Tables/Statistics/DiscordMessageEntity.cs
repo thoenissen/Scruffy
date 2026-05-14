@@ -8,6 +8,8 @@ namespace Scruffy.Data.Entity.Tables.Statistics;
 [Table("DiscordMessages")]
 public class DiscordMessageEntity
 {
+    #region Properties
+
     /// <summary>
     /// ID of the server
     /// </summary>
@@ -37,4 +39,6 @@ public class DiscordMessageEntity
     /// Time stamp
     /// </summary>
     public DateTime TimeStamp { get; set; }
+
+    #endregion // Properties
 }

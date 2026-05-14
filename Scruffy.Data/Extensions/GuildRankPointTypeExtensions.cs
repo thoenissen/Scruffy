@@ -7,6 +7,8 @@ namespace Scruffy.Data.Extensions;
 /// </summary>
 public static class GuildRankPointTypeExtensions
 {
+    #region Methods
+
     /// <summary>
     /// Get color
     /// </summary>
@@ -28,4 +30,6 @@ public static class GuildRankPointTypeExtensions
                    _ => "#FFFFFF"
                };
     }
+
+    #endregion // Methods
 }

@@ -20,7 +20,7 @@ public class ItemConfigurationFormData
     public long CustomValue { get; set; }
 
     /// <summary>
-    /// Should the value be reduced after n inserts.
+    /// Should the value be reduced after n inserts
     /// </summary>
     [DialogElementAssignment(typeof(GuildConfigurationItemCustomValueThresholdDialogElement))]
     public bool IsThresholdItem { get; set; }

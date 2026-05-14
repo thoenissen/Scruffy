@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.GuildWars2.Items;
 /// </summary>
 public class ItemIngredient
 {
+    #region Properties
+
     /// <summary>
     /// Item id
     /// </summary>
@@ -18,4 +20,6 @@ public class ItemIngredient
     /// </summary>
     [JsonProperty("count")]
     public int Count { get; set; }
+
+    #endregion // Properties
 }

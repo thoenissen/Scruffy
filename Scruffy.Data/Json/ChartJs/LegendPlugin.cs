@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.ChartJs
     /// </summary>
     public class LegendPlugin
     {
+        #region Properties
+
         /// <summary>
         /// Value indicating whether the legend is displayed
         /// </summary>
@@ -22,5 +24,7 @@ namespace Scruffy.Data.Json.ChartJs
         /// Labels for the legend
         /// </summary>
         public LegendLabels Labels { get; set; }
+
+        #endregion // Properties
     }
 }

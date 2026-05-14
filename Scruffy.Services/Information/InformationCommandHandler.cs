@@ -1,4 +1,5 @@
 using Discord;
+
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord.Interfaces;
@@ -13,7 +14,7 @@ public class InformationCommandHandler : LocatedServiceBase
     #region Constructor
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="InformationCommandHandler"/> class.
+    /// Initializes a new instance of the <see cref="InformationCommandHandler"/> class
     /// </summary>
     /// <param name="localizationService">Localization service</param>
     public InformationCommandHandler(LocalizationService localizationService)

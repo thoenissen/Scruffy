@@ -9,6 +9,8 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update45 : Migration
     {
+        #region Migration
+
         /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -70,5 +72,7 @@ namespace Scruffy.Data.Entity.Migrations
                                              nullable: false,
                                              defaultValue: false);
         }
+
+        #endregion // Migration
     }
 }

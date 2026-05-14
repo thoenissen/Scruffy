@@ -7,6 +7,8 @@ namespace Scruffy.Data.Entity.Migrations;
 /// <inheritdoc />
 public partial class Update89 : Migration
 {
+    #region Migration
+
     /// <inheritdoc />
     protected override void Up(MigrationBuilder migrationBuilder)
     {
@@ -30,4 +32,6 @@ public partial class Update89 : Migration
     {
         migrationBuilder.DropTable(name: "DiscordServerChannels");
     }
+
+    #endregion // Migration
 }

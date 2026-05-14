@@ -40,10 +40,12 @@ public class CalendarTemplateSelectionDialogElement : DialogEmbedMessageElementB
     public override EmbedBuilder GetMessage()
     {
         var builder = new EmbedBuilder();
+
         builder.WithTitle(LocalizationGroup.GetText("ChooseTemplateTitle", "Calendar template selection"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseTemplateDescription", "Please choose one of the following calendar templates:"));
 
         _templates = [];
+
         var levelsFieldsText = new StringBuilder();
 
         using (var dbFactory = RepositoryFactory.CreateInstance())

@@ -5,6 +5,8 @@
 /// </summary>
 public class OverviewUserPointsData
 {
+    #region Properties
+
     /// <summary>
     /// User id
     /// </summary>
@@ -34,4 +36,6 @@ public class OverviewUserPointsData
     /// Discord role id
     /// </summary>
     public ulong? DiscordRoleId { get; set; }
+
+    #endregion // Properties
 }

@@ -53,9 +53,9 @@ public abstract class TemporaryComponentsContainer : IAsyncDisposable
     #region IAsyncDisposable
 
     /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously.
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously
     /// </summary>
-    /// <returns>A task that represents the asynchronous dispose operation.</returns>
+    /// <returns>A task that represents the asynchronous dispose operation</returns>
     public ValueTask DisposeAsync()
     {
         GC.SuppressFinalize(this);

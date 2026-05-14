@@ -1,10 +1,12 @@
 namespace Scruffy.Data.Services.DpsReport;
 
 /// <summary>
-/// Represents a mechanic from a DPS report with hit count.
+/// Represents a mechanic from a DPS report with hit count
 /// </summary>
 public class Mechanic
 {
+    #region Properties
+
     /// <summary>
     /// Short name of the mechanic
     /// </summary>
@@ -24,4 +26,6 @@ public class Mechanic
     /// Number of times the player was hit by this mechanic
     /// </summary>
     public int Count { get; set; }
+
+    #endregion // Properties
 }

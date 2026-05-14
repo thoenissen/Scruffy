@@ -67,7 +67,7 @@ public partial class DiscordVoiceStatisticsPage : LocatedComponent
     /// <summary>
     /// Pie chart color palette
     /// </summary>
-    private static readonly string[] PieColors = ["#f1d083", "#7b68ee", "#ff6384", "#36a2eb", "#4bc0c0", "#9966ff", "#ff9f40", "#c9cbcf", "#e7e9ed", "#8ac926", "#6a4c93"];
+    private static readonly string[] _pieColors = ["#f1d083", "#7b68ee", "#ff6384", "#36a2eb", "#4bc0c0", "#9966ff", "#ff9f40", "#c9cbcf", "#e7e9ed", "#8ac926", "#6a4c93"];
 
     #endregion // Constants
 
@@ -414,6 +414,7 @@ public partial class DiscordVoiceStatisticsPage : LocatedComponent
                     for (var date = startDate.Date; date <= today; date = date.AddDays(1))
                     {
                         var label = date.ToString("dd.MM", LocalizationGroup.CultureInfo);
+
                         result.Add((label, lookup.GetValueOrDefault(label)));
                     }
                 }
@@ -446,6 +447,7 @@ public partial class DiscordVoiceStatisticsPage : LocatedComponent
                     while (currentMonth <= endMonth)
                     {
                         var label = $"{currentMonth.Month:D2}/{currentMonth.Year}";
+
                         result.Add((label, lookup.GetValueOrDefault(label)));
                         currentMonth = currentMonth.AddMonths(1);
                     }
@@ -524,7 +526,7 @@ public partial class DiscordVoiceStatisticsPage : LocatedComponent
     /// <summary>
     /// Load all chart data
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task LoadDataAsync()
     {
         _isLoading = true;
@@ -711,7 +713,7 @@ public partial class DiscordVoiceStatisticsPage : LocatedComponent
                                                     new DataSet
                                                     {
                                                         Data = values.ToArray(),
-                                                        BackgroundColor = PieColors.Take(labels.Count).ToArray()
+                                                        BackgroundColor = _pieColors.Take(labels.Count).ToArray()
                                                     }
                                                 ]
                                  };
@@ -811,7 +813,7 @@ public partial class DiscordVoiceStatisticsPage : LocatedComponent
                                                        new DataSet
                                                        {
                                                            Data = values.ToArray(),
-                                                           BackgroundColor = PieColors.Take(labels.Count).ToArray()
+                                                           BackgroundColor = _pieColors.Take(labels.Count).ToArray()
                                                        }
                                                    ]
                                     };
@@ -859,7 +861,7 @@ public partial class DiscordVoiceStatisticsPage : LocatedComponent
     /// </summary>
     /// <param name="accountId">Discord account ID (for user drilldown)</param>
     /// <param name="channelId">Discord channel ID (for channel drilldown)</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task LoadDrilldownAsync(ulong? accountId = null, ulong? channelId = null)
     {
         await Task.Run(() =>
@@ -1031,7 +1033,7 @@ public partial class DiscordVoiceStatisticsPage : LocatedComponent
                                                               new DataSet
                                                               {
                                                                   Data = values.ToArray(),
-                                                                  BackgroundColor = PieColors.Take(labels.Count).ToArray()
+                                                                  BackgroundColor = _pieColors.Take(labels.Count).ToArray()
                                                               }
                                                           ]
                                            };
@@ -1104,7 +1106,7 @@ public partial class DiscordVoiceStatisticsPage : LocatedComponent
                                                               new DataSet
                                                               {
                                                                   Data = values.ToArray(),
-                                                                  BackgroundColor = PieColors.Take(labels.Count).ToArray()
+                                                                  BackgroundColor = _pieColors.Take(labels.Count).ToArray()
                                                               }
                                                           ]
                                            };

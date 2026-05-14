@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.QuickChart;
 /// </summary>
 public class Annotation
 {
+    #region Properties
+
     /// <summary>
     /// Type
     /// </summary>
@@ -42,4 +44,6 @@ public class Annotation
     /// </summary>
     [JsonProperty("borderWidth")]
     public int BorderWidth { get; set; }
+
+    #endregion // Properties
 }

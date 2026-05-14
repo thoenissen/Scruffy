@@ -83,7 +83,7 @@ public sealed class DiscordBot : IAsyncDisposable
     /// <summary>
     /// Start the discord bot
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation</returns>
     public async Task StartAsync()
     {
         var debugChannel = Environment.GetEnvironmentVariable("SCRUFFY_DEBUG_CHANNEL");
@@ -157,7 +157,7 @@ public sealed class DiscordBot : IAsyncDisposable
     /// <summary>
     /// The discord client connected
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation</returns>
     private async Task OnConnected()
     {
         if (_isSchedulerInitialized == false)
@@ -205,7 +205,7 @@ public sealed class DiscordBot : IAsyncDisposable
     /// The discord client disconnected
     /// </summary>
     /// <param name="ex">Exception</param>
-    /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation</returns>
     private Task OnDisconnected(Exception ex)
     {
         _lastDisconnect = ex;
@@ -217,7 +217,7 @@ public sealed class DiscordBot : IAsyncDisposable
     /// Discord client logging
     /// </summary>
     /// <param name="e">Argument</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private Task OnDiscordClientLog(LogMessage e)
     {
         LoggingService.AddDiscordClientLog(e);
@@ -229,7 +229,7 @@ public sealed class DiscordBot : IAsyncDisposable
     /// Interaction service logging
     /// </summary>
     /// <param name="e">Argument</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private Task OnInteractionServiceLog(LogMessage e)
     {
         LoggingService.AddInteractionServiceLog(e);
@@ -241,7 +241,7 @@ public sealed class DiscordBot : IAsyncDisposable
     /// Interaction created
     /// </summary>
     /// <param name="e">Arguments</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task OnInteractionCreated(SocketInteraction e)
     {
         var context = new InteractionContextContainer(_discordClient, e);
@@ -262,7 +262,7 @@ public sealed class DiscordBot : IAsyncDisposable
     /// </summary>
     /// <param name="context">Context</param>
     /// <param name="ex">Exception</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task HandleInteractionException(InteractionContextContainer context, Exception ex)
     {
         if (ex is ScruffyException
@@ -306,7 +306,7 @@ public sealed class DiscordBot : IAsyncDisposable
     /// <param name="command">Command</param>
     /// <param name="context">Context</param>
     /// <param name="result">Result</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task OnComponentCommandExecuted(ComponentCommandInfo command, IInteractionContext context, IResult result)
     {
         if (context is InteractionContextContainer container)
@@ -354,7 +354,7 @@ public sealed class DiscordBot : IAsyncDisposable
     /// <param name="command">Command</param>
     /// <param name="context">Context</param>
     /// <param name="result">Result</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task OnModalCommandExecuted(ModalCommandInfo command, IInteractionContext context, IResult result)
     {
         if (context is InteractionContextContainer container)
@@ -402,7 +402,7 @@ public sealed class DiscordBot : IAsyncDisposable
     /// <param name="command">Command</param>
     /// <param name="context">Context</param>
     /// <param name="result">Result</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task OnSlashCommandExecuted(SlashCommandInfo command, IInteractionContext context, IResult result)
     {
         if (context is InteractionContextContainer container)
@@ -449,9 +449,9 @@ public sealed class DiscordBot : IAsyncDisposable
     #region IAsyncDisposable
 
     /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously.
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously
     /// </summary>
-    /// <returns>A task that represents the asynchronous dispose operation.</returns>
+    /// <returns>A task that represents the asynchronous dispose operation</returns>
     public async ValueTask DisposeAsync()
     {
         _interaction?.Dispose();

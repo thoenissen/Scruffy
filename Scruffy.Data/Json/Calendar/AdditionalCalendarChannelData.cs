@@ -5,6 +5,8 @@
 /// </summary>
 public class AdditionalCalendarChannelData
 {
+    #region Properties
+
     /// <summary>
     /// Title of the calendar
     /// </summary>
@@ -14,4 +16,6 @@ public class AdditionalCalendarChannelData
     /// Description of the calendar
     /// </summary>
     public string Description { get; set; }
+
+    #endregion // Properties
 }

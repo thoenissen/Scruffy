@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.QuickChart;
 /// </summary>
 public class YAxis
 {
+    #region Properties
+
     /// <summary>
     /// Stacked
     /// </summary>
@@ -18,4 +20,6 @@ public class YAxis
     /// </summary>
     [JsonProperty("ticks")]
     public AxisTicks Ticks { get; set; }
+
+    #endregion // Properties
 }

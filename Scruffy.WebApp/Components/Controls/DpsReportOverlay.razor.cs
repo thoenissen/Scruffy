@@ -39,7 +39,7 @@ public partial class DpsReportOverlay
     /// <summary>
     /// Called when the overlay close button is clicked
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task OnCloseOverlay()
     {
         await OnCloseRequested.InvokeAsync()

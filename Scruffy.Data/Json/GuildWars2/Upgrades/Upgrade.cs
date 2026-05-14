@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.GuildWars2.Upgrades;
 /// </summary>
 public class Upgrade
 {
+    #region Properties
+
     /// <summary>
     /// id
     /// </summary>
@@ -18,4 +20,6 @@ public class Upgrade
     /// </summary>
     [JsonProperty("name")]
     public string Name { get; set; }
+
+    #endregion // Properties
 }

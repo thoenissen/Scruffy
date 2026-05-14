@@ -58,7 +58,7 @@ public class GuildRankService : LocatedServiceBase
     /// Import all in game ranks
     /// </summary>
     /// <param name="guildId">Id of the guild</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task ImportGuildRanks(long? guildId)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
@@ -119,7 +119,7 @@ public class GuildRankService : LocatedServiceBase
     /// <param name="guildId">Id of the guild</param>
     /// <param name="accountName">Account name</param>
     /// <param name="rankName">rank</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<bool> RefreshDiscordRank(long guildId, string accountName, string rankName)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
@@ -255,7 +255,7 @@ public class GuildRankService : LocatedServiceBase
     /// Refresh discord roles
     /// </summary>
     /// <param name="guildId">Id of the guild</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task RefreshDiscordRoles(long? guildId)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
@@ -370,7 +370,7 @@ public class GuildRankService : LocatedServiceBase
     /// Refresh current guild rank points
     /// </summary>
     /// <param name="guildId">Id of the guild</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task RefreshCurrentPoints(long? guildId)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
@@ -1083,7 +1083,7 @@ public class GuildRankService : LocatedServiceBase
     /// </summary>
     /// <param name="guildId">Guild id</param>
     /// <param name="isLiveDetermination">Is live rank determination?</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<Embed> CheckCurrentAssignments(long guildId, bool isLiveDetermination)
     {
         Dictionary<string, string> currentRanks;

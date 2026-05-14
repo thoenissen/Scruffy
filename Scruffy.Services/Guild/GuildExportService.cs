@@ -45,7 +45,7 @@ public class GuildExportService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <param name="sinceDate">Since date</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task ExportStashLog(InteractionContextContainer commandContext, DateTime sinceDate)
     {
         await commandContext.DeferProcessing()
@@ -141,7 +141,7 @@ public class GuildExportService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <param name="sinceDate">Since date</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task ExportStashLogSummarized(InteractionContextContainer commandContext, DateTime sinceDate)
     {
         await commandContext.DeferProcessing()
@@ -243,7 +243,7 @@ public class GuildExportService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <param name="sinceDate">Since date</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task ExportUpgradesLog(InteractionContextContainer commandContext, DateTime sinceDate)
     {
         await commandContext.DeferProcessing()
@@ -363,7 +363,7 @@ public class GuildExportService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <param name="sinceDate">Since date</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task ExportUpgradesLogSummarized(InteractionContextContainer commandContext, DateTime sinceDate)
     {
         await commandContext.DeferProcessing()
@@ -488,7 +488,7 @@ public class GuildExportService : LocatedServiceBase
     /// Exporting login data
     /// </summary>
     /// <param name="commandContext">Command context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task ExportLoginActivityLog(InteractionContextContainer commandContext)
     {
         await commandContext.DeferProcessing()
@@ -541,7 +541,7 @@ public class GuildExportService : LocatedServiceBase
     /// Exporting representation state
     /// </summary>
     /// <param name="commandContext">Command context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task ExportRepresentation(InteractionContextContainer commandContext)
     {
         await commandContext.DeferProcessing()
@@ -635,7 +635,7 @@ public class GuildExportService : LocatedServiceBase
     /// Exporting guild members
     /// </summary>
     /// <param name="commandContext">Command context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task ExportGuildMembers(InteractionContextContainer commandContext)
     {
         await commandContext.DeferProcessing()
@@ -716,7 +716,7 @@ public class GuildExportService : LocatedServiceBase
     /// Exporting guild roles
     /// </summary>
     /// <param name="commandContext">Command context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task ExportGuildRoles(InteractionContextContainer commandContext)
     {
         await commandContext.DeferProcessing()
@@ -768,7 +768,7 @@ public class GuildExportService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <param name="sinceDate">Since date</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task ExportGuildRankPoints(InteractionContextContainer commandContext, DateTime sinceDate)
     {
         await commandContext.DeferProcessing()
@@ -835,7 +835,7 @@ public class GuildExportService : LocatedServiceBase
     /// Exporting current guild rank assignments
     /// </summary>
     /// <param name="commandContext">Command context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task ExportGuildRankAssignments(InteractionContextContainer commandContext)
     {
         await commandContext.DeferProcessing()

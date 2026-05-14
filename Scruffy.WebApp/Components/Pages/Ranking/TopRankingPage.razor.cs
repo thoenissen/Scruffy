@@ -101,7 +101,7 @@ public partial class TopRankingPage : LocatedComponent
     /// <summary>
     /// Build max points chart
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task BuildMaxPointsChart()
     {
         var maxPoints = await Cache.GetOrCreateAsync("webapp/ranking/top/max_points",

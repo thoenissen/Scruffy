@@ -5,6 +5,8 @@
 /// </summary>
 public class RaidAppointmentMessageExperienceLevel
 {
+    #region Properties
+
     /// <summary>
     /// Id
     /// </summary>
@@ -29,4 +31,6 @@ public class RaidAppointmentMessageExperienceLevel
     /// Rank
     /// </summary>
     public int Rank { get; set; }
+
+    #endregion // Properties
 }

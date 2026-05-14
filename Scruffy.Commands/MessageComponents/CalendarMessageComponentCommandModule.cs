@@ -43,7 +43,7 @@ public class CalendarMessageComponentCommandModule : LocatedInteractionModuleBas
     /// <summary>
     /// Appointment lead configuration
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [ComponentInteraction($"{Group};{CommandLeadConfiguration};")]
     public async Task LeadConfiguration()
     {
@@ -58,7 +58,7 @@ public class CalendarMessageComponentCommandModule : LocatedInteractionModuleBas
     /// Appointment lead selection
     /// </summary>
     /// <param name="selection">Selection</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [ComponentInteraction($"{Group};{CommandLeadSelection};")]
     public async Task LeadSelection(string[] selection)
     {

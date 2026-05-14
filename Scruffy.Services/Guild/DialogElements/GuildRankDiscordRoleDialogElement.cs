@@ -38,10 +38,12 @@ public class GuildRankDiscordRoleDialogElement : DialogEmbedMessageElementBase<u
     public override EmbedBuilder GetMessage()
     {
         var builder = new EmbedBuilder();
+
         builder.WithTitle(LocalizationGroup.GetText("ChooseTitle", "Role selection"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseDescription", "Please choose one of the following roles:"));
 
         _roles = [];
+
         var stringBuilder = new StringBuilder();
 
         var rolesCounter = 1;

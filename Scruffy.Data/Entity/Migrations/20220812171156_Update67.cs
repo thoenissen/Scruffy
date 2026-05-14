@@ -9,6 +9,8 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update67 : Migration
     {
+        #region Migration
+
         /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -238,5 +240,7 @@ namespace Scruffy.Data.Entity.Migrations
             migrationBuilder.DropColumn(name: "TwoFactorEnabled", table: "Users");
             migrationBuilder.DropColumn(name: "UserName", table: "Users");
         }
+
+        #endregion // Migration
     }
 }

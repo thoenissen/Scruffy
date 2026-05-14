@@ -7,6 +7,8 @@ namespace Scruffy.Data.Entity.Migrations;
 /// <inheritdoc />
 public partial class Update91 : Migration
 {
+    #region Migration
+
     /// <inheritdoc />
     protected override void Up(MigrationBuilder migrationBuilder)
     {
@@ -21,4 +23,6 @@ public partial class Update91 : Migration
     {
         migrationBuilder.DropColumn(name: "AvatarUrl", table: "DiscordServerMembers");
     }
+
+    #endregion // Migration
 }

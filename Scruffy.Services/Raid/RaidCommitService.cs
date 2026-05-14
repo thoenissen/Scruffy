@@ -70,7 +70,7 @@ public class RaidCommitService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <param name="aliasName">Alias name</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task CommitRaidAppointment(IContextContainer commandContext, string aliasName)
     {
         await commandContext.DeferProcessing()

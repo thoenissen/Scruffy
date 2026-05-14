@@ -51,7 +51,7 @@ public class GuildRankingLeaderRoleAssignmentJob : LocatedAsyncJob
     /// <param name="guildId">Guild ID</param>
     /// <param name="discordServerId">Discord server ID</param>
     /// <param name="rankingLeaderRoleId">Ranking leader role ID</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task AssignRole(long guildId, ulong discordServerId, ulong rankingLeaderRoleId)
     {
         var discordGuild = _discordClient.GetGuild(discordServerId);

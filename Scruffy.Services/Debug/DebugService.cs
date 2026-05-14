@@ -138,7 +138,7 @@ public class DebugService
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <param name="id">Id</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task PostLogEntry(IContextContainer commandContext, int id)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
@@ -245,7 +245,7 @@ public class DebugService
     /// <param name="channel">Channel</param>
     /// <param name="date">Date</param>
     /// <param name="suppressEmpty">Suppress empty overview</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task PostLogOverview(IMessageChannel channel, DateTime date, bool suppressEmpty)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
@@ -329,7 +329,7 @@ public class DebugService
     /// <summary>
     /// Refresh accounts
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task RefreshAccount()
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())

@@ -200,7 +200,7 @@ public sealed class DialogHandler : IAsyncDisposable, IDisposable
     /// <summary>
     /// Deletes all messages
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task DeleteMessages()
     {
         await _commandContext.DeleteMessages(DialogContext.Messages)
@@ -211,8 +211,10 @@ public sealed class DialogHandler : IAsyncDisposable, IDisposable
 
     #region IAsyncDisposable
 
-    /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously.</summary>
-    /// <returns>A task that represents the asynchronous dispose operation.</returns>
+    /// <summary>
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously
+    /// </summary>
+    /// <returns>A task that represents the asynchronous dispose operation</returns>
     public async ValueTask DisposeAsync()
     {
         if (_serviceProvider != null)
@@ -229,7 +231,7 @@ public sealed class DialogHandler : IAsyncDisposable, IDisposable
     #region IDisposable
 
     /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources
     /// </summary>
     public void Dispose()
     {

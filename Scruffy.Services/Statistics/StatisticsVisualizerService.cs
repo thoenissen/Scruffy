@@ -47,7 +47,7 @@ public class StatisticsVisualizerService : LocatedServiceBase
     /// Post personal overview
     /// </summary>
     /// <param name="commandContext">Command context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task PostMeOverview(IContextContainer commandContext)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
@@ -61,6 +61,7 @@ public class StatisticsVisualizerService : LocatedServiceBase
                                                  .WithTimestamp(now);
 
             var stringBuilder = new StringBuilder();
+
             stringBuilder.AppendLine($"{commandContext.User.Mention} ({commandContext.User.Username}#{commandContext.User.Discriminator})");
             stringBuilder.AppendLine();
             stringBuilder.AppendLine(LocalizationGroup.GetText("MeOverviewDescription", "Personal statistics of the last 60 Days."));
@@ -127,7 +128,9 @@ public class StatisticsVisualizerService : LocatedServiceBase
 
             stringBuilder.Append(LocalizationGroup.GetText("MeOverview60Days", "60 Days:"));
             stringBuilder.Append(' ');
+
             var limit = now.AddDays(-60);
+
             stringBuilder.Append(Format.Code(dbFactory.GetRepository<DiscordMessageRepository>()
                                                       .GetQuery()
                                                       .Count(obj => obj.DiscordServerId == commandContext.Guild.Id

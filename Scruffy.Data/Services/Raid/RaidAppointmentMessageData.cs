@@ -5,6 +5,8 @@
 /// </summary>
 public class RaidAppointmentMessageData
 {
+    #region Properties
+
     /// <summary>
     /// Timestamp
     /// </summary>
@@ -44,4 +46,6 @@ public class RaidAppointmentMessageData
     /// Registrations
     /// </summary>
     public List<RaidAppointmentRegistrationData> Registrations { get; set; }
+
+    #endregion // Properties
 }

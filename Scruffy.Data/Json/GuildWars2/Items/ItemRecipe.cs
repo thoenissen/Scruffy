@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.GuildWars2.Items;
 /// </summary>
 public class ItemRecipe
 {
+    #region Properties
+
     /// <summary>
     /// Id
     /// </summary>
@@ -78,4 +80,6 @@ public class ItemRecipe
     /// </summary>
     [JsonProperty("guild_ingredients")]
     public List<GuildIngredient> GuildIngredients { get; set; }
+
+    #endregion // Properties
 }

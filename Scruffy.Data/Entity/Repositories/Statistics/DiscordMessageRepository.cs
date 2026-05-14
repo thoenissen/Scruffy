@@ -34,7 +34,7 @@ public class DiscordMessageRepository : RepositoryBase<DiscordMessageQueryable, 
     /// Bulk insert
     /// </summary>
     /// <param name="entries">Entries</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<bool> BulkInsert(List<DiscordMessageBulkInsertData> entries)
     {
         var success = false;
@@ -66,6 +66,7 @@ public class DiscordMessageRepository : RepositoryBase<DiscordMessageQueryable, 
                 }
 
                 var dataTable = new DataTable();
+
                 dataTable.Columns.Add(nameof(DiscordMessageEntity.DiscordServerId), typeof(ulong));
                 dataTable.Columns.Add(nameof(DiscordMessageEntity.DiscordChannelId), typeof(ulong));
                 dataTable.Columns.Add(nameof(DiscordMessageEntity.DiscordThreadId), typeof(ulong));

@@ -24,7 +24,7 @@ public abstract class LocatedAsyncJob : IServiceScopeSupport, IAsyncJob, IDispos
     #region Finalizer
 
     /// <summary>
-    /// Allows an object to try to free resources and perform other cleanup operations before it is reclaimed by garbage collection.
+    /// Allows an object to try to free resources and perform other cleanup operations before it is reclaimed by garbage collection
     /// </summary>
     ~LocatedAsyncJob()
     {
@@ -38,7 +38,7 @@ public abstract class LocatedAsyncJob : IServiceScopeSupport, IAsyncJob, IDispos
     /// <summary>
     /// Executes the job
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public abstract Task ExecuteOverrideAsync();
 
     #endregion // Methods
@@ -64,9 +64,9 @@ public abstract class LocatedAsyncJob : IServiceScopeSupport, IAsyncJob, IDispos
     #region IJob
 
     /// <summary>
-    /// Executes the job.
+    /// Executes the job
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task ExecuteAsync()
     {
         try
@@ -118,7 +118,7 @@ public abstract class LocatedAsyncJob : IServiceScopeSupport, IAsyncJob, IDispos
     /// <summary>
     /// Internal IDisposable implementation
     /// </summary>
-    /// <param name="disposing">Called from <see cref="Dispose()"/></param>?
+    /// <param name="disposing">Called from <see cref="Dispose()"/>?</param>
     protected virtual void Dispose(bool disposing)
     {
         if (disposing)
@@ -128,7 +128,7 @@ public abstract class LocatedAsyncJob : IServiceScopeSupport, IAsyncJob, IDispos
     }
 
     /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources
     /// </summary>
     public void Dispose()
     {

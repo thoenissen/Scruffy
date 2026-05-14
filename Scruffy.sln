@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.1.11312.151 d18.0
+VisualStudioVersion = 18.1.11312.151
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scruffy.ServiceHosts.Discord", "Scruffy.ServiceHosts.Discord\Scruffy.ServiceHosts.Discord.csproj", "{7FA49663-BEE1-45B9-9147-0F95ABDC0324}"
 EndProject
@@ -22,7 +22,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04_Misc", "04_Misc", "{8BFF
 		Directory.Build.props = Directory.Build.props
 		.github\workflows\docker-publish.yml = .github\workflows\docker-publish.yml
 		StyleCop.Debug.ruleset = StyleCop.Debug.ruleset
-		stylecop.json = stylecop.json
 		StyleCop.Release.ruleset = StyleCop.Release.ruleset
 	EndProjectSection
 EndProject

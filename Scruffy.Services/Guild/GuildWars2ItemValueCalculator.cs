@@ -81,7 +81,7 @@ namespace Scruffy.Services.Guild
         /// Get item values
         /// </summary>
         /// <param name="itemId">Item Id</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         public async Task<List<ItemValue>> GetItemValues(int itemId)
         {
             _customValues ??= await _dbFactory.GetRepository<GuildWarsItemRepository>()
@@ -110,7 +110,7 @@ namespace Scruffy.Services.Guild
         /// </summary>
         /// <param name="itemId">Item ID</param>
         /// <param name="itemValues">Item values</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
         private async Task<ItemValue> GetValue(int itemId, List<ItemValue> itemValues)
         {
             var itemValue = new ItemValue
@@ -273,7 +273,7 @@ namespace Scruffy.Services.Guild
         #region IDisposable
 
         /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources
         /// </summary>
         public void Dispose()
         {

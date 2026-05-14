@@ -271,7 +271,7 @@ public partial class RaidCommitPage
     /// <summary>
     /// Commit the raid appointment
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task OnCommitAsync()
     {
         if (_appointmentId == null || _appointmentTimeStamp == null || _isCommitting)

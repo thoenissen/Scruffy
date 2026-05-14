@@ -35,12 +35,12 @@ public class LogCommandHandler : LocatedServiceBase
     /// <summary>
     /// Formats for parsing an input date
     /// </summary>
-    private static readonly string[] DateFormats = ["dd.MM", "dd.MM.yyyy", "MM-dd", "yyyy-MM-dd"];
+    private static readonly string[] _dateFormats = ["dd.MM", "dd.MM.yyyy", "MM-dd", "yyyy-MM-dd"];
 
     /// <summary>
     /// Web application URL
     /// </summary>
-    private static readonly string WebbAppUrl = Environment.GetEnvironmentVariable("SCRUFFY_WEBAPP_URL");
+    private static readonly string _webbAppUrl = Environment.GetEnvironmentVariable("SCRUFFY_WEBAPP_URL");
 
     /// <summary>
     /// Discord socket client
@@ -661,13 +661,13 @@ public class LogCommandHandler : LocatedServiceBase
                                  .ConfigureAwait(false);
                 }
 
-                if (string.IsNullOrWhiteSpace(WebbAppUrl) == false)
+                if (string.IsNullOrWhiteSpace(_webbAppUrl) == false)
                 {
                     var webAppEmbed = new EmbedBuilder().WithColor(Color.Green)
                                                         .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
                                                         .WithColor(Color.Green)
                                                         .WithTimestamp(DateTime.Now)
-                                                        .WithDescription(LocalizationGroup.GetFormattedText("WebAppGolemHint", "Would you like more information about a log? Then check out the new [website]({0}).", WebbAppUrl + "/DpsReports/Today"));
+                                                        .WithDescription(LocalizationGroup.GetFormattedText("WebAppGolemHint", "Would you like more information about a log? Then check out the new [website]({0}).", _webbAppUrl + "/DpsReports/Today"));
 
                     await context.SendMessageAsync(embed: webAppEmbed.Build())
                                  .ConfigureAwait(false);
@@ -885,7 +885,7 @@ public class LogCommandHandler : LocatedServiceBase
     #region Private methods
 
     /// <summary>
-    /// Parses the day from the given dayString.
+    /// Parses the day from the given dayString
     /// </summary>
     /// <param name="dayString">Day to parse</param>
     /// <param name="day">Date</param>
@@ -894,7 +894,7 @@ public class LogCommandHandler : LocatedServiceBase
     {
         if (string.IsNullOrWhiteSpace(dayString) == false)
         {
-            return DateOnly.TryParseExact(dayString, DateFormats, null, DateTimeStyles.None, out day);
+            return DateOnly.TryParseExact(dayString, _dateFormats, null, DateTimeStyles.None, out day);
         }
 
         day = default;
@@ -903,7 +903,7 @@ public class LogCommandHandler : LocatedServiceBase
     }
 
     /// <summary>
-    /// Parses the day date time offset from the given dayString as the first second of the day.
+    /// Parses the day date time offset from the given dayString as the first second of the day
     /// </summary>
     /// <param name="dayString">Day to parse</param>
     /// <returns>Parsed date time offset</returns>
@@ -918,7 +918,7 @@ public class LogCommandHandler : LocatedServiceBase
     }
 
     /// <summary>
-    /// Parses the day date time offset from the given dayString as the last second of the day.
+    /// Parses the day date time offset from the given dayString as the last second of the day
     /// </summary>
     /// <param name="dayString">Day to parse</param>
     /// <returns>Parsed date time offset</returns>
@@ -1075,7 +1075,7 @@ public class LogCommandHandler : LocatedServiceBase
     /// </summary>
     /// <param name="builder">Embed Builder</param>
     /// <param name="uploads">DPS report uploads</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task<HashSet<PlayerGroup>> WriteRaidSummary(DpsReportEmbedBuilder builder, IEnumerable<Upload> uploads)
     {
         var knownGroups = new HashSet<PlayerGroup>();
@@ -1107,6 +1107,7 @@ public class LogCommandHandler : LocatedServiceBase
                 foreach (var groupUploads in groupedUploads)
                 {
                     var fieldTitle = new StringBuilder();
+
                     fieldTitle.Append(reportGroup.Key.AsText());
 
                     if (hasMultipleGroups)
@@ -1141,6 +1142,7 @@ public class LogCommandHandler : LocatedServiceBase
                                                       .Select(obj => obj.ToList()))
                         {
                             var title = BuildTitle(boss, true, hasNormalTries, hasChallengeTries);
+
                             reports.AppendLine(title);
 
                             // Enrich the logs with the remaining health
@@ -1161,7 +1163,7 @@ public class LogCommandHandler : LocatedServiceBase
 
     /// <summary>
     /// Groups the given uploads, using the given known groups.
-    /// Adds new groups, if they don't exist.
+    /// Adds new groups, if they don't exist
     /// </summary>
     /// <param name="knownGroups">Previously known groups</param>
     /// <param name="uploads">Uploads</param>
@@ -1204,7 +1206,7 @@ public class LogCommandHandler : LocatedServiceBase
     /// </summary>
     /// <param name="uploads">The uploads to get the logs for</param>
     /// <param name="shouldSkip">A function to determine whether a upload should be skipped</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task<List<Tuple<Upload, double?>>> LoadRemainingHealths(List<Upload> uploads, Func<Upload, bool> shouldSkip)
     {
         var logs = uploads.Where(upload => shouldSkip(upload) == false
@@ -1416,6 +1418,7 @@ public class LogCommandHandler : LocatedServiceBase
             foreach (var group in groups)
             {
                 var title = new StringBuilder();
+
                 title.Append(Format.Bold(LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(groups.Key.DayOfWeek)));
 
                 if (hasMultipleGroups)

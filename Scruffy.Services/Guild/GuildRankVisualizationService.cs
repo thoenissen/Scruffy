@@ -31,19 +31,19 @@ public class GuildRankVisualizationService : LocatedServiceBase
     #region Fields
 
     /// <summary>
-    /// Lock (Accessing <see cref="Overviews"/>)
+    /// Lock (Accessing <see cref="_overviews"/>)
     /// </summary>
-    private static readonly LockFactory OverviewsLock = new();
+    private static readonly LockFactory _overviewsLock = new();
 
     /// <summary>
     /// Lock (Modifying the message)
     /// </summary>
-    private static readonly LockFactory ModifyLock = new();
+    private static readonly LockFactory _modifyLock = new();
 
     /// <summary>
     /// Guild overviews
     /// </summary>
-    private static readonly Dictionary<(ulong DiscordServerId, GuildRankPointType? PointType), GuildRankingOverviewData> Overviews = [];
+    private static readonly Dictionary<(ulong DiscordServerId, GuildRankPointType? PointType), GuildRankingOverviewData> _overviews = [];
 
     /// <summary>
     /// Repository factory
@@ -99,7 +99,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
     /// </summary>
     /// <param name="context">Context</param>
     /// <param name="messageId">Optional message id which will be refreshed</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task PostOverview(InteractionContextContainer context, ulong? messageId)
     {
         if (messageId == null)
@@ -124,7 +124,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
     /// <param name="page">Page</param>
     /// <param name="pointType">Point type</param>
     /// <param name="isForceRefresh">Force refresh data?</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task RefreshOverview(ulong discordServerId, ulong channelId, ulong messageId, int page, GuildRankPointType? pointType, bool isForceRefresh)
     {
         var data = await GetOverviewData(discordServerId, pointType, isForceRefresh).ConfigureAwait(false);
@@ -137,7 +137,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
     /// </summary>
     /// <param name="context">Context</param>
     /// <param name="guildUser">User</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task PostPersonalOverview(InteractionContextContainer context, IGuildUser guildUser)
     {
         await context.DeferProcessing()
@@ -321,7 +321,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
     /// <param name="context">Context</param>
     /// <param name="guildUser">User</param>
     /// <param name="compareGuildUser">Compare user</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task PostPersonalCompareOverview(InteractionContextContainer context, IGuildUser guildUser, IGuildUser compareGuildUser)
     {
         await context.DeferProcessing()
@@ -526,7 +526,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
     /// </summary>
     /// <param name="context">Context</param>
     /// <param name="guildUser">User</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task PostPersonalHistoryTypeOverview(InteractionContextContainer context, IGuildUser guildUser)
     {
         await context.DeferProcessing()
@@ -680,13 +680,13 @@ public class GuildRankVisualizationService : LocatedServiceBase
     /// <param name="discordServerId">Discord server id</param>
     /// <param name="pointType">Point type</param>
     /// <param name="isForceRefresh">Force to refresh the cached data?</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task<GuildRankingOverviewData> GetOverviewData(ulong discordServerId, GuildRankPointType? pointType, bool isForceRefresh)
     {
         GuildRankingOverviewData data = null;
 
-        var scopeLock = await OverviewsLock.CreateLockAsync()
-                                           .ConfigureAwait(false);
+        var scopeLock = await _overviewsLock.CreateLockAsync()
+                                            .ConfigureAwait(false);
 
         await using (scopeLock.ConfigureAwait(false))
         {
@@ -694,18 +694,18 @@ public class GuildRankVisualizationService : LocatedServiceBase
             {
                 if (pointType == null)
                 {
-                    foreach (var overview in Overviews.Where(obj => obj.Key.DiscordServerId == discordServerId).ToList())
+                    foreach (var overview in _overviews.Where(obj => obj.Key.DiscordServerId == discordServerId).ToList())
                     {
-                        Overviews.Remove(overview.Key);
+                        _overviews.Remove(overview.Key);
                     }
                 }
                 else
                 {
-                    Overviews.Remove((discordServerId, pointType.Value));
+                    _overviews.Remove((discordServerId, pointType.Value));
                 }
             }
 
-            if (Overviews.TryGetValue((discordServerId, pointType), out data) == false)
+            if (_overviews.TryGetValue((discordServerId, pointType), out data) == false)
             {
                 data = new GuildRankingOverviewData();
 
@@ -845,7 +845,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
 
                 data.UserCount = users.Count;
 
-                Overviews[(discordServerId, pointType)] = data;
+                _overviews[(discordServerId, pointType)] = data;
             }
         }
 
@@ -860,7 +860,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
     /// <param name="currentPointType">Current point type</param>
     /// <param name="channelId">Id of the channel</param>
     /// <param name="messageId">Id of the message</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task RefreshOverviewMessage(GuildRankingOverviewData data, int pageNumber, GuildRankPointType? currentPointType, ulong channelId, ulong messageId)
     {
         var componentsBuilder = new ComponentBuilder();
@@ -1004,8 +1004,8 @@ public class GuildRankVisualizationService : LocatedServiceBase
             {
                 if (await channel.GetMessageAsync(messageId).ConfigureAwait(false) is IUserMessage message)
                 {
-                    var scopeLock = await ModifyLock.CreateLockAsync()
-                                                    .ConfigureAwait(false);
+                    var scopeLock = await _modifyLock.CreateLockAsync()
+                                                     .ConfigureAwait(false);
 
                     await using (scopeLock.ConfigureAwait(false))
                     {

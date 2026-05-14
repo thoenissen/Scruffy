@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.GuildWars2.Achievements;
 /// </summary>
 public class Achievement
 {
+    #region Properties
+
     /// <summary>
     /// Id
     /// </summary>
@@ -84,4 +86,6 @@ public class Achievement
     /// </summary>
     [JsonProperty("point_cap")]
     public int? PointCap { get; set; }
+
+    #endregion // Properties
 }

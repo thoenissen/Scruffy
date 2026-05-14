@@ -5,6 +5,8 @@
 /// </summary>
 public class AppointmentParticipantsContainer
 {
+    #region Properties
+
     /// <summary>
     /// Id of the appointment
     /// </summary>
@@ -14,4 +16,6 @@ public class AppointmentParticipantsContainer
     /// Participants
     /// </summary>
     public List<CalendarAppointmentParticipantData> Participants { get; set; }
+
+    #endregion // Properties
 }

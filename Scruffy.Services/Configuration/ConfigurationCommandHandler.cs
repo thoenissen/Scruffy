@@ -40,7 +40,7 @@ public class ConfigurationCommandHandler : LocatedServiceBase
     /// Server configuration
     /// </summary>
     /// <param name="context">Context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task Configure(InteractionContextContainer context)
     {
         if (await _permissionsValidationService.CheckPermissions(context)

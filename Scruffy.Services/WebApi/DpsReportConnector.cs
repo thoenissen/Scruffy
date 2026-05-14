@@ -28,10 +28,10 @@ public class DpsReportConnector
     /// <summary>
     /// JSON serializer settings
     /// </summary>
-    private static readonly JsonSerializerSettings Settings = new()
-                                                              {
-                                                                  NullValueHandling = NullValueHandling.Ignore,
-                                                              };
+    private static readonly JsonSerializerSettings _settings = new()
+                                                               {
+                                                                   NullValueHandling = NullValueHandling.Ignore,
+                                                               };
 
     /// <summary>
     /// Client factory
@@ -67,7 +67,7 @@ public class DpsReportConnector
     /// </summary>
     /// <param name="userToken">User token</param>
     /// <param name="page">Page</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<Page> GetUploads(string userToken, int page)
     {
         using (var client = _clientFactory.CreateClient())
@@ -79,7 +79,7 @@ public class DpsReportConnector
                                                .ReadAsStringAsync()
                                                .ConfigureAwait(false);
 
-                return JsonConvert.DeserializeObject<Page>(jsonResult, Settings);
+                return JsonConvert.DeserializeObject<Page>(jsonResult, _settings);
             }
         }
     }
@@ -91,7 +91,7 @@ public class DpsReportConnector
     /// <param name="filter">Function to filter reports</param>
     /// <param name="shouldAbort">Function to abort searching further</param>
     /// <param name="skipEnhancement">Whether to skip certain enhancements on the upload</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public IAsyncEnumerable<Upload> GetUploads(string token, Func<Upload, bool> filter, Func<Upload, bool> shouldAbort, bool skipEnhancement = false)
     {
         var omitTime = new DateTimeOffset(DateTime.MinValue, TimeSpan.Zero);
@@ -103,12 +103,12 @@ public class DpsReportConnector
     /// Requests a filtered list of DPS reports
     /// </summary>
     /// <param name="token">DPS-report user token</param>
-    /// <param name="startTime">Date for the oldest report to get. Set to zero to omit this parameter.</param>
-    /// <param name="endTime">Date for the most recent reports to get. Set to zero to omit this parameter.</param>
+    /// <param name="startTime">Date for the oldest report to get. Set to zero to omit this parameter</param>
+    /// <param name="endTime">Date for the most recent reports to get. Set to zero to omit this parameter</param>
     /// <param name="filter">Function to filter reports</param>
     /// <param name="shouldAbort">Function to abort searching further</param>
     /// <param name="skipEnhancement">Whether to skip certain enhancements on the upload</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async IAsyncEnumerable<Upload> GetUploads(string token, DateTimeOffset startTime, DateTimeOffset? endTime, Func<Upload, bool> filter = null, Func<Upload, bool> shouldAbort = null, bool skipEnhancement = false)
     {
         var firstPage = await GetUploads(token, 1, startTime, endTime).ConfigureAwait(false);
@@ -200,9 +200,9 @@ public class DpsReportConnector
     /// </summary>
     /// <param name="userToken">User token</param>
     /// <param name="page">Page</param>
-    /// <param name="startTime">Date for the oldest report to get. Set to zero to omit this parameter.</param>
-    /// <param name="endTime">Date for the most recent reports to get. Set to zero to omit this parameter.</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <param name="startTime">Date for the oldest report to get. Set to zero to omit this parameter</param>
+    /// <param name="endTime">Date for the most recent reports to get. Set to zero to omit this parameter</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task<Page> GetUploads(string userToken, int page, DateTimeOffset startTime, DateTimeOffset? endTime)
     {
         var url = $"https://dps.report/getUploads?userToken={userToken}&page={page}";
@@ -223,7 +223,7 @@ public class DpsReportConnector
 
         using var response = await client.GetAsync(url).ConfigureAwait(false);
         var jsonResult = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-        var parsedPage = JsonConvert.DeserializeObject<Page>(jsonResult, Settings);
+        var parsedPage = JsonConvert.DeserializeObject<Page>(jsonResult, _settings);
 
         if (endTime != null && parsedPage?.Uploads != null)
         {
@@ -249,7 +249,7 @@ public class DpsReportConnector
     /// </summary>
     /// <param name="upload">Upload to check</param>
     /// <param name="skipEnhancement">Whether to skip certain enhancements on the upload</param>
-    /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation</returns>
     private async Task<Upload> CheckUpload(Upload upload, bool skipEnhancement)
     {
         var isUploadComplete = true;
@@ -373,7 +373,7 @@ public class DpsReportConnector
                     {
                         var logContent = await reader.ReadToEndAsync().ConfigureAwait(false);
 
-                        log = JsonConvert.DeserializeObject<Log>(logContent, Settings);
+                        log = JsonConvert.DeserializeObject<Log>(logContent, _settings);
                     }
                 }
             }
@@ -409,7 +409,7 @@ public class DpsReportConnector
 
                     await UploadToCache(jsonResult, id).ConfigureAwait(false);
 
-                    return JsonConvert.DeserializeObject<Log>(jsonResult, Settings);
+                    return JsonConvert.DeserializeObject<Log>(jsonResult, _settings);
                 }
             }
             catch (Exception ex)
@@ -426,7 +426,7 @@ public class DpsReportConnector
     /// </summary>
     /// <param name="content">Content</param>
     /// <param name="id">ID</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task UploadToCache(string content, string id)
     {
         try

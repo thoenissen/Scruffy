@@ -39,7 +39,7 @@ public abstract class DialogEmbedReactionElementBase<TData> : DialogElementBase<
     /// Editing the embedded message
     /// </summary>
     /// <param name="builder">Builder</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public virtual Task EditMessage(EmbedBuilder builder)
     {
         return Task.CompletedTask;

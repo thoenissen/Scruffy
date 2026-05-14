@@ -35,7 +35,7 @@ public class RaidExperienceLevelsService : LocatedServiceBase
     /// Post overview of experience roles
     /// </summary>
     /// <param name="commandContextContainer">Command context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task PostExperienceLevelOverview(IContextContainer commandContextContainer)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())

@@ -36,7 +36,7 @@ public class GuildWarsItemRepository : RepositoryBase<GuildWarsItemQueryable, Gu
     /// Bulk insert items
     /// </summary>
     /// <param name="items">Items</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<bool> BulkInsert(List<Item> items)
     {
         var success = false;
@@ -66,6 +66,7 @@ public class GuildWarsItemRepository : RepositoryBase<GuildWarsItemQueryable, Gu
                 }
 
                 var dataTable = new DataTable();
+
                 dataTable.Columns.Add(nameof(GuildWarsItemEntity.ItemId), typeof(int));
                 dataTable.Columns.Add(nameof(GuildWarsItemEntity.Name), typeof(string));
                 dataTable.Columns.Add(nameof(GuildWarsItemEntity.Type), typeof(int));

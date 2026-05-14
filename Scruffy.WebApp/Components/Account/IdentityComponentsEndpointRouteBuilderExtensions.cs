@@ -21,7 +21,7 @@ namespace Scruffy.WebApp.Components.Account;
 internal static class IdentityComponentsEndpointRouteBuilderExtensions
 {
     /// <summary>
-    /// These endpoints are required by the Identity Razor components defined in the /Components/Account/Pages directory of this project.
+    /// These endpoints are required by the Identity Razor components defined in the /Components/Account/Pages directory of this project
     /// </summary>
     /// <param name="endpoints">Endpoint-Builder</param>
     public static void MapAdditionalIdentityEndpoints(this IEndpointRouteBuilder endpoints)

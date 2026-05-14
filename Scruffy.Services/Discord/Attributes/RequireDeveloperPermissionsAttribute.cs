@@ -14,7 +14,7 @@ public class RequireDeveloperPermissionsAttribute : PreconditionAttribute
     /// <summary>
     /// User ids
     /// </summary>
-    private static readonly ConcurrentDictionary<ulong, byte> UserIds;
+    private static readonly ConcurrentDictionary<ulong, byte> _userIds;
 
     #endregion // Fields
 
@@ -27,7 +27,7 @@ public class RequireDeveloperPermissionsAttribute : PreconditionAttribute
     {
         var userIds = Environment.GetEnvironmentVariable("SCRUFFY_DEVELOPER_USER_IDS") ?? string.Empty;
 
-        UserIds = new ConcurrentDictionary<ulong, byte>(userIds.Split(";").ToDictionary(Convert.ToUInt64, obj => (byte)0));
+        _userIds = new ConcurrentDictionary<ulong, byte>(userIds.Split(";").ToDictionary(Convert.ToUInt64, obj => (byte)0));
     }
 
     #endregion // Constructor
@@ -37,7 +37,7 @@ public class RequireDeveloperPermissionsAttribute : PreconditionAttribute
     /// <inheritdoc/>
     public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
     {
-        return Task.FromResult(UserIds.ContainsKey(context.User.Id)
+        return Task.FromResult(_userIds.ContainsKey(context.User.Id)
                                    ? PreconditionResult.FromSuccess()
                                    : PreconditionResult.FromError("The channel is blocked for commands."));
     }

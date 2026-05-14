@@ -1,6 +1,7 @@
 ﻿using System.Net.Http;
 
 using GW2EIDPSReport.DPSReportJsons;
+
 using Newtonsoft.Json;
 
 using Scruffy.Data.Entity;
@@ -77,7 +78,7 @@ public class DpsReportsMetaImporter : LocatedServiceBase
     /// Imports the meta data for the given user ID
     /// </summary>
     /// <param name="userId">User ID</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task Import(long userId)
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
@@ -121,7 +122,9 @@ public class DpsReportsMetaImporter : LocatedServiceBase
                     uploads = JsonConvert.DeserializeObject<DPSReportGetUploadsObject>(content,
                                                                                        new JsonSerializerSettings
                                                                                        {
-                                                                                           Converters = { new IntOrBoolConverter() },
+                                                                                           Converters = {
+                                                                                                            new IntOrBoolConverter()
+                                                                                                        },
                                                                                            Error = (_, e) =>
                                                                                                    {
                                                                                                        // Sometimes 'foundUploads' is a bool and the deserialization to int? fails

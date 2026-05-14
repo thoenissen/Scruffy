@@ -119,7 +119,7 @@ public partial class MessageRankingPage : LocatedComponent
     /// <summary>
     /// Load ranking data
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task LoadDataAsync()
     {
         var entries = await Cache.GetOrCreateAsync("webapp/ranking/messages",

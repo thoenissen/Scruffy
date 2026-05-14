@@ -5,6 +5,8 @@
 /// </summary>
 public class DiscordMessageBulkInsertData
 {
+    #region Properties
+
     /// <summary>
     /// ID of the server
     /// </summary>
@@ -34,4 +36,6 @@ public class DiscordMessageBulkInsertData
     /// Time stamp
     /// </summary>
     public DateTime TimeStamp { get; set; }
+
+    #endregion // Properties
 }

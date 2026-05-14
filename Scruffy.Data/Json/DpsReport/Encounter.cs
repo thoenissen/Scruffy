@@ -9,6 +9,8 @@ namespace Scruffy.Data.Json.DpsReport;
 /// </summary>
 public class Encounter
 {
+    #region Properties
+
     /// <summary>
     /// Unique id
     /// </summary>
@@ -29,7 +31,7 @@ public class Encounter
     public TimeSpan Duration { get; set; }
 
     /// <summary>
-    /// Computed overall DPS of the group.
+    /// Computed overall DPS of the group
     /// </summary>
     [JsonProperty("compDps")]
     public int CompDps { get; set; }
@@ -69,4 +71,6 @@ public class Encounter
     /// </summary>
     [JsonProperty("jsonAvailable")]
     public bool JsonAvailable { get; set; }
+
+    #endregion // Properties
 }

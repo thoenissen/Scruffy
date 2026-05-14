@@ -7,6 +7,8 @@ namespace Scruffy.Data.Entity.Migrations;
 /// <inheritdoc />
 public partial class Update87 : Migration
 {
+    #region Migration
+
     /// <inheritdoc />
     protected override void Up(MigrationBuilder migrationBuilder)
     {
@@ -18,4 +20,6 @@ public partial class Update87 : Migration
     {
         migrationBuilder.DropColumn(name: "RankingLeaderRoleId", table: "Guilds");
     }
+
+    #endregion // Migration
 }

@@ -123,7 +123,7 @@ public partial class WeeklyLogsOverviewPage : IAsyncDisposable
     /// Loads the weekly DPS reports from the database
     /// </summary>
     /// <param name="token">Cancellation token</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task LoadWeeklyReports(CancellationToken token)
     {
         try
@@ -167,7 +167,7 @@ public partial class WeeklyLogsOverviewPage : IAsyncDisposable
     /// </summary>
     /// <param name="boss">The boss to load logs for</param>
     /// <param name="token">Cancellation token</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task LoadBossLogs(DpsReportBoss boss, CancellationToken token)
     {
         if (boss.IsLoadingLogs)
@@ -204,7 +204,7 @@ public partial class WeeklyLogsOverviewPage : IAsyncDisposable
     /// Toggles the boss details (logs)
     /// </summary>
     /// <param name="boss">The boss to toggle</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task ToggleBossDetails(DpsReportBoss boss)
     {
         if (boss?.IsSuccessful is null)
@@ -235,7 +235,7 @@ public partial class WeeklyLogsOverviewPage : IAsyncDisposable
     /// Opens the overlay for a log entry
     /// </summary>
     /// <param name="logEntry">The log entry to display</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task OpenLogOverlay(DpsReportBossLogEntry logEntry)
     {
         if (_loadedLogs.TryGetValue(logEntry.Id, out var existingReport))
@@ -258,7 +258,7 @@ public partial class WeeklyLogsOverviewPage : IAsyncDisposable
     /// Gets additional data for the report, like DPS, alacrity and quickness
     /// </summary>
     /// <param name="report">Report</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task GetAdditionalDataAsync(DpsReport report)
     {
         try
@@ -310,6 +310,7 @@ public partial class WeeklyLogsOverviewPage : IAsyncDisposable
                                           .ConfigureAwait(false);
             _cancellationTokenSource.Dispose();
         }
+
         _cancellationTokenSource = new CancellationTokenSource();
 
         _loadTask = LoadWeeklyReports(_cancellationTokenSource.Token);

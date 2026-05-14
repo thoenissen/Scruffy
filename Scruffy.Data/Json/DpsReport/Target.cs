@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.DpsReport;
 /// </summary>
 public class Target
 {
+    #region Properties
+
     /// <summary>
     /// Game ID of the target
     /// </summary>
@@ -62,4 +64,6 @@ public class Target
     /// </summary>
     [JsonProperty("isFake")]
     public bool IsFake { get; set; }
+
+    #endregion // Properties
 }

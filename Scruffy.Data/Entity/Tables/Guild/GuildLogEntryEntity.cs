@@ -8,6 +8,8 @@ namespace Scruffy.Data.Entity.Tables.Guild;
 [Table("GuildLogEntries")]
 public class GuildLogEntryEntity
 {
+    #region Constants
+
     /// <summary>
     /// Types
     /// </summary>
@@ -71,6 +73,8 @@ public class GuildLogEntryEntity
         public const string Queued = "queued";
     }
 
+    #endregion // Constants
+
     #region Properties
 
     #region Data
@@ -81,12 +85,12 @@ public class GuildLogEntryEntity
     public long GuildId { get; set; }
 
     /// <summary>
-    /// An ID to uniquely identify the log entry within the scope of the guild. Not globally unique.
+    /// An ID to uniquely identify the log entry within the scope of the guild. Not globally unique
     /// </summary>
     public int Id { get; set; }
 
     /// <summary>
-    /// ISO-8601 standard timestamp for when the log entry was created.
+    /// ISO-8601 standard timestamp for when the log entry was created
     /// </summary>
     public DateTime Time { get; set; }
 
@@ -125,22 +129,22 @@ public class GuildLogEntryEntity
     ///      - influence — Additional fields include:
     ///            activity(string) — Activity that generated influence for the guild.Possible values: daily_login, gifted
     ///            total_participants (number) — Number of members.
-    ///            participants (array of strings) — An array of account names of participants.Strings may be null.
+    ///            participants (array of strings) — An array of account names of participants.Strings may be null
     /// </summary>
     public string Type { get; set; }
 
     /// <summary>
-    /// The account name of the guild member who generated this log entry.
+    /// The account name of the guild member who generated this log entry
     /// </summary>
     public string User { get; set; }
 
     /// <summary>
-    ///  Account name of the guild member which kicked the player.
+    ///  Account name of the guild member which kicked the player
     /// </summary>
     public string KickedBy { get; set; }
 
     /// <summary>
-    /// Account name of the guild member which invited the player.
+    /// Account name of the guild member which invited the player
     /// </summary>
     public string InvitedBy { get; set; }
 
@@ -153,42 +157,42 @@ public class GuildLogEntryEntity
     public string Operation { get; set; }
 
     /// <summary>
-    /// The item ID that was deposited into the treasury.
+    /// The item ID that was deposited into the treasury
     /// </summary>
     public int? ItemId { get; set; }
 
     /// <summary>
-    /// How many of the specified item was deposited.
+    /// How many of the specified item was deposited
     /// </summary>
     public int? Count { get; set; }
 
     /// <summary>
-    /// How many coins (in copper) were deposited.
+    /// How many coins (in copper) were deposited
     /// </summary>
     public int? Coins { get; set; }
 
     /// <summary>
-    /// Account name of the guild member which changed the player rank.
+    /// Account name of the guild member which changed the player rank
     /// </summary>
     public string ChangedBy { get; set; }
 
     /// <summary>
-    /// Old rank name.
+    /// Old rank name
     /// </summary>
     public string OldRank { get; set; }
 
     /// <summary>
-    /// New rank name.
+    /// New rank name
     /// </summary>
     public string NewRank { get; set; }
 
     /// <summary>
-    /// The upgrade ID which was completed.
+    /// The upgrade ID which was completed
     /// </summary>
     public int? UpgradeId { get; set; }
 
     /// <summary>
-    /// May be added if the upgrade was created through a scribe station by a scribe.
+    /// May be added if the upgrade was created through a scribe station by a scribe
     /// </summary>
     public int? RecipeId { get; set; }
 
@@ -207,17 +211,17 @@ public class GuildLogEntryEntity
     public string Activity { get; set; }
 
     /// <summary>
-    /// Number of members.
+    /// Number of members
     /// </summary>
     public int? TotalParticipants { get; set; }
 
     /// <summary>
-    /// An array of account names of participants. Strings may be null.
+    /// An array of account names of participants. Strings may be null
     /// </summary>
     public string Participants { get; set; }
 
     /// <summary>
-    /// The new MOTD.
+    /// The new MOTD
     /// </summary>
     public string MessageOfTheDay { get; set; }
 

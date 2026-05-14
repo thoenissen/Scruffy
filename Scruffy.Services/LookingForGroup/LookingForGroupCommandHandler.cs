@@ -216,7 +216,7 @@ public class LookingForGroupCommandHandler : LocatedServiceBase
     /// </summary>
     /// <param name="context">Command context</param>
     /// <param name="appointmentId">Id of the appointment</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task Join(InteractionContextContainer context, int appointmentId)
     {
         var user = await _userManagementService.GetUserByDiscordAccountId(context.User)
@@ -257,7 +257,7 @@ public class LookingForGroupCommandHandler : LocatedServiceBase
     /// </summary>
     /// <param name="context">Command context</param>
     /// <param name="appointmentId">Id of the appointment</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task Leave(InteractionContextContainer context, int appointmentId)
     {
         var user = await _userManagementService.GetUserByDiscordAccountId(context.User)
@@ -294,7 +294,7 @@ public class LookingForGroupCommandHandler : LocatedServiceBase
     /// </summary>
     /// <param name="context">Command context</param>
     /// <param name="appointmentId">Id of the appointment</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task Configure(InteractionContextContainer context, int appointmentId)
     {
         if (context.User is IGuildUser { GuildPermissions.Administrator: true }
@@ -334,7 +334,7 @@ public class LookingForGroupCommandHandler : LocatedServiceBase
     /// <param name="context">Command context</param>
     /// <param name="appointmentId">Id of the appointment</param>
     /// <param name="value">Selected value</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task ConfigureMenuOption(InteractionContextContainer context, int appointmentId, string value)
     {
         var appointment = _repositoryFactory.GetRepository<LookingForGroupAppointmentRepository>()

@@ -5,6 +5,8 @@
 /// </summary>
 public class RaidCommitContainer
 {
+    #region Properties
+
     /// <summary>
     /// Id of the appointment
     /// </summary>
@@ -19,4 +21,6 @@ public class RaidCommitContainer
     /// Users
     /// </summary>
     public List<RaidCommitUserData> Users { get; set; }
+
+    #endregion // Properties
 }

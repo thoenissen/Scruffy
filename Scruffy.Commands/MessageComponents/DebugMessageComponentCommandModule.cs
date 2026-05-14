@@ -29,7 +29,7 @@ public class DebugMessageComponentCommandModule : LocatedInteractionModuleBase
     /// Ping
     /// </summary>
     /// <param name="id">Id</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [ComponentInteraction($"{Group};{CommandPing};*")]
     public async Task Ping(string id)
     {

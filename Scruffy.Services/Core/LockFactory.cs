@@ -87,7 +87,7 @@ public sealed class LockFactory : IDisposable
         #region IDisposable
 
         /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources
         /// </summary>
         public void Dispose()
         {
@@ -99,9 +99,9 @@ public sealed class LockFactory : IDisposable
         #region IAsyncDisposable
 
         /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously.
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously
         /// </summary>
-        /// <returns>A task that represents the asynchronous dispose operation.</returns>
+        /// <returns>A task that represents the asynchronous dispose operation</returns>
         public ValueTask DisposeAsync()
         {
             Dispose();
@@ -117,7 +117,7 @@ public sealed class LockFactory : IDisposable
     #region IDisposable
 
     /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources
     /// </summary>
     public void Dispose()
     {

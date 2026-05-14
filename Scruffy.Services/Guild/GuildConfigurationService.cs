@@ -55,7 +55,7 @@ public class GuildConfigurationService : LocatedServiceBase
     /// Create a new guild configuration
     /// </summary>
     /// <param name="commandContext">Command context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task CreateGuildConfiguration(IContextContainer commandContext)
     {
         var data = await DialogHandler.RunForm<CreateGuildFormData>(commandContext, true)
@@ -113,7 +113,7 @@ public class GuildConfigurationService : LocatedServiceBase
     /// Setting up the calendar
     /// </summary>
     /// <param name="commandContext">Command context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task SetupMotd(IContextContainer commandContext)
     {
         var message = await commandContext.Channel
@@ -154,7 +154,7 @@ public class GuildConfigurationService : LocatedServiceBase
     /// Setting up the calendar
     /// </summary>
     /// <param name="commandContext">Command context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task SetupCalendar(IContextContainer commandContext)
     {
         var data = await DialogHandler.RunForm<SetGuildCalendarFormData>(commandContext, true)

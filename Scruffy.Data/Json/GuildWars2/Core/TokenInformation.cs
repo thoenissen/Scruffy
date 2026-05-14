@@ -92,7 +92,7 @@ public class TokenInformation
     ///  - pvp - Grants access to the /v2/pvp sub-endpoints. (i.e. /v2/pvp/games, /v2/pvp/stats)
     ///  - tradingpost - Grants access to the /v2/commerce/transactions endpoint.
     ///  - unlocks - Grants access to the /v2/account/skins and /v2/account/dyes endpoints.
-    ///  - wallet - Grants access to the /v2/account/wallet endpoint.
+    ///  - wallet - Grants access to the /v2/account/wallet endpoint
     /// </summary>
     [JsonProperty("permissions")]
     public List<string> Permissions { get; set; }

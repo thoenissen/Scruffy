@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.MediaWiki;
 /// </summary>
 public class SearchQueryRoot
 {
+    #region Properties
+
     /// <summary>
     /// Batch completed
     /// </summary>
@@ -24,4 +26,6 @@ public class SearchQueryRoot
     /// </summary>
     [JsonProperty("query")]
     public SearchQueryQuery Query { get; set; }
+
+    #endregion // Properties
 }

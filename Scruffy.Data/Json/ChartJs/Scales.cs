@@ -5,6 +5,8 @@
     /// </summary>
     public class Scales
     {
+        #region Properties
+
         /// <summary>
         /// Configuration for the x-axis of the chart
         /// </summary>
@@ -14,5 +16,7 @@
         /// Configuration for the x-axis of the chart
         /// </summary>
         public Axes Y { get; set; }
+
+        #endregion // Properties
     }
 }

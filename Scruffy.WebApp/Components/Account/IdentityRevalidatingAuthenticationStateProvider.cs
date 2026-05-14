@@ -15,7 +15,7 @@ using Scruffy.Data.Entity.Tables.CoreData;
 namespace Scruffy.WebApp.Components.Account;
 
 /// <summary>
-/// This is a server-side AuthenticationStateProvider that revalidates the security stamp for the connected user every 30 minutes an interactive circuit is connected.
+/// This is a server-side AuthenticationStateProvider that revalidates the security stamp for the connected user every 30 minutes an interactive circuit is connected
 /// </summary>
 internal sealed class IdentityRevalidatingAuthenticationStateProvider : RevalidatingServerAuthenticationStateProvider
 {
@@ -57,7 +57,7 @@ internal sealed class IdentityRevalidatingAuthenticationStateProvider : Revalida
     /// </summary>
     /// <param name="userManager">User manager</param>
     /// <param name="principal">Principal</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task<bool> ValidateSecurityStamp(UserManager<UserEntity> userManager, ClaimsPrincipal principal)
     {
         var user = await userManager.GetUserAsync(principal)

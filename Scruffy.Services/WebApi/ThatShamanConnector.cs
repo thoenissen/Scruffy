@@ -38,7 +38,7 @@ public sealed class ThatShamanConnector : IAsyncDisposable, IDisposable
     /// <summary>
     /// Get the next update
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<NextUpdateData> GetNextUpdate()
     {
         var client = _httpClientFactory.CreateClient();
@@ -57,7 +57,7 @@ public sealed class ThatShamanConnector : IAsyncDisposable, IDisposable
     /// <summary>
     /// Get the next update
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<NextUpdateData> GetEODRelease()
     {
         var client = _httpClientFactory.CreateClient();
@@ -78,9 +78,9 @@ public sealed class ThatShamanConnector : IAsyncDisposable, IDisposable
     #region IAsyncDisposable
 
     /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously.
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously
     /// </summary>
-    /// <returns>A task that represents the asynchronous dispose operation.</returns>
+    /// <returns>A task that represents the asynchronous dispose operation</returns>
     public ValueTask DisposeAsync()
     {
         return ValueTask.CompletedTask;
@@ -91,7 +91,7 @@ public sealed class ThatShamanConnector : IAsyncDisposable, IDisposable
     #region IDisposable
 
     /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources
     /// </summary>
     public void Dispose()
     {

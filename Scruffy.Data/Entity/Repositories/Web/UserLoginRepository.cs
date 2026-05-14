@@ -34,7 +34,7 @@ public class UserLoginRepository : RepositoryBase<UserLoginQueryable, UserLoginE
     /// Bulk insert users
     /// </summary>
     /// <param name="users">Users</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<bool> BulkInsert(List<(long UserId, ulong DiscordAccountId, string Name)> users)
     {
         var success = false;
@@ -63,6 +63,7 @@ public class UserLoginRepository : RepositoryBase<UserLoginQueryable, UserLoginE
                 }
 
                 var table = new DataTable();
+
                 table.Columns.Add(nameof(UserLoginEntity.LoginProvider), typeof(string));
                 table.Columns.Add(nameof(UserLoginEntity.ProviderKey), typeof(string));
                 table.Columns.Add(nameof(UserLoginEntity.ProviderDisplayName), typeof(string));

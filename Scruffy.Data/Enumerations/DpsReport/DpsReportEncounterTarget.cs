@@ -1,7 +1,7 @@
 namespace Scruffy.Data.Enumerations.DpsReport;
 
 /// <summary>
-/// Encounter targets reported by dps.report.
+/// Encounter targets reported by dps.report
 /// </summary>
 public enum DpsReportEncounterTarget
 {

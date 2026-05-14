@@ -39,7 +39,7 @@ public class ItemsService : LocatedServiceBase
     /// <summary>
     /// Importing all items
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<bool> ImportItems()
     {
         using (var dbFactory = RepositoryFactory.CreateInstance())
@@ -70,7 +70,7 @@ public class ItemsService : LocatedServiceBase
     /// Item configuration
     /// </summary>
     /// <param name="context">Context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task ConfigureItem(IContextContainer context)
     {
         var dialogHandler = new DialogHandler(context);
@@ -134,7 +134,7 @@ public class ItemsService : LocatedServiceBase
     /// Custom value export
     /// </summary>
     /// <param name="context">Context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task ExportCustomValues(InteractionContextContainer context)
     {
         await context.DeferProcessing()

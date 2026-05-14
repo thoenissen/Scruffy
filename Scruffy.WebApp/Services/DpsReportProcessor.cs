@@ -111,7 +111,7 @@ public sealed class DpsReportProcessor : IAsyncDisposable
     /// <summary>
     /// Processes requests for detailed DPS reports asynchronously
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task ProcessRequestsAsync()
     {
         var token = _tokenSource.Token;
@@ -138,7 +138,7 @@ public sealed class DpsReportProcessor : IAsyncDisposable
     /// Processes a single detailed DPS report request
     /// </summary>
     /// <param name="request">Request</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task ProcessRequest(DetailedDpsReportRequest request)
     {
         if (await TryGetFromCache(request).ConfigureAwait(false) == false)
@@ -151,7 +151,7 @@ public sealed class DpsReportProcessor : IAsyncDisposable
     /// Tries to get a detailed DPS report from the cache
     /// </summary>
     /// <param name="request">Request</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task<bool> TryGetFromCache(DetailedDpsReportRequest request)
     {
         var success = false;
@@ -193,7 +193,7 @@ public sealed class DpsReportProcessor : IAsyncDisposable
     /// Gets a detailed DPS report from dps.report by its ID
     /// </summary>
     /// <param name="request">Request</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task GetFromDpsReport(DetailedDpsReportRequest request)
     {
         using (var client = _httpClientFactory.CreateClient())
@@ -224,7 +224,7 @@ public sealed class DpsReportProcessor : IAsyncDisposable
     /// </summary>
     /// <param name="content">Content</param>
     /// <param name="id">ID</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task UploadToCache(string content, string id)
     {
         try

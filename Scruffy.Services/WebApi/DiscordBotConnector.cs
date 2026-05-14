@@ -38,7 +38,7 @@ public sealed class DiscordBotConnector
     /// <param name="configurationId">ID of the raid configuration</param>
     /// <param name="deadline">Deadline timestamp</param>
     /// <param name="timeStamp">Appointment timestamp</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task ScheduleRaidMessageRefreshAsync(long configurationId, DateTime deadline, DateTime timeStamp)
     {
         using (var client = _httpClientFactory.CreateClient("DiscordBot"))

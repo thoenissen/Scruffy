@@ -5,6 +5,8 @@
 /// </summary>
 public class WelcomeDirectMessageData
 {
+    #region Properties
+
     /// <summary>
     /// Title
     /// </summary>
@@ -24,4 +26,6 @@ public class WelcomeDirectMessageData
     /// Footer
     /// </summary>
     public string Footer { get; set; }
+
+    #endregion // Properties
 }

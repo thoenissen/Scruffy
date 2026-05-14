@@ -5,6 +5,8 @@
 /// </summary>
 public class QuagganData
 {
+    #region Properties
+
     /// <summary>
     /// Id
     /// </summary>
@@ -14,4 +16,6 @@ public class QuagganData
     /// Url
     /// </summary>
     public string Url { get; set; }
+
+    #endregion // Properties
 }

@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.GuildWars2.Achievements;
 /// </summary>
 public class Tier
 {
+    #region Properties
+
     /// <summary>
     /// Count
     /// </summary>
@@ -18,4 +20,6 @@ public class Tier
     /// </summary>
     [JsonProperty("points")]
     public int Points { get; set; }
+
+    #endregion // Properties
 }

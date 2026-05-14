@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.DpsReport;
 /// </summary>
 public class Page
 {
+    #region Properties
+
     /// <summary>
     /// Pages
     /// </summary>
@@ -18,4 +20,6 @@ public class Page
     /// </summary>
     [JsonProperty("uploads")]
     public List<Upload> Uploads { get; set; }
+
+    #endregion // Properties
 }

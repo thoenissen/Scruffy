@@ -48,7 +48,7 @@ public class WorldsService : LocatedServiceBase
     /// <summary>
     /// Import worlds
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<bool> ImportWorlds()
     {
         var success = false;
@@ -95,7 +95,7 @@ public class WorldsService : LocatedServiceBase
     /// Post worlds overview
     /// </summary>
     /// <param name="commandContext">Command context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task PostWorldsOverview(InteractionContextContainer commandContext)
     {
         await commandContext.DeferProcessing()

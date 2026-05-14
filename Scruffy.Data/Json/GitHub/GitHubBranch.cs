@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.GitHub;
 /// </summary>
 public class GitHubBranch
 {
+    #region Properties
+
     /// <summary>
     /// Name
     /// </summary>
@@ -18,4 +20,6 @@ public class GitHubBranch
     /// </summary>
     [JsonProperty("commit")]
     public GitHubBranchCommit Commit { get; set; }
+
+    #endregion // Properties
 }

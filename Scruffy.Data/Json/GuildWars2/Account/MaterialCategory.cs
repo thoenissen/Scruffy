@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.GuildWars2.Account;
 /// </summary>
 public class MaterialCategory
 {
+    #region Properties
+
     /// <summary>
     /// The category id
     /// </summary>
@@ -30,4 +32,6 @@ public class MaterialCategory
     /// </summary>
     [JsonProperty("order")]
     public int Order { get; set; }
+
+    #endregion // Properties
 }

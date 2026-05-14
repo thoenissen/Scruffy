@@ -72,6 +72,7 @@ public class GuildSpecialRankEditDialogElement : DialogEmbedReactionElementBase<
                                       .ConfigureAwait(false);
 
             var fieldBuilder = new StringBuilder();
+
             fieldBuilder.AppendLine($"{Format.Bold(LocalizationGroup.GetText("Description", "Description"))}: {data.Description}");
             fieldBuilder.AppendLine($"{Format.Bold(LocalizationGroup.GetText("DiscordRole", "Discord role"))}: {CommandContext.Guild.GetRole(data.DiscordRoleId).Mention}");
             fieldBuilder.AppendLine($"{Format.Bold(LocalizationGroup.GetText("MaximumPoints", "Maximum points"))}: {data.MaximumPoints.ToString(LocalizationGroup.CultureInfo)}");

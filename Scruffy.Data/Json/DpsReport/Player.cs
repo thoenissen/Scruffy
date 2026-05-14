@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.DpsReport;
 /// </summary>
 public class Player
 {
+    #region Properties
+
     /// <summary>
     /// Display name
     /// </summary>
@@ -42,4 +44,6 @@ public class Player
     /// </summary>
     [JsonProperty("elite_spec")]
     public int EliteSpecialization { get; set; }
+
+    #endregion // Properties
 }

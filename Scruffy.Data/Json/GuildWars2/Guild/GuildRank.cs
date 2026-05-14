@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.GuildWars2.Guild;
 /// </summary>
 public class GuildRank
 {
+    #region Properties
+
     /// <summary>
     /// Id
     /// </summary>
@@ -30,4 +32,6 @@ public class GuildRank
     /// </summary>
     [JsonProperty("icon")]
     public string Icon { get; set; }
+
+    #endregion // Properties
 }

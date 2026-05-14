@@ -39,6 +39,7 @@ public class GuildGuildDialogElement : DialogEmbedMessageElementBase<string>
     public override EmbedBuilder GetMessage()
     {
         var builder = new EmbedBuilder();
+
         builder.WithTitle(LocalizationGroup.GetText("ChooseGuildTitle", "Guild selection"));
         builder.WithDescription(LocalizationGroup.GetText("ChooseGuildDescription", "Please choose one of the following guilds:"));
 

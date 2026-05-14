@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.GuildWars2.Guild;
 /// </summary>
 public class GuildEmblemLayerData
 {
+    #region Properties
+
     /// <summary>
     /// Id
     /// </summary>
@@ -18,4 +20,6 @@ public class GuildEmblemLayerData
     /// </summary>
     [JsonProperty("layers")]
     public List<string> Layers { get; set; }
+
+    #endregion // Properties
 }

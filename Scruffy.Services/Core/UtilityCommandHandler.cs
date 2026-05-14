@@ -41,7 +41,7 @@ public class UtilityCommandHandler : LocatedServiceBase
     /// Set the same reactions as of the given message
     /// </summary>
     /// <param name="message">Message</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task AddReactions(IMessage message)
     {
         if (message.Channel is ITextChannel textChannel)
@@ -61,7 +61,7 @@ public class UtilityCommandHandler : LocatedServiceBase
     /// Remove the same reactions as of the given message
     /// </summary>
     /// <param name="message">Message</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task RemoveReactions(IMessage message)
     {
         if (message.Channel is ITextChannel textChannel)
@@ -81,7 +81,7 @@ public class UtilityCommandHandler : LocatedServiceBase
     /// Repost message
     /// </summary>
     /// <param name="message">Message</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task RepostMessage(IUserMessage message)
     {
         var repostMessage = await message.Channel
@@ -103,7 +103,7 @@ public class UtilityCommandHandler : LocatedServiceBase
     /// <param name="messageId">Message id</param>
     /// <param name="name">Name</param>
     /// <param name="link">Link</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task AddLink(InteractionContextContainer context, ulong channelId, ulong messageId, string name, string link)
     {
         if (await context.Client
@@ -151,7 +151,7 @@ public class UtilityCommandHandler : LocatedServiceBase
     /// Remove components
     /// </summary>
     /// <param name="message">Message</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task RemoveComponents(IUserMessage message)
     {
         await message.ModifyAsync(obj => obj.Components = new ComponentBuilder().Build())

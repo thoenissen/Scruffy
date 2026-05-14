@@ -7,6 +7,8 @@ namespace Scruffy.Data.Extensions;
 /// </summary>
 public static class DpsReportDisplayExtensions
 {
+    #region Methods
+
     /// <summary>
     /// Returns a user-friendly display string for the given group
     /// </summary>
@@ -158,4 +160,6 @@ public static class DpsReportDisplayExtensions
                    _ => "<:core:1474789520896692244>"
                };
     }
+
+    #endregion // Methods
 }

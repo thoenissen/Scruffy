@@ -34,7 +34,7 @@ public class GuildWarsAchievementRepository : RepositoryBase<GuildWarsAchievemen
     /// Bulk insert
     /// </summary>
     /// <param name="entries">Entries</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<bool> BulkInsert(List<Achievement> entries)
     {
         var success = false;
@@ -107,6 +107,7 @@ public class GuildWarsAchievementRepository : RepositoryBase<GuildWarsAchievemen
                 }
 
                 var achievementsTable = new DataTable();
+
                 achievementsTable.Columns.Add(nameof(GuildWarsAchievementEntity.Id), typeof(int));
                 achievementsTable.Columns.Add(nameof(GuildWarsAchievementEntity.Icon), typeof(string));
                 achievementsTable.Columns.Add(nameof(GuildWarsAchievementEntity.Name), typeof(string));
@@ -117,6 +118,7 @@ public class GuildWarsAchievementRepository : RepositoryBase<GuildWarsAchievemen
                 achievementsTable.Columns.Add(nameof(GuildWarsAchievementEntity.PointCap), typeof(int));
 
                 var bitsTable = new DataTable();
+
                 bitsTable.Columns.Add(nameof(GuildWarsAchievementBitEntity.AchievementId), typeof(int));
                 bitsTable.Columns.Add(nameof(GuildWarsAchievementBitEntity.Bit), typeof(int));
                 bitsTable.Columns.Add(nameof(GuildWarsAchievementBitEntity.Id), typeof(int));
@@ -124,14 +126,17 @@ public class GuildWarsAchievementRepository : RepositoryBase<GuildWarsAchievemen
                 bitsTable.Columns.Add(nameof(GuildWarsAchievementBitEntity.Text), typeof(string));
 
                 var flagsTable = new DataTable();
+
                 flagsTable.Columns.Add(nameof(GuildWarsAchievementFlagEntity.AchievementId), typeof(int));
                 flagsTable.Columns.Add(nameof(GuildWarsAchievementFlagEntity.Flag), typeof(string));
 
                 var prerequisitesTable = new DataTable();
+
                 prerequisitesTable.Columns.Add(nameof(GuildWarsAchievementPrerequisiteEntity.AchievementId), typeof(int));
                 prerequisitesTable.Columns.Add(nameof(GuildWarsAchievementPrerequisiteEntity.Id), typeof(int));
 
                 var rewardsTable = new DataTable();
+
                 rewardsTable.Columns.Add(nameof(GuildWarsAchievementRewardEntity.AchievementId), typeof(int));
                 rewardsTable.Columns.Add(nameof(GuildWarsAchievementRewardEntity.Counter), typeof(int));
                 rewardsTable.Columns.Add(nameof(GuildWarsAchievementRewardEntity.Id), typeof(int));
@@ -140,6 +145,7 @@ public class GuildWarsAchievementRepository : RepositoryBase<GuildWarsAchievemen
                 rewardsTable.Columns.Add(nameof(GuildWarsAchievementRewardEntity.Region), typeof(string));
 
                 var tiersTable = new DataTable();
+
                 tiersTable.Columns.Add(nameof(GuildWarsAchievementTierEntity.AchievementId), typeof(int));
                 tiersTable.Columns.Add(nameof(GuildWarsAchievementTierEntity.Counter), typeof(int));
                 tiersTable.Columns.Add(nameof(GuildWarsAchievementTierEntity.Count), typeof(int));

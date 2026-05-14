@@ -87,7 +87,7 @@ public sealed class GuildUserService : SingletonLocatedServiceBase, IDisposable
     /// </summary>
     /// <param name="user">User</param>
     /// <param name="guild">Guild</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private Task OnUserUnbanned(SocketUser user, SocketGuild guild)
     {
         return SendNotificationMessage(user, guild, "UserUnbanned");
@@ -98,7 +98,7 @@ public sealed class GuildUserService : SingletonLocatedServiceBase, IDisposable
     /// </summary>
     /// <param name="user">User</param>
     /// <param name="guild">Guild</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private Task OnUserBanned(SocketUser user, SocketGuild guild)
     {
         return SendNotificationMessage(user, guild, "UserBanned");
@@ -109,7 +109,7 @@ public sealed class GuildUserService : SingletonLocatedServiceBase, IDisposable
     /// </summary>
     /// <param name="guild">Guild</param>
     /// <param name="user">User</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private Task OnUserLeft(SocketGuild guild, SocketUser user)
     {
         return SendNotificationMessage(user, guild, "UserLeft");
@@ -119,7 +119,7 @@ public sealed class GuildUserService : SingletonLocatedServiceBase, IDisposable
     /// User joined
     /// </summary>
     /// <param name="user">User</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task OnUserJoined(SocketGuildUser user)
     {
         await SetNewUserRole(user, user.Guild).ConfigureAwait(false);
@@ -134,7 +134,7 @@ public sealed class GuildUserService : SingletonLocatedServiceBase, IDisposable
     /// </summary>
     /// <param name="user">User</param>
     /// <param name="guild">Guild</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task SetNewUserRole(SocketGuildUser user, SocketGuild guild)
     {
         try
@@ -157,7 +157,7 @@ public sealed class GuildUserService : SingletonLocatedServiceBase, IDisposable
     /// <param name="user">User</param>
     /// <param name="guild">Guild</param>
     /// <param name="messageKey">Message key</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task SendNotificationMessage(SocketUser user, SocketGuild guild, string messageKey)
     {
         try
@@ -211,7 +211,7 @@ public sealed class GuildUserService : SingletonLocatedServiceBase, IDisposable
     /// </summary>
     /// <param name="user">User</param>
     /// <param name="guild">Guild</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task SendWelcomeMessage(SocketGuildUser user, SocketGuild guild)
     {
         try
@@ -315,7 +315,7 @@ public sealed class GuildUserService : SingletonLocatedServiceBase, IDisposable
     #region IDisposable
 
     /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources
     /// </summary>
     public void Dispose()
     {

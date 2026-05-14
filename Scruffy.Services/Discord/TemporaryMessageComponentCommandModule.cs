@@ -15,7 +15,7 @@ public class TemporaryMessageComponentCommandModule : LocatedInteractionModuleBa
     /// Temporary button
     /// </summary>
     /// <param name="identification">Identification</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [ComponentInteraction("temporary;button;*")]
     public async Task ExecuteTemporaryButton(string identification)
     {
@@ -37,7 +37,7 @@ public class TemporaryMessageComponentCommandModule : LocatedInteractionModuleBa
     /// </summary>
     /// <param name="identification">Identification</param>
     /// <param name="unused">Unused</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [ComponentInteraction("temporary;selectMenu;*")]
     public async Task ExecuteTemporarySelectMenu(string identification, string[] unused)
     {

@@ -8,6 +8,8 @@ namespace Scruffy.Data.Entity.Tables.Statistics;
 [Table("DiscordIgnoreChannels")]
 public class DiscordIgnoreChannelEntity
 {
+    #region Properties
+
     /// <summary>
     /// Id of the server
     /// </summary>
@@ -17,4 +19,6 @@ public class DiscordIgnoreChannelEntity
     /// Id of the channel
     /// </summary>
     public ulong DiscordChannelId { get; set; }
+
+    #endregion // Properties
 }

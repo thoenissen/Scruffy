@@ -35,7 +35,7 @@ public class GuildWarsAccountHistoricCharacterRepository : RepositoryBase<GuildW
     /// </summary>
     /// <param name="accountName">Account name</param>
     /// <param name="entries">Entries</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task<bool> BulkInsert(string accountName, List<Character> entries)
     {
         var success = false;
@@ -65,6 +65,7 @@ public class GuildWarsAccountHistoricCharacterRepository : RepositoryBase<GuildW
                 }
 
                 var table = new DataTable();
+
                 table.Columns.Add(nameof(GuildWarsAccountHistoricCharacterEntity.Date), typeof(DateTime));
                 table.Columns.Add(nameof(GuildWarsAccountHistoricCharacterEntity.GuildId), typeof(string));
                 table.Columns.Add(nameof(GuildWarsAccountHistoricCharacterEntity.AccountName), typeof(string));

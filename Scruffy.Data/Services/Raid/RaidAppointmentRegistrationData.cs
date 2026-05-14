@@ -5,6 +5,8 @@
 /// </summary>
 public class RaidAppointmentRegistrationData
 {
+    #region Properties
+
     /// <summary>
     /// Id of the user
     /// </summary>
@@ -19,4 +21,6 @@ public class RaidAppointmentRegistrationData
     /// User rank
     /// </summary>
     public int Rank { get; set; }
+
+    #endregion // Properties
 }

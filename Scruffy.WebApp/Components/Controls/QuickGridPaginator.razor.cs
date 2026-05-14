@@ -37,7 +37,7 @@ public partial class QuickGridPaginator
     /// <summary>
     /// Go to the first page asynchronously
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private Task GoFirstAsync()
     {
         return GoToPageAsync(0);
@@ -46,7 +46,7 @@ public partial class QuickGridPaginator
     /// <summary>
     /// Go to the previous page asynchronously
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private Task GoPreviousAsync()
     {
         return GoToPageAsync(State.CurrentPageIndex - 1);
@@ -55,7 +55,7 @@ public partial class QuickGridPaginator
     /// <summary>
     /// Go to the next page asynchronously
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private Task GoNextAsync()
     {
         return GoToPageAsync(State.CurrentPageIndex + 1);
@@ -64,7 +64,7 @@ public partial class QuickGridPaginator
     /// <summary>
     /// Go to the last page asynchronously
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private Task GoLastAsync()
     {
         return GoToPageAsync(State.LastPageIndex.GetValueOrDefault(0));
@@ -84,7 +84,7 @@ public partial class QuickGridPaginator
     /// Go to a specific page asynchronously
     /// </summary>
     /// <param name="pageIndex">Page index</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private Task GoToPageAsync(int pageIndex)
     {
         return State.SetCurrentPageIndexAsync(pageIndex);

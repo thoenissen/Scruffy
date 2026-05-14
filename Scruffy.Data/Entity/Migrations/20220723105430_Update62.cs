@@ -9,6 +9,8 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update62 : Migration
     {
+        #region Migration
+
         /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -92,5 +94,7 @@ namespace Scruffy.Data.Entity.Migrations
             migrationBuilder.CreateIndex(name: "IX_FractalRegistrations_AppointmentId", table: "FractalRegistrations", column: "AppointmentId");
             migrationBuilder.CreateIndex(name: "IX_FractalRegistrations_UserId", table: "FractalRegistrations", column: "UserId");
         }
+
+        #endregion // Migration
     }
 }

@@ -5,6 +5,8 @@ namespace Scruffy.Data.Services.CoreData;
 /// </summary>
 public class UserData
 {
+    #region Properties
+
     /// <summary>
     /// Id
     /// </summary>
@@ -19,4 +21,6 @@ public class UserData
     /// Are the data storage terms accepted?
     /// </summary>
     public bool? IsDataStorageAccepted { get; set; }
+
+    #endregion // Properties
 }

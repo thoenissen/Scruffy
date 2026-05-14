@@ -186,7 +186,9 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
             var uploads = JsonConvert.DeserializeObject<DPSReportGetUploadsObject>(content,
                                                                                    new JsonSerializerSettings
                                                                                    {
-                                                                                       Converters = { new IntOrBoolConverter() },
+                                                                                       Converters = {
+                                                                                                        new IntOrBoolConverter()
+                                                                                                    },
                                                                                        Error = (_, e) =>
                                                                                                {
                                                                                                    // Sometimes 'foundUploads' is a bool and the deserialization to int? fails
@@ -259,7 +261,7 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
     /// <summary>
     /// Load user data including DPS report token and Guild Wars 2 accounts
     /// </summary>
-    /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation</returns>
     private async ValueTask LoadUserDataAsync()
     {
         if (_isUserDataLoaded)
@@ -296,7 +298,7 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
     /// Gets additional data for the report, like DPS, alacrity and quickness
     /// </summary>
     /// <param name="report">Report</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task GetAdditionalDataAsync(DpsReport report)
     {
         report.FullReport = await DpsReportProcessor.Get(report.MetaData.Id).ConfigureAwait(false);

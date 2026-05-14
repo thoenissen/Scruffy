@@ -7,6 +7,8 @@ namespace Scruffy.Data.Services.Calendar;
 /// </summary>
 public class CalendarAppointmentParticipantData
 {
+    #region Properties
+
     /// <summary>
     /// Member
     /// </summary>
@@ -16,4 +18,6 @@ public class CalendarAppointmentParticipantData
     /// Leader
     /// </summary>
     public bool IsLeader { get; set; }
+
+    #endregion // Properties
 }

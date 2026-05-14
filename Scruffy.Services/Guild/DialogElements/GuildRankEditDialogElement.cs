@@ -61,6 +61,7 @@ public class GuildRankEditDialogElement : DialogEmbedReactionElementBase<bool>
                                       .ConfigureAwait(false);
 
             var fieldBuilder = new StringBuilder();
+
             fieldBuilder.AppendLine($"{Format.Bold(LocalizationGroup.GetText("InGameName", "In game name"))}: {data.InGameName}");
             fieldBuilder.AppendLine($"{Format.Bold(LocalizationGroup.GetText("DiscordRoleId", "Discord role"))}: {CommandContext.Guild.GetRole(data.DiscordRoleId).Mention}");
             fieldBuilder.AppendLine($"{Format.Bold(LocalizationGroup.GetText("Percentage", "Percentage quota"))}: {data.Percentage.ToString(LocalizationGroup.CultureInfo)}");

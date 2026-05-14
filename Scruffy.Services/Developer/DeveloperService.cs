@@ -50,7 +50,7 @@ public class DeveloperService : LocatedServiceBase
     /// <summary>
     /// Import commits
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task ImportCommits()
     {
         try

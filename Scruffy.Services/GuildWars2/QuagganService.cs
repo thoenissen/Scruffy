@@ -29,7 +29,7 @@ public class QuagganService : LocatedServiceBase
     /// Posting a random Quaggan
     /// </summary>
     /// <param name="commandContext">Command context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task PostRandomQuaggan(IContextContainer commandContext)
     {
         var connector = new GuildWars2ApiConnector(null);

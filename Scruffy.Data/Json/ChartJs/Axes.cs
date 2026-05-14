@@ -1,12 +1,12 @@
-﻿using System.Reflection.Emit;
-
-namespace Scruffy.Data.Json.ChartJs;
+﻿namespace Scruffy.Data.Json.ChartJs;
 
 /// <summary>
 /// Represents the configuration for the axes of a chart
 /// </summary>
 public class Axes
 {
+    #region Properties
+
     /// <summary>
     /// Stacked
     /// </summary>
@@ -21,4 +21,6 @@ public class Axes
     /// Configuration for the ticks of the axis
     /// </summary>
     public AxisTicks Ticks { get; set; }
+
+    #endregion // Properties
 }

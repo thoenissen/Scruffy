@@ -89,7 +89,7 @@ public sealed class InteractivityService : SingletonLocatedServiceBase, IDisposa
     /// Wait for a specific message
     /// </summary>
     /// <param name="checkMessage">Function to check the message</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<IUserMessage> WaitForMessageAsync(Func<IUserMessage, bool> checkMessage)
     {
         var taskSource = new TaskCompletionSource<IUserMessage>();
@@ -120,7 +120,7 @@ public sealed class InteractivityService : SingletonLocatedServiceBase, IDisposa
     /// </summary>
     /// <param name="message">Message</param>
     /// <param name="user">User</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task<IReaction> WaitForReactionAsync(IUserMessage message, IUser user)
     {
         var taskSource = new TaskCompletionSource<IReaction>();
@@ -181,7 +181,7 @@ public sealed class InteractivityService : SingletonLocatedServiceBase, IDisposa
     /// </summary>
     /// <param name="identification">Identification</param>
     /// <param name="component">Component</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     internal async Task CheckButtonComponent(string identification, SocketMessageComponent component)
     {
         var isProcessed = false;
@@ -215,7 +215,7 @@ public sealed class InteractivityService : SingletonLocatedServiceBase, IDisposa
     /// </summary>
     /// <param name="identification">Identification</param>
     /// <param name="component">Component</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     internal async Task CheckSelectMenuComponent(string identification, SocketMessageComponent component)
     {
         var isProcessed = false;
@@ -264,7 +264,7 @@ public sealed class InteractivityService : SingletonLocatedServiceBase, IDisposa
     /// A new message was created
     /// </summary>
     /// <param name="arg">Arguments</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private Task OnMessageReceived(SocketMessage arg)
     {
         if (arg is IUserMessage message)
@@ -282,7 +282,7 @@ public sealed class InteractivityService : SingletonLocatedServiceBase, IDisposa
     /// <param name="user">User</param>
     /// <param name="message">Message</param>
     /// <param name="reaction">Reaction</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private Task OnReactionAdded(Cacheable<IUserMessage, ulong> user, Cacheable<IMessageChannel, ulong> message, SocketReaction reaction)
     {
         _reactions.Enqueue(reaction);
@@ -394,7 +394,7 @@ public sealed class InteractivityService : SingletonLocatedServiceBase, IDisposa
     #region IDisposable
 
     /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources
     /// </summary>
     public void Dispose()
     {

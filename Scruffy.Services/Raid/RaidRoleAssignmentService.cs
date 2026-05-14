@@ -52,7 +52,7 @@ public class RaidRoleAssignmentService : LocatedServiceBase
     /// </summary>
     /// <param name="commandContext">Command context</param>
     /// <param name="registrationId">Id of the registration</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task AssignRoles(IContextContainer commandContext, long registrationId)
     {
         var dialogHandler = new DialogHandler(commandContext);

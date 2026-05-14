@@ -3,7 +3,7 @@
 namespace Scruffy.WebApp.DTOs.Raid;
 
 /// <summary>
-/// Represents statistics for a specific raid day.
+/// Represents statistics for a specific raid day
 /// </summary>
 public class RaidDayStatisticsDTO
 {

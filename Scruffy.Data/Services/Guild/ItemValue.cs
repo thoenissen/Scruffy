@@ -5,6 +5,8 @@
     /// </summary>
     public class ItemValue
     {
+        #region Properties
+
         /// <summary>
         /// Is upgrade?
         /// </summary>
@@ -34,5 +36,7 @@
         /// Error message
         /// </summary>
         public string ErrorMessage { get; set; }
+
+        #endregion // Properties
     }
 }

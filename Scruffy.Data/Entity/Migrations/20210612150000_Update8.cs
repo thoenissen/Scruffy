@@ -9,6 +9,8 @@ namespace Scruffy.Data.Entity.Migrations
     /// </summary>
     public partial class Update8 : Migration
     {
+        #region Migration
+
         /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -31,5 +33,7 @@ namespace Scruffy.Data.Entity.Migrations
         {
             migrationBuilder.DropTable("RaidDayTemplates");
         }
+
+        #endregion // Migration
     }
 }

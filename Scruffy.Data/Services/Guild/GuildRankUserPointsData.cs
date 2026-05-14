@@ -7,6 +7,8 @@ namespace Scruffy.Data.Services.Guild;
 /// </summary>
 public class GuildRankUserPointsData
 {
+    #region Properties
+
     /// <summary>
     /// Type
     /// </summary>
@@ -16,4 +18,6 @@ public class GuildRankUserPointsData
     /// Points
     /// </summary>
     public double Points { get; set; }
+
+    #endregion // Properties
 }

@@ -46,7 +46,7 @@ public abstract class DialogEmbedMessageElementBase<TData> : DialogElementBase<T
     /// Converting the response message
     /// </summary>
     /// <param name="message">Message</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public virtual Task<TData> ConvertMessage(IUserMessage message)
     {
         return Task.FromResult((TData)Convert.ChangeType(message.Content, typeof(TData)));

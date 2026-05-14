@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.ChartJs;
 /// </summary>
 public class ChartOptions
 {
+    #region Properties
+
     /// <summary>
     /// Value indicating whether the chart is responsive
     /// </summary>
@@ -33,4 +35,6 @@ public class ChartOptions
     /// </summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public Scales Scales { get; set; }
+
+    #endregion // Properties
 }

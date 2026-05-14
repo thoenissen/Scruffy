@@ -9,6 +9,8 @@ namespace Scruffy.Data.Json.DpsReport;
 /// </summary>
 public class Log
 {
+    #region Properties
+
     /// <summary>
     /// Fight name
     /// </summary>
@@ -106,4 +108,6 @@ public class Log
             return hasValidTargets ? remainingHealth / totalHealth * 100 : null;
         }
     }
+
+    #endregion // Properties
 }

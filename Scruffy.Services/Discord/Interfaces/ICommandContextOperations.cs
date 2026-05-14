@@ -8,6 +8,6 @@ public interface ICommandContextOperations
     /// <summary>
     /// Show unmet precondition hint
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task ShowUnmetPrecondition();
 }

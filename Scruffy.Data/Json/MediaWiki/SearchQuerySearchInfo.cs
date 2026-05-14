@@ -7,6 +7,8 @@ namespace Scruffy.Data.Json.MediaWiki;
 /// </summary>
 public class SearchQuerySearchInfo
 {
+    #region Properties
+
     /// <summary>
     /// Total hits
     /// </summary>
@@ -24,4 +26,6 @@ public class SearchQuerySearchInfo
     /// </summary>
     [JsonProperty("suggestionsnippet")]
     public string SuggestionSnippet { get; set; }
+
+    #endregion // Properties
 }

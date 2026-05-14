@@ -23,7 +23,7 @@ public class HelpSlashCommandModule : SlashCommandModuleBase
     /// <summary>
     /// Display command help
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [DefaultMemberPermissions(Discord.GuildPermission.SendMessages)]
     [SlashCommand("help", "Shows the Scruffy help message", true)]
     public async Task Show()

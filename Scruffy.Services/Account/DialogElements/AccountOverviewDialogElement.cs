@@ -194,8 +194,7 @@ public class AccountOverviewDialogElement : DialogEmbedSelectMenuElementBase<boo
 
                                if (isDataStorageAccepted)
                                {
-                                   isExtendedDataStorageAccepted =
-                                   await RunSubElement<AccountGuildStatisticsTermsDialogElement, bool>().ConfigureAwait(false);
+                                   isExtendedDataStorageAccepted = await RunSubElement<AccountGuildStatisticsTermsDialogElement, bool>().ConfigureAwait(false);
                                }
 
                                var discordQuery = _repositoryFactory.GetRepository<DiscordAccountRepository>()

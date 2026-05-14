@@ -27,7 +27,7 @@ public class UtilityMessageCommandModule : MessageCommandModuleBase
     /// Set reactions
     /// </summary>
     /// <param name="message">Message</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [MessageCommand("Add reactions")]
     public async Task AddReactions(IUserMessage message)
     {
@@ -45,7 +45,7 @@ public class UtilityMessageCommandModule : MessageCommandModuleBase
     /// Set reactions
     /// </summary>
     /// <param name="message">Message</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [MessageCommand("Remove reactions")]
     public async Task RemoveReactions(IUserMessage message)
     {
@@ -63,7 +63,7 @@ public class UtilityMessageCommandModule : MessageCommandModuleBase
     /// Repost message
     /// </summary>
     /// <param name="message">Message</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [MessageCommand("Repost message")]
     public async Task RepostMessage(IUserMessage message)
     {
@@ -81,7 +81,7 @@ public class UtilityMessageCommandModule : MessageCommandModuleBase
     /// Add link
     /// </summary>
     /// <param name="message">Message</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [MessageCommand("Add link")]
     public async Task AddLink(IUserMessage message)
     {
@@ -96,7 +96,7 @@ public class UtilityMessageCommandModule : MessageCommandModuleBase
     /// Remove components
     /// </summary>
     /// <param name="message">Message</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [MessageCommand("Remove components")]
     public async Task RemoveComponents(IUserMessage message)
     {

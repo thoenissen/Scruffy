@@ -81,6 +81,7 @@ public class GuildWars2CommandHandler : LocatedServiceBase
                                         .WithTimestamp(DateTime.Now);
 
         var stringBuilder = new StringBuilder();
+
         stringBuilder.AppendLine($"{DiscordEmoteService.GetGuildEmote(container.Client, 848910035747864576)} {Format.Url("Vale Guardian", "https://bit.ly/2EevcXD")} ({Format.Url("Mukluk", "https://bit.ly/3i7056E")} - {Format.Url("Tekkit", "https://bit.ly/3Xrru3C")} - {Format.Url("Hardstuck", "https://bit.ly/3EuRmCX")})");
         stringBuilder.AppendLine($"{DiscordEmoteService.GetGuildEmote(container.Client, 743938320459104317)} {Format.Url("Spirit Woods", "https://bit.ly/3ViTUuB")} ({Format.Url("Mukluk", "https://bit.ly/3GDDwRd")} - {Format.Url("Hardstuck", "https://bit.ly/3ViFyKL")})");
         stringBuilder.AppendLine($"{DiscordEmoteService.GetGuildEmote(container.Client, 848908993538949131)} {Format.Url("Gorseval the Multifarious", "https://bit.ly/2EhcXkn")} ({Format.Url("Mukluk", "https://bit.ly/3U4IpWx")} - {Format.Url("Tekkit", "https://bit.ly/3i2B8cE")} - {Format.Url("Hardstuck", "https://bit.ly/3EymNwf")})");
@@ -157,6 +158,7 @@ public class GuildWars2CommandHandler : LocatedServiceBase
                                         .WithTimestamp(DateTime.Now);
 
         var stringBuilder = new StringBuilder();
+
         stringBuilder.AppendLine($"{Format.Url("Aetherblade", "https://bit.ly/3VihmYR")} ({Format.Url("Discretize", "https://bit.ly/3hXprnu")} - {Format.Url("Hardstuck", "https://bit.ly/3EFotUS")})");
         stringBuilder.AppendLine($"{Format.Url("Aquatic Ruins", "https://bit.ly/3EVoepQ")} ({Format.Url("Discretize", "https://bit.ly/3hW5I7F")} - {Format.Url("Hardstuck", "https://bit.ly/3XvasSf")})");
         stringBuilder.AppendLine($"{Format.Url("Captain Mai Trin Boss", "https://bit.ly/3Xrs5lO")} ({Format.Url("Discretize", "https://bit.ly/3OtVyHH")} - {Format.Url("Hardstuck", "https://bit.ly/3Vkpzfo")})");
@@ -211,6 +213,7 @@ public class GuildWars2CommandHandler : LocatedServiceBase
                                         .WithTimestamp(DateTime.Now);
 
         var stringBuilder = new StringBuilder();
+
         stringBuilder.AppendLine($"{Format.Url("Old Lion's Court", "https://bit.ly/3V0zLtr")} ({Format.Url("Mukluk", "https://bit.ly/3Xt0eBz")} - {Format.Url("Hardstuck", "https://bit.ly/3ETyGhF")})");
         builder.AddField("Living World Season 1", stringBuilder.ToString());
 

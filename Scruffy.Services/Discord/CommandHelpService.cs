@@ -42,7 +42,7 @@ public class CommandHelpService : LocatedServiceBase
     /// Show command help
     /// </summary>
     /// <param name="context">Context</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public async Task ShowHelp(IContextContainer context)
     {
         var embedBuilder = new EmbedBuilder().WithColor(Color.DarkBlue)

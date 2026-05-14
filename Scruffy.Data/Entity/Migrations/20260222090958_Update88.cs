@@ -7,6 +7,8 @@ namespace Scruffy.Data.Entity.Migrations;
 /// <inheritdoc />
 public partial class Update88 : Migration
 {
+    #region Migration
+
     /// <inheritdoc />
     protected override void Up(MigrationBuilder migrationBuilder)
     {
@@ -28,4 +30,6 @@ public partial class Update88 : Migration
                                          nullable: false,
                                          defaultValue: false);
     }
+
+    #endregion // Migration
 }

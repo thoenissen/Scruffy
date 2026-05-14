@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+
 using Scruffy.Data.Entity.Tables.CoreData;
 using Scruffy.Data.Enumerations.Guild;
 
