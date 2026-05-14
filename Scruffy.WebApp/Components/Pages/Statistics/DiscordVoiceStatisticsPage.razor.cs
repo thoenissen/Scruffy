@@ -437,37 +437,37 @@ public partial class DiscordVoiceStatisticsPage : LocatedComponent
             return [];
         }
 
-        var n = values.Length;
+        var valueCount = values.Length;
         var sumX = 0.0;
         var sumY = 0.0;
         var sumXy = 0.0;
         var sumX2 = 0.0;
 
-        for (var i = 0; i < n; i++)
+        for (var valueIndex = 0; valueIndex < valueCount; valueIndex++)
         {
-            sumX += i;
-            sumY += values[i];
-            sumXy += i * values[i];
-            sumX2 += i * i;
+            sumX += valueIndex;
+            sumY += values[valueIndex];
+            sumXy += valueIndex * values[valueIndex];
+            sumX2 += valueIndex * valueIndex;
         }
 
-        var denominator = (n * sumX2) - (sumX * sumX);
+        var denominator = (valueCount * sumX2) - (sumX * sumX);
 
         if (denominator == 0)
         {
-            var avg = sumY / n;
+            var avg = sumY / valueCount;
 
-            return Enumerable.Repeat(avg, n).ToArray();
+            return Enumerable.Repeat(avg, valueCount).ToArray();
         }
 
-        var slope = ((n * sumXy) - (sumX * sumY)) / denominator;
-        var intercept = (sumY - (slope * sumX)) / n;
+        var slope = ((valueCount * sumXy) - (sumX * sumY)) / denominator;
+        var intercept = (sumY - (slope * sumX)) / valueCount;
 
-        var trend = new double[n];
+        var trend = new double[valueCount];
 
-        for (var i = 0; i < n; i++)
+        for (var valueIndex = 0; valueIndex < valueCount; valueIndex++)
         {
-            trend[i] = Math.Max(0, intercept + (slope * i));
+            trend[valueIndex] = Math.Max(0, intercept + (slope * valueIndex));
         }
 
         return trend;

@@ -460,9 +460,9 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
 
                           var items = new List<Item>();
 
-                          for (var i = 0; i < pageCount; i++)
+                          for (var pageIndex = 0; pageIndex < pageCount; pageIndex++)
                           {
-                              var ids = string.Join(",", itemIds.Skip(i * 200).Take(200).Select(obj => obj.ToString()));
+                              var ids = string.Join(",", itemIds.Skip(pageIndex * 200).Take(200).Select(obj => obj.ToString()));
 
                               try
                               {
@@ -533,9 +533,9 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
 
                           var upgrades = new List<Upgrade>();
 
-                          for (var i = 0; i < pageCount; i++)
+                          for (var pageIndex = 0; pageIndex < pageCount; pageIndex++)
                           {
-                              var ids = string.Join(",", upgradeIds.Skip(i * 200).Take(200).Select(obj => obj.ToString()));
+                              var ids = string.Join(",", upgradeIds.Skip(pageIndex * 200).Take(200).Select(obj => obj.ToString()));
 
                               using (var response = await CreateRequest($"https://api.guildwars2.com/v2/guild/upgrades?ids={ids}", GuildWars2ApiPermission.None).ConfigureAwait(false))
                               {
@@ -622,9 +622,9 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
 
                           var prices = new List<TradingPostItemPrice>();
 
-                          for (var i = 0; i < pageCount; i++)
+                          for (var pageIndex = 0; pageIndex < pageCount; pageIndex++)
                           {
-                              var ids = string.Join(",", itemIds.Skip(i * 200).Take(200).Select(obj => obj.ToString()));
+                              var ids = string.Join(",", itemIds.Skip(pageIndex * 200).Take(200).Select(obj => obj.ToString()));
 
                               try
                               {
@@ -678,9 +678,9 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
 
                           var achievements = new List<Achievement>();
 
-                          for (var i = 0; i < pageCount; i++)
+                          for (var pageIndex = 0; pageIndex < pageCount; pageIndex++)
                           {
-                              var ids = string.Join(",", itemIds.Skip(i * 200).Take(200).Select(obj => obj.ToString()));
+                              var ids = string.Join(",", itemIds.Skip(pageIndex * 200).Take(200).Select(obj => obj.ToString()));
 
                               using (var response = await CreateRequest($"https://api.guildwars2.com/v2/achievements?ids={ids}", GuildWars2ApiPermission.None).ConfigureAwait(false))
                               {

@@ -48,7 +48,7 @@ public class GuildGuildDialogElement : DialogEmbedMessageElementBase<string>
         using (var connector = new GuildWars2ApiConnector(DialogContext.GetValue<string>("ApiKey")))
         {
             var fieldText = new StringBuilder();
-            var i = 1;
+            var guildIndex = 1;
 
             // TODO GetMessage -> GetMessageAsync
             var accountInformation = connector.GetAccountInformationAsync().Result;
@@ -58,7 +58,7 @@ public class GuildGuildDialogElement : DialogEmbedMessageElementBase<string>
                 var guildInformation = connector.GetGuildInformation(guildId).Result;
 
                 fieldText.Append('`');
-                fieldText.Append(i);
+                fieldText.Append(guildIndex);
                 fieldText.Append("` - ");
                 fieldText.Append(' ');
                 fieldText.Append(guildInformation.Name);
@@ -67,9 +67,9 @@ public class GuildGuildDialogElement : DialogEmbedMessageElementBase<string>
                 fieldText.Append(']');
                 fieldText.Append('\n');
 
-                _guilds[i] = guildId;
+                _guilds[guildIndex] = guildId;
 
-                i++;
+                guildIndex++;
             }
 
             builder.AddField(LocalizationGroup.GetText("GuildsField", "Guilds"), fieldText.ToString());

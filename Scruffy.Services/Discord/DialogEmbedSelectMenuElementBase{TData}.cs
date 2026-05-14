@@ -71,13 +71,13 @@ public abstract class DialogEmbedSelectMenuElementBase<TData> : InteractionDialo
                 var selectMenu = new SelectMenuBuilder().WithCustomId(components.AddSelectMenu(0))
                                                         .WithPlaceholder(GetPlaceholder());
 
-                var i = 1;
+                var entryIndex = 1;
 
                 foreach (var entry in entries.Take(25))
                 {
-                    selectMenu.AddOption(entry.CommandText, i.ToString(), null, entry.Emote);
+                    selectMenu.AddOption(entry.CommandText, entryIndex.ToString(), null, entry.Emote);
 
-                    i++;
+                    entryIndex++;
                 }
 
                 componentsBuilder.WithSelectMenu(selectMenu);

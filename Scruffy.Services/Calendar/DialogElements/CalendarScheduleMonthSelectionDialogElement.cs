@@ -37,12 +37,12 @@ public class CalendarScheduleMonthSelectionDialogElement : DialogMultiSelectSele
     {
         var entries = new List<SelectMenuOptionData>();
 
-        for (var i = 1; i <= 12; i++)
+        for (var month = 1; month <= 12; month++)
         {
             entries.Add(new SelectMenuOptionData
                         {
-                            Value = i.ToString(),
-                            Label = new DateTime(1, i, 1).ToString("MMMM", LocalizationGroup.CultureInfo)
+                            Value = month.ToString(),
+                            Label = new DateTime(1, month, 1).ToString("MMMM", LocalizationGroup.CultureInfo)
                         });
         }
 

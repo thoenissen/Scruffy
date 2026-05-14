@@ -64,20 +64,20 @@ public class CalendarTemplateSelectionDialogElement : DialogEmbedMessageElementB
                                      .OrderBy(obj => obj.Description)
                                      .ToList();
 
-            var i = 1;
+            var templateIndex = 1;
 
             foreach (var role in mainRoles)
             {
                 levelsFieldsText.Append('`');
-                levelsFieldsText.Append(i);
+                levelsFieldsText.Append(templateIndex);
                 levelsFieldsText.Append("` - ");
                 levelsFieldsText.Append(' ');
                 levelsFieldsText.Append(role.Description);
                 levelsFieldsText.Append('\n');
 
-                _templates[i] = role.Id;
+                _templates[templateIndex] = role.Id;
 
-                i++;
+                templateIndex++;
             }
 
             builder.AddField(LocalizationGroup.GetText("TemplateField", "Templates"), levelsFieldsText.ToString());

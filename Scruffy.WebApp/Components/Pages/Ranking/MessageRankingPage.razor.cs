@@ -71,9 +71,9 @@ public partial class MessageRankingPage : LocatedComponent
     {
         var total = 0L;
 
-        for (var n = 1; n <= level; n++)
+        for (var currentLevel = 1; currentLevel <= level; currentLevel++)
         {
-            total += ((n - 1) / 2 * (55 + ((n - 2) * 10) + 55)) + 100;
+            total += ((currentLevel - 1) / 2 * (55 + ((currentLevel - 2) * 10) + 55)) + 100;
         }
 
         return total / 10;

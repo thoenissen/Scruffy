@@ -83,16 +83,16 @@ public class GuildBankService : LocatedServiceBase
                     foreach (var stash in vault)
                     {
                         var slots = new List<(int ItemId, int X, int Y)>();
-                        var i = 0;
+                        var slotIndex = 0;
 
                         foreach (var slot in stash.Slots)
                         {
                             if (slot is { Count: < 250 })
                             {
-                                slots.Add((slot.ItemId, (i % 10) + 1, (i / 10) + 1));
+                                slots.Add((slot.ItemId, (slotIndex % 10) + 1, (slotIndex / 10) + 1));
                             }
 
-                            i++;
+                            slotIndex++;
                         }
 
                         var stringBuilder = new StringBuilder();
@@ -105,10 +105,10 @@ public class GuildBankService : LocatedServiceBase
 
                             stringBuilder.AppendLine(item.Name);
 
-                            foreach (var (x, y) in group.OrderBy(obj => obj.X)
-                                                        .ThenBy(obj => obj.Y))
+                            foreach (var (column, row) in group.OrderBy(obj => obj.X)
+                                                               .ThenBy(obj => obj.Y))
                             {
-                                stringBuilder.AppendLine($"- {Format.Code($"({x}/{y})")}");
+                                stringBuilder.AppendLine($"- {Format.Code($"({column}/{row})")}");
                             }
                         }
 

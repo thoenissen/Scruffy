@@ -287,32 +287,32 @@ public sealed class MessageCollectorService : SingletonLocatedServiceBase, IDisp
     /// <summary>
     /// Message received
     /// </summary>
-    /// <param name="e">Message</param>
+    /// <param name="socketMessage">Message</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    private Task OnMessageReceived(SocketMessage e)
+    private Task OnMessageReceived(SocketMessage socketMessage)
     {
-        if (e is IUserMessage)
+        if (socketMessage is IUserMessage)
         {
-            if (e.Channel is IGuildChannel guildChannel)
+            if (socketMessage.Channel is IGuildChannel guildChannel)
             {
                 using (var dbFactory = RepositoryFactory.CreateInstance())
                 {
                     var message = new DiscordMessageEntity
                                   {
                                       DiscordServerId = guildChannel.GuildId,
-                                      DiscordAccountId = e.Author.Id,
-                                      DiscordMessageId = e.Id,
-                                      TimeStamp = e.CreatedAt.LocalDateTime
+                                      DiscordAccountId = socketMessage.Author.Id,
+                                      DiscordMessageId = socketMessage.Id,
+                                      TimeStamp = socketMessage.CreatedAt.LocalDateTime
                                   };
 
-                    if (e.Channel is SocketThreadChannel threadChannel)
+                    if (socketMessage.Channel is SocketThreadChannel threadChannel)
                     {
                         message.DiscordThreadId = threadChannel.Id;
                         message.DiscordChannelId = threadChannel.ParentChannel.Id;
                     }
                     else
                     {
-                        message.DiscordChannelId = e.Channel.Id;
+                        message.DiscordChannelId = socketMessage.Channel.Id;
                     }
 
                     dbFactory.GetRepository<DiscordMessageRepository>()

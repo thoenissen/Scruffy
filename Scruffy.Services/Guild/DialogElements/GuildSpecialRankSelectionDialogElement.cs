@@ -62,20 +62,20 @@ public class GuildSpecialRankSelectionDialogElement : DialogEmbedMessageElementB
                                      .OrderBy(obj => obj.Description)
                                      .ToList();
 
-            var i = 1;
+            var rankIndex = 1;
 
             foreach (var role in mainRoles)
             {
                 levelsFieldsText.Append('`');
-                levelsFieldsText.Append(i);
+                levelsFieldsText.Append(rankIndex);
                 levelsFieldsText.Append("` - ");
                 levelsFieldsText.Append(' ');
                 levelsFieldsText.Append(role.Description);
                 levelsFieldsText.Append('\n');
 
-                _ranks[i] = role.Id;
+                _ranks[rankIndex] = role.Id;
 
-                i++;
+                rankIndex++;
             }
 
             builder.AddField(LocalizationGroup.GetText("RanksField", "Ranks"), levelsFieldsText.ToString());

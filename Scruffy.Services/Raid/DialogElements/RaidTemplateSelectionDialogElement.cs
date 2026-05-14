@@ -61,20 +61,20 @@ public class RaidTemplateSelectionDialogElement : DialogEmbedMessageElementBase<
                                      .OrderBy(obj => obj.AliasName)
                                      .ToList();
 
-            var i = 1;
+            var templateIndex = 1;
 
             foreach (var role in mainRoles)
             {
                 templatesFieldText.Append('`');
-                templatesFieldText.Append(i);
+                templatesFieldText.Append(templateIndex);
                 templatesFieldText.Append("` - ");
                 templatesFieldText.Append(' ');
                 templatesFieldText.Append(role.AliasName);
                 templatesFieldText.Append('\n');
 
-                _templates[i] = role.Id;
+                _templates[templateIndex] = role.Id;
 
-                i++;
+                templateIndex++;
             }
 
             builder.AddField(LocalizationGroup.GetText("TemplatesField", "Templates"), templatesFieldText.ToString());

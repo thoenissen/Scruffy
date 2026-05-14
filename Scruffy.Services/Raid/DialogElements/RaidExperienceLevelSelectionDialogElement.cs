@@ -61,20 +61,20 @@ public class RaidExperienceLevelSelectionDialogElement : DialogEmbedMessageEleme
                                      .OrderBy(obj => obj.Description)
                                      .ToList();
 
-            var i = 1;
+            var levelIndex = 1;
 
             foreach (var role in mainRoles)
             {
                 levelsFieldsText.Append('`');
-                levelsFieldsText.Append(i);
+                levelsFieldsText.Append(levelIndex);
                 levelsFieldsText.Append("` - ");
                 levelsFieldsText.Append(' ');
                 levelsFieldsText.Append(role.Description);
                 levelsFieldsText.Append('\n');
 
-                _levels[i] = role.Id;
+                _levels[levelIndex] = role.Id;
 
-                i++;
+                levelIndex++;
             }
 
             builder.AddField(LocalizationGroup.GetText("LevelsField", "Levels"), levelsFieldsText.ToString());

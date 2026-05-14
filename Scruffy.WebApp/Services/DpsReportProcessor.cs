@@ -76,9 +76,9 @@ public sealed class DpsReportProcessor : IAsyncDisposable
 
         _processorTask = new Task[Environment.ProcessorCount];
 
-        for (var i = 0; i < _processorTask.Length; i++)
+        for (var processorIndex = 0; processorIndex < _processorTask.Length; processorIndex++)
         {
-            _processorTask[i] = ProcessRequestsAsync();
+            _processorTask[processorIndex] = ProcessRequestsAsync();
         }
     }
 
@@ -162,11 +162,11 @@ public sealed class DpsReportProcessor : IAsyncDisposable
             {
                 using (var memoryStream = new MemoryStream())
                 {
-                    var e = new GetObjectArgs().WithBucket("dps.report")
-                                               .WithObject($"{request.Id}.json")
-                                               .WithCallbackStream(objectStream => objectStream.CopyTo(memoryStream));
+                    var getObjectArgs = new GetObjectArgs().WithBucket("dps.report")
+                                                           .WithObject($"{request.Id}.json")
+                                                           .WithCallbackStream(objectStream => objectStream.CopyTo(memoryStream));
 
-                    await minioClient.GetObjectAsync(e).ConfigureAwait(false);
+                    await minioClient.GetObjectAsync(getObjectArgs).ConfigureAwait(false);
 
                     memoryStream.Position = 0;
 
@@ -235,13 +235,13 @@ public sealed class DpsReportProcessor : IAsyncDisposable
 
                 using (var memoryStream = new MemoryStream(data))
                 {
-                    var e = new PutObjectArgs().WithBucket("dps.report")
-                                               .WithObject($"{id}.json")
-                                               .WithStreamData(memoryStream)
-                                               .WithObjectSize(data.Length)
-                                               .WithContentType("application/json");
+                    var putObjectArgs = new PutObjectArgs().WithBucket("dps.report")
+                                                           .WithObject($"{id}.json")
+                                                           .WithStreamData(memoryStream)
+                                                           .WithObjectSize(data.Length)
+                                                           .WithContentType("application/json");
 
-                    await minioClient.PutObjectAsync(e).ConfigureAwait(false);
+                    await minioClient.PutObjectAsync(putObjectArgs).ConfigureAwait(false);
                 }
             }
         }

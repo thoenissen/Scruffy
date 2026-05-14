@@ -79,12 +79,12 @@ public class Program
     /// The cancel key was pressed
     /// </summary>
     /// <param name="sender">Sender</param>
-    /// <param name="e">Arguments</param>
-    private static void OnCancelKeyPress(object sender, ConsoleCancelEventArgs e)
+    /// <param name="eventArgs">Arguments</param>
+    private static void OnCancelKeyPress(object sender, ConsoleCancelEventArgs eventArgs)
     {
         LoggingService.AddServiceLogEntry(LogEntryLevel.Information, nameof(Program), "OnCancelKeyPress", null);
 
-        e.Cancel = true;
+        eventArgs.Cancel = true;
 
         _waitForExitTaskSource.TrySetResult(true);
     }
@@ -93,8 +93,8 @@ public class Program
     /// Occurs when the default application domain's parent process exits
     /// </summary>
     /// <param name="sender">Sender</param>
-    /// <param name="e">Argument</param>
-    private static void OnProcessExit(object sender, EventArgs e)
+    /// <param name="eventArgs">Argument</param>
+    private static void OnProcessExit(object sender, EventArgs eventArgs)
     {
         LoggingService.AddServiceLogEntry(LogEntryLevel.Information, nameof(Program), "OnProcessExit", null);
 

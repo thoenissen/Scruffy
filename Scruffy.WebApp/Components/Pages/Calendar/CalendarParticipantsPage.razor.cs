@@ -107,10 +107,10 @@ public partial class CalendarParticipantsPage
     /// <summary>
     /// Handle appointment selection change
     /// </summary>
-    /// <param name="e">Change event args</param>
-    private void OnAppointmentChanged(ChangeEventArgs e)
+    /// <param name="changeEventArgs">Change event args</param>
+    private void OnAppointmentChanged(ChangeEventArgs changeEventArgs)
     {
-        if (long.TryParse(e.Value?.ToString(), out var appointmentId))
+        if (long.TryParse(changeEventArgs.Value?.ToString(), out var appointmentId))
         {
             _selectedAppointmentId = appointmentId;
             _isCommitted = false;

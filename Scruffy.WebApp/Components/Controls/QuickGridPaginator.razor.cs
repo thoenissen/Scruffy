@@ -96,8 +96,8 @@ public partial class QuickGridPaginator
     /// Event handler for when the total item count has changed
     /// </summary>
     /// <param name="sender">Sender</param>
-    /// <param name="e">Arguments</param>
-    private void OnTotalItemCountChanged(object sender, int? e)
+    /// <param name="totalItemCount">Arguments</param>
+    private void OnTotalItemCountChanged(object sender, int? totalItemCount)
     {
         InvokeAsync(StateHasChanged);
     }

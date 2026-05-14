@@ -120,10 +120,10 @@ public partial class RaidCommitPage
     /// Handle status change for a user
     /// </summary>
     /// <param name="user">User</param>
-    /// <param name="e">Change event args</param>
-    private static void OnStatusChanged(RaidCommitUserDTO user, ChangeEventArgs e)
+    /// <param name="changeEventArgs">Change event args</param>
+    private static void OnStatusChanged(RaidCommitUserDTO user, ChangeEventArgs changeEventArgs)
     {
-        user.Status = (string)e.Value switch
+        user.Status = (string)changeEventArgs.Value switch
                       {
                           "substitute" => RaidParticipationStatus.Substitute,
                           "noshow" => RaidParticipationStatus.NoShow,
@@ -151,10 +151,10 @@ public partial class RaidCommitPage
     /// Handle role wish change for a user
     /// </summary>
     /// <param name="user">User</param>
-    /// <param name="e">Change event args</param>
-    private static void OnRoleWishChanged(RaidCommitUserDTO user, ChangeEventArgs e)
+    /// <param name="changeEventArgs">Change event args</param>
+    private static void OnRoleWishChanged(RaidCommitUserDTO user, ChangeEventArgs changeEventArgs)
     {
-        user.IsRoleWishFulfilled = (string)e.Value switch
+        user.IsRoleWishFulfilled = (string)changeEventArgs.Value switch
                                    {
                                        "fulfilled" => true,
                                        "notfulfilled" => false,
@@ -228,10 +228,10 @@ public partial class RaidCommitPage
     /// <summary>
     /// Handle appointment selection change
     /// </summary>
-    /// <param name="e">Change event args</param>
-    private void OnAppointmentChanged(ChangeEventArgs e)
+    /// <param name="changeEventArgs">Change event args</param>
+    private void OnAppointmentChanged(ChangeEventArgs changeEventArgs)
     {
-        if (long.TryParse((string)e.Value, out var selectedId))
+        if (long.TryParse((string)changeEventArgs.Value, out var selectedId))
         {
             var appointment = _appointments?.FirstOrDefault(a => a.Id == selectedId);
 

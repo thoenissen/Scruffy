@@ -124,9 +124,9 @@ public class DpsReportConnector
                                     Task.FromResult(firstPage)
                                 };
 
-                for (var i = 2; i <= firstPage.Pages; i++)
+                for (var pageNumber = 2; pageNumber <= firstPage.Pages; pageNumber++)
                 {
-                    pageTasks.Add(GetUploads(token, i, startTime, endTime));
+                    pageTasks.Add(GetUploads(token, pageNumber, startTime, endTime));
                 }
 
                 while (pageTasks.Count != 0)
@@ -365,11 +365,11 @@ public class DpsReportConnector
             {
                 using (var memoryStream = new MemoryStream())
                 {
-                    var e = new GetObjectArgs().WithBucket("dps.report")
-                                               .WithObject($"{id}.json")
-                                               .WithCallbackStream(objectStream => objectStream.CopyTo(memoryStream));
+                    var getObjectArgs = new GetObjectArgs().WithBucket("dps.report")
+                                                           .WithObject($"{id}.json")
+                                                           .WithCallbackStream(objectStream => objectStream.CopyTo(memoryStream));
 
-                    await minioClient.GetObjectAsync(e).ConfigureAwait(false);
+                    await minioClient.GetObjectAsync(getObjectArgs).ConfigureAwait(false);
 
                     memoryStream.Position = 0;
 
@@ -441,13 +441,13 @@ public class DpsReportConnector
 
                 using (var memoryStream = new MemoryStream(data))
                 {
-                    var e = new PutObjectArgs().WithBucket("dps.report")
-                                               .WithObject($"{id}.json")
-                                               .WithStreamData(memoryStream)
-                                               .WithObjectSize(data.Length)
-                                               .WithContentType("application/json");
+                    var putObjectArgs = new PutObjectArgs().WithBucket("dps.report")
+                                                           .WithObject($"{id}.json")
+                                                           .WithStreamData(memoryStream)
+                                                           .WithObjectSize(data.Length)
+                                                           .WithContentType("application/json");
 
-                    await minioClient.PutObjectAsync(e).ConfigureAwait(false);
+                    await minioClient.PutObjectAsync(putObjectArgs).ConfigureAwait(false);
                 }
             }
         }

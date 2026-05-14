@@ -60,20 +60,20 @@ public class CalendarScheduleSelectionDialogElement : DialogEmbedMessageElementB
                                      .OrderBy(obj => obj.Description)
                                      .ToList();
 
-            var i = 1;
+            var scheduleIndex = 1;
 
             foreach (var role in mainRoles)
             {
                 levelsFieldsText.Append('`');
-                levelsFieldsText.Append(i);
+                levelsFieldsText.Append(scheduleIndex);
                 levelsFieldsText.Append("` - ");
                 levelsFieldsText.Append(' ');
                 levelsFieldsText.Append(role.Description);
                 levelsFieldsText.Append('\n');
 
-                _schedules[i] = role.Id;
+                _schedules[scheduleIndex] = role.Id;
 
-                i++;
+                scheduleIndex++;
             }
 
             builder.AddField(LocalizationGroup.GetText("ScheduleField", "Schedules"), levelsFieldsText.ToString());

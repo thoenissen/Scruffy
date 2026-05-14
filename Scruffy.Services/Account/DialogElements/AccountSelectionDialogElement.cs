@@ -48,7 +48,7 @@ public class AccountSelectionDialogElement : DialogEmbedMessageElementBase<strin
 
         var typesField = new StringBuilder();
 
-        var i = 1;
+        var accountIndex = 1;
 
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {
@@ -58,15 +58,15 @@ public class AccountSelectionDialogElement : DialogEmbedMessageElementBase<strin
                                                  .Select(obj => obj.Name))
             {
                 typesField.Append('`');
-                typesField.Append(i);
+                typesField.Append(accountIndex);
                 typesField.Append("` - ");
                 typesField.Append(' ');
                 typesField.Append(accountName);
                 typesField.Append('\n');
 
-                _accounts[i] = accountName;
+                _accounts[accountIndex] = accountName;
 
-                i++;
+                accountIndex++;
             }
         }
 

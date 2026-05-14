@@ -73,13 +73,13 @@ public class CommandHelpService : LocatedServiceBase
 
         foreach (var module in commands.GroupBy(obj => obj.Name))
         {
-            var s = LocalizationGroup.GetText(module.Key, module.Key);
+            var localizedModuleName = LocalizationGroup.GetText(module.Key, module.Key);
 
-            modules.Add(s,
+            modules.Add(localizedModuleName,
                         (module.Select(obj => obj.Command)
                                .Distinct()
                                .ToList(),
-                         module.Any(obj => obj.Command.Length > 18) || s.Length > 18));
+                         module.Any(obj => obj.Command.Length > 18) || localizedModuleName.Length > 18));
         }
 
         embedBuilder.WithDescription(LocalizationGroup.GetText("BuilderDescriptionGeneral", "The following commands are available. Further information is displayed when entering the command."));

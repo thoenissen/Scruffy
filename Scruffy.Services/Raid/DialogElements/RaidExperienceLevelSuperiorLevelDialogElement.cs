@@ -68,20 +68,20 @@ public class RaidExperienceLevelSuperiorLevelDialogElement : DialogEmbedMessageE
             levelsFieldsText.Append(LocalizationGroup.GetText("NoExperienceLevel", "No superior level"));
             levelsFieldsText.Append('\n');
 
-            var i = 1;
+            var superiorLevelIndex = 1;
 
             foreach (var role in mainRoles)
             {
                 levelsFieldsText.Append('`');
-                levelsFieldsText.Append(i);
+                levelsFieldsText.Append(superiorLevelIndex);
                 levelsFieldsText.Append("` - ");
                 levelsFieldsText.Append(' ');
                 levelsFieldsText.Append(role.Description);
                 levelsFieldsText.Append('\n');
 
-                _levels[i] = role.Id;
+                _levels[superiorLevelIndex] = role.Id;
 
-                i++;
+                superiorLevelIndex++;
             }
 
             builder.AddField(LocalizationGroup.GetText("LevelsField", "Levels"), levelsFieldsText.ToString());

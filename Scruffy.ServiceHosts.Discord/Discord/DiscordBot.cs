@@ -216,11 +216,11 @@ public sealed class DiscordBot : IAsyncDisposable
     /// <summary>
     /// Discord client logging
     /// </summary>
-    /// <param name="e">Argument</param>
+    /// <param name="logMessage">Argument</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    private Task OnDiscordClientLog(LogMessage e)
+    private Task OnDiscordClientLog(LogMessage logMessage)
     {
-        LoggingService.AddDiscordClientLog(e);
+        LoggingService.AddDiscordClientLog(logMessage);
 
         return Task.CompletedTask;
     }
@@ -228,11 +228,11 @@ public sealed class DiscordBot : IAsyncDisposable
     /// <summary>
     /// Interaction service logging
     /// </summary>
-    /// <param name="e">Argument</param>
+    /// <param name="logMessage">Argument</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    private Task OnInteractionServiceLog(LogMessage e)
+    private Task OnInteractionServiceLog(LogMessage logMessage)
     {
-        LoggingService.AddInteractionServiceLog(e);
+        LoggingService.AddInteractionServiceLog(logMessage);
 
         return Task.CompletedTask;
     }
@@ -240,11 +240,11 @@ public sealed class DiscordBot : IAsyncDisposable
     /// <summary>
     /// Interaction created
     /// </summary>
-    /// <param name="e">Arguments</param>
+    /// <param name="interaction">Arguments</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    private async Task OnInteractionCreated(SocketInteraction e)
+    private async Task OnInteractionCreated(SocketInteraction interaction)
     {
-        var context = new InteractionContextContainer(_discordClient, e);
+        var context = new InteractionContextContainer(_discordClient, interaction);
 
         try
         {

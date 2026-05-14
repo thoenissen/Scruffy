@@ -59,13 +59,13 @@ public abstract class DialogButtonElementBase<TData> : DialogElementBase<TData>
 
             if (buttons?.Count > 0)
             {
-                var i = 1;
+                var buttonIndex = 1;
 
                 foreach (var button in buttons)
                 {
-                    componentsBuilder.WithButton(button.CommandText, components.AddButton(i), ButtonStyle.Secondary, button.Emote);
+                    componentsBuilder.WithButton(button.CommandText, components.AddButton(buttonIndex), ButtonStyle.Secondary, button.Emote);
 
-                    i++;
+                    buttonIndex++;
                 }
             }
 

@@ -53,20 +53,20 @@ public class RaidExperienceLevelRoleDialogElement : DialogEmbedMessageElementBas
         levelsFieldsText.Append(LocalizationGroup.GetText("NoDiscordRole", "No role"));
         levelsFieldsText.Append('\n');
 
-        var i = 1;
+        var roleIndex = 1;
 
         foreach (var role in CommandContext.Guild.Roles)
         {
             levelsFieldsText.Append('`');
-            levelsFieldsText.Append(i);
+            levelsFieldsText.Append(roleIndex);
             levelsFieldsText.Append("` - ");
             levelsFieldsText.Append(' ');
             levelsFieldsText.Append(role.Mention);
             levelsFieldsText.Append('\n');
 
-            _levels[i] = role.Id;
+            _levels[roleIndex] = role.Id;
 
-            i++;
+            roleIndex++;
         }
 
         builder.AddField(LocalizationGroup.GetText("RolesField", "Roles"), levelsFieldsText.ToString());

@@ -51,21 +51,21 @@ public class CalendarScheduleScheduleDialogElement : DialogEmbedMessageElementBa
 
         var typesField = new StringBuilder();
 
-        var i = 1;
+        var typeIndex = 1;
 
         foreach (var type in Enum.GetValues(typeof(CalendarAppointmentScheduleType))
                                  .OfType<CalendarAppointmentScheduleType>())
         {
             typesField.Append('`');
-            typesField.Append(i);
+            typesField.Append(typeIndex);
             typesField.Append("` - ");
             typesField.Append(' ');
             typesField.Append(LocalizationGroup.GetText(type.ToString(), type.ToString()));
             typesField.Append('\n');
 
-            _types[i] = type;
+            _types[typeIndex] = type;
 
-            i++;
+            typeIndex++;
         }
 
         builder.AddField(LocalizationGroup.GetText("TypesField", "Types"), typesField.ToString());

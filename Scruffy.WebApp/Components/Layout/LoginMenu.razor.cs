@@ -35,10 +35,10 @@ public sealed partial class LoginMenu : IDisposable
     /// Reaction to <see cref="NavigationManager.LocationChanged"/>
     /// </summary>
     /// <param name="sender">Sender</param>
-    /// <param name="e">Arguments</param>
-    private void OnLocationChanged(object sender, LocationChangedEventArgs e)
+    /// <param name="locationChangedEventArgs">Arguments</param>
+    private void OnLocationChanged(object sender, LocationChangedEventArgs locationChangedEventArgs)
     {
-        _currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+        _currentUrl = NavigationManager.ToBaseRelativePath(locationChangedEventArgs.Location);
 
         StateHasChanged();
     }

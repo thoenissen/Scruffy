@@ -61,20 +61,20 @@ public class GuildSpecialRankRoleAssignmentSelectionDialog : DialogEmbedMessageE
                                                     })
                                      .ToList();
 
-            var i = 1;
+            var rankIndex = 1;
 
             foreach (var role in mainRoles)
             {
                 levelsFieldsText.Append('`');
-                levelsFieldsText.Append(i);
+                levelsFieldsText.Append(rankIndex);
                 levelsFieldsText.Append("` - ");
                 levelsFieldsText.Append(' ');
                 levelsFieldsText.Append(CommandContext.Guild.GetRole(role.DiscordRoleId).Mention);
                 levelsFieldsText.Append('\n');
 
-                _ranks[i] = role.DiscordRoleId;
+                _ranks[rankIndex] = role.DiscordRoleId;
 
-                i++;
+                rankIndex++;
             }
 
             builder.AddField(LocalizationGroup.GetText("AssignmentsField", "Assignments"), levelsFieldsText.ToString());
