@@ -13,26 +13,6 @@ namespace Scruffy.Commands.SlashCommands;
 [DefaultMemberPermissions(GuildPermission.Administrator)]
 public class AdministrationSlashCommandModule : SlashCommandModuleBase
 {
-    #region Enumerations
-
-    /// <summary>
-    /// Channel configurations
-    /// </summary>
-    public enum ChannelConfigurationType
-    {
-        /// <summary>
-        /// Block
-        /// </summary>
-        Block,
-
-        /// <summary>
-        /// Unblock
-        /// </summary>
-        Unblock
-    }
-
-    #endregion // Enumerations
-
     #region Properties
 
     /// <summary>

@@ -262,50 +262,50 @@ public class GuildCommandHandler : LocatedServiceBase
 
         await using (dialogHandler.ConfigureAwait(false))
         {
-            var type = await dialogHandler.Run<GuildNotificationChannelConfigurationSelectDialogElement, GuildNotificationChannelConfigurationSelectDialogElement.ChannelType?>()
+            var type = await dialogHandler.Run<GuildNotificationChannelConfigurationSelectDialogElement, GuildNotificationChannelType?>()
                                           .ConfigureAwait(false);
 
             switch (type)
             {
-                case GuildNotificationChannelConfigurationSelectDialogElement.ChannelType.SpecialRankNotification:
+                case GuildNotificationChannelType.SpecialRankNotification:
                     {
                         _configurationService.SetChannel(context, GuildChannelConfigurationType.SpecialRankRankChange, null);
                     }
                     break;
 
-                case GuildNotificationChannelConfigurationSelectDialogElement.ChannelType.CalendarReminderNotification:
+                case GuildNotificationChannelType.CalendarReminderNotification:
                     {
                         _configurationService.SetChannel(context, GuildChannelConfigurationType.CalendarReminder, null);
                     }
                     break;
 
-                case GuildNotificationChannelConfigurationSelectDialogElement.ChannelType.GuildLogNotification:
+                case GuildNotificationChannelType.GuildLogNotification:
                     {
                         _configurationService.SetChannel(context, GuildChannelConfigurationType.GuildLogNotification, null);
                     }
                     break;
 
-                case GuildNotificationChannelConfigurationSelectDialogElement.ChannelType.GuildRankChangeNotification:
+                case GuildNotificationChannelType.GuildRankChangeNotification:
                     {
                         _configurationService.SetChannel(context, GuildChannelConfigurationType.GuildRankChanges, null);
                     }
                     break;
 
-                case GuildNotificationChannelConfigurationSelectDialogElement.ChannelType.MessageOfTheDay:
+                case GuildNotificationChannelType.MessageOfTheDay:
                     {
                         await _configurationService.SetupMotd(context)
                                                    .ConfigureAwait(false);
                     }
                     break;
 
-                case GuildNotificationChannelConfigurationSelectDialogElement.ChannelType.Calendar:
+                case GuildNotificationChannelType.Calendar:
                     {
                         await _configurationService.SetupCalendar(context)
                                                    .ConfigureAwait(false);
                     }
                     break;
 
-                case GuildNotificationChannelConfigurationSelectDialogElement.ChannelType.UserNotification:
+                case GuildNotificationChannelType.UserNotification:
                     {
                         _guildUserService.SetChannel(context.Guild.Id, context.Channel.Id);
                     }
@@ -334,12 +334,12 @@ public class GuildCommandHandler : LocatedServiceBase
 
         await using (dialogHandler.ConfigureAwait(false))
         {
-            var type = await dialogHandler.Run<GuildOverviewMessageConfigurationSelectDialogElement, GuildOverviewMessageConfigurationSelectDialogElement.MessageType?>()
+            var type = await dialogHandler.Run<GuildOverviewMessageConfigurationSelectDialogElement, GuildOverviewMessageType?>()
                                           .ConfigureAwait(false);
 
             switch (type)
             {
-                case GuildOverviewMessageConfigurationSelectDialogElement.MessageType.Ranking:
+                case GuildOverviewMessageType.Ranking:
                     {
                         var message = await context.Channel
                                                    .SendMessageAsync($"{DiscordEmoteService.GetLoadingEmote(context.Client)} {LocalizationGroup.GetText("OverviewCreation", "The overview is being created.")}")

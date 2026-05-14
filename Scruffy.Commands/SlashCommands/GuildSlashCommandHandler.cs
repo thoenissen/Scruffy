@@ -12,21 +12,6 @@ namespace Scruffy.Commands.SlashCommands;
 [Group("guild", "Guild related commands")]
 public class GuildSlashCommandHandler : SlashCommandModuleBase
 {
-    #region Enumeration
-
-    /// <summary>
-    /// Typ of unlocks
-    /// </summary>
-    public enum GuildBankUnlocks
-    {
-        /// <summary>
-        /// Dyes
-        /// </summary>
-        Dyes
-    }
-
-    #endregion // Enumeration
-
     #region Fields
 
     /// <summary>

@@ -14,6 +14,8 @@ using Scruffy.Data.Json.ChartJs;
 using Scruffy.WebApp.Components.Base;
 using Scruffy.WebApp.Components.Controls;
 
+using TimeFilter = Scruffy.WebApp.Components.Pages.Statistics.DiscordVoiceStatisticsTimeFilter;
+
 namespace Scruffy.WebApp.Components.Pages.Statistics;
 
 /// <summary>
@@ -22,41 +24,6 @@ namespace Scruffy.WebApp.Components.Pages.Statistics;
 [Authorize(Roles = "Member")]
 public partial class DiscordVoiceStatisticsPage : LocatedComponent
 {
-    #region Nested types
-
-    /// <summary>
-    /// Time filter options
-    /// </summary>
-    private enum TimeFilter
-    {
-        /// <summary>
-        /// Last 30 days
-        /// </summary>
-        Days30,
-
-        /// <summary>
-        /// Last 90 days
-        /// </summary>
-        Days90,
-
-        /// <summary>
-        /// Last 180 days
-        /// </summary>
-        Days180,
-
-        /// <summary>
-        /// Last year
-        /// </summary>
-        Year1,
-
-        /// <summary>
-        /// All time
-        /// </summary>
-        All
-    }
-
-    #endregion // Nested types
-
     #region Constants
 
     /// <summary>

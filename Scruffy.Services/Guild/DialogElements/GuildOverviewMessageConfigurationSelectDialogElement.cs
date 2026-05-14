@@ -6,23 +6,8 @@ namespace Scruffy.Services.Guild.DialogElements;
 /// <summary>
 /// Overview type selection
 /// </summary>
-internal class GuildOverviewMessageConfigurationSelectDialogElement : DialogSelectMenuElementBase<GuildOverviewMessageConfigurationSelectDialogElement.MessageType?>
+internal class GuildOverviewMessageConfigurationSelectDialogElement : DialogSelectMenuElementBase<GuildOverviewMessageType?>
 {
-    #region Enumerations
-
-    /// <summary>
-    /// Message type
-    /// </summary>
-    public enum MessageType
-    {
-        /// <summary>
-        /// General
-        /// </summary>
-        Ranking
-    }
-
-    #endregion // Enumerations
-
     #region Constructor
 
     /// <summary>
@@ -45,20 +30,20 @@ internal class GuildOverviewMessageConfigurationSelectDialogElement : DialogSele
     }
 
     /// <inheritdoc/>
-    public override IReadOnlyList<SelectMenuEntryData<MessageType?>> GetEntries()
+    public override IReadOnlyList<SelectMenuEntryData<GuildOverviewMessageType?>> GetEntries()
     {
-        return Enum.GetValues(typeof(MessageType))
-                   .OfType<MessageType>()
-                   .Select(obj => new SelectMenuEntryData<MessageType?>
+        return Enum.GetValues(typeof(GuildOverviewMessageType))
+                   .OfType<GuildOverviewMessageType>()
+                   .Select(obj => new SelectMenuEntryData<GuildOverviewMessageType?>
                                   {
                                       CommandText = LocalizationGroup.GetText(obj.ToString(), obj.ToString()),
-                                      Response = () => Task.FromResult((MessageType?)obj)
+                                      Response = () => Task.FromResult((GuildOverviewMessageType?)obj)
                                   })
                    .ToList();
     }
 
     /// <inheritdoc/>
-    protected override MessageType? DefaultFunc()
+    protected override GuildOverviewMessageType? DefaultFunc()
     {
         return null;
     }

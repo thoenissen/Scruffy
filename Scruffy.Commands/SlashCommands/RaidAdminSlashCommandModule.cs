@@ -18,58 +18,6 @@ namespace Scruffy.Commands.SlashCommands;
 [DefaultMemberPermissions(GuildPermission.Administrator)]
 public class RaidAdminSlashCommandModule : SlashCommandModuleBase
 {
-    #region Enumerations
-
-    /// <summary>
-    /// Configuration types
-    /// </summary>
-    public enum ConfigurationType
-    {
-        /// <summary>
-        /// Appointments
-        /// </summary>
-        [ChoiceDisplay("Appointments")]
-        Appointments,
-
-        /// <summary>
-        /// Experience levels
-        /// </summary>
-        [ChoiceDisplay("Experience levels")]
-        ExperienceLevels,
-
-        /// <summary>
-        /// Templates
-        /// </summary>
-        [ChoiceDisplay("Templates")]
-        Templates
-    }
-
-    /// <summary>
-    /// Overview types
-    /// </summary>
-    public enum OverviewType
-    {
-        /// <summary>
-        /// Participation overview
-        /// </summary>
-        [ChoiceDisplay("Participation")]
-        Participation,
-
-        /// <summary>
-        /// Experience levels overview
-        /// </summary>
-        [ChoiceDisplay("Levels")]
-        Levels,
-
-        /// <summary>
-        /// Logs overview
-        /// </summary>
-        [ChoiceDisplay("Logs")]
-        Logs
-    }
-
-    #endregion // Enumerations
-
     #region Properties
 
     /// <summary>
@@ -92,25 +40,25 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
     /// <param name="type">Type of the configuration</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("configuration", "Starting the raid configuration")]
-    public async Task Configuration([Summary("Type", "Type of the configuration assistant to be started")]ConfigurationType type)
+    public async Task Configuration([Summary("Type", "Type of the configuration assistant to be started")]RaidAdminConfigurationType type)
     {
         switch (type)
         {
-            case ConfigurationType.Appointments:
+            case RaidAdminConfigurationType.Appointments:
                 {
                     await CommandHandler.AppointmentConfiguration(Context)
                                         .ConfigureAwait(false);
                 }
                 break;
 
-            case ConfigurationType.ExperienceLevels:
+            case RaidAdminConfigurationType.ExperienceLevels:
                 {
                     await CommandHandler.LevelsConfiguration(Context)
                                         .ConfigureAwait(false);
                 }
                 break;
 
-            case ConfigurationType.Templates:
+            case RaidAdminConfigurationType.Templates:
                 {
                     await CommandHandler.TemplatesConfiguration(Context)
                                         .ConfigureAwait(false);
@@ -216,28 +164,28 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
     /// <param name="raidWeekDay">Day of the raid week</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("overview", "Overview of the given data type")]
-    public async Task Overview([Summary("Type", "Type of the data which should be visualized")]OverviewType type, [Summary("day-of-raid-week", "Day of the raid week")]string raidWeekDay = null)
+    public async Task Overview([Summary("Type", "Type of the data which should be visualized")]RaidAdminOverviewType type, [Summary("day-of-raid-week", "Day of the raid week")]string raidWeekDay = null)
     {
         await Context.DeferProcessing()
                      .ConfigureAwait(false);
 
         switch (type)
         {
-            case OverviewType.Participation:
+            case RaidAdminOverviewType.Participation:
                 {
                     await CommandHandler.PostParticipationOverview(Context)
                                         .ConfigureAwait(false);
                 }
                 break;
 
-            case OverviewType.Levels:
+            case RaidAdminOverviewType.Levels:
                 {
                     await CommandHandler.PostExperienceLevelOverview(Context)
                                         .ConfigureAwait(false);
                 }
                 break;
 
-            case OverviewType.Logs:
+            case RaidAdminOverviewType.Logs:
                 {
                     await LogCommandHandler.PostGuildRaidSummary(Context, raidWeekDay)
                                            .ConfigureAwait(false);

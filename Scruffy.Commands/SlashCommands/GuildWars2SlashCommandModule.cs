@@ -11,46 +11,6 @@ namespace Scruffy.Commands.SlashCommands;
 [Group("gw2", "Guild Wars 2 related commands")]
 public class GuildWars2SlashCommandModule : SlashCommandModuleBase
 {
-    #region Enumerations
-
-    /// <summary>
-    /// Guide type
-    /// </summary>
-    public enum GuideType
-    {
-        /// <summary>
-        /// Raids
-        /// </summary>
-        [ChoiceDisplay("Raids")]
-        Raids,
-
-        /// <summary>
-        /// Strike Missions
-        /// </summary>
-        [ChoiceDisplay("Strike Missions")]
-        StrikeMissions,
-
-        /// <summary>
-        /// Fractals of the Mists
-        /// </summary>
-        [ChoiceDisplay("Fractals of the Mists")]
-        Fractals
-    }
-
-    /// <summary>
-    /// Bank commands
-    /// </summary>
-    public enum BankCommand
-    {
-        /// <summary>
-        /// Lists all slots of the material storage with has the maximum amount of items
-        /// </summary>
-        [ChoiceDisplay("List full material storage slots")]
-        ListFullMaterialStorage,
-    }
-
-    #endregion // Enumerations
-
     #region Properties
 
     /// <summary>

@@ -6,53 +6,8 @@ namespace Scruffy.Services.Guild.DialogElements;
 /// <summary>
 /// Channel type selection
 /// </summary>
-internal class GuildNotificationChannelConfigurationSelectDialogElement : DialogSelectMenuElementBase<GuildNotificationChannelConfigurationSelectDialogElement.ChannelType?>
+internal class GuildNotificationChannelConfigurationSelectDialogElement : DialogSelectMenuElementBase<GuildNotificationChannelType?>
 {
-    #region Enumerations
-
-    /// <summary>
-    /// Channel type
-    /// </summary>
-    public enum ChannelType
-    {
-        /// <summary>
-        /// Special rank notification
-        /// </summary>
-        SpecialRankNotification,
-
-        /// <summary>
-        /// Calendar reminder notification
-        /// </summary>
-        CalendarReminderNotification,
-
-        /// <summary>
-        /// Guild log notification
-        /// </summary>
-        GuildLogNotification,
-
-        /// <summary>
-        /// Guild rank change notification
-        /// </summary>
-        GuildRankChangeNotification,
-
-        /// <summary>
-        /// Message of the day
-        /// </summary>
-        MessageOfTheDay,
-
-        /// <summary>
-        /// Calendar
-        /// </summary>
-        Calendar,
-
-        /// <summary>
-        /// User notification
-        /// </summary>
-        UserNotification
-    }
-
-    #endregion // Enumerations
-
     #region Constructor
 
     /// <summary>
@@ -75,20 +30,20 @@ internal class GuildNotificationChannelConfigurationSelectDialogElement : Dialog
     }
 
     /// <inheritdoc/>
-    public override IReadOnlyList<SelectMenuEntryData<ChannelType?>> GetEntries()
+    public override IReadOnlyList<SelectMenuEntryData<GuildNotificationChannelType?>> GetEntries()
     {
-        return Enum.GetValues(typeof(ChannelType))
-                   .OfType<ChannelType>()
-                   .Select(obj => new SelectMenuEntryData<ChannelType?>
+        return Enum.GetValues(typeof(GuildNotificationChannelType))
+                   .OfType<GuildNotificationChannelType>()
+                   .Select(obj => new SelectMenuEntryData<GuildNotificationChannelType?>
                                   {
                                       CommandText = LocalizationGroup.GetText(obj.ToString(), obj.ToString()),
-                                      Response = () => Task.FromResult((ChannelType?)obj)
+                                      Response = () => Task.FromResult((GuildNotificationChannelType?)obj)
                                   })
                    .ToList();
     }
 
     /// <inheritdoc/>
-    protected override ChannelType? DefaultFunc()
+    protected override GuildNotificationChannelType? DefaultFunc()
     {
         return null;
     }

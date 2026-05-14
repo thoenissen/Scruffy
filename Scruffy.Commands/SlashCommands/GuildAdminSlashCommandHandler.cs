@@ -14,196 +14,6 @@ namespace Scruffy.Commands.SlashCommands;
 [DefaultMemberPermissions(GuildPermission.Administrator)]
 public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
 {
-    #region Enumeration
-
-    /// <summary>
-    /// Configuration types
-    /// </summary>
-    public enum ConfigurationType
-    {
-        /// <summary>
-        /// General configuration
-        /// </summary>
-        [ChoiceDisplay("General")]
-        General,
-
-        /// <summary>
-        /// Guild Wars 2 item configuration
-        /// </summary>
-        [ChoiceDisplay("Guild Wars 2 item")]
-        GuildWarsItems,
-
-        /// <summary>
-        /// User configuration
-        /// </summary>
-        [ChoiceDisplay("User")]
-        User,
-
-        /// <summary>
-        /// Rank configuration
-        /// </summary>
-        [ChoiceDisplay("Ranks")]
-        Ranks,
-
-        /// <summary>
-        /// Special rank configuration
-        /// </summary>
-        [ChoiceDisplay("Special ranks")]
-        SpecialRanks,
-
-        /// <summary>
-        /// Message activity roles configuration
-        /// </summary>
-        [ChoiceDisplay("Message activity roles")]
-        MessageActivity,
-
-        /// <summary>
-        /// Voice activity roles configuration
-        /// </summary>
-        [ChoiceDisplay("Voice activity roles")]
-        VoiceActivity,
-
-        /// <summary>
-        /// Notification channels configuration
-        /// </summary>
-        [ChoiceDisplay("Notification channels")]
-        NotificationChannels,
-
-        /// <summary>
-        /// Overview messages configuration
-        /// </summary>
-        [ChoiceDisplay("Overview")]
-        Overviews
-    }
-
-    /// <summary>
-    /// Overview types
-    /// </summary>
-    public enum OverviewType
-    {
-        /// <summary>
-        /// Ranking overview
-        /// </summary>
-        [ChoiceDisplay("Ranking")]
-        Ranking,
-
-        /// <summary>
-        /// Special ranks overview
-        /// </summary>
-        [ChoiceDisplay("Special ranks")]
-        SpecialRanks,
-
-        /// <summary>
-        /// Worlds overview
-        /// </summary>
-        [ChoiceDisplay("Worlds")]
-        Worlds
-    }
-
-    /// <summary>
-    /// Export types
-    /// </summary>
-    public enum DataType
-    {
-        /// <summary>
-        /// Stash
-        /// </summary>
-        [ChoiceDisplay("Stash")]
-        Stash,
-
-        /// <summary>
-        /// Upgrades
-        /// </summary>
-        [ChoiceDisplay("Upgrades")]
-        Upgrades,
-
-        /// <summary>
-        /// Login activity
-        /// </summary>
-        [ChoiceDisplay("Login activity")]
-        LoginActivity,
-
-        /// <summary>
-        /// Representation
-        /// </summary>
-        [ChoiceDisplay("Representation")]
-        Representation,
-
-        /// <summary>
-        /// Representation
-        /// </summary>
-        [ChoiceDisplay("Members")]
-        Members,
-
-        /// <summary>
-        /// Roles
-        /// </summary>
-        [ChoiceDisplay("Roles")]
-        Roles,
-
-        /// <summary>
-        /// Points
-        /// </summary>
-        [ChoiceDisplay("Points")]
-        Points,
-
-        /// <summary>
-        /// Items
-        /// </summary>
-        [ChoiceDisplay("Items")]
-        Items,
-
-        /// <summary>
-        /// Assignments
-        /// </summary>
-        [ChoiceDisplay("Assignments")]
-        Assignments
-    }
-
-    /// <summary>
-    /// Check types
-    /// </summary>
-    public enum CheckType
-    {
-        /// <summary>
-        /// Rank assignments
-        /// </summary>
-        [ChoiceDisplay("In game rank assignments")]
-        RankAssignment,
-
-        /// <summary>
-        /// API keys
-        /// </summary>
-        [ChoiceDisplay("API Keys")]
-        ApiKeys,
-
-        /// <summary>
-        /// Unknown users
-        /// </summary>
-        [ChoiceDisplay("Unknown users")]
-        UnknownUsers,
-    }
-
-    /// <summary>
-    /// Guild ranking visualization type
-    /// </summary>
-    public enum GuildRankingVisualizationType
-    {
-        /// <summary>
-        /// Current
-        /// </summary>
-        [ChoiceDisplay("Current points")]
-        Current,
-
-        /// <summary>
-        /// History per type
-        /// </summary>
-        [ChoiceDisplay("History per type")]
-        HistoryTypes
-    }
-
-    #endregion // Enumeration
-
     #region Properties
 
     /// <summary>
@@ -221,67 +31,67 @@ public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
     /// <param name="type">Type</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("configuration", "Guild configuration")]
-    public async Task Configuration([Summary("Type", "Configuration type")] ConfigurationType type)
+    public async Task Configuration([Summary("Type", "Configuration type")] GuildAdminConfigurationType type)
     {
         switch (type)
         {
-            case ConfigurationType.General:
+            case GuildAdminConfigurationType.General:
                 {
                     await CommandHandler.ConfigureGuild(Context)
                                         .ConfigureAwait(false);
                 }
                 break;
 
-            case ConfigurationType.VoiceActivity:
+            case GuildAdminConfigurationType.VoiceActivity:
                 {
                     await CommandHandler.ConfigureVoiceActivityRoles(Context)
                                         .ConfigureAwait(false);
                 }
                 break;
 
-            case ConfigurationType.MessageActivity:
+            case GuildAdminConfigurationType.MessageActivity:
                 {
                     await CommandHandler.ConfigureMessageActivityRoles(Context)
                                         .ConfigureAwait(false);
                 }
                 break;
 
-            case ConfigurationType.NotificationChannels:
+            case GuildAdminConfigurationType.NotificationChannels:
                 {
                     await CommandHandler.ConfigureNotificationChannel(Context)
                                         .ConfigureAwait(false);
                 }
                 break;
 
-            case ConfigurationType.Overviews:
+            case GuildAdminConfigurationType.Overviews:
                 {
                     await CommandHandler.ConfigureOverviewMessages(Context)
                                         .ConfigureAwait(false);
                 }
                 break;
 
-            case ConfigurationType.GuildWarsItems:
+            case GuildAdminConfigurationType.GuildWarsItems:
                 {
                     await CommandHandler.ConfigureItem(Context)
                                         .ConfigureAwait(false);
                 }
                 break;
 
-            case ConfigurationType.User:
+            case GuildAdminConfigurationType.User:
                 {
                     await CommandHandler.ConfigureUser(Context)
                                         .ConfigureAwait(false);
                 }
                 break;
 
-            case ConfigurationType.Ranks:
+            case GuildAdminConfigurationType.Ranks:
                 {
                     await CommandHandler.ConfigureRanks(Context)
                                         .ConfigureAwait(false);
                 }
                 break;
 
-            case ConfigurationType.SpecialRanks:
+            case GuildAdminConfigurationType.SpecialRanks:
                 {
                     await CommandHandler.ConfigureSpecialRanks(Context)
                                         .ConfigureAwait(false);
@@ -301,25 +111,25 @@ public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
     /// <param name="type">Type</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("overview", "Guild overview")]
-    public async Task Configuration([Summary("Type", "Overview type")] OverviewType type)
+    public async Task Configuration([Summary("Type", "Overview type")] GuildAdminOverviewType type)
     {
         switch (type)
         {
-            case OverviewType.Ranking:
+            case GuildAdminOverviewType.Ranking:
                 {
                     await CommandHandler.PostRankingOverview(Context)
                                         .ConfigureAwait(false);
                 }
                 break;
 
-            case OverviewType.SpecialRanks:
+            case GuildAdminOverviewType.SpecialRanks:
                 {
                     await CommandHandler.PostSpecialRankOverview(Context)
                                         .ConfigureAwait(false);
                 }
                 break;
 
-            case OverviewType.Worlds:
+            case GuildAdminOverviewType.Worlds:
                 {
                     await CommandHandler.PostWorldsOverview(Context)
                                         .ConfigureAwait(false);
