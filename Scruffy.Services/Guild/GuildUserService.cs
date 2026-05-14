@@ -191,12 +191,17 @@ public sealed class GuildUserService : SingletonLocatedServiceBase, IDisposable
 
                 if (channel is ITextChannel textChannel)
                 {
-                    await textChannel.SendMessageAsync(LocalizationGroup.GetFormattedText(messageKey, messageKey + " {0}", userName))
+                    await textChannel.SendMessageAsync(LocalizationGroup.GetFormattedText(messageKey,
+                                                                                          $"{messageKey} {{0}}",
+                                                                                          userName))
                                      .ConfigureAwait(false);
                 }
                 else
                 {
-                    LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(GuildUserService), "Invalid notification channel", guild.Id + "-" + channelId);
+                    LoggingService.AddServiceLogEntry(LogEntryLevel.Error,
+                                                      nameof(GuildUserService),
+                                                      "Invalid notification channel",
+                                                      $"{guild.Id}-{channelId}");
                 }
             }
         }
@@ -218,7 +223,10 @@ public sealed class GuildUserService : SingletonLocatedServiceBase, IDisposable
         {
             if (_welcomeMessages.TryGetValue(guild.Id, out var data))
             {
-                LoggingService.AddServiceLogEntry(LogEntryLevel.Information, nameof(GuildUserService), "Sending welcome message", guild.Id + "-" + user.Id);
+                LoggingService.AddServiceLogEntry(LogEntryLevel.Information,
+                                                  nameof(GuildUserService),
+                                                  "Sending welcome message",
+                                                  $"{guild.Id}-{user.Id}");
 
                 var builder = new EmbedBuilder().WithColor(Color.Green)
                                                 .WithTimestamp(DateTime.Now);

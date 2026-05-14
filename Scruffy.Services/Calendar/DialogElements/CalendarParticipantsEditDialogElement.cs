@@ -142,7 +142,7 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedSelectMenuElemen
 
             if (line.Length + message.Length > 1000)
             {
-                builder.AddField(LocalizationGroup.GetText("Participants", "Participants") + " #" + fieldCounter, message.ToString());
+                builder.AddField($"{LocalizationGroup.GetText("Participants", "Participants")} #{fieldCounter}", message.ToString());
 
                 message = new StringBuilder();
                 fieldCounter++;
@@ -160,7 +160,7 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedSelectMenuElemen
 
         if (fieldCounter > 1)
         {
-            fieldTitle += " #" + fieldCounter;
+            fieldTitle += $" #{fieldCounter}";
         }
 
         builder.AddField(fieldTitle, message.ToString());

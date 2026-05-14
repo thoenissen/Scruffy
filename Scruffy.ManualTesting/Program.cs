@@ -20,7 +20,6 @@ await using var unused = serviceProvider.ConfigureAwait(false);
 serviceProvider.Initialize(obj => obj.AddSingleton(Preparation.DiscordClient));
 
 using var scope = serviceProvider.CreateScope();
-
 // Debug context
 // var context = new DebuggingContext(scope.ServiceProvider);
 //

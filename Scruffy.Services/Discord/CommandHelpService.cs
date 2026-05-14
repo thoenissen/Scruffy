@@ -64,7 +64,7 @@ public class CommandHelpService : LocatedServiceBase
                 }
                 else
                 {
-                    commands.Add((command.Module.SlashGroupName, command.Module.SlashGroupName + " " + command.Name));
+                    commands.Add((command.Module.SlashGroupName, $"{command.Module.SlashGroupName} {command.Name}"));
                 }
             }
         }
@@ -88,7 +88,7 @@ public class CommandHelpService : LocatedServiceBase
                                                                        .ThenByDescending(obj => obj.Value.Commands.Count))
         {
             embedBuilder.AddField(Format.Bold(module),
-                                  "```" + Environment.NewLine + string.Join(Environment.NewLine, moduleCommands.OrderBy(obj => obj)) + "```",
+                                  $"```{Environment.NewLine}{string.Join(Environment.NewLine, moduleCommands.OrderBy(obj => obj))}```",
                                   isOversized == false);
         }
 

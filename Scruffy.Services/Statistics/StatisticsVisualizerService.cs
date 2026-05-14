@@ -114,9 +114,7 @@ public class StatisticsVisualizerService : LocatedServiceBase
                     stringBuilder.Append(' ');
                     stringBuilder.Append(textChannel.Mention);
                     stringBuilder.Append(' ');
-                    stringBuilder.Append(Format.Code(mostActive.Count.ToString()
-                                                     + ' '
-                                                     + LocalizationGroup.GetText("MeOverviewMessages", "messages")));
+                    stringBuilder.Append(Format.Code($"{mostActive.Count} {LocalizationGroup.GetText("MeOverviewMessages", "messages")}"));
                 }
             }
 
@@ -131,38 +129,29 @@ public class StatisticsVisualizerService : LocatedServiceBase
 
             var limit = now.AddDays(-60);
 
-            stringBuilder.Append(Format.Code(dbFactory.GetRepository<DiscordMessageRepository>()
-                                                      .GetQuery()
-                                                      .Count(obj => obj.DiscordServerId == commandContext.Guild.Id
-                                                                    && obj.DiscordAccountId == commandContext.User.Id
-                                                                    && obj.TimeStamp > limit)
-                                                      .ToString()
-                                             + ' '
-                                             + LocalizationGroup.GetText("MeOverviewMessages", "messages")));
+            stringBuilder.Append(Format.Code($"{dbFactory.GetRepository<DiscordMessageRepository>()
+                                                         .GetQuery()
+                                                         .Count(obj => obj.DiscordServerId == commandContext.Guild.Id
+                                                                       && obj.DiscordAccountId == commandContext.User.Id
+                                                                       && obj.TimeStamp > limit)} {LocalizationGroup.GetText("MeOverviewMessages", "messages")}"));
             stringBuilder.Append(Environment.NewLine);
             stringBuilder.Append(LocalizationGroup.GetText("MeOverview7Days", "7 Days:"));
             stringBuilder.Append(' ');
             limit = now.AddDays(-7);
-            stringBuilder.Append(Format.Code(dbFactory.GetRepository<DiscordMessageRepository>()
-                                                      .GetQuery()
-                                                      .Count(obj => obj.DiscordServerId == commandContext.Guild.Id
-                                                                    && obj.DiscordAccountId == commandContext.User.Id
-                                                                    && obj.TimeStamp > limit)
-                                                      .ToString()
-                                             + ' '
-                                             + LocalizationGroup.GetText("MeOverviewMessages", "messages")));
+            stringBuilder.Append(Format.Code($"{dbFactory.GetRepository<DiscordMessageRepository>()
+                                                         .GetQuery()
+                                                         .Count(obj => obj.DiscordServerId == commandContext.Guild.Id
+                                                                       && obj.DiscordAccountId == commandContext.User.Id
+                                                                       && obj.TimeStamp > limit)} {LocalizationGroup.GetText("MeOverviewMessages", "messages")}"));
             stringBuilder.Append(Environment.NewLine);
             stringBuilder.Append(LocalizationGroup.GetText("MeOverview24Hours", "24 Hours:"));
             stringBuilder.Append(' ');
             limit = now.AddDays(-1);
-            stringBuilder.Append(Format.Code(dbFactory.GetRepository<DiscordMessageRepository>()
-                                                      .GetQuery()
-                                                      .Count(obj => obj.DiscordServerId == commandContext.Guild.Id
-                                                                    && obj.DiscordAccountId == commandContext.User.Id
-                                                                    && obj.TimeStamp > limit)
-                                                      .ToString()
-                                             + ' '
-                                             + LocalizationGroup.GetText("MeOverviewMessages", "messages")));
+            stringBuilder.Append(Format.Code($"{dbFactory.GetRepository<DiscordMessageRepository>()
+                                                         .GetQuery()
+                                                         .Count(obj => obj.DiscordServerId == commandContext.Guild.Id
+                                                                       && obj.DiscordAccountId == commandContext.User.Id
+                                                                       && obj.TimeStamp > limit)} {LocalizationGroup.GetText("MeOverviewMessages", "messages")}"));
             stringBuilder.Append(Environment.NewLine);
 
             embedBuilder.AddField(LocalizationGroup.GetText("MeOverviewMessagesField", "Messages"), stringBuilder.ToString());

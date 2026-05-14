@@ -77,7 +77,7 @@ public class GuildRankSuperiorRankDialogElement : DialogEmbedMessageElementBase<
 
                 if (currentLine.Length + stringBuilder.Length > 1024)
                 {
-                    builder.AddField(LocalizationGroup.GetText("RanksField", "Ranks") + " #" + fieldsCounter, stringBuilder.ToString());
+                    builder.AddField($"{LocalizationGroup.GetText("RanksField", "Ranks")} #{fieldsCounter}", stringBuilder.ToString());
                     stringBuilder.Clear();
                     fieldsCounter++;
                 }
@@ -95,7 +95,7 @@ public class GuildRankSuperiorRankDialogElement : DialogEmbedMessageElementBase<
             stringBuilder.Append("\u200D");
         }
 
-        builder.AddField(LocalizationGroup.GetText("RanksField", "Ranks") + " #" + fieldsCounter, stringBuilder.ToString());
+        builder.AddField($"{LocalizationGroup.GetText("RanksField", "Ranks")} #{fieldsCounter}", stringBuilder.ToString());
 
         return builder;
     }

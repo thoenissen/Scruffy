@@ -55,7 +55,7 @@ public class GuildSpecialRankDiscordRoleDialogElement : DialogEmbedMessageElemen
 
             if (currentLine.Length + stringBuilder.Length > 1024)
             {
-                builder.AddField(LocalizationGroup.GetText("RolesField", "Roles") + " #" + fieldsCounter, stringBuilder.ToString());
+                builder.AddField($"{LocalizationGroup.GetText("RolesField", "Roles")} #{fieldsCounter}", stringBuilder.ToString());
                 stringBuilder.Clear();
                 fieldsCounter++;
             }
@@ -72,7 +72,7 @@ public class GuildSpecialRankDiscordRoleDialogElement : DialogEmbedMessageElemen
             stringBuilder.Append("\u200D");
         }
 
-        builder.AddField(LocalizationGroup.GetText("RolesField", "Roles") + " #" + fieldsCounter, stringBuilder.ToString());
+        builder.AddField($"{LocalizationGroup.GetText("RolesField", "Roles")} #{fieldsCounter}", stringBuilder.ToString());
 
         return builder;
     }

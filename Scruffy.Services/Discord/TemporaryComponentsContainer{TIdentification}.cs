@@ -82,7 +82,7 @@ namespace Scruffy.Services.Discord
 
             _buttons[customId] = identification;
 
-            return "temporary;button;" + customId;
+            return $"temporary;button;{customId}";
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace Scruffy.Services.Discord
 
             _selectMenus[customId] = identification;
 
-            return "temporary;selectMenu;" + customId;
+            return $"temporary;selectMenu;{customId}";
         }
 
         /// <summary>

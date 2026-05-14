@@ -114,11 +114,12 @@ public class GuildBankService : LocatedServiceBase
 
                         if (stringBuilder.Length > 0)
                         {
-                            stringBuilder.Insert(0, Format.Bold(LocalizationGroup.GetText("DuplicationCheck", "Duplication check")) + " \u200B " + DiscordEmoteService.GetCrossEmote(commandContext.Client) + "\n");
+                            stringBuilder.Insert(0,
+                                                 $"{Format.Bold(LocalizationGroup.GetText("DuplicationCheck", "Duplication check"))} \u200B {DiscordEmoteService.GetCrossEmote(commandContext.Client)}\n");
                         }
                         else
                         {
-                            stringBuilder.AppendLine(Format.Bold(LocalizationGroup.GetText("DuplicationCheck", "Duplication check")) + " \u200B " + DiscordEmoteService.GetCheckEmote(commandContext.Client));
+                            stringBuilder.AppendLine($"{Format.Bold(LocalizationGroup.GetText("DuplicationCheck", "Duplication check"))} \u200B {DiscordEmoteService.GetCheckEmote(commandContext.Client)}");
                         }
 
                         if (stash.Coins != 0 && stash.Coins % 10000 != 0)
@@ -127,12 +128,12 @@ public class GuildBankService : LocatedServiceBase
                             var silverCoins = (stash.Coins - (goldCoins * 10000)) / 100;
                             var copperCoins = stash.Coins % 100;
 
-                            stringBuilder.AppendLine(Format.Bold(LocalizationGroup.GetText("CoinCheck", "Coins check")) + " \u200B " + DiscordEmoteService.GetCrossEmote(commandContext.Client));
+                            stringBuilder.AppendLine($"{Format.Bold(LocalizationGroup.GetText("CoinCheck", "Coins check"))} \u200B {DiscordEmoteService.GetCrossEmote(commandContext.Client)}");
                             stringBuilder.AppendLine($"{goldCoins} {DiscordEmoteService.GetGuildWars2GoldEmote(commandContext.Client)} {silverCoins} {DiscordEmoteService.GetGuildWars2SilverEmote(commandContext.Client)} {copperCoins} {DiscordEmoteService.GetGuildWars2CopperEmote(commandContext.Client)}");
                         }
                         else
                         {
-                            stringBuilder.AppendLine(Format.Bold(LocalizationGroup.GetText("CoinCheck", "Coins check")) + " \u200B " + DiscordEmoteService.GetCheckEmote(commandContext.Client));
+                            stringBuilder.AppendLine($"{Format.Bold(LocalizationGroup.GetText("CoinCheck", "Coins check"))} \u200B {DiscordEmoteService.GetCheckEmote(commandContext.Client)}");
                         }
 
                         stringBuilder.Append("\u200B");

@@ -342,7 +342,7 @@ public class GuildCommandHandler : LocatedServiceBase
                 case GuildOverviewMessageConfigurationSelectDialogElement.MessageType.Ranking:
                     {
                         var message = await context.Channel
-                                                   .SendMessageAsync(DiscordEmoteService.GetLoadingEmote(context.Client) + " " + LocalizationGroup.GetText("OverviewCreation", "The overview is being created."))
+                                                   .SendMessageAsync($"{DiscordEmoteService.GetLoadingEmote(context.Client)} {LocalizationGroup.GetText("OverviewCreation", "The overview is being created.")}")
                                                    .ConfigureAwait(false);
 
                         _configurationService.SetChannel(context, GuildChannelConfigurationType.GuildOverviewRanking, message.Id);

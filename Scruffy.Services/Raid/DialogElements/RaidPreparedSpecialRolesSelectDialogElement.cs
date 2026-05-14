@@ -71,7 +71,7 @@ public class RaidPreparedSpecialRolesSelectDialogElement : DialogEmbedMultiSelec
 
             foreach (var role in raidUserRoles)
             {
-                userRolesMsg.AppendLine(DiscordEmoteService.GetGuildEmote(CommandContext.Client, role.DiscordEmojiId) + " " + role.Description);
+                userRolesMsg.AppendLine($"{DiscordEmoteService.GetGuildEmote(CommandContext.Client, role.DiscordEmojiId)} {role.Description}");
             }
 
             if (userRolesMsg.Length == 0)

@@ -97,7 +97,9 @@ public class GuildSlashCommandHandler : SlashCommandModuleBase
         var webAppEmbed = new EmbedBuilder().WithColor(Color.DarkBlue)
                                             .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
                                             .WithTimestamp(DateTime.Now)
-                                            .WithDescription(LocalizationGroup.GetFormattedText("WebAppHint", "Would you like more precise data on your ranking? Then test the new [website]({0}).", _webbAppUrl + "/Ranking/Personal"));
+                                            .WithDescription(LocalizationGroup.GetFormattedText("WebAppHint",
+                                                                                                "Would you like more precise data on your ranking? Then test the new [website]({0}).",
+                                                                                                $"{_webbAppUrl}/Ranking/Personal"));
 
         await Context.SendMessageAsync(embed: webAppEmbed.Build())
                      .ConfigureAwait(false);

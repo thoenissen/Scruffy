@@ -87,14 +87,14 @@ public class LookingForGroupCommandHandler : LocatedServiceBase
 
         if (context.Channel is ITextChannel textChannel)
         {
-            var message = await context.ReplyAsync(DiscordEmoteService.GetLoadingEmote(context.Client) + " " + LocalizationGroup.GetText("AppointmentCreation", "The appoint is being created."))
+            var message = await context.ReplyAsync($"{DiscordEmoteService.GetLoadingEmote(context.Client)} {LocalizationGroup.GetText("AppointmentCreation", "The appoint is being created.")}")
                                        .ConfigureAwait(false);
 
             IThreadChannel thread = null;
 
             if (textChannel is not IThreadChannel)
             {
-                thread = await textChannel.CreateThreadAsync("LFG: " + title)
+                thread = await textChannel.CreateThreadAsync($"LFG: {title}")
                                           .ConfigureAwait(false);
 
                 await thread.AddUserAsync(context.Member)
@@ -201,7 +201,7 @@ public class LookingForGroupCommandHandler : LocatedServiceBase
                                  .GetChannelAsync(threadId.Value)
                                  .ConfigureAwait(false) is IThreadChannel threadChannel)
                 {
-                    await threadChannel.ModifyAsync(obj => obj.Name = "LFG: " + title)
+                    await threadChannel.ModifyAsync(obj => obj.Name = $"LFG: {title}")
                                        .ConfigureAwait(false);
                 }
             }

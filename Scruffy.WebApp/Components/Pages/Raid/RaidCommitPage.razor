@@ -20,7 +20,7 @@
 
                     if (appointment.IsCommitted)
                     {
-                        label = "✓ " + appointment.TimeStamp.ToString("f", LocalizationGroup.CultureInfo);
+                        label = $"✓ {appointment.TimeStamp.ToString("f", LocalizationGroup.CultureInfo)}";
                     }
                     else
                     {

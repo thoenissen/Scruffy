@@ -466,7 +466,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
 
                               try
                               {
-                                  using (var response = await CreateRequest("https://api.guildwars2.com/v2/items?ids=" + ids, GuildWars2ApiPermission.None).ConfigureAwait(false))
+                                  using (var response = await CreateRequest($"https://api.guildwars2.com/v2/items?ids={ids}", GuildWars2ApiPermission.None).ConfigureAwait(false))
                                   {
                                       var jsonResult = await response.Content
                                                                      .ReadAsStringAsync()
@@ -495,7 +495,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
                       {
                           ItemRecipe recipe = null;
 
-                          using (var searchResponse = await CreateRequest("https://api.guildwars2.com/v2/recipes/search?output=" + itemId, GuildWars2ApiPermission.None).ConfigureAwait(false))
+                          using (var searchResponse = await CreateRequest($"https://api.guildwars2.com/v2/recipes/search?output={itemId}", GuildWars2ApiPermission.None).ConfigureAwait(false))
                           {
                               var jsonResult = await searchResponse.Content
                                                                    .ReadAsStringAsync()
@@ -505,7 +505,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
 
                               if (recipeIds?.Count > 0)
                               {
-                                  using (var recipeResponse = await CreateRequest("https://api.guildwars2.com/v2/recipes/" + recipeIds[0], GuildWars2ApiPermission.None).ConfigureAwait(false))
+                                  using (var recipeResponse = await CreateRequest($"https://api.guildwars2.com/v2/recipes/{recipeIds[0]}", GuildWars2ApiPermission.None).ConfigureAwait(false))
                                   {
                                       jsonResult = await recipeResponse.Content
                                                                        .ReadAsStringAsync()
@@ -537,7 +537,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
                           {
                               var ids = string.Join(",", upgradeIds.Skip(i * 200).Take(200).Select(obj => obj.ToString()));
 
-                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/guild/upgrades?ids=" + ids, GuildWars2ApiPermission.None).ConfigureAwait(false))
+                              using (var response = await CreateRequest($"https://api.guildwars2.com/v2/guild/upgrades?ids={ids}", GuildWars2ApiPermission.None).ConfigureAwait(false))
                               {
                                   var jsonResult = await response.Content
                                                                  .ReadAsStringAsync()
@@ -628,7 +628,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
 
                               try
                               {
-                                  using (var response = await CreateRequest("https://api.guildwars2.com/v2/commerce/prices?ids=" + ids, GuildWars2ApiPermission.None).ConfigureAwait(false))
+                                  using (var response = await CreateRequest($"https://api.guildwars2.com/v2/commerce/prices?ids={ids}", GuildWars2ApiPermission.None).ConfigureAwait(false))
                                   {
                                       var jsonResult = await response.Content
                                                                      .ReadAsStringAsync()
@@ -682,7 +682,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
                           {
                               var ids = string.Join(",", itemIds.Skip(i * 200).Take(200).Select(obj => obj.ToString()));
 
-                              using (var response = await CreateRequest("https://api.guildwars2.com/v2/achievements?ids=" + ids, GuildWars2ApiPermission.None).ConfigureAwait(false))
+                              using (var response = await CreateRequest($"https://api.guildwars2.com/v2/achievements?ids={ids}", GuildWars2ApiPermission.None).ConfigureAwait(false))
                               {
                                   var jsonResult = await response.Content
                                                                  .ReadAsStringAsync()
@@ -813,7 +813,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
 
             if (_apiKey != null)
             {
-                message.Headers.Add("Authorization", "Bearer " + _apiKey);
+                message.Headers.Add("Authorization", $"Bearer {_apiKey}");
             }
 
             response = await HttpClient.SendAsync(message)

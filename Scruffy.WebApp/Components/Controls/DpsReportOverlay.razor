@@ -46,11 +46,11 @@
                         </div>
                         <div class="overlay-info-row">
                             <span class="overlay-label">@LocalizationGroup.GetText("Quickness", "Quickness")</span>
-                            <span class="@DpsReportVisualizer.GetSkillLevelFromUptime(Report.OverallStatistics?.Quickness)">@((Report.OverallStatistics?.Quickness ?? 0).ToString("N2", LocalizationGroup.CultureInfo) + " %")</span>
+                            <span class="@DpsReportVisualizer.GetSkillLevelFromUptime(Report.OverallStatistics?.Quickness)">@($"{(Report.OverallStatistics?.Quickness ?? 0).ToString("N2", LocalizationGroup.CultureInfo)} %")</span>
                         </div>
                         <div class="overlay-info-row">
                             <span class="overlay-label">@LocalizationGroup.GetText("Alacrity", "Alacrity")</span>
-                            <span class="@DpsReportVisualizer.GetSkillLevelFromUptime(Report.OverallStatistics?.Alacrity)">@((Report.OverallStatistics?.Alacrity ?? 0).ToString("N2", LocalizationGroup.CultureInfo) + " %")</span>
+                            <span class="@DpsReportVisualizer.GetSkillLevelFromUptime(Report.OverallStatistics?.Alacrity)">@($"{(Report.OverallStatistics?.Alacrity ?? 0).ToString("N2", LocalizationGroup.CultureInfo)} %")</span>
                         </div>
                     </LoadingContainer>
                 </div>

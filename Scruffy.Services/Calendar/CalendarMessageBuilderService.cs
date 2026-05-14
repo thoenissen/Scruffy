@@ -272,7 +272,7 @@ public class CalendarMessageBuilderService : LocatedServiceBase
 
                     foreach (var template in calendar.Templates)
                     {
-                        appointmentLinks.AppendLine(" > " + Format.Url(template.Description, template.Uri));
+                        appointmentLinks.AppendLine($" > {Format.Url(template.Description, template.Uri)}");
                     }
 
                     builder.AddField(LocalizationGroup.GetText("Appointments", "Appointments"),

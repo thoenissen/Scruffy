@@ -241,7 +241,7 @@ public class GuildSpecialRankPointsJob : LocatedAsyncJob
 
                                 foreach (var (_, user, _) in actions.Where(obj => obj.IsGrant == false))
                                 {
-                                    stringBuilder.AppendLine(DiscordEmoteService.GetBulletEmote(client) + " " + user.Mention);
+                                    stringBuilder.AppendLine($"{DiscordEmoteService.GetBulletEmote(client)} {user.Mention}");
                                 }
 
                                 builder.AddField(LocalizationGroup.GetText("RemovedRoles", "Removed roles"), stringBuilder.ToString());
@@ -253,7 +253,7 @@ public class GuildSpecialRankPointsJob : LocatedAsyncJob
 
                                 foreach (var (_, user, _) in actions.Where(obj => obj.IsGrant))
                                 {
-                                    stringBuilder.AppendLine(DiscordEmoteService.GetBulletEmote(client) + " " + user.Mention);
+                                    stringBuilder.AppendLine($"{DiscordEmoteService.GetBulletEmote(client)} {user.Mention}");
                                 }
 
                                 builder.AddField(LocalizationGroup.GetText("GrantedRoles", "Granted roles"), stringBuilder.ToString());

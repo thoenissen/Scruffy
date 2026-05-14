@@ -97,7 +97,7 @@ public class LookingForGroupMessageService : LocatedServiceBase
 
                 if (message is IUserMessage userMessage)
                 {
-                    var embedBuilder = new EmbedBuilder().WithTitle("LFG: " + appointmentData.Title)
+                    var embedBuilder = new EmbedBuilder().WithTitle($"LFG: {appointmentData.Title}")
                                                          .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
                                                          .WithColor(Color.Green)
                                                          .WithTimestamp(DateTime.Now)
@@ -126,7 +126,7 @@ public class LookingForGroupMessageService : LocatedServiceBase
 
                     foreach (var participant in participants)
                     {
-                        var line = "> " + _discordClient.GetUser(participant.UserId).Mention;
+                        var line = $"> {_discordClient.GetUser(participant.UserId).Mention}";
 
                         if (participantCounter > 0
                             && participantCounter % 10 == 0)
@@ -159,7 +159,7 @@ public class LookingForGroupMessageService : LocatedServiceBase
 
                         foreach (var participant in participants)
                         {
-                            var line = "> " + _discordClient.GetUser(participant.UserId).Mention;
+                            var line = $"> {_discordClient.GetUser(participant.UserId).Mention}";
 
                             if (participantCounter > 0
                                 && participantCounter % 10 == 0)

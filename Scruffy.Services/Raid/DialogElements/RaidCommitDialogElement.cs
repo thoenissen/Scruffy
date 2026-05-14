@@ -94,7 +94,7 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
 
             if (currentLine.Length + message.Length > 1024)
             {
-                builder.AddField(LocalizationGroup.GetText("Users", "Users") + " #" + fieldCounter, message.ToString());
+                builder.AddField($"{LocalizationGroup.GetText("Users", "Users")} #{fieldCounter}", message.ToString());
                 fieldCounter++;
 
                 message = new StringBuilder();
@@ -109,7 +109,7 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
 
         if (fieldCounter > 1)
         {
-            fieldName = fieldName + " #" + fieldCounter;
+            fieldName = $"{fieldName} #{fieldCounter}";
         }
 
         builder.AddField(fieldName, message.ToString());
