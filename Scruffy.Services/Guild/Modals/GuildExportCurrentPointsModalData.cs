@@ -8,10 +8,16 @@ namespace Scruffy.Services.Guild.Modals;
 /// </summary>
 public class GuildExportCurrentPointsModalData : IModal
 {
+    #region Constants
+
     /// <summary>
     /// Custom id
     /// </summary>
     public const string CustomId = "modal;guild;export-current-points";
+
+    #endregion // Constants
+
+    #region Properties
 
     /// <summary>
     /// Title
@@ -25,4 +31,6 @@ public class GuildExportCurrentPointsModalData : IModal
     [RequiredInput]
     [ModalTextInput(nameof(SinceDate), TextInputStyle.Short, "yyyy-MM-dd", 10, 10)]
     public string SinceDate { get; set; }
+
+    #endregion // Properties
 }

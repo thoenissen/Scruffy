@@ -11,6 +11,8 @@ namespace Scruffy.WebApp.Components.Pages.Raid.Data;
 /// </summary>
 public class UserRaidAppointmentsData
 {
+    #region Properties
+
     /// <summary>
     /// Appointments
     /// </summary>
@@ -25,4 +27,6 @@ public class UserRaidAppointmentsData
     /// Special roles
     /// </summary>
     public RaidSpecialRole SpecialRoles { get; init; }
+
+    #endregion // Properties
 }

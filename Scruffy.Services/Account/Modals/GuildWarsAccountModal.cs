@@ -8,10 +8,16 @@ namespace Scruffy.Services.Account.Modals;
 /// </summary>
 public class GuildWarsAccountModal : IModal
 {
+    #region Constants
+
     /// <summary>
     /// Custom id
     /// </summary>
     public const string CustomId = "modal;acccount;add-or-refresh-guild-wars-account";
+
+    #endregion // Constants
+
+    #region Properties
 
     /// <summary>
     /// Title
@@ -25,4 +31,6 @@ public class GuildWarsAccountModal : IModal
     [RequiredInput]
     [ModalTextInput(nameof(APIKey), TextInputStyle.Short, "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXXXXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX")]
     public string APIKey { get; set; }
+
+    #endregion // Properties
 }

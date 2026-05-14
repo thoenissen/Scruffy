@@ -5,6 +5,8 @@
 /// </summary>
 public class LastMessageImportData
 {
+    #region Properties
+
     /// <summary>
     /// Server ID
     /// </summary>
@@ -24,4 +26,6 @@ public class LastMessageImportData
     /// Timestamp
     /// </summary>
     public DateTime TimeStamp { get; set; }
+
+    #endregion // Properties
 }

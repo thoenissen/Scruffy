@@ -8,10 +8,16 @@ namespace Scruffy.Services.Account.Modals;
 /// </summary>
 public class PersonalDataModal : IModal
 {
+    #region Constants
+
     /// <summary>
     /// Custom id
     /// </summary>
     public const string CustomId = "modal;acccount;personal-data";
+
+    #endregion // Constants
+
+    #region Properties
 
     /// <summary>
     /// Title
@@ -33,4 +39,6 @@ public class PersonalDataModal : IModal
     [RequiredInput(false)]
     [ModalTextInput(nameof(Birthday), TextInputStyle.Short, "yyyy-MM-dd", 10, 10)]
     public string Birthday { get; set; }
+
+    #endregion // Properties
 }

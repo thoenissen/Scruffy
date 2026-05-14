@@ -7,6 +7,8 @@ namespace Scruffy.Services.Guild.DialogElements.Forms;
 /// </summary>
 public class CreateGuildSpecialRankData
 {
+    #region Properties
+
     /// <summary>
     /// Description
     /// </summary>
@@ -36,4 +38,6 @@ public class CreateGuildSpecialRankData
     /// </summary>
     [DialogElementAssignment(typeof(GuildSpecialRankRemoveThresholdDialogElement))]
     public double RemoveThreshold { get; set; }
+
+    #endregion // Properties
 }

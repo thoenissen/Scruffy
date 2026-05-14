@@ -7,6 +7,8 @@ namespace Scruffy.WebApp.DTOs.Raid;
 /// </summary>
 public record RaidAppointmentDTO
 {
+    #region Properties
+
     /// <summary>
     /// Appointment ID
     /// </summary>
@@ -31,4 +33,6 @@ public record RaidAppointmentDTO
     /// Whether the appointment has already been committed
     /// </summary>
     public bool IsCommitted { get; init; }
+
+    #endregion // Properties
 }

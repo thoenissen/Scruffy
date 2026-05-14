@@ -8,10 +8,16 @@ namespace Scruffy.Services.Core.Modals;
 /// </summary>
 public class AddLinkModalData : IModal
 {
+    #region Constants
+
     /// <summary>
     /// Custom id
     /// </summary>
     public const string CustomIdPrefix = "modal;utility;add_link";
+
+    #endregion // Constants
+
+    #region Properties
 
     /// <summary>
     /// Title
@@ -34,6 +40,10 @@ public class AddLinkModalData : IModal
     [ModalTextInput(nameof(Link), TextInputStyle.Short, "https://wwww.todo.de")]
     public string Link { get; set; }
 
+    #endregion // Properties
+
+    #region Methods
+
     /// <summary>
     /// Get custom id
     /// </summary>
@@ -44,4 +54,6 @@ public class AddLinkModalData : IModal
     {
         return $"{CustomIdPrefix};{channelId};{messageId}";
     }
+
+    #endregion // Methods
 }

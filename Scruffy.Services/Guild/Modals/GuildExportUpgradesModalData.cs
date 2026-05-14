@@ -8,10 +8,16 @@ namespace Scruffy.Services.Guild.Modals;
 /// </summary>
 public class GuildExportUpgradesModalData : IModal
 {
+    #region Constants
+
     /// <summary>
     /// Custom id
     /// </summary>
     public const string CustomId = "modal;guild;export-upgrades";
+
+    #endregion // Constants
+
+    #region Properties
 
     /// <summary>
     /// Title
@@ -41,4 +47,6 @@ public class GuildExportUpgradesModalData : IModal
     [RequiredInput(false)]
     [ModalTextInput(nameof(SinceTime), TextInputStyle.Short, "hh:mm", 5, 5)]
     public string SinceTime { get; set; }
+
+    #endregion // Properties
 }

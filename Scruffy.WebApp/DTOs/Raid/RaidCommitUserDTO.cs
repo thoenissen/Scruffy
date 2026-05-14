@@ -5,6 +5,8 @@ namespace Scruffy.WebApp.DTOs.Raid;
 /// </summary>
 public class RaidCommitUserDTO
 {
+    #region Properties
+
     /// <summary>
     /// Internal user ID
     /// </summary>
@@ -59,4 +61,6 @@ public class RaidCommitUserDTO
     /// Has the role wish been fulfilled? Null if the user had no role wish
     /// </summary>
     public bool? IsRoleWishFulfilled { get; set; }
+
+    #endregion // Properties
 }

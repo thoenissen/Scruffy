@@ -212,7 +212,6 @@ public class DpsReportConnector
             url += $"&sinceEncounter={startTime.ToUnixTimeSeconds()}";
         }
 
-
         /* This doesn't work at the moment, see code below for work-around
         if (endTime?.Ticks > 0)
         {

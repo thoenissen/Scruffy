@@ -7,6 +7,8 @@ namespace Scruffy.Services.Raid.DialogElements.Forms;
 /// </summary>
 public class CreateRaidExperienceLevelData
 {
+    #region Properties
+
     /// <summary>
     /// Superior role
     /// </summary>
@@ -36,4 +38,6 @@ public class CreateRaidExperienceLevelData
     /// </summary>
     [DialogElementAssignment(typeof(RaidExperienceLevelEmojiDialogElement))]
     public ulong DiscordEmoji { get; set; }
+
+    #endregion // Properties
 }

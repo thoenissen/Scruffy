@@ -7,10 +7,16 @@ namespace Scruffy.Services.Account.Modals;
 /// </summary>
 public class DpsReportUserTokenModal : IModal
 {
+    #region Constants
+
     /// <summary>
     /// Custom id
     /// </summary>
     public const string CustomId = "modal;acccount;dpsreports-account";
+
+    #endregion // Constants
+
+    #region Properties
 
     /// <summary>
     /// Title
@@ -24,4 +30,6 @@ public class DpsReportUserTokenModal : IModal
     [RequiredInput(false)]
     [ModalTextInput(nameof(UserToken))]
     public string UserToken { get; set; }
+
+    #endregion // Properties
 }

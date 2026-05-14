@@ -7,6 +7,8 @@ namespace Scruffy.Services.Guild.DialogElements.Forms;
 /// </summary>
 public class ItemConfigurationFormData
 {
+    #region Properties
+
     /// <summary>
     /// Item id
     /// </summary>
@@ -24,4 +26,6 @@ public class ItemConfigurationFormData
     /// </summary>
     [DialogElementAssignment(typeof(GuildConfigurationItemCustomValueThresholdDialogElement))]
     public bool IsThresholdItem { get; set; }
+
+    #endregion // Properties
 }

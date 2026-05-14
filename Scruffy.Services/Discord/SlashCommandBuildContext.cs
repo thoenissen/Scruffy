@@ -9,6 +9,8 @@ namespace Scruffy.Services.Discord;
 /// </summary>
 public class SlashCommandBuildContext
 {
+    #region Properties
+
     /// <summary>
     /// Guild
     /// </summary>
@@ -23,4 +25,6 @@ public class SlashCommandBuildContext
     /// Culture information
     /// </summary>
     public CultureInfo CultureInfo { get; set; }
+
+    #endregion // Properties
 }

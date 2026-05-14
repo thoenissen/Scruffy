@@ -34,6 +34,8 @@ public partial class QuickGridPaginator
 
     #endregion // Properties
 
+    #region Methods
+
     /// <summary>
     /// Go to the first page asynchronously
     /// </summary>
@@ -99,6 +101,8 @@ public partial class QuickGridPaginator
     {
         InvokeAsync(StateHasChanged);
     }
+
+    #endregion // Methods
 
     #region ComponentBase
 

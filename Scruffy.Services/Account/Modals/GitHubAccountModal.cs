@@ -7,10 +7,16 @@ namespace Scruffy.Services.Account.Modals;
 /// </summary>
 public class GitHubAccountModal : IModal
 {
+    #region Constants
+
     /// <summary>
     /// Custom id
     /// </summary>
     public const string CustomId = "modal;acccount;add-or-refresh-github-account";
+
+    #endregion // Constants
+
+    #region Properties
 
     /// <summary>
     /// Title
@@ -24,4 +30,6 @@ public class GitHubAccountModal : IModal
     [RequiredInput(false)]
     [ModalTextInput(nameof(AccountName))]
     public string AccountName { get; set; }
+
+    #endregion // Properties
 }

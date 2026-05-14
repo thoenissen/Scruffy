@@ -5,6 +5,8 @@ namespace Scruffy.WebApp.DTOs.Calendar;
 /// </summary>
 public class VoiceChannelMemberDTO
 {
+    #region Properties
+
     /// <summary>
     /// Discord account ID
     /// </summary>
@@ -14,4 +16,6 @@ public class VoiceChannelMemberDTO
     /// Display name
     /// </summary>
     public string Name { get; init; }
+
+    #endregion // Properties
 }

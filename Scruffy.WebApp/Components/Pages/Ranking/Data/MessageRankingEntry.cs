@@ -5,6 +5,8 @@ namespace Scruffy.WebApp.Components.Pages.Ranking.Data;
 /// </summary>
 internal record MessageRankingEntry
 {
+    #region Properties
+
     /// <summary>
     /// User name
     /// </summary>
@@ -29,4 +31,6 @@ internal record MessageRankingEntry
     /// Progress towards the next level (0–100)
     /// </summary>
     public double LevelProgressPercent { get; init; }
+
+    #endregion // Properties
 }

@@ -5,6 +5,8 @@
 /// </summary>
 public class UserDTO
 {
+    #region Properties
+
     /// <summary>
     /// Discord account name
     /// </summary>
@@ -49,4 +51,6 @@ public class UserDTO
     /// Guild Wars 2 API key
     /// </summary>
     public string GuildWarsAccountApiKey { get; set; }
+
+    #endregion // Properties
 }

@@ -12,10 +12,17 @@ namespace Scruffy.ManualTesting;
 /// </summary>
 internal static class Preparation
 {
+    #region Properties
+
     /// <summary>
     /// Discord client
     /// </summary>
-    public static DiscordSocketClient DiscordClient { get; private set; }
+    public static DiscordSocketClient DiscordClient
+    { get; private set; }
+
+    #endregion // Properties
+
+    #region Methods
 
     /// <summary>
     /// Setting up environment variables
@@ -90,4 +97,6 @@ internal static class Preparation
         await DiscordClient.BulkOverwriteGlobalApplicationCommandsAsync([config.Build(), account.Build(), info.Build()])
                            .ConfigureAwait(false);
     }
+
+    #endregion // Methods
 }

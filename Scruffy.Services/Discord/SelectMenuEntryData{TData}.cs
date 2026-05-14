@@ -8,6 +8,8 @@ namespace Scruffy.Services.Discord;
 /// <typeparam name="TData">Type of the result</typeparam>
 public class SelectMenuEntryData<TData>
 {
+    #region Properties
+
     /// <summary>
     /// Command text
     /// </summary>
@@ -27,4 +29,6 @@ public class SelectMenuEntryData<TData>
     /// Function to react with a standard message
     /// </summary>
     public Func<Task<TData>> Response { get; set; }
+
+    #endregion // Properties
 }

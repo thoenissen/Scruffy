@@ -7,6 +7,8 @@ namespace Scruffy.Services.Core.Extensions;
 /// </summary>
 public static class TaskExtensions
 {
+    #region Methods
+
     /// <summary>
     /// Marking that there is no need to wait for the task
     /// </summary>
@@ -15,4 +17,6 @@ public static class TaskExtensions
     public static void Forget(this Task task)
     {
     }
+
+    #endregion // Methods
 }

@@ -12,6 +12,8 @@ namespace Scruffy.WebApp.Components.Pages.DpsReports;
 /// <remarks>The data of <see cref="DPSReportGetUploadsObject"/> somites uses a <see langword="bool"/> for <see cref="DPSReportGetUploadsObject.FoundUploads"/></remarks>
 public class IntOrBoolConverter : JsonConverter<int?>
 {
+    #region JsonConverter<int?>
+
     /// <inheritdoc />
     public override void WriteJson(JsonWriter writer, int? value, JsonSerializer serializer)
     {
@@ -29,4 +31,6 @@ public class IntOrBoolConverter : JsonConverter<int?>
                    _ => throw new JsonSerializationException($"Unexpected token {reader.TokenType} when parsing int?")
                };
     }
+
+    #endregion // JsonConverter<int?>
 }

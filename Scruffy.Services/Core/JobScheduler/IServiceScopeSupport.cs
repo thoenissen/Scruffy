@@ -7,9 +7,13 @@ namespace Scruffy.Services.Core.JobScheduler;
 /// </summary>
 public interface IServiceScopeSupport
 {
+    #region Methods
+
     /// <summary>
     /// Set the current scope
     /// </summary>
     /// <param name="scope">scope</param>
     public void SetScope(IServiceScope scope);
+
+    #endregion // Methods
 }

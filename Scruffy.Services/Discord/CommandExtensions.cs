@@ -8,6 +8,8 @@ namespace Scruffy.Services.Discord;
 /// </summary>
 internal static class CommandExtensions
 {
+    #region Methods
+
     /// <summary>
     /// Convert to <see cref="ApplicationCommandOptionProperties"/>
     /// </summary>
@@ -232,4 +234,6 @@ internal static class CommandExtensions
                      ]
                    : options;
     }
+
+    #endregion // Methods
 }

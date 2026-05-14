@@ -8,10 +8,16 @@ namespace Scruffy.Services.LookingForGroup.Modals;
 /// </summary>
 public class LookingForGroupEditModalData : IModal
 {
+    #region Constants
+
     /// <summary>
     /// Custom id
     /// </summary>
     public const string CustomId = "modal;lfg;edit";
+
+    #endregion // Constants
+
+    #region Properties
 
     /// <summary>
     /// Creation of the appointment
@@ -49,4 +55,6 @@ public class LookingForGroupEditModalData : IModal
     [RequiredInput(false)]
     [ModalTextInput(nameof(AppointmentDescription), TextInputStyle.Paragraph)]
     public string AppointmentDescription { get; set; }
+
+    #endregion // Properties
 }

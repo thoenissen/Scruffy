@@ -20,6 +20,8 @@ namespace Scruffy.WebApp.Components.Account;
 /// </summary>
 internal static class IdentityComponentsEndpointRouteBuilderExtensions
 {
+    #region Methods
+
     /// <summary>
     /// These endpoints are required by the Identity Razor components defined in the /Components/Account/Pages directory of this project
     /// </summary>
@@ -50,4 +52,6 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
                                  return TypedResults.LocalRedirect($"~/{returnUrl}");
                              });
     }
+
+    #endregion // Methods
 }

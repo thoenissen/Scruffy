@@ -5,6 +5,8 @@
 /// </summary>
 public static class GuildWars2Helper
 {
+    #region Methods
+
     /// <summary>
     /// Returns the name of a specialization based on its ID
     /// </summary>
@@ -192,4 +194,6 @@ public static class GuildWars2Helper
                    _ => ":grey_question:"
                };
     }
+
+    #endregion // Methods
 }

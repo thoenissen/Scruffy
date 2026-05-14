@@ -7,6 +7,8 @@ namespace Scruffy.Services.Discord;
 /// </summary>
 public class SelectMenuOptionData
 {
+    #region Properties
+
     /// <summary>
     /// Value
     /// </summary>
@@ -31,4 +33,6 @@ public class SelectMenuOptionData
     /// Is this entry selected by default?
     /// </summary>
     public bool? IsDefault { get; set; }
+
+    #endregion // Properties
 }

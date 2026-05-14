@@ -7,6 +7,8 @@ namespace Scruffy.WebApp.DTOs.Calendar;
 /// </summary>
 public class VoiceChannelDTO
 {
+    #region Properties
+
     /// <summary>
     /// Channel ID
     /// </summary>
@@ -21,4 +23,6 @@ public class VoiceChannelDTO
     /// Members currently connected to this voice channel
     /// </summary>
     public List<VoiceChannelMemberDTO> Members { get; init; } = [];
+
+    #endregion // Properties
 }

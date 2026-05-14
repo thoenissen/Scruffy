@@ -9,10 +9,16 @@ namespace Scruffy.Services.GuildWars2;
 /// </summary>
 public class DpsReportEmbedBuilder : EmbedBuilder
 {
+    #region Fields
+
     /// <summary>
     /// Amount of report groups in the current row
     /// </summary>
     private int _reportGroupsInRow;
+
+    #endregion // Fields
+
+    #region Methods
 
     /// <summary>
     /// Adds a sub title field
@@ -61,4 +67,6 @@ public class DpsReportEmbedBuilder : EmbedBuilder
 
         ++_reportGroupsInRow;
     }
+
+    #endregion // Methods
 }

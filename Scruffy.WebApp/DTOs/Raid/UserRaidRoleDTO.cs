@@ -7,6 +7,8 @@ namespace Scruffy.WebApp.DTOs.Raid;
 /// </summary>
 public class UserRaidRoleDTO
 {
+    #region Properties
+
     /// <summary>
     /// User name
     /// </summary>
@@ -26,4 +28,6 @@ public class UserRaidRoleDTO
     /// Is the player currently active?
     /// </summary>
     public bool IsActive { get; set; }
+
+    #endregion // Properties
 }

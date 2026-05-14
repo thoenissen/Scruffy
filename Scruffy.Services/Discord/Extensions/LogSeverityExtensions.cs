@@ -9,6 +9,8 @@ namespace Scruffy.Services.Discord.Extensions;
 /// </summary>
 internal static class LogSeverityExtensions
 {
+    #region Methods
+
     /// <summary>
     /// Returns the matching <see cref="LogEntryLevel"/>
     /// </summary>
@@ -27,4 +29,6 @@ internal static class LogSeverityExtensions
                    _ => LogEntryLevel.Warning
                };
     }
+
+    #endregion // Methods
 }

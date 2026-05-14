@@ -10,6 +10,8 @@ namespace Scruffy.Services.GuildWars2;
 /// </summary>
 public static class DpsReportAnalyzer
 {
+    #region Methods
+
     /// <summary>
     /// Get boss icon ID
     /// </summary>
@@ -326,4 +328,6 @@ public static class DpsReportAnalyzer
                    DpsReportExpansionEntryBuilder.CreateVisionsOfEternity()
                ];
     }
+
+    #endregion // Methods
 }

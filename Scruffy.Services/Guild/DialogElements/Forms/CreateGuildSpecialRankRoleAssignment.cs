@@ -7,6 +7,8 @@ namespace Scruffy.Services.Guild.DialogElements.Forms;
 /// </summary>
 public class CreateGuildSpecialRankRoleAssignment
 {
+    #region Properties
+
     /// <summary>
     /// Discord Role
     /// </summary>
@@ -18,4 +20,6 @@ public class CreateGuildSpecialRankRoleAssignment
     /// </summary>
     [DialogElementAssignment(typeof(GuildSpecialRankRoleAssignmentPointsDialogElement))]
     public double Points { get; set; }
+
+    #endregion // Properties
 }

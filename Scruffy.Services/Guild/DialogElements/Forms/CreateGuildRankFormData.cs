@@ -7,6 +7,8 @@ namespace Scruffy.Services.Guild.DialogElements.Forms;
 /// </summary>
 public class CreateGuildRankFormData
 {
+    #region Properties
+
     /// <summary>
     /// Superior rank
     /// </summary>
@@ -30,4 +32,6 @@ public class CreateGuildRankFormData
     /// </summary>
     [DialogElementAssignment(typeof(GuildRankPercentageDialogElement))]
     public double Percentage { get; set; }
+
+    #endregion // Properties
 }

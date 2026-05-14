@@ -7,6 +7,8 @@ namespace Scruffy.Services.Guild.DialogElements.Forms;
 /// </summary>
 public class GuildActivityDiscordMessageEditFormData
 {
+    #region Properties
+
     /// <summary>
     /// Id of the role
     /// </summary>
@@ -18,4 +20,6 @@ public class GuildActivityDiscordMessageEditFormData
     /// </summary>
     [DialogElementAssignment(typeof(GuildActivityDiscordMessagePointsDialogElement))]
     public double Points { get; set; }
+
+    #endregion // Properties
 }

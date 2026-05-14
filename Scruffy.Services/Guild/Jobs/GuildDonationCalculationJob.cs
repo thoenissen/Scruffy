@@ -44,17 +44,7 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
 
     #endregion // Constructor
 
-    #region LocatedAsyncJob
-
-    /// <inheritdoc/>
-    public override async Task ExecuteOverrideAsync()
-    {
-        await ProcessCoinDonations().ConfigureAwait(false);
-        await ProcessItemDonations().ConfigureAwait(false);
-        await ProgressUpgradeDonations().ConfigureAwait(false);
-    }
-
-    #endregion // LocatedAsyncJob
+    #region Methods
 
     /// <summary>
     /// Stash coins
@@ -498,4 +488,18 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
             }
         }
     }
+
+    #endregion // Methods
+
+    #region LocatedAsyncJob
+
+    /// <inheritdoc/>
+    public override async Task ExecuteOverrideAsync()
+    {
+        await ProcessCoinDonations().ConfigureAwait(false);
+        await ProcessItemDonations().ConfigureAwait(false);
+        await ProgressUpgradeDonations().ConfigureAwait(false);
+    }
+
+    #endregion // LocatedAsyncJob
 }

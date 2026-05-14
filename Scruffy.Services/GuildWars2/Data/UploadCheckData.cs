@@ -5,6 +5,8 @@ namespace Scruffy.Services.GuildWars2.Data;
 /// </summary>
 internal record UploadCheckData
 {
+    #region Properties
+
     /// <summary>
     /// Id
     /// </summary>
@@ -19,4 +21,6 @@ internal record UploadCheckData
     /// Is the log valid?
     /// </summary>
     public bool IsValid { get; set; }
+
+    #endregion // Properties
 }

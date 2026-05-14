@@ -18,6 +18,7 @@ using Microsoft.Extensions.Hosting;
 using Minio;
 using Minio.AspNetCore;
 
+using OpenTelemetry.Exporter;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -42,6 +43,8 @@ namespace Scruffy.WebApp;
 /// </summary>
 public class Program
 {
+    #region Methods
+
     /// <summary>
     /// Main entry
     /// </summary>
@@ -75,7 +78,7 @@ public class Program
                                                                   .AddOtlpExporter(otlpOptions =>
                                                                                    {
                                                                                        otlpOptions.Endpoint = new Uri(openTelemetryEndpoint);
-                                                                                       otlpOptions.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
+                                                                                       otlpOptions.Protocol = OtlpExportProtocol.Grpc;
                                                                                    });
                                          })
                             .WithMetrics(meterProviderBuilder =>
@@ -86,7 +89,7 @@ public class Program
                                                                  .AddOtlpExporter(otlpOptions =>
                                                                                   {
                                                                                       otlpOptions.Endpoint = new Uri(openTelemetryEndpoint);
-                                                                                      otlpOptions.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
+                                                                                      otlpOptions.Protocol = OtlpExportProtocol.Grpc;
                                                                                   });
                                          })
                             .WithLogging(loggingProviderBuilder =>
@@ -95,7 +98,7 @@ public class Program
                                                                    .AddOtlpExporter(otlpOptions =>
                                                                                     {
                                                                                         otlpOptions.Endpoint = new Uri(openTelemetryEndpoint);
-                                                                                        otlpOptions.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
+                                                                                        otlpOptions.Protocol = OtlpExportProtocol.Grpc;
                                                                                     });
                                          });
         }
@@ -233,4 +236,6 @@ public class Program
         await app.RunAsync()
                  .ConfigureAwait(false);
     }
+
+    #endregion // Methods
 }

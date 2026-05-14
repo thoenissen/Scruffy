@@ -5,6 +5,8 @@ namespace Scruffy.WebApp.DTOs.Calendar;
 /// </summary>
 public class CalendarParticipantDTO
 {
+    #region Properties
+
     /// <summary>
     /// Internal user ID
     /// </summary>
@@ -24,4 +26,6 @@ public class CalendarParticipantDTO
     /// Is the participant a leader?
     /// </summary>
     public bool IsLeader { get; set; }
+
+    #endregion // Properties
 }

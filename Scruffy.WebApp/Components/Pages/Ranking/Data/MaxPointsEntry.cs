@@ -5,6 +5,8 @@ namespace Scruffy.WebApp.Components.Pages.Ranking.Data;
 /// </summary>
 internal class MaxPointsEntry
 {
+    #region Properties
+
     /// <summary>
     /// Name
     /// </summary>
@@ -14,4 +16,6 @@ internal class MaxPointsEntry
     /// Points
     /// </summary>
     public double Points { get; set; }
+
+    #endregion // Properties
 }

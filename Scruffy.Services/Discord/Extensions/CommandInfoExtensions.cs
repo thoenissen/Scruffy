@@ -7,6 +7,8 @@ namespace Scruffy.Services.Discord.Extensions;
 /// </summary>
 public static class CommandInfoExtensions
 {
+    #region Methods
+
     /// <summary>
     /// Return the full command name
     /// </summary>
@@ -55,4 +57,6 @@ public static class CommandInfoExtensions
 
         return module.Name;
     }
+
+    #endregion // Methods
 }

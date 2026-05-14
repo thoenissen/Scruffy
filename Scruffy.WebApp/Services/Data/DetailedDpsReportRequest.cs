@@ -9,6 +9,8 @@ namespace Scruffy.WebApp.Services.Data;
 /// </summary>
 public class DetailedDpsReportRequest
 {
+    #region Properties
+
     /// <summary>
     /// ID
     /// </summary>
@@ -18,4 +20,6 @@ public class DetailedDpsReportRequest
     /// Task completion source to report the result of the request
     /// </summary>
     public TaskCompletionSource<JsonLog> Report { get; init; }
+
+    #endregion // Properties
 }

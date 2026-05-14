@@ -32,6 +32,8 @@ public class CalendarScheduleDayOfWeekDialogElement : DialogEmbedReactionElement
 
     #endregion // Constructor
 
+    #region Methods
+
     /// <summary>
     /// Returning task with the result
     /// </summary>
@@ -43,6 +45,8 @@ public class CalendarScheduleDayOfWeekDialogElement : DialogEmbedReactionElement
 
         return Task.FromResult(dayOfWeek);
     }
+
+    #endregion // Methods
 
     #region DialogReactionElementBase<DayOfWeek>
 

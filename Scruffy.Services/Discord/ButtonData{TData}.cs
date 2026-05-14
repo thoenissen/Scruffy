@@ -8,6 +8,8 @@ namespace Scruffy.Services.Discord;
 /// <typeparam name="TData">Type of the result</typeparam>
 public class ButtonData<TData>
 {
+    #region Properties
+
     /// <summary>
     /// Command text
     /// </summary>
@@ -22,4 +24,6 @@ public class ButtonData<TData>
     /// Function corresponding to the reaction
     /// </summary>
     public Func<Task<TData>> Func { get; set; }
+
+    #endregion // Properties
 }

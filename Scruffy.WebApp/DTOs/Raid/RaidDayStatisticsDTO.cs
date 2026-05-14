@@ -7,6 +7,8 @@ namespace Scruffy.WebApp.DTOs.Raid;
 /// </summary>
 public class RaidDayStatisticsDTO
 {
+    #region Properties
+
     /// <summary>
     /// Day
     /// </summary>
@@ -121,4 +123,6 @@ public class RaidDayStatisticsDTO
     /// Quadim 2 kiter availability
     /// </summary>
     public RoleAvailabilityLevel Quadim2KiterAvailability { get; set; }
+
+    #endregion // Properties
 }

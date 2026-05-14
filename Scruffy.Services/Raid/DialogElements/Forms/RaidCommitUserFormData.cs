@@ -9,6 +9,8 @@ namespace Scruffy.Services.Raid.DialogElements.Forms;
 /// </summary>
 public class RaidCommitUserFormData
 {
+    #region Properties
+
     /// <summary>
     /// User
     /// </summary>
@@ -20,4 +22,6 @@ public class RaidCommitUserFormData
     /// </summary>
     [DialogElementAssignment(typeof(RaidCommitPointDialogElement))]
     public double Points { get; set; }
+
+    #endregion // Properties
 }

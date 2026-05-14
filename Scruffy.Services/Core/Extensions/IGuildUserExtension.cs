@@ -7,6 +7,8 @@ namespace Scruffy.Services.Core.Extensions;
 /// </summary>
 public static class IGuildUserExtension
 {
+    #region Methods
+
     /// <summary>
     /// Gets the best display name
     /// </summary>
@@ -18,4 +20,6 @@ public static class IGuildUserExtension
                    ? member?.Username
                    : member.Nickname;
     }
+
+    #endregion // Methods
 }

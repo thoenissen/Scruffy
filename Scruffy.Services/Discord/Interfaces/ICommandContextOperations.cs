@@ -5,9 +5,13 @@
 /// </summary>
 public interface ICommandContextOperations
 {
+    #region Methods
+
     /// <summary>
     /// Show unmet precondition hint
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     public Task ShowUnmetPrecondition();
+
+    #endregion // Methods
 }

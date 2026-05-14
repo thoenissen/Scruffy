@@ -7,6 +7,8 @@ namespace Scruffy.Services.Calendar.DialogElements.Forms;
 /// </summary>
 public class CreateOneTimeEventFormData
 {
+    #region Properties
+
     /// <summary>
     /// Day
     /// </summary>
@@ -18,4 +20,6 @@ public class CreateOneTimeEventFormData
     /// </summary>
     [DialogElementAssignment(typeof(CalendarTemplateSelectionDialogElement))]
     public long TemplateId { get; set; }
+
+    #endregion // Properties
 }

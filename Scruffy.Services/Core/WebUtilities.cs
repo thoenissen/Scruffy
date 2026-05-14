@@ -8,6 +8,8 @@ namespace Scruffy.Services.Core;
 /// </summary>
 public static class WebUtilities
 {
+    #region Methods
+
     /// <summary>
     /// Converting html to plain text
     /// </summary>
@@ -23,4 +25,6 @@ public static class WebUtilities
 
         return text;
     }
+
+    #endregion // Methods
 }
