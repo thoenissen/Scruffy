@@ -222,16 +222,20 @@ public class DpsReportConnector
 
         var client = _clientFactory.CreateClient();
 
-        using var response = await client.GetAsync(url).ConfigureAwait(false);
-        var jsonResult = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-        var parsedPage = JsonConvert.DeserializeObject<Page>(jsonResult, _settings);
-
-        if (endTime != null && parsedPage?.Uploads != null)
+        using (var response = await client.GetAsync(url).ConfigureAwait(false))
         {
-            parsedPage.Uploads = parsedPage.Uploads.Where(upload => new DateTimeOffset(upload.EncounterTime, TimeSpan.Zero) <= endTime).ToList();
-        }
+            var jsonResult = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var parsedPage = JsonConvert.DeserializeObject<Page>(jsonResult, _settings);
 
-        return parsedPage;
+            if (endTime != null && parsedPage?.Uploads != null)
+            {
+                parsedPage.Uploads = parsedPage.Uploads
+                                               .Where(upload => new DateTimeOffset(upload.EncounterTime, TimeSpan.Zero) <= endTime)
+                                               .ToList();
+            }
+
+            return parsedPage;
+        }
     }
 
     /// <summary>

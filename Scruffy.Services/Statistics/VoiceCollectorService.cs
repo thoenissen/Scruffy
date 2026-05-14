@@ -317,21 +317,26 @@ public sealed class VoiceCollectorService : SingletonLocatedServiceBase, IDispos
     {
         try
         {
-            using var dbFactory = RepositoryFactory.CreateInstance();
-
-            if (dbFactory.GetRepository<DiscordVoiceTimeSpanRepository>()
-                         .Add(new DiscordVoiceTimeSpanEntity
-                              {
-                                  DiscordServerId = serverId,
-                                  DiscordChannelId = channelId,
-                                  DiscordAccountId = accountId,
-                                  StartTimeStamp = segmentStart,
-                                  EndTimeStamp = segmentStart,
-                                  IsCompleted = false
-                              })
-                == false)
+            using (var dbFactory = RepositoryFactory.CreateInstance())
             {
-                LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(VoiceCollectorService), nameof(BeginSegment), dbFactory.LastError?.Message, dbFactory.LastError?.ToString());
+                if (dbFactory.GetRepository<DiscordVoiceTimeSpanRepository>()
+                             .Add(new DiscordVoiceTimeSpanEntity
+                                  {
+                                      DiscordServerId = serverId,
+                                      DiscordChannelId = channelId,
+                                      DiscordAccountId = accountId,
+                                      StartTimeStamp = segmentStart,
+                                      EndTimeStamp = segmentStart,
+                                      IsCompleted = false
+                                  })
+                    == false)
+                {
+                    LoggingService.AddServiceLogEntry(LogEntryLevel.Error,
+                                                      nameof(VoiceCollectorService),
+                                                      nameof(BeginSegment),
+                                                      dbFactory.LastError?.Message,
+                                                      dbFactory.LastError?.ToString());
+                }
             }
         }
         catch (Exception ex)
@@ -393,20 +398,25 @@ public sealed class VoiceCollectorService : SingletonLocatedServiceBase, IDispos
     {
         try
         {
-            using var dbFactory = RepositoryFactory.CreateInstance();
-
-            if (dbFactory.GetRepository<DiscordVoiceTimeSpanRepository>()
-                         .Refresh(e => e.DiscordServerId == serverId
-                                       && e.DiscordChannelId == channelId
-                                       && e.DiscordAccountId == accountId
-                                       && e.StartTimeStamp == segmentStart,
-                                  e =>
-                                  {
-                                      e.EndTimeStamp = segmentEnd;
-                                      e.IsCompleted = true;
-                                  }) == false)
+            using (var dbFactory = RepositoryFactory.CreateInstance())
             {
-                LoggingService.AddServiceLogEntry(LogEntryLevel.Error, nameof(VoiceCollectorService), nameof(FinalizeSegment), dbFactory.LastError?.Message, dbFactory.LastError?.ToString());
+                if (dbFactory.GetRepository<DiscordVoiceTimeSpanRepository>()
+                             .Refresh(e => e.DiscordServerId == serverId
+                                           && e.DiscordChannelId == channelId
+                                           && e.DiscordAccountId == accountId
+                                           && e.StartTimeStamp == segmentStart,
+                                      e =>
+                                      {
+                                          e.EndTimeStamp = segmentEnd;
+                                          e.IsCompleted = true;
+                                      }) == false)
+                {
+                    LoggingService.AddServiceLogEntry(LogEntryLevel.Error,
+                                                      nameof(VoiceCollectorService),
+                                                      nameof(FinalizeSegment),
+                                                      dbFactory.LastError?.Message,
+                                                      dbFactory.LastError?.ToString());
+                }
             }
         }
         catch (Exception ex)

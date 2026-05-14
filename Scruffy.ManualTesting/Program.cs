@@ -15,16 +15,20 @@ await Preparation.SetUpDiscordClient()
                  .ConfigureAwait(false);
 
 var serviceProvider = new ServiceProviderContainer();
-await using var unused = serviceProvider.ConfigureAwait(false);
 
-serviceProvider.Initialize(obj => obj.AddSingleton(Preparation.DiscordClient));
+await using (serviceProvider.ConfigureAwait(false))
+{
+    serviceProvider.Initialize(obj => obj.AddSingleton(Preparation.DiscordClient));
 
-using var scope = serviceProvider.CreateScope();
-// Debug context
-// var context = new DebuggingContext(scope.ServiceProvider);
-//
-// await context.InitializeFromChannel(1429146759606567115, 699320744781545473)
-//              .ConfigureAwait(false);
+    using (serviceProvider.CreateScope())
+    {
+        // Debug context
+        // var context = new DebuggingContext(scope.ServiceProvider);
+        //
+        // await context.InitializeFromChannel(1429146759606567115, 699320744781545473)
+        //              .ConfigureAwait(false);
 
-// Testing
-// var service = scope.ServiceProvider.GetRequiredService<LogCommandHandler>();
+        // Testing
+        // var service = scope.ServiceProvider.GetRequiredService<LogCommandHandler>();
+    }
+}
