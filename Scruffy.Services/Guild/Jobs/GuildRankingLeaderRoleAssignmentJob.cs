@@ -85,7 +85,7 @@ public class GuildRankingLeaderRoleAssignmentJob : LocatedAsyncJob
                                             .Select(obj => new
                                                            {
                                                                UserId = obj.Key,
-                                                               Points = obj.Sum(obj2 => obj2.Points),
+                                                               Points = obj.Sum(obj2 => obj2.Points)
                                                            })
                                             .OrderByDescending(obj => obj.Points)
                                             .FirstOrDefault()

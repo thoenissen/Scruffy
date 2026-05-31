@@ -37,7 +37,7 @@ public class CalendarReminderDeletionJob : LocatedAsyncJob
 
     #endregion // Constructor
 
-    #region AsyncJob
+    #region LocatedAsyncJob
 
     /// <inheritdoc/>
     public override async Task ExecuteOverrideAsync()
@@ -87,5 +87,5 @@ public class CalendarReminderDeletionJob : LocatedAsyncJob
         }
     }
 
-    #endregion // AsyncJob
+    #endregion // LocatedAsyncJob
 }

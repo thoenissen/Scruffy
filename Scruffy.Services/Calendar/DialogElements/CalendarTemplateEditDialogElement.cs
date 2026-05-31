@@ -37,7 +37,7 @@ public class CalendarTemplateEditDialogElement : DialogEmbedReactionElementBase<
 
     #endregion // Constructor
 
-    #region DialogReactionElementBase<bool>
+    #region DialogEmbedReactionElementBase
 
     /// <inheritdoc/>
     public override async Task EditMessage(EmbedBuilder builder)
@@ -211,5 +211,5 @@ public class CalendarTemplateEditDialogElement : DialogEmbedReactionElementBase<
         return false;
     }
 
-    #endregion // DialogReactionElementBase<bool>
+    #endregion // DialogEmbedReactionElementBase
 }

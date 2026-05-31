@@ -25,7 +25,7 @@ public class RaidDayStartTimeDialogElement : DialogMessageElementBase<TimeSpan>
 
     #endregion // Constructor
 
-    #region DialogMessageElementBase<string>
+    #region DialogMessageElementBase
 
     /// <inheritdoc/>
     public override string GetMessage()
@@ -41,5 +41,5 @@ public class RaidDayStartTimeDialogElement : DialogMessageElementBase<TimeSpan>
                    : throw new InvalidOperationException();
     }
 
-    #endregion // DialogMessageElementBase<string>
+    #endregion // DialogMessageElementBase
 }

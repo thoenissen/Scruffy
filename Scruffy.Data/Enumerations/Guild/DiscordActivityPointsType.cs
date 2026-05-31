@@ -13,5 +13,5 @@ public enum DiscordActivityPointsType
     /// <summary>
     /// Message activity
     /// </summary>
-    Message,
+    Message
 }

@@ -1,13 +1,12 @@
-﻿namespace Scruffy.Data.Enumerations.GuildWars2
+﻿namespace Scruffy.Data.Enumerations.GuildWars2;
+
+/// <summary>
+/// State of the dps.report processing
+/// </summary>
+public enum DpsReportProcessingState
 {
     /// <summary>
-    /// State of the dps.report processing
+    /// Pending
     /// </summary>
-    public enum DpsReportProcessingState
-    {
-        /// <summary>
-        /// Pending
-        /// </summary>
-        Pending
-    }
+    Pending
 }

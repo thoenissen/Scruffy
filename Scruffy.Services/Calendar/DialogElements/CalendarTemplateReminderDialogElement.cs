@@ -33,7 +33,7 @@ public class CalendarTemplateReminderDialogElement : DialogReactionElementBase<C
 
     #endregion // Constructor
 
-    #region DialogReactionElementBase<bool>
+    #region DialogReactionElementBase
 
     /// <inheritdoc/>
     public override string GetMessage()
@@ -48,7 +48,7 @@ public class CalendarTemplateReminderDialogElement : DialogReactionElementBase<C
                                   new ReactionData<CalenderTemplateReminderData>
                                   {
                                       Emote = DiscordEmoteService.GetCheckEmote(CommandContext.Client),
-                                      Func = RunSubForm<CalenderTemplateReminderData>,
+                                      Func = RunSubForm<CalenderTemplateReminderData>
                                   },
                                   new ReactionData<CalenderTemplateReminderData>
                                   {
@@ -64,5 +64,5 @@ public class CalendarTemplateReminderDialogElement : DialogReactionElementBase<C
         return null;
     }
 
-    #endregion // DialogReactionElementBase<bool>
+    #endregion // DialogReactionElementBase
 }

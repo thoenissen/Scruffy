@@ -39,7 +39,7 @@ public class RaidPreparedRolesFirstTimeSelectDialogElement : DialogMultiSelectSe
 
     #endregion // Constructor
 
-    #region DialogEmbedMultiSelectSelectMenuElementBase<long>
+    #region DialogMultiSelectSelectMenuElementBase
 
     /// <inheritdoc/>
     protected override int MinValues => 1;
@@ -81,7 +81,7 @@ public class RaidPreparedRolesFirstTimeSelectDialogElement : DialogMultiSelectSe
                                  {
                                      Label = _raidRoleService.GetDescriptionAsText(role),
                                      Emote = DiscordEmoteService.GetGuildEmote(CommandContext.Client, role.DiscordEmojiId),
-                                     Value = role.Id.ToString(),
+                                     Value = role.Id.ToString()
                                  });
                 }
             }
@@ -90,5 +90,5 @@ public class RaidPreparedRolesFirstTimeSelectDialogElement : DialogMultiSelectSe
         return _entries;
     }
 
-    #endregion // DialogEmbedMultiSelectSelectMenuElementBase<long>
+    #endregion // DialogMultiSelectSelectMenuElementBase
 }

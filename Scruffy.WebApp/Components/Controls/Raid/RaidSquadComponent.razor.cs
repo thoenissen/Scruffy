@@ -368,7 +368,7 @@ public partial class RaidSquadComponent
                                                  _ => null
                                              },
                                      Role = role,
-                                     Player = registration,
+                                     Player = registration
                                  };
                 }
             }

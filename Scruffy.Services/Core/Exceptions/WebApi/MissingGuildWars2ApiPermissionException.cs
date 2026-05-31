@@ -32,7 +32,7 @@ public class MissingGuildWars2ApiPermissionException : ScruffyUserMessageExcepti
 
     #endregion // Constructor
 
-    #region ScruffyException
+    #region ScruffyUserMessageException
 
     /// <inheritdoc/>
     public override string GetLocalizedMessage()
@@ -72,5 +72,5 @@ public class MissingGuildWars2ApiPermissionException : ScruffyUserMessageExcepti
         }
     }
 
-    #endregion // ScruffyException
+    #endregion // ScruffyUserMessageException
 }

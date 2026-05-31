@@ -2,27 +2,26 @@
 
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Scruffy.Data.Entity.Migrations
+namespace Scruffy.Data.Entity.Migrations;
+
+/// <summary>
+/// Update 21
+/// </summary>
+public partial class Update21 : Migration
 {
-    /// <summary>
-    /// Update 21
-    /// </summary>
-    public partial class Update21 : Migration
+    #region Migration
+
+    /// <inheritdoc/>
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        #region Migration
-
-        /// <inheritdoc/>
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.AddColumn<decimal>("ReminderChannelId", "Guilds", "decimal(20,0)", nullable: true);
-        }
-
-        /// <inheritdoc/>
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropColumn("ReminderChannelId", "Guilds");
-        }
-
-        #endregion // Migration
+        migrationBuilder.AddColumn<decimal>("ReminderChannelId", "Guilds", "decimal(20,0)", nullable: true);
     }
+
+    /// <inheritdoc/>
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.DropColumn("ReminderChannelId", "Guilds");
+    }
+
+    #endregion // Migration
 }

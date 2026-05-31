@@ -2,19 +2,19 @@
 
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Scruffy.Data.Entity.Migrations
-{
-    /// <summary>
-    /// Update 46
-    /// </summary>
-    public partial class Update46 : Migration
-    {
-        #region Migration
+namespace Scruffy.Data.Entity.Migrations;
 
-        /// <inheritdoc/>
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.Sql(@"CREATE FUNCTION GetDateRange(
+/// <summary>
+/// Update 46
+/// </summary>
+public partial class Update46 : Migration
+{
+    #region Migration
+
+    /// <inheritdoc/>
+    protected override void Up(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.Sql(@"CREATE FUNCTION GetDateRange(
                                         @from datetime2(7),
                                         @to  datetime2(7)
                                     )
@@ -36,14 +36,13 @@ namespace Scruffy.Data.Entity.Migrations
 
                                    SELECT [Value]
                                    FROM   [DAY_RANGE]");
-        }
-
-        /// <inheritdoc/>
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.Sql("DROP FUNCTION GetDateRange");
-        }
-
-        #endregion // Migration
     }
+
+    /// <inheritdoc/>
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.Sql("DROP FUNCTION GetDateRange");
+    }
+
+    #endregion // Migration
 }

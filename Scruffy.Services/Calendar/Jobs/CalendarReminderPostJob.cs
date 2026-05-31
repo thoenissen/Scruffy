@@ -39,7 +39,7 @@ public class CalendarReminderPostJob : LocatedAsyncJob
 
     #endregion // Constructor
 
-    #region AsyncJob
+    #region LocatedAsyncJob
 
     /// <inheritdoc/>
     public override async Task ExecuteOverrideAsync()
@@ -165,5 +165,5 @@ public class CalendarReminderPostJob : LocatedAsyncJob
         }
     }
 
-    #endregion // AsyncJob
+    #endregion // LocatedAsyncJob
 }

@@ -48,7 +48,7 @@ public class CalendarScheduleDayOfWeekDialogElement : DialogEmbedReactionElement
 
     #endregion // Methods
 
-    #region DialogReactionElementBase<DayOfWeek>
+    #region DialogEmbedReactionElementBase
 
     /// <inheritdoc/>
     public override Task EditMessage(EmbedBuilder builder)
@@ -110,7 +110,7 @@ public class CalendarScheduleDayOfWeekDialogElement : DialogEmbedReactionElement
                                       Emote = Emoji.Parse(":seven:"),
                                       CommandText = $"{Emoji.Parse(":seven:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Sunday)}",
                                       Func = () => GetReturnValue(DayOfWeek.Sunday)
-                                  },
+                                  }
                               ];
     }
 
@@ -120,5 +120,5 @@ public class CalendarScheduleDayOfWeekDialogElement : DialogEmbedReactionElement
         throw new InvalidOperationException();
     }
 
-    #endregion // DialogReactionElementBase<DayOfWeek>
+    #endregion // DialogEmbedReactionElementBase
 }

@@ -21,7 +21,7 @@ public class GuildCalendarTitleDialogElement : DialogMessageElementBase<string>
 
     #endregion // Constructor
 
-    #region DialogMessageElementBase<string>
+    #region DialogMessageElementBase
 
     /// <inheritdoc/>
     public override string GetMessage()
@@ -29,5 +29,5 @@ public class GuildCalendarTitleDialogElement : DialogMessageElementBase<string>
         return LocalizationGroup.GetText("Message", "Please enter the calendar title.");
     }
 
-    #endregion // DialogMessageElementBase<string>
+    #endregion // DialogMessageElementBase
 }

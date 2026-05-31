@@ -230,8 +230,8 @@ public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
     /// <param name="type">Type</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("ranking-of", "Personal guild ranking overview")]
-    public async Task PostPersonalRankingOverview([Summary("User", "User")]IGuildUser user,
-                                                  [Summary("Type", "Visualization type")]GuildRankingVisualizationType type = GuildRankingVisualizationType.Current)
+    public async Task PostPersonalRankingOverview([Summary("User", "User")] IGuildUser user,
+                                                  [Summary("Type", "Visualization type")] GuildRankingVisualizationType type = GuildRankingVisualizationType.Current)
     {
         switch (type)
         {
@@ -275,7 +275,7 @@ public class GuildAdminSlashCommandHandler : SlashCommandModuleBase
     /// <param name="type">Type</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("check", "Check execution")]
-    public async Task Check([Summary("Type", "Check type")]CheckType type)
+    public async Task Check([Summary("Type", "Check type")] CheckType type)
     {
         switch (type)
         {

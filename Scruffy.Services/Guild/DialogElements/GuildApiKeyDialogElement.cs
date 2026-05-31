@@ -23,7 +23,7 @@ public class GuildApiKeyDialogElement : DialogMessageElementBase<string>
 
     #endregion // Constructor
 
-    #region DialogMessageElementBase<string>
+    #region DialogMessageElementBase
 
     /// <inheritdoc/>
     public override string GetMessage()
@@ -39,5 +39,5 @@ public class GuildApiKeyDialogElement : DialogMessageElementBase<string>
         return base.ConvertMessage(message);
     }
 
-    #endregion // DialogMessageElementBase<string>
+    #endregion // DialogMessageElementBase
 }

@@ -36,7 +36,7 @@ public class RaidExperienceLevelEditDialogElement : DialogEmbedReactionElementBa
 
     #endregion // Constructor
 
-    #region DialogReactionElementBase<bool>
+    #region DialogEmbedReactionElementBase
 
     /// <inheritdoc/>
     public override async Task EditMessage(EmbedBuilder builder)
@@ -207,5 +207,5 @@ public class RaidExperienceLevelEditDialogElement : DialogEmbedReactionElementBa
         return false;
     }
 
-    #endregion // DialogReactionElementBase<bool>
+    #endregion // DialogEmbedReactionElementBase
 }

@@ -34,7 +34,7 @@ public class GuildRankSuperiorRankDialogElement : DialogEmbedMessageElementBase<
 
     #endregion // Constructor
 
-    #region DialogEmbedMessageElementBase<ulong>
+    #region DialogEmbedMessageElementBase
 
     /// <inheritdoc/>
     public override EmbedBuilder GetMessage()
@@ -109,5 +109,5 @@ public class GuildRankSuperiorRankDialogElement : DialogEmbedMessageElementBase<
                                    : null);
     }
 
-    #endregion // DialogEmbedMessageElementBase<ulong>
+    #endregion // DialogEmbedMessageElementBase
 }

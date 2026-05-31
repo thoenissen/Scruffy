@@ -47,7 +47,7 @@ public class ScruffyUserMessageCodeException : ScruffyUserMessageException
 
     #endregion // Methods
 
-    #region ScruffyException
+    #region ScruffyUserMessageException
 
     /// <inheritdoc/>
     public override string GetLocalizedMessage()
@@ -60,5 +60,5 @@ public class ScruffyUserMessageCodeException : ScruffyUserMessageException
         }
     }
 
-    #endregion // ScruffyException
+    #endregion // ScruffyUserMessageException
 }

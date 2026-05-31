@@ -46,6 +46,10 @@ public abstract class DialogButtonElementBase<TData> : DialogElementBase<TData>
     /// <returns>Result</returns>
     protected abstract TData DefaultFunc();
 
+    #endregion // Methods
+
+    #region DialogElementBase
+
     /// <inheritdoc/>
     public override async Task<TData> Run()
     {
@@ -115,5 +119,5 @@ public abstract class DialogButtonElementBase<TData> : DialogElementBase<TData>
         }
     }
 
-    #endregion // Methods
+    #endregion // DialogElementBase
 }

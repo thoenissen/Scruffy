@@ -70,7 +70,7 @@ public sealed partial class UserAdministrationPage : IDisposable
 
     #endregion // Fields
 
-    #region ComponentsBase
+    #region ComponentBase
 
     /// <inheritdoc/>
     protected override void OnInitialized()
@@ -101,7 +101,7 @@ public sealed partial class UserAdministrationPage : IDisposable
                                                                       join.Member.Name,
                                                                       UserId = account != null
                                                                                    ? (long?)account.UserId
-                                                                                   : null,
+                                                                                   : null
                                                                   })
                                    .GroupJoin(_repositoryFactory.GetRepository<GuildWarsAccountRepository>()
                                                                 .GetQuery(),
@@ -184,7 +184,7 @@ public sealed partial class UserAdministrationPage : IDisposable
         OnFilterChanged();
     }
 
-    #endregion // ComponentsBase
+    #endregion // ComponentBase
 
     #region Methods
 

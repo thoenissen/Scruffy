@@ -63,6 +63,20 @@ public abstract class DialogMultiSelectSelectMenuElementBase<TData> : Interactio
         return null;
     }
 
+    /// <summary>
+    /// Convert the selected value
+    /// </summary>
+    /// <param name="selectedValue">Selected value</param>
+    /// <returns>Converted value</returns>
+    protected virtual TData ConvertSelectedValue(string selectedValue)
+    {
+        return (TData)Convert.ChangeType(selectedValue, typeof(TData));
+    }
+
+    #endregion // Methods
+
+    #region DialogElementBase
+
     /// <inheritdoc/>
     public override async Task<List<TData>> Run()
     {
@@ -116,15 +130,5 @@ public abstract class DialogMultiSelectSelectMenuElementBase<TData> : Interactio
         }
     }
 
-    /// <summary>
-    /// Convert the selected value
-    /// </summary>
-    /// <param name="selectedValue">Selected value</param>
-    /// <returns>Converted value</returns>
-    protected virtual TData ConvertSelectedValue(string selectedValue)
-    {
-        return (TData)Convert.ChangeType(selectedValue, typeof(TData));
-    }
-
-    #endregion // Methods
+    #endregion // DialogElementBase
 }

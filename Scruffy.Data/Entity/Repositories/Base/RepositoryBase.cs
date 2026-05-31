@@ -3,6 +3,4 @@
 /// <summary>
 /// Base class for creating a repository
 /// </summary>
-public abstract class RepositoryBase
-{
-}
+public abstract class RepositoryBase;

@@ -155,7 +155,7 @@ public class RaidCommitService : LocatedServiceBase
                                 {
                                     AppointmentId = appointment.Id,
                                     AppointmentTimeStamp = appointment.TimeStamp,
-                                    Users = users,
+                                    Users = users
                                 };
 
                 var dialogHandler = new DialogHandler(commandContext);

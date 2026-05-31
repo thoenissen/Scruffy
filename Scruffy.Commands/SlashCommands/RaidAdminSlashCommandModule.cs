@@ -40,7 +40,7 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
     /// <param name="type">Type of the configuration</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("configuration", "Starting the raid configuration")]
-    public async Task Configuration([Summary("Type", "Type of the configuration assistant to be started")]RaidAdminConfigurationType type)
+    public async Task Configuration([Summary("Type", "Type of the configuration assistant to be started")] RaidAdminConfigurationType type)
     {
         switch (type)
         {
@@ -79,8 +79,8 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
     /// <param name="name">Name</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("join-user", "Register a user to an appointment")]
-    public Task Join([Summary("User")]IGuildUser user,
-                     [Summary("Name", "Name of the appointment")]string name)
+    public Task Join([Summary("User")] IGuildUser user,
+                     [Summary("Name", "Name of the appointment")] string name)
     {
         return CommandHandler.Join(Context, user, name);
     }
@@ -92,8 +92,8 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
     /// <param name="name">Name</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("leave-user", "Deregister a user to an appointment")]
-    public async Task Leave([Summary("User")]IGuildUser user,
-                            [Summary("Name", "Name of the appointment")]string name)
+    public async Task Leave([Summary("User")] IGuildUser user,
+                            [Summary("Name", "Name of the appointment")] string name)
     {
         var message = await Context.DeferProcessing()
                                    .ConfigureAwait(false);
@@ -111,7 +111,7 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
     /// <param name="name">Alias name</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("set-template", "Set raid template")]
-    public Task SetTemplate([Summary("Name", "Name of the appointment")]string name)
+    public Task SetTemplate([Summary("Name", "Name of the appointment")] string name)
     {
         return CommandHandler.SetTemplate(Context, name);
     }
@@ -123,8 +123,8 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
     /// <param name="count">Count</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("set-group-count", "Set group count")]
-    public async Task SetTemplate([Summary("Name", "Name of the appointment")]string name,
-                                  [Summary("Count", "Group count")]int count)
+    public async Task SetTemplate([Summary("Name", "Name of the appointment")] string name,
+                                  [Summary("Count", "Group count")] int count)
     {
         await Context.DeferAsync()
                      .ConfigureAwait(false);
@@ -140,8 +140,8 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
     /// <param name="user">Users</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("set-experience-level", "Assign a experience to the given users.")]
-    public Task SetExperienceLevel([Summary("Role", "The role which should be assigned")]string role,
-                                   [Summary("User", "The user who should be assigned the role.")]IGuildUser user)
+    public Task SetExperienceLevel([Summary("Role", "The role which should be assigned")] string role,
+                                   [Summary("User", "The user who should be assigned the role.")] IGuildUser user)
     {
         return CommandHandler.SetExperienceLevel(Context, role, user);
     }
@@ -152,7 +152,7 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
     /// <param name="name">Alias name</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("commit", "Commit raid appointment")]
-    public Task Commit([Summary("Name", "Name of the appointment")]string name)
+    public Task Commit([Summary("Name", "Name of the appointment")] string name)
     {
         return CommandHandler.Commit(Context, name);
     }
@@ -164,7 +164,7 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
     /// <param name="raidWeekDay">Day of the raid week</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("overview", "Overview of the given data type")]
-    public async Task Overview([Summary("Type", "Type of the data which should be visualized")]RaidAdminOverviewType type, [Summary("day-of-raid-week", "Day of the raid week")]string raidWeekDay = null)
+    public async Task Overview([Summary("Type", "Type of the data which should be visualized")] RaidAdminOverviewType type, [Summary("day-of-raid-week", "Day of the raid week")] string raidWeekDay = null)
     {
         await Context.DeferProcessing()
                      .ConfigureAwait(false);

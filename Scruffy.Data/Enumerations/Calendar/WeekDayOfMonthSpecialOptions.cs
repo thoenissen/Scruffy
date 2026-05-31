@@ -23,5 +23,5 @@ public enum WeekDayOfMonthSpecialOptions
     /// <summary>
     /// Selection of months
     /// </summary>
-    MonthSelection,
+    MonthSelection
 }

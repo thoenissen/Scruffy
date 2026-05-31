@@ -2,31 +2,30 @@
 
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Scruffy.Data.Entity.Migrations
+namespace Scruffy.Data.Entity.Migrations;
+
+/// <summary>
+/// Update 42
+/// </summary>
+public partial class Update42 : Migration
 {
-    /// <summary>
-    /// Update 42
-    /// </summary>
-    public partial class Update42 : Migration
+    #region Migration
+
+    /// <inheritdoc/>
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        #region Migration
-
-        /// <inheritdoc/>
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.AddColumn<int>(name: "GroupCount",
-                                            table: "RaidAppointments",
-                                            type: "int",
-                                            nullable: false,
-                                            defaultValue: 0);
-        }
-
-        /// <inheritdoc/>
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropColumn(name: "GroupCount", table: "RaidAppointments");
-        }
-
-        #endregion // Migration
+        migrationBuilder.AddColumn<int>(name: "GroupCount",
+                                        table: "RaidAppointments",
+                                        type: "int",
+                                        nullable: false,
+                                        defaultValue: 0);
     }
+
+    /// <inheritdoc/>
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.DropColumn(name: "GroupCount", table: "RaidAppointments");
+    }
+
+    #endregion // Migration
 }

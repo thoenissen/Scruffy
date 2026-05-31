@@ -23,7 +23,7 @@ public class RaidExperienceLevelEmojiDialogElement : DialogReactionElementBase<u
 
     #endregion // Constructor
 
-    #region DialogReactionElementBase<bool>
+    #region DialogReactionElementBase
 
     /// <inheritdoc/>
     public override string GetMessage()
@@ -37,5 +37,5 @@ public class RaidExperienceLevelEmojiDialogElement : DialogReactionElementBase<u
         return (reaction.Emote as ISnowflakeEntity)?.Id ?? throw new InvalidOperationException();
     }
 
-    #endregion // DialogReactionElementBase<bool>
+    #endregion // DialogReactionElementBase
 }

@@ -64,5 +64,5 @@ public enum GuildWars2ApiPermission : long
     /// <summary>
     /// Wallet
     /// </summary>
-    Wallet = 1 << 9,
+    Wallet = 1 << 9
 }

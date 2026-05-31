@@ -23,7 +23,7 @@ public class CalendarScheduleOccurenceCountDialogElement : DialogMessageElementB
 
     #endregion // Constructor
 
-    #region DialogMessageElementBase<string>
+    #region DialogMessageElementBase
 
     /// <inheritdoc/>
     public override string GetMessage()
@@ -39,5 +39,5 @@ public class CalendarScheduleOccurenceCountDialogElement : DialogMessageElementB
         return int.TryParse(message.Content, out var result) ? result : 0;
     }
 
-    #endregion // DialogMessageElementBase<string>
+    #endregion // DialogMessageElementBase
 }

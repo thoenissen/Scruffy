@@ -33,5 +33,5 @@ public enum LogEntryLevel
     /// <summary>
     /// Critical error
     /// </summary>
-    CriticalError = 9000,
+    CriticalError = 9000
 }

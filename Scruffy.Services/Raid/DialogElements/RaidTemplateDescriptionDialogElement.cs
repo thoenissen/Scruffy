@@ -21,7 +21,7 @@ public class RaidTemplateDescriptionDialogElement : DialogMessageElementBase<str
 
     #endregion // Constructor
 
-    #region DialogMessageElementBase<string>
+    #region DialogMessageElementBase
 
     /// <inheritdoc/>
     public override string GetMessage()
@@ -29,5 +29,5 @@ public class RaidTemplateDescriptionDialogElement : DialogMessageElementBase<str
         return LocalizationGroup.GetText("Message", "Please enter the description which should be used.");
     }
 
-    #endregion // DialogMessageElementBase<string>
+    #endregion // DialogMessageElementBase
 }

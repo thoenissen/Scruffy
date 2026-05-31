@@ -47,6 +47,10 @@ public abstract class DialogReactionElementBase<TData> : DialogElementBase<TData
     /// <returns>Result</returns>
     protected abstract TData DefaultFunc(IReaction reaction);
 
+    #endregion // Methods
+
+    #region DialogElementBase
+
     /// <inheritdoc/>
     public override async Task<TData> Run()
     {
@@ -85,5 +89,5 @@ public abstract class DialogReactionElementBase<TData> : DialogElementBase<TData
         return DefaultFunc(userReaction);
     }
 
-    #endregion // Methods
+    #endregion // DialogElementBase
 }

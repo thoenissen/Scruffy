@@ -21,7 +21,7 @@ public class RaidExperienceLevelDescriptionDialogElement : DialogMessageElementB
 
     #endregion // Constructor
 
-    #region DialogMessageElementBase<string>
+    #region DialogMessageElementBase
 
     /// <inheritdoc/>
     public override string GetMessage()
@@ -29,5 +29,5 @@ public class RaidExperienceLevelDescriptionDialogElement : DialogMessageElementB
         return LocalizationGroup.GetText("Message", "Please enter the description which should be used.");
     }
 
-    #endregion // DialogMessageElementBase<string>
+    #endregion // DialogMessageElementBase
 }

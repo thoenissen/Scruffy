@@ -34,7 +34,7 @@ public class CalendarTemplateSelectionDialogElement : DialogEmbedMessageElementB
 
     #endregion // Constructor
 
-    #region DialogEmbedMessageElementBase<long>
+    #region DialogEmbedMessageElementBase
 
     /// <inheritdoc/>
     public override EmbedBuilder GetMessage()
@@ -92,5 +92,5 @@ public class CalendarTemplateSelectionDialogElement : DialogEmbedMessageElementB
         return Task.FromResult(int.TryParse(message.Content, out var index) && _templates.TryGetValue(index, out var selectedTemplateId) ? selectedTemplateId : throw new InvalidOperationException());
     }
 
-    #endregion // DialogEmbedMessageElementBase<long>
+    #endregion // DialogEmbedMessageElementBase
 }

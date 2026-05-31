@@ -17,10 +17,6 @@ public class UserEntity : IdentityUser<long>
 {
     #region Properties
 
-    /// <inheritdoc/>
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public override long Id { get; set; }
-
     /// <summary>
     /// Creation of the user
     /// </summary>
@@ -96,4 +92,12 @@ public class UserEntity : IdentityUser<long>
     #endregion // Navigation properties
 
     #endregion // Properties
+
+    #region IdentityUser
+
+    /// <inheritdoc/>
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public override long Id { get; set; }
+
+    #endregion // IdentityUser
 }

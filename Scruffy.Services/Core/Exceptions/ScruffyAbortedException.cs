@@ -3,6 +3,4 @@
 /// <summary>
 /// Execution aborted
 /// </summary>
-public class ScruffyAbortedException : ScruffyException
-{
-}
+public class ScruffyAbortedException : ScruffyException;

@@ -194,9 +194,9 @@ public sealed partial class TodaysLogsOverviewPage : IAsyncDisposable
                                                             PermaLink = upload.Permalink,
                                                             EncounterTime = DateTimeOffset.FromUnixTimeSeconds(upload.EncounterTime ?? 0).ToLocalTime(),
                                                             Boss = upload.Encounter?.BossName ?? LocalizationGroup.GetText("Loading", "Loading..."),
-                                                            Duration = TimeSpan.FromSeconds(upload.Encounter?.Duration ?? 0),
+                                                            Duration = TimeSpan.FromSeconds(upload.Encounter?.Duration ?? 0)
                                                         },
-                                             IsLoadingAdditionalData = true,
+                                             IsLoadingAdditionalData = true
                                          };
 
                             GetAdditionalDataAsync(report).Forget();

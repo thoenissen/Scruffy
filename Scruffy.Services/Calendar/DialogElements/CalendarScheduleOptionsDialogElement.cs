@@ -33,7 +33,7 @@ public class CalendarScheduleOptionsDialogElement : DialogEmbedReactionElementBa
 
     #endregion // Constructor
 
-    #region DialogReactionElementBase<WeekDayOfMonthSpecialOptions>
+    #region DialogEmbedReactionElementBase
 
     /// <inheritdoc/>
     public override Task EditMessage(EmbedBuilder builder)
@@ -87,5 +87,5 @@ public class CalendarScheduleOptionsDialogElement : DialogEmbedReactionElementBa
         throw new InvalidOperationException();
     }
 
-    #endregion // DialogReactionElementBase<WeekDayOfMonthSpecialOptions>
+    #endregion // DialogEmbedReactionElementBase
 }

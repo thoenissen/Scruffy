@@ -40,7 +40,7 @@ public class CalendarAdminSlashCommandModule : SlashCommandModuleBase
     /// <param name="type">Type</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("configuration", "Calendar configuration")]
-    public async Task Configuration([Summary("Type", "Configuration type")]CalendarConfigurationType type)
+    public async Task Configuration([Summary("Type", "Configuration type")] CalendarConfigurationType type)
     {
         switch (type)
         {

@@ -1,30 +1,29 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Scruffy.Data.Json.ChartJs
+namespace Scruffy.Data.Json.ChartJs;
+
+/// <summary>
+/// Legend plugin configuration
+/// </summary>
+public class LegendPlugin
 {
+    #region Properties
+
     /// <summary>
-    /// Legend plugin configuration
+    /// Value indicating whether the legend is displayed
     /// </summary>
-    public class LegendPlugin
-    {
-        #region Properties
+    public bool Display { get; set; }
 
-        /// <summary>
-        /// Value indicating whether the legend is displayed
-        /// </summary>
-        public bool Display { get; set; }
+    /// <summary>
+    /// Position of the legend (e.g. "top", "left", "bottom", "right")
+    /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string Position { get; set; }
 
-        /// <summary>
-        /// Position of the legend (e.g. "top", "left", "bottom", "right")
-        /// </summary>
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string Position { get; set; }
+    /// <summary>
+    /// Labels for the legend
+    /// </summary>
+    public LegendLabels Labels { get; set; }
 
-        /// <summary>
-        /// Labels for the legend
-        /// </summary>
-        public LegendLabels Labels { get; set; }
-
-        #endregion // Properties
-    }
+    #endregion // Properties
 }

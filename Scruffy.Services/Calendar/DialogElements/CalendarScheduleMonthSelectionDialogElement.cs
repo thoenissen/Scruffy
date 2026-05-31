@@ -21,7 +21,7 @@ public class CalendarScheduleMonthSelectionDialogElement : DialogMultiSelectSele
 
     #endregion // Constructor
 
-    #region DialogEmbedMultiSelectSelectMenuElementBase<int>
+    #region DialogMultiSelectSelectMenuElementBase
 
     /// <inheritdoc/>
     protected override int MaxValues => 12;
@@ -49,5 +49,5 @@ public class CalendarScheduleMonthSelectionDialogElement : DialogMultiSelectSele
         return entries;
     }
 
-    #endregion // DialogEmbedMultiSelectSelectMenuElementBase<int>
+    #endregion // DialogMultiSelectSelectMenuElementBase
 }

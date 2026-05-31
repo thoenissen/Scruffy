@@ -21,7 +21,7 @@ public class RaidTemplateAliasNameDialogElement : DialogMessageElementBase<strin
 
     #endregion // Constructor
 
-    #region DialogMessageElementBase<string>
+    #region DialogMessageElementBase
 
     /// <inheritdoc/>
     public override string GetMessage()
@@ -29,5 +29,5 @@ public class RaidTemplateAliasNameDialogElement : DialogMessageElementBase<strin
         return LocalizationGroup.GetText("Message", "Please enter the alias name which should be used.");
     }
 
-    #endregion // DialogMessageElementBase<string>
+    #endregion // DialogMessageElementBase
 }

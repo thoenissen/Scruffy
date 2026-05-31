@@ -1,22 +1,21 @@
-﻿namespace Scruffy.Data.Json.ChartJs
+﻿namespace Scruffy.Data.Json.ChartJs;
+
+/// <summary>
+/// Represents a collection of plugins for a chart
+/// </summary>
+public class Scales
 {
+    #region Properties
+
     /// <summary>
-    /// Represents a collection of plugins for a chart
+    /// Configuration for the x-axis of the chart
     /// </summary>
-    public class Scales
-    {
-        #region Properties
+    public Axes X { get; set; }
 
-        /// <summary>
-        /// Configuration for the x-axis of the chart
-        /// </summary>
-        public Axes X { get; set; }
+    /// <summary>
+    /// Configuration for the x-axis of the chart
+    /// </summary>
+    public Axes Y { get; set; }
 
-        /// <summary>
-        /// Configuration for the x-axis of the chart
-        /// </summary>
-        public Axes Y { get; set; }
-
-        #endregion // Properties
-    }
+    #endregion // Properties
 }

@@ -57,6 +57,10 @@ public abstract class DialogEmbedReactionElementBase<TData> : DialogElementBase<
     /// <returns>Result</returns>
     protected abstract TData DefaultFunc();
 
+    #endregion // Methods
+
+    #region DialogElementBase
+
     /// <inheritdoc/>
     public override async Task<TData> Run()
     {
@@ -115,5 +119,5 @@ public abstract class DialogEmbedReactionElementBase<TData> : DialogElementBase<
         throw new ScruffyTimeoutException();
     }
 
-    #endregion // Methods
+    #endregion // DialogElementBase
 }

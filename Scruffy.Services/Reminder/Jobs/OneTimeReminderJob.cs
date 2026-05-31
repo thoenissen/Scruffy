@@ -37,7 +37,7 @@ public class OneTimeReminderJob : LocatedAsyncJob
 
     #endregion // Constructor
 
-    #region IJob
+    #region LocatedAsyncJob
 
     /// <inheritdoc/>
     public override async Task ExecuteOverrideAsync()
@@ -111,5 +111,5 @@ public class OneTimeReminderJob : LocatedAsyncJob
         }
     }
 
-    #endregion // IJob
+    #endregion // LocatedAsyncJob
 }

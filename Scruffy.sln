@@ -20,9 +20,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04_Misc", "04_Misc", "{8BFF
 		.gitignore = .gitignore
 		.github\workflows\build.yml = .github\workflows\build.yml
 		Directory.Build.props = Directory.Build.props
+		Debug.ruleset = Debug.ruleset
 		.github\workflows\docker-publish.yml = .github\workflows\docker-publish.yml
-		StyleCop.Debug.ruleset = StyleCop.Debug.ruleset
-		StyleCop.Release.ruleset = StyleCop.Release.ruleset
+		Release.ruleset = Release.ruleset
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scruffy.Services", "Scruffy.Services\Scruffy.Services.csproj", "{6CF70C6D-BBD6-4781-87B6-4793A78C6990}"

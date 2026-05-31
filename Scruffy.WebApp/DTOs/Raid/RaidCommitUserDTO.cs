@@ -46,7 +46,7 @@ public class RaidCommitUserDTO
                                 RaidParticipationStatus.NoShow => ParticipationPoints * -1.0,
                                 RaidParticipationStatus.LateRegistration => 0.0,
                                 RaidParticipationStatus.Removed => 0.0,
-                                _ => ParticipationPoints * 1.0,
+                                _ => ParticipationPoints * 1.0
                             };
         }
         set;

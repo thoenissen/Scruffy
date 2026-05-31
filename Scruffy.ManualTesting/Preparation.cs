@@ -17,8 +17,7 @@ internal static class Preparation
     /// <summary>
     /// Discord client
     /// </summary>
-    public static DiscordSocketClient DiscordClient
-    { get; private set; }
+    public static DiscordSocketClient DiscordClient { get; private set; }
 
     #endregion // Properties
 

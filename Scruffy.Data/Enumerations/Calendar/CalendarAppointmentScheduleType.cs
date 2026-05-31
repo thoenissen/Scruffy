@@ -8,5 +8,5 @@ public enum CalendarAppointmentScheduleType
     /// <summary>
     /// Specific weekday of a month
     /// </summary>
-    WeekDayOfMonth,
+    WeekDayOfMonth
 }

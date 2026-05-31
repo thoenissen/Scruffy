@@ -128,7 +128,7 @@ public partial class RaidCommitPage
                           "substitute" => RaidParticipationStatus.Substitute,
                           "noshow" => RaidParticipationStatus.NoShow,
                           "lateregistration" => RaidParticipationStatus.LateRegistration,
-                          _ => RaidParticipationStatus.Played,
+                          _ => RaidParticipationStatus.Played
                       };
     }
 
@@ -143,7 +143,7 @@ public partial class RaidCommitPage
                {
                    true => "fulfilled",
                    false => "notfulfilled",
-                   null => "none",
+                   null => "none"
                };
     }
 
@@ -158,7 +158,7 @@ public partial class RaidCommitPage
                                    {
                                        "fulfilled" => true,
                                        "notfulfilled" => false,
-                                       _ => null,
+                                       _ => null
                                    };
     }
 
@@ -187,18 +187,6 @@ public partial class RaidCommitPage
     private void OnCloseAddPlayerOverlay()
     {
         _isAddPlayerOverlayVisible = false;
-    }
-
-    /// <inheritdoc />
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (_focusSearchInput)
-        {
-            _focusSearchInput = false;
-
-            await _searchInput.FocusAsync()
-                              .ConfigureAwait(false);
-        }
     }
 
     /// <summary>
@@ -470,44 +458,6 @@ public partial class RaidCommitPage
         }
     }
 
-    #endregion // Methods
-
-    #region ComponentBase
-
-    /// <inheritdoc />
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-
-        using (var dbFactory = RepositoryFactory.CreateInstance())
-        {
-            var now = DateTime.Now;
-
-            _appointments = dbFactory.GetRepository<RaidAppointmentRepository>()
-                                     .GetQuery()
-                                     .Where(obj => obj.TimeStamp < now)
-                                     .OrderByDescending(obj => obj.TimeStamp)
-                                     .Take(10)
-                                     .Select(obj => new RaidAppointmentDTO
-                                                    {
-                                                        Id = obj.Id,
-                                                        ConfigurationId = obj.ConfigurationId,
-                                                        TimeStamp = obj.TimeStamp,
-                                                        Deadline = obj.Deadline,
-                                                        IsCommitted = obj.IsCommitted
-                                                    })
-                                     .ToList();
-
-            var selectedAppointment = _appointments.FirstOrDefault(a => a.IsCommitted == false)
-                                          ?? _appointments.FirstOrDefault();
-
-            if (selectedAppointment != null)
-            {
-                LoadAppointmentData(selectedAppointment);
-            }
-        }
-    }
-
     /// <summary>
     /// Load the user data for the given appointment
     /// </summary>
@@ -573,7 +523,7 @@ public partial class RaidCommitPage
                                                                RegistrationState.NoShow => RaidParticipationStatus.NoShow,
                                                                RegistrationState.LateRegistration => RaidParticipationStatus.LateRegistration,
                                                                RegistrationState.Removed => RaidParticipationStatus.Removed,
-                                                               _ => RaidParticipationStatus.Played,
+                                                               _ => RaidParticipationStatus.Played
                                                            };
 
                                               return new RaidCommitUserDTO
@@ -673,6 +623,56 @@ public partial class RaidCommitPage
                                                     })
                                             .OrderBy(obj => obj.Name)
                                             .ToList();
+            }
+        }
+    }
+
+    #endregion // Methods
+
+    #region ComponentBase
+
+    /// <inheritdoc />
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (_focusSearchInput)
+        {
+            _focusSearchInput = false;
+
+            await _searchInput.FocusAsync()
+                              .ConfigureAwait(false);
+        }
+    }
+
+    /// <inheritdoc />
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        using (var dbFactory = RepositoryFactory.CreateInstance())
+        {
+            var now = DateTime.Now;
+
+            _appointments = dbFactory.GetRepository<RaidAppointmentRepository>()
+                                     .GetQuery()
+                                     .Where(obj => obj.TimeStamp < now)
+                                     .OrderByDescending(obj => obj.TimeStamp)
+                                     .Take(10)
+                                     .Select(obj => new RaidAppointmentDTO
+                                                    {
+                                                        Id = obj.Id,
+                                                        ConfigurationId = obj.ConfigurationId,
+                                                        TimeStamp = obj.TimeStamp,
+                                                        Deadline = obj.Deadline,
+                                                        IsCommitted = obj.IsCommitted
+                                                    })
+                                     .ToList();
+
+            var selectedAppointment = _appointments.FirstOrDefault(a => a.IsCommitted == false)
+                                          ?? _appointments.FirstOrDefault();
+
+            if (selectedAppointment != null)
+            {
+                LoadAppointmentData(selectedAppointment);
             }
         }
     }

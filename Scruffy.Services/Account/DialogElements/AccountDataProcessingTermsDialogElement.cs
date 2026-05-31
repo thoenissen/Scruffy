@@ -30,7 +30,7 @@ public class AccountDataProcessingTermsDialogElement : DialogButtonElementBase<b
 
     #endregion // Constructor
 
-    #region DialogButtonElementBase<bool>
+    #region DialogButtonElementBase
 
     /// <inheritdoc/>
     public override string GetMessage()
@@ -64,5 +64,5 @@ public class AccountDataProcessingTermsDialogElement : DialogButtonElementBase<b
         return false;
     }
 
-    #endregion // DialogButtonElementBase<bool>
+    #endregion // DialogButtonElementBase
 }

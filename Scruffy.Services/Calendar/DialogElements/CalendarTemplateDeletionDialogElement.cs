@@ -34,7 +34,7 @@ public class CalendarTemplateDeletionDialogElement : DialogReactionElementBase<b
 
     #endregion // Constructor
 
-    #region DialogReactionElementBase<bool>
+    #region DialogReactionElementBase
 
     /// <inheritdoc/>
     public override string GetMessage()
@@ -83,5 +83,5 @@ public class CalendarTemplateDeletionDialogElement : DialogReactionElementBase<b
         return false;
     }
 
-    #endregion // DialogReactionElementBase<bool>
+    #endregion // DialogReactionElementBase
 }

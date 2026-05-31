@@ -34,7 +34,7 @@ public class GuildRankDeletionDialogElement : DialogReactionElementBase<bool>
 
     #endregion // Constructor
 
-    #region DialogReactionElementBase<bool>
+    #region DialogReactionElementBase
 
     /// <inheritdoc/>
     public override string GetMessage()
@@ -90,5 +90,5 @@ public class GuildRankDeletionDialogElement : DialogReactionElementBase<bool>
         return false;
     }
 
-    #endregion // DialogReactionElementBase<bool>
+    #endregion // DialogReactionElementBase
 }

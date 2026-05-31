@@ -2,54 +2,54 @@
 
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Scruffy.Data.Entity.Migrations
+namespace Scruffy.Data.Entity.Migrations;
+
+/// <summary>
+/// Update 57
+/// </summary>
+public partial class Update57 : Migration
 {
-    /// <summary>
-    /// Update 57
-    /// </summary>
-    public partial class Update57 : Migration
+    #region Migration
+
+    /// <inheritdoc/>
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        #region Migration
+        migrationBuilder.CreateTable(name: "GuildDonations",
+                                     columns: table => new
+                                                       {
+                                                           GuildId = table.Column<long>(type: "bigint", nullable: false),
+                                                           LogEntryId = table.Column<int>(type: "int", nullable: false),
+                                                           Value = table.Column<long>(type: "bigint", nullable: false),
+                                                           IsThresholdRelevant = table.Column<bool>(type: "bit", nullable: false)
+                                                       },
+                                     constraints: table =>
+                                                  {
+                                                      table.PrimaryKey("PK_GuildDonations",
+                                                                       x => new
+                                                                            {
+                                                                                x.GuildId,
+                                                                                x.LogEntryId
+                                                                            });
+                                                  });
 
-        /// <inheritdoc/>
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.CreateTable(name: "GuildDonations",
-                                         columns: table => new
-                                                           {
-                                                               GuildId = table.Column<long>(type: "bigint", nullable: false),
-                                                               LogEntryId = table.Column<int>(type: "int", nullable: false),
-                                                               Value = table.Column<long>(type: "bigint", nullable: false),
-                                                               IsThresholdRelevant = table.Column<bool>(type: "bit", nullable: false)
-                                                           },
-                                         constraints: table =>
-                                                      {
-                                                          table.PrimaryKey("PK_GuildDonations",
-                                                                           x => new
-                                                                                {
-                                                                                    x.GuildId,
-                                                                                    x.LogEntryId
-                                                                                });
-                                                      });
+        migrationBuilder.CreateTable(name: "GuildWarsCustomRecipeEntries",
+                                     columns: table => new
+                                                       {
+                                                           ItemId = table.Column<int>(type: "int", nullable: false),
+                                                           IngredientItemId = table.Column<int>(type: "int", nullable: false),
+                                                           IngredientCount = table.Column<int>(type: "int", nullable: false)
+                                                       },
+                                     constraints: table =>
+                                                  {
+                                                      table.PrimaryKey("PK_GuildWarsCustomRecipeEntries",
+                                                                       x => new
+                                                                            {
+                                                                                x.ItemId,
+                                                                                x.IngredientItemId
+                                                                            });
+                                                  });
 
-            migrationBuilder.CreateTable(name: "GuildWarsCustomRecipeEntries",
-                                         columns: table => new
-                                                           {
-                                                               ItemId = table.Column<int>(type: "int", nullable: false),
-                                                               IngredientItemId = table.Column<int>(type: "int", nullable: false),
-                                                               IngredientCount = table.Column<int>(type: "int", nullable: false)
-                                                           },
-                                         constraints: table =>
-                                                      {
-                                                          table.PrimaryKey("PK_GuildWarsCustomRecipeEntries",
-                                                                           x => new
-                                                                                {
-                                                                                    x.ItemId,
-                                                                                    x.IngredientItemId
-                                                                                });
-                                                      });
-
-            migrationBuilder.Sql(@"CREATE FUNCTION [dbo].[ScruffyGetWeeklyEventPoints] (
+        migrationBuilder.Sql(@"CREATE FUNCTION [dbo].[ScruffyGetWeeklyEventPoints] (
                                        @from DATETIME2(7),
                                        @to   DATETIME2(7)
                                    )
@@ -69,7 +69,7 @@ namespace Scruffy.Data.Entity.Migrations
                                                           AND [Template].[IsRaisingGuildPointCap] = 1 ) AS [Raw]
                                             GROUP BY [Week]");
 
-            migrationBuilder.Sql(@"CREATE FUNCTION [dbo].[ScruffyGetWeeklyDonationReferences] (
+        migrationBuilder.Sql(@"CREATE FUNCTION [dbo].[ScruffyGetWeeklyDonationReferences] (
                                        @guildId INT,
                                        @from    DATETIME2(7),
                                        @to      DATETIME2(7)
@@ -102,7 +102,7 @@ namespace Scruffy.Data.Entity.Migrations
                                                           AND [Donation].[Value] > 0 ) AS [Raw]
                                             GROUP BY [Week]");
 
-            migrationBuilder.Sql(@"CREATE  FUNCTION [dbo].[ScruffyGetWeeklyCommits] (
+        migrationBuilder.Sql(@"CREATE  FUNCTION [dbo].[ScruffyGetWeeklyCommits] (
                                        @guildId INT,
                                        @from    DATETIME2(7),
                                        @to      DATETIME2(7)
@@ -123,15 +123,14 @@ namespace Scruffy.Data.Entity.Migrations
                                                         WHERE [Commit].[TimeStamp] > @from
                                                           AND [Commit].[TimeStamp] < @to ) AS [Raw]
                                             GROUP BY [Week]");
-        }
-
-        /// <inheritdoc/>
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropTable(name: "GuildDonations");
-            migrationBuilder.DropTable(name: "GuildWarsCustomRecipeEntries");
-        }
-
-        #endregion // Migration
     }
+
+    /// <inheritdoc/>
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.DropTable(name: "GuildDonations");
+        migrationBuilder.DropTable(name: "GuildWarsCustomRecipeEntries");
+    }
+
+    #endregion // Migration
 }

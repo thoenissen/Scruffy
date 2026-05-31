@@ -37,7 +37,7 @@ public class WeeklyReminderDeletionJob : LocatedAsyncJob
 
     #endregion // Constructor
 
-    #region AsyncJob
+    #region LocatedAsyncJob
 
     /// <inheritdoc/>
     public override async Task ExecuteOverrideAsync()
@@ -79,5 +79,5 @@ public class WeeklyReminderDeletionJob : LocatedAsyncJob
         }
     }
 
-    #endregion // AsyncJob
+    #endregion // LocatedAsyncJob
 }

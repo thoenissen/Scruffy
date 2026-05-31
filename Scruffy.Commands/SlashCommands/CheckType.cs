@@ -23,5 +23,5 @@ public enum CheckType
     /// Unknown users
     /// </summary>
     [ChoiceDisplay("Unknown users")]
-    UnknownUsers,
+    UnknownUsers
 }

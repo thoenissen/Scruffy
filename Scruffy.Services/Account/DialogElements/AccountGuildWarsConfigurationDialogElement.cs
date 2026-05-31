@@ -55,7 +55,7 @@ public class AccountGuildWarsConfigurationDialogElement : DialogEmbedSelectMenuE
 
     #endregion // Constructor
 
-    #region DialogEmbedSelectMenuElementBase<bool>
+    #region DialogEmbedSelectMenuElementBase
 
     /// <inheritdoc/>
     public override Task<EmbedBuilder> GetMessage()
@@ -146,5 +146,5 @@ public class AccountGuildWarsConfigurationDialogElement : DialogEmbedSelectMenuE
         return false;
     }
 
-    #endregion // DialogEmbedSelectMenuElementBase<bool>
+    #endregion // DialogEmbedSelectMenuElementBase
 }

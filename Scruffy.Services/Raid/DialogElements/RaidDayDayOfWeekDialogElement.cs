@@ -32,7 +32,7 @@ public class RaidDayDayOfWeekDialogElement : DialogEmbedReactionElementBase<DayO
 
     #endregion // Constructor
 
-    #region DialogReactionElementBase<bool>
+    #region DialogEmbedReactionElementBase
 
     /// <inheritdoc/>
     public override Task EditMessage(EmbedBuilder builder)
@@ -94,7 +94,7 @@ public class RaidDayDayOfWeekDialogElement : DialogEmbedReactionElementBase<DayO
                                       Emote = Emoji.Parse(":seven:"),
                                       CommandText = $"{Emoji.Parse(":seven:")} {LocalizationGroup.CultureInfo.DateTimeFormat.GetDayName(DayOfWeek.Sunday)}",
                                       Func = () => Task.FromResult(DayOfWeek.Sunday)
-                                  },
+                                  }
                               ];
     }
 
@@ -104,5 +104,5 @@ public class RaidDayDayOfWeekDialogElement : DialogEmbedReactionElementBase<DayO
         throw new InvalidOperationException();
     }
 
-    #endregion // DialogReactionElementBase<bool>
+    #endregion // DialogEmbedReactionElementBase
 }

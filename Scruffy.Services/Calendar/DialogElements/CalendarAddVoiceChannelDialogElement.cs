@@ -32,7 +32,39 @@ public class CalendarAddVoiceChannelDialogElement : DialogEmbedSelectMenuElement
 
     #endregion // Constructor
 
-    #region DialogEmbedMessageElementBase
+    #region Methods
+
+    /// <summary>
+    /// Get users of channel
+    /// </summary>
+    /// <param name="channelId">Channel ID</param>
+    /// <returns>Result</returns>
+    public async Task<List<IGuildUser>> GetUsers(ulong channelId)
+    {
+        var members = new List<IGuildUser>();
+
+        if (await CommandContext.Guild
+                                .GetChannelAsync(channelId)
+                                .ConfigureAwait(false)
+            is IVoiceChannel voiceChannel)
+        {
+            foreach (var user in await voiceChannel.GetUsersAsync()
+                                                   .FlattenAsync()
+                                                   .ConfigureAwait(false))
+            {
+                if (user.VoiceChannel?.Id == voiceChannel.Id)
+                {
+                    members.Add(user);
+                }
+            }
+        }
+
+        return members;
+    }
+
+    #endregion // Methods
+
+    #region DialogEmbedSelectMenuElementBase
 
     /// <inheritdoc/>
     public override Task<EmbedBuilder> GetMessage()
@@ -85,33 +117,5 @@ public class CalendarAddVoiceChannelDialogElement : DialogEmbedSelectMenuElement
         return _channels;
     }
 
-    /// <summary>
-    /// Get users of channel
-    /// </summary>
-    /// <param name="channelId">Channel ID</param>
-    /// <returns>Result</returns>
-    public async Task<List<IGuildUser>> GetUsers(ulong channelId)
-    {
-        var members = new List<IGuildUser>();
-
-        if (await CommandContext.Guild
-                                .GetChannelAsync(channelId)
-                                .ConfigureAwait(false)
-            is IVoiceChannel voiceChannel)
-        {
-            foreach (var user in await voiceChannel.GetUsersAsync()
-                                                   .FlattenAsync()
-                                                   .ConfigureAwait(false))
-            {
-                if (user.VoiceChannel?.Id == voiceChannel.Id)
-                {
-                    members.Add(user);
-                }
-            }
-        }
-
-        return members;
-    }
-
-    #endregion // DialogEmbedMessageElementBase
+    #endregion // DialogEmbedSelectMenuElementBase
 }

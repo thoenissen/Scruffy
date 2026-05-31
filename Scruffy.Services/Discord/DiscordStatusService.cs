@@ -91,7 +91,7 @@ public sealed class DiscordStatusService : SingletonLocatedServiceBase, IDisposa
                                         "Shaun the Quaggan",
                                         "Avengers Quaggangame",
                                         "Star Quaggan - The Revenge of the Fish",
-                                        "The last Quagganhunter",
+                                        "The last Quagganhunter"
                                     ]);
     }
 

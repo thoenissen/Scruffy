@@ -34,7 +34,7 @@ public class AccountSelectionDialogElement : DialogEmbedMessageElementBase<strin
 
     #endregion // Constructor
 
-    #region DialogEmbedMessageElementBase<string>
+    #region DialogEmbedMessageElementBase
 
     /// <inheritdoc/>
     public override EmbedBuilder GetMessage()
@@ -84,5 +84,5 @@ public class AccountSelectionDialogElement : DialogEmbedMessageElementBase<strin
                                    : throw new InvalidOperationException());
     }
 
-    #endregion // DialogEmbedMessageElementBase<string>
+    #endregion // DialogEmbedMessageElementBase
 }

@@ -46,7 +46,7 @@ public static class DpsReportGroupExtensions
                    or DpsReportGroupLegacy.TheKeyOfAhdashim
                    or DpsReportGroupLegacy.MountBalrior => DpsReportType.Raid,
 
-                   _ => DpsReportType.Other,
+                   _ => DpsReportType.Other
                };
     }
 

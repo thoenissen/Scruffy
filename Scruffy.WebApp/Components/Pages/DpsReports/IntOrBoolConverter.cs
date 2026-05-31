@@ -12,7 +12,7 @@ namespace Scruffy.WebApp.Components.Pages.DpsReports;
 /// <remarks>The data of <see cref="DPSReportGetUploadsObject"/> somites uses a <see langword="bool"/> for <see cref="DPSReportGetUploadsObject.FoundUploads"/></remarks>
 public class IntOrBoolConverter : JsonConverter<int?>
 {
-    #region JsonConverter<int?>
+    #region JsonConverter
 
     /// <inheritdoc />
     public override void WriteJson(JsonWriter writer, int? value, JsonSerializer serializer)
@@ -32,5 +32,5 @@ public class IntOrBoolConverter : JsonConverter<int?>
                };
     }
 
-    #endregion // JsonConverter<int?>
+    #endregion // JsonConverter
 }

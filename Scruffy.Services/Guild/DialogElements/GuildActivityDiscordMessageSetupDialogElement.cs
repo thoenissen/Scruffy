@@ -83,7 +83,7 @@ public class GuildActivityDiscordMessageSetupDialogElement : DialogEmbedReaction
 
     #endregion // Methods
 
-    #region DialogEmbedReactionElementBase<bool>
+    #region DialogEmbedReactionElementBase
 
     /// <inheritdoc/>
     protected override string GetCommandTitle()
@@ -259,5 +259,5 @@ public class GuildActivityDiscordMessageSetupDialogElement : DialogEmbedReaction
         return false;
     }
 
-    #endregion // DialogEmbedReactionElementBase<bool>
+    #endregion // DialogEmbedReactionElementBase
 }

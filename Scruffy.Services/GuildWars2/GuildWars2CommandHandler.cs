@@ -70,7 +70,7 @@ public class GuildWars2CommandHandler : LocatedServiceBase
                                                                       103918,
 
                                                                       // Lesser Essence of Gold
-                                                                      100233,
+                                                                      100233
                                                                   ];
 
     /// <summary>

@@ -160,7 +160,7 @@ public class DpsReportExpansionEntryBuilder
                                                                        new DpsReportEncounterEntryBuilder().WithEncounterId(DpsReportEncounter.WhisperingDepths)
                                                                                                            .WithName("Whispering Depths")
                                                                                                            .AddBoss(new DpsReportBossBuilder().WithBossIds(SpeciesIDs.TargetID.WhisperOfJormag).WithName("Whisper of Jormag").Build())
-                                                                                                           .Build(),
+                                                                                                           .Build()
                                                                    ])
                                                    .Build();
     }

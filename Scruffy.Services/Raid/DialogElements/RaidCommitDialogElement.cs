@@ -68,7 +68,7 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
 
     #endregion // Constructor
 
-    #region DialogEmbedReactionElementBase<bool>
+    #region DialogEmbedReactionElementBase
 
     /// <inheritdoc/>
     public override async Task EditMessage(EmbedBuilder builder)
@@ -334,7 +334,7 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
                                       Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
                                       CommandText = LocalizationGroup.GetFormattedText("CancelCommand", "{0} Cancel", DiscordEmoteService.GetCrossEmote(CommandContext.Client)),
                                       Func = () => Task.FromResult(false)
-                                  },
+                                  }
                               ];
     }
 
@@ -350,5 +350,5 @@ public class RaidCommitDialogElement : DialogEmbedReactionElementBase<bool>
         return false;
     }
 
-    #endregion // DialogEmbedReactionElementBase<bool>
+    #endregion // DialogEmbedReactionElementBase
 }

@@ -185,7 +185,7 @@ public class GuildRankService : LocatedServiceBase
                                                            (obj1, obj2) => new
                                                                            {
                                                                                obj2.UserId,
-                                                                               obj2.Name,
+                                                                               obj2.Name
                                                                            })
                                                      .Join(guildMemberQuery.Where(obj => guildMemberQuery.Any(obj2 => obj2.GuildId == obj.GuildId
                                                                                                                       && obj2.Date > obj.Date) == false),
@@ -299,7 +299,7 @@ public class GuildRankService : LocatedServiceBase
                                                   (obj1, obj2) => new
                                                                   {
                                                                       obj1.Rank,
-                                                                      obj2.UserId,
+                                                                      obj2.UserId
                                                                   })
                                             .Join(guildRankQuery.Where(obj => obj.GuildId == guild.Id),
                                                   obj => obj.Rank,

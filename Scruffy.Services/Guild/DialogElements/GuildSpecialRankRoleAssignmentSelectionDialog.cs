@@ -34,7 +34,7 @@ public class GuildSpecialRankRoleAssignmentSelectionDialog : DialogEmbedMessageE
 
     #endregion // Constructor
 
-    #region DialogEmbedMessageElementBase<long>
+    #region DialogEmbedMessageElementBase
 
     /// <inheritdoc/>
     public override EmbedBuilder GetMessage()
@@ -89,5 +89,5 @@ public class GuildSpecialRankRoleAssignmentSelectionDialog : DialogEmbedMessageE
         return Task.FromResult(int.TryParse(message.Content, out var index) && _ranks.TryGetValue(index, out var selected) ? selected : throw new InvalidOperationException());
     }
 
-    #endregion // DialogEmbedMessageElementBase<long>
+    #endregion // DialogEmbedMessageElementBase
 }

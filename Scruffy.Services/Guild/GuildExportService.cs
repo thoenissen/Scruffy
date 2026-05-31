@@ -158,7 +158,7 @@ public class GuildExportService : LocatedServiceBase
                                                             {
                                                                 obj.User,
                                                                 obj.ItemId,
-                                                                obj.Operation,
+                                                                obj.Operation
                                                             })
                                             .Select(obj => new
                                                            {

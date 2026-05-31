@@ -34,7 +34,7 @@ public class CalendarAppointmentSelectionDialogElement : DialogEmbedSelectMenuEl
 
     #endregion // Constructor
 
-    #region DialogEmbedMessageElementBase<long>
+    #region DialogEmbedSelectMenuElementBase
 
     /// <inheritdoc/>
     public override Task<EmbedBuilder> GetMessage()
@@ -85,5 +85,5 @@ public class CalendarAppointmentSelectionDialogElement : DialogEmbedSelectMenuEl
         return _appointments;
     }
 
-    #endregion // DialogEmbedMessageElementBase<long>
+    #endregion // DialogEmbedSelectMenuElementBase
 }

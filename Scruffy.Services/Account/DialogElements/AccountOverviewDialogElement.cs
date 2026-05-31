@@ -40,7 +40,7 @@ public class AccountOverviewDialogElement : DialogEmbedSelectMenuElementBase<boo
 
     #endregion // Constructor
 
-    #region DialogEmbedSelectMenuElementBase<bool>
+    #region DialogEmbedSelectMenuElementBase
 
     /// <inheritdoc/>
     public override Task<EmbedBuilder> GetMessage()
@@ -222,7 +222,7 @@ public class AccountOverviewDialogElement : DialogEmbedSelectMenuElementBase<boo
 
                                return isDataStorageAccepted;
                            }
-            },
+            }
         ];
     }
 
@@ -232,5 +232,5 @@ public class AccountOverviewDialogElement : DialogEmbedSelectMenuElementBase<boo
         return false;
     }
 
-    #endregion // DialogEmbedSelectMenuElementBase<bool>
+    #endregion // DialogEmbedSelectMenuElementBase
 }

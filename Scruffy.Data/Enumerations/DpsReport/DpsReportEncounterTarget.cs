@@ -303,5 +303,5 @@ public enum DpsReportEncounterTarget
     /// <summary>
     /// Kela
     /// </summary>
-    Kela,
+    Kela
 }

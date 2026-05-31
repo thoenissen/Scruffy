@@ -25,7 +25,7 @@ public class CalendarTemplateGuildPointsPointsDialogElement : DialogMessageEleme
 
     #endregion // Constructor
 
-    #region DialogMessageElementBase<string>
+    #region DialogMessageElementBase
 
     /// <inheritdoc/>
     public override string GetMessage()
@@ -40,5 +40,5 @@ public class CalendarTemplateGuildPointsPointsDialogElement : DialogMessageEleme
         return double.TryParse(message.Content, NumberStyles.Any, LocalizationGroup.CultureInfo, out var value) ? value : 0;
     }
 
-    #endregion // DialogMessageElementBase<string>
+    #endregion // DialogMessageElementBase
 }

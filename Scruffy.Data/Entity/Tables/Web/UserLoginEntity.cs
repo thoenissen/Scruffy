@@ -8,6 +8,4 @@ namespace Scruffy.Data.Entity.Tables.Web;
 /// User logins
 /// </summary>
 [Table("UserLogins")]
-public class UserLoginEntity : IdentityUserLogin<long>
-{
-}
+public class UserLoginEntity : IdentityUserLogin<long>;

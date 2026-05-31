@@ -25,7 +25,7 @@ public class RaidDayRegistrationDeadlineDialogElement : DialogMessageElementBase
 
     #endregion // Constructor
 
-    #region DialogMessageElementBase<string>
+    #region DialogMessageElementBase
 
     /// <inheritdoc/>
     public override string GetMessage()
@@ -41,5 +41,5 @@ public class RaidDayRegistrationDeadlineDialogElement : DialogMessageElementBase
                    : throw new InvalidOperationException();
     }
 
-    #endregion // DialogMessageElementBase<string>
+    #endregion // DialogMessageElementBase
 }

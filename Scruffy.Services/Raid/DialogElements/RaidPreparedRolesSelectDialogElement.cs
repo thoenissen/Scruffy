@@ -51,7 +51,7 @@ public class RaidPreparedRolesSelectDialogElement : DialogEmbedMultiSelectSelect
 
     #endregion // Constructor
 
-    #region DialogEmbedMultiSelectSelectMenuElementBase<long>
+    #region DialogEmbedMultiSelectSelectMenuElementBase
 
     /// <inheritdoc/>
     protected override int MinValues => 1;
@@ -132,7 +132,7 @@ public class RaidPreparedRolesSelectDialogElement : DialogEmbedMultiSelectSelect
                                      Label = _raidRoleService.GetDescriptionAsText(role),
                                      Emote = DiscordEmoteService.GetGuildEmote(CommandContext.Client, role.DiscordEmojiId),
                                      Value = role.Id.ToString(),
-                                     IsDefault = userRoles.Contains(role.Id),
+                                     IsDefault = userRoles.Contains(role.Id)
                                  });
                 }
             }
@@ -141,5 +141,5 @@ public class RaidPreparedRolesSelectDialogElement : DialogEmbedMultiSelectSelect
         return _entries;
     }
 
-    #endregion // DialogEmbedMultiSelectSelectMenuElementBase<long>
+    #endregion // DialogEmbedMultiSelectSelectMenuElementBase
 }

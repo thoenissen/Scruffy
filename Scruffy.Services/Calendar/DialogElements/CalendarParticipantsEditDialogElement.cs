@@ -52,7 +52,7 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedSelectMenuElemen
 
     #endregion // Constructor
 
-    #region DialogEmbedReactionElementBase<bool>
+    #region DialogEmbedSelectMenuElementBase
 
     /// <inheritdoc/>
     public override async Task<EmbedBuilder> GetMessage()
@@ -336,9 +336,8 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedSelectMenuElemen
                                     CommandText = LocalizationGroup.GetText("CancelCommand", "Cancel"),
                                     Response = () => Task.FromResult(false)
                                 }
-
                             ];
     }
 
-    #endregion // DialogEmbedReactionElementBase<bool>
+    #endregion // DialogEmbedSelectMenuElementBase
 }

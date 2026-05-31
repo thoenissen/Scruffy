@@ -30,7 +30,7 @@ public class GuildConfigurationItemCustomValueThresholdDialogElement : DialogBut
 
     #endregion // Constructor
 
-    #region DialogReactionElementBase<bool>
+    #region DialogButtonElementBase
 
     /// <inheritdoc/>
     public override string GetMessage()
@@ -53,7 +53,7 @@ public class GuildConfigurationItemCustomValueThresholdDialogElement : DialogBut
                                     CommandText = LocalizationGroup.GetText("No", "No"),
                                     Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
                                     Func = () => Task.FromResult(false)
-                                },
+                                }
                             ];
     }
 
@@ -63,5 +63,5 @@ public class GuildConfigurationItemCustomValueThresholdDialogElement : DialogBut
         return false;
     }
 
-    #endregion // DialogReactionElementBase<bool>
+    #endregion // DialogButtonElementBase
 }

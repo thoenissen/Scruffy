@@ -55,6 +55,10 @@ public abstract class DialogSelectMenuElementBase<TData> : DialogElementBase<TDa
     /// <returns>Result</returns>
     protected abstract TData DefaultFunc();
 
+    #endregion // Methods
+
+    #region DialogElementBase
+
     /// <inheritdoc/>
     public override async Task<TData> Run()
     {
@@ -155,5 +159,5 @@ public abstract class DialogSelectMenuElementBase<TData> : DialogElementBase<TDa
         }
     }
 
-    #endregion // Methods
+    #endregion // DialogElementBase
 }

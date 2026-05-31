@@ -25,7 +25,7 @@ public class ServerConfigurationDialogElement : DialogEmbedSelectMenuElementBase
 
     #endregion // Constructor
 
-    #region DialogSelectMenuElementBase<bool>
+    #region DialogEmbedSelectMenuElementBase
 
     /// <inheritdoc/>
     public override Task<EmbedBuilder> GetMessage()
@@ -120,5 +120,5 @@ public class ServerConfigurationDialogElement : DialogEmbedSelectMenuElementBase
         return false;
     }
 
-    #endregion // DialogSelectMenuElementBase<bool>
+    #endregion // DialogEmbedSelectMenuElementBase
 }

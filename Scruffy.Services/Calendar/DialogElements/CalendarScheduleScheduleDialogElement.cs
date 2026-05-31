@@ -37,7 +37,7 @@ public class CalendarScheduleScheduleDialogElement : DialogEmbedMessageElementBa
 
     #endregion // Constructor
 
-    #region DialogEmbedMessageElementBase<long>
+    #region DialogEmbedMessageElementBase
 
     /// <inheritdoc/>
     public override EmbedBuilder GetMessage()
@@ -124,5 +124,5 @@ public class CalendarScheduleScheduleDialogElement : DialogEmbedMessageElementBa
         return data;
     }
 
-    #endregion // DialogEmbedMessageElementBase<long>
+    #endregion // DialogEmbedMessageElementBase
 }

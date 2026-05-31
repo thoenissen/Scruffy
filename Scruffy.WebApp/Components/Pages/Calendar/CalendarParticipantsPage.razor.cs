@@ -453,6 +453,10 @@ public partial class CalendarParticipantsPage
         return Task.CompletedTask;
     }
 
+    #endregion // Methods
+
+    #region ComponentBase
+
     /// <inheritdoc />
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -464,10 +468,6 @@ public partial class CalendarParticipantsPage
                               .ConfigureAwait(false);
         }
     }
-
-    #endregion // Methods
-
-    #region ComponentBase
 
     /// <inheritdoc />
     protected override void OnInitialized()

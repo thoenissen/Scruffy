@@ -30,7 +30,7 @@ public class AccountGuildStatisticsTermsDialogElement : DialogButtonElementBase<
 
     #endregion // Constructor
 
-    #region DialogButtonElementBase<bool>
+    #region DialogButtonElementBase
 
     /// <inheritdoc/>
     public override string GetMessage()
@@ -64,5 +64,5 @@ public class AccountGuildStatisticsTermsDialogElement : DialogButtonElementBase<
         return false;
     }
 
-    #endregion // DialogButtonElementBase<bool>
+    #endregion // DialogButtonElementBase
 }

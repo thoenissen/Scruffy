@@ -251,7 +251,7 @@ public class CalendarScheduleService : LocatedServiceBase
                                                                                                                                      obj3.DiscordEventId,
                                                                                                                                      obj2.Description,
                                                                                                                                      obj2.DiscordVoiceChannel,
-                                                                                                                                     obj2.DiscordEventDescription,
+                                                                                                                                     obj2.DiscordEventDescription
                                                                                                                                  }))
                                                                                          .Where(obj3 => obj3.DiscordEventId == null)
                                                                                          .OrderBy(obj2 => obj2.TimeStamp)

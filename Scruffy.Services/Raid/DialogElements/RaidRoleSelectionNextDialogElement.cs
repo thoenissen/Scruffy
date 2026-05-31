@@ -37,7 +37,7 @@ public class RaidRoleSelectionNextDialogElement : DialogButtonElementBase<bool>
 
     #endregion // Constructor
 
-    #region DialogReactionElementBase<bool>
+    #region DialogButtonElementBase
 
     /// <inheritdoc/>
     public override string GetMessage()
@@ -62,7 +62,7 @@ public class RaidRoleSelectionNextDialogElement : DialogButtonElementBase<bool>
                                     CommandText = LocalizationGroup.GetText("No", "No"),
                                     Emote = DiscordEmoteService.GetCrossEmote(CommandContext.Client),
                                     Func = () => Task.FromResult(false)
-                                },
+                                }
                             ];
     }
 
@@ -72,5 +72,5 @@ public class RaidRoleSelectionNextDialogElement : DialogButtonElementBase<bool>
         return false;
     }
 
-    #endregion // DialogReactionElementBase<bool>
+    #endregion // DialogButtonElementBase
 }

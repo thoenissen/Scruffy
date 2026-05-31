@@ -48,7 +48,7 @@ public class GuildSlashCommandHandler : SlashCommandModuleBase
     /// <param name="type">Type</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("bank-unlocks", "Check if items of the given type are unlocked")]
-    public async Task BankUnlocks([Summary("Type", "Item type to be checked")]GuildBankUnlocks type)
+    public async Task BankUnlocks([Summary("Type", "Item type to be checked")] GuildBankUnlocks type)
     {
         switch (type)
         {
@@ -96,7 +96,7 @@ public class GuildSlashCommandHandler : SlashCommandModuleBase
     /// <param name="compareUser">Compare user</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("ranking-compare", "Personal guild ranking compare")]
-    public async Task PostPersonalCompareOverview([Summary("User", "Compare your points with the given user")]IGuildUser compareUser)
+    public async Task PostPersonalCompareOverview([Summary("User", "Compare your points with the given user")] IGuildUser compareUser)
     {
         await CommandHandler.PostPersonalCompareOverview(Context, Context.Member, compareUser)
                             .ConfigureAwait(false);

@@ -8,6 +8,4 @@ namespace Scruffy.Data.Entity.Tables.Web;
 /// Role claims
 /// </summary>
 [Table("RoleClaims")]
-public class RoleClaimEntity : IdentityRoleClaim<long>
-{
-}
+public class RoleClaimEntity : IdentityRoleClaim<long>;

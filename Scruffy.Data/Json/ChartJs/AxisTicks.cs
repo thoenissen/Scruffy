@@ -1,17 +1,16 @@
-﻿namespace Scruffy.Data.Json.ChartJs
+﻿namespace Scruffy.Data.Json.ChartJs;
+
+/// <summary>
+/// Represents the configuration for the grid lines in a chart
+/// </summary>
+public class AxisTicks
 {
+    #region Properties
+
     /// <summary>
-    /// Represents the configuration for the grid lines in a chart
+    /// Color of the grid lines
     /// </summary>
-    public class AxisTicks
-    {
-        #region Properties
+    public string Color { get; set; }
 
-        /// <summary>
-        /// Color of the grid lines
-        /// </summary>
-        public string Color { get; set; }
-
-        #endregion // Properties
-    }
+    #endregion // Properties
 }

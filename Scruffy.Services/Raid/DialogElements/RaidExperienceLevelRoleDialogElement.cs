@@ -32,7 +32,7 @@ public class RaidExperienceLevelRoleDialogElement : DialogEmbedMessageElementBas
 
     #endregion // Constructor
 
-    #region DialogEmbedMessageElementBase<long>
+    #region DialogEmbedMessageElementBase
 
     /// <inheritdoc/>
     public override EmbedBuilder GetMessage()
@@ -80,5 +80,5 @@ public class RaidExperienceLevelRoleDialogElement : DialogEmbedMessageElementBas
         return Task.FromResult(int.TryParse(message.Content, out var index) && _levels.TryGetValue(index, out var selectedRoleId) ? selectedRoleId : null);
     }
 
-    #endregion // DialogEmbedMessageElementBase<long>
+    #endregion // DialogEmbedMessageElementBase
 }

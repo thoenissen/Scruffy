@@ -73,7 +73,7 @@ public class GuildSpecialRankSetupDialogElement : DialogEmbedReactionElementBase
 
     #endregion // Methods
 
-    #region DialogReactionElementBase<bool>
+    #region DialogEmbedReactionElementBase
 
     /// <inheritdoc/>
     public override Task EditMessage(EmbedBuilder builder)
@@ -217,5 +217,5 @@ public class GuildSpecialRankSetupDialogElement : DialogEmbedReactionElementBase
         return false;
     }
 
-    #endregion // DialogReactionElementBase<bool>
+    #endregion // DialogEmbedReactionElementBase
 }

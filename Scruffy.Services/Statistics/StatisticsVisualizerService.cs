@@ -246,9 +246,9 @@ public class StatisticsVisualizerService : LocatedServiceBase
                                                                                                       {
                                                                                                           Color = "white",
                                                                                                           Text = LocalizationGroup.GetText("MeOverviewMessages", "messages")
-                                                                                                      },
+                                                                                                      }
                                                                                                   ]
-                                                                                     },
+                                                                                     }
                                                                  },
                                                        Title = new TitleConfiguration
                                                                {

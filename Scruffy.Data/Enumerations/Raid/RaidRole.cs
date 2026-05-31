@@ -44,5 +44,5 @@ public enum RaidRole
     /// <summary>
     /// Quickness - Tank - Healer
     /// </summary>
-    QuicknessTankHealer = 1 << 6,
+    QuicknessTankHealer = 1 << 6
 }

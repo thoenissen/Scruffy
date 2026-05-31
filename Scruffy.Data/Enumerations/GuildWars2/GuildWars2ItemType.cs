@@ -88,5 +88,5 @@ public enum GuildWars2ItemType
     /// <summary>
     /// Unknown type
     /// </summary>
-    Unknown = int.MaxValue,
+    Unknown = int.MaxValue
 }

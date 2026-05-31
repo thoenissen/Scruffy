@@ -25,7 +25,7 @@ public class GuildActivityDiscordMessagePointsDialogElement : DialogMessageEleme
 
     #endregion // Constructor
 
-    #region DialogMessageElementBase<string>
+    #region DialogMessageElementBase
 
     /// <inheritdoc/>
     public override string GetMessage()
@@ -39,5 +39,5 @@ public class GuildActivityDiscordMessagePointsDialogElement : DialogMessageEleme
         return double.Parse(message.Content, NumberStyles.Any, LocalizationGroup.CultureInfo);
     }
 
-    #endregion // DialogMessageElementBase<string>
+    #endregion // DialogMessageElementBase
 }

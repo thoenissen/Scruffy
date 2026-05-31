@@ -79,4 +79,8 @@
   <Rules AnalyzerId="Microsoft.CodeQuality.Analyzers" RuleNamespace="Microsoft.CodeQuality.Analyzers">
     <Rule Id="CA1710" Action="None" />
   </Rules>
+  <Rules AnalyzerId="Reihitsu.Analyzer" RuleNamespace="Reihitsu.Analyzer">
+    <Rule Id="RH2001" Action="None" />
+    <Rule Id="RH4001" Action="None" />
+  </Rules>
 </RuleSet>

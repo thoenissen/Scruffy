@@ -34,7 +34,7 @@ public class RaidTemplateDeletionElementBase : DialogReactionElementBase<bool>
 
     #endregion // Constructor
 
-    #region DialogReactionElementBase<bool>
+    #region DialogReactionElementBase
 
     /// <inheritdoc/>
     public override string GetMessage()
@@ -76,5 +76,5 @@ public class RaidTemplateDeletionElementBase : DialogReactionElementBase<bool>
         return false;
     }
 
-    #endregion // DialogReactionElementBase<bool>
+    #endregion // DialogReactionElementBase
 }

@@ -32,7 +32,7 @@ public class CalendarTemplateUriDialogElement : DialogReactionElementBase<string
 
     #endregion // Constructor
 
-    #region DialogReactionElementBase<bool>
+    #region DialogReactionElementBase
 
     /// <inheritdoc/>
     public override string GetMessage()
@@ -63,5 +63,5 @@ public class CalendarTemplateUriDialogElement : DialogReactionElementBase<string
         return null;
     }
 
-    #endregion // DialogReactionElementBase<bool>
+    #endregion // DialogReactionElementBase
 }

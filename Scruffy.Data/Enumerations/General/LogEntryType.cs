@@ -38,5 +38,5 @@ public enum LogEntryType
     /// <summary>
     /// Interaction service
     /// </summary>
-    InteractionService = 6000,
+    InteractionService = 6000
 }

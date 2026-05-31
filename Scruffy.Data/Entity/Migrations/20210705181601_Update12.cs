@@ -2,78 +2,77 @@
 
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Scruffy.Data.Entity.Migrations
+namespace Scruffy.Data.Entity.Migrations;
+
+/// <summary>
+/// Update 12
+/// </summary>
+public partial class Update12 : Migration
 {
-    /// <summary>
-    /// Update 12
-    /// </summary>
-    public partial class Update12 : Migration
+    #region Migration
+
+    /// <inheritdoc/>
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        #region Migration
+        migrationBuilder.CreateTable("CalendarAppointmentTemplates",
+                                     table => new
+                                              {
+                                                  Id = table.Column<long>("bigint", nullable: false)
+                                                            .Annotation("SqlServer:Identity", "1, 1"),
+                                                  Description = table.Column<string>("nvarchar(max)", nullable: true),
+                                                  ReminderMessage = table.Column<string>("nvarchar(max)", nullable: true)
+                                              },
+                                     constraints: table => table.PrimaryKey("PK_CalendarAppointmentTemplates", x => x.Id));
 
-        /// <inheritdoc/>
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.CreateTable("CalendarAppointmentTemplates",
-                                         table => new
+        migrationBuilder.CreateTable("CalendarAppointments",
+                                     table => new
+                                              {
+                                                  Id = table.Column<long>("bigint", nullable: false)
+                                                            .Annotation("SqlServer:Identity", "1, 1"),
+                                                  TimeStamp = table.Column<DateTime>("datetime2", nullable: false),
+                                                  CalendarAppointmentTemplateId = table.Column<long>("bigint", nullable: false)
+                                              },
+                                     constraints: table =>
                                                   {
-                                                      Id = table.Column<long>("bigint", nullable: false)
-                                                                .Annotation("SqlServer:Identity", "1, 1"),
-                                                      Description = table.Column<string>("nvarchar(max)", nullable: true),
-                                                      ReminderMessage = table.Column<string>("nvarchar(max)", nullable: true)
-                                                  },
-                                         constraints: table => table.PrimaryKey("PK_CalendarAppointmentTemplates", x => x.Id));
+                                                      table.PrimaryKey("PK_CalendarAppointments", x => x.Id);
 
-            migrationBuilder.CreateTable("CalendarAppointments",
-                                         table => new
+                                                      table.ForeignKey("FK_CalendarAppointments_CalendarAppointmentTemplates_CalendarAppointmentTemplateId",
+                                                                       x => x.CalendarAppointmentTemplateId,
+                                                                       "CalendarAppointmentTemplates",
+                                                                       "Id",
+                                                                       onDelete: ReferentialAction.Restrict);
+                                                  });
+
+        migrationBuilder.CreateTable("CalendarAppointmentSchedules",
+                                     table => new
+                                              {
+                                                  Id = table.Column<long>("bigint", nullable: false)
+                                                            .Annotation("SqlServer:Identity", "1, 1"),
+                                                  CalendarAppointmentTemplateId = table.Column<long>("bigint", nullable: false),
+                                                  Type = table.Column<int>("int", nullable: false),
+                                                  AdditionalData = table.Column<string>("nvarchar(max)", nullable: true)
+                                              },
+                                     constraints: table =>
                                                   {
-                                                      Id = table.Column<long>("bigint", nullable: false)
-                                                                .Annotation("SqlServer:Identity", "1, 1"),
-                                                      TimeStamp = table.Column<DateTime>("datetime2", nullable: false),
-                                                      CalendarAppointmentTemplateId = table.Column<long>("bigint", nullable: false)
-                                                  },
-                                         constraints: table =>
-                                                      {
-                                                          table.PrimaryKey("PK_CalendarAppointments", x => x.Id);
+                                                      table.PrimaryKey("PK_CalendarAppointmentSchedules", x => x.Id);
 
-                                                          table.ForeignKey("FK_CalendarAppointments_CalendarAppointmentTemplates_CalendarAppointmentTemplateId",
-                                                                           x => x.CalendarAppointmentTemplateId,
-                                                                           "CalendarAppointmentTemplates",
-                                                                           "Id",
-                                                                           onDelete: ReferentialAction.Restrict);
-                                                      });
-
-            migrationBuilder.CreateTable("CalendarAppointmentSchedules",
-                                         table => new
-                                                  {
-                                                      Id = table.Column<long>("bigint", nullable: false)
-                                                                .Annotation("SqlServer:Identity", "1, 1"),
-                                                      CalendarAppointmentTemplateId = table.Column<long>("bigint", nullable: false),
-                                                      Type = table.Column<int>("int", nullable: false),
-                                                      AdditionalData = table.Column<string>("nvarchar(max)", nullable: true)
-                                                  },
-                                         constraints: table =>
-                                                      {
-                                                          table.PrimaryKey("PK_CalendarAppointmentSchedules", x => x.Id);
-
-                                                          table.ForeignKey("FK_CalendarAppointmentSchedules_CalendarAppointmentTemplates_CalendarAppointmentTemplateId",
-                                                                           x => x.CalendarAppointmentTemplateId,
-                                                                           "CalendarAppointmentTemplates",
-                                                                           "Id",
-                                                                           onDelete: ReferentialAction.Restrict);
-                                                      });
-            migrationBuilder.CreateIndex("IX_CalendarAppointments_CalendarAppointmentTemplateId", "CalendarAppointments", "CalendarAppointmentTemplateId");
-            migrationBuilder.CreateIndex("IX_CalendarAppointmentSchedules_CalendarAppointmentTemplateId", "CalendarAppointmentSchedules", "CalendarAppointmentTemplateId");
-        }
-
-        /// <inheritdoc/>
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropTable("CalendarAppointments");
-            migrationBuilder.DropTable("CalendarAppointmentSchedules");
-            migrationBuilder.DropTable("CalendarAppointmentTemplates");
-        }
-
-        #endregion // Migration
+                                                      table.ForeignKey("FK_CalendarAppointmentSchedules_CalendarAppointmentTemplates_CalendarAppointmentTemplateId",
+                                                                       x => x.CalendarAppointmentTemplateId,
+                                                                       "CalendarAppointmentTemplates",
+                                                                       "Id",
+                                                                       onDelete: ReferentialAction.Restrict);
+                                                  });
+        migrationBuilder.CreateIndex("IX_CalendarAppointments_CalendarAppointmentTemplateId", "CalendarAppointments", "CalendarAppointmentTemplateId");
+        migrationBuilder.CreateIndex("IX_CalendarAppointmentSchedules_CalendarAppointmentTemplateId", "CalendarAppointmentSchedules", "CalendarAppointmentTemplateId");
     }
+
+    /// <inheritdoc/>
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.DropTable("CalendarAppointments");
+        migrationBuilder.DropTable("CalendarAppointmentSchedules");
+        migrationBuilder.DropTable("CalendarAppointmentTemplates");
+    }
+
+    #endregion // Migration
 }

@@ -21,7 +21,7 @@ public class CalendarTemplateReminderMessageDialogElement : DialogMessageElement
 
     #endregion // Constructor
 
-    #region DialogMessageElementBase<string>
+    #region DialogMessageElementBase
 
     /// <inheritdoc/>
     public override string GetMessage()
@@ -29,5 +29,5 @@ public class CalendarTemplateReminderMessageDialogElement : DialogMessageElement
         return LocalizationGroup.GetText("Message", "Please enter the reminder message which should be used.");
     }
 
-    #endregion // DialogMessageElementBase<string>
+    #endregion // DialogMessageElementBase
 }

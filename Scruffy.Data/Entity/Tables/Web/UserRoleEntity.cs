@@ -8,6 +8,4 @@ namespace Scruffy.Data.Entity.Tables.Web;
 /// User roles
 /// </summary>
 [Table("UserRoles")]
-public class UserRoleEntity : IdentityUserRole<long>
-{
-}
+public class UserRoleEntity : IdentityUserRole<long>;

@@ -7,2052 +7,2051 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Scruffy.Data.Entity;
 
-namespace Scruffy.Data.Entity.Migrations
+namespace Scruffy.Data.Entity.Migrations;
+
+[DbContext(typeof(ScruffyDbContext))]
+[Migration("20211206201536_Update42")]
+partial class Update42
 {
-    [DbContext(typeof(ScruffyDbContext))]
-    [Migration("20211206201536_Update42")]
-    partial class Update42
+    protected override void BuildTargetModel(ModelBuilder modelBuilder)
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
-        {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.10")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+        modelBuilder
+            .HasAnnotation("Relational:MaxIdentifierLength", 128)
+            .HasAnnotation("ProductVersion", "5.0.10")
+            .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Calendar.CalendarAppointmentEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Calendar.CalendarAppointmentEntity", b =>
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long?>("CalendarAppointmentScheduleId")
-                        .HasColumnType("bigint");
+                b.Property<long?>("CalendarAppointmentScheduleId")
+                    .HasColumnType("bigint");
 
-                    b.Property<long>("CalendarAppointmentTemplateId")
-                        .HasColumnType("bigint");
+                b.Property<long>("CalendarAppointmentTemplateId")
+                    .HasColumnType("bigint");
 
-                    b.Property<decimal?>("DiscordChannelId")
-                        .HasColumnType("decimal(20,0)");
+                b.Property<decimal?>("DiscordChannelId")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.Property<decimal?>("DiscordMessageId")
-                        .HasColumnType("decimal(20,0)");
+                b.Property<decimal?>("DiscordMessageId")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("TimeStamp")
+                    .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("CalendarAppointmentScheduleId");
+                b.HasIndex("CalendarAppointmentScheduleId");
 
-                    b.HasIndex("CalendarAppointmentTemplateId");
+                b.HasIndex("CalendarAppointmentTemplateId");
 
-                    b.ToTable("CalendarAppointments");
-                });
+                b.ToTable("CalendarAppointments");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Calendar.CalendarAppointmentParticipantEntity", b =>
-                {
-                    b.Property<long>("AppointmentId")
-                        .HasColumnType("bigint");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Calendar.CalendarAppointmentParticipantEntity", b =>
+            {
+                b.Property<long>("AppointmentId")
+                    .HasColumnType("bigint");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                b.Property<long>("UserId")
+                    .HasColumnType("bigint");
 
-                    b.Property<bool>("IsLeader")
-                        .HasColumnType("bit");
+                b.Property<bool>("IsLeader")
+                    .HasColumnType("bit");
 
-                    b.HasKey("AppointmentId", "UserId");
+                b.HasKey("AppointmentId", "UserId");
 
-                    b.HasIndex("UserId");
+                b.HasIndex("UserId");
 
-                    b.ToTable("CalendarAppointmentParticipants");
-                });
+                b.ToTable("CalendarAppointmentParticipants");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Calendar.CalendarAppointmentScheduleEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Calendar.CalendarAppointmentScheduleEntity", b =>
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AdditionalData")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("AdditionalData")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("CalendarAppointmentTemplateId")
-                        .HasColumnType("bigint");
+                b.Property<long>("CalendarAppointmentTemplateId")
+                    .HasColumnType("bigint");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Description")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("DiscordServerId")
-                        .HasColumnType("decimal(20,0)");
+                b.Property<decimal>("DiscordServerId")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                b.Property<bool>("IsDeleted")
+                    .HasColumnType("bit");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
+                b.Property<int>("Type")
+                    .HasColumnType("int");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("CalendarAppointmentTemplateId");
+                b.HasIndex("CalendarAppointmentTemplateId");
 
-                    b.ToTable("CalendarAppointmentSchedules");
-                });
+                b.ToTable("CalendarAppointmentSchedules");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Calendar.CalendarAppointmentTemplateEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Calendar.CalendarAppointmentTemplateEntity", b =>
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<TimeSpan>("AppointmentTime")
-                        .HasColumnType("time");
+                b.Property<TimeSpan>("AppointmentTime")
+                    .HasColumnType("time");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Description")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("DiscordServerId")
-                        .HasColumnType("decimal(20,0)");
+                b.Property<decimal>("DiscordServerId")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.Property<double?>("GuildPoints")
-                        .HasColumnType("float");
+                b.Property<double?>("GuildPoints")
+                    .HasColumnType("float");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                b.Property<bool>("IsDeleted")
+                    .HasColumnType("bit");
 
-                    b.Property<bool?>("IsRaisingGuildPointCap")
-                        .HasColumnType("bit");
+                b.Property<bool?>("IsRaisingGuildPointCap")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("ReminderMessage")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ReminderMessage")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<TimeSpan?>("ReminderTime")
-                        .HasColumnType("time");
+                b.Property<TimeSpan?>("ReminderTime")
+                    .HasColumnType("time");
 
-                    b.Property<string>("Uri")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Uri")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("DiscordServerId");
+                b.HasIndex("DiscordServerId");
 
-                    b.ToTable("CalendarAppointmentTemplates");
-                });
+                b.ToTable("CalendarAppointmentTemplates");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.CoreData.ServerConfigurationEntity", b =>
-                {
-                    b.Property<decimal>("DiscordServerId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.CoreData.ServerConfigurationEntity", b =>
+            {
+                b.Property<decimal>("DiscordServerId")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("decimal(20,0)")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
-                    b.Property<decimal?>("DiscordAdministratorRoleId")
-                        .HasColumnType("decimal(20,0)");
+                b.Property<decimal?>("DiscordAdministratorRoleId")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.Property<string>("Prefix")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Prefix")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("DiscordServerId");
+                b.HasKey("DiscordServerId");
 
-                    b.ToTable("ServerConfigurations");
-                });
+                b.ToTable("ServerConfigurations");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.CoreData.UserEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.CoreData.UserEntity", b =>
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("CreationTimeStamp")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreationTimeStamp")
+                    .HasColumnType("datetime2");
 
-                    b.Property<long?>("RaidExperienceLevelId")
-                        .HasColumnType("bigint");
+                b.Property<long?>("RaidExperienceLevelId")
+                    .HasColumnType("bigint");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
+                b.Property<int>("Type")
+                    .HasColumnType("int");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("RaidExperienceLevelId");
+                b.HasIndex("RaidExperienceLevelId");
 
-                    b.ToTable("Users");
-                });
+                b.ToTable("Users");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Discord.DiscordAccountEntity", b =>
-                {
-                    b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Discord.DiscordAccountEntity", b =>
+            {
+                b.Property<decimal>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("decimal(20,0)")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                b.Property<long>("UserId")
+                    .HasColumnType("bigint");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                b.HasIndex("UserId");
 
-                    b.ToTable("DiscordAccounts");
-                });
+                b.ToTable("DiscordAccounts");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Fractals.FractalAppointmentEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Fractals.FractalAppointmentEntity", b =>
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("AppointmentTimeStamp")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("AppointmentTimeStamp")
+                    .HasColumnType("datetime2");
 
-                    b.Property<long>("ConfigurationId")
-                        .HasColumnType("bigint");
+                b.Property<long>("ConfigurationId")
+                    .HasColumnType("bigint");
 
-                    b.Property<decimal>("DiscordMessageId")
-                        .HasColumnType("decimal(20,0)");
+                b.Property<decimal>("DiscordMessageId")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("ConfigurationId");
+                b.HasIndex("ConfigurationId");
 
-                    b.ToTable("FractalAppointments");
-                });
+                b.ToTable("FractalAppointments");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Fractals.FractalLfgConfigurationEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Fractals.FractalLfgConfigurationEntity", b =>
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AliasName")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                b.Property<string>("AliasName")
+                    .HasMaxLength(20)
+                    .HasColumnType("nvarchar(20)");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Description")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("DiscordChannelId")
-                        .HasColumnType("decimal(20,0)");
+                b.Property<decimal>("DiscordChannelId")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.Property<decimal>("DiscordMessageId")
-                        .HasColumnType("decimal(20,0)");
+                b.Property<decimal>("DiscordMessageId")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Title")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("FractalLfgConfigurations");
-                });
+                b.ToTable("FractalLfgConfigurations");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Fractals.FractalRegistrationEntity", b =>
-                {
-                    b.Property<long>("ConfigurationId")
-                        .HasColumnType("bigint");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Fractals.FractalRegistrationEntity", b =>
+            {
+                b.Property<long>("ConfigurationId")
+                    .HasColumnType("bigint");
 
-                    b.Property<DateTime>("AppointmentTimeStamp")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("AppointmentTimeStamp")
+                    .HasColumnType("datetime2");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                b.Property<long>("UserId")
+                    .HasColumnType("bigint");
 
-                    b.Property<long?>("AppointmentId")
-                        .HasColumnType("bigint");
+                b.Property<long?>("AppointmentId")
+                    .HasColumnType("bigint");
 
-                    b.Property<DateTime>("RegistrationTimeStamp")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("RegistrationTimeStamp")
+                    .HasColumnType("datetime2");
 
-                    b.HasKey("ConfigurationId", "AppointmentTimeStamp", "UserId");
+                b.HasKey("ConfigurationId", "AppointmentTimeStamp", "UserId");
 
-                    b.HasIndex("AppointmentId");
+                b.HasIndex("AppointmentId");
 
-                    b.HasIndex("UserId");
+                b.HasIndex("UserId");
 
-                    b.ToTable("FractalRegistrations");
-                });
+                b.ToTable("FractalRegistrations");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Games.GameChannelEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Games.GameChannelEntity", b =>
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<decimal>("DiscordChannelId")
-                        .HasColumnType("decimal(20,0)");
+                b.Property<decimal>("DiscordChannelId")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
+                b.Property<int>("Type")
+                    .HasColumnType("int");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("GameChannels");
-                });
+                b.ToTable("GameChannels");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.General.LogEntryEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.General.LogEntryEntity", b =>
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AdditionalInformation")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("AdditionalInformation")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Level")
-                        .HasColumnType("int");
+                b.Property<int>("Level")
+                    .HasColumnType("int");
 
-                    b.Property<string>("Message")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Message")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Source")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Source")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SubSource")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("SubSource")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("TimeStamp")
+                    .HasColumnType("datetime2");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
+                b.Property<int>("Type")
+                    .HasColumnType("int");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("LogEntries");
-                });
+                b.ToTable("LogEntries");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildChannelConfigurationEntity", b =>
-                {
-                    b.Property<long>("GuildId")
-                        .HasColumnType("bigint");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildChannelConfigurationEntity", b =>
+            {
+                b.Property<long>("GuildId")
+                    .HasColumnType("bigint");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
+                b.Property<int>("Type")
+                    .HasColumnType("int");
 
-                    b.Property<string>("AdditionalData")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("AdditionalData")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("DiscordChannelId")
-                        .HasColumnType("decimal(20,0)");
+                b.Property<decimal>("DiscordChannelId")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.Property<decimal?>("DiscordMessageId")
-                        .HasColumnType("decimal(20,0)");
+                b.Property<decimal?>("DiscordMessageId")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.HasKey("GuildId", "Type");
+                b.HasKey("GuildId", "Type");
 
-                    b.ToTable("GuildChannelConfigurations");
-                });
+                b.ToTable("GuildChannelConfigurations");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildEntity", b =>
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ApiKey")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ApiKey")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("DiscordServerId")
-                        .HasColumnType("decimal(20,0)");
+                b.Property<decimal>("DiscordServerId")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.Property<string>("GuildId")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("GuildId")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("DiscordServerId");
+                b.HasIndex("DiscordServerId");
 
-                    b.ToTable("Guilds");
-                });
+                b.ToTable("Guilds");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildLogEntryEntity", b =>
-                {
-                    b.Property<long>("GuildId")
-                        .HasColumnType("bigint");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildLogEntryEntity", b =>
+            {
+                b.Property<long>("GuildId")
+                    .HasColumnType("bigint");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
+                b.Property<int>("Id")
+                    .HasColumnType("int");
 
-                    b.Property<string>("Action")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Action")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Activity")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Activity")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ChangedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ChangedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Coins")
-                        .HasColumnType("int");
+                b.Property<int?>("Coins")
+                    .HasColumnType("int");
 
-                    b.Property<int?>("Count")
-                        .HasColumnType("int");
+                b.Property<int?>("Count")
+                    .HasColumnType("int");
 
-                    b.Property<string>("InvitedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("InvitedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ItemId")
-                        .HasColumnType("int");
+                b.Property<int?>("ItemId")
+                    .HasColumnType("int");
 
-                    b.Property<string>("KickedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("KickedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("MessageOfTheDay")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("MessageOfTheDay")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("NewRank")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("NewRank")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("OldRank")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("OldRank")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Operation")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Operation")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Participants")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Participants")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("RecipeId")
-                        .HasColumnType("int");
+                b.Property<int?>("RecipeId")
+                    .HasColumnType("int");
 
-                    b.Property<DateTime>("Time")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("Time")
+                    .HasColumnType("datetime2");
 
-                    b.Property<int?>("TotalParticipants")
-                        .HasColumnType("int");
+                b.Property<int?>("TotalParticipants")
+                    .HasColumnType("int");
 
-                    b.Property<string>("Type")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Type")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UpgradeId")
-                        .HasColumnType("int");
+                b.Property<int?>("UpgradeId")
+                    .HasColumnType("int");
 
-                    b.Property<string>("User")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("User")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("GuildId", "Id");
+                b.HasKey("GuildId", "Id");
 
-                    b.ToTable("GuildLogEntries");
-                });
+                b.ToTable("GuildLogEntries");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildRankEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildRankEntity", b =>
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<decimal>("DiscordRoleId")
-                        .HasColumnType("decimal(20,0)");
+                b.Property<decimal>("DiscordRoleId")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.Property<long>("GuildId")
-                        .HasColumnType("bigint");
+                b.Property<long>("GuildId")
+                    .HasColumnType("bigint");
 
-                    b.Property<string>("InGameName")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("InGameName")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Percentage")
-                        .HasColumnType("float");
+                b.Property<double>("Percentage")
+                    .HasColumnType("float");
 
-                    b.Property<int?>("SuperiorId")
-                        .HasColumnType("int");
+                b.Property<int?>("SuperiorId")
+                    .HasColumnType("int");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("GuildId");
+                b.HasIndex("GuildId");
 
-                    b.HasIndex("SuperiorId");
+                b.HasIndex("SuperiorId");
 
-                    b.ToTable("GuildRanks");
-                });
+                b.ToTable("GuildRanks");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildSpecialRankConfigurationEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildSpecialRankConfigurationEntity", b =>
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Description")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("DiscordRoleId")
-                        .HasColumnType("decimal(20,0)");
+                b.Property<decimal>("DiscordRoleId")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.Property<double>("GrantThreshold")
-                        .HasColumnType("float");
+                b.Property<double>("GrantThreshold")
+                    .HasColumnType("float");
 
-                    b.Property<long>("GuildId")
-                        .HasColumnType("bigint");
+                b.Property<long>("GuildId")
+                    .HasColumnType("bigint");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                b.Property<bool>("IsDeleted")
+                    .HasColumnType("bit");
 
-                    b.Property<double>("MaximumPoints")
-                        .HasColumnType("float");
+                b.Property<double>("MaximumPoints")
+                    .HasColumnType("float");
 
-                    b.Property<double>("RemoveThreshold")
-                        .HasColumnType("float");
+                b.Property<double>("RemoveThreshold")
+                    .HasColumnType("float");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("GuildId");
+                b.HasIndex("GuildId");
 
-                    b.ToTable("GuildSpecialRankConfigurations");
-                });
+                b.ToTable("GuildSpecialRankConfigurations");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildSpecialRankIgnoreRoleAssignmentEntity", b =>
-                {
-                    b.Property<long>("ConfigurationId")
-                        .HasColumnType("bigint");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildSpecialRankIgnoreRoleAssignmentEntity", b =>
+            {
+                b.Property<long>("ConfigurationId")
+                    .HasColumnType("bigint");
 
-                    b.Property<decimal>("DiscordRoleId")
-                        .HasColumnType("decimal(20,0)");
+                b.Property<decimal>("DiscordRoleId")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.HasKey("ConfigurationId", "DiscordRoleId");
+                b.HasKey("ConfigurationId", "DiscordRoleId");
 
-                    b.ToTable("GuildSpecialRankIgnoreRoleAssignments");
-                });
+                b.ToTable("GuildSpecialRankIgnoreRoleAssignments");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildSpecialRankPointsEntity", b =>
-                {
-                    b.Property<long>("ConfigurationId")
-                        .HasColumnType("bigint");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildSpecialRankPointsEntity", b =>
+            {
+                b.Property<long>("ConfigurationId")
+                    .HasColumnType("bigint");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                b.Property<long>("UserId")
+                    .HasColumnType("bigint");
 
-                    b.Property<double>("Points")
-                        .HasColumnType("float");
+                b.Property<double>("Points")
+                    .HasColumnType("float");
 
-                    b.HasKey("ConfigurationId", "UserId");
+                b.HasKey("ConfigurationId", "UserId");
 
-                    b.HasIndex("UserId");
+                b.HasIndex("UserId");
 
-                    b.ToTable("GuildSpecialRankPoints");
-                });
+                b.ToTable("GuildSpecialRankPoints");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildSpecialRankProtocolEntryEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildSpecialRankProtocolEntryEntity", b =>
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<double?>("Amount")
-                        .HasColumnType("float");
+                b.Property<double?>("Amount")
+                    .HasColumnType("float");
 
-                    b.Property<long>("ConfigurationId")
-                        .HasColumnType("bigint");
+                b.Property<long>("ConfigurationId")
+                    .HasColumnType("bigint");
 
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("TimeStamp")
+                    .HasColumnType("datetime2");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
+                b.Property<int>("Type")
+                    .HasColumnType("int");
 
-                    b.Property<long?>("UserId")
-                        .HasColumnType("bigint");
+                b.Property<long?>("UserId")
+                    .HasColumnType("bigint");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("ConfigurationId");
+                b.HasIndex("ConfigurationId");
 
-                    b.HasIndex("UserId");
+                b.HasIndex("UserId");
 
-                    b.ToTable("GuildSpecialRankProtocolEntries");
-                });
+                b.ToTable("GuildSpecialRankProtocolEntries");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildSpecialRankRoleAssignmentEntity", b =>
-                {
-                    b.Property<long>("ConfigurationId")
-                        .HasColumnType("bigint");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildSpecialRankRoleAssignmentEntity", b =>
+            {
+                b.Property<long>("ConfigurationId")
+                    .HasColumnType("bigint");
 
-                    b.Property<decimal>("DiscordRoleId")
-                        .HasColumnType("decimal(20,0)");
+                b.Property<decimal>("DiscordRoleId")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.Property<double>("Points")
-                        .HasColumnType("float");
+                b.Property<double>("Points")
+                    .HasColumnType("float");
 
-                    b.HasKey("ConfigurationId", "DiscordRoleId");
+                b.HasKey("ConfigurationId", "DiscordRoleId");
 
-                    b.ToTable("GuildSpecialRankRoleAssignments");
-                });
+                b.ToTable("GuildSpecialRankRoleAssignments");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.Account.GuildWarsAccountAchievementBitEntity", b =>
-                {
-                    b.Property<string>("AccountName")
-                        .HasMaxLength(42)
-                        .HasColumnType("nvarchar(42)");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.Account.GuildWarsAccountAchievementBitEntity", b =>
+            {
+                b.Property<string>("AccountName")
+                    .HasMaxLength(42)
+                    .HasColumnType("nvarchar(42)");
 
-                    b.Property<int>("AchievementId")
-                        .HasColumnType("int");
+                b.Property<int>("AchievementId")
+                    .HasColumnType("int");
 
-                    b.Property<int>("Bit")
-                        .HasColumnType("int");
+                b.Property<int>("Bit")
+                    .HasColumnType("int");
 
-                    b.HasKey("AccountName", "AchievementId", "Bit");
+                b.HasKey("AccountName", "AchievementId", "Bit");
 
-                    b.ToTable("GuildWarsAccountAchievementBits");
-                });
+                b.ToTable("GuildWarsAccountAchievementBits");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.Account.GuildWarsAccountAchievementEntity", b =>
-                {
-                    b.Property<string>("AccountName")
-                        .HasMaxLength(42)
-                        .HasColumnType("nvarchar(42)");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.Account.GuildWarsAccountAchievementEntity", b =>
+            {
+                b.Property<string>("AccountName")
+                    .HasMaxLength(42)
+                    .HasColumnType("nvarchar(42)");
 
-                    b.Property<int>("AchievementId")
-                        .HasColumnType("int");
+                b.Property<int>("AchievementId")
+                    .HasColumnType("int");
 
-                    b.Property<int?>("Current")
-                        .HasColumnType("int");
+                b.Property<int?>("Current")
+                    .HasColumnType("int");
 
-                    b.Property<bool>("IsDone")
-                        .HasColumnType("bit");
+                b.Property<bool>("IsDone")
+                    .HasColumnType("bit");
 
-                    b.Property<bool>("IsUnlocked")
-                        .HasColumnType("bit");
+                b.Property<bool>("IsUnlocked")
+                    .HasColumnType("bit");
 
-                    b.Property<int?>("Maximum")
-                        .HasColumnType("int");
+                b.Property<int?>("Maximum")
+                    .HasColumnType("int");
 
-                    b.Property<int?>("RepetitionCount")
-                        .HasColumnType("int");
+                b.Property<int?>("RepetitionCount")
+                    .HasColumnType("int");
 
-                    b.HasKey("AccountName", "AchievementId");
+                b.HasKey("AccountName", "AchievementId");
 
-                    b.ToTable("GuildWarsAccountAchievements");
-                });
+                b.ToTable("GuildWarsAccountAchievements");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.Account.GuildWarsAccountDailyLoginCheckEntity", b =>
-                {
-                    b.Property<string>("Name")
-                        .HasMaxLength(42)
-                        .HasColumnType("nvarchar(42)");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.Account.GuildWarsAccountDailyLoginCheckEntity", b =>
+            {
+                b.Property<string>("Name")
+                    .HasMaxLength(42)
+                    .HasColumnType("nvarchar(42)");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("Date")
+                    .HasColumnType("datetime2");
 
-                    b.HasKey("Name", "Date");
+                b.HasKey("Name", "Date");
 
-                    b.ToTable("GuildWarsAccountDailyLoginChecks");
-                });
+                b.ToTable("GuildWarsAccountDailyLoginChecks");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.Account.GuildWarsAccountEntity", b =>
-                {
-                    b.Property<string>("Name")
-                        .HasMaxLength(42)
-                        .HasColumnType("nvarchar(42)");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.Account.GuildWarsAccountEntity", b =>
+            {
+                b.Property<string>("Name")
+                    .HasMaxLength(42)
+                    .HasColumnType("nvarchar(42)");
 
-                    b.Property<string>("ApiKey")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ApiKey")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("DailyAchievementPoints")
-                        .HasColumnType("int");
+                b.Property<int?>("DailyAchievementPoints")
+                    .HasColumnType("int");
 
-                    b.Property<string>("DpsReportUserToken")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("DpsReportUserToken")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("LastAge")
-                        .HasColumnType("bigint");
+                b.Property<long>("LastAge")
+                    .HasColumnType("bigint");
 
-                    b.Property<int?>("MonthlyAchievementPoints")
-                        .HasColumnType("int");
+                b.Property<int?>("MonthlyAchievementPoints")
+                    .HasColumnType("int");
 
-                    b.Property<decimal>("Permissions")
-                        .HasColumnType("decimal(20,0)");
+                b.Property<decimal>("Permissions")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                b.Property<long>("UserId")
+                    .HasColumnType("bigint");
 
-                    b.Property<long?>("WorldId")
-                        .HasColumnType("bigint");
+                b.Property<long?>("WorldId")
+                    .HasColumnType("bigint");
 
-                    b.HasKey("Name");
+                b.HasKey("Name");
 
-                    b.HasIndex("UserId");
+                b.HasIndex("UserId");
 
-                    b.ToTable("GuildWarsAccounts");
-                });
+                b.ToTable("GuildWarsAccounts");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementBitEntity", b =>
-                {
-                    b.Property<int>("AchievementId")
-                        .HasColumnType("int");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementBitEntity", b =>
+            {
+                b.Property<int>("AchievementId")
+                    .HasColumnType("int");
 
-                    b.Property<int>("Bit")
-                        .HasColumnType("int");
+                b.Property<int>("Bit")
+                    .HasColumnType("int");
 
-                    b.Property<int?>("Id")
-                        .HasColumnType("int");
+                b.Property<int?>("Id")
+                    .HasColumnType("int");
 
-                    b.Property<string>("Text")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Text")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Type")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Type")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("AchievementId", "Bit");
+                b.HasKey("AchievementId", "Bit");
 
-                    b.ToTable("GuildWarsAchievementBits");
-                });
+                b.ToTable("GuildWarsAchievementBits");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementEntity", b =>
+            {
+                b.Property<int>("Id")
+                    .HasColumnType("int");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Description")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Icon")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Icon")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("LockedText")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("LockedText")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Name")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PointCap")
-                        .HasColumnType("int");
+                b.Property<int?>("PointCap")
+                    .HasColumnType("int");
 
-                    b.Property<string>("Requirement")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Requirement")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Type")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Type")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("GuildWarsAchievements");
-                });
+                b.ToTable("GuildWarsAchievements");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementFlagEntity", b =>
-                {
-                    b.Property<int>("AchievementId")
-                        .HasColumnType("int");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementFlagEntity", b =>
+            {
+                b.Property<int>("AchievementId")
+                    .HasColumnType("int");
 
-                    b.Property<string>("Flag")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                b.Property<string>("Flag")
+                    .HasMaxLength(50)
+                    .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("AchievementId", "Flag");
+                b.HasKey("AchievementId", "Flag");
 
-                    b.ToTable("GuildWarsAchievementFlags");
-                });
+                b.ToTable("GuildWarsAchievementFlags");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementPrerequisiteEntity", b =>
-                {
-                    b.Property<int>("AchievementId")
-                        .HasColumnType("int");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementPrerequisiteEntity", b =>
+            {
+                b.Property<int>("AchievementId")
+                    .HasColumnType("int");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
+                b.Property<int>("Id")
+                    .HasColumnType("int");
 
-                    b.HasKey("AchievementId", "Id");
+                b.HasKey("AchievementId", "Id");
 
-                    b.ToTable("GuildWarsAchievementPrerequisites");
-                });
+                b.ToTable("GuildWarsAchievementPrerequisites");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementRewardEntity", b =>
-                {
-                    b.Property<int>("AchievementId")
-                        .HasColumnType("int");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementRewardEntity", b =>
+            {
+                b.Property<int>("AchievementId")
+                    .HasColumnType("int");
 
-                    b.Property<int>("Counter")
-                        .HasColumnType("int");
+                b.Property<int>("Counter")
+                    .HasColumnType("int");
 
-                    b.Property<int>("Count")
-                        .HasColumnType("int");
+                b.Property<int>("Count")
+                    .HasColumnType("int");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
+                b.Property<int>("Id")
+                    .HasColumnType("int");
 
-                    b.Property<string>("Region")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Region")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Type")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Type")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("AchievementId", "Counter");
+                b.HasKey("AchievementId", "Counter");
 
-                    b.ToTable("GuildWarsAchievementRewards");
-                });
+                b.ToTable("GuildWarsAchievementRewards");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementTierEntity", b =>
-                {
-                    b.Property<int>("AchievementId")
-                        .HasColumnType("int");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementTierEntity", b =>
+            {
+                b.Property<int>("AchievementId")
+                    .HasColumnType("int");
 
-                    b.Property<int>("Counter")
-                        .HasColumnType("int");
+                b.Property<int>("Counter")
+                    .HasColumnType("int");
 
-                    b.Property<int>("Count")
-                        .HasColumnType("int");
+                b.Property<int>("Count")
+                    .HasColumnType("int");
 
-                    b.Property<int>("Points")
-                        .HasColumnType("int");
+                b.Property<int>("Points")
+                    .HasColumnType("int");
 
-                    b.HasKey("AchievementId", "Counter");
+                b.HasKey("AchievementId", "Counter");
 
-                    b.ToTable("GuildWarsAchievementTiers");
-                });
+                b.ToTable("GuildWarsAchievementTiers");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsItemEntity", b =>
-                {
-                    b.Property<int>("ItemId")
-                        .HasColumnType("int");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsItemEntity", b =>
+            {
+                b.Property<int>("ItemId")
+                    .HasColumnType("int");
 
-                    b.Property<long?>("CustomValue")
-                        .HasColumnType("bigint");
+                b.Property<long?>("CustomValue")
+                    .HasColumnType("bigint");
 
-                    b.Property<bool>("IsValueReducingActivated")
-                        .HasColumnType("bit");
+                b.Property<bool>("IsValueReducingActivated")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Name")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
+                b.Property<int>("Type")
+                    .HasColumnType("int");
 
-                    b.Property<long?>("VendorValue")
-                        .HasColumnType("bigint");
+                b.Property<long?>("VendorValue")
+                    .HasColumnType("bigint");
 
-                    b.HasKey("ItemId");
+                b.HasKey("ItemId");
 
-                    b.ToTable("GuildWarsItems");
-                });
+                b.ToTable("GuildWarsItems");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsItemGuildUpgradeConversionEntity", b =>
-                {
-                    b.Property<int>("ItemId")
-                        .HasColumnType("int");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsItemGuildUpgradeConversionEntity", b =>
+            {
+                b.Property<int>("ItemId")
+                    .HasColumnType("int");
 
-                    b.Property<long>("UpgradeId")
-                        .HasColumnType("bigint");
+                b.Property<long>("UpgradeId")
+                    .HasColumnType("bigint");
 
-                    b.HasKey("ItemId", "UpgradeId");
+                b.HasKey("ItemId", "UpgradeId");
 
-                    b.ToTable("GuildWarsItemGuildUpgradeConversions");
-                });
+                b.ToTable("GuildWarsItemGuildUpgradeConversions");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsWorldEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .HasColumnType("bigint");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsWorldEntity", b =>
+            {
+                b.Property<long>("Id")
+                    .HasColumnType("bigint");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Name")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("GuildWarsWorlds");
-                });
+                b.ToTable("GuildWarsWorlds");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidAppointmentEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidAppointmentEntity", b =>
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long>("ConfigurationId")
-                        .HasColumnType("bigint");
+                b.Property<long>("ConfigurationId")
+                    .HasColumnType("bigint");
 
-                    b.Property<DateTime>("Deadline")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("Deadline")
+                    .HasColumnType("datetime2");
 
-                    b.Property<int>("GroupCount")
-                        .HasColumnType("int");
+                b.Property<int>("GroupCount")
+                    .HasColumnType("int");
 
-                    b.Property<bool>("IsCommitted")
-                        .HasColumnType("bit");
+                b.Property<bool>("IsCommitted")
+                    .HasColumnType("bit");
 
-                    b.Property<long>("TemplateId")
-                        .HasColumnType("bigint");
+                b.Property<long>("TemplateId")
+                    .HasColumnType("bigint");
 
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("TimeStamp")
+                    .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("ConfigurationId");
+                b.HasIndex("ConfigurationId");
 
-                    b.HasIndex("TemplateId");
+                b.HasIndex("TemplateId");
 
-                    b.ToTable("RaidAppointments");
-                });
+                b.ToTable("RaidAppointments");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidCurrentUserPointsEntity", b =>
-                {
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidCurrentUserPointsEntity", b =>
+            {
+                b.Property<long>("UserId")
+                    .HasColumnType("bigint");
 
-                    b.Property<double>("Points")
-                        .HasColumnType("float");
+                b.Property<double>("Points")
+                    .HasColumnType("float");
 
-                    b.HasKey("UserId");
+                b.HasKey("UserId");
 
-                    b.ToTable("RaidCurrentUserPoints");
-                });
+                b.ToTable("RaidCurrentUserPoints");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidDayConfigurationEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidDayConfigurationEntity", b =>
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AliasName")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                b.Property<string>("AliasName")
+                    .HasMaxLength(20)
+                    .HasColumnType("nvarchar(20)");
 
-                    b.Property<int>("Day")
-                        .HasColumnType("int");
+                b.Property<int>("Day")
+                    .HasColumnType("int");
 
-                    b.Property<decimal>("DiscordChannelId")
-                        .HasColumnType("decimal(20,0)");
+                b.Property<decimal>("DiscordChannelId")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.Property<decimal>("DiscordMessageId")
-                        .HasColumnType("decimal(20,0)");
+                b.Property<decimal>("DiscordMessageId")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.Property<TimeSpan>("RegistrationDeadline")
-                        .HasColumnType("time");
+                b.Property<TimeSpan>("RegistrationDeadline")
+                    .HasColumnType("time");
 
-                    b.Property<TimeSpan>("StartTime")
-                        .HasColumnType("time");
+                b.Property<TimeSpan>("StartTime")
+                    .HasColumnType("time");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("RaidDayConfigurations");
-                });
+                b.ToTable("RaidDayConfigurations");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidDayTemplateEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidDayTemplateEntity", b =>
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AliasName")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                b.Property<string>("AliasName")
+                    .HasMaxLength(20)
+                    .HasColumnType("nvarchar(20)");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Description")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                b.Property<bool>("IsDeleted")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("Thumbnail")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Thumbnail")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Title")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("RaidDayTemplates");
-                });
+                b.ToTable("RaidDayTemplates");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidExperienceAssignmentEntity", b =>
-                {
-                    b.Property<long>("TemplateId")
-                        .HasColumnType("bigint");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidExperienceAssignmentEntity", b =>
+            {
+                b.Property<long>("TemplateId")
+                    .HasColumnType("bigint");
 
-                    b.Property<long>("ExperienceLevelId")
-                        .HasColumnType("bigint");
+                b.Property<long>("ExperienceLevelId")
+                    .HasColumnType("bigint");
 
-                    b.Property<long>("Count")
-                        .HasColumnType("bigint");
+                b.Property<long>("Count")
+                    .HasColumnType("bigint");
 
-                    b.HasKey("TemplateId", "ExperienceLevelId");
+                b.HasKey("TemplateId", "ExperienceLevelId");
 
-                    b.HasIndex("ExperienceLevelId");
+                b.HasIndex("ExperienceLevelId");
 
-                    b.ToTable("RaidExperienceAssignments");
-                });
+                b.ToTable("RaidExperienceAssignments");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidExperienceLevelEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidExperienceLevelEntity", b =>
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AliasName")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("AliasName")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Description")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("DiscordEmoji")
-                        .HasColumnType("decimal(20,0)");
+                b.Property<decimal>("DiscordEmoji")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.Property<decimal?>("DiscordRoleId")
-                        .HasColumnType("decimal(20,0)");
+                b.Property<decimal?>("DiscordRoleId")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                b.Property<bool>("IsDeleted")
+                    .HasColumnType("bit");
 
-                    b.Property<double>("ParticipationPoints")
-                        .HasColumnType("float");
+                b.Property<double>("ParticipationPoints")
+                    .HasColumnType("float");
 
-                    b.Property<int>("Rank")
-                        .HasColumnType("int");
+                b.Property<int>("Rank")
+                    .HasColumnType("int");
 
-                    b.Property<long?>("SuperiorExperienceLevelId")
-                        .HasColumnType("bigint");
+                b.Property<long?>("SuperiorExperienceLevelId")
+                    .HasColumnType("bigint");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("SuperiorExperienceLevelId");
+                b.HasIndex("SuperiorExperienceLevelId");
 
-                    b.ToTable("RaidExperienceLevels");
-                });
+                b.ToTable("RaidExperienceLevels");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRegistrationEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRegistrationEntity", b =>
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long>("AppointmentId")
-                        .HasColumnType("bigint");
+                b.Property<long>("AppointmentId")
+                    .HasColumnType("bigint");
 
-                    b.Property<long?>("LineupExperienceLevelId")
-                        .HasColumnType("bigint");
+                b.Property<long?>("LineupExperienceLevelId")
+                    .HasColumnType("bigint");
 
-                    b.Property<double?>("Points")
-                        .HasColumnType("float");
+                b.Property<double?>("Points")
+                    .HasColumnType("float");
 
-                    b.Property<DateTime>("RegistrationTimeStamp")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("RegistrationTimeStamp")
+                    .HasColumnType("datetime2");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                b.Property<long>("UserId")
+                    .HasColumnType("bigint");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("AppointmentId");
+                b.HasIndex("AppointmentId");
 
-                    b.HasIndex("LineupExperienceLevelId");
+                b.HasIndex("LineupExperienceLevelId");
 
-                    b.HasIndex("UserId");
+                b.HasIndex("UserId");
 
-                    b.ToTable("RaidRegistrations");
-                });
+                b.ToTable("RaidRegistrations");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRegistrationRoleAssignmentEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRegistrationRoleAssignmentEntity", b =>
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long?>("MainRoleId")
-                        .HasColumnType("bigint");
+                b.Property<long?>("MainRoleId")
+                    .HasColumnType("bigint");
 
-                    b.Property<long>("RegistrationId")
-                        .HasColumnType("bigint");
+                b.Property<long>("RegistrationId")
+                    .HasColumnType("bigint");
 
-                    b.Property<long?>("SubRoleId")
-                        .HasColumnType("bigint");
+                b.Property<long?>("SubRoleId")
+                    .HasColumnType("bigint");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("MainRoleId");
+                b.HasIndex("MainRoleId");
 
-                    b.HasIndex("RegistrationId");
+                b.HasIndex("RegistrationId");
 
-                    b.HasIndex("SubRoleId");
+                b.HasIndex("SubRoleId");
 
-                    b.ToTable("RaidRegistrationRoleAssignments");
-                });
+                b.ToTable("RaidRegistrationRoleAssignments");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRequiredRoleEntity", b =>
-                {
-                    b.Property<long>("TemplateId")
-                        .HasColumnType("bigint");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRequiredRoleEntity", b =>
+            {
+                b.Property<long>("TemplateId")
+                    .HasColumnType("bigint");
 
-                    b.Property<long>("Index")
-                        .HasColumnType("bigint");
+                b.Property<long>("Index")
+                    .HasColumnType("bigint");
 
-                    b.Property<long>("MainRoleId")
-                        .HasColumnType("bigint");
+                b.Property<long>("MainRoleId")
+                    .HasColumnType("bigint");
 
-                    b.Property<long?>("SubRoleId")
-                        .HasColumnType("bigint");
+                b.Property<long?>("SubRoleId")
+                    .HasColumnType("bigint");
 
-                    b.HasKey("TemplateId", "Index");
+                b.HasKey("TemplateId", "Index");
 
-                    b.HasIndex("MainRoleId");
+                b.HasIndex("MainRoleId");
 
-                    b.HasIndex("SubRoleId");
+                b.HasIndex("SubRoleId");
 
-                    b.ToTable("RaidRequiredRoles");
-                });
+                b.ToTable("RaidRequiredRoles");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRoleAliasNameEntity", b =>
-                {
-                    b.Property<string>("AliasName")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRoleAliasNameEntity", b =>
+            {
+                b.Property<string>("AliasName")
+                    .HasMaxLength(20)
+                    .HasColumnType("nvarchar(20)");
 
-                    b.Property<long>("MainRoleId")
-                        .HasColumnType("bigint");
+                b.Property<long>("MainRoleId")
+                    .HasColumnType("bigint");
 
-                    b.Property<long?>("SubRoleId")
-                        .HasColumnType("bigint");
+                b.Property<long?>("SubRoleId")
+                    .HasColumnType("bigint");
 
-                    b.HasKey("AliasName");
+                b.HasKey("AliasName");
 
-                    b.HasIndex("MainRoleId");
+                b.HasIndex("MainRoleId");
 
-                    b.HasIndex("SubRoleId");
+                b.HasIndex("SubRoleId");
 
-                    b.ToTable("RaidRoleAliasNames");
-                });
+                b.ToTable("RaidRoleAliasNames");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRoleEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRoleEntity", b =>
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Description")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("DiscordEmojiId")
-                        .HasColumnType("decimal(20,0)");
+                b.Property<decimal>("DiscordEmojiId")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                b.Property<bool>("IsDeleted")
+                    .HasColumnType("bit");
 
-                    b.Property<long?>("MainRoleId")
-                        .HasColumnType("bigint");
+                b.Property<long?>("MainRoleId")
+                    .HasColumnType("bigint");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("MainRoleId");
+                b.HasIndex("MainRoleId");
 
-                    b.ToTable("RaidRoles");
-                });
+                b.ToTable("RaidRoles");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRoleLineupAssignmentEntity", b =>
-                {
-                    b.Property<long>("TemplateId")
-                        .HasColumnType("bigint");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRoleLineupAssignmentEntity", b =>
+            {
+                b.Property<long>("TemplateId")
+                    .HasColumnType("bigint");
 
-                    b.Property<long>("LineupHeaderId")
-                        .HasColumnType("bigint");
+                b.Property<long>("LineupHeaderId")
+                    .HasColumnType("bigint");
 
-                    b.HasKey("TemplateId", "LineupHeaderId");
+                b.HasKey("TemplateId", "LineupHeaderId");
 
-                    b.HasIndex("LineupHeaderId");
+                b.HasIndex("LineupHeaderId");
 
-                    b.ToTable("RaidRoleLineupAssignments");
-                });
+                b.ToTable("RaidRoleLineupAssignments");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRoleLineupEntryEntity", b =>
-                {
-                    b.Property<long>("LineupHeaderId")
-                        .HasColumnType("bigint");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRoleLineupEntryEntity", b =>
+            {
+                b.Property<long>("LineupHeaderId")
+                    .HasColumnType("bigint");
 
-                    b.Property<long>("Position")
-                        .HasColumnType("bigint");
+                b.Property<long>("Position")
+                    .HasColumnType("bigint");
 
-                    b.Property<long>("RoleId")
-                        .HasColumnType("bigint");
+                b.Property<long>("RoleId")
+                    .HasColumnType("bigint");
 
-                    b.HasKey("LineupHeaderId", "Position", "RoleId");
+                b.HasKey("LineupHeaderId", "Position", "RoleId");
 
-                    b.HasIndex("RoleId");
+                b.HasIndex("RoleId");
 
-                    b.ToTable("RaidRoleLineupEntries");
-                });
+                b.ToTable("RaidRoleLineupEntries");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRoleLineupHeaderEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRoleLineupHeaderEntity", b =>
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Description")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("RaidRoleLineupHeaders");
-                });
+                b.ToTable("RaidRoleLineupHeaders");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidUserRoleEntity", b =>
-                {
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidUserRoleEntity", b =>
+            {
+                b.Property<long>("UserId")
+                    .HasColumnType("bigint");
 
-                    b.Property<long>("MainRoleId")
-                        .HasColumnType("bigint");
+                b.Property<long>("MainRoleId")
+                    .HasColumnType("bigint");
 
-                    b.Property<long>("SubRoleId")
-                        .HasColumnType("bigint");
+                b.Property<long>("SubRoleId")
+                    .HasColumnType("bigint");
 
-                    b.HasKey("UserId", "MainRoleId", "SubRoleId");
+                b.HasKey("UserId", "MainRoleId", "SubRoleId");
 
-                    b.HasIndex("MainRoleId");
+                b.HasIndex("MainRoleId");
 
-                    b.HasIndex("SubRoleId");
+                b.HasIndex("SubRoleId");
 
-                    b.ToTable("RaidUserRoles");
-                });
+                b.ToTable("RaidUserRoles");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Reminder.OneTimeReminderEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Reminder.OneTimeReminderEntity", b =>
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<decimal>("DiscordAccountId")
-                        .HasColumnType("decimal(20,0)");
+                b.Property<decimal>("DiscordAccountId")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.Property<decimal>("DiscordChannelId")
-                        .HasColumnType("decimal(20,0)");
+                b.Property<decimal>("DiscordChannelId")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.Property<bool>("IsExecuted")
-                        .HasColumnType("bit");
+                b.Property<bool>("IsExecuted")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("Message")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Message")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("TimeStamp")
+                    .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("DiscordAccountId");
+                b.HasIndex("DiscordAccountId");
 
-                    b.ToTable("OneTimeReminders");
-                });
+                b.ToTable("OneTimeReminders");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Reminder.WeeklyReminderEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Reminder.WeeklyReminderEntity", b =>
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("DayOfWeek")
-                        .HasColumnType("int");
+                b.Property<int>("DayOfWeek")
+                    .HasColumnType("int");
 
-                    b.Property<TimeSpan>("DeletionTime")
-                        .HasColumnType("time");
+                b.Property<TimeSpan>("DeletionTime")
+                    .HasColumnType("time");
 
-                    b.Property<decimal>("DiscordChannelId")
-                        .HasColumnType("decimal(20,0)");
+                b.Property<decimal>("DiscordChannelId")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.Property<decimal?>("DiscordMessageId")
-                        .HasColumnType("decimal(20,0)");
+                b.Property<decimal?>("DiscordMessageId")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.Property<string>("Message")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Message")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<TimeSpan>("PostTime")
-                        .HasColumnType("time");
+                b.Property<TimeSpan>("PostTime")
+                    .HasColumnType("time");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("WeeklyReminders");
-                });
+                b.ToTable("WeeklyReminders");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Statistics.DiscordIgnoreChannelEntity", b =>
-                {
-                    b.Property<decimal>("DiscordServerId")
-                        .HasColumnType("decimal(20,0)");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Statistics.DiscordIgnoreChannelEntity", b =>
+            {
+                b.Property<decimal>("DiscordServerId")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.Property<decimal>("DiscordChannelId")
-                        .HasColumnType("decimal(20,0)");
+                b.Property<decimal>("DiscordChannelId")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.HasKey("DiscordServerId", "DiscordChannelId");
+                b.HasKey("DiscordServerId", "DiscordChannelId");
 
-                    b.ToTable("DiscordIgnoreChannels");
-                });
+                b.ToTable("DiscordIgnoreChannels");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Statistics.DiscordMessageEntity", b =>
-                {
-                    b.Property<decimal>("DiscordServerId")
-                        .HasColumnType("decimal(20,0)");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Statistics.DiscordMessageEntity", b =>
+            {
+                b.Property<decimal>("DiscordServerId")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.Property<decimal>("DiscordChannelId")
-                        .HasColumnType("decimal(20,0)");
+                b.Property<decimal>("DiscordChannelId")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.Property<decimal>("DiscordMessageId")
-                        .HasColumnType("decimal(20,0)");
+                b.Property<decimal>("DiscordMessageId")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.Property<decimal>("DiscordAccountId")
-                        .HasColumnType("decimal(20,0)");
+                b.Property<decimal>("DiscordAccountId")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.Property<bool>("IsBatchCommitted")
-                        .HasColumnType("bit");
+                b.Property<bool>("IsBatchCommitted")
+                    .HasColumnType("bit");
 
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("TimeStamp")
+                    .HasColumnType("datetime2");
 
-                    b.HasKey("DiscordServerId", "DiscordChannelId", "DiscordMessageId");
+                b.HasKey("DiscordServerId", "DiscordChannelId", "DiscordMessageId");
 
-                    b.ToTable("DiscordMessages");
-                });
+                b.ToTable("DiscordMessages");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Statistics.DiscordVoiceTimeSpanEntity", b =>
-                {
-                    b.Property<decimal>("DiscordServerId")
-                        .HasColumnType("decimal(20,0)");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Statistics.DiscordVoiceTimeSpanEntity", b =>
+            {
+                b.Property<decimal>("DiscordServerId")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.Property<decimal>("DiscordChannelId")
-                        .HasColumnType("decimal(20,0)");
+                b.Property<decimal>("DiscordChannelId")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.Property<decimal>("DiscordAccountId")
-                        .HasColumnType("decimal(20,0)");
+                b.Property<decimal>("DiscordAccountId")
+                    .HasColumnType("decimal(20,0)");
 
-                    b.Property<DateTime>("StartTimeStamp")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("StartTimeStamp")
+                    .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("EndTimeStamp")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("EndTimeStamp")
+                    .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsCompleted")
-                        .HasColumnType("bit");
+                b.Property<bool>("IsCompleted")
+                    .HasColumnType("bit");
 
-                    b.HasKey("DiscordServerId", "DiscordChannelId", "DiscordAccountId", "StartTimeStamp");
+                b.HasKey("DiscordServerId", "DiscordChannelId", "DiscordAccountId", "StartTimeStamp");
 
-                    b.HasIndex("DiscordAccountId");
+                b.HasIndex("DiscordAccountId");
 
-                    b.ToTable("DiscordVoiceTimeSpans");
-                });
+                b.ToTable("DiscordVoiceTimeSpans");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Calendar.CalendarAppointmentEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.Calendar.CalendarAppointmentScheduleEntity", "CalendarAppointmentSchedule")
-                        .WithMany()
-                        .HasForeignKey("CalendarAppointmentScheduleId");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Calendar.CalendarAppointmentEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.Calendar.CalendarAppointmentScheduleEntity", "CalendarAppointmentSchedule")
+                    .WithMany()
+                    .HasForeignKey("CalendarAppointmentScheduleId");
 
-                    b.HasOne("Scruffy.Data.Entity.Tables.Calendar.CalendarAppointmentTemplateEntity", "CalendarAppointmentTemplate")
-                        .WithMany("CalendarAppointments")
-                        .HasForeignKey("CalendarAppointmentTemplateId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                b.HasOne("Scruffy.Data.Entity.Tables.Calendar.CalendarAppointmentTemplateEntity", "CalendarAppointmentTemplate")
+                    .WithMany("CalendarAppointments")
+                    .HasForeignKey("CalendarAppointmentTemplateId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("CalendarAppointmentSchedule");
+                b.Navigation("CalendarAppointmentSchedule");
 
-                    b.Navigation("CalendarAppointmentTemplate");
-                });
+                b.Navigation("CalendarAppointmentTemplate");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Calendar.CalendarAppointmentParticipantEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.Calendar.CalendarAppointmentEntity", "CalendarAppointment")
-                        .WithMany("CalendarAppointmentParticipants")
-                        .HasForeignKey("AppointmentId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Calendar.CalendarAppointmentParticipantEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.Calendar.CalendarAppointmentEntity", "CalendarAppointment")
+                    .WithMany("CalendarAppointmentParticipants")
+                    .HasForeignKey("AppointmentId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.HasOne("Scruffy.Data.Entity.Tables.CoreData.UserEntity", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                b.HasOne("Scruffy.Data.Entity.Tables.CoreData.UserEntity", "User")
+                    .WithMany()
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("CalendarAppointment");
+                b.Navigation("CalendarAppointment");
 
-                    b.Navigation("User");
-                });
+                b.Navigation("User");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Calendar.CalendarAppointmentScheduleEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.Calendar.CalendarAppointmentTemplateEntity", "CalendarAppointmentTemplate")
-                        .WithMany("CalendarAppointmentSchedules")
-                        .HasForeignKey("CalendarAppointmentTemplateId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Calendar.CalendarAppointmentScheduleEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.Calendar.CalendarAppointmentTemplateEntity", "CalendarAppointmentTemplate")
+                    .WithMany("CalendarAppointmentSchedules")
+                    .HasForeignKey("CalendarAppointmentTemplateId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("CalendarAppointmentTemplate");
-                });
+                b.Navigation("CalendarAppointmentTemplate");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Calendar.CalendarAppointmentTemplateEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.CoreData.ServerConfigurationEntity", "ServerConfiguration")
-                        .WithMany()
-                        .HasForeignKey("DiscordServerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Calendar.CalendarAppointmentTemplateEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.CoreData.ServerConfigurationEntity", "ServerConfiguration")
+                    .WithMany()
+                    .HasForeignKey("DiscordServerId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("ServerConfiguration");
-                });
+                b.Navigation("ServerConfiguration");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.CoreData.UserEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidExperienceLevelEntity", "RaidExperienceLevel")
-                        .WithMany("Users")
-                        .HasForeignKey("RaidExperienceLevelId");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.CoreData.UserEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidExperienceLevelEntity", "RaidExperienceLevel")
+                    .WithMany("Users")
+                    .HasForeignKey("RaidExperienceLevelId");
 
-                    b.Navigation("RaidExperienceLevel");
-                });
+                b.Navigation("RaidExperienceLevel");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Discord.DiscordAccountEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.CoreData.UserEntity", "User")
-                        .WithMany("DiscordAccounts")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Discord.DiscordAccountEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.CoreData.UserEntity", "User")
+                    .WithMany("DiscordAccounts")
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("User");
-                });
+                b.Navigation("User");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Fractals.FractalAppointmentEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.Fractals.FractalLfgConfigurationEntity", "FractalLfgConfiguration")
-                        .WithMany()
-                        .HasForeignKey("ConfigurationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Fractals.FractalAppointmentEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.Fractals.FractalLfgConfigurationEntity", "FractalLfgConfiguration")
+                    .WithMany()
+                    .HasForeignKey("ConfigurationId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("FractalLfgConfiguration");
-                });
+                b.Navigation("FractalLfgConfiguration");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Fractals.FractalRegistrationEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.Fractals.FractalAppointmentEntity", "FractalAppointmentEntity")
-                        .WithMany()
-                        .HasForeignKey("AppointmentId");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Fractals.FractalRegistrationEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.Fractals.FractalAppointmentEntity", "FractalAppointmentEntity")
+                    .WithMany()
+                    .HasForeignKey("AppointmentId");
 
-                    b.HasOne("Scruffy.Data.Entity.Tables.Fractals.FractalLfgConfigurationEntity", "FractalLfgConfiguration")
-                        .WithMany("FractalRegistrations")
-                        .HasForeignKey("ConfigurationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                b.HasOne("Scruffy.Data.Entity.Tables.Fractals.FractalLfgConfigurationEntity", "FractalLfgConfiguration")
+                    .WithMany("FractalRegistrations")
+                    .HasForeignKey("ConfigurationId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.HasOne("Scruffy.Data.Entity.Tables.CoreData.UserEntity", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                b.HasOne("Scruffy.Data.Entity.Tables.CoreData.UserEntity", "User")
+                    .WithMany()
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("FractalAppointmentEntity");
+                b.Navigation("FractalAppointmentEntity");
 
-                    b.Navigation("FractalLfgConfiguration");
+                b.Navigation("FractalLfgConfiguration");
 
-                    b.Navigation("User");
-                });
+                b.Navigation("User");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildChannelConfigurationEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.Guild.GuildEntity", "Guild")
-                        .WithMany()
-                        .HasForeignKey("GuildId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildChannelConfigurationEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.Guild.GuildEntity", "Guild")
+                    .WithMany()
+                    .HasForeignKey("GuildId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("Guild");
-                });
+                b.Navigation("Guild");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.CoreData.ServerConfigurationEntity", "ServerConfiguration")
-                        .WithMany()
-                        .HasForeignKey("DiscordServerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.CoreData.ServerConfigurationEntity", "ServerConfiguration")
+                    .WithMany()
+                    .HasForeignKey("DiscordServerId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("ServerConfiguration");
-                });
+                b.Navigation("ServerConfiguration");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildLogEntryEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.Guild.GuildEntity", "Guild")
-                        .WithMany("GuildLogEntries")
-                        .HasForeignKey("GuildId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildLogEntryEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.Guild.GuildEntity", "Guild")
+                    .WithMany("GuildLogEntries")
+                    .HasForeignKey("GuildId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("Guild");
-                });
+                b.Navigation("Guild");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildRankEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.Guild.GuildEntity", "Guild")
-                        .WithMany()
-                        .HasForeignKey("GuildId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildRankEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.Guild.GuildEntity", "Guild")
+                    .WithMany()
+                    .HasForeignKey("GuildId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.HasOne("Scruffy.Data.Entity.Tables.Guild.GuildRankEntity", "SuperiorRank")
-                        .WithMany()
-                        .HasForeignKey("SuperiorId");
+                b.HasOne("Scruffy.Data.Entity.Tables.Guild.GuildRankEntity", "SuperiorRank")
+                    .WithMany()
+                    .HasForeignKey("SuperiorId");
 
-                    b.Navigation("Guild");
+                b.Navigation("Guild");
 
-                    b.Navigation("SuperiorRank");
-                });
+                b.Navigation("SuperiorRank");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildSpecialRankConfigurationEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.Guild.GuildEntity", "Guild")
-                        .WithMany()
-                        .HasForeignKey("GuildId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildSpecialRankConfigurationEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.Guild.GuildEntity", "Guild")
+                    .WithMany()
+                    .HasForeignKey("GuildId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("Guild");
-                });
+                b.Navigation("Guild");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildSpecialRankIgnoreRoleAssignmentEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.Guild.GuildSpecialRankConfigurationEntity", "GuildSpecialRankConfiguration")
-                        .WithMany("GuildSpecialRankIgnoreRoleAssignments")
-                        .HasForeignKey("ConfigurationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildSpecialRankIgnoreRoleAssignmentEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.Guild.GuildSpecialRankConfigurationEntity", "GuildSpecialRankConfiguration")
+                    .WithMany("GuildSpecialRankIgnoreRoleAssignments")
+                    .HasForeignKey("ConfigurationId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("GuildSpecialRankConfiguration");
-                });
+                b.Navigation("GuildSpecialRankConfiguration");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildSpecialRankPointsEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.Guild.GuildSpecialRankConfigurationEntity", "GuildSpecialRankConfiguration")
-                        .WithMany("GuildSpecialRankPoints")
-                        .HasForeignKey("ConfigurationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildSpecialRankPointsEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.Guild.GuildSpecialRankConfigurationEntity", "GuildSpecialRankConfiguration")
+                    .WithMany("GuildSpecialRankPoints")
+                    .HasForeignKey("ConfigurationId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.HasOne("Scruffy.Data.Entity.Tables.CoreData.UserEntity", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                b.HasOne("Scruffy.Data.Entity.Tables.CoreData.UserEntity", "User")
+                    .WithMany()
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("GuildSpecialRankConfiguration");
+                b.Navigation("GuildSpecialRankConfiguration");
 
-                    b.Navigation("User");
-                });
+                b.Navigation("User");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildSpecialRankProtocolEntryEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.Guild.GuildSpecialRankConfigurationEntity", "GuildSpecialRankConfiguration")
-                        .WithMany("GuildSpecialRankProtocolEntries")
-                        .HasForeignKey("ConfigurationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildSpecialRankProtocolEntryEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.Guild.GuildSpecialRankConfigurationEntity", "GuildSpecialRankConfiguration")
+                    .WithMany("GuildSpecialRankProtocolEntries")
+                    .HasForeignKey("ConfigurationId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.HasOne("Scruffy.Data.Entity.Tables.CoreData.UserEntity", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
+                b.HasOne("Scruffy.Data.Entity.Tables.CoreData.UserEntity", "User")
+                    .WithMany()
+                    .HasForeignKey("UserId");
 
-                    b.Navigation("GuildSpecialRankConfiguration");
+                b.Navigation("GuildSpecialRankConfiguration");
 
-                    b.Navigation("User");
-                });
+                b.Navigation("User");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildSpecialRankRoleAssignmentEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.Guild.GuildSpecialRankConfigurationEntity", "GuildSpecialRankConfiguration")
-                        .WithMany("GuildSpecialRankRoleAssignments")
-                        .HasForeignKey("ConfigurationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildSpecialRankRoleAssignmentEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.Guild.GuildSpecialRankConfigurationEntity", "GuildSpecialRankConfiguration")
+                    .WithMany("GuildSpecialRankRoleAssignments")
+                    .HasForeignKey("ConfigurationId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("GuildSpecialRankConfiguration");
-                });
+                b.Navigation("GuildSpecialRankConfiguration");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.Account.GuildWarsAccountAchievementBitEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.GuildWars2.Account.GuildWarsAccountEntity", "GuildWarsAccount")
-                        .WithMany()
-                        .HasForeignKey("AccountName")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.Account.GuildWarsAccountAchievementBitEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.GuildWars2.Account.GuildWarsAccountEntity", "GuildWarsAccount")
+                    .WithMany()
+                    .HasForeignKey("AccountName")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.HasOne("Scruffy.Data.Entity.Tables.GuildWars2.Account.GuildWarsAccountAchievementEntity", "GuildWarsAccountAchievement")
-                        .WithMany("GuildWarsAccountAchievementBits")
-                        .HasForeignKey("AccountName", "AchievementId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                b.HasOne("Scruffy.Data.Entity.Tables.GuildWars2.Account.GuildWarsAccountAchievementEntity", "GuildWarsAccountAchievement")
+                    .WithMany("GuildWarsAccountAchievementBits")
+                    .HasForeignKey("AccountName", "AchievementId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("GuildWarsAccount");
+                b.Navigation("GuildWarsAccount");
 
-                    b.Navigation("GuildWarsAccountAchievement");
-                });
+                b.Navigation("GuildWarsAccountAchievement");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.Account.GuildWarsAccountAchievementEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.GuildWars2.Account.GuildWarsAccountEntity", "GuildWarsAccount")
-                        .WithMany()
-                        .HasForeignKey("AccountName")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.Account.GuildWarsAccountAchievementEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.GuildWars2.Account.GuildWarsAccountEntity", "GuildWarsAccount")
+                    .WithMany()
+                    .HasForeignKey("AccountName")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("GuildWarsAccount");
-                });
+                b.Navigation("GuildWarsAccount");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.Account.GuildWarsAccountDailyLoginCheckEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.GuildWars2.Account.GuildWarsAccountEntity", "Account")
-                        .WithMany()
-                        .HasForeignKey("Name")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.Account.GuildWarsAccountDailyLoginCheckEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.GuildWars2.Account.GuildWarsAccountEntity", "Account")
+                    .WithMany()
+                    .HasForeignKey("Name")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("Account");
-                });
+                b.Navigation("Account");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.Account.GuildWarsAccountEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.CoreData.UserEntity", "User")
-                        .WithMany("GuildWarsAccounts")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.Account.GuildWarsAccountEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.CoreData.UserEntity", "User")
+                    .WithMany("GuildWarsAccounts")
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("User");
-                });
+                b.Navigation("User");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementBitEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementEntity", "GuildWarsAchievement")
-                        .WithMany("GuildWarsAchievementBits")
-                        .HasForeignKey("AchievementId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementBitEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementEntity", "GuildWarsAchievement")
+                    .WithMany("GuildWarsAchievementBits")
+                    .HasForeignKey("AchievementId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("GuildWarsAchievement");
-                });
+                b.Navigation("GuildWarsAchievement");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementFlagEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementEntity", "GuildWarsAchievement")
-                        .WithMany("GuildWarsAchievementFlags")
-                        .HasForeignKey("AchievementId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementFlagEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementEntity", "GuildWarsAchievement")
+                    .WithMany("GuildWarsAchievementFlags")
+                    .HasForeignKey("AchievementId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("GuildWarsAchievement");
-                });
+                b.Navigation("GuildWarsAchievement");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementPrerequisiteEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementEntity", "GuildWarsAchievement")
-                        .WithMany("GuildWarsAchievementPrerequisites")
-                        .HasForeignKey("AchievementId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementPrerequisiteEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementEntity", "GuildWarsAchievement")
+                    .WithMany("GuildWarsAchievementPrerequisites")
+                    .HasForeignKey("AchievementId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("GuildWarsAchievement");
-                });
+                b.Navigation("GuildWarsAchievement");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementRewardEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementEntity", "GuildWarsAchievement")
-                        .WithMany("GuildWarsAchievementRewards")
-                        .HasForeignKey("AchievementId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementRewardEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementEntity", "GuildWarsAchievement")
+                    .WithMany("GuildWarsAchievementRewards")
+                    .HasForeignKey("AchievementId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("GuildWarsAchievement");
-                });
+                b.Navigation("GuildWarsAchievement");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementTierEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementEntity", "GuildWarsAchievement")
-                        .WithMany("GuildWarsAchievementTiers")
-                        .HasForeignKey("AchievementId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementTierEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementEntity", "GuildWarsAchievement")
+                    .WithMany("GuildWarsAchievementTiers")
+                    .HasForeignKey("AchievementId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("GuildWarsAchievement");
-                });
+                b.Navigation("GuildWarsAchievement");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsItemGuildUpgradeConversionEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsItemEntity", "Item")
-                        .WithMany()
-                        .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsItemGuildUpgradeConversionEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsItemEntity", "Item")
+                    .WithMany()
+                    .HasForeignKey("ItemId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("Item");
-                });
+                b.Navigation("Item");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidAppointmentEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidDayConfigurationEntity", "RaidDayConfiguration")
-                        .WithMany("RaidAppointments")
-                        .HasForeignKey("ConfigurationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidAppointmentEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidDayConfigurationEntity", "RaidDayConfiguration")
+                    .WithMany("RaidAppointments")
+                    .HasForeignKey("ConfigurationId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidDayTemplateEntity", "RaidDayTemplate")
-                        .WithMany("RaidAppointments")
-                        .HasForeignKey("TemplateId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidDayTemplateEntity", "RaidDayTemplate")
+                    .WithMany("RaidAppointments")
+                    .HasForeignKey("TemplateId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("RaidDayConfiguration");
+                b.Navigation("RaidDayConfiguration");
 
-                    b.Navigation("RaidDayTemplate");
-                });
+                b.Navigation("RaidDayTemplate");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidCurrentUserPointsEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.CoreData.UserEntity", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidCurrentUserPointsEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.CoreData.UserEntity", "User")
+                    .WithMany()
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("User");
-                });
+                b.Navigation("User");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidExperienceAssignmentEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidExperienceLevelEntity", "RaidExperienceLevel")
-                        .WithMany("RaidExperienceAssignments")
-                        .HasForeignKey("ExperienceLevelId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidExperienceAssignmentEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidExperienceLevelEntity", "RaidExperienceLevel")
+                    .WithMany("RaidExperienceAssignments")
+                    .HasForeignKey("ExperienceLevelId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidDayTemplateEntity", "RaidDayTemplate")
-                        .WithMany("RaidExperienceAssignments")
-                        .HasForeignKey("TemplateId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidDayTemplateEntity", "RaidDayTemplate")
+                    .WithMany("RaidExperienceAssignments")
+                    .HasForeignKey("TemplateId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("RaidDayTemplate");
+                b.Navigation("RaidDayTemplate");
 
-                    b.Navigation("RaidExperienceLevel");
-                });
+                b.Navigation("RaidExperienceLevel");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidExperienceLevelEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidExperienceLevelEntity", "SuperiorRaidExperienceLevel")
-                        .WithMany("InferiorRaidExperienceLevels")
-                        .HasForeignKey("SuperiorExperienceLevelId");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidExperienceLevelEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidExperienceLevelEntity", "SuperiorRaidExperienceLevel")
+                    .WithMany("InferiorRaidExperienceLevels")
+                    .HasForeignKey("SuperiorExperienceLevelId");
 
-                    b.Navigation("SuperiorRaidExperienceLevel");
-                });
+                b.Navigation("SuperiorRaidExperienceLevel");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRegistrationEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidAppointmentEntity", "RaidAppointment")
-                        .WithMany("RaidRegistrations")
-                        .HasForeignKey("AppointmentId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRegistrationEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidAppointmentEntity", "RaidAppointment")
+                    .WithMany("RaidRegistrations")
+                    .HasForeignKey("AppointmentId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidExperienceLevelEntity", "LineupExperienceLevel")
-                        .WithMany()
-                        .HasForeignKey("LineupExperienceLevelId");
+                b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidExperienceLevelEntity", "LineupExperienceLevel")
+                    .WithMany()
+                    .HasForeignKey("LineupExperienceLevelId");
 
-                    b.HasOne("Scruffy.Data.Entity.Tables.CoreData.UserEntity", "User")
-                        .WithMany("RaidRegistrations")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                b.HasOne("Scruffy.Data.Entity.Tables.CoreData.UserEntity", "User")
+                    .WithMany("RaidRegistrations")
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("LineupExperienceLevel");
+                b.Navigation("LineupExperienceLevel");
 
-                    b.Navigation("RaidAppointment");
+                b.Navigation("RaidAppointment");
 
-                    b.Navigation("User");
-                });
+                b.Navigation("User");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRegistrationRoleAssignmentEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidRoleEntity", "MainRaidRole")
-                        .WithMany()
-                        .HasForeignKey("MainRoleId");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRegistrationRoleAssignmentEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidRoleEntity", "MainRaidRole")
+                    .WithMany()
+                    .HasForeignKey("MainRoleId");
 
-                    b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidRegistrationEntity", "RaidRegistration")
-                        .WithMany("RaidRegistrationRoleAssignments")
-                        .HasForeignKey("RegistrationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidRegistrationEntity", "RaidRegistration")
+                    .WithMany("RaidRegistrationRoleAssignments")
+                    .HasForeignKey("RegistrationId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidRoleEntity", "SubRaidRole")
-                        .WithMany()
-                        .HasForeignKey("SubRoleId");
+                b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidRoleEntity", "SubRaidRole")
+                    .WithMany()
+                    .HasForeignKey("SubRoleId");
 
-                    b.Navigation("MainRaidRole");
+                b.Navigation("MainRaidRole");
 
-                    b.Navigation("RaidRegistration");
+                b.Navigation("RaidRegistration");
 
-                    b.Navigation("SubRaidRole");
-                });
+                b.Navigation("SubRaidRole");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRequiredRoleEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidRoleEntity", "MainRaidRole")
-                        .WithMany()
-                        .HasForeignKey("MainRoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRequiredRoleEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidRoleEntity", "MainRaidRole")
+                    .WithMany()
+                    .HasForeignKey("MainRoleId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidRoleEntity", "SubRaidRole")
-                        .WithMany()
-                        .HasForeignKey("SubRoleId");
+                b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidRoleEntity", "SubRaidRole")
+                    .WithMany()
+                    .HasForeignKey("SubRoleId");
 
-                    b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidDayTemplateEntity", "RaidDayTemplateEntity")
-                        .WithMany()
-                        .HasForeignKey("TemplateId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidDayTemplateEntity", "RaidDayTemplateEntity")
+                    .WithMany()
+                    .HasForeignKey("TemplateId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("MainRaidRole");
+                b.Navigation("MainRaidRole");
 
-                    b.Navigation("RaidDayTemplateEntity");
+                b.Navigation("RaidDayTemplateEntity");
 
-                    b.Navigation("SubRaidRole");
-                });
+                b.Navigation("SubRaidRole");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRoleAliasNameEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidRoleEntity", "MainRaidRole")
-                        .WithMany()
-                        .HasForeignKey("MainRoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRoleAliasNameEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidRoleEntity", "MainRaidRole")
+                    .WithMany()
+                    .HasForeignKey("MainRoleId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidRoleEntity", "SubRaidRole")
-                        .WithMany()
-                        .HasForeignKey("SubRoleId");
+                b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidRoleEntity", "SubRaidRole")
+                    .WithMany()
+                    .HasForeignKey("SubRoleId");
 
-                    b.Navigation("MainRaidRole");
+                b.Navigation("MainRaidRole");
 
-                    b.Navigation("SubRaidRole");
-                });
+                b.Navigation("SubRaidRole");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRoleEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidRoleEntity", "MainRaidRole")
-                        .WithMany("SubRaidRoles")
-                        .HasForeignKey("MainRoleId");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRoleEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidRoleEntity", "MainRaidRole")
+                    .WithMany("SubRaidRoles")
+                    .HasForeignKey("MainRoleId");
 
-                    b.Navigation("MainRaidRole");
-                });
+                b.Navigation("MainRaidRole");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRoleLineupAssignmentEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidRoleLineupHeaderEntity", "RaidRoleLineupHeader")
-                        .WithMany("RaidRoleLineupAssignments")
-                        .HasForeignKey("LineupHeaderId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRoleLineupAssignmentEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidRoleLineupHeaderEntity", "RaidRoleLineupHeader")
+                    .WithMany("RaidRoleLineupAssignments")
+                    .HasForeignKey("LineupHeaderId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidDayTemplateEntity", "RaidDayTemplate")
-                        .WithMany("RaidRoleLineupAssignments")
-                        .HasForeignKey("TemplateId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidDayTemplateEntity", "RaidDayTemplate")
+                    .WithMany("RaidRoleLineupAssignments")
+                    .HasForeignKey("TemplateId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("RaidDayTemplate");
+                b.Navigation("RaidDayTemplate");
 
-                    b.Navigation("RaidRoleLineupHeader");
-                });
+                b.Navigation("RaidRoleLineupHeader");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRoleLineupEntryEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidRoleLineupHeaderEntity", "RaidRoleLineupHeader")
-                        .WithMany("RaidRoleLineupEntries")
-                        .HasForeignKey("LineupHeaderId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRoleLineupEntryEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidRoleLineupHeaderEntity", "RaidRoleLineupHeader")
+                    .WithMany("RaidRoleLineupEntries")
+                    .HasForeignKey("LineupHeaderId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidRoleEntity", "RaidRole")
-                        .WithMany("RaidRoleLineupEntries")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidRoleEntity", "RaidRole")
+                    .WithMany("RaidRoleLineupEntries")
+                    .HasForeignKey("RoleId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("RaidRole");
+                b.Navigation("RaidRole");
 
-                    b.Navigation("RaidRoleLineupHeader");
-                });
+                b.Navigation("RaidRoleLineupHeader");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidUserRoleEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidRoleEntity", "MainRaidRole")
-                        .WithMany()
-                        .HasForeignKey("MainRoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidUserRoleEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidRoleEntity", "MainRaidRole")
+                    .WithMany()
+                    .HasForeignKey("MainRoleId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidRoleEntity", "SubRaidRole")
-                        .WithMany()
-                        .HasForeignKey("SubRoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                b.HasOne("Scruffy.Data.Entity.Tables.Raid.RaidRoleEntity", "SubRaidRole")
+                    .WithMany()
+                    .HasForeignKey("SubRoleId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.HasOne("Scruffy.Data.Entity.Tables.CoreData.UserEntity", "User")
-                        .WithMany("RaidUserRoles")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                b.HasOne("Scruffy.Data.Entity.Tables.CoreData.UserEntity", "User")
+                    .WithMany("RaidUserRoles")
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("MainRaidRole");
+                b.Navigation("MainRaidRole");
 
-                    b.Navigation("SubRaidRole");
+                b.Navigation("SubRaidRole");
 
-                    b.Navigation("User");
-                });
+                b.Navigation("User");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Reminder.OneTimeReminderEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.Discord.DiscordAccountEntity", "DiscordAccount")
-                        .WithMany("OneTimeReminders")
-                        .HasForeignKey("DiscordAccountId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Reminder.OneTimeReminderEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.Discord.DiscordAccountEntity", "DiscordAccount")
+                    .WithMany("OneTimeReminders")
+                    .HasForeignKey("DiscordAccountId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("DiscordAccount");
-                });
+                b.Navigation("DiscordAccount");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Statistics.DiscordVoiceTimeSpanEntity", b =>
-                {
-                    b.HasOne("Scruffy.Data.Entity.Tables.Discord.DiscordAccountEntity", "DiscordAccount")
-                        .WithMany()
-                        .HasForeignKey("DiscordAccountId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Statistics.DiscordVoiceTimeSpanEntity", b =>
+            {
+                b.HasOne("Scruffy.Data.Entity.Tables.Discord.DiscordAccountEntity", "DiscordAccount")
+                    .WithMany()
+                    .HasForeignKey("DiscordAccountId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("DiscordAccount");
-                });
+                b.Navigation("DiscordAccount");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Calendar.CalendarAppointmentEntity", b =>
-                {
-                    b.Navigation("CalendarAppointmentParticipants");
-                });
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Calendar.CalendarAppointmentEntity", b =>
+            {
+                b.Navigation("CalendarAppointmentParticipants");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Calendar.CalendarAppointmentTemplateEntity", b =>
-                {
-                    b.Navigation("CalendarAppointments");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Calendar.CalendarAppointmentTemplateEntity", b =>
+            {
+                b.Navigation("CalendarAppointments");
 
-                    b.Navigation("CalendarAppointmentSchedules");
-                });
+                b.Navigation("CalendarAppointmentSchedules");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.CoreData.UserEntity", b =>
-                {
-                    b.Navigation("DiscordAccounts");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.CoreData.UserEntity", b =>
+            {
+                b.Navigation("DiscordAccounts");
 
-                    b.Navigation("GuildWarsAccounts");
+                b.Navigation("GuildWarsAccounts");
 
-                    b.Navigation("RaidRegistrations");
+                b.Navigation("RaidRegistrations");
 
-                    b.Navigation("RaidUserRoles");
-                });
+                b.Navigation("RaidUserRoles");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Discord.DiscordAccountEntity", b =>
-                {
-                    b.Navigation("OneTimeReminders");
-                });
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Discord.DiscordAccountEntity", b =>
+            {
+                b.Navigation("OneTimeReminders");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Fractals.FractalLfgConfigurationEntity", b =>
-                {
-                    b.Navigation("FractalRegistrations");
-                });
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Fractals.FractalLfgConfigurationEntity", b =>
+            {
+                b.Navigation("FractalRegistrations");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildEntity", b =>
-                {
-                    b.Navigation("GuildLogEntries");
-                });
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildEntity", b =>
+            {
+                b.Navigation("GuildLogEntries");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildSpecialRankConfigurationEntity", b =>
-                {
-                    b.Navigation("GuildSpecialRankIgnoreRoleAssignments");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Guild.GuildSpecialRankConfigurationEntity", b =>
+            {
+                b.Navigation("GuildSpecialRankIgnoreRoleAssignments");
 
-                    b.Navigation("GuildSpecialRankPoints");
+                b.Navigation("GuildSpecialRankPoints");
 
-                    b.Navigation("GuildSpecialRankProtocolEntries");
+                b.Navigation("GuildSpecialRankProtocolEntries");
 
-                    b.Navigation("GuildSpecialRankRoleAssignments");
-                });
+                b.Navigation("GuildSpecialRankRoleAssignments");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.Account.GuildWarsAccountAchievementEntity", b =>
-                {
-                    b.Navigation("GuildWarsAccountAchievementBits");
-                });
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.Account.GuildWarsAccountAchievementEntity", b =>
+            {
+                b.Navigation("GuildWarsAccountAchievementBits");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementEntity", b =>
-                {
-                    b.Navigation("GuildWarsAchievementBits");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.GuildWars2.GameData.GuildWarsAchievementEntity", b =>
+            {
+                b.Navigation("GuildWarsAchievementBits");
 
-                    b.Navigation("GuildWarsAchievementFlags");
+                b.Navigation("GuildWarsAchievementFlags");
 
-                    b.Navigation("GuildWarsAchievementPrerequisites");
+                b.Navigation("GuildWarsAchievementPrerequisites");
 
-                    b.Navigation("GuildWarsAchievementRewards");
+                b.Navigation("GuildWarsAchievementRewards");
 
-                    b.Navigation("GuildWarsAchievementTiers");
-                });
+                b.Navigation("GuildWarsAchievementTiers");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidAppointmentEntity", b =>
-                {
-                    b.Navigation("RaidRegistrations");
-                });
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidAppointmentEntity", b =>
+            {
+                b.Navigation("RaidRegistrations");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidDayConfigurationEntity", b =>
-                {
-                    b.Navigation("RaidAppointments");
-                });
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidDayConfigurationEntity", b =>
+            {
+                b.Navigation("RaidAppointments");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidDayTemplateEntity", b =>
-                {
-                    b.Navigation("RaidAppointments");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidDayTemplateEntity", b =>
+            {
+                b.Navigation("RaidAppointments");
 
-                    b.Navigation("RaidExperienceAssignments");
+                b.Navigation("RaidExperienceAssignments");
 
-                    b.Navigation("RaidRoleLineupAssignments");
-                });
+                b.Navigation("RaidRoleLineupAssignments");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidExperienceLevelEntity", b =>
-                {
-                    b.Navigation("InferiorRaidExperienceLevels");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidExperienceLevelEntity", b =>
+            {
+                b.Navigation("InferiorRaidExperienceLevels");
 
-                    b.Navigation("RaidExperienceAssignments");
+                b.Navigation("RaidExperienceAssignments");
 
-                    b.Navigation("Users");
-                });
+                b.Navigation("Users");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRegistrationEntity", b =>
-                {
-                    b.Navigation("RaidRegistrationRoleAssignments");
-                });
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRegistrationEntity", b =>
+            {
+                b.Navigation("RaidRegistrationRoleAssignments");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRoleEntity", b =>
-                {
-                    b.Navigation("RaidRoleLineupEntries");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRoleEntity", b =>
+            {
+                b.Navigation("RaidRoleLineupEntries");
 
-                    b.Navigation("SubRaidRoles");
-                });
+                b.Navigation("SubRaidRoles");
+            });
 
-            modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRoleLineupHeaderEntity", b =>
-                {
-                    b.Navigation("RaidRoleLineupAssignments");
+        modelBuilder.Entity("Scruffy.Data.Entity.Tables.Raid.RaidRoleLineupHeaderEntity", b =>
+            {
+                b.Navigation("RaidRoleLineupAssignments");
 
-                    b.Navigation("RaidRoleLineupEntries");
-                });
+                b.Navigation("RaidRoleLineupEntries");
+            });
 #pragma warning restore 612, 618
-        }
     }
 }

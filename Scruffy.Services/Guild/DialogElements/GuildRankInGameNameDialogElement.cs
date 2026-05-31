@@ -35,7 +35,7 @@ public class GuildRankInGameNameDialogElement : DialogEmbedMessageElementBase<st
 
     #endregion // Constructor
 
-    #region DialogEmbedMessageElementBase<ulong>
+    #region DialogEmbedMessageElementBase
 
     /// <inheritdoc/>
     public override EmbedBuilder GetMessage()
@@ -106,5 +106,5 @@ public class GuildRankInGameNameDialogElement : DialogEmbedMessageElementBase<st
                                    : throw new InvalidOperationException());
     }
 
-    #endregion // DialogEmbedMessageElementBase<ulong>
+    #endregion // DialogEmbedMessageElementBase
 }

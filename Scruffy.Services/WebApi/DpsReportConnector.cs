@@ -30,7 +30,7 @@ public class DpsReportConnector
     /// </summary>
     private static readonly JsonSerializerSettings _settings = new()
                                                                {
-                                                                   NullValueHandling = NullValueHandling.Ignore,
+                                                                   NullValueHandling = NullValueHandling.Ignore
                                                                };
 
     /// <summary>
@@ -309,7 +309,7 @@ public class DpsReportConnector
                                                   {
                                                       player.DisplayName,
                                                       upload.Id,
-                                                      upload.Permalink,
+                                                      upload.Permalink
                                                   });
             }
         }

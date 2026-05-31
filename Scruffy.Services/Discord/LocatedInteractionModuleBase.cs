@@ -36,7 +36,7 @@ public class LocatedInteractionModuleBase : InteractionModuleBase<InteractionCon
 
     #endregion // Properties
 
-    #region ModuleBase
+    #region InteractionModuleBase
 
     /// <inheritdoc/>
     public override void BeforeExecute(ICommandInfo command)
@@ -44,5 +44,5 @@ public class LocatedInteractionModuleBase : InteractionModuleBase<InteractionCon
         Context.Command = command;
     }
 
-    #endregion // ModuleBase
+    #endregion // InteractionModuleBase
 }

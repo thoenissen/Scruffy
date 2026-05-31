@@ -48,7 +48,7 @@ public class GuildWars2SlashCommandModule : SlashCommandModuleBase
     /// <param name="type">Type</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("guides", "Guild Wars 2 guides")]
-    public async Task Guides([Summary("Type", "Type of the guides which should be shown.")]GuideType type)
+    public async Task Guides([Summary("Type", "Type of the guides which should be shown.")] GuideType type)
     {
         switch (type)
         {

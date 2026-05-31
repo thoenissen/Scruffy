@@ -53,7 +53,7 @@ public class CalendarRefreshJob : LocatedAsyncJob
                                                               {
                                                                   obj.Id,
                                                                   obj.CalendarAppointmentTemplate.ReminderTime,
-                                                                  obj.TimeStamp,
+                                                                  obj.TimeStamp
                                                               })
                                                .ToList())
                 {

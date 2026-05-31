@@ -13,5 +13,5 @@ public enum UserType
     /// <summary>
     /// Managed by an Administrator
     /// </summary>
-    AdministratorManaged = 1,
+    AdministratorManaged = 1
 }

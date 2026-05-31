@@ -262,7 +262,7 @@ public class DpsReportReportGenerator : LocatedServiceBase
                {
                    Dps = detailedReport.Players?.Sum(player => player.DpsTargets?.Sum(dpsTarget => dpsTarget.Count > 0 ? dpsTarget[0].Dps : 0)),
                    Alacrity = GetUptime(detailedReport.Players, AlacrityId),
-                   Quickness = GetUptime(detailedReport.Players, QuicknessId),
+                   Quickness = GetUptime(detailedReport.Players, QuicknessId)
                };
     }
 
@@ -278,7 +278,7 @@ public class DpsReportReportGenerator : LocatedServiceBase
         var statistics = new PersonalStatistics
                          {
                              PlayerCharacterName = playerCharacterName,
-                             Mechanics = GetMechanics(detailedReport, playerCharacterName),
+                             Mechanics = GetMechanics(detailedReport, playerCharacterName)
                          };
 
         var player = detailedReport?.Players?.FirstOrDefault(player => player.Name?.Equals(playerCharacterName, StringComparison.OrdinalIgnoreCase) == true);

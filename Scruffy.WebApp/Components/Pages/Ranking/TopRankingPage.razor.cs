@@ -126,7 +126,7 @@ public partial class TopRankingPage : LocatedComponent
                                                      }
                                                  ],
                                       Labels = maxPoints.Select(topPoints => $"{topPoints.Name} ({topPoints.Points:0.##})")
-                                                        .ToArray(),
+                                                        .ToArray()
                                   };
         }
 
@@ -176,7 +176,7 @@ public partial class TopRankingPage : LocatedComponent
                                                                                                      && points.UserId == dates.UserId
                                                                                                      && points.Date > dates.Date.AddDays(-63)
                                                                                                      && points.Date <= dates.Date)
-                                                                                    .Sum(points => points.Points),
+                                                                                    .Sum(points => points.Points)
                                                      })
                                     .GroupBy(dates => dates.UserId)
                                     .Select(pointsPerUser => new MaxPointsEntry
@@ -185,7 +185,7 @@ public partial class TopRankingPage : LocatedComponent
                                                                                                        && member.ServerId == WebAppConfiguration.DiscordServerId)
                                                                                       .Select(member => member.Name)
                                                                                       .FirstOrDefault(),
-                                                                 Points = pointsPerUser.Max(points => points.Points),
+                                                                 Points = pointsPerUser.Max(points => points.Points)
                                                              })
                                     .Where(pointsPerUser => pointsPerUser.Name != null)
                                     .OrderByDescending(pointsPerUser => pointsPerUser.Points)

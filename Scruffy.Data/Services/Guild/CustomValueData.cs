@@ -1,27 +1,26 @@
-﻿namespace Scruffy.Data.Services.Guild
+﻿namespace Scruffy.Data.Services.Guild;
+
+/// <summary>
+/// Custom value data
+/// </summary>
+public class CustomValueData
 {
+    #region Properties
+
     /// <summary>
-    /// Custom value data
+    /// Item id
     /// </summary>
-    public class CustomValueData
-    {
-        #region Properties
+    public int ItemId { get; set; }
 
-        /// <summary>
-        /// Item id
-        /// </summary>
-        public int ItemId { get; set; }
+    /// <summary>
+    /// Value
+    /// </summary>
+    public long Value { get; set; }
 
-        /// <summary>
-        /// Value
-        /// </summary>
-        public long Value { get; set; }
+    /// <summary>
+    /// Custom value threshold
+    /// </summary>
+    public bool IsCustomValueThresholdActivated { get; set; }
 
-        /// <summary>
-        /// Custom value threshold
-        /// </summary>
-        public bool IsCustomValueThresholdActivated { get; set; }
-
-        #endregion // Properties
-    }
+    #endregion // Properties
 }

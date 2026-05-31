@@ -13,5 +13,5 @@ public enum GameType
     /// <summary>
     /// Word chain
     /// </summary>
-    WordChain,
+    WordChain
 }

@@ -32,7 +32,7 @@ public class CalendarTemplateGuildPointsCapDialogElement : DialogReactionElement
 
     #endregion // Constructor
 
-    #region DialogReactionElementBase<bool>
+    #region DialogReactionElementBase
 
     /// <inheritdoc/>
     public override string GetMessage()
@@ -63,5 +63,5 @@ public class CalendarTemplateGuildPointsCapDialogElement : DialogReactionElement
         return false;
     }
 
-    #endregion // DialogReactionElementBase<bool>
+    #endregion // DialogReactionElementBase
 }

@@ -106,7 +106,7 @@ public class GuildRankAssignmentJob : LocatedAsyncJob
                                                          {
                                                              obj.Id,
                                                              obj.Order,
-                                                             obj.Percentage,
+                                                             obj.Percentage
                                                          })
                                           .OrderByDescending(obj => obj.Order)
                                           .ToList();

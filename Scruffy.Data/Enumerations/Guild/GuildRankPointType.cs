@@ -48,5 +48,5 @@ public enum GuildRankPointType
     /// <summary>
     /// Development
     /// </summary>
-    Development,
+    Development
 }

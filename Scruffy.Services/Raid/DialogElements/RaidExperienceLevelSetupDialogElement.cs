@@ -62,7 +62,7 @@ public class RaidExperienceLevelSetupDialogElement : DialogEmbedReactionElementB
                                                       Id = obj.Id,
                                                       SuperiorExperienceLevelId = obj.SuperiorExperienceLevelId,
                                                       Description = obj.Description,
-                                                      DiscordEmoji = obj.DiscordEmoji,
+                                                      DiscordEmoji = obj.DiscordEmoji
                                                   })
                                    .ToList();
             }
@@ -73,7 +73,7 @@ public class RaidExperienceLevelSetupDialogElement : DialogEmbedReactionElementB
 
     #endregion // Methods
 
-    #region DialogReactionElementBase<bool>
+    #region DialogEmbedReactionElementBase
 
     /// <inheritdoc/>
     public override Task EditMessage(EmbedBuilder builder)
@@ -128,7 +128,7 @@ public class RaidExperienceLevelSetupDialogElement : DialogEmbedReactionElementB
                                                                 SuperiorExperienceLevelId = data.SuperiorExperienceLevelId,
                                                                 Description = data.Description,
                                                                 DiscordEmoji = data.DiscordEmoji,
-                                                                DiscordRoleId = data.DiscordRoleId,
+                                                                DiscordRoleId = data.DiscordRoleId
                                                             };
 
                                                 if (dbFactory.GetRepository<RaidExperienceLevelRepository>()
@@ -212,5 +212,5 @@ public class RaidExperienceLevelSetupDialogElement : DialogEmbedReactionElementB
         return false;
     }
 
-    #endregion // DialogReactionElementBase<bool>
+    #endregion // DialogEmbedReactionElementBase
 }

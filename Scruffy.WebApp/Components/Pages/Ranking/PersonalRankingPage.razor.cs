@@ -202,7 +202,7 @@ public partial class PersonalRankingPage
                                                                                             .ToArray()
                                                             }
                                                         ],
-                                             Labels = userPoints.Select(obj => $"{GetDescription(obj.Type)} ({obj.Points:0.##})").ToArray(),
+                                             Labels = userPoints.Select(obj => $"{GetDescription(obj.Type)} ({obj.Points:0.##})").ToArray()
                                          };
             }
         }

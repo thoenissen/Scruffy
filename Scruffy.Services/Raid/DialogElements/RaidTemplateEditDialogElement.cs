@@ -36,7 +36,7 @@ public class RaidTemplateEditDialogElement : DialogEmbedReactionElementBase<bool
 
     #endregion // Constructor
 
-    #region DialogReactionElementBase<bool>
+    #region DialogEmbedReactionElementBase
 
     /// <inheritdoc/>
     public override async Task EditMessage(EmbedBuilder builder)
@@ -169,5 +169,5 @@ public class RaidTemplateEditDialogElement : DialogEmbedReactionElementBase<bool
         return false;
     }
 
-    #endregion // DialogReactionElementBase<bool>
+    #endregion // DialogEmbedReactionElementBase
 }

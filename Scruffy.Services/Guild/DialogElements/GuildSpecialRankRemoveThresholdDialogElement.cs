@@ -25,7 +25,7 @@ public class GuildSpecialRankRemoveThresholdDialogElement : DialogMessageElement
 
     #endregion // Constructor
 
-    #region DialogMessageElementBase<string>
+    #region DialogMessageElementBase
 
     /// <inheritdoc/>
     public override string GetMessage()
@@ -39,5 +39,5 @@ public class GuildSpecialRankRemoveThresholdDialogElement : DialogMessageElement
         return double.Parse(message.Content, NumberStyles.Any, LocalizationGroup.CultureInfo);
     }
 
-    #endregion // DialogMessageElementBase<string>
+    #endregion // DialogMessageElementBase
 }

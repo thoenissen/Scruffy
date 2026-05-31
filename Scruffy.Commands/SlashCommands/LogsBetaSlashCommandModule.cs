@@ -39,7 +39,7 @@ public class LogsBetaSlashCommandModule : SlashCommandModuleBase
     /// <param name="dateString">Date string</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("day", "Display logs of a day")]
-    public async Task Day([Summary("date", "Date (dd.mm; dd.mm.yyyy)")]string dateString = null)
+    public async Task Day([Summary("date", "Date (dd.mm; dd.mm.yyyy)")] string dateString = null)
     {
         await CommandHandler.Day(Context, dateString)
                             .ConfigureAwait(false);

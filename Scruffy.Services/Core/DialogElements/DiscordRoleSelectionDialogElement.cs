@@ -41,7 +41,7 @@ public class DiscordRoleSelectionDialogElement : DialogSelectMenuElementBase<ulo
 
     #endregion // Properties
 
-    #region DialogEmbedMessageElementBase<long?>
+    #region DialogSelectMenuElementBase
 
     /// <inheritdoc/>
     public override string GetMessage()
@@ -91,5 +91,5 @@ public class DiscordRoleSelectionDialogElement : DialogSelectMenuElementBase<ulo
         throw new InvalidOperationException();
     }
 
-    #endregion // DialogEmbedMessageElementBase<long?>
+    #endregion // DialogSelectMenuElementBase
 }

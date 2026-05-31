@@ -23,7 +23,7 @@ public class CalendarOneTimeDayDialogElement : DialogMessageElementBase<DateTime
 
     #endregion // Constructor
 
-    #region DialogMessageElementBase<string>
+    #region DialogMessageElementBase
 
     /// <inheritdoc/>
     public override string GetMessage()
@@ -43,5 +43,5 @@ public class CalendarOneTimeDayDialogElement : DialogMessageElementBase<DateTime
                    : throw new InvalidOperationException();
     }
 
-    #endregion // DialogMessageElementBase<string>
+    #endregion // DialogMessageElementBase
 }

@@ -25,7 +25,7 @@ public class GuildConfigurationItemItemIdDialogElement : DialogMessageElementBas
 
     #endregion // Constructor
 
-    #region DialogMessageElementBase<string>
+    #region DialogMessageElementBase
 
     /// <inheritdoc/>
     public override string GetMessage()
@@ -39,5 +39,5 @@ public class GuildConfigurationItemItemIdDialogElement : DialogMessageElementBas
         return int.Parse(message.Content, NumberStyles.Any, LocalizationGroup.CultureInfo);
     }
 
-    #endregion // DialogMessageElementBase<string>
+    #endregion // DialogMessageElementBase
 }

@@ -353,7 +353,7 @@ public sealed class InteractivityService : SingletonLocatedServiceBase, IDisposa
 
     #endregion // Private methods
 
-    #region SingleLocatedServiceBase
+    #region SingletonLocatedServiceBase
 
     /// <inheritdoc/>
     public override async Task Initialize(IServiceProvider serviceProvider)
@@ -389,7 +389,7 @@ public sealed class InteractivityService : SingletonLocatedServiceBase, IDisposa
         _client.ReactionAdded += OnReactionAdded;
     }
 
-    #endregion // SingleLocatedServiceBase
+    #endregion // SingletonLocatedServiceBase
 
     #region IDisposable
 

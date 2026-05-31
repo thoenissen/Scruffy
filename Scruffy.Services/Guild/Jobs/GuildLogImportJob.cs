@@ -20,6 +20,75 @@ namespace Scruffy.Services.Guild.Jobs;
 /// </summary>
 public class GuildLogImportJob : LocatedAsyncJob
 {
+    #region Methods
+
+    /// <summary>
+    /// Member joined
+    /// </summary>
+    /// <param name="discordChannel">Discord channel</param>
+    /// <param name="entry">Entry</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    private async Task<bool> OnJoined(IMessageChannel discordChannel, GuildLogEntry entry)
+    {
+        if (discordChannel != null)
+        {
+            await discordChannel.SendMessageAsync(LocalizationGroup.GetFormattedText("MemberJoined", "**{0}** joined the guild.", entry.User))
+                                .ConfigureAwait(false);
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Member kicked
+    /// </summary>
+    /// <param name="discordChannel">Discord channel</param>
+    /// <param name="entry">Entry</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    private async Task<bool> OnKick(IMessageChannel discordChannel, GuildLogEntry entry)
+    {
+        if (discordChannel != null)
+        {
+            if (entry.User == entry.KickedBy)
+            {
+                await discordChannel.SendMessageAsync(LocalizationGroup.GetFormattedText("MemberLeft", "**{0}** left the guild.", entry.User))
+                                    .ConfigureAwait(false);
+            }
+            else
+            {
+                await discordChannel.SendMessageAsync(LocalizationGroup.GetFormattedText("MemberKicked", "**{0}** got kicked out of the guild by {1}.", entry.User, entry.KickedBy))
+                                    .ConfigureAwait(false);
+            }
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Rank changed
+    /// </summary>
+    /// <param name="discordChannel">Discord channel</param>
+    /// <param name="guildRankService">Guild rank service</param>
+    /// <param name="guildId">Id of the guild</param>
+    /// <param name="entry">Entry</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    private async Task<bool> OnRankChanged(IMessageChannel discordChannel, GuildRankService guildRankService, long guildId, GuildLogEntry entry)
+    {
+        var refreshTask = guildRankService.RefreshDiscordRank(guildId, entry.User, entry.NewRank);
+
+        if (discordChannel != null)
+        {
+            await discordChannel.SendMessageAsync(LocalizationGroup.GetFormattedText("MemberRankChanged", "**{0}** changed the rank of **{1}** from **{2}** to **{3}**.", entry.ChangedBy, entry.User, entry.OldRank, entry.NewRank))
+                                .ConfigureAwait(false);
+        }
+
+        await refreshTask.ConfigureAwait(false);
+
+        return true;
+    }
+
+    #endregion // Methods
+
     #region LocatedAsyncJob
 
     /// <inheritdoc/>
@@ -130,71 +199,6 @@ public class GuildLogImportJob : LocatedAsyncJob
                 }
             }
         }
-    }
-
-    /// <summary>
-    /// Member joined
-    /// </summary>
-    /// <param name="discordChannel">Discord channel</param>
-    /// <param name="entry">Entry</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    private async Task<bool> OnJoined(IMessageChannel discordChannel, GuildLogEntry entry)
-    {
-        if (discordChannel != null)
-        {
-            await discordChannel.SendMessageAsync(LocalizationGroup.GetFormattedText("MemberJoined", "**{0}** joined the guild.", entry.User))
-                                .ConfigureAwait(false);
-        }
-
-        return true;
-    }
-
-    /// <summary>
-    /// Member kicked
-    /// </summary>
-    /// <param name="discordChannel">Discord channel</param>
-    /// <param name="entry">Entry</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    private async Task<bool> OnKick(IMessageChannel discordChannel, GuildLogEntry entry)
-    {
-        if (discordChannel != null)
-        {
-            if (entry.User == entry.KickedBy)
-            {
-                await discordChannel.SendMessageAsync(LocalizationGroup.GetFormattedText("MemberLeft", "**{0}** left the guild.", entry.User))
-                                    .ConfigureAwait(false);
-            }
-            else
-            {
-                await discordChannel.SendMessageAsync(LocalizationGroup.GetFormattedText("MemberKicked", "**{0}** got kicked out of the guild by {1}.", entry.User, entry.KickedBy))
-                                    .ConfigureAwait(false);
-            }
-        }
-
-        return true;
-    }
-
-    /// <summary>
-    /// Rank changed
-    /// </summary>
-    /// <param name="discordChannel">Discord channel</param>
-    /// <param name="guildRankService">Guild rank service</param>
-    /// <param name="guildId">Id of the guild</param>
-    /// <param name="entry">Entry</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    private async Task<bool> OnRankChanged(IMessageChannel discordChannel, GuildRankService guildRankService, long guildId, GuildLogEntry entry)
-    {
-        var refreshTask = guildRankService.RefreshDiscordRank(guildId, entry.User, entry.NewRank);
-
-        if (discordChannel != null)
-        {
-            await discordChannel.SendMessageAsync(LocalizationGroup.GetFormattedText("MemberRankChanged", "**{0}** changed the rank of **{1}** from **{2}** to **{3}**.", entry.ChangedBy, entry.User, entry.OldRank, entry.NewRank))
-                                .ConfigureAwait(false);
-        }
-
-        await refreshTask.ConfigureAwait(false);
-
-        return true;
     }
 
     #endregion // LocatedAsyncJob

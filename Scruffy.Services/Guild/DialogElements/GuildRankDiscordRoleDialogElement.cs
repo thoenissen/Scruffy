@@ -32,7 +32,7 @@ public class GuildRankDiscordRoleDialogElement : DialogEmbedMessageElementBase<u
 
     #endregion // Constructor
 
-    #region DialogEmbedMessageElementBase<ulong>
+    #region DialogEmbedMessageElementBase
 
     /// <inheritdoc/>
     public override EmbedBuilder GetMessage()
@@ -83,5 +83,5 @@ public class GuildRankDiscordRoleDialogElement : DialogEmbedMessageElementBase<u
         return Task.FromResult(int.TryParse(message.Content, out var index) && _roles.TryGetValue(index, out var selectedRoleId) ? selectedRoleId : throw new InvalidOperationException());
     }
 
-    #endregion // DialogEmbedMessageElementBase<ulong>
+    #endregion // DialogEmbedMessageElementBase
 }

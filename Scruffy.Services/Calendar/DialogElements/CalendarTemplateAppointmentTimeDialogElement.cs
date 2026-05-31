@@ -25,7 +25,7 @@ public class CalendarTemplateAppointmentTimeDialogElement : DialogMessageElement
 
     #endregion // Constructor
 
-    #region DialogMessageElementBase<string>
+    #region DialogMessageElementBase
 
     /// <inheritdoc/>
     public override string GetMessage()
@@ -41,5 +41,5 @@ public class CalendarTemplateAppointmentTimeDialogElement : DialogMessageElement
                    : throw new InvalidOperationException();
     }
 
-    #endregion // DialogMessageElementBase<string>
+    #endregion // DialogMessageElementBase
 }

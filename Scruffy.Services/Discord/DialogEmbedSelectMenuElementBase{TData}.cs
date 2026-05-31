@@ -55,6 +55,10 @@ public abstract class DialogEmbedSelectMenuElementBase<TData> : InteractionDialo
     /// <returns>Result</returns>
     protected abstract TData DefaultFunc();
 
+    #endregion // Methods
+
+    #region DialogElementBase
+
     /// <inheritdoc/>
     public override async Task<TData> Run()
     {
@@ -162,5 +166,5 @@ public abstract class DialogEmbedSelectMenuElementBase<TData> : InteractionDialo
         }
     }
 
-    #endregion // Methods
+    #endregion // DialogElementBase
 }

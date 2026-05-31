@@ -39,7 +39,7 @@ public class RaidRoleSelectionDialogElement : DialogMultiSelectSelectMenuElement
 
     #endregion // Constructor
 
-    #region DialogMultiSelectSelectMenuElementBase<long>
+    #region DialogMultiSelectSelectMenuElementBase
 
     /// <inheritdoc/>
     protected override int MinValues => 1;
@@ -79,7 +79,7 @@ public class RaidRoleSelectionDialogElement : DialogMultiSelectSelectMenuElement
                                  {
                                      Label = _raidRoleService.GetDescriptionAsText(role),
                                      Emote = DiscordEmoteService.GetGuildEmote(CommandContext.Client, role.DiscordEmojiId),
-                                     Value = role.Id.ToString(),
+                                     Value = role.Id.ToString()
                                  });
                 }
             }
@@ -88,5 +88,5 @@ public class RaidRoleSelectionDialogElement : DialogMultiSelectSelectMenuElement
         return _entries;
     }
 
-    #endregion // DialogMultiSelectSelectMenuElementBase<long>
+    #endregion // DialogMultiSelectSelectMenuElementBase
 }

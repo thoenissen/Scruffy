@@ -33,7 +33,7 @@ public class GuildGuildDialogElement : DialogEmbedMessageElementBase<string>
 
     #endregion // Constructor
 
-    #region DialogEmbedMessageElementBase<long>
+    #region DialogEmbedMessageElementBase
 
     /// <inheritdoc/>
     public override EmbedBuilder GetMessage()
@@ -84,5 +84,5 @@ public class GuildGuildDialogElement : DialogEmbedMessageElementBase<string>
         return Task.FromResult(int.TryParse(message.Content, out var index) && _guilds.TryGetValue(index, out var selectedGuild) ? selectedGuild : throw new InvalidOperationException());
     }
 
-    #endregion // DialogEmbedMessageElementBase<long>
+    #endregion // DialogEmbedMessageElementBase
 }

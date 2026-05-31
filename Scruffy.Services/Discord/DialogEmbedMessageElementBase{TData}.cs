@@ -52,6 +52,10 @@ public abstract class DialogEmbedMessageElementBase<TData> : DialogElementBase<T
         return Task.FromResult((TData)Convert.ChangeType(message.Content, typeof(TData)));
     }
 
+    #endregion // Methods
+
+    #region DialogElementBase
+
     /// <inheritdoc/>
     public override async Task<TData> Run()
     {
@@ -95,5 +99,5 @@ public abstract class DialogEmbedMessageElementBase<TData> : DialogElementBase<T
         throw new ScruffyTimeoutException();
     }
 
-    #endregion // Methods
+    #endregion // DialogElementBase
 }

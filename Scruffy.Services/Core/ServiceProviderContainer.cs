@@ -135,7 +135,7 @@ public sealed class ServiceProviderContainer : IAsyncDisposable
                                                                     {
                                                                         UseDefaultCredentials = true,
                                                                         Credentials = new NetworkCredential(Environment.GetEnvironmentVariable("SCRUFFY_GITHUB_USER"),
-                                                                                                            Environment.GetEnvironmentVariable("SCRUFFY_GITHUB_TOKEN")),
+                                                                                                            Environment.GetEnvironmentVariable("SCRUFFY_GITHUB_TOKEN"))
                                                                     });
         _serviceCollection.AddHttpClient("GW2Wiki",
                                          obj => obj.DefaultRequestHeaders.Add("User-Agent", "Scruffy"));

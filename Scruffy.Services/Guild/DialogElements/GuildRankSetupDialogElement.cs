@@ -85,7 +85,7 @@ public class GuildRankSetupDialogElement : DialogEmbedReactionElementBase<bool>
 
     #endregion // Methods
 
-    #region DialogReactionElementBase<bool>
+    #region DialogEmbedReactionElementBase
 
     /// <inheritdoc/>
     public override Task EditMessage(EmbedBuilder builder)
@@ -147,7 +147,7 @@ public class GuildRankSetupDialogElement : DialogEmbedReactionElementBase<bool>
                                                                                       .Where(obj => obj.Id == data.SuperiorId)
                                                                                       .Select(obj => obj.Order)
                                                                                       .First() + 1
-                                                                           : 0,
+                                                                           : 0
                                                            };
 
                                                 if (dbFactory.GetRepository<GuildRankRepository>()
@@ -246,5 +246,5 @@ public class GuildRankSetupDialogElement : DialogEmbedReactionElementBase<bool>
         return false;
     }
 
-    #endregion // DialogReactionElementBase<bool>
+    #endregion // DialogEmbedReactionElementBase
 }

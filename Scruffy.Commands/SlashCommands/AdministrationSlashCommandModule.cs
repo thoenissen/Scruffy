@@ -31,8 +31,8 @@ public class AdministrationSlashCommandModule : SlashCommandModuleBase
     /// <param name="name">Name</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("rename-member", "Renaming a user")]
-    public Task RenameMember([Summary("Member", "Member")]IGuildUser member,
-                             [Summary("Name", "New nickname")]string name)
+    public Task RenameMember([Summary("Member", "Member")] IGuildUser member,
+                             [Summary("Name", "New nickname")] string name)
     {
         return CommandHandler.RenameMember(Context, member, name);
     }
@@ -44,8 +44,8 @@ public class AdministrationSlashCommandModule : SlashCommandModuleBase
     /// <param name="name">Name</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("rename-role", "Renaming a user")]
-    public Task RenameRole([Summary("Role", "Role")]IRole member,
-                           [Summary("Name", "New name")]string name)
+    public Task RenameRole([Summary("Role", "Role")] IRole member,
+                           [Summary("Name", "New name")] string name)
     {
         return CommandHandler.RenameRole(Context, member, name);
     }

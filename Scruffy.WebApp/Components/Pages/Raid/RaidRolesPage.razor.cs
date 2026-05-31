@@ -204,7 +204,7 @@ public partial class RaidRolesPage
                                   .GetQuery()
                                   .Select(day => new RaidDayStatisticsDTO
                                                  {
-                                                     Day = day.Day,
+                                                     Day = day.Day
                                                  })
                                   .ToList();
 
@@ -217,7 +217,7 @@ public partial class RaidRolesPage
                                       .Select(obj => new
                                                      {
                                                          obj.UserId,
-                                                         obj.RaidAppointment.TimeStamp,
+                                                         obj.RaidAppointment.TimeStamp
                                                      })
                                       .GroupBy(obj => obj.UserId)
                                       .Select(obj => new

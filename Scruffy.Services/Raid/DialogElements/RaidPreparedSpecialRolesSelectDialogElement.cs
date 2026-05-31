@@ -44,7 +44,7 @@ public class RaidPreparedSpecialRolesSelectDialogElement : DialogEmbedMultiSelec
 
     #endregion // Constructor
 
-    #region DialogEmbedMultiSelectSelectMenuElementBase<long>
+    #region DialogEmbedMultiSelectSelectMenuElementBase
 
     /// <inheritdoc/>
     protected override int MinValues => 1;
@@ -134,5 +134,5 @@ public class RaidPreparedSpecialRolesSelectDialogElement : DialogEmbedMultiSelec
         return _entries;
     }
 
-    #endregion // DialogEmbedMultiSelectSelectMenuElementBase<long>
+    #endregion // DialogEmbedMultiSelectSelectMenuElementBase
 }

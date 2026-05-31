@@ -1,23 +1,22 @@
-﻿namespace Scruffy.Data.Enumerations.GuildWars2
+﻿namespace Scruffy.Data.Enumerations.GuildWars2;
+
+/// <summary>
+/// Mode of the dps.report
+/// </summary>
+public enum DpsReportMode
 {
     /// <summary>
-    /// Mode of the dps.report
+    /// Normal mode
     /// </summary>
-    public enum DpsReportMode
-    {
-        /// <summary>
-        /// Normal mode
-        /// </summary>
-        Normal,
+    Normal,
 
-        /// <summary>
-        /// Challenge mode
-        /// </summary>
-        ChallengeMode,
+    /// <summary>
+    /// Challenge mode
+    /// </summary>
+    ChallengeMode,
 
-        /// <summary>
-        /// Legendary challenge mode
-        /// </summary>
-        LegendaryChallengeMode
-    }
+    /// <summary>
+    /// Legendary challenge mode
+    /// </summary>
+    LegendaryChallengeMode
 }

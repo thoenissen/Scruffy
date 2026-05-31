@@ -235,7 +235,7 @@ public class GuildDonationCalculationJob : LocatedAsyncJob
                                                             Ingredients = obj.Select(obj2 => new ItemIngredient
                                                                                              {
                                                                                                  ItemId = obj2.IngredientItemId,
-                                                                                                 Count = obj2.IngredientCount,
+                                                                                                 Count = obj2.IngredientCount
                                                                                              })
                                                                              .ToList(),
                                                             OutputItemCount = 1

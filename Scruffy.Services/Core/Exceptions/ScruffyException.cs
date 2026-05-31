@@ -3,6 +3,4 @@
 /// <summary>
 /// Exception base class
 /// </summary>
-public abstract class ScruffyException : Exception
-{
-}
+public abstract class ScruffyException : Exception;

@@ -41,6 +41,10 @@ public abstract class DialogMessageElementBase<TData> : DialogElementBase<TData>
         return (TData)Convert.ChangeType(message.Content, typeof(TData));
     }
 
+    #endregion // Methods
+
+    #region DialogElementBase
+
     /// <inheritdoc/>
     public override async Task<TData> Run()
     {
@@ -59,5 +63,5 @@ public abstract class DialogMessageElementBase<TData> : DialogElementBase<TData>
         return ConvertMessage(currentUserResponse);
     }
 
-    #endregion // Methods
+    #endregion // DialogElementBase
 }

@@ -9,7 +9,7 @@ namespace Scruffy.Services.Core.Exceptions;
 /// </summary>
 public class ScruffyTimeoutException : ScruffyUserMessageException
 {
-    #region ScruffyException
+    #region ScruffyUserMessageException
 
     /// <inheritdoc/>
     public override string GetLocalizedMessage()
@@ -22,5 +22,5 @@ public class ScruffyTimeoutException : ScruffyUserMessageException
         }
     }
 
-    #endregion // ScruffyException
+    #endregion // ScruffyUserMessageException
 }

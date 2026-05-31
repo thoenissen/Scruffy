@@ -1,17 +1,16 @@
-﻿namespace Scruffy.Data.Json.ChartJs
+﻿namespace Scruffy.Data.Json.ChartJs;
+
+/// <summary>
+/// Legend labels configuration
+/// </summary>
+public class LegendLabels
 {
+    #region Properties
+
     /// <summary>
-    /// Legend labels configuration
+    /// Color of the labels
     /// </summary>
-    public class LegendLabels
-    {
-        #region Properties
+    public string Color { get; set; }
 
-        /// <summary>
-        /// Color of the labels
-        /// </summary>
-        public string Color { get; set; }
-
-        #endregion // Properties
-    }
+    #endregion // Properties
 }

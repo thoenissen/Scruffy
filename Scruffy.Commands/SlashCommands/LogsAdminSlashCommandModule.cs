@@ -31,7 +31,7 @@ public class LogsAdminSlashCommandModule : SlashCommandModuleBase
     /// <param name="count">Count</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     [SlashCommand("check", "Check logs")]
-    public async Task Check([Summary("user", "User")]IUser user, [Summary("count", "Count of logs to check")]int? count = 0)
+    public async Task Check([Summary("user", "User")] IUser user, [Summary("count", "Count of logs to check")] int? count = 0)
     {
         await Context.DeferProcessing()
                      .ConfigureAwait(false);

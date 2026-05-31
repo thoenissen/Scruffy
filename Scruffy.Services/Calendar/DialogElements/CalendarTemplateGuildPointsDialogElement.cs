@@ -33,7 +33,7 @@ public class CalendarTemplateGuildPointsDialogElement : DialogReactionElementBas
 
     #endregion // Constructor
 
-    #region DialogReactionElementBase<bool>
+    #region DialogReactionElementBase
 
     /// <inheritdoc/>
     public override string GetMessage()
@@ -48,7 +48,7 @@ public class CalendarTemplateGuildPointsDialogElement : DialogReactionElementBas
                                   new ReactionData<CalenderTemplateGuildData>
                                   {
                                       Emote = DiscordEmoteService.GetCheckEmote(CommandContext.Client),
-                                      Func = RunSubForm<CalenderTemplateGuildData>,
+                                      Func = RunSubForm<CalenderTemplateGuildData>
                                   },
                                   new ReactionData<CalenderTemplateGuildData>
                                   {
@@ -64,5 +64,5 @@ public class CalendarTemplateGuildPointsDialogElement : DialogReactionElementBas
         return null;
     }
 
-    #endregion // DialogReactionElementBase<bool>
+    #endregion // DialogReactionElementBase
 }

@@ -451,6 +451,10 @@ public class DpsReportEncounterKey : IEquatable<DpsReportEncounterKey>
                && Encounter == other.Encounter;
     }
 
+    #endregion // Equality members
+
+    #region Object
+
     /// <inheritdoc />
     public override bool Equals(object obj)
     {
@@ -478,5 +482,5 @@ public class DpsReportEncounterKey : IEquatable<DpsReportEncounterKey>
         return HashCode.Combine((int)Group, (int)SubGroup, (int)Encounter);
     }
 
-    #endregion // Equality members
+    #endregion // Object
 }

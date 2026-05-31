@@ -31,5 +31,5 @@ public enum RaidSpecialRole
     /// <summary>
     /// Quadim 1 - Kiter
     /// </summary>
-    Quadim2Kiter = 1 << 3,
+    Quadim2Kiter = 1 << 3
 }
