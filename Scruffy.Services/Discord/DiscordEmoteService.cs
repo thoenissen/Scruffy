@@ -414,11 +414,10 @@ public static class DiscordEmoteService
     /// <summary>
     /// Get 'AstralAcclaim'-Emote
     /// </summary>
-    /// <param name="client">Discord client</param>
     /// <returns>Emote</returns>
-    public static IEmote GetAstralAcclaim(IDiscordClient client)
+    public static IEmote GetAstralAcclaim()
     {
-        return GetEmote(client, "AstralAcclaim");
+        return Emote.Parse("<:astral_acclaim:1510579436985254008>");
     }
 
     /// <summary>

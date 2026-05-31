@@ -509,13 +509,13 @@ public class GuildWars2CommandHandler : LocatedServiceBase
 
                 if (listing.PurchaseLimit == null)
                 {
-                    line = $"> ∞x {itemName} ({listing.Cost} {DiscordEmoteService.GetAstralAcclaim(context.Client)})";
+                    line = $"> ∞x {itemName} ({listing.Cost} {DiscordEmoteService.GetAstralAcclaim()})";
                 }
                 else
                 {
                     var remaining = Math.Max(0, listing.PurchaseLimit.Value - (listing.Purchased ?? 0));
 
-                    line = $"> {remaining}x {itemName} ({listing.Cost * remaining} {DiscordEmoteService.GetAstralAcclaim(context.Client)})";
+                    line = $"> {remaining}x {itemName} [{listing.Cost * remaining} {DiscordEmoteService.GetAstralAcclaim()}]";
                 }
 
                 if (fieldValue.Length + line.Length + 2 > 1_000)
@@ -544,7 +544,7 @@ public class GuildWars2CommandHandler : LocatedServiceBase
         for (var fieldIndex = 0; fieldIndex < fields.Count; fieldIndex += 24)
         {
             var embed = new EmbedBuilder().WithTitle(LocalizationGroup.GetText("WizardVaultTitle", "Wizard's Vault"))
-                                          .WithDescription(LocalizationGroup.GetFormattedText("WizardVaultDescription", "**Account:** {0}\n**Mode:** {1}\n**Remaining limited cost:** {2} {3}", accountName, mode, totalCost, DiscordEmoteService.GetAstralAcclaim(context.Client)))
+                                          .WithDescription(LocalizationGroup.GetFormattedText("WizardVaultDescription", "**Account:** {0}\n**Mode:** {1}\n**Remaining limited cost:** {2} {3}", accountName, mode, totalCost, DiscordEmoteService.GetAstralAcclaim()))
                                           .WithColor(Color.Green)
                                           .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
                                           .WithTimestamp(DateTime.Now);
