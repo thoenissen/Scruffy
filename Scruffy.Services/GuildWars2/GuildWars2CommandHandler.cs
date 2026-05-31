@@ -1,7 +1,12 @@
+using System.Collections.Frozen;
+
 using Discord;
 
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Repositories.GuildWars2.Account;
+using Scruffy.Data.Enumerations.GuildWars2;
+using Scruffy.Data.Json.GuildWars2.Account;
+using Scruffy.Data.Json.GuildWars2.Items;
 using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.Discord;
@@ -16,6 +21,57 @@ namespace Scruffy.Services.GuildWars2;
 public class GuildWars2CommandHandler : LocatedServiceBase
 {
     #region Fields
+
+    /// <summary>
+    /// Not recommend wizard vault items
+    /// </summary>
+    private static readonly FrozenSet<int> _notRecommendItemIds = [
+
+                                                                      // Transmutation Charge
+                                                                      64737,
+
+                                                                      // Tome of Knowledge
+                                                                      43766,
+
+                                                                      // Lucent Crystal Vault Bag
+                                                                      105332,
+
+                                                                      // Black Lion Mastery Coffer
+                                                                      95289,
+
+                                                                      // Obsidian Shard
+                                                                      19925,
+
+                                                                      // Upgrade Extractor
+                                                                      20349,
+
+                                                                      // Black Lion Salvage Kit
+                                                                      19986,
+
+                                                                      // Wizard's Box of Crafting Materials
+                                                                      106933,
+
+                                                                      // Metabolic Primer
+                                                                      42877,
+
+                                                                      // Utility Primer
+                                                                      8469,
+
+                                                                      // Revive Orb
+                                                                      19996,
+
+                                                                      // Vision Crystal
+                                                                      46746,
+
+                                                                      // Wizard's Ascended Armor Chest
+                                                                      104044,
+
+                                                                      // Wizard's Ascended Weapon Chest
+                                                                      103918,
+
+                                                                      // Lesser Essence of Gold
+                                                                      100233,
+                                                                  ];
 
     /// <summary>
     /// Quaggan service
@@ -326,6 +382,183 @@ public class GuildWars2CommandHandler : LocatedServiceBase
                                  .ConfigureAwait(false);
                 }
             }
+        }
+    }
+
+    /// <summary>
+    /// Lists Wizard's Vault rewards
+    /// </summary>
+    /// <param name="context">Context</param>
+    /// <param name="mode">Mode</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task ListWizardVault(InteractionContextContainer context, WizardVaultMode mode)
+    {
+        await context.DeferAsync()
+                     .ConfigureAwait(false);
+
+        using (var dbFactory = RepositoryFactory.CreateInstance())
+        {
+            var accounts = dbFactory.GetRepository<GuildWarsAccountRepository>()
+                                    .GetQuery()
+                                    .Where(obj => obj.User.DiscordAccounts.Any(discordAccount => discordAccount.Id == context.User.Id))
+                                    .Select(obj => new
+                                                   {
+                                                       obj.Name,
+                                                       obj.ApiKey
+                                                   })
+                                    .ToList();
+
+            if (accounts.Count == 0)
+            {
+                await context.SendMessageAsync(LocalizationGroup.GetText("WizardVaultNoAccounts", "No Guild Wars 2 account is linked to your Discord account."))
+                             .ConfigureAwait(false);
+
+                return;
+            }
+
+            foreach (var account in accounts)
+            {
+                var connector = new GuildWars2ApiConnector(account.ApiKey);
+
+                await using (connector.ConfigureAwait(false))
+                {
+                    var listings = await connector.GetWizardVaultListings()
+                                                  .ConfigureAwait(false);
+
+                    listings = listings.Where(item => item.Type is "Featured"
+                                                                or "Normal"
+                                                      && item.PurchaseLimit != null)
+                                       .OrderBy(item => item.Type == "Featured" ? 0 : 1)
+                                       .ThenBy(item => item.Cost)
+                                       .ThenBy(item => item.Id)
+                                       .ToList();
+
+                    if (mode == WizardVaultMode.Open)
+                    {
+                        listings = listings.Where(IsWizardVaultListingOpen)
+                                           .ToList();
+                    }
+                    else if (mode == WizardVaultMode.Recommended)
+                    {
+                        listings = listings.Where(IsWizardVaultListingRecommended)
+                                           .ToList();
+                    }
+
+                    var items = await connector.GetItems(listings.Select(item => (int?)item.ItemId)
+                                                                 .Distinct()
+                                                                 .ToList())
+                                               .ConfigureAwait(false);
+
+                    await SendWizardVaultEmbeds(context, account.Name, mode, listings, items).ConfigureAwait(false);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Checks whether a Wizard's Vault listing can still be purchased
+    /// </summary>
+    /// <param name="listing">Listing</param>
+    /// <returns>A value indicating whether the listing is open</returns>
+    private static bool IsWizardVaultListingOpen(WizardVaultListing listing)
+    {
+        return listing.PurchaseLimit == null
+               || (listing.Purchased ?? 0) < listing.PurchaseLimit.Value;
+    }
+
+    /// <summary>
+    /// Checks whether a Wizard's Vault listing is recommended
+    /// </summary>
+    /// <param name="listing">Listing</param>
+    /// <returns>A value indicating whether the listing is open</returns>
+    private static bool IsWizardVaultListingRecommended(WizardVaultListing listing)
+    {
+        return listing.PurchaseLimit != null
+               && (listing.Purchased ?? 0) < listing.PurchaseLimit.Value
+               && _notRecommendItemIds.Contains(listing.ItemId) == false;
+    }
+
+    /// <summary>
+    /// Sends Wizard's Vault embeds
+    /// </summary>
+    /// <param name="context">Context</param>
+    /// <param name="accountName">Account name</param>
+    /// <param name="mode">Mode</param>
+    /// <param name="listings">Listings</param>
+    /// <param name="items">Items</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    private async Task SendWizardVaultEmbeds(InteractionContextContainer context, string accountName, WizardVaultMode mode, List<WizardVaultListing> listings, List<Item> items)
+    {
+        var totalCost = listings.Where(item => item.PurchaseLimit != null)
+                                .Sum(item => Math.Max(0, item.PurchaseLimit.Value - (item.Purchased ?? 0)) * item.Cost);
+        var itemNames = items.ToDictionary(item => item.Id, item => item.Name);
+        var fields = new List<EmbedFieldBuilder>();
+
+        foreach (var group in listings.GroupBy(item => item.Type))
+        {
+            var fieldValue = new StringBuilder();
+            var fieldIndex = 1;
+
+            foreach (var listing in group)
+            {
+                var itemName = itemNames.TryGetValue(listing.ItemId, out var name)
+                                   ? name
+                                   : LocalizationGroup.GetText("UnknownWizardVaultItem", "Unknown item");
+
+                string line;
+
+                if (listing.PurchaseLimit == null)
+                {
+                    line = $"> ∞x {itemName} ({listing.Cost} {DiscordEmoteService.GetAstralAcclaim(context.Client)})";
+                }
+                else
+                {
+                    var remaining = Math.Max(0, listing.PurchaseLimit.Value - (listing.Purchased ?? 0));
+
+                    line = $"> {remaining}x {itemName} ({listing.Cost * remaining} {DiscordEmoteService.GetAstralAcclaim(context.Client)})";
+                }
+
+                if (fieldValue.Length + line.Length + 2 > 1_000)
+                {
+                    fields.Add(new EmbedFieldBuilder().WithName($"{group.Key} {fieldIndex++}")
+                                                      .WithValue(fieldValue.ToString()));
+                    fieldValue.Clear();
+                }
+
+                fieldValue.AppendLine(line);
+            }
+
+            if (fieldValue.Length > 0)
+            {
+                fields.Add(new EmbedFieldBuilder().WithName(fieldIndex == 1 ? group.Key : $"{group.Key} #{fieldIndex}")
+                                                  .WithValue(fieldValue.ToString()));
+            }
+        }
+
+        if (fields.Count == 0)
+        {
+            fields.Add(new EmbedFieldBuilder().WithName(LocalizationGroup.GetText("WizardVaultRewards", "Rewards"))
+                                              .WithValue(LocalizationGroup.GetText("WizardVaultNoOpenRewards", "No matching rewards found.")));
+        }
+
+        for (var fieldIndex = 0; fieldIndex < fields.Count; fieldIndex += 24)
+        {
+            var embed = new EmbedBuilder().WithTitle(LocalizationGroup.GetText("WizardVaultTitle", "Wizard's Vault"))
+                                          .WithDescription(LocalizationGroup.GetFormattedText("WizardVaultDescription", "**Account:** {0}\n**Mode:** {1}\n**Remaining limited cost:** {2} {3}", accountName, mode, totalCost, DiscordEmoteService.GetAstralAcclaim(context.Client)))
+                                          .WithColor(Color.Green)
+                                          .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
+                                          .WithTimestamp(DateTime.Now);
+
+            foreach (var field in fields.Skip(fieldIndex).Take(24))
+            {
+                embed.AddField(field);
+            }
+
+            embed.AddField(new EmbedFieldBuilder().WithName(LocalizationGroup.GetText("WizardVaultBugTitle", "Note"))
+                                                  .WithValue(LocalizationGroup.GetText("WizardVaultBugText", "There is currently a bug that prevents the correct calculation. ([Issue](https://github.com/gw2-api/issues/issues/84))")));
+
+            await context.SendMessageAsync(embed: embed.Build())
+                         .ConfigureAwait(false);
         }
     }
 

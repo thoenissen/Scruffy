@@ -412,6 +412,16 @@ public static class DiscordEmoteService
     }
 
     /// <summary>
+    /// Get 'AstralAcclaim'-Emote
+    /// </summary>
+    /// <param name="client">Discord client</param>
+    /// <returns>Emote</returns>
+    public static IEmote GetAstralAcclaim(IDiscordClient client)
+    {
+        return GetEmote(client, "AstralAcclaim");
+    }
+
+    /// <summary>
     /// Get guild emoji
     /// </summary>
     /// <param name="client">Discord client</param>

@@ -402,6 +402,25 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
     }
 
     /// <summary>
+    /// Request Wizard's Vault listings
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public Task<List<WizardVaultListing>> GetWizardVaultListings()
+    {
+        return Invoke(async () =>
+                      {
+                          using (var response = await CreateRequest("https://api.guildwars2.com/v2/account/wizardsvault/listings", GuildWars2ApiPermission.Account | GuildWars2ApiPermission.Progression).ConfigureAwait(false))
+                          {
+                              var jsonResult = await response.Content
+                                                             .ReadAsStringAsync()
+                                                             .ConfigureAwait(false);
+
+                              return JsonConvert.DeserializeObject<List<WizardVaultListing>>(jsonResult);
+                          }
+                      });
+    }
+
+    /// <summary>
     /// Request the list of all items
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
