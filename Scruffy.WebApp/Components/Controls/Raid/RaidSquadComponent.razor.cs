@@ -316,11 +316,11 @@ public partial class RaidSquadComponent
 
         var requiredRole = isForTank
                                ? pairedRole.Role == RaidRole.AlacrityTankHealer
-                                     ? RaidRole.QuicknessDamageDealer
-                                     : RaidRole.AlacrityDamageDealer
+                                   ? RaidRole.QuicknessDamageDealer
+                                   : RaidRole.AlacrityDamageDealer
                                : pairedRole.Role == RaidRole.AlacrityHealer
-                                     ? RaidRole.QuicknessDamageDealer
-                                     : RaidRole.AlacrityDamageDealer;
+                                   ? RaidRole.QuicknessDamageDealer
+                                   : RaidRole.AlacrityDamageDealer;
 
         return dpsSupportRoles.Where(r => r.Role == requiredRole).ToList();
     }

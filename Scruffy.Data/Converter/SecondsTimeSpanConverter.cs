@@ -14,8 +14,8 @@ public class SecondsTimeSpanConverter : JsonConverter<TimeSpan>
     {
         return reader.Value != null
                    ? reader.ValueType == typeof(long)
-                         ? TimeSpan.FromSeconds((long)reader.Value)
-                         : TimeSpan.FromSeconds((double)reader.Value)
+                       ? TimeSpan.FromSeconds((long)reader.Value)
+                       : TimeSpan.FromSeconds((double)reader.Value)
                    : TimeSpan.Zero;
     }
 

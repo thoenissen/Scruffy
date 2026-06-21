@@ -45,7 +45,7 @@ public class GuildSpecialRankPointsRepository : RepositoryBase<GuildSpecialRankP
         {
             dbContext.LastError = null;
 
-            var pointsToAdd = pointsList.Sum(obj => obj);
+            var pointsToAdd = pointsList.Max(obj => obj);
 
             var userPoints = await dbContext.Set<GuildSpecialRankPointsEntity>()
                                             .FirstOrDefaultAsync(obj => obj.ConfigurationId == configurationId

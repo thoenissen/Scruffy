@@ -335,9 +335,11 @@ public sealed class MessageCollectorService : SingletonLocatedServiceBase, IDisp
         _client = serviceProvider.GetService<DiscordSocketClient>();
 
         Task.Run(StartCollecting);
-#endif
 
         return base.Initialize(serviceProvider);
+#else
+        return base.Initialize(serviceProvider);
+#endif
     }
 
     #endregion // SingletonLocatedServiceBase

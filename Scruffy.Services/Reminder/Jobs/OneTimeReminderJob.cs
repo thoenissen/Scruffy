@@ -88,8 +88,8 @@ public class OneTimeReminderJob : LocatedAsyncJob
                                     await textChannel.SendMessageAsync(string.IsNullOrWhiteSpace(jobEntity.Message)
                                                                            ? LocalizationGroup.GetFormattedText("EmptyReminder", "{0} Reminder", user.Mention)
                                                                            : jobEntity.Message.Contains("\n")
-                                                                                 ? LocalizationGroup.GetFormattedText("MultiLineReminder", "{0} Reminder:\n\n{1}", user.Mention, jobEntity.Message)
-                                                                                 : LocalizationGroup.GetFormattedText("SingleLineReminder", "{0} Reminder: {1}", user.Mention, jobEntity.Message))
+                                                                               ? LocalizationGroup.GetFormattedText("MultiLineReminder", "{0} Reminder:\n\n{1}", user.Mention, jobEntity.Message)
+                                                                               : LocalizationGroup.GetFormattedText("SingleLineReminder", "{0} Reminder: {1}", user.Mention, jobEntity.Message))
                                                      .ConfigureAwait(false);
 
                                     isExecuted = true;

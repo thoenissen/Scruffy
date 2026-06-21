@@ -576,8 +576,8 @@ public partial class RaidCommitPage
                                               var status = entry.RegistrationTimeStamp > appointment.Deadline
                                                                ? RaidParticipationStatus.LateRegistration
                                                                : entry.LineupExperienceLevelId is null
-                                                                     ? RaidParticipationStatus.Substitute
-                                                                     : RaidParticipationStatus.Played;
+                                                                   ? RaidParticipationStatus.Substitute
+                                                                   : RaidParticipationStatus.Played;
 
                                               return new RaidCommitUserDTO
                                                      {
