@@ -32,6 +32,16 @@ public partial class QuickGridPaginator
     /// </summary>
     private int TotalItemCount => State.TotalItemCount ?? 0;
 
+    /// <summary>
+    /// Checks if it is possible to go back in the pagination
+    /// </summary>
+    private bool CanGoBack => State.CurrentPageIndex > 0;
+
+    /// <summary>
+    /// Checks if it is possible to go forwards in the pagination
+    /// </summary>
+    private bool CanGoForwards => State.CurrentPageIndex < State.LastPageIndex;
+
     #endregion // Properties
 
     #region Methods
@@ -71,16 +81,6 @@ public partial class QuickGridPaginator
     {
         return GoToPageAsync(State.LastPageIndex.GetValueOrDefault(0));
     }
-
-    /// <summary>
-    /// Checks if it is possible to go back in the pagination
-    /// </summary>
-    private bool CanGoBack => State.CurrentPageIndex > 0;
-
-    /// <summary>
-    /// Checks if it is possible to go forwards in the pagination
-    /// </summary>
-    private bool CanGoForwards => State.CurrentPageIndex < State.LastPageIndex;
 
     /// <summary>
     /// Go to a specific page asynchronously

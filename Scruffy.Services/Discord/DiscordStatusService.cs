@@ -33,7 +33,7 @@ public sealed class DiscordStatusService : SingletonLocatedServiceBase, IDisposa
 
     #endregion // Fields
 
-    #region Properties
+    #region Methods
 
     /// <summary>
     /// Status timer
@@ -54,7 +54,7 @@ public sealed class DiscordStatusService : SingletonLocatedServiceBase, IDisposa
         }
     }
 
-    #endregion // Properties
+    #endregion // Methods
 
     #region SingletonLocatedServiceBase
 

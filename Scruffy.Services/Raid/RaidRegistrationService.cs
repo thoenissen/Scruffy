@@ -31,7 +31,7 @@ public class RaidRegistrationService : LocatedServiceBase
 
     #endregion // Fields
 
-    #region Properties
+    #region Constructor
 
     /// <summary>
     /// Constructor
@@ -45,7 +45,7 @@ public class RaidRegistrationService : LocatedServiceBase
         _userManagementService = userManagementService;
     }
 
-    #endregion // Properties
+    #endregion // Constructor
 
     #region Methods
 

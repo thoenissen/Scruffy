@@ -33,8 +33,8 @@ public class SingletonLocatedServiceBase
     /// Initialize
     /// </summary>
     /// <param name="serviceProvider">Service provider</param>
-    /// <remarks>When this method is called all services are registered and can be resolved.  But not all singleton services may be initialized </remarks>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    /// <remarks>When this method is called all services are registered and can be resolved.  But not all singleton services may be initialized </remarks>
     public virtual Task Initialize(IServiceProvider serviceProvider)
     {
         _localizationService = serviceProvider.GetRequiredService<LocalizationService>();

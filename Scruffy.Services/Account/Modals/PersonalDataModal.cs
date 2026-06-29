@@ -20,11 +20,6 @@ public class PersonalDataModal : IModal
     #region Properties
 
     /// <summary>
-    /// Title
-    /// </summary>
-    public string Title => "Personal data";
-
-    /// <summary>
     /// Name
     /// </summary>
     [InputLabel("Name")]
@@ -41,4 +36,13 @@ public class PersonalDataModal : IModal
     public string Birthday { get; set; }
 
     #endregion // Properties
+
+    #region IModal
+
+    /// <summary>
+    /// Title
+    /// </summary>
+    public string Title => "Personal data";
+
+    #endregion // IModal
 }

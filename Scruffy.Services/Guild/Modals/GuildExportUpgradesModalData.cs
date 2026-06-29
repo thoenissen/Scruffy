@@ -20,11 +20,6 @@ public class GuildExportUpgradesModalData : IModal
     #region Properties
 
     /// <summary>
-    /// Title
-    /// </summary>
-    public string Title => "Export: Guild stash";
-
-    /// <summary>
     /// Mode
     /// </summary>
     [InputLabel("Mode (raw or sum)")]
@@ -49,4 +44,13 @@ public class GuildExportUpgradesModalData : IModal
     public string SinceTime { get; set; }
 
     #endregion // Properties
+
+    #region IModal
+
+    /// <summary>
+    /// Title
+    /// </summary>
+    public string Title => "Export: Guild stash";
+
+    #endregion // IModal
 }

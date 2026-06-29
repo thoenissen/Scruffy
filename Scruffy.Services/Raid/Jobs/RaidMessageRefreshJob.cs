@@ -31,6 +31,7 @@ public class RaidMessageRefreshJob : LocatedAsyncJob
     }
 
     #endregion // Constructor
+
     #region LocatedAsyncJob
 
     /// <inheritdoc/>

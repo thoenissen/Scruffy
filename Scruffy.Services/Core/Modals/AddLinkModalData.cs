@@ -20,11 +20,6 @@ public class AddLinkModalData : IModal
     #region Properties
 
     /// <summary>
-    /// Title
-    /// </summary>
-    public string Title => "Message editing: Link input";
-
-    /// <summary>
     /// Name
     /// </summary>
     [InputLabel("Name")]
@@ -56,4 +51,13 @@ public class AddLinkModalData : IModal
     }
 
     #endregion // Methods
+
+    #region IModal
+
+    /// <summary>
+    /// Title
+    /// </summary>
+    public string Title => "Message editing: Link input";
+
+    #endregion // IModal
 }

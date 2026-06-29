@@ -72,21 +72,6 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
     #region Properties
 
     /// <summary>
-    /// Custom Id
-    /// </summary>
-    public string CustomId { get; }
-
-    /// <summary>
-    /// Service provider
-    /// </summary>
-    public IServiceProvider ServiceProvider { get; set; }
-
-    /// <summary>
-    /// Interactivity
-    /// </summary>
-    public InteractivityService Interactivity { get; }
-
-    /// <summary>
     /// Command
     /// </summary>
     public ICommandInfo Command { get; internal set; }
@@ -109,6 +94,90 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
     #endregion // Properties
 
     #region Methods
+
+    /// <summary>
+    /// Acknowledge the interaction
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task DeferAsync()
+    {
+        try
+        {
+            await _interaction.DeferAsync()
+                              .ConfigureAwait(false);
+        }
+        catch (TimeoutException)
+        {
+            throw new ScruffyAbortedException();
+        }
+    }
+
+    /// <summary>
+    /// Response with a modal
+    /// </summary>
+    /// <typeparam name="TModal">Modal data</typeparam>
+    /// <param name="customId">Custom ID</param>
+    /// <param name="modifyModal">Modal modification</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task RespondWithModalAsync<TModal>(string customId, Action<ModalBuilder> modifyModal = null)
+        where TModal : class, IModal
+    {
+        try
+        {
+            await _interaction.RespondWithModalAsync<TModal>(customId, null, modifyModal)
+                              .ConfigureAwait(false);
+        }
+        catch (TimeoutException)
+        {
+            throw new ScruffyAbortedException();
+        }
+    }
+
+    /// <summary>
+    /// Delete original response
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    public async Task DeleteOriginalResponse()
+    {
+        try
+        {
+            await _interaction.DeleteOriginalResponseAsync()
+                              .ConfigureAwait(false);
+        }
+        catch (TimeoutException)
+        {
+            throw new ScruffyAbortedException();
+        }
+    }
+
+    #endregion // Methods
+
+    #region IContextContainer
+
+    /// <summary>
+    /// Custom ID
+    /// </summary>
+    public string CustomId { get; }
+
+    /// <summary>
+    /// Service provider
+    /// </summary>
+    public IServiceProvider ServiceProvider { get; set; }
+
+    /// <summary>
+    /// Interactivity
+    /// </summary>
+    public InteractivityService Interactivity { get; }
+
+    /// <summary>
+    /// Gets the <see cref="DiscordSocketClient" /> that the command is executed with
+    /// </summary>
+    public DiscordSocketClient Client { get; }
+
+    /// <summary>
+    /// Current member
+    /// </summary>
+    public IGuildUser Member => User as IGuildUser;
 
     /// <summary>
     /// Response general processing message
@@ -164,70 +233,6 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
             throw new ScruffyAbortedException();
         }
     }
-
-    /// <summary>
-    /// Acknowledge the interaction
-    /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task DeferAsync()
-    {
-        try
-        {
-            await _interaction.DeferAsync()
-                              .ConfigureAwait(false);
-        }
-        catch (TimeoutException)
-        {
-            throw new ScruffyAbortedException();
-        }
-    }
-
-    /// <summary>
-    /// Response with a modal
-    /// </summary>
-    /// <param name="customId">Custom ID</param>
-    /// <param name="modifyModal">Modal modification</param>
-    /// <typeparam name="TModal">Modal data</typeparam>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task RespondWithModalAsync<TModal>(string customId, Action<ModalBuilder> modifyModal = null)
-        where TModal : class, IModal
-    {
-        try
-        {
-            await _interaction.RespondWithModalAsync<TModal>(customId, null, modifyModal)
-                              .ConfigureAwait(false);
-        }
-        catch (TimeoutException)
-        {
-            throw new ScruffyAbortedException();
-        }
-    }
-
-    /// <summary>
-    /// Delete original response
-    /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task DeleteOriginalResponse()
-    {
-        try
-        {
-            await _interaction.DeleteOriginalResponseAsync()
-                              .ConfigureAwait(false);
-        }
-        catch (TimeoutException)
-        {
-            throw new ScruffyAbortedException();
-        }
-    }
-
-    #endregion // Methods
-
-    #region IContextContainer
-
-    /// <summary>
-    /// Current member
-    /// </summary>
-    public IGuildUser Member => User as IGuildUser;
 
     /// <summary>
     /// Switching to a direct message context
@@ -509,11 +514,6 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
     #endregion // IContextContainer
 
     #region IInteractionContext
-
-    /// <summary>
-    /// Gets the <see cref="DiscordSocketClient" /> that the command is executed with
-    /// </summary>
-    public DiscordSocketClient Client { get; }
 
     /// <summary>
     /// Gets the <see cref="IDiscordClient" /> that the command is executed with

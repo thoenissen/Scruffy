@@ -19,11 +19,6 @@ public class DpsReportUserTokenModal : IModal
     #region Properties
 
     /// <summary>
-    /// Title
-    /// </summary>
-    public string Title => "GW2 DPS Reports user token";
-
-    /// <summary>
     /// API-Key
     /// </summary>
     [InputLabel("User token")]
@@ -32,4 +27,13 @@ public class DpsReportUserTokenModal : IModal
     public string UserToken { get; set; }
 
     #endregion // Properties
+
+    #region IModal
+
+    /// <summary>
+    /// Title
+    /// </summary>
+    public string Title => "GW2 DPS Reports user token";
+
+    #endregion // IModal
 }

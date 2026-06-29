@@ -20,11 +20,6 @@ public class GuildExportCurrentPointsModalData : IModal
     #region Properties
 
     /// <summary>
-    /// Title
-    /// </summary>
-    public string Title => "Export: Current guild rank points";
-
-    /// <summary>
     /// Date selection
     /// </summary>
     [InputLabel("Start date selection")]
@@ -33,4 +28,13 @@ public class GuildExportCurrentPointsModalData : IModal
     public string SinceDate { get; set; }
 
     #endregion // Properties
+
+    #region IModal
+
+    /// <summary>
+    /// Title
+    /// </summary>
+    public string Title => "Export: Current guild rank points";
+
+    #endregion // IModal
 }

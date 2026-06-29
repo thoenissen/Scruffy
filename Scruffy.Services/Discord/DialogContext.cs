@@ -36,6 +36,10 @@ public class DialogContext
     /// </summary>
     public List<IMessage> Messages { get; }
 
+    #endregion // Properties
+
+    #region Methods
+
     /// <summary>
     /// Set value
     /// </summary>
@@ -58,5 +62,5 @@ public class DialogContext
         return (T)_values[key];
     }
 
-    #endregion // Properties
+    #endregion // Methods
 }

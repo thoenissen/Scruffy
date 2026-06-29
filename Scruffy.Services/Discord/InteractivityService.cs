@@ -152,8 +152,8 @@ public sealed class InteractivityService : SingletonLocatedServiceBase, IDisposa
     /// <summary>
     /// Creating of a container to manage temporary components
     /// </summary>
-    /// <param name="checkFunction">Check function</param>
     /// <typeparam name="TIdentification">Type of the identification</typeparam>
+    /// <param name="checkFunction">Check function</param>
     /// <returns>Container object</returns>
     public TemporaryComponentsContainer<TIdentification> CreateTemporaryComponentContainer<TIdentification>(Func<SocketMessageComponent, bool> checkFunction)
     {

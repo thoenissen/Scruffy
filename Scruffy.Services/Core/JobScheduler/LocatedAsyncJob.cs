@@ -61,7 +61,7 @@ public abstract class LocatedAsyncJob : IServiceScopeSupport, IAsyncJob, IDispos
 
     #endregion // Properties
 
-    #region IJob
+    #region IAsyncJob
 
     /// <summary>
     /// Executes the job
@@ -80,6 +80,10 @@ public abstract class LocatedAsyncJob : IServiceScopeSupport, IAsyncJob, IDispos
             LoggingService.AddJobLogEntry(LogEntryLevel.CriticalError, GetType().Name, ex.Message, null, ex);
         }
     }
+
+    #endregion // IAsyncJob
+
+    #region IJob
 
     /// <summary>
     /// Executes the job

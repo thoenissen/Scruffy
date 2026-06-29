@@ -32,34 +32,6 @@ internal class DebuggingContext : IContextContainer
 
     #endregion // Constructor
 
-    #region Properties
-
-    /// <inheritdoc/>
-    public string CustomId => "Debug";
-
-    /// <inheritdoc/>
-    public IServiceProvider ServiceProvider { get; }
-
-    /// <inheritdoc/>
-    public DiscordSocketClient Client { get; }
-
-    /// <inheritdoc/>
-    public IGuild Guild { get; private set; }
-
-    /// <inheritdoc/>
-    public IMessageChannel Channel { get; private set; }
-
-    /// <inheritdoc/>
-    public IUser User { get; private set; }
-
-    /// <inheritdoc/>
-    public IGuildUser Member { get; private set; }
-
-    /// <inheritdoc/>
-    public InteractivityService Interactivity { get; }
-
-    #endregion // Properties
-
     #region Methods
 
     /// <summary>
@@ -85,7 +57,31 @@ internal class DebuggingContext : IContextContainer
 
     #endregion // Methods
 
-    #region IContextProvider
+    #region IContextContainer
+
+    /// <inheritdoc/>
+    public IServiceProvider ServiceProvider { get; }
+
+    /// <inheritdoc/>
+    public DiscordSocketClient Client { get; }
+
+    /// <inheritdoc/>
+    public IGuild Guild { get; private set; }
+
+    /// <inheritdoc/>
+    public IMessageChannel Channel { get; private set; }
+
+    /// <inheritdoc/>
+    public IUser User { get; private set; }
+
+    /// <inheritdoc/>
+    public IGuildUser Member { get; private set; }
+
+    /// <inheritdoc/>
+    public InteractivityService Interactivity { get; }
+
+    /// <inheritdoc/>
+    public string CustomId => "Debug";
 
     /// <inheritdoc/>
     public Task SwitchToDirectMessageContext()
@@ -165,5 +161,5 @@ internal class DebuggingContext : IContextContainer
         return Task.CompletedTask;
     }
 
-    #endregion // IContextProvider
+    #endregion // IContextContainer
 }

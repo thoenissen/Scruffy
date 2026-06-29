@@ -20,11 +20,6 @@ public class GuildWarsAccountModal : IModal
     #region Properties
 
     /// <summary>
-    /// Title
-    /// </summary>
-    public string Title => "Guild Wars 2 account";
-
-    /// <summary>
     /// API-Key
     /// </summary>
     [InputLabel("API-Key")]
@@ -33,4 +28,13 @@ public class GuildWarsAccountModal : IModal
     public string APIKey { get; set; }
 
     #endregion // Properties
+
+    #region IModal
+
+    /// <summary>
+    /// Title
+    /// </summary>
+    public string Title => "Guild Wars 2 account";
+
+    #endregion // IModal
 }

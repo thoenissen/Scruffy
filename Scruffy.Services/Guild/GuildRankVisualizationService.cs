@@ -818,7 +818,7 @@ public class GuildRankVisualizationService : LocatedServiceBase
 
                             if (role != null)
                             {
-                                user.UserColor = role.Color.ToString();
+                                user.UserColor = role.Colors.PrimaryColor.ToString();
                             }
                         }
                     }

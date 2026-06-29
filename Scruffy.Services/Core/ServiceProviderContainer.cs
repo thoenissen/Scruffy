@@ -191,7 +191,7 @@ public sealed class ServiceProviderContainer : IAsyncDisposable
 
     #endregion // Methods
 
-    #region IDisposable
+    #region IAsyncDisposable
 
     /// <summary>
     /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources
@@ -223,5 +223,5 @@ public sealed class ServiceProviderContainer : IAsyncDisposable
                               .ConfigureAwait(false);
     }
 
-    #endregion // IDisposable
+    #endregion // IAsyncDisposable
 }

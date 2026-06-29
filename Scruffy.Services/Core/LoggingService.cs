@@ -188,12 +188,12 @@ public class LoggingService
     /// <summary>
     /// Adding a log entry
     /// </summary>
+    /// <typeparam name="T">Custom data type</typeparam>
     /// <param name="level">Level</param>
     /// <param name="className">Class name</param>
     /// <param name="message">Message</param>
     /// <param name="additionalInformation">Additional information</param>
     /// <param name="customData">Custom data</param>
-    /// <typeparam name="T">Custom data type</typeparam>
     /// <returns>Log entry id</returns>
     public static long? AddServiceLogEntry<T>(LogEntryLevel level, string className, string message, string additionalInformation, T customData)
     {
@@ -236,6 +236,7 @@ public class LoggingService
     /// <summary>
     /// Write line to log
     /// </summary>
+    /// <typeparam name="T">Custom data type</typeparam>
     /// <param name="type">Type</param>
     /// <param name="level">Level</param>
     /// <param name="source">Source</param>
@@ -245,7 +246,6 @@ public class LoggingService
     /// <param name="ex">Exception</param>
     /// <param name="customData">Custom data</param>
     /// <returns>Log entry id</returns>
-    /// <typeparam name="T">Custom data type</typeparam>
     private long? WriteLine<T>(LogEntryType type, LogEntryLevel level, string source, string subSource, string message, string additionalInformation, Exception ex, T customData)
     {
         Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss} {level}] [{source}{(string.IsNullOrWhiteSpace(subSource) ? string.Empty : "|")}{(string.IsNullOrWhiteSpace(subSource) ? string.Empty : subSource)}]: {message}{(string.IsNullOrWhiteSpace(additionalInformation) ? null : " - ")}{additionalInformation}{(ex != null ? $" - {ex}" : string.Empty)}");

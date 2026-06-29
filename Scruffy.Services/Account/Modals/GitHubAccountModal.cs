@@ -19,11 +19,6 @@ public class GitHubAccountModal : IModal
     #region Properties
 
     /// <summary>
-    /// Title
-    /// </summary>
-    public string Title => "Add or refresh a GitHub account";
-
-    /// <summary>
     /// API-Key
     /// </summary>
     [InputLabel("Account name")]
@@ -32,4 +27,13 @@ public class GitHubAccountModal : IModal
     public string AccountName { get; set; }
 
     #endregion // Properties
+
+    #region IModal
+
+    /// <summary>
+    /// Title
+    /// </summary>
+    public string Title => "Add or refresh a GitHub account";
+
+    #endregion // IModal
 }

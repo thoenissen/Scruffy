@@ -20,11 +20,6 @@ public class LookingForGroupCreationModalData : IModal
     #region Properties
 
     /// <summary>
-    /// Creation of the appointment
-    /// </summary>
-    public string Title => "Appointment creation";
-
-    /// <summary>
     /// Title
     /// </summary>
     [InputLabel("Title")]
@@ -57,4 +52,13 @@ public class LookingForGroupCreationModalData : IModal
     public string AppointmentDescription { get; set; }
 
     #endregion // Properties
+
+    #region IModal
+
+    /// <summary>
+    /// Creation of the appointment
+    /// </summary>
+    public string Title => "Appointment creation";
+
+    #endregion // IModal
 }

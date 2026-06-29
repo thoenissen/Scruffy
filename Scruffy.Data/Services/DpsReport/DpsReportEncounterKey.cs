@@ -431,7 +431,7 @@ public class DpsReportEncounterKey : IEquatable<DpsReportEncounterKey>
 
     #endregion // Methods
 
-    #region Equality members
+    #region IEquatable
 
     /// <inheritdoc />
     public bool Equals(DpsReportEncounterKey other)
@@ -451,7 +451,7 @@ public class DpsReportEncounterKey : IEquatable<DpsReportEncounterKey>
                && Encounter == other.Encounter;
     }
 
-    #endregion // Equality members
+    #endregion // IEquatable
 
     #region Object
 
