@@ -83,6 +83,7 @@ public class ScruffyDbContext : IdentityDbContext<UserEntity, RoleEntity, long, 
         base.OnModelCreating(modelBuilder);
 
         // CoreData
+        modelBuilder.Entity<CoreConfigurationEntity>();
         modelBuilder.Entity<UserEntity>()
                     .ToTable("Users");
         modelBuilder.Entity<ServerConfigurationEntity>();
