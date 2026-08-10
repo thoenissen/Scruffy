@@ -134,27 +134,30 @@ public sealed class ServiceProviderContainer : IAsyncDisposable
                           .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
                                                                     {
                                                                         UseDefaultCredentials = true,
-                                                                        Credentials = new NetworkCredential(Environment.GetEnvironmentVariable("SCRUFFY_GITHUB_USER"),
-                                                                                                            Environment.GetEnvironmentVariable("SCRUFFY_GITHUB_TOKEN"))
+                                                                        Credentials = new NetworkCredential(ConfigurationService.GetEntry("SCRUFFY_GITHUB_USER"),
+                                                                                                            ConfigurationService.GetEntry("SCRUFFY_GITHUB_TOKEN"))
                                                                     });
         _serviceCollection.AddHttpClient("GW2Wiki",
                                          obj => obj.DefaultRequestHeaders.Add("User-Agent", "Scruffy"));
 
-        var discordBotBaseUrl = Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_BOT_BASE_URL");
+        var discordBotBaseUrl = ConfigurationService.GetEntry("SCRUFFY_DISCORD_BOT_BASE_URL");
 
         if (string.IsNullOrWhiteSpace(discordBotBaseUrl) == false)
         {
             _serviceCollection.AddHttpClient("DiscordBot", client => client.BaseAddress = new Uri(discordBotBaseUrl));
         }
 
-        _serviceCollection.AddMinio(options =>
-                                    {
-                                        options.WithEndpoint(Environment.GetEnvironmentVariable("SCRUFFY_MINIO_ENDPOINT"));
-                                        options.WithCredentials(Environment.GetEnvironmentVariable("SCRUFFY_MINIO_ACCESS_KEY")!,
-                                                                Environment.GetEnvironmentVariable("SCRUFFY_MINIO_SECRET_KEY")!)
-                                               .WithSSL(false)
-                                               .WithRegion(Environment.GetEnvironmentVariable("SCRUFFY_MINIO_REGION"));
-                                    });
+        if (ConfigurationService.IsMaintenanceMode == false)
+        {
+            _serviceCollection.AddMinio(options =>
+                                        {
+                                            options.WithEndpoint(ConfigurationService.GetEntry("SCRUFFY_MINIO_ENDPOINT"));
+                                            options.WithCredentials(ConfigurationService.GetEntry("SCRUFFY_MINIO_ACCESS_KEY")!,
+                                                                    ConfigurationService.GetEntry("SCRUFFY_MINIO_SECRET_KEY")!)
+                                                   .WithSSL(false)
+                                                   .WithRegion(ConfigurationService.GetEntry("SCRUFFY_MINIO_REGION"));
+                                        });
+        }
 
         onInitialize?.Invoke(_serviceCollection);
 

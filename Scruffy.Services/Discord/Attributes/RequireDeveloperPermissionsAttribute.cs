@@ -2,6 +2,8 @@
 
 using Discord.Commands;
 
+using Scruffy.Services.Core;
+
 namespace Scruffy.Services.Discord.Attributes;
 
 /// <summary>
@@ -14,29 +16,22 @@ public class RequireDeveloperPermissionsAttribute : PreconditionAttribute
     /// <summary>
     /// User ids
     /// </summary>
-    private static readonly ConcurrentDictionary<ulong, byte> _userIds;
+    private ConcurrentDictionary<ulong, byte> _userIds;
 
     #endregion // Fields
-
-    #region Constructor
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    static RequireDeveloperPermissionsAttribute()
-    {
-        var userIds = Environment.GetEnvironmentVariable("SCRUFFY_DEVELOPER_USER_IDS") ?? string.Empty;
-
-        _userIds = new ConcurrentDictionary<ulong, byte>(userIds.Split(";").ToDictionary(Convert.ToUInt64, obj => (byte)0));
-    }
-
-    #endregion // Constructor
 
     #region PreconditionAttribute
 
     /// <inheritdoc/>
     public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
     {
+        if (_userIds == null)
+        {
+            var userIds = ConfigurationService.GetEntry("SCRUFFY_DEVELOPER_USER_IDS") ?? string.Empty;
+
+            _userIds = new ConcurrentDictionary<ulong, byte>(userIds.Split(";").ToDictionary(Convert.ToUInt64, obj => (byte)0));
+        }
+
         return Task.FromResult(_userIds.ContainsKey(context.User.Id)
                                    ? PreconditionResult.FromSuccess()
                                    : PreconditionResult.FromError("The channel is blocked for commands."));

@@ -63,26 +63,29 @@ public class LoggingService
     /// </summary>
     private LoggingService()
     {
-        _environment = Environment.GetEnvironmentVariable("SCRUFFY_ENVIRONMENT")?.ToLowerInvariant();
+        _environment = ConfigurationService.GetEntry("SCRUFFY_ENVIRONMENT")?.ToLowerInvariant();
 
-        var openSearchUrl = Environment.GetEnvironmentVariable("SCRUFFY_OPENSEARCH");
-
-        if (string.IsNullOrWhiteSpace(_environment) == false
-            && string.IsNullOrWhiteSpace(openSearchUrl) == false)
+        if (ConfigurationService.IsMaintenanceMode == false)
         {
-            var node = new Uri(openSearchUrl);
-            var settings = new ConnectionSettings(node);
+            var openSearchUrl = ConfigurationService.GetEntry("SCRUFFY_OPENSEARCH");
 
-            settings.ServerCertificateValidationCallback(CertificateValidations.AllowAll);
-
-            var user = Environment.GetEnvironmentVariable("SCRUFFY_OPENSEARCH_USER");
-
-            if (string.IsNullOrWhiteSpace(user) == false)
+            if (string.IsNullOrWhiteSpace(_environment) == false
+                && string.IsNullOrWhiteSpace(openSearchUrl) == false)
             {
-                settings.BasicAuthentication(user, Environment.GetEnvironmentVariable("SCRUFFY_OPENSEARCH_PASSWORD"));
-            }
+                var node = new Uri(openSearchUrl);
+                var settings = new ConnectionSettings(node);
 
-            _openSearchClient = new OpenSearchClient(settings);
+                settings.ServerCertificateValidationCallback(CertificateValidations.AllowAll);
+
+                var user = ConfigurationService.GetEntry("SCRUFFY_OPENSEARCH_USER");
+
+                if (string.IsNullOrWhiteSpace(user) == false)
+                {
+                    settings.BasicAuthentication(user, ConfigurationService.GetEntry("SCRUFFY_OPENSEARCH_PASSWORD"));
+                }
+
+                _openSearchClient = new OpenSearchClient(settings);
+            }
         }
     }
 

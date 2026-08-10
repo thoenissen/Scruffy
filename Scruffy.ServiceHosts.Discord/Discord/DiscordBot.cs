@@ -86,11 +86,14 @@ public sealed class DiscordBot : IAsyncDisposable
     /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation</returns>
     public async Task StartAsync()
     {
-        var debugChannel = Environment.GetEnvironmentVariable("SCRUFFY_DEBUG_CHANNEL");
-
-        if (string.IsNullOrWhiteSpace(debugChannel) == false)
+        if (ConfigurationService.IsMaintenanceMode == false)
         {
-            _debugChannel = Convert.ToUInt64(debugChannel);
+            var debugChannel = ConfigurationService.GetEntry("SCRUFFY_DEBUG_CHANNEL");
+
+            if (string.IsNullOrWhiteSpace(debugChannel) == false)
+            {
+                _debugChannel = Convert.ToUInt64(debugChannel);
+            }
         }
 
         var config = new DiscordSocketConfig
@@ -147,7 +150,7 @@ public sealed class DiscordBot : IAsyncDisposable
         await _interaction.AddModulesAsync(Assembly.Load("Scruffy.Commands"), _serviceScope.ServiceProvider)
                           .ConfigureAwait(false);
 
-        await _discordClient.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_TOKEN"))
+        await _discordClient.LoginAsync(TokenType.Bot, ConfigurationService.GetEntry("SCRUFFY_DISCORD_TOKEN"))
                             .ConfigureAwait(false);
 
         await _discordClient.StartAsync()

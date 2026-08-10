@@ -38,11 +38,6 @@ public class LogCommandHandler : LocatedServiceBase
     private static readonly string[] _dateFormats = ["dd.MM", "dd.MM.yyyy", "MM-dd", "yyyy-MM-dd"];
 
     /// <summary>
-    /// Web application URL
-    /// </summary>
-    private static readonly string _webbAppUrl = Environment.GetEnvironmentVariable("SCRUFFY_WEBAPP_URL");
-
-    /// <summary>
     /// Discord socket client
     /// </summary>
     private readonly DiscordSocketClient _client;
@@ -90,6 +85,11 @@ public class LogCommandHandler : LocatedServiceBase
     #endregion // Constructor
 
     #region Properties
+
+    /// <summary>
+    /// Web application URL
+    /// </summary>
+    private static string WebbAppUrl => field ??= ConfigurationService.GetEntry("SCRUFFY_WEBAPP_URL");
 
     /// <summary>
     /// String to display the success icon
@@ -661,7 +661,7 @@ public class LogCommandHandler : LocatedServiceBase
                                  .ConfigureAwait(false);
                 }
 
-                if (string.IsNullOrWhiteSpace(_webbAppUrl) == false)
+                if (string.IsNullOrWhiteSpace(WebbAppUrl) == false)
                 {
                     var webAppEmbed = new EmbedBuilder().WithColor(Color.Green)
                                                         .WithFooter("Scruffy", "https://cdn.discordapp.com/app-icons/838381119585648650/823930922cbe1e5a9fa8552ed4b2a392.png?size=64")
@@ -669,7 +669,7 @@ public class LogCommandHandler : LocatedServiceBase
                                                         .WithTimestamp(DateTime.Now)
                                                         .WithDescription(LocalizationGroup.GetFormattedText("WebAppGolemHint",
                                                                                                             "Would you like more information about a log? Then check out the new [website]({0}).",
-                                                                                                            $"{_webbAppUrl}/DpsReports/Today"));
+                                                                                                            $"{WebbAppUrl}/DpsReports/Today"));
 
                     await context.SendMessageAsync(embed: webAppEmbed.Build())
                                  .ConfigureAwait(false);

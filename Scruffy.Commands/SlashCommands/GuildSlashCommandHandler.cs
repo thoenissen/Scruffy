@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.Interactions;
 
+using Scruffy.Services.Core;
 using Scruffy.Services.Discord;
 using Scruffy.Services.Guild;
 
@@ -12,16 +13,12 @@ namespace Scruffy.Commands.SlashCommands;
 [Group("guild", "Guild related commands")]
 public class GuildSlashCommandHandler : SlashCommandModuleBase
 {
-    #region Fields
+    #region Properties
 
     /// <summary>
     /// Web application URL
     /// </summary>
-    private static readonly string _webbAppUrl = Environment.GetEnvironmentVariable("SCRUFFY_WEBAPP_URL");
-
-    #endregion // Fields
-
-    #region Properties
+    private static string WebbAppUrl => field ??= ConfigurationService.GetEntry("SCRUFFY_WEBAPP_URL");
 
     /// <summary>
     /// Command handler
@@ -84,7 +81,7 @@ public class GuildSlashCommandHandler : SlashCommandModuleBase
                                             .WithTimestamp(DateTime.Now)
                                             .WithDescription(LocalizationGroup.GetFormattedText("WebAppHint",
                                                                                                 "Would you like more precise data on your ranking? Then test the new [website]({0}).",
-                                                                                                $"{_webbAppUrl}/Ranking/Personal"));
+                                                                                                $"{WebbAppUrl}/Ranking/Personal"));
 
         await Context.SendMessageAsync(embed: webAppEmbed.Build())
                      .ConfigureAwait(false);

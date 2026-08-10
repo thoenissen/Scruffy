@@ -27,6 +27,7 @@ using OpenTelemetry.Trace;
 using Scruffy.Data.Entity;
 using Scruffy.Data.Entity.Tables.CoreData;
 using Scruffy.Data.Entity.Tables.Web;
+using Scruffy.Services.Core;
 using Scruffy.Services.Core.Localization;
 using Scruffy.Services.GuildWars2.DpsReports;
 using Scruffy.Services.Raid;
@@ -60,70 +61,73 @@ public class Program
         builder.Services.AddScoped<IdentityRedirectManager>();
         builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
 
-        var openTelemetryEndpoint = Environment.GetEnvironmentVariable("SCRUFFY_OPENTELEMETRY_ENDPOINT");
-        var openTelemetryInstance = Environment.GetEnvironmentVariable("SCRUFFY_OPENTELEMETRY_INSTANCE");
-
-        if (string.IsNullOrWhiteSpace(openTelemetryEndpoint) == false
-            && string.IsNullOrWhiteSpace(openTelemetryInstance) == false)
+        if (ConfigurationService.IsMaintenanceMode == false)
         {
-            var resourceBuilder = ResourceBuilder.CreateDefault()
-                                                 .AddService("Scruffy.WebApp", "Scruffy", Assembly.GetExecutingAssembly().GetName().Version!.ToString(), false, openTelemetryInstance);
+            var openTelemetryEndpoint = ConfigurationService.GetEntry("SCRUFFY_OPENTELEMETRY_ENDPOINT");
+            var openTelemetryInstance = ConfigurationService.GetEntry("SCRUFFY_OPENTELEMETRY_INSTANCE");
 
-            builder.Services.AddOpenTelemetry()
-                            .WithTracing(tracerProviderBuilder =>
-                                         {
-                                             tracerProviderBuilder.SetResourceBuilder(resourceBuilder)
-                                                                  .AddAspNetCoreInstrumentation()
-                                                                  .AddHttpClientInstrumentation()
-                                                                  .AddOtlpExporter(otlpOptions =>
-                                                                                   {
-                                                                                       otlpOptions.Endpoint = new Uri(openTelemetryEndpoint);
-                                                                                       otlpOptions.Protocol = OtlpExportProtocol.Grpc;
-                                                                                   });
-                                         })
-                            .WithMetrics(meterProviderBuilder =>
-                                         {
-                                             meterProviderBuilder.SetResourceBuilder(resourceBuilder)
-                                                                 .AddAspNetCoreInstrumentation()
-                                                                 .AddHttpClientInstrumentation()
-                                                                 .AddOtlpExporter(otlpOptions =>
-                                                                                  {
-                                                                                      otlpOptions.Endpoint = new Uri(openTelemetryEndpoint);
-                                                                                      otlpOptions.Protocol = OtlpExportProtocol.Grpc;
-                                                                                  });
-                                         })
-                            .WithLogging(loggingProviderBuilder =>
-                                         {
-                                             loggingProviderBuilder.SetResourceBuilder(resourceBuilder)
-                                                                   .AddOtlpExporter(otlpOptions =>
-                                                                                    {
-                                                                                        otlpOptions.Endpoint = new Uri(openTelemetryEndpoint);
-                                                                                        otlpOptions.Protocol = OtlpExportProtocol.Grpc;
-                                                                                    });
-                                         });
-        }
+            if (string.IsNullOrWhiteSpace(openTelemetryEndpoint) == false
+                && string.IsNullOrWhiteSpace(openTelemetryInstance) == false)
+            {
+                var resourceBuilder = ResourceBuilder.CreateDefault()
+                                                     .AddService("Scruffy.WebApp", "Scruffy", Assembly.GetExecutingAssembly().GetName().Version!.ToString(), false, openTelemetryInstance);
 
-        builder.Services.AddMinio(options =>
-                                  {
-                                      options.Endpoint = Environment.GetEnvironmentVariable("SCRUFFY_MINIO_ENDPOINT")!;
-                                      options.ConfigureClient(client =>
-                                                              {
-                                                                  client.WithCredentials(Environment.GetEnvironmentVariable("SCRUFFY_MINIO_ACCESS_KEY")!,
-                                                                                         Environment.GetEnvironmentVariable("SCRUFFY_MINIO_SECRET_KEY")!)
-                                                                        .WithSSL(false)
-                                                                        .WithRegion(Environment.GetEnvironmentVariable("SCRUFFY_MINIO_REGION"));
-                                                              });
-                                  });
+                builder.Services.AddOpenTelemetry()
+                                .WithTracing(tracerProviderBuilder =>
+                                             {
+                                                 tracerProviderBuilder.SetResourceBuilder(resourceBuilder)
+                                                                      .AddAspNetCoreInstrumentation()
+                                                                      .AddHttpClientInstrumentation()
+                                                                      .AddOtlpExporter(otlpOptions =>
+                                                                                       {
+                                                                                           otlpOptions.Endpoint = new Uri(openTelemetryEndpoint);
+                                                                                           otlpOptions.Protocol = OtlpExportProtocol.Grpc;
+                                                                                       });
+                                             })
+                                .WithMetrics(meterProviderBuilder =>
+                                             {
+                                                 meterProviderBuilder.SetResourceBuilder(resourceBuilder)
+                                                                     .AddAspNetCoreInstrumentation()
+                                                                     .AddHttpClientInstrumentation()
+                                                                     .AddOtlpExporter(otlpOptions =>
+                                                                                      {
+                                                                                          otlpOptions.Endpoint = new Uri(openTelemetryEndpoint);
+                                                                                          otlpOptions.Protocol = OtlpExportProtocol.Grpc;
+                                                                                      });
+                                             })
+                                .WithLogging(loggingProviderBuilder =>
+                                             {
+                                                 loggingProviderBuilder.SetResourceBuilder(resourceBuilder)
+                                                                       .AddOtlpExporter(otlpOptions =>
+                                                                                        {
+                                                                                            otlpOptions.Endpoint = new Uri(openTelemetryEndpoint);
+                                                                                            otlpOptions.Protocol = OtlpExportProtocol.Grpc;
+                                                                                        });
+                                             });
+            }
 
-        var redisConnectionString = Environment.GetEnvironmentVariable("SCRUFFY_REDIS_CONNECTION_STRING");
+            builder.Services.AddMinio(options =>
+                                      {
+                                          options.Endpoint = ConfigurationService.GetEntry("SCRUFFY_MINIO_ENDPOINT")!;
+                                          options.ConfigureClient(client =>
+                                                                  {
+                                                                      client.WithCredentials(ConfigurationService.GetEntry("SCRUFFY_MINIO_ACCESS_KEY")!,
+                                                                                             ConfigurationService.GetEntry("SCRUFFY_MINIO_SECRET_KEY")!)
+                                                                            .WithSSL(false)
+                                                                            .WithRegion(ConfigurationService.GetEntry("SCRUFFY_MINIO_REGION"));
+                                                                  });
+                                      });
 
-        if (string.IsNullOrWhiteSpace(redisConnectionString) == false)
-        {
-            builder.Services.AddStackExchangeRedisCache(opts =>
-                                                        {
-                                                            opts.Configuration = redisConnectionString;
-                                                            opts.InstanceName = "Scruffy.WebApp";
-                                                        });
+            var redisConnectionString = ConfigurationService.GetEntry("SCRUFFY_REDIS_CONNECTION_STRING");
+
+            if (string.IsNullOrWhiteSpace(redisConnectionString) == false)
+            {
+                builder.Services.AddStackExchangeRedisCache(opts =>
+                                                            {
+                                                                opts.Configuration = redisConnectionString;
+                                                                opts.InstanceName = "Scruffy.WebApp";
+                                                            });
+            }
         }
 
         builder.Services.AddHybridCache();
@@ -136,7 +140,7 @@ public class Program
         builder.Services.AddTransient<RaidMessageBuilder>();
         builder.Services.AddTransient<RaidRolesService>();
 
-        var discordBotBaseUrl = Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_BOT_BASE_URL");
+        var discordBotBaseUrl = ConfigurationService.GetEntry("SCRUFFY_DISCORD_BOT_BASE_URL");
 
         if (string.IsNullOrWhiteSpace(discordBotBaseUrl) == false)
         {
@@ -155,7 +159,7 @@ public class Program
                                                         GatewayIntents = GatewayIntents.AllUnprivileged
                                                     });
 
-        await discordClient.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_TOKEN")!)
+        await discordClient.LoginAsync(TokenType.Bot, ConfigurationService.GetEntry("SCRUFFY_DISCORD_TOKEN")!)
                            .ConfigureAwait(false);
 
         await discordClient.StartAsync()
@@ -164,13 +168,16 @@ public class Program
         builder.Services.AddSingleton(discordClient);
         builder.Services.AddSingleton<IDiscordClient>(discordClient);
 
-        var persistenceDirectory = Environment.GetEnvironmentVariable("SCRUFFY_PERSISTENCE_DIRECTORY");
-
-        if (string.IsNullOrWhiteSpace(persistenceDirectory) == false)
+        if (ConfigurationService.IsMaintenanceMode == false)
         {
-            builder.Services.AddDataProtection()
-                            .PersistKeysToFileSystem(new DirectoryInfo(persistenceDirectory))
-                            .SetApplicationName("Scruffy.WebApp");
+            var persistenceDirectory = ConfigurationService.GetEntry("SCRUFFY_PERSISTENCE_DIRECTORY");
+
+            if (string.IsNullOrWhiteSpace(persistenceDirectory) == false)
+            {
+                builder.Services.AddDataProtection()
+                                .PersistKeysToFileSystem(new DirectoryInfo(persistenceDirectory))
+                                .SetApplicationName("Scruffy.WebApp");
+            }
         }
 
         builder.Services.AddAuthentication(options =>
@@ -180,8 +187,8 @@ public class Program
                                            })
                         .AddDiscord(options =>
                                     {
-                                        options.ClientId = Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_OAUTH_CLIENT_ID")!;
-                                        options.ClientSecret = Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_OAUTH_CLIENT_SECRET")!;
+                                        options.ClientId = ConfigurationService.GetEntry("SCRUFFY_DISCORD_OAUTH_CLIENT_ID")!;
+                                        options.ClientSecret = ConfigurationService.GetEntry("SCRUFFY_DISCORD_OAUTH_CLIENT_SECRET")!;
                                         options.Events.OnRemoteFailure = context =>
                                                                          {
                                                                              context.Response.Redirect("/");

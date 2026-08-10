@@ -18,7 +18,12 @@ public class LogOverviewJob : LocatedAsyncJob
     /// <inheritdoc/>
     public override async Task ExecuteOverrideAsync()
     {
-        var debugChannel = Environment.GetEnvironmentVariable("SCRUFFY_DEBUG_CHANNEL");
+        if (ConfigurationService.IsMaintenanceMode)
+        {
+            return;
+        }
+
+        var debugChannel = ConfigurationService.GetEntry("SCRUFFY_DEBUG_CHANNEL");
 
         if (string.IsNullOrWhiteSpace(debugChannel) == false)
         {

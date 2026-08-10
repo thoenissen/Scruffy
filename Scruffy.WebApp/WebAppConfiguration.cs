@@ -1,5 +1,7 @@
 ﻿using System;
 
+using Scruffy.Services.Core;
+
 namespace Scruffy.WebApp;
 
 /// <summary>
@@ -7,6 +9,15 @@ namespace Scruffy.WebApp;
 /// </summary>
 public static class WebAppConfiguration
 {
+    #region Fields
+
+    /// <summary>
+    /// ID of the discord server
+    /// </summary>
+    private static ulong? _discordServerId;
+
+    #endregion // Fields
+
     #region Nested classes
 
     /// <summary>
@@ -42,27 +53,30 @@ public static class WebAppConfiguration
 
     #endregion // Nested classes
 
-    #region Constructor
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    static WebAppConfiguration()
-    {
-        if (ulong.TryParse(Environment.GetEnvironmentVariable("SCRUFFY_GUILD_SERVER"), out var discordServerId))
-        {
-            DiscordServerId = discordServerId;
-        }
-    }
-
-    #endregion // Constructor
-
     #region Properties
 
     /// <summary>
     /// ID of the discord server
     /// </summary>
-    public static ulong DiscordServerId { get; }
+    public static ulong DiscordServerId
+    {
+        get
+        {
+            if (_discordServerId == null)
+            {
+                if (ulong.TryParse(ConfigurationService.GetEntry("SCRUFFY_GUILD_SERVER"), out var discordServerId) == false)
+                {
+                    _discordServerId = discordServerId;
+                }
+                else
+                {
+                    _discordServerId = 0;
+                }
+            }
+
+            return _discordServerId.Value;
+        }
+    }
 
     #endregion // Properties
 }

@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 
+using Scruffy.Services.Core;
+
 namespace Scruffy.ManualTesting;
 
 /// <summary>
@@ -67,7 +69,7 @@ internal static class Preparation
 
         DiscordClient = new DiscordSocketClient(config);
 
-        await DiscordClient.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("SCRUFFY_DISCORD_TOKEN"))
+        await DiscordClient.LoginAsync(TokenType.Bot, ConfigurationService.GetEntry("SCRUFFY_DISCORD_TOKEN"))
                            .ConfigureAwait(false);
 
         await DiscordClient.StartAsync()

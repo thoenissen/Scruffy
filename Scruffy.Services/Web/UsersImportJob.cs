@@ -1,5 +1,6 @@
 ﻿using Discord.WebSocket;
 
+using Scruffy.Services.Core;
 using Scruffy.Services.Core.JobScheduler;
 
 namespace Scruffy.Services.Web;
@@ -44,7 +45,7 @@ public class UsersImportJob : LocatedAsyncJob
     /// <inheritdoc/>
     public override async Task ExecuteOverrideAsync()
     {
-        var guildServer = Environment.GetEnvironmentVariable("SCRUFFY_GUILD_SERVER");
+        var guildServer = ConfigurationService.GetEntry("SCRUFFY_GUILD_SERVER");
 
         if (ulong.TryParse(guildServer, out var guildServerId))
         {
@@ -57,8 +58,8 @@ public class UsersImportJob : LocatedAsyncJob
             }
         }
 
-        var developmentServer = Environment.GetEnvironmentVariable("SCRUFFY_DEVELOPMENT_SERVER");
-        var developerRole = Environment.GetEnvironmentVariable("SCURFFY_DEVELOPER_ROLE");
+        var developmentServer = ConfigurationService.GetEntry("SCRUFFY_DEVELOPMENT_SERVER");
+        var developerRole = ConfigurationService.GetEntry("SCURFFY_DEVELOPER_ROLE");
 
         if (ulong.TryParse(developmentServer, out var developmentServerId)
             && ulong.TryParse(developerRole, out var developerRoleId))
