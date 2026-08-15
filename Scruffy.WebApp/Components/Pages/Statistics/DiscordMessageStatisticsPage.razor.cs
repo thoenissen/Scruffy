@@ -260,83 +260,83 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
     {
         return filter switch
                {
-                   TimeFilter.Days30 => query.GroupBy(m => m.TimeStamp.Date)
-                                             .Select(g => new
-                                                          {
-                                                              Date = g.Key,
-                                                              Count = g.Count()
-                                                          })
-                                             .OrderBy(g => g.Date)
+                   TimeFilter.Days30 => query.GroupBy(message => message.TimeStamp.Date)
+                                             .Select(group => new
+                                                              {
+                                                                  Date = group.Key,
+                                                                  Count = group.Count()
+                                                              })
+                                             .OrderBy(group => group.Date)
                                              .ToList()
-                                             .Select(g => (g.Date.ToString("dd.MM", LocalizationGroup.CultureInfo), g.Count))
+                                             .Select(group => (group.Date.ToString("dd.MM", LocalizationGroup.CultureInfo), group.Count))
                                              .ToList(),
 
-                   TimeFilter.Days90 => query.GroupBy(m => new
-                                                           {
-                                                               m.TimeStamp.Year,
-                                                               Week = ((m.TimeStamp.DayOfYear - 1) / 7) + 1
-                                                           })
-                                             .Select(g => new
-                                                          {
-                                                              g.Key.Year,
-                                                              g.Key.Week,
-                                                              Count = g.Count()
-                                                          })
-                                             .OrderBy(g => g.Year)
-                                             .ThenBy(g => g.Week)
+                   TimeFilter.Days90 => query.GroupBy(message => new
+                                                                 {
+                                                                     message.TimeStamp.Year,
+                                                                     Week = ((message.TimeStamp.DayOfYear - 1) / 7) + 1
+                                                                 })
+                                             .Select(group => new
+                                                              {
+                                                                  group.Key.Year,
+                                                                  group.Key.Week,
+                                                                  Count = group.Count()
+                                                              })
+                                             .OrderBy(group => group.Year)
+                                             .ThenBy(group => group.Week)
                                              .ToList()
-                                             .Select(g => ($"W{g.Week}/{g.Year}", g.Count))
+                                             .Select(group => ($"W{group.Week}/{group.Year}", group.Count))
                                              .ToList(),
 
-                   TimeFilter.Days180 => query.GroupBy(m => new
-                                                            {
-                                                                m.TimeStamp.Year,
-                                                                Week = ((m.TimeStamp.DayOfYear - 1) / 7) + 1
-                                                            })
-                                              .Select(g => new
-                                                           {
-                                                               g.Key.Year,
-                                                               g.Key.Week,
-                                                               Count = g.Count()
-                                                           })
-                                              .OrderBy(g => g.Year)
-                                              .ThenBy(g => g.Week)
+                   TimeFilter.Days180 => query.GroupBy(message => new
+                                                                  {
+                                                                      message.TimeStamp.Year,
+                                                                      Week = ((message.TimeStamp.DayOfYear - 1) / 7) + 1
+                                                                  })
+                                              .Select(group => new
+                                                               {
+                                                                   group.Key.Year,
+                                                                   group.Key.Week,
+                                                                   Count = group.Count()
+                                                               })
+                                              .OrderBy(group => group.Year)
+                                              .ThenBy(group => group.Week)
                                               .ToList()
-                                              .Select(g => ($"W{g.Week}/{g.Year}", g.Count))
+                                              .Select(group => ($"W{group.Week}/{group.Year}", group.Count))
                                               .ToList(),
 
-                   TimeFilter.Year1 => query.GroupBy(m => new
-                                                          {
-                                                              m.TimeStamp.Year,
-                                                              m.TimeStamp.Month
-                                                          })
-                                            .Select(g => new
-                                                         {
-                                                             g.Key.Year,
-                                                             g.Key.Month,
-                                                             Count = g.Count()
-                                                         })
-                                            .OrderBy(g => g.Year)
-                                            .ThenBy(g => g.Month)
+                   TimeFilter.Year1 => query.GroupBy(message => new
+                                                                {
+                                                                    message.TimeStamp.Year,
+                                                                    message.TimeStamp.Month
+                                                                })
+                                            .Select(group => new
+                                                             {
+                                                                 group.Key.Year,
+                                                                 group.Key.Month,
+                                                                 Count = group.Count()
+                                                             })
+                                            .OrderBy(group => group.Year)
+                                            .ThenBy(group => group.Month)
                                             .ToList()
-                                            .Select(g => ($"{g.Month:D2}/{g.Year}", g.Count))
+                                            .Select(group => ($"{group.Month:D2}/{group.Year}", group.Count))
                                             .ToList(),
 
-                   _ => query.GroupBy(m => new
-                                           {
-                                               m.TimeStamp.Year,
-                                               m.TimeStamp.Month
-                                           })
-                             .Select(g => new
-                                          {
-                                              g.Key.Year,
-                                              g.Key.Month,
-                                              Count = g.Count()
-                                          })
-                             .OrderBy(g => g.Year)
-                             .ThenBy(g => g.Month)
+                   _ => query.GroupBy(message => new
+                                                 {
+                                                     message.TimeStamp.Year,
+                                                     message.TimeStamp.Month
+                                                 })
+                             .Select(group => new
+                                              {
+                                                  group.Key.Year,
+                                                  group.Key.Month,
+                                                  Count = group.Count()
+                                              })
+                             .OrderBy(group => group.Year)
+                             .ThenBy(group => group.Month)
                              .ToList()
-                             .Select(g => ($"{g.Month:D2}/{g.Year}", g.Count))
+                             .Select(group => ($"{group.Month:D2}/{group.Year}", group.Count))
                              .ToList()
                };
     }
@@ -356,7 +356,7 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
         }
 
         var today = DateTime.UtcNow.Date;
-        var lookup = grouped.ToDictionary(g => g.Label, g => g.Count);
+        var lookup = grouped.ToDictionary(group => group.Label, group => group.Count);
         var result = new List<(string Label, int Count)>();
 
         switch (filter)
@@ -496,15 +496,15 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
                            {
                                ignoredChannelIds = repositoryFactory.GetRepository<DiscordIgnoreChannelRepository>()
                                                                     .GetQuery()
-                                                                    .Where(c => c.DiscordServerId == WebAppConfiguration.DiscordServerId)
-                                                                    .Select(c => c.DiscordChannelId)
+                                                                    .Where(channel => channel.DiscordServerId == WebAppConfiguration.DiscordServerId)
+                                                                    .Select(channel => channel.DiscordChannelId)
                                                                     .ToHashSet();
 
                                memberAccountIds = repositoryFactory.GetRepository<DiscordServerMemberRepository>()
                                                                    .GetQuery()
-                                                                   .Where(m => m.ServerId == WebAppConfiguration.DiscordServerId
-                                                                               && m.IsBot == false)
-                                                                   .Select(m => m.AccountId)
+                                                                   .Where(member => member.ServerId == WebAppConfiguration.DiscordServerId
+                                                                                    && member.IsBot == false)
+                                                                   .Select(member => member.AccountId)
                                                                    .ToHashSet();
                            }
 
@@ -531,13 +531,13 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
         {
             var query = repositoryFactory.GetRepository<DiscordMessageRepository>()
                                          .GetQuery()
-                                         .Where(m => m.DiscordServerId == WebAppConfiguration.DiscordServerId
-                                                     && ignoredChannelIds.Contains(m.DiscordChannelId) == false
-                                                     && memberAccountIds.Contains(m.DiscordAccountId));
+                                         .Where(message => message.DiscordServerId == WebAppConfiguration.DiscordServerId
+                                                           && ignoredChannelIds.Contains(message.DiscordChannelId) == false
+                                                           && memberAccountIds.Contains(message.DiscordAccountId));
 
             if (cutoff != null)
             {
-                query = query.Where(m => m.TimeStamp >= cutoff.Value);
+                query = query.Where(message => message.TimeStamp >= cutoff.Value);
             }
 
             var grouped = GroupMessages(query, _selectedFilter);
@@ -549,11 +549,11 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
                 return;
             }
 
-            var startDate = cutoff ?? query.Min(m => m.TimeStamp);
+            var startDate = cutoff ?? query.Min(message => message.TimeStamp);
             grouped = FillTimelineGaps(grouped, _selectedFilter, startDate);
 
-            var labels = grouped.Select(g => g.Label).ToArray();
-            var values = grouped.Select(g => (double)g.Count).ToArray();
+            var labels = grouped.Select(group => group.Label).ToArray();
+            var values = grouped.Select(group => (double)group.Count).ToArray();
             var trendValues = CalculateTrend(values);
 
             _overviewChartData = new ChartData
@@ -594,22 +594,22 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
         {
             var query = repositoryFactory.GetRepository<DiscordMessageRepository>()
                                          .GetQuery()
-                                         .Where(m => m.DiscordServerId == WebAppConfiguration.DiscordServerId
-                                                     && ignoredChannelIds.Contains(m.DiscordChannelId) == false
-                                                     && memberAccountIds.Contains(m.DiscordAccountId));
+                                         .Where(message => message.DiscordServerId == WebAppConfiguration.DiscordServerId
+                                                           && ignoredChannelIds.Contains(message.DiscordChannelId) == false
+                                                           && memberAccountIds.Contains(message.DiscordAccountId));
 
             if (cutoff != null)
             {
-                query = query.Where(m => m.TimeStamp >= cutoff.Value);
+                query = query.Where(message => message.TimeStamp >= cutoff.Value);
             }
 
-            var allUsers = query.GroupBy(m => m.DiscordAccountId)
-                                .Select(g => new
-                                             {
-                                                 AccountId = g.Key,
-                                                 Count = g.Count()
-                                             })
-                                .OrderByDescending(g => g.Count)
+            var allUsers = query.GroupBy(message => message.DiscordAccountId)
+                                .Select(group => new
+                                                 {
+                                                     AccountId = group.Key,
+                                                     Count = group.Count()
+                                                 })
+                                .OrderByDescending(group => group.Count)
                                 .ToList();
 
             if (allUsers.Count == 0)
@@ -622,38 +622,38 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
 
             var nameMap = repositoryFactory.GetRepository<DiscordServerMemberRepository>()
                                            .GetQuery()
-                                           .Where(m => m.ServerId == WebAppConfiguration.DiscordServerId)
-                                           .Select(m => new
-                                                        {
-                                                            m.AccountId,
-                                                            m.Name,
-                                                            m.AvatarUrl
-                                                        })
-                                           .ToDictionary(m => m.AccountId,
-                                                         m => new
-                                                              {
-                                                                  m.Name,
-                                                                  m.AvatarUrl
-                                                              });
+                                           .Where(member => member.ServerId == WebAppConfiguration.DiscordServerId)
+                                           .Select(member => new
+                                                             {
+                                                                 member.AccountId,
+                                                                 member.Name,
+                                                                 member.AvatarUrl
+                                                             })
+                                           .ToDictionary(member => member.AccountId,
+                                                         member => new
+                                                                   {
+                                                                       member.Name,
+                                                                       member.AvatarUrl
+                                                                   });
 
             string ResolveName(ulong accountId)
             {
                 return nameMap.TryGetValue(accountId, out var member) ? member.Name : accountId.ToString();
             }
 
-            var totalAll = allUsers.Sum(u => u.Count);
+            var totalAll = allUsers.Sum(user => user.Count);
             var topEntries = allUsers.Take(TopCount)
-                                     .Select(u => new
-                                                  {
-                                                      Name = ResolveName(u.AccountId),
-                                                      u.Count
-                                                  })
+                                     .Select(user => new
+                                                     {
+                                                         Name = ResolveName(user.AccountId),
+                                                         user.Count
+                                                     })
                                      .ToList();
 
-            var topSum = topEntries.Sum(e => e.Count);
+            var topSum = topEntries.Sum(entry => entry.Count);
             var otherCount = totalAll - topSum;
-            var labels = topEntries.Select(e => $"{e.Name} ({e.Count:N0})").ToList();
-            var values = topEntries.Select(e => (double)e.Count).ToList();
+            var labels = topEntries.Select(entry => $"{entry.Name} ({entry.Count:N0})").ToList();
+            var values = topEntries.Select(entry => (double)entry.Count).ToList();
 
             if (otherCount > 0)
             {
@@ -673,10 +673,10 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
                                                 ]
                                  };
 
-            _allUsersTableData = allUsers.Select(u => (u.AccountId,
-                                                       Name: ResolveName(u.AccountId),
-                                                       AvatarUrl: nameMap.TryGetValue(u.AccountId, out var member) ? member.AvatarUrl : null,
-                                                       u.Count))
+            _allUsersTableData = allUsers.Select(user => (user.AccountId,
+                                                          Name: ResolveName(user.AccountId),
+                                                          AvatarUrl: nameMap.TryGetValue(user.AccountId, out var member) ? member.AvatarUrl : null,
+                                                          user.Count))
                                          .ToList();
         }
     }
@@ -693,22 +693,22 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
         {
             var query = repositoryFactory.GetRepository<DiscordMessageRepository>()
                                          .GetQuery()
-                                         .Where(m => m.DiscordServerId == WebAppConfiguration.DiscordServerId
-                                                     && ignoredChannelIds.Contains(m.DiscordChannelId) == false
-                                                     && memberAccountIds.Contains(m.DiscordAccountId));
+                                         .Where(message => message.DiscordServerId == WebAppConfiguration.DiscordServerId
+                                                           && ignoredChannelIds.Contains(message.DiscordChannelId) == false
+                                                           && memberAccountIds.Contains(message.DiscordAccountId));
 
             if (cutoff != null)
             {
-                query = query.Where(m => m.TimeStamp >= cutoff.Value);
+                query = query.Where(message => message.TimeStamp >= cutoff.Value);
             }
 
-            var allChannels = query.GroupBy(m => m.DiscordChannelId)
-                                   .Select(g => new
-                                                {
-                                                    ChannelId = g.Key,
-                                                    Count = g.Count()
-                                                })
-                                   .OrderByDescending(g => g.Count)
+            var allChannels = query.GroupBy(message => message.DiscordChannelId)
+                                   .Select(group => new
+                                                    {
+                                                        ChannelId = group.Key,
+                                                        Count = group.Count()
+                                                    })
+                                   .OrderByDescending(group => group.Count)
                                    .ToList();
 
             if (allChannels.Count == 0)
@@ -721,34 +721,34 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
 
             var channelNameMap = repositoryFactory.GetRepository<DiscordServerChannelRepository>()
                                                   .GetQuery()
-                                                  .Where(c => c.ServerId == WebAppConfiguration.DiscordServerId)
-                                                  .Select(c => new
-                                                               {
-                                                                   c.ChannelId,
-                                                                   c.Name
-                                                               })
-                                                  .ToDictionary(c => c.ChannelId, c => c.Name);
+                                                  .Where(channel => channel.ServerId == WebAppConfiguration.DiscordServerId)
+                                                  .Select(channel => new
+                                                                     {
+                                                                         channel.ChannelId,
+                                                                         channel.Name
+                                                                     })
+                                                  .ToDictionary(channel => channel.ChannelId, channel => channel.Name);
 
             string ResolveChannelName(ulong channelId)
             {
                 return channelNameMap.TryGetValue(channelId, out var name) ? name : channelId.ToString();
             }
 
-            var totalAll = allChannels.Sum(c => c.Count);
+            var totalAll = allChannels.Sum(channel => channel.Count);
 
             var topEntries = allChannels.Take(TopCount)
-                                        .Select(c => new
-                                                     {
-                                                         Name = ResolveChannelName(c.ChannelId),
-                                                         c.Count
-                                                     })
+                                        .Select(channel => new
+                                                           {
+                                                               Name = ResolveChannelName(channel.ChannelId),
+                                                               channel.Count
+                                                           })
                                         .ToList();
 
-            var topSum = topEntries.Sum(e => e.Count);
+            var topSum = topEntries.Sum(entry => entry.Count);
             var otherCount = totalAll - topSum;
 
-            var labels = topEntries.Select(e => $"{e.Name} ({e.Count:N0})").ToList();
-            var values = topEntries.Select(e => (double)e.Count).ToList();
+            var labels = topEntries.Select(entry => $"{entry.Name} ({entry.Count:N0})").ToList();
+            var values = topEntries.Select(entry => (double)entry.Count).ToList();
 
             if (otherCount > 0)
             {
@@ -768,7 +768,7 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
                                                    ]
                                     };
 
-            _allChannelsTableData = allChannels.Select(c => (c.ChannelId, Name: ResolveChannelName(c.ChannelId), c.Count))
+            _allChannelsTableData = allChannels.Select(channel => (channel.ChannelId, Name: ResolveChannelName(channel.ChannelId), channel.Count))
                                                .ToList();
         }
     }
@@ -822,36 +822,36 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
                            {
                                var ignoredChannelIds = repositoryFactory.GetRepository<DiscordIgnoreChannelRepository>()
                                                                         .GetQuery()
-                                                                        .Where(c => c.DiscordServerId == WebAppConfiguration.DiscordServerId)
-                                                                        .Select(c => c.DiscordChannelId)
+                                                                        .Where(channel => channel.DiscordServerId == WebAppConfiguration.DiscordServerId)
+                                                                        .Select(channel => channel.DiscordChannelId)
                                                                         .ToHashSet();
 
                                var memberAccountIds = repositoryFactory.GetRepository<DiscordServerMemberRepository>()
                                                                        .GetQuery()
-                                                                       .Where(m => m.ServerId == WebAppConfiguration.DiscordServerId
-                                                                                   && m.IsBot == false)
-                                                                       .Select(m => m.AccountId)
+                                                                       .Where(member => member.ServerId == WebAppConfiguration.DiscordServerId
+                                                                                        && member.IsBot == false)
+                                                                       .Select(member => member.AccountId)
                                                                        .ToHashSet();
 
                                var query = repositoryFactory.GetRepository<DiscordMessageRepository>()
                                                             .GetQuery()
-                                                            .Where(m => m.DiscordServerId == WebAppConfiguration.DiscordServerId
-                                                                        && ignoredChannelIds.Contains(m.DiscordChannelId) == false
-                                                                        && memberAccountIds.Contains(m.DiscordAccountId));
+                                                            .Where(message => message.DiscordServerId == WebAppConfiguration.DiscordServerId
+                                                                              && ignoredChannelIds.Contains(message.DiscordChannelId) == false
+                                                                              && memberAccountIds.Contains(message.DiscordAccountId));
 
                                if (cutoff != null)
                                {
-                                   query = query.Where(m => m.TimeStamp >= cutoff.Value);
+                                   query = query.Where(message => message.TimeStamp >= cutoff.Value);
                                }
 
                                if (accountId != null)
                                {
-                                   query = query.Where(m => m.DiscordAccountId == accountId.Value);
+                                   query = query.Where(message => message.DiscordAccountId == accountId.Value);
                                }
 
                                if (channelId != null)
                                {
-                                   query = query.Where(m => m.DiscordChannelId == channelId.Value);
+                                   query = query.Where(message => message.DiscordChannelId == channelId.Value);
                                }
 
                                BuildDrilldownTimelineChart(query, cutoff);
@@ -881,11 +881,11 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
             return;
         }
 
-        var startDate = cutoff ?? query.Min(m => m.TimeStamp);
+        var startDate = cutoff ?? query.Min(message => message.TimeStamp);
         grouped = FillTimelineGaps(grouped, _selectedFilter, startDate);
 
-        var labels = grouped.Select(g => g.Label).ToArray();
-        var values = grouped.Select(g => (double)g.Count).ToArray();
+        var labels = grouped.Select(group => group.Label).ToArray();
+        var values = grouped.Select(group => (double)group.Count).ToArray();
         var trendValues = CalculateTrend(values);
 
         _drilldownChartData = new ChartData
@@ -925,13 +925,13 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
         {
             _drilldownBreakdownTitle = LocalizationGroup.GetText("DrilldownChannelsTitle", "Channels");
 
-            var channelGroups = query.GroupBy(m => m.DiscordChannelId)
-                                     .Select(g => new
-                                                  {
-                                                      ChannelId = g.Key,
-                                                      Count = g.Count()
-                                                  })
-                                     .OrderByDescending(g => g.Count)
+            var channelGroups = query.GroupBy(message => message.DiscordChannelId)
+                                     .Select(group => new
+                                                      {
+                                                          ChannelId = group.Key,
+                                                          Count = group.Count()
+                                                      })
+                                     .OrderByDescending(group => group.Count)
                                      .ToList();
 
             if (channelGroups.Count == 0)
@@ -943,32 +943,32 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
 
             var channelNameMap = repositoryFactory.GetRepository<DiscordServerChannelRepository>()
                                                   .GetQuery()
-                                                  .Where(c => c.ServerId == WebAppConfiguration.DiscordServerId)
-                                                  .Select(c => new
-                                                               {
-                                                                   c.ChannelId,
-                                                                   c.Name
-                                                               })
-                                                  .ToDictionary(c => c.ChannelId, c => c.Name);
+                                                  .Where(channel => channel.ServerId == WebAppConfiguration.DiscordServerId)
+                                                  .Select(channel => new
+                                                                     {
+                                                                         channel.ChannelId,
+                                                                         channel.Name
+                                                                     })
+                                                  .ToDictionary(channel => channel.ChannelId, channel => channel.Name);
 
             string ResolveChannelName(ulong id)
             {
                 return channelNameMap.TryGetValue(id, out var name) ? name : id.ToString();
             }
 
-            var totalAll = channelGroups.Sum(c => c.Count);
+            var totalAll = channelGroups.Sum(channel => channel.Count);
             var topEntries = channelGroups.Take(TopCount)
-                                          .Select(c => new
-                                                       {
-                                                           Name = ResolveChannelName(c.ChannelId),
-                                                           c.Count
-                                                       })
+                                          .Select(channel => new
+                                                             {
+                                                                 Name = ResolveChannelName(channel.ChannelId),
+                                                                 channel.Count
+                                                             })
                                           .ToList();
 
-            var topSum = topEntries.Sum(e => e.Count);
+            var topSum = topEntries.Sum(entry => entry.Count);
             var otherCount = totalAll - topSum;
-            var labels = topEntries.Select(e => $"#{e.Name} ({e.Count:N0})").ToList();
-            var values = topEntries.Select(e => (double)e.Count).ToList();
+            var labels = topEntries.Select(entry => $"#{entry.Name} ({entry.Count:N0})").ToList();
+            var values = topEntries.Select(entry => (double)entry.Count).ToList();
 
             if (otherCount > 0)
             {
@@ -992,13 +992,13 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
         {
             _drilldownBreakdownTitle = LocalizationGroup.GetText("DrilldownUsersTitle", "Users");
 
-            var userGroups = query.GroupBy(m => m.DiscordAccountId)
-                                  .Select(g => new
-                                               {
-                                                   AccountId = g.Key,
-                                                   Count = g.Count()
-                                               })
-                                  .OrderByDescending(g => g.Count)
+            var userGroups = query.GroupBy(message => message.DiscordAccountId)
+                                  .Select(group => new
+                                                   {
+                                                       AccountId = group.Key,
+                                                       Count = group.Count()
+                                                   })
+                                  .OrderByDescending(group => group.Count)
                                   .ToList();
 
             if (userGroups.Count == 0)
@@ -1010,32 +1010,32 @@ public partial class DiscordMessageStatisticsPage : LocatedComponent
 
             var nameMap = repositoryFactory.GetRepository<DiscordServerMemberRepository>()
                                            .GetQuery()
-                                           .Where(m => m.ServerId == WebAppConfiguration.DiscordServerId)
-                                           .Select(m => new
-                                                        {
-                                                            m.AccountId,
-                                                            m.Name
-                                                        })
-                                           .ToDictionary(m => m.AccountId, m => m.Name);
+                                           .Where(member => member.ServerId == WebAppConfiguration.DiscordServerId)
+                                           .Select(member => new
+                                                             {
+                                                                 member.AccountId,
+                                                                 member.Name
+                                                             })
+                                           .ToDictionary(member => member.AccountId, member => member.Name);
 
             string ResolveName(ulong id)
             {
                 return nameMap.TryGetValue(id, out var name) ? name : id.ToString();
             }
 
-            var totalAll = userGroups.Sum(u => u.Count);
+            var totalAll = userGroups.Sum(user => user.Count);
             var topEntries = userGroups.Take(TopCount)
-                                       .Select(u => new
-                                                    {
-                                                        Name = ResolveName(u.AccountId),
-                                                        u.Count
-                                                    })
+                                       .Select(user => new
+                                                       {
+                                                           Name = ResolveName(user.AccountId),
+                                                           user.Count
+                                                       })
                                        .ToList();
 
-            var topSum = topEntries.Sum(e => e.Count);
+            var topSum = topEntries.Sum(entry => entry.Count);
             var otherCount = totalAll - topSum;
-            var labels = topEntries.Select(e => $"{e.Name} ({e.Count:N0})").ToList();
-            var values = topEntries.Select(e => (double)e.Count).ToList();
+            var labels = topEntries.Select(entry => $"{entry.Name} ({entry.Count:N0})").ToList();
+            var values = topEntries.Select(entry => (double)entry.Count).ToList();
 
             if (otherCount > 0)
             {

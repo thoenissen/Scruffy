@@ -22,6 +22,16 @@ public class PlayerRoleDTO : IComboBoxEntry
 
     #endregion // Properties
 
+    #region Object
+
+    /// <inheritdoc />
+    public override string ToString()
+    {
+        return Player.Name ?? "Unknown";
+    }
+
+    #endregion // Object
+
     #region IComboBoxEntry
 
     /// <inheritdoc />
@@ -38,14 +48,4 @@ public class PlayerRoleDTO : IComboBoxEntry
     }
 
     #endregion // IComboBoxEntry
-
-    #region Object
-
-    /// <inheritdoc />
-    public override string ToString()
-    {
-        return Player.Name ?? "Unknown";
-    }
-
-    #endregion // Object
 }

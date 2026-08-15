@@ -286,7 +286,7 @@ public sealed class VoiceCollectorService : SingletonLocatedServiceBase, IDispos
         {
             incompleteRecords = dbFactory.GetRepository<DiscordVoiceTimeSpanRepository>()
                                          .GetQuery()
-                                         .Where(e => e.IsCompleted == false)
+                                         .Where(record => record.IsCompleted == false)
                                          .ToList();
         }
 
@@ -401,14 +401,14 @@ public sealed class VoiceCollectorService : SingletonLocatedServiceBase, IDispos
             using (var dbFactory = RepositoryFactory.CreateInstance())
             {
                 if (dbFactory.GetRepository<DiscordVoiceTimeSpanRepository>()
-                             .Refresh(e => e.DiscordServerId == serverId
-                                           && e.DiscordChannelId == channelId
-                                           && e.DiscordAccountId == accountId
-                                           && e.StartTimeStamp == segmentStart,
-                                      e =>
+                             .Refresh(record => record.DiscordServerId == serverId
+                                                && record.DiscordChannelId == channelId
+                                                && record.DiscordAccountId == accountId
+                                                && record.StartTimeStamp == segmentStart,
+                                      record =>
                                       {
-                                          e.EndTimeStamp = segmentEnd;
-                                          e.IsCompleted = true;
+                                          record.EndTimeStamp = segmentEnd;
+                                          record.IsCompleted = true;
                                       }) == false)
                 {
                     LoggingService.AddServiceLogEntry(LogEntryLevel.Error,

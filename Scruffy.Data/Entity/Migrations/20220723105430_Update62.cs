@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations;
@@ -36,7 +34,7 @@ public partial class Update62 : Migration
                                                            DiscordMessageId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                                                            Title = table.Column<string>(type: "nvarchar(max)", nullable: true)
                                                        },
-                                     constraints: table => table.PrimaryKey("PK_FractalLfgConfigurations", x => x.Id));
+                                     constraints: table => table.PrimaryKey("PK_FractalLfgConfigurations", column => column.Id));
 
         migrationBuilder.CreateTable(name: "FractalAppointments",
                                      columns: table => new
@@ -49,10 +47,10 @@ public partial class Update62 : Migration
                                                        },
                                      constraints: table =>
                                                   {
-                                                      table.PrimaryKey("PK_FractalAppointments", x => x.Id);
+                                                      table.PrimaryKey("PK_FractalAppointments", column => column.Id);
 
                                                       table.ForeignKey(name: "FK_FractalAppointments_FractalLfgConfigurations_ConfigurationId",
-                                                                       column: x => x.ConfigurationId,
+                                                                       column: column => column.ConfigurationId,
                                                                        principalTable: "FractalLfgConfigurations",
                                                                        principalColumn: "Id",
                                                                        onDelete: ReferentialAction.Restrict);
@@ -70,22 +68,22 @@ public partial class Update62 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_FractalRegistrations",
-                                                                       x => new
-                                                                            {
-                                                                                x.ConfigurationId,
-                                                                                x.AppointmentTimeStamp,
-                                                                                x.UserId
-                                                                            });
-                                                      table.ForeignKey(name: "FK_FractalRegistrations_FractalAppointments_AppointmentId", column: x => x.AppointmentId, principalTable: "FractalAppointments", principalColumn: "Id");
+                                                                       column => new
+                                                                                 {
+                                                                                     column.ConfigurationId,
+                                                                                     column.AppointmentTimeStamp,
+                                                                                     column.UserId
+                                                                                 });
+                                                      table.ForeignKey(name: "FK_FractalRegistrations_FractalAppointments_AppointmentId", column: column => column.AppointmentId, principalTable: "FractalAppointments", principalColumn: "Id");
 
                                                       table.ForeignKey(name: "FK_FractalRegistrations_FractalLfgConfigurations_ConfigurationId",
-                                                                       column: x => x.ConfigurationId,
+                                                                       column: column => column.ConfigurationId,
                                                                        principalTable: "FractalLfgConfigurations",
                                                                        principalColumn: "Id",
                                                                        onDelete: ReferentialAction.Restrict);
 
                                                       table.ForeignKey(name: "FK_FractalRegistrations_Users_UserId",
-                                                                       column: x => x.UserId,
+                                                                       column: column => column.UserId,
                                                                        principalTable: "Users",
                                                                        principalColumn: "Id",
                                                                        onDelete: ReferentialAction.Restrict);

@@ -25,7 +25,7 @@ public class DpsReportBoss
     public string IconUrl { get; set; }
 
     /// <summary>
-    /// Indicates if the boss has been successfully defeated
+    /// Has the boss has been successfully defeated?
     /// </summary>
     public bool? IsSuccessful { get; set; }
 
@@ -35,12 +35,12 @@ public class DpsReportBoss
     public List<DpsReportBossLogEntry> Logs { get; set; } = [];
 
     /// <summary>
-    /// Indicates whether the boss details (logs) are currently expanded
+    /// Are the boss details (logs) currently expanded?
     /// </summary>
     public bool IsExpanded { get; set; }
 
     /// <summary>
-    /// Indicates whether logs are currently being loaded for this boss
+    /// Are the logs currently being loaded for this boss?
     /// </summary>
     public bool IsLoadingLogs { get; set; }
 

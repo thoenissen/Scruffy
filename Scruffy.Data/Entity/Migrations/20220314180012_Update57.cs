@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations;
@@ -25,11 +23,11 @@ public partial class Update57 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_GuildDonations",
-                                                                       x => new
-                                                                            {
-                                                                                x.GuildId,
-                                                                                x.LogEntryId
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.GuildId,
+                                                                                     column.LogEntryId
+                                                                                 });
                                                   });
 
         migrationBuilder.CreateTable(name: "GuildWarsCustomRecipeEntries",
@@ -42,11 +40,11 @@ public partial class Update57 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_GuildWarsCustomRecipeEntries",
-                                                                       x => new
-                                                                            {
-                                                                                x.ItemId,
-                                                                                x.IngredientItemId
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.ItemId,
+                                                                                     column.IngredientItemId
+                                                                                 });
                                                   });
 
         migrationBuilder.Sql(@"CREATE FUNCTION [dbo].[ScruffyGetWeeklyEventPoints] (

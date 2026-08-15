@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations;
@@ -27,13 +25,13 @@ public partial class Update52 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_DiscordHistoricAccountRoleAssignments",
-                                                                       x => new
-                                                                            {
-                                                                                x.Date,
-                                                                                x.ServerId,
-                                                                                x.RoleId,
-                                                                                x.AccountId
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.Date,
+                                                                                     column.ServerId,
+                                                                                     column.RoleId,
+                                                                                     column.AccountId
+                                                                                 });
                                                   });
     }
 
@@ -52,12 +50,12 @@ public partial class Update52 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_DiscordAccountRoleAssignmentHistory",
-                                                                       x => new
-                                                                            {
-                                                                                x.ServerId,
-                                                                                x.RoleId,
-                                                                                x.AccountId
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.ServerId,
+                                                                                     column.RoleId,
+                                                                                     column.AccountId
+                                                                                 });
                                                   });
     }
 

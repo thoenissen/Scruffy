@@ -86,12 +86,6 @@ public class GuildActivityDiscordVoiceSetupDialogElement : DialogEmbedReactionEl
     #region DialogEmbedReactionElementBase
 
     /// <inheritdoc/>
-    protected override string GetCommandTitle()
-    {
-        return LocalizationGroup.GetText("CommandTitle", "Commands");
-    }
-
-    /// <inheritdoc/>
     public override Task EditMessage(EmbedBuilder builder)
     {
         builder.WithTitle(LocalizationGroup.GetText("ChooseCommandTitle", "Discord voice activity configuration"));
@@ -251,6 +245,12 @@ public class GuildActivityDiscordVoiceSetupDialogElement : DialogEmbedReactionEl
         }
 
         return _reactions;
+    }
+
+    /// <inheritdoc/>
+    protected override string GetCommandTitle()
+    {
+        return LocalizationGroup.GetText("CommandTitle", "Commands");
     }
 
     /// <inheritdoc/>

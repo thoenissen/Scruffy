@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable

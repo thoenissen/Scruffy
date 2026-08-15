@@ -196,6 +196,38 @@ public class DpsReportConnector
     }
 
     /// <summary>
+    /// Requests the log for the given upload Id
+    /// </summary>
+    /// <param name="id">The ID of the upload</param>
+    /// <returns>The log for the given Id</returns>
+    public async Task<Log> GetLog(string id)
+    {
+        return await TryGetLogFromCache(id).ConfigureAwait(false)
+                   ?? await GetLogFromDpsReport(id).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Determines the report type of a given boss
+    /// </summary>
+    /// <param name="bossId">The ID of the boss to determine the type</param>
+    /// <returns>Report type of the boss</returns>
+    public DpsReportType GetReportType(int bossId)
+    {
+        return DpsReportAnalyzer.GetReportGroupByBossId(bossId).GetReportType();
+    }
+
+    /// <summary>
+    /// Determines the sort value for a given boss
+    /// </summary>
+    /// <param name="bossId">The ID of the boss to determine the sort value</param>
+    /// <returns>The sort value for the given boss</returns>
+    public int GetSortValue(int bossId)
+    {
+        return DpsReportAnalyzer.GetReportGroupByBossId(bossId).GetSortValue()
+               + DpsReportAnalyzer.GetBossOrder(bossId);
+    }
+
+    /// <summary>
     /// Request DPS reports
     /// </summary>
     /// <param name="userToken">User token</param>
@@ -315,38 +347,6 @@ public class DpsReportConnector
         }
 
         return true;
-    }
-
-    /// <summary>
-    /// Requests the log for the given upload Id
-    /// </summary>
-    /// <param name="id">The ID of the upload</param>
-    /// <returns>The log for the given Id</returns>
-    public async Task<Log> GetLog(string id)
-    {
-        return await TryGetLogFromCache(id).ConfigureAwait(false)
-                   ?? await GetLogFromDpsReport(id).ConfigureAwait(false);
-    }
-
-    /// <summary>
-    /// Determines the report type of a given boss
-    /// </summary>
-    /// <param name="bossId">The ID of the boss to determine the type</param>
-    /// <returns>Report type of the boss</returns>
-    public DpsReportType GetReportType(int bossId)
-    {
-        return DpsReportAnalyzer.GetReportGroupByBossId(bossId).GetReportType();
-    }
-
-    /// <summary>
-    /// Determines the sort value for a given boss
-    /// </summary>
-    /// <param name="bossId">The ID of the boss to determine the sort value</param>
-    /// <returns>The sort value for the given boss</returns>
-    public int GetSortValue(int bossId)
-    {
-        return DpsReportAnalyzer.GetReportGroupByBossId(bossId).GetSortValue()
-               + DpsReportAnalyzer.GetBossOrder(bossId);
     }
 
     /// <summary>

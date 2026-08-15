@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations;
@@ -27,10 +25,10 @@ public partial class Update4 : Migration
                                               },
                                      constraints: table =>
                                                   {
-                                                      table.PrimaryKey("PK_FractalAppointments", x => x.Id);
+                                                      table.PrimaryKey("PK_FractalAppointments", column => column.Id);
 
                                                       table.ForeignKey("FK_FractalAppointments_FractalLfgConfigurations_ConfigurationId",
-                                                                       x => x.ConfigurationId,
+                                                                       column => column.ConfigurationId,
                                                                        "FractalLfgConfigurations",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);

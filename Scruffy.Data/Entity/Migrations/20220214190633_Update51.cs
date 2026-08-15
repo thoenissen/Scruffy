@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations;
@@ -27,13 +25,13 @@ public partial class Update51 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_DiscordHistoryRoleAssignments",
-                                                                       x => new
-                                                                            {
-                                                                                x.Date,
-                                                                                x.ServerId,
-                                                                                x.UserId,
-                                                                                x.RoleId
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.Date,
+                                                                                     column.ServerId,
+                                                                                     column.UserId,
+                                                                                     column.RoleId
+                                                                                 });
                                                   });
 
         migrationBuilder.CreateTable(name: "GuildWarsAccountHistoricCharacters",
@@ -47,12 +45,12 @@ public partial class Update51 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_GuildWarsAccountHistoricCharacters",
-                                                                       x => new
-                                                                            {
-                                                                                x.Date,
-                                                                                x.AccountName,
-                                                                                x.CharacterName
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.Date,
+                                                                                     column.AccountName,
+                                                                                     column.CharacterName
+                                                                                 });
                                                   });
 
         migrationBuilder.CreateTable(name: "GuildWarsGuildHistoricMembers",
@@ -67,15 +65,15 @@ public partial class Update51 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_GuildWarsGuildHistoricMembers",
-                                                                       x => new
-                                                                            {
-                                                                                x.Date,
-                                                                                x.GuildId,
-                                                                                x.Name
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.Date,
+                                                                                     column.GuildId,
+                                                                                     column.Name
+                                                                                 });
 
                                                       table.ForeignKey(name: "FK_GuildWarsGuildHistoricMembers_Guilds_GuildId",
-                                                                       column: x => x.GuildId,
+                                                                       column: column => column.GuildId,
                                                                        principalTable: "Guilds",
                                                                        principalColumn: "Id",
                                                                        onDelete: ReferentialAction.Restrict);
@@ -100,14 +98,14 @@ public partial class Update51 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_GuildWarsGuildMembers",
-                                                                       x => new
-                                                                            {
-                                                                                x.GuildId,
-                                                                                x.Name
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.GuildId,
+                                                                                     column.Name
+                                                                                 });
 
                                                       table.ForeignKey(name: "FK_GuildWarsGuildMembers_Guilds_GuildId",
-                                                                       column: x => x.GuildId,
+                                                                       column: column => column.GuildId,
                                                                        principalTable: "Guilds",
                                                                        principalColumn: "Id",
                                                                        onDelete: ReferentialAction.Restrict);

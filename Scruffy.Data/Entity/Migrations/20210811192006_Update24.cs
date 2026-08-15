@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations;
@@ -29,10 +27,10 @@ public partial class Update24 : Migration
                                               },
                                      constraints: table =>
                                                   {
-                                                      table.PrimaryKey("PK_GuildSpecialRankConfigurations", x => x.Id);
+                                                      table.PrimaryKey("PK_GuildSpecialRankConfigurations", column => column.Id);
 
                                                       table.ForeignKey("FK_GuildSpecialRankConfigurations_Guilds_GuildId",
-                                                                       x => x.GuildId,
+                                                                       column => column.GuildId,
                                                                        "Guilds",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);
@@ -48,20 +46,20 @@ public partial class Update24 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_GuildSpecialRankPoints",
-                                                                       x => new
-                                                                            {
-                                                                                x.ConfigurationId,
-                                                                                x.UserId
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.ConfigurationId,
+                                                                                     column.UserId
+                                                                                 });
 
                                                       table.ForeignKey("FK_GuildSpecialRankPoints_GuildSpecialRankConfigurations_ConfigurationId",
-                                                                       x => x.ConfigurationId,
+                                                                       column => column.ConfigurationId,
                                                                        "GuildSpecialRankConfigurations",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);
 
                                                       table.ForeignKey("FK_GuildSpecialRankPoints_Users_UserId",
-                                                                       x => x.UserId,
+                                                                       column => column.UserId,
                                                                        "Users",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);
@@ -80,16 +78,16 @@ public partial class Update24 : Migration
                                               },
                                      constraints: table =>
                                                   {
-                                                      table.PrimaryKey("PK_GuildSpecialRankProtocolEntries", x => x.Id);
+                                                      table.PrimaryKey("PK_GuildSpecialRankProtocolEntries", column => column.Id);
 
                                                       table.ForeignKey("FK_GuildSpecialRankProtocolEntries_GuildSpecialRankConfigurations_ConfigurationId",
-                                                                       x => x.ConfigurationId,
+                                                                       column => column.ConfigurationId,
                                                                        "GuildSpecialRankConfigurations",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);
 
                                                       table.ForeignKey("FK_GuildSpecialRankProtocolEntries_Users_UserId",
-                                                                       x => x.UserId,
+                                                                       column => column.UserId,
                                                                        "Users",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);
@@ -105,14 +103,14 @@ public partial class Update24 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_GuildSpecialRankRoleAssignments",
-                                                                       x => new
-                                                                            {
-                                                                                x.ConfigurationId,
-                                                                                x.DiscordRoleId
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.ConfigurationId,
+                                                                                     column.DiscordRoleId
+                                                                                 });
 
                                                       table.ForeignKey("FK_GuildSpecialRankRoleAssignments_GuildSpecialRankConfigurations_ConfigurationId",
-                                                                       x => x.ConfigurationId,
+                                                                       column => column.ConfigurationId,
                                                                        "GuildSpecialRankConfigurations",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);

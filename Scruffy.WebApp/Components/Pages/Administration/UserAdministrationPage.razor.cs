@@ -31,22 +31,22 @@ public sealed partial class UserAdministrationPage : IDisposable
     /// <summary>
     /// Sort by <see cref="UserDTO.IsGuildMember"/>
     /// </summary>
-    private readonly GridSort<UserDTO> _gridSortIsGuildMember = GridSort<UserDTO>.ByAscending(e => e.IsGuildMember);
+    private readonly GridSort<UserDTO> _gridSortIsGuildMember = GridSort<UserDTO>.ByAscending(user => user.IsGuildMember);
 
     /// <summary>
     /// Sort by <see cref="UserDTO.IsApiKeyValid"/>
     /// </summary>
-    private readonly GridSort<UserDTO> _gridSortIsApiKeyValid = GridSort<UserDTO>.ByAscending(e => e.IsApiKeyValid);
+    private readonly GridSort<UserDTO> _gridSortIsApiKeyValid = GridSort<UserDTO>.ByAscending(user => user.IsApiKeyValid);
 
     /// <summary>
     /// Sort by <see cref="UserDTO.IsFixedRank"/>
     /// </summary>
-    private readonly GridSort<UserDTO> _gridSortIsFixedRank = GridSort<UserDTO>.ByAscending(e => e.IsFixedRank);
+    private readonly GridSort<UserDTO> _gridSortIsFixedRank = GridSort<UserDTO>.ByAscending(user => user.IsFixedRank);
 
     /// <summary>
     /// Sort by <see cref="UserDTO.IsInactive"/>
     /// </summary>
-    private readonly GridSort<UserDTO> _gridSortIsInactive = GridSort<UserDTO>.ByAscending(e => e.IsInactive);
+    private readonly GridSort<UserDTO> _gridSortIsInactive = GridSort<UserDTO>.ByAscending(user => user.IsInactive);
 
     /// <summary>
     /// Users
@@ -70,6 +70,63 @@ public sealed partial class UserAdministrationPage : IDisposable
 
     #endregion // Fields
 
+    #region Methods
+
+    /// <summary>
+    /// Filter changed
+    /// </summary>
+    private void OnFilterChanged()
+    {
+        _filter ??= string.Empty;
+
+        _filteredUsers = _users.Where(obj => obj.DiscordAccountName?.Contains(_filter, StringComparison.OrdinalIgnoreCase) == true
+                                             || obj.GuildWarsAccountName?.Contains(_filter, StringComparison.OrdinalIgnoreCase) == true)
+                               .AsQueryable();
+    }
+
+    /// <summary>
+    /// Opens the configuration overlay for the given user
+    /// </summary>
+    /// <param name="user">User to configure</param>
+    private void OnUserSelected(UserDTO user)
+    {
+        if (user.UserId.HasValue)
+        {
+            _selectedUser = user;
+        }
+    }
+
+    /// <summary>
+    /// Closes the configuration overlay
+    /// </summary>
+    private void OnCloseOverlay()
+    {
+        _selectedUser = null;
+    }
+
+    /// <summary>
+    /// Synchronizes the configuration of all entries with the same user id
+    /// </summary>
+    private void OnConfigurationChanged()
+    {
+        if (_selectedUser?.UserId == null)
+        {
+            return;
+        }
+
+        foreach (var user in _users)
+        {
+            if (user != _selectedUser
+                && user.UserId == _selectedUser.UserId)
+            {
+                user.IsFixedRank = _selectedUser.IsFixedRank;
+                user.IsInactive = _selectedUser.IsInactive;
+            }
+        }
+    }
+
+    #endregion // Methods
+
     #region ComponentBase
 
     /// <inheritdoc/>
@@ -85,7 +142,7 @@ public sealed partial class UserAdministrationPage : IDisposable
 
         _users = _repositoryFactory.GetRepository<DiscordServerMemberRepository>()
                                    .GetQuery()
-                                   .Where(e => e.ServerId == WebAppConfiguration.DiscordServerId)
+                                   .Where(member => member.ServerId == WebAppConfiguration.DiscordServerId)
                                    .GroupJoin(_repositoryFactory.GetRepository<DiscordAccountRepository>()
                                                                 .GetQuery(),
                                               member => member.AccountId,
@@ -185,63 +242,6 @@ public sealed partial class UserAdministrationPage : IDisposable
     }
 
     #endregion // ComponentBase
-
-    #region Methods
-
-    /// <summary>
-    /// Filter changed
-    /// </summary>
-    private void OnFilterChanged()
-    {
-        _filter ??= string.Empty;
-
-        _filteredUsers = _users.Where(obj => obj.DiscordAccountName?.Contains(_filter, StringComparison.OrdinalIgnoreCase) == true
-                                             || obj.GuildWarsAccountName?.Contains(_filter, StringComparison.OrdinalIgnoreCase) == true)
-                               .AsQueryable();
-    }
-
-    /// <summary>
-    /// Opens the configuration overlay for the given user
-    /// </summary>
-    /// <param name="user">User to configure</param>
-    private void OnUserSelected(UserDTO user)
-    {
-        if (user.UserId.HasValue)
-        {
-            _selectedUser = user;
-        }
-    }
-
-    /// <summary>
-    /// Closes the configuration overlay
-    /// </summary>
-    private void OnCloseOverlay()
-    {
-        _selectedUser = null;
-    }
-
-    /// <summary>
-    /// Synchronizes the configuration of all entries with the same user id
-    /// </summary>
-    private void OnConfigurationChanged()
-    {
-        if (_selectedUser?.UserId == null)
-        {
-            return;
-        }
-
-        foreach (var user in _users)
-        {
-            if (user != _selectedUser
-                && user.UserId == _selectedUser.UserId)
-            {
-                user.IsFixedRank = _selectedUser.IsFixedRank;
-                user.IsInactive = _selectedUser.IsInactive;
-            }
-        }
-    }
-
-    #endregion // Methods
 
     #region IDisposable
 

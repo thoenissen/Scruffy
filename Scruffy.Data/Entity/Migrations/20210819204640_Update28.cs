@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations;
@@ -29,14 +27,14 @@ public partial class Update28 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_AccountDailyLoginChecks",
-                                                                       x => new
-                                                                            {
-                                                                                x.Name,
-                                                                                x.Date
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.Name,
+                                                                                     column.Date
+                                                                                 });
 
                                                       table.ForeignKey("FK_AccountDailyLoginChecks_Accounts_Name",
-                                                                       x => x.Name,
+                                                                       column => column.Name,
                                                                        "Accounts",
                                                                        "Name",
                                                                        onDelete: ReferentialAction.Restrict);

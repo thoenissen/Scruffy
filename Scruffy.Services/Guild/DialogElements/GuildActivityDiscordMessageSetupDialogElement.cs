@@ -86,12 +86,6 @@ public class GuildActivityDiscordMessageSetupDialogElement : DialogEmbedReaction
     #region DialogEmbedReactionElementBase
 
     /// <inheritdoc/>
-    protected override string GetCommandTitle()
-    {
-        return LocalizationGroup.GetText("CommandTitle", "Commands");
-    }
-
-    /// <inheritdoc/>
     public override Task EditMessage(EmbedBuilder builder)
     {
         builder.WithTitle(LocalizationGroup.GetText("ChooseCommandTitle", "Discord message activity configuration"));
@@ -251,6 +245,12 @@ public class GuildActivityDiscordMessageSetupDialogElement : DialogEmbedReaction
         }
 
         return _reactions;
+    }
+
+    /// <inheritdoc/>
+    protected override string GetCommandTitle()
+    {
+        return LocalizationGroup.GetText("CommandTitle", "Commands");
     }
 
     /// <inheritdoc/>

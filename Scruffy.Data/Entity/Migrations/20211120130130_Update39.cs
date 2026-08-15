@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations;
@@ -28,14 +26,14 @@ public partial class Update39 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_GuildWarsAccountAchievements",
-                                                                       x => new
-                                                                            {
-                                                                                x.AccountName,
-                                                                                x.AchievementId
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.AccountName,
+                                                                                     column.AchievementId
+                                                                                 });
 
                                                       table.ForeignKey(name: "FK_GuildWarsAccountAchievements_GuildWarsAccounts_AccountName",
-                                                                       column: x => x.AccountName,
+                                                                       column: column => column.AccountName,
                                                                        principalTable: "GuildWarsAccounts",
                                                                        principalColumn: "Name",
                                                                        onDelete: ReferentialAction.Restrict);
@@ -51,25 +49,25 @@ public partial class Update39 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_GuildWarsAccountAchievementBits",
-                                                                       x => new
-                                                                            {
-                                                                                x.AccountName,
-                                                                                x.AchievementId,
-                                                                                x.Bit
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.AccountName,
+                                                                                     column.AchievementId,
+                                                                                     column.Bit
+                                                                                 });
 
                                                       table.ForeignKey(name: "FK_GuildWarsAccountAchievementBits_GuildWarsAccountAchievements_AccountName_AchievementId",
-                                                                       columns: x => new
-                                                                                     {
-                                                                                         x.AccountName,
-                                                                                         x.AchievementId
-                                                                                     },
+                                                                       columns: column => new
+                                                                                          {
+                                                                                              column.AccountName,
+                                                                                              column.AchievementId
+                                                                                          },
                                                                        principalTable: "GuildWarsAccountAchievements",
                                                                        principalColumns: ["AccountName", "AchievementId"],
                                                                        onDelete: ReferentialAction.Restrict);
 
                                                       table.ForeignKey(name: "FK_GuildWarsAccountAchievementBits_GuildWarsAccounts_AccountName",
-                                                                       column: x => x.AccountName,
+                                                                       column: column => column.AccountName,
                                                                        principalTable: "GuildWarsAccounts",
                                                                        principalColumn: "Name",
                                                                        onDelete: ReferentialAction.Restrict);

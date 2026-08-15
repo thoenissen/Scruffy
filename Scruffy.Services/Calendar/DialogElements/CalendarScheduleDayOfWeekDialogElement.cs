@@ -60,12 +60,6 @@ public class CalendarScheduleDayOfWeekDialogElement : DialogEmbedReactionElement
     }
 
     /// <inheritdoc/>
-    protected override string GetCommandTitle()
-    {
-        return LocalizationGroup.GetText("Reactions", "Days");
-    }
-
-    /// <inheritdoc/>
     public override IReadOnlyList<ReactionData<DayOfWeek>> GetReactions()
     {
         return _reactions ??= [
@@ -112,6 +106,12 @@ public class CalendarScheduleDayOfWeekDialogElement : DialogEmbedReactionElement
                                       Func = () => GetReturnValue(DayOfWeek.Sunday)
                                   }
                               ];
+    }
+
+    /// <inheritdoc/>
+    protected override string GetCommandTitle()
+    {
+        return LocalizationGroup.GetText("Reactions", "Days");
     }
 
     /// <inheritdoc/>

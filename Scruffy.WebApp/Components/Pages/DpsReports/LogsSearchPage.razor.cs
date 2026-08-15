@@ -138,6 +138,21 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
     #region Methods
 
     /// <summary>
+    /// Called from JavaScript when a row is clicked
+    /// </summary>
+    /// <param name="reportId">ID of the report</param>
+    [JSInvokable]
+    public void SelectReportFromJs(string reportId)
+    {
+        if (_currentItems.TryGetValue(reportId, out var report))
+        {
+            _selectedReport = report;
+
+            InvokeAsync(StateHasChanged);
+        }
+    }
+
+    /// <summary>
     /// Gets the items for the grid based on the request parameters
     /// </summary>
     /// <param name="request">Request</param>
@@ -189,12 +204,12 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
                                                                                        Converters = {
                                                                                                         new IntOrBoolConverter()
                                                                                                     },
-                                                                                       Error = (_, e) =>
+                                                                                       Error = (_, errorArgs) =>
                                                                                                {
                                                                                                    // Sometimes 'foundUploads' is a bool and the deserialization to int? fails
-                                                                                                   if (e.ErrorContext.Path == "foundUploads")
+                                                                                                   if (errorArgs.ErrorContext.Path == "foundUploads")
                                                                                                    {
-                                                                                                       e.ErrorContext.Handled = true;
+                                                                                                       errorArgs.ErrorContext.Handled = true;
                                                                                                    }
                                                                                                }
                                                                                    });
@@ -280,7 +295,7 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
             {
                 var userRepository = repository.GetRepository<UserRepository>();
                 var user = userRepository.GetQuery()
-                                         .FirstOrDefault(u => u.Id == userId);
+                                         .FirstOrDefault(candidate => candidate.Id == userId);
 
                 if (user != null)
                 {
@@ -311,21 +326,6 @@ public sealed partial class LogsSearchPage : IAsyncDisposable
         report.IsLoadingAdditionalData = false;
 
         await InvokeAsync(StateHasChanged).ConfigureAwait(false);
-    }
-
-    /// <summary>
-    /// Called from JavaScript when a row is clicked
-    /// </summary>
-    /// <param name="reportId">ID of the report</param>
-    [JSInvokable]
-    public void SelectReportFromJs(string reportId)
-    {
-        if (_currentItems.TryGetValue(reportId, out var report))
-        {
-            _selectedReport = report;
-
-            InvokeAsync(StateHasChanged);
-        }
     }
 
     /// <summary>

@@ -23,7 +23,7 @@ public class DpsReportBossLogEntry
     public DateTime EncounterTime { get; set; }
 
     /// <summary>
-    /// Indicates whether the encounter was successful
+    /// Was the encounter successful?
     /// </summary>
     public bool IsSuccess { get; set; }
 

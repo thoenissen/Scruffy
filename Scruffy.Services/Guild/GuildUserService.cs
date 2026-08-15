@@ -57,7 +57,7 @@ public sealed class GuildUserService : SingletonLocatedServiceBase, IDisposable
     /// <param name="channelId">Channel id</param>
     public void SetChannel(ulong serverId, ulong channelId)
     {
-        _notificationChannels.AddOrUpdate(serverId, channelId, (o, n) => channelId);
+        _notificationChannels.AddOrUpdate(serverId, channelId, (_, _) => channelId);
 
         using (var dbFactory = RepositoryFactory.CreateInstance())
         {

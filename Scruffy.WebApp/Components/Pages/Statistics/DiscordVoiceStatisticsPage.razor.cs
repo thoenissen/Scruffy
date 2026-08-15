@@ -262,7 +262,7 @@ public partial class DiscordVoiceStatisticsPage : LocatedComponent
         var hours = (int)totalHours;
         var minutes = (int)((totalHours - hours) * 60);
 
-        return $"{hours.ToString("N0", LocalizationGroup.CultureInfo)}h {minutes:D2}m";
+        return $"{hours.ToString("N0", LocalizationGroup.CultureInfo)}h {minutes:D2}member";
     }
 
     /// <summary>
@@ -275,83 +275,83 @@ public partial class DiscordVoiceStatisticsPage : LocatedComponent
     {
         return filter switch
                {
-                   TimeFilter.Days30 => query.GroupBy(v => v.StartTimeStamp.Date)
-                                             .Select(g => new
-                                                          {
-                                                              Date = g.Key,
-                                                              TotalSeconds = g.Sum(v => (long)EF.Functions.DateDiffSecond(v.StartTimeStamp, v.EndTimeStamp))
-                                                          })
-                                             .OrderBy(g => g.Date)
+                   TimeFilter.Days30 => query.GroupBy(voiceTimeSpan => voiceTimeSpan.StartTimeStamp.Date)
+                                             .Select(group => new
+                                                              {
+                                                                  Date = group.Key,
+                                                                  TotalSeconds = group.Sum(voiceTimeSpan => (long)EF.Functions.DateDiffSecond(voiceTimeSpan.StartTimeStamp, voiceTimeSpan.EndTimeStamp))
+                                                              })
+                                             .OrderBy(group => group.Date)
                                              .ToList()
-                                             .Select(g => (g.Date.ToString("dd.MM", LocalizationGroup.CultureInfo), g.TotalSeconds / 3600.0))
+                                             .Select(group => (group.Date.ToString("dd.MM", LocalizationGroup.CultureInfo), group.TotalSeconds / 3600.0))
                                              .ToList(),
 
-                   TimeFilter.Days90 => query.GroupBy(v => new
-                                                           {
-                                                               v.StartTimeStamp.Year,
-                                                               Week = ((v.StartTimeStamp.DayOfYear - 1) / 7) + 1
-                                                           })
-                                             .Select(g => new
-                                                          {
-                                                              g.Key.Year,
-                                                              g.Key.Week,
-                                                              TotalSeconds = g.Sum(v => (long)EF.Functions.DateDiffSecond(v.StartTimeStamp, v.EndTimeStamp))
-                                                          })
-                                             .OrderBy(g => g.Year)
-                                             .ThenBy(g => g.Week)
+                   TimeFilter.Days90 => query.GroupBy(voiceTimeSpan => new
+                                                                       {
+                                                                           voiceTimeSpan.StartTimeStamp.Year,
+                                                                           Week = ((voiceTimeSpan.StartTimeStamp.DayOfYear - 1) / 7) + 1
+                                                                       })
+                                             .Select(group => new
+                                                              {
+                                                                  group.Key.Year,
+                                                                  group.Key.Week,
+                                                                  TotalSeconds = group.Sum(voiceTimeSpan => (long)EF.Functions.DateDiffSecond(voiceTimeSpan.StartTimeStamp, voiceTimeSpan.EndTimeStamp))
+                                                              })
+                                             .OrderBy(group => group.Year)
+                                             .ThenBy(group => group.Week)
                                              .ToList()
-                                             .Select(g => ($"W{g.Week}/{g.Year}", g.TotalSeconds / 3600.0))
+                                             .Select(group => ($"W{group.Week}/{group.Year}", group.TotalSeconds / 3600.0))
                                              .ToList(),
 
-                   TimeFilter.Days180 => query.GroupBy(v => new
-                                                            {
-                                                                v.StartTimeStamp.Year,
-                                                                Week = ((v.StartTimeStamp.DayOfYear - 1) / 7) + 1
-                                                            })
-                                              .Select(g => new
-                                                           {
-                                                               g.Key.Year,
-                                                               g.Key.Week,
-                                                               TotalSeconds = g.Sum(v => (long)EF.Functions.DateDiffSecond(v.StartTimeStamp, v.EndTimeStamp))
-                                                           })
-                                              .OrderBy(g => g.Year)
-                                              .ThenBy(g => g.Week)
+                   TimeFilter.Days180 => query.GroupBy(voiceTimeSpan => new
+                                                                        {
+                                                                            voiceTimeSpan.StartTimeStamp.Year,
+                                                                            Week = ((voiceTimeSpan.StartTimeStamp.DayOfYear - 1) / 7) + 1
+                                                                        })
+                                              .Select(group => new
+                                                               {
+                                                                   group.Key.Year,
+                                                                   group.Key.Week,
+                                                                   TotalSeconds = group.Sum(voiceTimeSpan => (long)EF.Functions.DateDiffSecond(voiceTimeSpan.StartTimeStamp, voiceTimeSpan.EndTimeStamp))
+                                                               })
+                                              .OrderBy(group => group.Year)
+                                              .ThenBy(group => group.Week)
                                               .ToList()
-                                              .Select(g => ($"W{g.Week}/{g.Year}", g.TotalSeconds / 3600.0))
+                                              .Select(group => ($"W{group.Week}/{group.Year}", group.TotalSeconds / 3600.0))
                                               .ToList(),
 
-                   TimeFilter.Year1 => query.GroupBy(v => new
-                                                          {
-                                                              v.StartTimeStamp.Year,
-                                                              v.StartTimeStamp.Month
-                                                          })
-                                            .Select(g => new
-                                                         {
-                                                             g.Key.Year,
-                                                             g.Key.Month,
-                                                             TotalSeconds = g.Sum(v => (long)EF.Functions.DateDiffSecond(v.StartTimeStamp, v.EndTimeStamp))
-                                                         })
-                                            .OrderBy(g => g.Year)
-                                            .ThenBy(g => g.Month)
+                   TimeFilter.Year1 => query.GroupBy(voiceTimeSpan => new
+                                                                      {
+                                                                          voiceTimeSpan.StartTimeStamp.Year,
+                                                                          voiceTimeSpan.StartTimeStamp.Month
+                                                                      })
+                                            .Select(group => new
+                                                             {
+                                                                 group.Key.Year,
+                                                                 group.Key.Month,
+                                                                 TotalSeconds = group.Sum(voiceTimeSpan => (long)EF.Functions.DateDiffSecond(voiceTimeSpan.StartTimeStamp, voiceTimeSpan.EndTimeStamp))
+                                                             })
+                                            .OrderBy(group => group.Year)
+                                            .ThenBy(group => group.Month)
                                             .ToList()
-                                            .Select(g => ($"{g.Month:D2}/{g.Year}", g.TotalSeconds / 3600.0))
+                                            .Select(group => ($"{group.Month:D2}/{group.Year}", group.TotalSeconds / 3600.0))
                                             .ToList(),
 
-                   _ => query.GroupBy(v => new
-                                           {
-                                               v.StartTimeStamp.Year,
-                                               v.StartTimeStamp.Month
-                                           })
-                             .Select(g => new
-                                          {
-                                              g.Key.Year,
-                                              g.Key.Month,
-                                              TotalSeconds = g.Sum(v => (long)EF.Functions.DateDiffSecond(v.StartTimeStamp, v.EndTimeStamp))
-                                          })
-                             .OrderBy(g => g.Year)
-                             .ThenBy(g => g.Month)
+                   _ => query.GroupBy(voiceTimeSpan => new
+                                                       {
+                                                           voiceTimeSpan.StartTimeStamp.Year,
+                                                           voiceTimeSpan.StartTimeStamp.Month
+                                                       })
+                             .Select(group => new
+                                              {
+                                                  group.Key.Year,
+                                                  group.Key.Month,
+                                                  TotalSeconds = group.Sum(voiceTimeSpan => (long)EF.Functions.DateDiffSecond(voiceTimeSpan.StartTimeStamp, voiceTimeSpan.EndTimeStamp))
+                                              })
+                             .OrderBy(group => group.Year)
+                             .ThenBy(group => group.Month)
                              .ToList()
-                             .Select(g => ($"{g.Month:D2}/{g.Year}", g.TotalSeconds / 3600.0))
+                             .Select(group => ($"{group.Month:D2}/{group.Year}", group.TotalSeconds / 3600.0))
                              .ToList()
                };
     }
@@ -371,7 +371,7 @@ public partial class DiscordVoiceStatisticsPage : LocatedComponent
         }
 
         var today = DateTime.UtcNow.Date;
-        var lookup = grouped.ToDictionary(g => g.Label, g => g.Hours);
+        var lookup = grouped.ToDictionary(group => group.Label, group => group.Hours);
         var result = new List<(string Label, double Hours)>();
 
         switch (filter)
@@ -510,9 +510,9 @@ public partial class DiscordVoiceStatisticsPage : LocatedComponent
                            {
                                memberAccountIds = repositoryFactory.GetRepository<DiscordServerMemberRepository>()
                                                                    .GetQuery()
-                                                                   .Where(m => m.ServerId == WebAppConfiguration.DiscordServerId
-                                                                               && m.IsBot == false)
-                                                                   .Select(m => m.AccountId)
+                                                                   .Where(member => member.ServerId == WebAppConfiguration.DiscordServerId
+                                                                                    && member.IsBot == false)
+                                                                   .Select(member => member.AccountId)
                                                                    .ToHashSet();
                            }
 
@@ -538,13 +538,13 @@ public partial class DiscordVoiceStatisticsPage : LocatedComponent
         {
             var query = repositoryFactory.GetRepository<DiscordVoiceTimeSpanRepository>()
                                          .GetQuery()
-                                         .Where(v => v.DiscordServerId == WebAppConfiguration.DiscordServerId
-                                                     && v.IsCompleted
-                                                     && memberAccountIds.Contains(v.DiscordAccountId));
+                                         .Where(voiceTimeSpan => voiceTimeSpan.DiscordServerId == WebAppConfiguration.DiscordServerId
+                                                                 && voiceTimeSpan.IsCompleted
+                                                                 && memberAccountIds.Contains(voiceTimeSpan.DiscordAccountId));
 
             if (cutoff != null)
             {
-                query = query.Where(v => v.StartTimeStamp >= cutoff.Value);
+                query = query.Where(voiceTimeSpan => voiceTimeSpan.StartTimeStamp >= cutoff.Value);
             }
 
             var grouped = GroupVoiceTimeSpans(query, _selectedFilter);
@@ -556,11 +556,11 @@ public partial class DiscordVoiceStatisticsPage : LocatedComponent
                 return;
             }
 
-            var startDate = cutoff ?? query.Min(v => v.StartTimeStamp);
+            var startDate = cutoff ?? query.Min(voiceTimeSpan => voiceTimeSpan.StartTimeStamp);
             grouped = FillTimelineGaps(grouped, _selectedFilter, startDate);
 
-            var labels = grouped.Select(g => g.Label).ToArray();
-            var values = grouped.Select(g => g.Hours).ToArray();
+            var labels = grouped.Select(group => group.Label).ToArray();
+            var values = grouped.Select(group => group.Hours).ToArray();
             var trendValues = CalculateTrend(values);
 
             _overviewChartData = new ChartData
@@ -600,22 +600,22 @@ public partial class DiscordVoiceStatisticsPage : LocatedComponent
         {
             var query = repositoryFactory.GetRepository<DiscordVoiceTimeSpanRepository>()
                                          .GetQuery()
-                                         .Where(v => v.DiscordServerId == WebAppConfiguration.DiscordServerId
-                                                     && v.IsCompleted
-                                                     && memberAccountIds.Contains(v.DiscordAccountId));
+                                         .Where(voiceTimeSpan => voiceTimeSpan.DiscordServerId == WebAppConfiguration.DiscordServerId
+                                                                 && voiceTimeSpan.IsCompleted
+                                                                 && memberAccountIds.Contains(voiceTimeSpan.DiscordAccountId));
 
             if (cutoff != null)
             {
-                query = query.Where(v => v.StartTimeStamp >= cutoff.Value);
+                query = query.Where(voiceTimeSpan => voiceTimeSpan.StartTimeStamp >= cutoff.Value);
             }
 
-            var allUsers = query.GroupBy(v => v.DiscordAccountId)
-                                .Select(g => new
-                                             {
-                                                 AccountId = g.Key,
-                                                 TotalSeconds = g.Sum(v => (long)EF.Functions.DateDiffSecond(v.StartTimeStamp, v.EndTimeStamp))
-                                             })
-                                .OrderByDescending(g => g.TotalSeconds)
+            var allUsers = query.GroupBy(voiceTimeSpan => voiceTimeSpan.DiscordAccountId)
+                                .Select(group => new
+                                                 {
+                                                     AccountId = group.Key,
+                                                     TotalSeconds = group.Sum(voiceTimeSpan => (long)EF.Functions.DateDiffSecond(voiceTimeSpan.StartTimeStamp, voiceTimeSpan.EndTimeStamp))
+                                                 })
+                                .OrderByDescending(group => group.TotalSeconds)
                                 .ToList();
 
             if (allUsers.Count == 0)
@@ -628,44 +628,44 @@ public partial class DiscordVoiceStatisticsPage : LocatedComponent
 
             var nameMap = repositoryFactory.GetRepository<DiscordServerMemberRepository>()
                                            .GetQuery()
-                                           .Where(m => m.ServerId == WebAppConfiguration.DiscordServerId)
-                                           .Select(m => new
-                                                        {
-                                                            m.AccountId,
-                                                            m.Name,
-                                                            m.AvatarUrl
-                                                        })
-                                           .ToDictionary(m => m.AccountId,
-                                                         m => new
-                                                              {
-                                                                  m.Name,
-                                                                  m.AvatarUrl
-                                                              });
+                                           .Where(member => member.ServerId == WebAppConfiguration.DiscordServerId)
+                                           .Select(member => new
+                                                             {
+                                                                 member.AccountId,
+                                                                 member.Name,
+                                                                 member.AvatarUrl
+                                                             })
+                                           .ToDictionary(member => member.AccountId,
+                                                         member => new
+                                                                   {
+                                                                       member.Name,
+                                                                       member.AvatarUrl
+                                                                   });
 
             string ResolveName(ulong accountId)
             {
                 return nameMap.TryGetValue(accountId, out var member) ? member.Name : accountId.ToString();
             }
 
-            var allUsersWithHours = allUsers.Select(u => new
-                                                         {
-                                                             u.AccountId,
-                                                             Hours = u.TotalSeconds / 3600.0
-                                                         })
+            var allUsersWithHours = allUsers.Select(user => new
+                                                            {
+                                                                user.AccountId,
+                                                                Hours = user.TotalSeconds / 3600.0
+                                                            })
                                             .ToList();
-            var totalAll = allUsersWithHours.Sum(u => u.Hours);
+            var totalAll = allUsersWithHours.Sum(user => user.Hours);
             var topEntries = allUsersWithHours.Take(TopCount)
-                                              .Select(u => new
-                                                           {
-                                                               Name = ResolveName(u.AccountId),
-                                                               u.Hours
-                                                           })
+                                              .Select(user => new
+                                                              {
+                                                                  Name = ResolveName(user.AccountId),
+                                                                  user.Hours
+                                                              })
                                               .ToList();
 
-            var topSum = topEntries.Sum(e => e.Hours);
+            var topSum = topEntries.Sum(entry => entry.Hours);
             var otherHours = totalAll - topSum;
-            var labels = topEntries.Select(e => $"{e.Name} ({FormatDuration(e.Hours)})").ToList();
-            var values = topEntries.Select(e => e.Hours).ToList();
+            var labels = topEntries.Select(entry => $"{entry.Name} ({FormatDuration(entry.Hours)})").ToList();
+            var values = topEntries.Select(entry => entry.Hours).ToList();
 
             if (otherHours > 0)
             {
@@ -685,10 +685,10 @@ public partial class DiscordVoiceStatisticsPage : LocatedComponent
                                                 ]
                                  };
 
-            _allUsersTableData = allUsersWithHours.Select(u => (u.AccountId,
-                                                                Name: ResolveName(u.AccountId),
-                                                                AvatarUrl: nameMap.TryGetValue(u.AccountId, out var member) ? member.AvatarUrl : null,
-                                                                u.Hours))
+            _allUsersTableData = allUsersWithHours.Select(user => (user.AccountId,
+                                                                   Name: ResolveName(user.AccountId),
+                                                                   AvatarUrl: nameMap.TryGetValue(user.AccountId, out var member) ? member.AvatarUrl : null,
+                                                                   user.Hours))
                                                   .ToList();
         }
     }
@@ -704,22 +704,22 @@ public partial class DiscordVoiceStatisticsPage : LocatedComponent
         {
             var query = repositoryFactory.GetRepository<DiscordVoiceTimeSpanRepository>()
                                          .GetQuery()
-                                         .Where(v => v.DiscordServerId == WebAppConfiguration.DiscordServerId
-                                                     && v.IsCompleted
-                                                     && memberAccountIds.Contains(v.DiscordAccountId));
+                                         .Where(voiceTimeSpan => voiceTimeSpan.DiscordServerId == WebAppConfiguration.DiscordServerId
+                                                                 && voiceTimeSpan.IsCompleted
+                                                                 && memberAccountIds.Contains(voiceTimeSpan.DiscordAccountId));
 
             if (cutoff != null)
             {
-                query = query.Where(v => v.StartTimeStamp >= cutoff.Value);
+                query = query.Where(voiceTimeSpan => voiceTimeSpan.StartTimeStamp >= cutoff.Value);
             }
 
-            var allChannels = query.GroupBy(v => v.DiscordChannelId)
-                                   .Select(g => new
-                                                {
-                                                    ChannelId = g.Key,
-                                                    TotalSeconds = g.Sum(v => (long)EF.Functions.DateDiffSecond(v.StartTimeStamp, v.EndTimeStamp))
-                                                })
-                                   .OrderByDescending(g => g.TotalSeconds)
+            var allChannels = query.GroupBy(voiceTimeSpan => voiceTimeSpan.DiscordChannelId)
+                                   .Select(group => new
+                                                    {
+                                                        ChannelId = group.Key,
+                                                        TotalSeconds = group.Sum(voiceTimeSpan => (long)EF.Functions.DateDiffSecond(voiceTimeSpan.StartTimeStamp, voiceTimeSpan.EndTimeStamp))
+                                                    })
+                                   .OrderByDescending(group => group.TotalSeconds)
                                    .ToList();
 
             if (allChannels.Count == 0)
@@ -732,40 +732,40 @@ public partial class DiscordVoiceStatisticsPage : LocatedComponent
 
             var channelNameMap = repositoryFactory.GetRepository<DiscordServerChannelRepository>()
                                                   .GetQuery()
-                                                  .Where(c => c.ServerId == WebAppConfiguration.DiscordServerId)
-                                                  .Select(c => new
-                                                               {
-                                                                   c.ChannelId,
-                                                                   c.Name
-                                                               })
-                                                  .ToDictionary(c => c.ChannelId, c => c.Name);
+                                                  .Where(channel => channel.ServerId == WebAppConfiguration.DiscordServerId)
+                                                  .Select(channel => new
+                                                                     {
+                                                                         channel.ChannelId,
+                                                                         channel.Name
+                                                                     })
+                                                  .ToDictionary(channel => channel.ChannelId, channel => channel.Name);
 
             string ResolveChannelName(ulong channelId)
             {
                 return channelNameMap.TryGetValue(channelId, out var name) ? name : channelId.ToString();
             }
 
-            var allChannelsWithHours = allChannels.Select(c => new
-                                                               {
-                                                                   c.ChannelId,
-                                                                   Hours = c.TotalSeconds / 3600.0
-                                                               })
+            var allChannelsWithHours = allChannels.Select(channel => new
+                                                                     {
+                                                                         channel.ChannelId,
+                                                                         Hours = channel.TotalSeconds / 3600.0
+                                                                     })
                                                   .ToList();
-            var totalAll = allChannelsWithHours.Sum(c => c.Hours);
+            var totalAll = allChannelsWithHours.Sum(channel => channel.Hours);
 
             var topEntries = allChannelsWithHours.Take(TopCount)
-                                                 .Select(c => new
-                                                              {
-                                                                  Name = ResolveChannelName(c.ChannelId),
-                                                                  c.Hours
-                                                              })
+                                                 .Select(channel => new
+                                                                    {
+                                                                        Name = ResolveChannelName(channel.ChannelId),
+                                                                        channel.Hours
+                                                                    })
                                                  .ToList();
 
-            var topSum = topEntries.Sum(e => e.Hours);
+            var topSum = topEntries.Sum(entry => entry.Hours);
             var otherHours = totalAll - topSum;
 
-            var labels = topEntries.Select(e => $"{e.Name} ({FormatDuration(e.Hours)})").ToList();
-            var values = topEntries.Select(e => e.Hours).ToList();
+            var labels = topEntries.Select(entry => $"{entry.Name} ({FormatDuration(entry.Hours)})").ToList();
+            var values = topEntries.Select(entry => entry.Hours).ToList();
 
             if (otherHours > 0)
             {
@@ -785,7 +785,7 @@ public partial class DiscordVoiceStatisticsPage : LocatedComponent
                                                    ]
                                     };
 
-            _allChannelsTableData = allChannelsWithHours.Select(c => (c.ChannelId, Name: ResolveChannelName(c.ChannelId), c.Hours))
+            _allChannelsTableData = allChannelsWithHours.Select(channel => (channel.ChannelId, Name: ResolveChannelName(channel.ChannelId), channel.Hours))
                                                         .ToList();
         }
     }
@@ -839,30 +839,30 @@ public partial class DiscordVoiceStatisticsPage : LocatedComponent
                            {
                                var memberAccountIds = repositoryFactory.GetRepository<DiscordServerMemberRepository>()
                                                                        .GetQuery()
-                                                                       .Where(m => m.ServerId == WebAppConfiguration.DiscordServerId
-                                                                                   && m.IsBot == false)
-                                                                       .Select(m => m.AccountId)
+                                                                       .Where(member => member.ServerId == WebAppConfiguration.DiscordServerId
+                                                                                        && member.IsBot == false)
+                                                                       .Select(member => member.AccountId)
                                                                        .ToHashSet();
 
                                var query = repositoryFactory.GetRepository<DiscordVoiceTimeSpanRepository>()
                                                             .GetQuery()
-                                                            .Where(v => v.DiscordServerId == WebAppConfiguration.DiscordServerId
-                                                                        && v.IsCompleted
-                                                                        && memberAccountIds.Contains(v.DiscordAccountId));
+                                                            .Where(voiceTimeSpan => voiceTimeSpan.DiscordServerId == WebAppConfiguration.DiscordServerId
+                                                                                    && voiceTimeSpan.IsCompleted
+                                                                                    && memberAccountIds.Contains(voiceTimeSpan.DiscordAccountId));
 
                                if (cutoff != null)
                                {
-                                   query = query.Where(v => v.StartTimeStamp >= cutoff.Value);
+                                   query = query.Where(voiceTimeSpan => voiceTimeSpan.StartTimeStamp >= cutoff.Value);
                                }
 
                                if (accountId != null)
                                {
-                                   query = query.Where(v => v.DiscordAccountId == accountId.Value);
+                                   query = query.Where(voiceTimeSpan => voiceTimeSpan.DiscordAccountId == accountId.Value);
                                }
 
                                if (channelId != null)
                                {
-                                   query = query.Where(v => v.DiscordChannelId == channelId.Value);
+                                   query = query.Where(voiceTimeSpan => voiceTimeSpan.DiscordChannelId == channelId.Value);
                                }
 
                                BuildDrilldownTimelineChart(query, cutoff);
@@ -892,11 +892,11 @@ public partial class DiscordVoiceStatisticsPage : LocatedComponent
             return;
         }
 
-        var startDate = cutoff ?? query.Min(v => v.StartTimeStamp);
+        var startDate = cutoff ?? query.Min(voiceTimeSpan => voiceTimeSpan.StartTimeStamp);
         grouped = FillTimelineGaps(grouped, _selectedFilter, startDate);
 
-        var labels = grouped.Select(g => g.Label).ToArray();
-        var values = grouped.Select(g => g.Hours).ToArray();
+        var labels = grouped.Select(group => group.Label).ToArray();
+        var values = grouped.Select(group => group.Hours).ToArray();
         var trendValues = CalculateTrend(values);
 
         _drilldownChartData = new ChartData
@@ -936,13 +936,13 @@ public partial class DiscordVoiceStatisticsPage : LocatedComponent
         {
             _drilldownBreakdownTitle = LocalizationGroup.GetText("DrilldownChannelsTitle", "Channels");
 
-            var channelGroups = query.GroupBy(v => v.DiscordChannelId)
-                                     .Select(g => new
-                                                  {
-                                                      ChannelId = g.Key,
-                                                      TotalSeconds = g.Sum(v => (long)EF.Functions.DateDiffSecond(v.StartTimeStamp, v.EndTimeStamp))
-                                                  })
-                                     .OrderByDescending(g => g.TotalSeconds)
+            var channelGroups = query.GroupBy(voiceTimeSpan => voiceTimeSpan.DiscordChannelId)
+                                     .Select(group => new
+                                                      {
+                                                          ChannelId = group.Key,
+                                                          TotalSeconds = group.Sum(voiceTimeSpan => (long)EF.Functions.DateDiffSecond(voiceTimeSpan.StartTimeStamp, voiceTimeSpan.EndTimeStamp))
+                                                      })
+                                     .OrderByDescending(group => group.TotalSeconds)
                                      .ToList();
 
             if (channelGroups.Count == 0)
@@ -954,38 +954,38 @@ public partial class DiscordVoiceStatisticsPage : LocatedComponent
 
             var channelNameMap = repositoryFactory.GetRepository<DiscordServerChannelRepository>()
                                                   .GetQuery()
-                                                  .Where(c => c.ServerId == WebAppConfiguration.DiscordServerId)
-                                                  .Select(c => new
-                                                               {
-                                                                   c.ChannelId,
-                                                                   c.Name
-                                                               })
-                                                  .ToDictionary(c => c.ChannelId, c => c.Name);
+                                                  .Where(channel => channel.ServerId == WebAppConfiguration.DiscordServerId)
+                                                  .Select(channel => new
+                                                                     {
+                                                                         channel.ChannelId,
+                                                                         channel.Name
+                                                                     })
+                                                  .ToDictionary(channel => channel.ChannelId, channel => channel.Name);
 
             string ResolveChannelName(ulong id)
             {
                 return channelNameMap.TryGetValue(id, out var name) ? name : id.ToString();
             }
 
-            var channelGroupsWithHours = channelGroups.Select(c => new
-                                                                   {
-                                                                       c.ChannelId,
-                                                                       Hours = c.TotalSeconds / 3600.0
-                                                                   })
+            var channelGroupsWithHours = channelGroups.Select(channel => new
+                                                                         {
+                                                                             channel.ChannelId,
+                                                                             Hours = channel.TotalSeconds / 3600.0
+                                                                         })
                                                       .ToList();
-            var totalAll = channelGroupsWithHours.Sum(c => c.Hours);
+            var totalAll = channelGroupsWithHours.Sum(channel => channel.Hours);
             var topEntries = channelGroupsWithHours.Take(TopCount)
-                                                   .Select(c => new
-                                                                {
-                                                                    Name = ResolveChannelName(c.ChannelId),
-                                                                    c.Hours
-                                                                })
+                                                   .Select(channel => new
+                                                                      {
+                                                                          Name = ResolveChannelName(channel.ChannelId),
+                                                                          channel.Hours
+                                                                      })
                                                    .ToList();
 
-            var topSum = topEntries.Sum(e => e.Hours);
+            var topSum = topEntries.Sum(entry => entry.Hours);
             var otherHours = totalAll - topSum;
-            var labels = topEntries.Select(e => $"#{e.Name} ({FormatDuration(e.Hours)})").ToList();
-            var values = topEntries.Select(e => e.Hours).ToList();
+            var labels = topEntries.Select(entry => $"#{entry.Name} ({FormatDuration(entry.Hours)})").ToList();
+            var values = topEntries.Select(entry => entry.Hours).ToList();
 
             if (otherHours > 0)
             {
@@ -1009,13 +1009,13 @@ public partial class DiscordVoiceStatisticsPage : LocatedComponent
         {
             _drilldownBreakdownTitle = LocalizationGroup.GetText("DrilldownUsersTitle", "Users");
 
-            var userGroups = query.GroupBy(v => v.DiscordAccountId)
-                                  .Select(g => new
-                                               {
-                                                   AccountId = g.Key,
-                                                   TotalSeconds = g.Sum(v => (long)EF.Functions.DateDiffSecond(v.StartTimeStamp, v.EndTimeStamp))
-                                               })
-                                  .OrderByDescending(g => g.TotalSeconds)
+            var userGroups = query.GroupBy(voiceTimeSpan => voiceTimeSpan.DiscordAccountId)
+                                  .Select(group => new
+                                                   {
+                                                       AccountId = group.Key,
+                                                       TotalSeconds = group.Sum(voiceTimeSpan => (long)EF.Functions.DateDiffSecond(voiceTimeSpan.StartTimeStamp, voiceTimeSpan.EndTimeStamp))
+                                                   })
+                                  .OrderByDescending(group => group.TotalSeconds)
                                   .ToList();
 
             if (userGroups.Count == 0)
@@ -1027,38 +1027,38 @@ public partial class DiscordVoiceStatisticsPage : LocatedComponent
 
             var nameMap = repositoryFactory.GetRepository<DiscordServerMemberRepository>()
                                            .GetQuery()
-                                           .Where(m => m.ServerId == WebAppConfiguration.DiscordServerId)
-                                           .Select(m => new
-                                                        {
-                                                            m.AccountId,
-                                                            m.Name
-                                                        })
-                                           .ToDictionary(m => m.AccountId, m => m.Name);
+                                           .Where(member => member.ServerId == WebAppConfiguration.DiscordServerId)
+                                           .Select(member => new
+                                                             {
+                                                                 member.AccountId,
+                                                                 member.Name
+                                                             })
+                                           .ToDictionary(member => member.AccountId, member => member.Name);
 
             string ResolveName(ulong id)
             {
                 return nameMap.TryGetValue(id, out var name) ? name : id.ToString();
             }
 
-            var userGroupsWithHours = userGroups.Select(u => new
-                                                             {
-                                                                 u.AccountId,
-                                                                 Hours = u.TotalSeconds / 3600.0
-                                                             })
+            var userGroupsWithHours = userGroups.Select(user => new
+                                                                {
+                                                                    user.AccountId,
+                                                                    Hours = user.TotalSeconds / 3600.0
+                                                                })
                                                 .ToList();
-            var totalAll = userGroupsWithHours.Sum(u => u.Hours);
+            var totalAll = userGroupsWithHours.Sum(user => user.Hours);
             var topEntries = userGroupsWithHours.Take(TopCount)
-                                                .Select(u => new
-                                                             {
-                                                                 Name = ResolveName(u.AccountId),
-                                                                 u.Hours
-                                                             })
+                                                .Select(user => new
+                                                                {
+                                                                    Name = ResolveName(user.AccountId),
+                                                                    user.Hours
+                                                                })
                                                 .ToList();
 
-            var topSum = topEntries.Sum(e => e.Hours);
+            var topSum = topEntries.Sum(entry => entry.Hours);
             var otherHours = totalAll - topSum;
-            var labels = topEntries.Select(e => $"{e.Name} ({FormatDuration(e.Hours)})").ToList();
-            var values = topEntries.Select(e => e.Hours).ToList();
+            var labels = topEntries.Select(entry => $"{entry.Name} ({FormatDuration(entry.Hours)})").ToList();
+            var values = topEntries.Select(entry => entry.Hours).ToList();
 
             if (otherHours > 0)
             {

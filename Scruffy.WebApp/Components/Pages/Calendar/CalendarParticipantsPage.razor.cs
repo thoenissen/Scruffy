@@ -284,12 +284,12 @@ public partial class CalendarParticipantsPage
                                                                                DiscordAccountId = user.Id,
                                                                                Name = user.DisplayName
                                                                            })
-                                                           .OrderBy(m => m.Name)
+                                                           .OrderBy(member => member.Name)
                                                            .ToList()
                                });
         }
 
-        _voiceChannels = _voiceChannels.OrderBy(c => c.Name).ToList();
+        _voiceChannels = _voiceChannels.OrderBy(channel => channel.Name).ToList();
     }
 
     /// <summary>
@@ -322,7 +322,7 @@ public partial class CalendarParticipantsPage
     /// <param name="displayName">Display name</param>
     private void AddMemberByDiscordId(ulong discordAccountId, string displayName)
     {
-        if (_participants?.Any(p => p.DiscordAccountId == discordAccountId) == true)
+        if (_participants?.Any(participant => participant.DiscordAccountId == discordAccountId) == true)
         {
             return;
         }
@@ -336,8 +336,8 @@ public partial class CalendarParticipantsPage
                                                    {
                                                        obj.UserId,
                                                        Name = obj.Members
-                                                                 .Where(m => m.ServerId == WebAppConfiguration.DiscordServerId)
-                                                                 .Select(m => m.Name)
+                                                                 .Where(member => member.ServerId == WebAppConfiguration.DiscordServerId)
+                                                                 .Select(member => member.Name)
                                                                  .FirstOrDefault()
                                                                   ?? obj.User.UserName
                                                    })
@@ -364,7 +364,7 @@ public partial class CalendarParticipantsPage
     /// <param name="member">Guild member to add</param>
     private void OnAddMember(CalendarParticipantDTO member)
     {
-        if (_participants?.Any(p => p.UserId == member.UserId) == true)
+        if (_participants?.Any(participant => participant.UserId == member.UserId) == true)
         {
             return;
         }
@@ -391,13 +391,13 @@ public partial class CalendarParticipantsPage
             return [];
         }
 
-        var existingUserIds = _participants?.Select(p => p.UserId).ToHashSet() ?? [];
-        var filtered = _allGuildMembers.Where(m => existingUserIds.Contains(m.UserId) == false);
+        var existingUserIds = _participants?.Select(participant => participant.UserId).ToHashSet() ?? [];
+        var filtered = _allGuildMembers.Where(guildMember => existingUserIds.Contains(guildMember.UserId) == false);
 
         if (string.IsNullOrWhiteSpace(_addMemberSearchFilter) == false)
         {
-            filtered = filtered.Where(m => m.Name != null
-                                           && m.Name.Contains(_addMemberSearchFilter, StringComparison.OrdinalIgnoreCase));
+            filtered = filtered.Where(guildMember => guildMember.Name != null
+                                                     && guildMember.Name.Contains(_addMemberSearchFilter, StringComparison.OrdinalIgnoreCase));
         }
 
         return filtered;

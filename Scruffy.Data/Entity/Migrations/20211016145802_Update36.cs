@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 using Scruffy.Data.Enumerations.CoreData;
@@ -76,7 +74,7 @@ public partial class Update36 : Migration
                                                   Type = table.Column<UserType>("int", nullable: false),
                                                   RaidExperienceLevelId = table.Column<long?>("bigint", nullable: true)
                                               },
-                                     constraints: table => table.PrimaryKey("PK_Users", x => x.Id));
+                                     constraints: table => table.PrimaryKey("PK_Users", column => column.Id));
         migrationBuilder.CreateTable(name: "DiscordAccounts",
                                      columns: table => new
                                                        {
@@ -85,10 +83,10 @@ public partial class Update36 : Migration
                                                        },
                                      constraints: table =>
                                                   {
-                                                      table.PrimaryKey("PK_DiscordAccounts", x => x.Id);
+                                                      table.PrimaryKey("PK_DiscordAccounts", column => column.Id);
 
                                                       table.ForeignKey(name: "FK_DiscordAccounts_Users_UserId",
-                                                                       column: x => x.UserId,
+                                                                       column: column => column.UserId,
                                                                        principalTable: "Users",
                                                                        principalColumn: "Id",
                                                                        onDelete: ReferentialAction.Restrict);
@@ -105,10 +103,10 @@ public partial class Update36 : Migration
                                                        },
                                      constraints: table =>
                                                   {
-                                                      table.PrimaryKey("PK_GuildWarsAccounts", x => x.Name);
+                                                      table.PrimaryKey("PK_GuildWarsAccounts", column => column.Name);
 
                                                       table.ForeignKey(name: "FK_GuildWarsAccounts_Users_UserId",
-                                                                       column: x => x.UserId,
+                                                                       column: column => column.UserId,
                                                                        principalTable: "Users",
                                                                        principalColumn: "Id",
                                                                        onDelete: ReferentialAction.Restrict);
@@ -123,14 +121,14 @@ public partial class Update36 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_GuildWarsAccountDailyLoginChecks",
-                                                                       x => new
-                                                                            {
-                                                                                x.Name,
-                                                                                x.Date
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.Name,
+                                                                                     column.Date
+                                                                                 });
 
                                                       table.ForeignKey(name: "FK_GuildWarsAccountDailyLoginChecks_GuildWarsAccounts_Name",
-                                                                       column: x => x.Name,
+                                                                       column: column => column.Name,
                                                                        principalTable: "GuildWarsAccounts",
                                                                        principalColumn: "Name",
                                                                        onDelete: ReferentialAction.Restrict);

@@ -47,12 +47,6 @@ public class CalendarAppointmentSelectionDialogElement : DialogEmbedSelectMenuEl
     }
 
     /// <inheritdoc/>
-    protected override long DefaultFunc()
-    {
-        return 0;
-    }
-
-    /// <inheritdoc/>
     public override IReadOnlyList<SelectMenuEntryData<long>> GetEntries()
     {
         if (_appointments == null)
@@ -83,6 +77,12 @@ public class CalendarAppointmentSelectionDialogElement : DialogEmbedSelectMenuEl
         }
 
         return _appointments;
+    }
+
+    /// <inheritdoc/>
+    protected override long DefaultFunc()
+    {
+        return 0;
     }
 
     #endregion // DialogEmbedSelectMenuElementBase

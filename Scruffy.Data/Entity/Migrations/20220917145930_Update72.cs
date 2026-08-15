@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations;
@@ -22,7 +20,7 @@ public partial class Update72 : Migration
                                                            Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                                                            DiscordEmojiId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                                                        },
-                                     constraints: table => table.PrimaryKey("PK_RaidSpecialRoles", x => x.Id));
+                                     constraints: table => table.PrimaryKey("PK_RaidSpecialRoles", column => column.Id));
 
         migrationBuilder.CreateTable(name: "RaidUserSpecialRoles",
                                      columns: table => new
@@ -33,20 +31,20 @@ public partial class Update72 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_RaidUserSpecialRoles",
-                                                                       x => new
-                                                                            {
-                                                                                x.UserId,
-                                                                                x.SpecialRoleId
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.UserId,
+                                                                                     column.SpecialRoleId
+                                                                                 });
 
                                                       table.ForeignKey(name: "FK_RaidUserSpecialRoles_RaidSpecialRoles_SpecialRoleId",
-                                                                       column: x => x.SpecialRoleId,
+                                                                       column: column => column.SpecialRoleId,
                                                                        principalTable: "RaidSpecialRoles",
                                                                        principalColumn: "Id",
                                                                        onDelete: ReferentialAction.Restrict);
 
                                                       table.ForeignKey(name: "FK_RaidUserSpecialRoles_Users_UserId",
-                                                                       column: x => x.UserId,
+                                                                       column: column => column.UserId,
                                                                        principalTable: "Users",
                                                                        principalColumn: "Id",
                                                                        onDelete: ReferentialAction.Restrict);

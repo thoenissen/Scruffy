@@ -13,7 +13,7 @@ public class MetaData
     public string Id { get; set; }
 
     /// <summary>
-    /// Indicates whether the encounter was a success
+    /// Was the encounter a success?
     /// </summary>
     public bool IsSuccess { get; set; }
 

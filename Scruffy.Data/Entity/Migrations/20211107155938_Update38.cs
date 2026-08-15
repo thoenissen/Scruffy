@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations;
@@ -26,7 +24,7 @@ public partial class Update38 : Migration
                                                            Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
                                                            PointCap = table.Column<int>(type: "int", nullable: true)
                                                        },
-                                     constraints: table => table.PrimaryKey("PK_GuildWarsAchievements", x => x.Id));
+                                     constraints: table => table.PrimaryKey("PK_GuildWarsAchievements", column => column.Id));
 
         migrationBuilder.CreateTable(name: "GuildWarsAchievementBits",
                                      columns: table => new
@@ -40,14 +38,14 @@ public partial class Update38 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_GuildWarsAchievementBits",
-                                                                       x => new
-                                                                            {
-                                                                                x.AchievementId,
-                                                                                x.Bit
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.AchievementId,
+                                                                                     column.Bit
+                                                                                 });
 
                                                       table.ForeignKey(name: "FK_GuildWarsAchievementBits_GuildWarsAchievements_AchievementId",
-                                                                       column: x => x.AchievementId,
+                                                                       column: column => column.AchievementId,
                                                                        principalTable: "GuildWarsAchievements",
                                                                        principalColumn: "Id",
                                                                        onDelete: ReferentialAction.Restrict);
@@ -62,14 +60,14 @@ public partial class Update38 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_GuildWarsAchievementFlags",
-                                                                       x => new
-                                                                            {
-                                                                                x.AchievementId,
-                                                                                x.Flag
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.AchievementId,
+                                                                                     column.Flag
+                                                                                 });
 
                                                       table.ForeignKey(name: "FK_GuildWarsAchievementFlags_GuildWarsAchievements_AchievementId",
-                                                                       column: x => x.AchievementId,
+                                                                       column: column => column.AchievementId,
                                                                        principalTable: "GuildWarsAchievements",
                                                                        principalColumn: "Id",
                                                                        onDelete: ReferentialAction.Restrict);
@@ -84,14 +82,14 @@ public partial class Update38 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_GuildWarsAchievementPrerequisites",
-                                                                       x => new
-                                                                            {
-                                                                                x.AchievementId,
-                                                                                x.Id
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.AchievementId,
+                                                                                     column.Id
+                                                                                 });
 
                                                       table.ForeignKey(name: "FK_GuildWarsAchievementPrerequisites_GuildWarsAchievements_AchievementId",
-                                                                       column: x => x.AchievementId,
+                                                                       column: column => column.AchievementId,
                                                                        principalTable: "GuildWarsAchievements",
                                                                        principalColumn: "Id",
                                                                        onDelete: ReferentialAction.Restrict);
@@ -110,14 +108,14 @@ public partial class Update38 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_GuildWarsAchievementRewards",
-                                                                       x => new
-                                                                            {
-                                                                                x.AchievementId,
-                                                                                x.Counter
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.AchievementId,
+                                                                                     column.Counter
+                                                                                 });
 
                                                       table.ForeignKey(name: "FK_GuildWarsAchievementRewards_GuildWarsAchievements_AchievementId",
-                                                                       column: x => x.AchievementId,
+                                                                       column: column => column.AchievementId,
                                                                        principalTable: "GuildWarsAchievements",
                                                                        principalColumn: "Id",
                                                                        onDelete: ReferentialAction.Restrict);
@@ -134,14 +132,14 @@ public partial class Update38 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_GuildWarsAchievementTiers",
-                                                                       x => new
-                                                                            {
-                                                                                x.AchievementId,
-                                                                                x.Counter
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.AchievementId,
+                                                                                     column.Counter
+                                                                                 });
 
                                                       table.ForeignKey(name: "FK_GuildWarsAchievementTiers_GuildWarsAchievements_AchievementId",
-                                                                       column: x => x.AchievementId,
+                                                                       column: column => column.AchievementId,
                                                                        principalTable: "GuildWarsAchievements",
                                                                        principalColumn: "Id",
                                                                        onDelete: ReferentialAction.Restrict);

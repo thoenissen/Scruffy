@@ -195,7 +195,7 @@ public partial class RaidCommitPage
     /// <param name="member">Guild member to add</param>
     private void OnAddPlayer(RaidCommitUserDTO member)
     {
-        if (_users?.Any(u => u.UserId == member.UserId) == true)
+        if (_users?.Any(user => user.UserId == member.UserId) == true)
         {
             return;
         }
@@ -221,7 +221,7 @@ public partial class RaidCommitPage
     {
         if (long.TryParse((string)changeEventArgs.Value, out var selectedId))
         {
-            var appointment = _appointments?.FirstOrDefault(a => a.Id == selectedId);
+            var appointment = _appointments?.FirstOrDefault(candidate => candidate.Id == selectedId);
 
             if (appointment != null)
             {
@@ -244,13 +244,13 @@ public partial class RaidCommitPage
             return [];
         }
 
-        var existingUserIds = _users?.Select(u => u.UserId).ToHashSet() ?? [];
+        var existingUserIds = _users?.Select(user => user.UserId).ToHashSet() ?? [];
 
-        var filtered = _allGuildMembers.Where(m => existingUserIds.Contains(m.UserId) == false);
+        var filtered = _allGuildMembers.Where(guildMember => existingUserIds.Contains(guildMember.UserId) == false);
 
         if (string.IsNullOrWhiteSpace(_addPlayerSearchFilter) == false)
         {
-            filtered = filtered.Where(m => m.Name != null && m.Name.Contains(_addPlayerSearchFilter, StringComparison.OrdinalIgnoreCase));
+            filtered = filtered.Where(guildMember => guildMember.Name != null && guildMember.Name.Contains(_addPlayerSearchFilter, StringComparison.OrdinalIgnoreCase));
         }
 
         return filtered;
@@ -608,7 +608,7 @@ public partial class RaidCommitPage
                                             .AsEnumerable()
                                             .Select(obj =>
                                                     {
-                                                        var experienceLevel = experienceLevels.FirstOrDefault(e => e.Id == obj.RaidExperienceLevelId)
+                                                        var experienceLevel = experienceLevels.FirstOrDefault(level => level.Id == obj.RaidExperienceLevelId)
                                                                                   ?? fallbackExperienceLevel;
 
                                                         return new RaidCommitUserDTO
@@ -667,7 +667,7 @@ public partial class RaidCommitPage
                                                     })
                                      .ToList();
 
-            var selectedAppointment = _appointments.FirstOrDefault(a => a.IsCommitted == false)
+            var selectedAppointment = _appointments.FirstOrDefault(appointment => appointment.IsCommitted == false)
                                           ?? _appointments.FirstOrDefault();
 
             if (selectedAppointment != null)

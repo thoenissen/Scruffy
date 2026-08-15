@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations;
@@ -22,7 +20,7 @@ public partial class Update12 : Migration
                                                   Description = table.Column<string>("nvarchar(max)", nullable: true),
                                                   ReminderMessage = table.Column<string>("nvarchar(max)", nullable: true)
                                               },
-                                     constraints: table => table.PrimaryKey("PK_CalendarAppointmentTemplates", x => x.Id));
+                                     constraints: table => table.PrimaryKey("PK_CalendarAppointmentTemplates", column => column.Id));
 
         migrationBuilder.CreateTable("CalendarAppointments",
                                      table => new
@@ -34,10 +32,10 @@ public partial class Update12 : Migration
                                               },
                                      constraints: table =>
                                                   {
-                                                      table.PrimaryKey("PK_CalendarAppointments", x => x.Id);
+                                                      table.PrimaryKey("PK_CalendarAppointments", column => column.Id);
 
                                                       table.ForeignKey("FK_CalendarAppointments_CalendarAppointmentTemplates_CalendarAppointmentTemplateId",
-                                                                       x => x.CalendarAppointmentTemplateId,
+                                                                       column => column.CalendarAppointmentTemplateId,
                                                                        "CalendarAppointmentTemplates",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);
@@ -54,10 +52,10 @@ public partial class Update12 : Migration
                                               },
                                      constraints: table =>
                                                   {
-                                                      table.PrimaryKey("PK_CalendarAppointmentSchedules", x => x.Id);
+                                                      table.PrimaryKey("PK_CalendarAppointmentSchedules", column => column.Id);
 
                                                       table.ForeignKey("FK_CalendarAppointmentSchedules_CalendarAppointmentTemplates_CalendarAppointmentTemplateId",
-                                                                       x => x.CalendarAppointmentTemplateId,
+                                                                       column => column.CalendarAppointmentTemplateId,
                                                                        "CalendarAppointmentTemplates",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);

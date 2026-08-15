@@ -654,7 +654,7 @@ public class ScruffyDbContext : IdentityDbContext<UserEntity, RoleEntity, long, 
         modelBuilder.Entity<DateValue>(eb =>
                                        {
                                            eb.HasNoKey();
-                                           eb.ToTable("__Unmapped_Query_Type_DateValue__", t => t.ExcludeFromMigrations());
+                                           eb.ToTable("__Unmapped_Query_Type_DateValue__", table => table.ExcludeFromMigrations());
                                        });
 
         // Disabling cascade on delete

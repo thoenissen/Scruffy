@@ -74,66 +74,6 @@ public class DebugService
     }
 
     /// <summary>
-    /// List entries
-    /// </summary>
-    /// <param name="commandContext">Context</param>
-    /// <param name="description">Description</param>
-    /// <param name="entries">Entries</param>
-    /// <param name="isAddInline">Adding inline code</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    private async Task ListEntries(IContextContainer commandContext, string description, IEnumerable<string> entries, bool isAddInline = true)
-    {
-        var embedBuilder = new EmbedBuilder
-                           {
-                               Color = Color.Green,
-                               Description = description
-                           };
-
-        var fieldCounter = 1;
-        var stringBuilder = new StringBuilder();
-
-        foreach (var entry in entries)
-        {
-            var currentLine = isAddInline
-                                  ? $"{entry} - {Format.Code(entry)}\n"
-                                  : $"{entry}\n";
-
-            if (currentLine.Length + stringBuilder.Length > 1024)
-            {
-                embedBuilder.AddField($"#{fieldCounter}", stringBuilder.ToString());
-
-                if (fieldCounter == 5)
-                {
-                    fieldCounter = 1;
-
-                    await commandContext.Channel
-                                        .SendMessageAsync(embed: embedBuilder.Build())
-                                        .ConfigureAwait(false);
-
-                    embedBuilder = new EmbedBuilder
-                                   {
-                                       Color = Color.Green
-                                   };
-                }
-                else
-                {
-                    fieldCounter++;
-                }
-
-                stringBuilder = new StringBuilder();
-            }
-
-            stringBuilder.Append(currentLine);
-        }
-
-        embedBuilder.AddField($"#{fieldCounter}", stringBuilder.ToString());
-
-        await commandContext.Channel
-                            .SendMessageAsync(embed: embedBuilder.Build())
-                            .ConfigureAwait(false);
-    }
-
-    /// <summary>
     /// Posting a specific log entry
     /// </summary>
     /// <param name="commandContext">Command context</param>
@@ -350,6 +290,66 @@ public class DebugService
                                               })
                            .ConfigureAwait(false);
         }
+    }
+
+    /// <summary>
+    /// List entries
+    /// </summary>
+    /// <param name="commandContext">Context</param>
+    /// <param name="description">Description</param>
+    /// <param name="entries">Entries</param>
+    /// <param name="isAddInline">Adding inline code</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    private async Task ListEntries(IContextContainer commandContext, string description, IEnumerable<string> entries, bool isAddInline = true)
+    {
+        var embedBuilder = new EmbedBuilder
+                           {
+                               Color = Color.Green,
+                               Description = description
+                           };
+
+        var fieldCounter = 1;
+        var stringBuilder = new StringBuilder();
+
+        foreach (var entry in entries)
+        {
+            var currentLine = isAddInline
+                                  ? $"{entry} - {Format.Code(entry)}\n"
+                                  : $"{entry}\n";
+
+            if (currentLine.Length + stringBuilder.Length > 1024)
+            {
+                embedBuilder.AddField($"#{fieldCounter}", stringBuilder.ToString());
+
+                if (fieldCounter == 5)
+                {
+                    fieldCounter = 1;
+
+                    await commandContext.Channel
+                                        .SendMessageAsync(embed: embedBuilder.Build())
+                                        .ConfigureAwait(false);
+
+                    embedBuilder = new EmbedBuilder
+                                   {
+                                       Color = Color.Green
+                                   };
+                }
+                else
+                {
+                    fieldCounter++;
+                }
+
+                stringBuilder = new StringBuilder();
+            }
+
+            stringBuilder.Append(currentLine);
+        }
+
+        embedBuilder.AddField($"#{fieldCounter}", stringBuilder.ToString());
+
+        await commandContext.Channel
+                            .SendMessageAsync(embed: embedBuilder.Build())
+                            .ConfigureAwait(false);
     }
 
     #endregion // Methods

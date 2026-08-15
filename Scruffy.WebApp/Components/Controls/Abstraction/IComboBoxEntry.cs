@@ -13,7 +13,7 @@ public interface IComboBoxEntry
     public string Group { get; }
 
     /// <summary>
-    /// Indicates if the entry is disabled
+    /// Is the entry disabled?
     /// </summary>
     public bool IsDisabled { get; }
 

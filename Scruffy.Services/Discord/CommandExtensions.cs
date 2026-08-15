@@ -28,7 +28,7 @@ internal static class CommandExtensions
                                                                            Name = obj.Name,
                                                                            Value = obj.Value
                                                                        })
-                                               .ToList(),
+                                                       .ToList(),
                         ChannelTypes = parameterInfo.ChannelTypes?.ToList(),
                         IsAutocomplete = parameterInfo.IsAutocomplete,
                         MaxValue = parameterInfo.MaxValue,
@@ -62,8 +62,8 @@ internal static class CommandExtensions
             throw new InvalidOperationException($"Slash Commands cannot have more than {SlashCommandBuilder.MaxOptionsCount} command parameters");
         }
 
-        props.Options = commandInfo.FlattenedParameters?.Select(x => x.ToApplicationCommandOptionProps())
-                                   .ToList()
+        props.Options = commandInfo.FlattenedParameters?.Select(parameter => parameter.ToApplicationCommandOptionProps())
+                                                       .ToList()
                             ?? Optional<List<ApplicationCommandOptionProperties>>.Unspecified;
 
         return props;
@@ -82,7 +82,7 @@ internal static class CommandExtensions
                    Description = commandInfo.Description,
                    Type = ApplicationCommandOptionType.SubCommand,
                    IsRequired = false,
-                   Options = commandInfo.FlattenedParameters?.Select(x => x.ToApplicationCommandOptionProps()).ToList()
+                   Options = commandInfo.FlattenedParameters?.Select(parameter => parameter.ToApplicationCommandOptionProps()).ToList()
                };
     }
 
@@ -140,11 +140,11 @@ internal static class CommandExtensions
     {
         if (moduleInfo.DontAutoRegister == false)
         {
-            args.AddRange(moduleInfo.ContextCommands?.Select(x => x.ToApplicationCommandProps()));
+            args.AddRange(moduleInfo.ContextCommands?.Select(command => command.ToApplicationCommandProps()));
 
             if (moduleInfo.IsSlashGroup == false)
             {
-                args.AddRange(moduleInfo.SlashCommands?.Select(x => x.ToApplicationCommandProps()));
+                args.AddRange(moduleInfo.SlashCommands?.Select(command => command.ToApplicationCommandProps()));
 
                 foreach (var submodule in moduleInfo.SubModules)
                 {
@@ -167,7 +167,7 @@ internal static class CommandExtensions
                     }
                 }
 
-                options.AddRange(moduleInfo.SubModules?.SelectMany(x => x.ParseSubModule(args)));
+                options.AddRange(moduleInfo.SubModules?.SelectMany(subModule => subModule.ParseSubModule(args)));
 
                 var props = new SlashCommandBuilder().WithName(moduleInfo.SlashGroupName)
                                                      .WithDescription(moduleInfo.Description)
@@ -204,11 +204,11 @@ internal static class CommandExtensions
             return [];
         }
 
-        args.AddRange(moduleInfo.ContextCommands?.Select(x => x.ToApplicationCommandProps()));
+        args.AddRange(moduleInfo.ContextCommands?.Select(command => command.ToApplicationCommandProps()));
 
         var options = new List<ApplicationCommandOptionProperties>();
 
-        options.AddRange(moduleInfo.SubModules?.SelectMany(x => x.ParseSubModule(args)));
+        options.AddRange(moduleInfo.SubModules?.SelectMany(subModule => subModule.ParseSubModule(args)));
 
         foreach (var command in moduleInfo.SlashCommands)
         {

@@ -120,6 +120,16 @@ public abstract class LocatedAsyncJob : IServiceScopeSupport, IAsyncJob, IDispos
     #region IDisposable
 
     /// <summary>
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources
+    /// </summary>
+    public void Dispose()
+    {
+        Dispose(true);
+
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
     /// Internal IDisposable implementation
     /// </summary>
     /// <param name="disposing">Called from <see cref="Dispose()"/>?</param>
@@ -129,16 +139,6 @@ public abstract class LocatedAsyncJob : IServiceScopeSupport, IAsyncJob, IDispos
         {
             _scope?.Dispose();
         }
-    }
-
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources
-    /// </summary>
-    public void Dispose()
-    {
-        Dispose(true);
-
-        GC.SuppressFinalize(this);
     }
 
     #endregion // IDisposable

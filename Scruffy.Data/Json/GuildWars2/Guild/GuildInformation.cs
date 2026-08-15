@@ -46,7 +46,7 @@ public class GuildInformation
     public int Favor { get; set; }
 
     /// <summary>
-    ///  The number of People currently in the Guild
+    /// The number of People currently in the Guild
     /// </summary>
     [JsonProperty("member_count")]
     public int MemberCount { get; set; }

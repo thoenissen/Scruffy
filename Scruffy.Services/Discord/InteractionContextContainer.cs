@@ -82,7 +82,7 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
     public IMessage Message => (_interaction as IComponentInteraction)?.Message;
 
     /// <summary>
-    /// Gets whether or not this interaction has been responded to
+    /// Has this interaction been responded to?
     /// </summary>
     public bool HasResponded => _interaction?.HasResponded == true;
 
@@ -170,7 +170,7 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
     public InteractivityService Interactivity { get; }
 
     /// <summary>
-    /// Gets the <see cref="DiscordSocketClient" /> that the command is executed with
+    /// <see cref="DiscordSocketClient" /> the command is executed with
     /// </summary>
     public DiscordSocketClient Client { get; }
 
@@ -216,12 +216,12 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
     {
         try
         {
-            var components = new ComponentBuilderV2().WithContainer(b => b.WithTextDisplay($"# {title}")
-                                                                          .WithSeparator()
-                                                                          .WithTextDisplay($"{DiscordEmoteService.GetLoadingEmote(Client)} {message}")
-                                                                          .WithSeparator()
-                                                                          .WithTextDisplay($"-# {footer}")
-                                                                          .WithAccentColor(Color.DarkPurple))
+            var components = new ComponentBuilderV2().WithContainer(container => container.WithTextDisplay($"# {title}")
+                                                                                          .WithSeparator()
+                                                                                          .WithTextDisplay($"{DiscordEmoteService.GetLoadingEmote(Client)} {message}")
+                                                                                          .WithSeparator()
+                                                                                          .WithTextDisplay($"-# {footer}")
+                                                                                          .WithAccentColor(Color.DarkPurple))
                                                      .Build();
 
             _deferMessage = await SendMessageAsync(components: components).ConfigureAwait(false);
@@ -516,28 +516,28 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
     #region IInteractionContext
 
     /// <summary>
-    /// Gets the <see cref="IDiscordClient" /> that the command is executed with
+    /// <see cref="IDiscordClient" /> the command is executed with
     /// </summary>
     IDiscordClient IInteractionContext.Client => Client;
 
     /// <summary>
-    /// Gets the guild the interaction originated from
+    /// Guild the interaction originated from
     /// </summary>
     /// <remarks> Will be <see langword="null" /> if the interaction originated from a DM channel or the interaction was a Context Command interaction </remarks>
     public IGuild Guild { get; private set; }
 
     /// <summary>
-    /// Gets the channel the interaction originated from
+    /// Channel the interaction originated from
     /// </summary>
     public IMessageChannel Channel { get; private set; }
 
     /// <summary>
-    /// Gets the user who invoked the interaction event
+    /// User who invoked the interaction event
     /// </summary>
     public IUser User { get; private set; }
 
     /// <summary>
-    /// Gets the underlying interaction
+    /// Underlying interaction
     /// </summary>
     IDiscordInteraction IInteractionContext.Interaction => _interaction;
 
@@ -568,7 +568,7 @@ public sealed class InteractionContextContainer : IInteractionContext, IRouteMat
     }
 
     /// <summary>
-    /// Gets the collection of captured route segments in this container
+    /// Collection of captured route segments in this container
     /// </summary>
     /// <returns>A collection of captured route segments</returns>
     IEnumerable<IRouteSegmentMatch> IRouteMatchContainer.SegmentMatches => _segmentMatches;

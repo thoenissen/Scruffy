@@ -292,11 +292,11 @@ public partial class RaidSquadComponent
     /// <returns>Best matching player role or <c>null</c></returns>
     private static PlayerRoleDTO PickBest(List<PlayerRoleDTO> candidates)
     {
-        var available = candidates.Where(r => r.Player.IsOnSubstitutesBench == false
-                                              && r.Player.IsAssigned == false)
+        var available = candidates.Where(role => role.Player.IsOnSubstitutesBench == false
+                                                 && role.Player.IsAssigned == false)
                                   .ToList();
 
-        return available.FirstOrDefault(r => r.Player.RegistrationRoles.HasFlag(r.Role))
+        return available.FirstOrDefault(role => role.Player.RegistrationRoles.HasFlag(role.Role))
                    ?? available.FirstOrDefault();
     }
 
@@ -322,7 +322,7 @@ public partial class RaidSquadComponent
                                    ? RaidRole.QuicknessDamageDealer
                                    : RaidRole.AlacrityDamageDealer;
 
-        return dpsSupportRoles.Where(r => r.Role == requiredRole).ToList();
+        return dpsSupportRoles.Where(role => role.Role == requiredRole).ToList();
     }
 
     /// <summary>

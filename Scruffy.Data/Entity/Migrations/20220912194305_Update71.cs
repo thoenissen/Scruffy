@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations;
@@ -28,9 +26,9 @@ public partial class Update71 : Migration
                                                        },
                                      constraints: table =>
                                                   {
-                                                      table.PrimaryKey("PK_LookingForGroupAppointments", x => x.Id);
+                                                      table.PrimaryKey("PK_LookingForGroupAppointments", column => column.Id);
                                                       table.ForeignKey(name: "FK_LookingForGroupAppointments_Users_CreationUserId",
-                                                                       column: x => x.CreationUserId,
+                                                                       column: column => column.CreationUserId,
                                                                        principalTable: "Users",
                                                                        principalColumn: "Id",
                                                                        onDelete: ReferentialAction.Restrict);
@@ -46,18 +44,18 @@ public partial class Update71 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_LookingForGroupParticipants",
-                                                                       x => new
-                                                                            {
-                                                                                x.AppointmentId,
-                                                                                x.UserId
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.AppointmentId,
+                                                                                     column.UserId
+                                                                                 });
                                                       table.ForeignKey(name: "FK_LookingForGroupParticipants_LookingForGroupAppointments_AppointmentId",
-                                                                       column: x => x.AppointmentId,
+                                                                       column: column => column.AppointmentId,
                                                                        principalTable: "LookingForGroupAppointments",
                                                                        principalColumn: "Id",
                                                                        onDelete: ReferentialAction.Restrict);
                                                       table.ForeignKey(name: "FK_LookingForGroupParticipants_Users_UserId",
-                                                                       column: x => x.UserId,
+                                                                       column: column => column.UserId,
                                                                        principalTable: "Users",
                                                                        principalColumn: "Id",
                                                                        onDelete: ReferentialAction.Restrict);

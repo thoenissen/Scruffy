@@ -75,10 +75,10 @@ public class DpsReportReportGenerator : LocatedServiceBase
     {
         var lastEncounter = _repositoryFactory.GetRepository<DpsReportRepository>()
                                               .GetQuery()
-                                              .Where(r => r.UserId == userId
-                                                          && _encounterBosses.Contains(r.BossId))
-                                              .OrderByDescending(r => r.EncounterTime)
-                                              .Select(r => (DateTime?)r.EncounterTime)
+                                              .Where(report => report.UserId == userId
+                                                               && _encounterBosses.Contains(report.BossId))
+                                              .OrderByDescending(report => report.EncounterTime)
+                                              .Select(report => (DateTime?)report.EncounterTime)
                                               .FirstOrDefault()
                                 ?? DateTime.Now;
 
@@ -135,12 +135,12 @@ public class DpsReportReportGenerator : LocatedServiceBase
         var dpsReportRepository = _repositoryFactory.GetRepository<DpsReportRepository>();
 
         var bosses = dpsReportRepository.GetQuery()
-                                        .Where(r => r.UserId == userId
-                                                    && r.EncounterTime >= weekStart
-                                                    && r.EncounterTime < weekEnd)
-                                        .GroupBy(r => r.BossId)
-                                        .ToDictionary(g => g.Key,
-                                                      g => g.Any(r => r.IsSuccess));
+                                        .Where(report => report.UserId == userId
+                                                         && report.EncounterTime >= weekStart
+                                                         && report.EncounterTime < weekEnd)
+                                        .GroupBy(report => report.BossId)
+                                        .ToDictionary(group => group.Key,
+                                                      group => group.Any(report => report.IsSuccess));
 
         token.ThrowIfCancellationRequested();
 
@@ -173,9 +173,9 @@ public class DpsReportReportGenerator : LocatedServiceBase
         var timeFrom = from.ToDateTime(TimeOnly.MinValue);
         var timeTo = to.ToDateTime(TimeOnly.MinValue);
         var bosses = dpsReportRepository.GetQuery()
-                                        .Where(r => r.UserId == user
-                                                    && r.EncounterTime >= timeFrom
-                                                    && r.EncounterTime < timeTo)
+                                        .Where(report => report.UserId == user
+                                                         && report.EncounterTime >= timeFrom
+                                                         && report.EncounterTime < timeTo)
                                         .ToList();
 
         var encounters = new Dictionary<DpsReportEncounterKey, List<DpsReportEncounterData>>();
@@ -212,20 +212,20 @@ public class DpsReportReportGenerator : LocatedServiceBase
         {
             var dpsReportRepository = repository.GetRepository<DpsReportRepository>();
             var dpsReports = dpsReportRepository.GetQuery()
-                                                .Where(r => r.UserId == userId
-                                                            && bossIds.Contains(r.BossId)
-                                                            && r.EncounterTime >= weekStart
-                                                            && r.EncounterTime < weekEnd)
-                                                .OrderByDescending(r => r.EncounterTime)
+                                                .Where(report => report.UserId == userId
+                                                                 && bossIds.Contains(report.BossId)
+                                                                 && report.EncounterTime >= weekStart
+                                                                 && report.EncounterTime < weekEnd)
+                                                .OrderByDescending(report => report.EncounterTime)
                                                 .ToList();
 
-            return dpsReports.Select(r => new DpsReportBossLogEntry
-                                          {
-                                              Id = r.Id,
-                                              PermaLink = r.PermaLink,
-                                              EncounterTime = r.EncounterTime,
-                                              IsSuccess = r.IsSuccess
-                                          })
+            return dpsReports.Select(report => new DpsReportBossLogEntry
+                                               {
+                                                   Id = report.Id,
+                                                   PermaLink = report.PermaLink,
+                                                   EncounterTime = report.EncounterTime,
+                                                   IsSuccess = report.IsSuccess
+                                               })
                              .ToList();
         }
     }
@@ -359,7 +359,7 @@ public class DpsReportReportGenerator : LocatedServiceBase
         {
             if (mechanic.MechanicsData != null)
             {
-                var count = mechanic.MechanicsData.Count(m => m.Actor?.Equals(playerCharacterName, StringComparison.OrdinalIgnoreCase) == true);
+                var count = mechanic.MechanicsData.Count(hit => hit.Actor?.Equals(playerCharacterName, StringComparison.OrdinalIgnoreCase) == true);
 
                 if (count > 0)
                 {

@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations;
@@ -22,7 +20,7 @@ public partial class Update9 : Migration
                                                   Message = table.Column<string>("nvarchar(max)", nullable: true),
                                                   QualifiedCommandName = table.Column<string>("nvarchar(max)", nullable: true)
                                               },
-                                     constraints: table => table.PrimaryKey("PK_LogEntries", x => x.Id));
+                                     constraints: table => table.PrimaryKey("PK_LogEntries", column => column.Id));
     }
 
     /// <inheritdoc/>

@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations;
@@ -25,7 +23,7 @@ public partial class Update1 : Migration
                                                   Title = table.Column<string>("nvarchar(max)", nullable: true),
                                                   Description = table.Column<string>("nvarchar(max)", nullable: true)
                                               },
-                                     constraints: table => table.PrimaryKey("PK_FractalLfgConfigurations", x => x.Id));
+                                     constraints: table => table.PrimaryKey("PK_FractalLfgConfigurations", column => column.Id));
 
         migrationBuilder.CreateTable("FractalRegistrations",
                                      table => new
@@ -39,15 +37,15 @@ public partial class Update1 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_FractalRegistrations",
-                                                                       x => new
-                                                                            {
-                                                                                x.ConfigurationId,
-                                                                                x.AppointmentTimeStamp,
-                                                                                x.UserId
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.ConfigurationId,
+                                                                                     column.AppointmentTimeStamp,
+                                                                                     column.UserId
+                                                                                 });
 
                                                       table.ForeignKey("FK_FractalRegistrations_FractalLfgConfigurations_FractalLfgConfigurationId",
-                                                                       x => x.FractalLfgConfigurationId,
+                                                                       column => column.FractalLfgConfigurationId,
                                                                        "FractalLfgConfigurations",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);

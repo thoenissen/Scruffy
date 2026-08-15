@@ -12,11 +12,11 @@ public partial class Update94 : Migration
     {
         migrationBuilder.CreateTable(name: "CoreConfigurations",
                                      columns: table => new
-                                              {
-                                                  Key = table.Column<string>(type: "nvarchar(260)", maxLength: 260, nullable: false),
-                                                  Value = table.Column<string>(type: "nvarchar(260)", maxLength: 260, nullable: true)
-                                              },
-                                     constraints: table => table.PrimaryKey("PK_CoreConfigurations", x => x.Key));
+                                                       {
+                                                           Key = table.Column<string>(type: "nvarchar(260)", maxLength: 260, nullable: false),
+                                                           Value = table.Column<string>(type: "nvarchar(260)", maxLength: 260, nullable: true)
+                                                       },
+                                     constraints: table => table.PrimaryKey("PK_CoreConfigurations", column => column.Key));
     }
 
     /// <inheritdoc />

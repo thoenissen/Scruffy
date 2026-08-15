@@ -102,7 +102,7 @@ public sealed class InteractivityService : SingletonLocatedServiceBase, IDisposa
         }
 
         Task.Delay(60_000, waitEntry.CancellationToken)
-            .ContinueWith(t =>
+            .ContinueWith(task =>
                           {
                               waitEntry.SetTimeOut();
 
@@ -136,7 +136,7 @@ public sealed class InteractivityService : SingletonLocatedServiceBase, IDisposa
         }
 
         Task.Delay(60_000, waitEntry.CancellationToken)
-            .ContinueWith(t =>
+            .ContinueWith(task =>
                           {
                               waitEntry.SetTimeOut();
 

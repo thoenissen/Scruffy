@@ -22,7 +22,7 @@ public partial class QuickGridPaginator
     #region Properties
 
     /// <summary>
-    /// Specifies the associated <see cref="PaginationState"/>
+    /// Associated <see cref="PaginationState"/>
     /// </summary>
     [Parameter]
     public PaginationState State { get; set; } = null!;

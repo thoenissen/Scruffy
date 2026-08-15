@@ -55,22 +55,13 @@ public class QueryableBase<TEntity> : IQueryable<TEntity>
 
     #region IQueryable
 
-    /// <summary>
-    /// Gets the type of the element(s) that are returned when the expression tree associated with this instance of <see cref="T:System.Linq.IQueryable" /> is executed
-    /// </summary>
-    /// <returns>A <see cref="T:System.Type" /> that represents the type of the element(s) that are returned when the expression tree associated with this object is executed</returns>
+    /// <inheritdoc/>
     public Type ElementType => InternalQueryable.ElementType;
 
-    /// <summary>
-    /// Gets the expression tree that is associated with the instance of <see cref="T:System.Linq.IQueryable" />
-    /// </summary>
-    /// <returns>The <see cref="T:System.Linq.Expressions.Expression" /> that is associated with this instance of <see cref="T:System.Linq.IQueryable" /></returns>
+    /// <inheritdoc/>
     public Expression Expression => InternalQueryable.Expression;
 
-    /// <summary>
-    /// Gets the query provider that is associated with this data source
-    /// </summary>
-    /// <returns>The <see cref="T:System.Linq.IQueryProvider" /> that is associated with this data source</returns>
+    /// <inheritdoc/>
     public IQueryProvider Provider => InternalQueryable.Provider;
 
     #endregion // IQueryable

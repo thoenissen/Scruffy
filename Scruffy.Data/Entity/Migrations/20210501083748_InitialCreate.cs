@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations;
@@ -29,7 +27,7 @@ public partial class InitialCreate : Migration
                                                   MessageId = table.Column<decimal>("decimal(20,0)", nullable: false),
                                                   AdministrationRoleId = table.Column<decimal>("decimal(20,0)", nullable: true)
                                               },
-                                     constraints: table => table.PrimaryKey("PK_RaidDayConfigurations", x => x.Id));
+                                     constraints: table => table.PrimaryKey("PK_RaidDayConfigurations", column => column.Id));
 
         migrationBuilder.CreateTable("RaidExperienceLevels",
                                      table => new
@@ -41,10 +39,10 @@ public partial class InitialCreate : Migration
                                               },
                                      constraints: table =>
                                                   {
-                                                      table.PrimaryKey("PK_RaidExperienceLevels", x => x.Id);
+                                                      table.PrimaryKey("PK_RaidExperienceLevels", column => column.Id);
 
                                                       table.ForeignKey("FK_RaidExperienceLevels_RaidExperienceLevels_SuperiorExperienceLevelId",
-                                                                       x => x.SuperiorExperienceLevelId,
+                                                                       column => column.SuperiorExperienceLevelId,
                                                                        "RaidExperienceLevels",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);
@@ -61,10 +59,10 @@ public partial class InitialCreate : Migration
                                               },
                                      constraints: table =>
                                                   {
-                                                      table.PrimaryKey("PK_RaidRoles", x => x.Id);
+                                                      table.PrimaryKey("PK_RaidRoles", column => column.Id);
 
                                                       table.ForeignKey("FK_RaidRoles_RaidRoles_MainRoleId",
-                                                                       x => x.MainRoleId,
+                                                                       column => column.MainRoleId,
                                                                        "RaidRoles",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);
@@ -76,7 +74,7 @@ public partial class InitialCreate : Migration
                                                   Id = table.Column<decimal>("decimal(20,0)", nullable: false),
                                                   CreationTimeStamp = table.Column<DateTime>("datetime2", nullable: false)
                                               },
-                                     constraints: table => table.PrimaryKey("PK_Users", x => x.Id));
+                                     constraints: table => table.PrimaryKey("PK_Users", column => column.Id));
 
         migrationBuilder.CreateTable("RaidAppointments",
                                      table => new
@@ -88,10 +86,10 @@ public partial class InitialCreate : Migration
                                               },
                                      constraints: table =>
                                                   {
-                                                      table.PrimaryKey("PK_RaidAppointments", x => x.Id);
+                                                      table.PrimaryKey("PK_RaidAppointments", column => column.Id);
 
                                                       table.ForeignKey("FK_RaidAppointments_RaidDayConfigurations_ConfigurationId",
-                                                                       x => x.ConfigurationId,
+                                                                       column => column.ConfigurationId,
                                                                        "RaidDayConfigurations",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);
@@ -107,20 +105,20 @@ public partial class InitialCreate : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_RaidExperienceAssignments",
-                                                                       x => new
-                                                                            {
-                                                                                x.ConfigurationId,
-                                                                                x.ExperienceLevelId
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.ConfigurationId,
+                                                                                     column.ExperienceLevelId
+                                                                                 });
 
                                                       table.ForeignKey("FK_RaidExperienceAssignments_RaidDayConfigurations_ConfigurationId",
-                                                                       x => x.ConfigurationId,
+                                                                       column => column.ConfigurationId,
                                                                        "RaidDayConfigurations",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);
 
                                                       table.ForeignKey("FK_RaidExperienceAssignments_RaidExperienceLevels_ExperienceLevelId",
-                                                                       x => x.ExperienceLevelId,
+                                                                       column => column.ExperienceLevelId,
                                                                        "RaidExperienceLevels",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);
@@ -137,26 +135,26 @@ public partial class InitialCreate : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_RaidRequiredRoles",
-                                                                       x => new
-                                                                            {
-                                                                                x.ConfigurationId,
-                                                                                x.Index
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.ConfigurationId,
+                                                                                     column.Index
+                                                                                 });
 
                                                       table.ForeignKey("FK_RaidRequiredRoles_RaidDayConfigurations_ConfigurationId",
-                                                                       x => x.ConfigurationId,
+                                                                       column => column.ConfigurationId,
                                                                        "RaidDayConfigurations",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);
 
                                                       table.ForeignKey("FK_RaidRequiredRoles_RaidRoles_MainRoleId",
-                                                                       x => x.MainRoleId,
+                                                                       column => column.MainRoleId,
                                                                        "RaidRoles",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);
 
                                                       table.ForeignKey("FK_RaidRequiredRoles_RaidRoles_SubRoleId",
-                                                                       x => x.SubRoleId,
+                                                                       column => column.SubRoleId,
                                                                        "RaidRoles",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);
@@ -171,16 +169,16 @@ public partial class InitialCreate : Migration
                                               },
                                      constraints: table =>
                                                   {
-                                                      table.PrimaryKey("PK_RaidRoleAliasNames", x => x.AliasName);
+                                                      table.PrimaryKey("PK_RaidRoleAliasNames", column => column.AliasName);
 
                                                       table.ForeignKey("FK_RaidRoleAliasNames_RaidRoles_MainRoleId",
-                                                                       x => x.MainRoleId,
+                                                                       column => column.MainRoleId,
                                                                        "RaidRoles",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);
 
                                                       table.ForeignKey("FK_RaidRoleAliasNames_RaidRoles_SubRoleId",
-                                                                       x => x.SubRoleId,
+                                                                       column => column.SubRoleId,
                                                                        "RaidRoles",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);
@@ -199,10 +197,10 @@ public partial class InitialCreate : Migration
                                               },
                                      constraints: table =>
                                                   {
-                                                      table.PrimaryKey("PK_OneTimeReminders", x => x.Id);
+                                                      table.PrimaryKey("PK_OneTimeReminders", column => column.Id);
 
                                                       table.ForeignKey("FK_OneTimeReminders_Users_UserId",
-                                                                       x => x.UserId,
+                                                                       column => column.UserId,
                                                                        "Users",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);
@@ -218,27 +216,27 @@ public partial class InitialCreate : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_RaidUserRoles",
-                                                                       x => new
-                                                                            {
-                                                                                x.UserId,
-                                                                                x.MainRoleId,
-                                                                                x.SubRoleId
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.UserId,
+                                                                                     column.MainRoleId,
+                                                                                     column.SubRoleId
+                                                                                 });
 
                                                       table.ForeignKey("FK_RaidUserRoles_RaidRoles_MainRoleId",
-                                                                       x => x.MainRoleId,
+                                                                       column => column.MainRoleId,
                                                                        "RaidRoles",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);
 
                                                       table.ForeignKey("FK_RaidUserRoles_RaidRoles_SubRoleId",
-                                                                       x => x.SubRoleId,
+                                                                       column => column.SubRoleId,
                                                                        "RaidRoles",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);
 
                                                       table.ForeignKey("FK_RaidUserRoles_Users_UserId",
-                                                                       x => x.UserId,
+                                                                       column => column.UserId,
                                                                        "Users",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);
@@ -256,16 +254,16 @@ public partial class InitialCreate : Migration
                                               },
                                      constraints: table =>
                                                   {
-                                                      table.PrimaryKey("PK_RaidRegistrations", x => x.Id);
+                                                      table.PrimaryKey("PK_RaidRegistrations", column => column.Id);
 
                                                       table.ForeignKey("FK_RaidRegistrations_RaidAppointments_AppointmentId",
-                                                                       x => x.AppointmentId,
+                                                                       column => column.AppointmentId,
                                                                        "RaidAppointments",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);
 
                                                       table.ForeignKey("FK_RaidRegistrations_Users_UserId",
-                                                                       x => x.UserId,
+                                                                       column => column.UserId,
                                                                        "Users",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);
@@ -282,22 +280,22 @@ public partial class InitialCreate : Migration
                                               },
                                      constraints: table =>
                                                   {
-                                                      table.PrimaryKey("PK_RaidRegistrationRoleAssignments", x => x.Id);
+                                                      table.PrimaryKey("PK_RaidRegistrationRoleAssignments", column => column.Id);
 
                                                       table.ForeignKey("FK_RaidRegistrationRoleAssignments_RaidRegistrations_RegistrationId",
-                                                                       x => x.RegistrationId,
+                                                                       column => column.RegistrationId,
                                                                        "RaidRegistrations",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);
 
                                                       table.ForeignKey("FK_RaidRegistrationRoleAssignments_RaidRoles_MainRoleId",
-                                                                       x => x.MainRoleId,
+                                                                       column => column.MainRoleId,
                                                                        "RaidRoles",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);
 
                                                       table.ForeignKey("FK_RaidRegistrationRoleAssignments_RaidRoles_SubRoleId",
-                                                                       x => x.SubRoleId,
+                                                                       column => column.SubRoleId,
                                                                        "RaidRoles",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);

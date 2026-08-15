@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations;
@@ -25,7 +23,7 @@ public partial class Update8 : Migration
                                                   Thumbnail = table.Column<string>("nvarchar(max)", nullable: true),
                                                   IsDeleted = table.Column<bool>("bit", nullable: false)
                                               },
-                                     constraints: table => table.PrimaryKey("PK_RaidDayTemplates", x => x.Id));
+                                     constraints: table => table.PrimaryKey("PK_RaidDayTemplates", column => column.Id));
     }
 
     /// <inheritdoc/>

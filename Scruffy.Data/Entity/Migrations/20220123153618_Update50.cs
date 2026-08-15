@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations;
@@ -24,12 +22,12 @@ public partial class Update50 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_DiscordAccountRoleAssignmentHistory",
-                                                                       x => new
-                                                                            {
-                                                                                x.ServerId,
-                                                                                x.RoleId,
-                                                                                x.AccountId
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.ServerId,
+                                                                                     column.RoleId,
+                                                                                     column.AccountId
+                                                                                 });
                                                   });
 
         migrationBuilder.CreateTable(name: "GuildWarsAccountRankingData",
@@ -42,11 +40,11 @@ public partial class Update50 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_GuildWarsAccountRankingData",
-                                                                       x => new
-                                                                            {
-                                                                                x.AccountName,
-                                                                                x.Date
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.AccountName,
+                                                                                     column.Date
+                                                                                 });
                                                   });
 
         migrationBuilder.CreateTable(name: "GuildWarsAccountRankingGuildData",
@@ -61,12 +59,12 @@ public partial class Update50 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_GuildWarsAccountRankingGuildData",
-                                                                       x => new
-                                                                            {
-                                                                                x.AccountName,
-                                                                                x.GuildId,
-                                                                                x.Date
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.AccountName,
+                                                                                     column.GuildId,
+                                                                                     column.Date
+                                                                                 });
                                                   });
     }
 

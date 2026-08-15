@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations;
@@ -22,7 +20,7 @@ public partial class Update27 : Migration
                                                   Type = table.Column<int>("int", nullable: false),
                                                   DiscordChannelId = table.Column<decimal>("decimal(20,0)", nullable: false)
                                               },
-                                     constraints: table => table.PrimaryKey("PK_GameChannels", x => x.Id));
+                                     constraints: table => table.PrimaryKey("PK_GameChannels", column => column.Id));
     }
 
     /// <inheritdoc/>

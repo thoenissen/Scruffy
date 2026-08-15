@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations;
@@ -25,7 +23,7 @@ public partial class Update55 : Migration
                                                            Committer = table.Column<string>(type: "nvarchar(max)", nullable: true),
                                                            TimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false)
                                                        },
-                                     constraints: table => table.PrimaryKey("PK_GitHubCommitEntity", x => x.Sha));
+                                     constraints: table => table.PrimaryKey("PK_GitHubCommitEntity", column => column.Sha));
     }
 
     /// <inheritdoc/>
@@ -45,13 +43,13 @@ public partial class Update55 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_DiscordHistoryRoleAssignments",
-                                                                       x => new
-                                                                            {
-                                                                                x.Date,
-                                                                                x.ServerId,
-                                                                                x.UserId,
-                                                                                x.RoleId
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.Date,
+                                                                                     column.ServerId,
+                                                                                     column.UserId,
+                                                                                     column.RoleId
+                                                                                 });
                                                   });
     }
 

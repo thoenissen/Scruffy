@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations;
@@ -23,11 +21,11 @@ public partial class Update34 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_DiscordIgnoreChannels",
-                                                                       x => new
-                                                                            {
-                                                                                x.ServerId,
-                                                                                x.ChannelId
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.ServerId,
+                                                                                     column.ChannelId
+                                                                                 });
                                                   });
 
         migrationBuilder.CreateTable(name: "DiscordMessages",
@@ -43,12 +41,12 @@ public partial class Update34 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_DiscordMessages",
-                                                                       x => new
-                                                                            {
-                                                                                x.ServerId,
-                                                                                x.ChannelId,
-                                                                                x.MessageId
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.ServerId,
+                                                                                     column.ChannelId,
+                                                                                     column.MessageId
+                                                                                 });
                                                   });
 
         migrationBuilder.CreateTable(name: "DiscordVoiceTimeSpans",
@@ -64,13 +62,13 @@ public partial class Update34 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_DiscordVoiceTimeSpans",
-                                                                       x => new
-                                                                            {
-                                                                                x.ServerId,
-                                                                                x.ChannelId,
-                                                                                x.UserId,
-                                                                                x.StartTimeStamp
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.ServerId,
+                                                                                     column.ChannelId,
+                                                                                     column.UserId,
+                                                                                     column.StartTimeStamp
+                                                                                 });
                                                   });
     }
 

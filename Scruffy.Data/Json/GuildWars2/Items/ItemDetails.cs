@@ -22,13 +22,13 @@ public class ItemDetails
     public int GuildUpgradeId { get; set; }
 
     /// <summary>
-    ///  Unlock type
+    /// Unlock type
     /// </summary>
     [JsonProperty("unlock_type")]
     public string UnlockType { get; set; }
 
     /// <summary>
-    ///  Unlock type
+    /// Unlock type
     /// </summary>
     [JsonProperty("color_id")]
     public int? ColorId { get; set; }

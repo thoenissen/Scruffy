@@ -45,12 +45,6 @@ public class CalendarScheduleOptionsDialogElement : DialogEmbedReactionElementBa
     }
 
     /// <inheritdoc/>
-    protected override string GetCommandTitle()
-    {
-        return LocalizationGroup.GetText("Reactions", "Days");
-    }
-
-    /// <inheritdoc/>
     public override IReadOnlyList<ReactionData<WeekDayOfMonthSpecialOptions>> GetReactions()
     {
         return _reactions ??= [
@@ -79,6 +73,12 @@ public class CalendarScheduleOptionsDialogElement : DialogEmbedReactionElementBa
                                       Func = () => Task.FromResult(WeekDayOfMonthSpecialOptions.MonthSelection)
                                   }
                               ];
+    }
+
+    /// <inheritdoc/>
+    protected override string GetCommandTitle()
+    {
+        return LocalizationGroup.GetText("Reactions", "Days");
     }
 
     /// <inheritdoc/>

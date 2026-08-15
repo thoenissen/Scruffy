@@ -46,7 +46,7 @@ public class DpsReport
     public MetaData MetaData { get; set; }
 
     /// <summary>
-    /// Indicates whether additional data is currently being loaded for this report
+    /// Is additional data currently being loaded for this report?
     /// </summary>
     public bool IsLoadingAdditionalData { get; set; }
 

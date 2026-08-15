@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations;
@@ -25,15 +23,15 @@ public partial class Update54 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_GuildDiscordActivityPointsAssignments",
-                                                                       x => new
-                                                                            {
-                                                                                x.GuildId,
-                                                                                x.Type,
-                                                                                x.RoleId
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.GuildId,
+                                                                                     column.Type,
+                                                                                     column.RoleId
+                                                                                 });
 
                                                       table.ForeignKey(name: "FK_GuildDiscordActivityPointsAssignments_Guilds_GuildId",
-                                                                       column: x => x.GuildId,
+                                                                       column: column => column.GuildId,
                                                                        principalTable: "Guilds",
                                                                        principalColumn: "Id",
                                                                        onDelete: ReferentialAction.Restrict);

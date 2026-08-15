@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations;
@@ -46,10 +44,10 @@ public partial class Update22 : Migration
                                               },
                                      constraints: table =>
                                                   {
-                                                      table.PrimaryKey("PK_Accounts", x => x.Name);
+                                                      table.PrimaryKey("PK_Accounts", column => column.Name);
 
                                                       table.ForeignKey("FK_Accounts_Users_UserId",
-                                                                       x => x.UserId,
+                                                                       column => column.UserId,
                                                                        "Users",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);
@@ -64,10 +62,10 @@ public partial class Update22 : Migration
                                               },
                                      constraints: table =>
                                                   {
-                                                      table.PrimaryKey("PK_RaidCurrentUserPoints", x => x.UserId);
+                                                      table.PrimaryKey("PK_RaidCurrentUserPoints", column => column.UserId);
 
                                                       table.ForeignKey("FK_RaidCurrentUserPoints_Users_UserId1",
-                                                                       x => x.UserId1,
+                                                                       column => column.UserId1,
                                                                        "Users",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);
@@ -80,7 +78,7 @@ public partial class Update22 : Migration
                                                             .Annotation("SqlServer:Identity", "1, 1"),
                                                   Description = table.Column<string>("nvarchar(max)", nullable: true)
                                               },
-                                     constraints: table => table.PrimaryKey("PK_RaidRoleLineupHeaders", x => x.Id));
+                                     constraints: table => table.PrimaryKey("PK_RaidRoleLineupHeaders", column => column.Id));
 
         migrationBuilder.CreateTable("RaidRoleLineupAssignments",
                                      table => new
@@ -91,20 +89,20 @@ public partial class Update22 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_RaidRoleLineupAssignments",
-                                                                       x => new
-                                                                            {
-                                                                                x.TemplateId,
-                                                                                x.LineupHeaderId
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.TemplateId,
+                                                                                     column.LineupHeaderId
+                                                                                 });
 
                                                       table.ForeignKey("FK_RaidRoleLineupAssignments_RaidDayTemplates_TemplateId",
-                                                                       x => x.TemplateId,
+                                                                       column => column.TemplateId,
                                                                        "RaidDayTemplates",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);
 
                                                       table.ForeignKey("FK_RaidRoleLineupAssignments_RaidRoleLineupHeaders_LineupHeaderId",
-                                                                       x => x.LineupHeaderId,
+                                                                       column => column.LineupHeaderId,
                                                                        "RaidRoleLineupHeaders",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);
@@ -120,21 +118,21 @@ public partial class Update22 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_RaidRoleLineupEntries",
-                                                                       x => new
-                                                                            {
-                                                                                x.LineupHeaderId,
-                                                                                x.Position,
-                                                                                x.RoleId
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.LineupHeaderId,
+                                                                                     column.Position,
+                                                                                     column.RoleId
+                                                                                 });
 
                                                       table.ForeignKey("FK_RaidRoleLineupEntries_RaidRoleLineupHeaders_LineupHeaderId",
-                                                                       x => x.LineupHeaderId,
+                                                                       column => column.LineupHeaderId,
                                                                        "RaidRoleLineupHeaders",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);
 
                                                       table.ForeignKey("FK_RaidRoleLineupEntries_RaidRoles_RoleId",
-                                                                       x => x.RoleId,
+                                                                       column => column.RoleId,
                                                                        "RaidRoles",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);

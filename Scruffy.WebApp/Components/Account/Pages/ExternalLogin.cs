@@ -26,6 +26,12 @@ public class ExternalLogin : ComponentBase
 
     #region Properties
 
+    /// <summary>
+    /// Action
+    /// </summary>
+    [SupplyParameterFromQuery]
+    public string Action { get; set; }
+
     #region Injection
 
     /// <summary>
@@ -67,12 +73,6 @@ public class ExternalLogin : ComponentBase
     /// </summary>
     [SupplyParameterFromQuery]
     private string ReturnUrl { get; set; }
-
-    /// <summary>
-    /// Action
-    /// </summary>
-    [SupplyParameterFromQuery]
-    public string Action { get; set; }
 
     #endregion // Parameters
 

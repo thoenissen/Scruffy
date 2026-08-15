@@ -82,12 +82,6 @@ public class CalendarTemplateEditDialogElement : DialogEmbedReactionElementBase<
     }
 
     /// <inheritdoc/>
-    protected override string GetCommandTitle()
-    {
-        return LocalizationGroup.GetText("CommandTitle", "Commands");
-    }
-
-    /// <inheritdoc/>
     public override IReadOnlyList<ReactionData<bool>> GetReactions()
     {
         return _reactions ??= [
@@ -203,6 +197,12 @@ public class CalendarTemplateEditDialogElement : DialogEmbedReactionElementBase<
                                       Func = () => Task.FromResult(false)
                                   }
                               ];
+    }
+
+    /// <inheritdoc/>
+    protected override string GetCommandTitle()
+    {
+        return LocalizationGroup.GetText("CommandTitle", "Commands");
     }
 
     /// <inheritdoc/>

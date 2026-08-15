@@ -431,28 +431,6 @@ public class DpsReportEncounterKey : IEquatable<DpsReportEncounterKey>
 
     #endregion // Methods
 
-    #region IEquatable
-
-    /// <inheritdoc />
-    public bool Equals(DpsReportEncounterKey other)
-    {
-        if (other is null)
-        {
-            return false;
-        }
-
-        if (ReferenceEquals(this, other))
-        {
-            return true;
-        }
-
-        return Group == other.Group
-               && SubGroup == other.SubGroup
-               && Encounter == other.Encounter;
-    }
-
-    #endregion // IEquatable
-
     #region Object
 
     /// <inheritdoc />
@@ -483,4 +461,26 @@ public class DpsReportEncounterKey : IEquatable<DpsReportEncounterKey>
     }
 
     #endregion // Object
+
+    #region IEquatable
+
+    /// <inheritdoc />
+    public bool Equals(DpsReportEncounterKey other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return Group == other.Group
+               && SubGroup == other.SubGroup
+               && Encounter == other.Encounter;
+    }
+
+    #endregion // IEquatable
 }

@@ -169,12 +169,6 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedSelectMenuElemen
     }
 
     /// <inheritdoc/>
-    protected override bool DefaultFunc()
-    {
-        return false;
-    }
-
-    /// <inheritdoc/>
     public override IReadOnlyList<SelectMenuEntryData<bool>> GetEntries()
     {
         return _entries ??= [
@@ -337,6 +331,12 @@ public class CalendarParticipantsEditDialogElement : DialogEmbedSelectMenuElemen
                                     Response = () => Task.FromResult(false)
                                 }
                             ];
+    }
+
+    /// <inheritdoc/>
+    protected override bool DefaultFunc()
+    {
+        return false;
     }
 
     #endregion // DialogEmbedSelectMenuElementBase

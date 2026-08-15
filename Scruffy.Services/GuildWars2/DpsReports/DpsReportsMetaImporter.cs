@@ -96,12 +96,12 @@ public class DpsReportsMetaImporter : LocatedServiceBase
                                                                                            Converters = {
                                                                                                             new IntOrBoolConverter()
                                                                                                         },
-                                                                                           Error = (_, e) =>
+                                                                                           Error = (_, errorArgs) =>
                                                                                                    {
                                                                                                        // Sometimes 'foundUploads' is a bool and the deserialization to int? fails
-                                                                                                       if (e.ErrorContext.Path == "foundUploads")
+                                                                                                       if (errorArgs.ErrorContext.Path == "foundUploads")
                                                                                                        {
-                                                                                                           e.ErrorContext.Handled = true;
+                                                                                                           errorArgs.ErrorContext.Handled = true;
                                                                                                        }
                                                                                                    }
                                                                                        });

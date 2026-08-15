@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations;
@@ -32,10 +30,10 @@ public partial class Update15 : Migration
                                               },
                                      constraints: table =>
                                                   {
-                                                      table.PrimaryKey("PK_Guilds", x => x.Id);
+                                                      table.PrimaryKey("PK_Guilds", column => column.Id);
 
                                                       table.ForeignKey("FK_Guilds_ServerConfigurationEntity_DiscordServerId",
-                                                                       x => x.DiscordServerId,
+                                                                       column => column.DiscordServerId,
                                                                        "ServerConfigurationEntity",
                                                                        "ServerId",
                                                                        onDelete: ReferentialAction.Restrict);
@@ -69,14 +67,14 @@ public partial class Update15 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_GuildLogEntries",
-                                                                       x => new
-                                                                            {
-                                                                                x.GuildId,
-                                                                                x.Id
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.GuildId,
+                                                                                     column.Id
+                                                                                 });
 
                                                       table.ForeignKey("FK_GuildLogEntries_Guilds_GuildId",
-                                                                       x => x.GuildId,
+                                                                       column => column.GuildId,
                                                                        "Guilds",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);

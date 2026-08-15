@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations;
@@ -32,22 +30,22 @@ public partial class Update78 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_RaidAppointmentLineUpSquads",
-                                                                       x => new
-                                                                            {
-                                                                                x.AppointmentId,
-                                                                                x.GroupNumber
-                                                                            });
-                                                      table.ForeignKey("FK_RaidAppointmentLineUpSquads_RaidAppointments_AppointmentId", x => x.AppointmentId, "RaidAppointments", "Id", onDelete: ReferentialAction.Restrict);
-                                                      table.ForeignKey("FK_RaidAppointmentLineUpSquads_Users_Dps1UserId", x => x.Dps1UserId, "Users", "Id");
-                                                      table.ForeignKey("FK_RaidAppointmentLineUpSquads_Users_Dps2UserId", x => x.Dps2UserId, "Users", "Id");
-                                                      table.ForeignKey("FK_RaidAppointmentLineUpSquads_Users_Dps3UserId", x => x.Dps3UserId, "Users", "Id");
-                                                      table.ForeignKey("FK_RaidAppointmentLineUpSquads_Users_Dps4UserId", x => x.Dps4UserId, "Users", "Id");
-                                                      table.ForeignKey("FK_RaidAppointmentLineUpSquads_Users_Dps5UserId", x => x.Dps5UserId, "Users", "Id");
-                                                      table.ForeignKey("FK_RaidAppointmentLineUpSquads_Users_Dps6UserId", x => x.Dps6UserId, "Users", "Id");
-                                                      table.ForeignKey("FK_RaidAppointmentLineUpSquads_Users_HealerUserId", x => x.HealerUserId, "Users", "Id");
-                                                      table.ForeignKey("FK_RaidAppointmentLineUpSquads_Users_Support1UserId", x => x.Support1UserId, "Users", "Id");
-                                                      table.ForeignKey("FK_RaidAppointmentLineUpSquads_Users_Support2UserId", x => x.Support2UserId, "Users", "Id");
-                                                      table.ForeignKey("FK_RaidAppointmentLineUpSquads_Users_TankUserId", x => x.TankUserId, "Users", "Id");
+                                                                       column => new
+                                                                                 {
+                                                                                     column.AppointmentId,
+                                                                                     column.GroupNumber
+                                                                                 });
+                                                      table.ForeignKey("FK_RaidAppointmentLineUpSquads_RaidAppointments_AppointmentId", column => column.AppointmentId, "RaidAppointments", "Id", onDelete: ReferentialAction.Restrict);
+                                                      table.ForeignKey("FK_RaidAppointmentLineUpSquads_Users_Dps1UserId", column => column.Dps1UserId, "Users", "Id");
+                                                      table.ForeignKey("FK_RaidAppointmentLineUpSquads_Users_Dps2UserId", column => column.Dps2UserId, "Users", "Id");
+                                                      table.ForeignKey("FK_RaidAppointmentLineUpSquads_Users_Dps3UserId", column => column.Dps3UserId, "Users", "Id");
+                                                      table.ForeignKey("FK_RaidAppointmentLineUpSquads_Users_Dps4UserId", column => column.Dps4UserId, "Users", "Id");
+                                                      table.ForeignKey("FK_RaidAppointmentLineUpSquads_Users_Dps5UserId", column => column.Dps5UserId, "Users", "Id");
+                                                      table.ForeignKey("FK_RaidAppointmentLineUpSquads_Users_Dps6UserId", column => column.Dps6UserId, "Users", "Id");
+                                                      table.ForeignKey("FK_RaidAppointmentLineUpSquads_Users_HealerUserId", column => column.HealerUserId, "Users", "Id");
+                                                      table.ForeignKey("FK_RaidAppointmentLineUpSquads_Users_Support1UserId", column => column.Support1UserId, "Users", "Id");
+                                                      table.ForeignKey("FK_RaidAppointmentLineUpSquads_Users_Support2UserId", column => column.Support2UserId, "Users", "Id");
+                                                      table.ForeignKey("FK_RaidAppointmentLineUpSquads_Users_TankUserId", column => column.TankUserId, "Users", "Id");
                                                   });
 
         migrationBuilder.CreateIndex("IX_RaidAppointmentLineUpSquads_Dps1UserId", "RaidAppointmentLineUpSquads", "Dps1UserId");

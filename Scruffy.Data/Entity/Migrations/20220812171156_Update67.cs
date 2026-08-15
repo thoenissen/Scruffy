@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations;
@@ -74,7 +72,7 @@ public partial class Update67 : Migration
                                                            NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                                                            ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
                                                        },
-                                     constraints: table => table.PrimaryKey("PK_Roles", x => x.Id));
+                                     constraints: table => table.PrimaryKey("PK_Roles", column => column.Id));
         migrationBuilder.CreateTable(name: "UserClaims",
                                      columns: table => new
                                                        {
@@ -86,10 +84,10 @@ public partial class Update67 : Migration
                                                        },
                                      constraints: table =>
                                                   {
-                                                      table.PrimaryKey("PK_UserClaims", x => x.Id);
+                                                      table.PrimaryKey("PK_UserClaims", column => column.Id);
 
                                                       table.ForeignKey(name: "FK_UserClaims_Users_UserId",
-                                                                       column: x => x.UserId,
+                                                                       column: column => column.UserId,
                                                                        principalTable: "Users",
                                                                        principalColumn: "Id",
                                                                        onDelete: ReferentialAction.Restrict);
@@ -105,14 +103,14 @@ public partial class Update67 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_UserLogins",
-                                                                       x => new
-                                                                            {
-                                                                                x.LoginProvider,
-                                                                                x.ProviderKey
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.LoginProvider,
+                                                                                     column.ProviderKey
+                                                                                 });
 
                                                       table.ForeignKey(name: "FK_UserLogins_Users_UserId",
-                                                                       column: x => x.UserId,
+                                                                       column: column => column.UserId,
                                                                        principalTable: "Users",
                                                                        principalColumn: "Id",
                                                                        onDelete: ReferentialAction.Restrict);
@@ -128,15 +126,15 @@ public partial class Update67 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_UserTokens",
-                                                                       x => new
-                                                                            {
-                                                                                x.UserId,
-                                                                                x.LoginProvider,
-                                                                                x.Name
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.UserId,
+                                                                                     column.LoginProvider,
+                                                                                     column.Name
+                                                                                 });
 
                                                       table.ForeignKey(name: "FK_UserTokens_Users_UserId",
-                                                                       column: x => x.UserId,
+                                                                       column: column => column.UserId,
                                                                        principalTable: "Users",
                                                                        principalColumn: "Id",
                                                                        onDelete: ReferentialAction.Restrict);
@@ -152,10 +150,10 @@ public partial class Update67 : Migration
                                                        },
                                      constraints: table =>
                                                   {
-                                                      table.PrimaryKey("PK_RoleClaims", x => x.Id);
+                                                      table.PrimaryKey("PK_RoleClaims", column => column.Id);
 
                                                       table.ForeignKey(name: "FK_RoleClaims_Roles_RoleId",
-                                                                       column: x => x.RoleId,
+                                                                       column: column => column.RoleId,
                                                                        principalTable: "Roles",
                                                                        principalColumn: "Id",
                                                                        onDelete: ReferentialAction.Restrict);
@@ -169,20 +167,20 @@ public partial class Update67 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_UserRoles",
-                                                                       x => new
-                                                                            {
-                                                                                x.UserId,
-                                                                                x.RoleId
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.UserId,
+                                                                                     column.RoleId
+                                                                                 });
 
                                                       table.ForeignKey(name: "FK_UserRoles_Roles_RoleId",
-                                                                       column: x => x.RoleId,
+                                                                       column: column => column.RoleId,
                                                                        principalTable: "Roles",
                                                                        principalColumn: "Id",
                                                                        onDelete: ReferentialAction.Restrict);
 
                                                       table.ForeignKey(name: "FK_UserRoles_Users_UserId",
-                                                                       column: x => x.UserId,
+                                                                       column: column => column.UserId,
                                                                        principalTable: "Users",
                                                                        principalColumn: "Id",
                                                                        onDelete: ReferentialAction.Restrict);

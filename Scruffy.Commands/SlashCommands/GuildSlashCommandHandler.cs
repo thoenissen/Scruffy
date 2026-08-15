@@ -16,14 +16,14 @@ public class GuildSlashCommandHandler : SlashCommandModuleBase
     #region Properties
 
     /// <summary>
-    /// Web application URL
-    /// </summary>
-    private static string WebbAppUrl => field ??= ConfigurationService.GetEntry("SCRUFFY_WEBAPP_URL");
-
-    /// <summary>
     /// Command handler
     /// </summary>
     public GuildCommandHandler CommandHandler { get; set; }
+
+    /// <summary>
+    /// Web application URL
+    /// </summary>
+    private static string WebbAppUrl => field ??= ConfigurationService.GetEntry("SCRUFFY_WEBAPP_URL");
 
     #endregion // Properties
 

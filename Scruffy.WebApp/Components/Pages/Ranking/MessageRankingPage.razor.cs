@@ -146,60 +146,60 @@ public partial class MessageRankingPage : LocatedComponent
         {
             var botAccountIds = repositoryFactory.GetRepository<DiscordServerMemberRepository>()
                                                  .GetQuery()
-                                                 .Where(m => m.ServerId == WebAppConfiguration.DiscordServerId
-                                                             && m.IsBot)
-                                                 .Select(m => m.AccountId)
+                                                 .Where(member => member.ServerId == WebAppConfiguration.DiscordServerId
+                                                                  && member.IsBot)
+                                                 .Select(member => member.AccountId)
                                                  .ToHashSet();
 
             var ignoreChannelIds = repositoryFactory.GetRepository<DiscordIgnoreChannelRepository>()
                                                     .GetQuery()
-                                                    .Where(m => m.DiscordServerId == WebAppConfiguration.DiscordServerId)
-                                                    .Select(m => m.DiscordChannelId)
+                                                    .Where(channel => channel.DiscordServerId == WebAppConfiguration.DiscordServerId)
+                                                    .Select(channel => channel.DiscordChannelId)
                                                     .ToHashSet();
 
             var messageCounts = repositoryFactory.GetRepository<DiscordMessageRepository>()
                                                  .GetQuery()
-                                                 .Where(m => m.DiscordServerId == WebAppConfiguration.DiscordServerId
-                                                             && botAccountIds.Contains(m.DiscordAccountId) == false
-                                                             && ignoreChannelIds.Contains(m.DiscordChannelId) == false)
-                                                 .GroupBy(m => m.DiscordAccountId)
-                                                 .Select(g => new
-                                                              {
-                                                                  AccountId = g.Key,
-                                                                  Count = g.Count()
-                                                              })
-                                                 .OrderByDescending(g => g.Count)
+                                                 .Where(message => message.DiscordServerId == WebAppConfiguration.DiscordServerId
+                                                                   && botAccountIds.Contains(message.DiscordAccountId) == false
+                                                                   && ignoreChannelIds.Contains(message.DiscordChannelId) == false)
+                                                 .GroupBy(message => message.DiscordAccountId)
+                                                 .Select(group => new
+                                                                  {
+                                                                      AccountId = group.Key,
+                                                                      Count = group.Count()
+                                                                  })
+                                                 .OrderByDescending(group => group.Count)
                                                  .ToList();
 
             var nameMap = repositoryFactory.GetRepository<DiscordServerMemberRepository>()
                                            .GetQuery()
-                                           .Where(m => m.ServerId == WebAppConfiguration.DiscordServerId)
-                                           .Select(m => new
-                                                        {
-                                                            m.AccountId,
-                                                            m.Name,
-                                                            m.AvatarUrl
-                                                        })
-                                           .ToDictionary(m => m.AccountId,
-                                                         m => new
-                                                              {
-                                                                  m.Name,
-                                                                  m.AvatarUrl
-                                                              });
+                                           .Where(member => member.ServerId == WebAppConfiguration.DiscordServerId)
+                                           .Select(member => new
+                                                             {
+                                                                 member.AccountId,
+                                                                 member.Name,
+                                                                 member.AvatarUrl
+                                                             })
+                                           .ToDictionary(member => member.AccountId,
+                                                         member => new
+                                                                   {
+                                                                       member.Name,
+                                                                       member.AvatarUrl
+                                                                   });
 
-            return messageCounts.Where(m => nameMap.ContainsKey(m.AccountId))
-                                .Select(m =>
+            return messageCounts.Where(messageCount => nameMap.ContainsKey(messageCount.AccountId))
+                                .Select(messageCount =>
                                         {
-                                            var level = CalculateLevel(m.Count);
-                                            var member = nameMap[m.AccountId];
+                                            var level = CalculateLevel(messageCount.Count);
+                                            var member = nameMap[messageCount.AccountId];
 
                                             return new MessageRankingEntry
                                                    {
                                                        Name = member.Name,
                                                        AvatarUrl = member.AvatarUrl,
-                                                       MessageCount = m.Count,
+                                                       MessageCount = messageCount.Count,
                                                        Level = level,
-                                                       LevelProgressPercent = CalculateLevelProgress(m.Count, level)
+                                                       LevelProgressPercent = CalculateLevelProgress(messageCount.Count, level)
                                                    };
                                         })
                                 .ToList();

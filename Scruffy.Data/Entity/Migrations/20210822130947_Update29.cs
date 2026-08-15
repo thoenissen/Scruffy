@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations;
@@ -28,14 +26,14 @@ public partial class Update29 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_GuildChannelConfigurations",
-                                                                       x => new
-                                                                            {
-                                                                                x.GuildId,
-                                                                                x.Type
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.GuildId,
+                                                                                     column.Type
+                                                                                 });
 
                                                       table.ForeignKey("FK_GuildChannelConfigurations_Guilds_GuildId",
-                                                                       x => x.GuildId,
+                                                                       column => column.GuildId,
                                                                        "Guilds",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);
@@ -47,7 +45,7 @@ public partial class Update29 : Migration
                                                   Id = table.Column<long>("bigint", nullable: false),
                                                   Name = table.Column<string>("nvarchar(max)", nullable: true)
                                               },
-                                     constraints: table => table.PrimaryKey("PK_GuildWarsWorlds", x => x.Id));
+                                     constraints: table => table.PrimaryKey("PK_GuildWarsWorlds", column => column.Id));
 
         migrationBuilder.Sql(@"INSERT INTO [dbo].[GuildChannelConfigurations]
                                    SELECT [Id], 1000, [ReminderChannelId], null, null FROM [dbo].[Guilds] WHERE [ReminderChannelId] IS NOT NULL");

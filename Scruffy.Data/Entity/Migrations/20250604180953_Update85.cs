@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations;
@@ -28,13 +26,13 @@ public partial class Update85 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_DpsReports",
-                                                                       x => new
-                                                                            {
-                                                                                x.UserId,
-                                                                                x.Id
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.UserId,
+                                                                                     column.Id
+                                                                                 });
                                                       table.ForeignKey("FK_DpsReports_Users_UserId",
-                                                                       column: x => x.UserId,
+                                                                       column: column => column.UserId,
                                                                        principalTable: "Users",
                                                                        principalColumn: "Id",
                                                                        onDelete: ReferentialAction.Restrict);
@@ -50,9 +48,9 @@ public partial class Update85 : Migration
                                                        },
                                      constraints: table =>
                                                   {
-                                                      table.PrimaryKey("PK_UserDpsReportsConfigurations", x => x.UserId);
+                                                      table.PrimaryKey("PK_UserDpsReportsConfigurations", column => column.UserId);
                                                       table.ForeignKey("FK_UserDpsReportsConfigurations_Users_UserId",
-                                                                       column: x => x.UserId,
+                                                                       column: column => column.UserId,
                                                                        principalTable: "Users",
                                                                        principalColumn: "Id",
                                                                        onDelete: ReferentialAction.Restrict);

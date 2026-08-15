@@ -16,6 +16,18 @@ public class Player
     public string DisplayName { get; set; }
 
     /// <summary>
+    /// Character name
+    /// </summary>
+    [JsonProperty("character_name")]
+    public string CharacterName { get; set; }
+
+    /// <summary>
+    /// Elite specialization
+    /// </summary>
+    [JsonProperty("elite_spec")]
+    public int EliteSpecialization { get; set; }
+
+    /// <summary>
     /// Display name from detailed logs
     /// </summary>
     [JsonProperty("account")]
@@ -25,12 +37,6 @@ public class Player
     }
 
     /// <summary>
-    /// Character name
-    /// </summary>
-    [JsonProperty("character_name")]
-    public string CharacterName { get; set; }
-
-    /// <summary>
     /// Character name from detailed logs
     /// </summary>
     [JsonProperty("name")]
@@ -38,12 +44,6 @@ public class Player
     {
         set => CharacterName = value;
     }
-
-    /// <summary>
-    /// Elite specialization
-    /// </summary>
-    [JsonProperty("elite_spec")]
-    public int EliteSpecialization { get; set; }
 
     #endregion // Properties
 }

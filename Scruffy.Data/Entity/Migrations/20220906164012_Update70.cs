@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations;
@@ -24,13 +22,13 @@ public partial class Update70 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_DiscordServerMembers",
-                                                                       x => new
-                                                                            {
-                                                                                x.ServerId,
-                                                                                x.AccountId
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.ServerId,
+                                                                                     column.AccountId
+                                                                                 });
                                                       table.ForeignKey(name: "FK_DiscordServerMembers_DiscordAccounts_AccountId",
-                                                                       column: x => x.AccountId,
+                                                                       column: column => column.AccountId,
                                                                        principalTable: "DiscordAccounts",
                                                                        principalColumn: "Id",
                                                                        onDelete: ReferentialAction.Restrict);

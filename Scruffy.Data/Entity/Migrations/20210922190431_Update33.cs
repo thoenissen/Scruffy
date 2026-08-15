@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations;
@@ -24,7 +22,7 @@ public partial class Update33 : Migration
                                                            CustomValue = table.Column<long>(type: "bigint", nullable: true),
                                                            IsValueReducingActivated = table.Column<bool>(type: "bit", nullable: false)
                                                        },
-                                     constraints: table => table.PrimaryKey("PK_GuildWarsItems", x => x.ItemId));
+                                     constraints: table => table.PrimaryKey("PK_GuildWarsItems", column => column.ItemId));
 
         migrationBuilder.CreateTable(name: "GuildWarsItemGuildUpgradeConversions",
                                      columns: table => new
@@ -35,14 +33,14 @@ public partial class Update33 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_GuildWarsItemGuildUpgradeConversions",
-                                                                       x => new
-                                                                            {
-                                                                                x.ItemId,
-                                                                                x.UpgradeId
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.ItemId,
+                                                                                     column.UpgradeId
+                                                                                 });
 
                                                       table.ForeignKey(name: "FK_GuildWarsItemGuildUpgradeConversions_GuildWarsItems_ItemId",
-                                                                       column: x => x.ItemId,
+                                                                       column: column => column.ItemId,
                                                                        principalTable: "GuildWarsItems",
                                                                        principalColumn: "ItemId",
                                                                        onDelete: ReferentialAction.Restrict);

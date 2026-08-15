@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations;
@@ -20,7 +18,7 @@ public partial class Update5 : Migration
                                                   ServerId = table.Column<decimal>("decimal(20,0)", nullable: false),
                                                   Prefix = table.Column<string>("nvarchar(max)", nullable: true)
                                               },
-                                     constraints: table => table.PrimaryKey("PK_ServerConfigurationEntity", x => x.ServerId));
+                                     constraints: table => table.PrimaryKey("PK_ServerConfigurationEntity", column => column.ServerId));
     }
 
     /// <inheritdoc/>

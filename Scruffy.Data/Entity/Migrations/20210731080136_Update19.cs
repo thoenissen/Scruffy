@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations;
@@ -67,20 +65,20 @@ public partial class Update19 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_CalendarAppointmentParticipants",
-                                                                       x => new
-                                                                            {
-                                                                                x.AppointmentId,
-                                                                                x.UserId
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.AppointmentId,
+                                                                                     column.UserId
+                                                                                 });
 
                                                       table.ForeignKey("FK_CalendarAppointmentParticipants_CalendarAppointments_AppointmentId",
-                                                                       x => x.AppointmentId,
+                                                                       column => column.AppointmentId,
                                                                        "CalendarAppointments",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);
 
                                                       table.ForeignKey("FK_CalendarAppointmentParticipants_Users_UserId",
-                                                                       x => x.UserId,
+                                                                       column => column.UserId,
                                                                        "Users",
                                                                        "Id",
                                                                        onDelete: ReferentialAction.Restrict);

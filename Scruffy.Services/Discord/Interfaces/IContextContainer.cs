@@ -21,27 +21,27 @@ public interface IContextContainer
     public IServiceProvider ServiceProvider { get; }
 
     /// <summary>
-    /// Gets the <see cref="T:DiscordSocketClient" /> that the command is executed with
+    /// <see cref="T:DiscordSocketClient" /> the command is executed with
     /// </summary>
     public DiscordSocketClient Client { get; }
 
     /// <summary>
-    /// Gets the <see cref="T:IGuild" /> that the command is executed in
+    /// <see cref="T:IGuild" /> the command is executed in
     /// </summary>
     public IGuild Guild { get; }
 
     /// <summary>
-    /// Gets the <see cref="T:IMessageChannel" /> that the command is executed in
+    /// <see cref="T:IMessageChannel" /> the command is executed in
     /// </summary>
     public IMessageChannel Channel { get; }
 
     /// <summary>
-    /// Gets the <see cref="IUser" /> who executed the command
+    /// <see cref="IUser" /> who executed the command
     /// </summary>
     public IUser User { get; }
 
     /// <summary>
-    /// Gets the <see cref="T:IGuildUser" /> who executed the command
+    /// <see cref="T:IGuildUser" /> who executed the command
     /// </summary>
     public IGuildUser Member { get; }
 

@@ -46,7 +46,7 @@ public class Target
     public int LastAware { get; set; }
 
     /// <summary>
-    /// Indicates that the Target is actually an enemy player
+    /// Is the Target actually an enemy player?
     /// </summary>
     [JsonProperty("enemyPlayer")]
     public bool EnemyPlayer { get; set; }
@@ -60,7 +60,7 @@ public class Target
     public IReadOnlyList<IReadOnlyList<double>> BreakbarPercents { get; set; }
 
     /// <summary>
-    /// Indicates that the JsonActor does not exist in reality
+    /// Does theJsonActor not exist in reality?
     /// </summary>
     [JsonProperty("isFake")]
     public bool IsFake { get; set; }

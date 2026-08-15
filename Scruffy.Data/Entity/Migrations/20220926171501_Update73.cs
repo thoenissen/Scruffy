@@ -1,5 +1,3 @@
-#pragma warning disable RH0201
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Scruffy.Data.Entity.Migrations;
@@ -25,21 +23,21 @@ public partial class Update73 : Migration
                                      constraints: table =>
                                                   {
                                                       table.PrimaryKey("PK_GuildRankNotifications",
-                                                                       x => new
-                                                                            {
-                                                                                x.GuildId,
-                                                                                x.UserId,
-                                                                                x.Type
-                                                                            });
+                                                                       column => new
+                                                                                 {
+                                                                                     column.GuildId,
+                                                                                     column.UserId,
+                                                                                     column.Type
+                                                                                 });
 
                                                       table.ForeignKey(name: "FK_GuildRankNotifications_Guilds_GuildId",
-                                                                       column: x => x.GuildId,
+                                                                       column: column => column.GuildId,
                                                                        principalTable: "Guilds",
                                                                        principalColumn: "Id",
                                                                        onDelete: ReferentialAction.Restrict);
 
                                                       table.ForeignKey(name: "FK_GuildRankNotifications_Users_UserId",
-                                                                       column: x => x.UserId,
+                                                                       column: column => column.UserId,
                                                                        principalTable: "Users",
                                                                        principalColumn: "Id",
                                                                        onDelete: ReferentialAction.Restrict);

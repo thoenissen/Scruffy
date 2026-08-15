@@ -44,12 +44,6 @@ public class RaidDayDayOfWeekDialogElement : DialogEmbedReactionElementBase<DayO
     }
 
     /// <inheritdoc/>
-    protected override string GetCommandTitle()
-    {
-        return LocalizationGroup.GetText("Reactions", "Days");
-    }
-
-    /// <inheritdoc/>
     public override IReadOnlyList<ReactionData<DayOfWeek>> GetReactions()
     {
         return _reactions ??= [
@@ -96,6 +90,12 @@ public class RaidDayDayOfWeekDialogElement : DialogEmbedReactionElementBase<DayO
                                       Func = () => Task.FromResult(DayOfWeek.Sunday)
                                   }
                               ];
+    }
+
+    /// <inheritdoc/>
+    protected override string GetCommandTitle()
+    {
+        return LocalizationGroup.GetText("Reactions", "Days");
     }
 
     /// <inheritdoc/>
