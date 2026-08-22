@@ -64,9 +64,9 @@ public sealed class DpsReportProcessor : IAsyncDisposable
     /// Constructor
     /// </summary>
     /// <param name="httpClientFactory">HTTP client factory to create clients for requests</param>
-    /// <param name="minioClientFactory">Minio client factory to create clients for Minio operations</param>
     /// <param name="logger">Logger for logging</param>
-    public DpsReportProcessor(IHttpClientFactory httpClientFactory, IMinioClientFactory minioClientFactory, ILogger<DpsReportProcessor> logger)
+    /// <param name="minioClientFactory">Minio client factory to create clients for Minio operations</param>
+    public DpsReportProcessor(IHttpClientFactory httpClientFactory, ILogger<DpsReportProcessor> logger, IMinioClientFactory minioClientFactory = null)
     {
         _httpClientFactory = httpClientFactory;
         _minioClientFactory = minioClientFactory;
@@ -156,6 +156,11 @@ public sealed class DpsReportProcessor : IAsyncDisposable
     {
         var success = false;
 
+        if (_minioClientFactory == null)
+        {
+            return false;
+        }
+
         try
         {
             using (var minioClient = _minioClientFactory.CreateClient())
@@ -227,6 +232,11 @@ public sealed class DpsReportProcessor : IAsyncDisposable
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task UploadToCache(string content, string id)
     {
+        if (_minioClientFactory == null)
+        {
+            return;
+        }
+
         try
         {
             using (var minioClient = _minioClientFactory.CreateClient())

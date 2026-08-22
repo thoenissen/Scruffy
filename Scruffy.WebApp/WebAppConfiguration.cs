@@ -64,7 +64,7 @@ public static class WebAppConfiguration
         {
             if (_discordServerId == null)
             {
-                if (ulong.TryParse(ConfigurationService.GetEntry("SCRUFFY_GUILD_SERVER"), out var discordServerId) == false)
+                if (ulong.TryParse(ConfigurationService.GetEntry("SCRUFFY_GUILD_SERVER"), out var discordServerId))
                 {
                     _discordServerId = discordServerId;
                 }
