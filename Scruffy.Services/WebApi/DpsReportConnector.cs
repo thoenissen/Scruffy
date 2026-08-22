@@ -52,7 +52,7 @@ public class DpsReportConnector
     /// </summary>
     /// <param name="clientFactory">Client factory</param>
     /// <param name="minioClientFactory">Minio factory</param>
-    public DpsReportConnector(IHttpClientFactory clientFactory, IMinioClientFactory minioClientFactory)
+    public DpsReportConnector(IHttpClientFactory clientFactory, IMinioClientFactory minioClientFactory = null)
     {
         _clientFactory = clientFactory;
         _minioClientFactory = minioClientFactory;
@@ -357,6 +357,11 @@ public class DpsReportConnector
     [SuppressMessage("ReSharper", "AccessToDisposedClosure", Justification = "Object is not disposed when being used.")]
     private async Task<Log> TryGetLogFromCache(string id)
     {
+        if (_minioClientFactory == null)
+        {
+            return null;
+        }
+
         Log log = null;
 
         try
@@ -433,6 +438,11 @@ public class DpsReportConnector
     /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
     private async Task UploadToCache(string content, string id)
     {
+        if (_minioClientFactory == null)
+        {
+            return;
+        }
+
         try
         {
             using (var minioClient = _minioClientFactory.CreateClient())

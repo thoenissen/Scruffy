@@ -28,7 +28,7 @@ internal static class CommandExtensions
                                                                            Name = obj.Name,
                                                                            Value = obj.Value
                                                                        })
-                                                       .ToList(),
+                                               .ToList(),
                         ChannelTypes = parameterInfo.ChannelTypes?.ToList(),
                         IsAutocomplete = parameterInfo.IsAutocomplete,
                         MaxValue = parameterInfo.MaxValue,
@@ -63,7 +63,7 @@ internal static class CommandExtensions
         }
 
         props.Options = commandInfo.FlattenedParameters?.Select(parameter => parameter.ToApplicationCommandOptionProps())
-                                                       .ToList()
+                                   .ToList()
                             ?? Optional<List<ApplicationCommandOptionProperties>>.Unspecified;
 
         return props;
