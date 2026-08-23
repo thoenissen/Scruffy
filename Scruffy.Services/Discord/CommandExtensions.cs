@@ -23,13 +23,12 @@ internal static class CommandExtensions
                         Description = parameterInfo.Description,
                         Type = parameterInfo.DiscordOptionType ?? ApplicationCommandOptionType.String,
                         IsRequired = parameterInfo.IsRequired,
-                        Choices = parameterInfo.Choices
-                                               ?.Select(obj => new ApplicationCommandOptionChoiceProperties
-                                                               {
-                                                                   Name = obj.Name,
-                                                                   Value = obj.Value
-                                                               })
-                                               .ToList(),
+                        Choices = parameterInfo.Choices?.Select(obj => new ApplicationCommandOptionChoiceProperties
+                                                                       {
+                                                                           Name = obj.Name,
+                                                                           Value = obj.Value
+                                                                       })
+                                                       .ToList(),
                         ChannelTypes = parameterInfo.ChannelTypes?.ToList(),
                         IsAutocomplete = parameterInfo.IsAutocomplete,
                         MaxValue = parameterInfo.MaxValue,
@@ -63,9 +62,8 @@ internal static class CommandExtensions
             throw new InvalidOperationException($"Slash Commands cannot have more than {SlashCommandBuilder.MaxOptionsCount} command parameters");
         }
 
-        props.Options = commandInfo.FlattenedParameters
-                                   ?.Select(parameter => parameter.ToApplicationCommandOptionProps())
-                                   .ToList()
+        props.Options = commandInfo.FlattenedParameters?.Select(parameter => parameter.ToApplicationCommandOptionProps())
+                                                       .ToList()
                             ?? Optional<List<ApplicationCommandOptionProperties>>.Unspecified;
 
         return props;
