@@ -10,6 +10,7 @@ using Discord.WebSocket;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -189,6 +190,13 @@ public class Program
                                     {
                                         options.ClientId = ConfigurationService.GetEntry("SCRUFFY_DISCORD_OAUTH_CLIENT_ID")!;
                                         options.ClientSecret = ConfigurationService.GetEntry("SCRUFFY_DISCORD_OAUTH_CLIENT_SECRET")!;
+
+                                        if (ConfigurationService.IsMaintenanceMode)
+                                        {
+                                            options.CorrelationCookie.SameSite = SameSiteMode.Lax;
+                                            options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+                                        }
+
                                         options.Events.OnRemoteFailure = context =>
                                                                          {
                                                                              context.Response.Redirect("/");
@@ -212,12 +220,21 @@ public class Program
         await locationService.Initialize(app.Services)
                              .ConfigureAwait(false);
 
-        app.UseForwardedHeaders(new ForwardedHeadersOptions
-                                {
-                                    ForwardedHeaders = ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedHost
-                                });
+        if (ConfigurationService.IsMaintenanceMode)
+        {
+            var forwardedHeadersOptions = new ForwardedHeadersOptions
+                                          {
+                                              ForwardedHeaders = ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedHost
+                                          };
 
-        if (app.Environment.IsDevelopment() == false)
+            forwardedHeadersOptions.KnownIPNetworks.Clear();
+            forwardedHeadersOptions.KnownProxies.Clear();
+
+            app.UseForwardedHeaders(forwardedHeadersOptions);
+        }
+
+        if (app.Environment.IsDevelopment() == false
+            && ConfigurationService.IsMaintenanceMode == false)
         {
             app.UseHttpsRedirection();
         }
