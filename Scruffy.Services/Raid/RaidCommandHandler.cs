@@ -36,11 +36,6 @@ public class RaidCommandHandler : LocatedServiceBase
     private readonly RaidMessageBuilder _messageBuilder;
 
     /// <summary>
-    /// Committing a appointment
-    /// </summary>
-    private readonly RaidCommitService _commitService;
-
-    /// <summary>
     /// Registration service
     /// </summary>
     private readonly RaidRegistrationService _registrationService;
@@ -84,7 +79,6 @@ public class RaidCommandHandler : LocatedServiceBase
     /// </summary>
     /// <param name="localizationService">Localization service</param>
     /// <param name="messageBuilder">Message builder</param>
-    /// <param name="commitService">Commit service</param>
     /// <param name="registrationService">Registration service</param>
     /// <param name="roleAssignmentService">Role assignment service</param>
     /// <param name="overviewService">Overview service</param>
@@ -93,7 +87,6 @@ public class RaidCommandHandler : LocatedServiceBase
     /// <param name="rolesService">Roles Service connector</param>
     public RaidCommandHandler(LocalizationService localizationService,
                               RaidMessageBuilder messageBuilder,
-                              RaidCommitService commitService,
                               RaidRegistrationService registrationService,
                               RaidRoleAssignmentService roleAssignmentService,
                               RaidOverviewService overviewService,
@@ -104,7 +97,6 @@ public class RaidCommandHandler : LocatedServiceBase
     {
         _localizationService = localizationService;
         _messageBuilder = messageBuilder;
-        _commitService = commitService;
         _registrationService = registrationService;
         _roleAssignmentService = roleAssignmentService;
         _overviewService = overviewService;
@@ -542,18 +534,6 @@ public class RaidCommandHandler : LocatedServiceBase
                                .ConfigureAwait(false);
             }
         }
-    }
-
-    /// <summary>
-    /// Commiting the current raid appointment
-    /// </summary>
-    /// <param name="container">Context container</param>
-    /// <param name="aliasName">Alias name</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    public async Task Commit(IContextContainer container, string aliasName)
-    {
-        await _commitService.CommitRaidAppointment(container, aliasName)
-                            .ConfigureAwait(false);
     }
 
     /// <summary>

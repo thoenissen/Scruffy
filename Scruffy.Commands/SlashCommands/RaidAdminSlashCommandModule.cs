@@ -147,17 +147,6 @@ public class RaidAdminSlashCommandModule : SlashCommandModuleBase
     }
 
     /// <summary>
-    /// Commiting the current raid appointment
-    /// </summary>
-    /// <param name="name">Alias name</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
-    [SlashCommand("commit", "Commit raid appointment")]
-    public Task Commit([Summary("Name", "Name of the appointment")] string name)
-    {
-        return CommandHandler.Commit(Context, name);
-    }
-
-    /// <summary>
     /// Post a overview of the selected type
     /// </summary>
     /// <param name="type">Type of the configuration</param>
