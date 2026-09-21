@@ -262,7 +262,7 @@ public partial class DiscordVoiceStatisticsPage : LocatedComponent
         var hours = (int)totalHours;
         var minutes = (int)((totalHours - hours) * 60);
 
-        return $"{hours.ToString("N0", LocalizationGroup.CultureInfo)}h {minutes:D2}member";
+        return $"{hours.ToString("N0", LocalizationGroup.CultureInfo)}h {minutes:D2}m";
     }
 
     /// <summary>
