@@ -737,36 +737,12 @@
       "UnknownExperienceLevel": "Das angegebene Erfahrungslevel existiert nicht.",
       "NoLineUpFound": "Aktuell existiert keine Aufstellung, die angezeigt werden kann."
     },
-    "RaidCommitDialogElement": {
-      "AddCommand": "{0} Teilnehmer hinzufügen",
-      "CancelCommand": "{0} Abbrechen",
-      "CommandTitle": "Befehle",
-      "CommitCommand": "{0} Bestätigung",
-      "CommitText": "Die folgenden Punkte werden fortgeschrieben:",
-      "CommitTitle": "Fortschreibung Teilnahmepunkte",
-      "RemoveCommand": "{0} Teilnehmer entfernen",
-      "SetPointsCommand": "{0} Bearbeitung der Punkte",
-      "Users": "Benutzer"
-    },
     "RaidLineUpService": {
       "LineUpTitle": "Aufstellung - Gruppe {0}",
       "LineUpDescription": "Termin: `{0:G}`",
       "GroupTitle": "Gruppe {0}",
       "SupportTitle": "Support",
       "DpsTitle": "DPS"
-    },
-    "RaidCommitPointDialogElement": {
-      "Message": "Wie viele Punkte sollen zugewiesen werden?"
-    },
-    "RaidCommitRemoveUserDialogElement": {
-      "Message": "Welcher Benutzer soll entfernt werden?"
-    },
-    "RaidCommitService": {
-      "CommitCompleted": "Die Fortschreibung wurde durchgeführt.",
-      "NoOpenAppointment": "Es besteht kein Termin, der noch nicht fortgeschrieben worden ist."
-    },
-    "RaidCommitUserDialogElement": {
-      "Message": "Gib den Benutzer ein:"
     },
     "RaidCommitPage": {
       "PageTitle": "FooI - Raid - Fortschreibung",
