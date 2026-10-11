@@ -39,9 +39,7 @@ public class PersonalDataModal : IModal
 
     #region IModal
 
-    /// <summary>
-    /// Title
-    /// </summary>
+    /// <inheritdoc/>
     public string Title => "Personal data";
 
     #endregion // IModal

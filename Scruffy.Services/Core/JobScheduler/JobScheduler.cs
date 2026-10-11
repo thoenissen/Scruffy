@@ -248,10 +248,7 @@ public sealed class JobScheduler : SingletonLocatedServiceBase,
 
     #region IAsyncDisposable
 
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously
-    /// </summary>
-    /// <returns> A task that represents the asynchronous dispose operation</returns>
+    /// <inheritdoc/>
     async ValueTask IAsyncDisposable.DisposeAsync()
     {
         await Task.Run(JobManager.StopAndBlock).ConfigureAwait(false);

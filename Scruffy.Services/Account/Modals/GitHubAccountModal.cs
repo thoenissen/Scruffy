@@ -30,9 +30,7 @@ public class GitHubAccountModal : IModal
 
     #region IModal
 
-    /// <summary>
-    /// Title
-    /// </summary>
+    /// <inheritdoc/>
     public string Title => "Add or refresh a GitHub account";
 
     #endregion // IModal

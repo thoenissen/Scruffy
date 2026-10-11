@@ -48,25 +48,16 @@ public abstract class LocatedAsyncJob : IServiceScopeSupport, IAsyncJob, IDispos
     /// <summary>
     /// Localized group
     /// </summary>
-    public LocalizationGroup LocalizationGroup
-    {
-        get
-        {
-            return field ??= ServiceProviderContainer.Current
-                                                     .GetServiceProvider()
-                                                     .GetRequiredService<LocalizationService>()
-                                                     .GetGroup(GetType().Name);
-        }
-    }
+    public LocalizationGroup LocalizationGroup => field ??= ServiceProviderContainer.Current
+                                                                                    .GetServiceProvider()
+                                                                                    .GetRequiredService<LocalizationService>()
+                                                                                    .GetGroup(GetType().Name);
 
     #endregion // Properties
 
     #region IAsyncJob
 
-    /// <summary>
-    /// Executes the job
-    /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    /// <inheritdoc/>
     public async Task ExecuteAsync()
     {
         try
@@ -85,9 +76,7 @@ public abstract class LocatedAsyncJob : IServiceScopeSupport, IAsyncJob, IDispos
 
     #region IJob
 
-    /// <summary>
-    /// Executes the job
-    /// </summary>
+    /// <inheritdoc/>
     public void Execute()
     {
         try
@@ -106,10 +95,7 @@ public abstract class LocatedAsyncJob : IServiceScopeSupport, IAsyncJob, IDispos
 
     #region IServiceScopeSupport
 
-    /// <summary>
-    /// Set the current scope
-    /// </summary>
-    /// <param name="scope">scope</param>
+    /// <inheritdoc/>
     public void SetScope(IServiceScope scope)
     {
         _scope = scope;
@@ -119,9 +105,7 @@ public abstract class LocatedAsyncJob : IServiceScopeSupport, IAsyncJob, IDispos
 
     #region IDisposable
 
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources
-    /// </summary>
+    /// <inheritdoc/>
     public void Dispose()
     {
         Dispose(true);

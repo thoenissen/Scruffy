@@ -54,9 +54,7 @@ public class AddLinkModalData : IModal
 
     #region IModal
 
-    /// <summary>
-    /// Title
-    /// </summary>
+    /// <inheritdoc/>
     public string Title => "Message editing: Link input";
 
     #endregion // IModal

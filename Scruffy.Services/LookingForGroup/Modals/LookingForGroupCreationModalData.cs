@@ -55,9 +55,7 @@ public class LookingForGroupCreationModalData : IModal
 
     #region IModal
 
-    /// <summary>
-    /// Creation of the appointment
-    /// </summary>
+    /// <inheritdoc/>
     public string Title => "Appointment creation";
 
     #endregion // IModal

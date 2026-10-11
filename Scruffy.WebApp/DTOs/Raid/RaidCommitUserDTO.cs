@@ -37,18 +37,15 @@ public class RaidCommitUserDTO
     /// </summary>
     public double? Points
     {
-        get
-        {
-            return field ?? Status switch
-                            {
-                                RaidParticipationStatus.Played => ParticipationPoints * 1.0,
-                                RaidParticipationStatus.Substitute => ParticipationPoints * 3.0,
-                                RaidParticipationStatus.NoShow => ParticipationPoints * -1.0,
-                                RaidParticipationStatus.LateRegistration => 0.0,
-                                RaidParticipationStatus.Removed => 0.0,
-                                _ => ParticipationPoints * 1.0
-                            };
-        }
+        get => field ?? Status switch
+                        {
+                            RaidParticipationStatus.Played => ParticipationPoints * 1.0,
+                            RaidParticipationStatus.Substitute => ParticipationPoints * 3.0,
+                            RaidParticipationStatus.NoShow => ParticipationPoints * -1.0,
+                            RaidParticipationStatus.LateRegistration => 0.0,
+                            RaidParticipationStatus.Removed => 0.0,
+                            _ => ParticipationPoints * 1.0
+                        };
         set;
     }
 

@@ -196,10 +196,7 @@ public sealed class ServiceProviderContainer : IAsyncDisposable
 
     #region IAsyncDisposable
 
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources
-    /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation</returns>
+    /// <inheritdoc/>
     public async ValueTask DisposeAsync()
     {
         if (_singletons != null)

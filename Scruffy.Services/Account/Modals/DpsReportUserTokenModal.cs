@@ -30,9 +30,7 @@ public class DpsReportUserTokenModal : IModal
 
     #region IModal
 
-    /// <summary>
-    /// Title
-    /// </summary>
+    /// <inheritdoc/>
     public string Title => "GW2 DPS Reports user token";
 
     #endregion // IModal

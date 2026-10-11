@@ -33,19 +33,13 @@ public class QueryableBase<TEntity> : IQueryable<TEntity>
 
     #region IEnumerable
 
-    /// <summary>
-    /// Returns an enumerator that iterates through the collection
-    /// </summary>
-    /// <returns>An enumerator that can be used to iterate through the collection</returns>
+    /// <inheritdoc/>
     public IEnumerator<TEntity> GetEnumerator()
     {
         return InternalQueryable.GetEnumerator();
     }
 
-    /// <summary>
-    /// Returns an enumerator that iterates through a collection
-    /// </summary>
-    /// <returns>An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the collection</returns>
+    /// <inheritdoc/>
     IEnumerator IEnumerable.GetEnumerator()
     {
         return ((IEnumerable)InternalQueryable).GetEnumerator();

@@ -31,9 +31,7 @@ public class GuildExportCurrentPointsModalData : IModal
 
     #region IModal
 
-    /// <summary>
-    /// Title
-    /// </summary>
+    /// <inheritdoc/>
     public string Title => "Export: Current guild rank points";
 
     #endregion // IModal

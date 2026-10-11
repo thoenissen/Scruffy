@@ -451,10 +451,7 @@ public sealed class DiscordBot : IAsyncDisposable
 
     #region IAsyncDisposable
 
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously
-    /// </summary>
-    /// <returns>A task that represents the asynchronous dispose operation</returns>
+    /// <inheritdoc/>
     public async ValueTask DisposeAsync()
     {
         _interaction?.Dispose();

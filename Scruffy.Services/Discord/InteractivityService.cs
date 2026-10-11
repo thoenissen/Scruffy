@@ -393,9 +393,7 @@ public sealed class InteractivityService : SingletonLocatedServiceBase, IDisposa
 
     #region IDisposable
 
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources
-    /// </summary>
+    /// <inheritdoc/>
     public void Dispose()
     {
         if (_disposed == false)

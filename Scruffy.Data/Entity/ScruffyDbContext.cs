@@ -72,7 +72,7 @@ public class ScruffyDbContext : IdentityDbContext<UserEntity, RoleEntity, long, 
 
         optionsBuilder.UseSqlServer(ConnectionString);
 #if DEBUG
-        optionsBuilder.LogTo(s => System.Diagnostics.Debug.WriteLine(s));
+        optionsBuilder.LogTo(message => System.Diagnostics.Debug.WriteLine(message));
 #endif
         base.OnConfiguring(optionsBuilder);
     }

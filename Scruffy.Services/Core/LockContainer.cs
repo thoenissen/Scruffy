@@ -31,9 +31,7 @@ internal sealed class LockContainer : IAsyncDisposable, IDisposable
 
     #region IDisposable
 
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources
-    /// </summary>
+    /// <inheritdoc/>
     public void Dispose()
     {
         _semaphore.Release();
@@ -43,10 +41,7 @@ internal sealed class LockContainer : IAsyncDisposable, IDisposable
 
     #region IAsyncDisposable
 
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously
-    /// </summary>
-    /// <returns>A task that represents the asynchronous dispose operation</returns>
+    /// <inheritdoc/>
     public ValueTask DisposeAsync()
     {
         Dispose();

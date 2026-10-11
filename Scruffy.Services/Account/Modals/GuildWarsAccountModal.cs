@@ -31,9 +31,7 @@ public class GuildWarsAccountModal : IModal
 
     #region IModal
 
-    /// <summary>
-    /// Title
-    /// </summary>
+    /// <inheritdoc/>
     public string Title => "Guild Wars 2 account";
 
     #endregion // IModal

@@ -79,9 +79,7 @@ public sealed class QuickChartConnector : IDisposable,
 
     #region IDisposable
 
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources
-    /// </summary>
+    /// <inheritdoc/>
     public void Dispose()
     {
     }
@@ -90,10 +88,7 @@ public sealed class QuickChartConnector : IDisposable,
 
     #region IAsyncDisposable
 
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously
-    /// </summary>
-    /// <returns>A task that represents the asynchronous dispose operation</returns>
+    /// <inheritdoc/>
     public ValueTask DisposeAsync()
     {
         return ValueTask.CompletedTask;

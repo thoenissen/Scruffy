@@ -935,10 +935,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
 
     #region IAsyncDisposable
 
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously
-    /// </summary>
-    /// <returns>A task that represents the asynchronous dispose operation</returns>
+    /// <inheritdoc/>
     public async ValueTask DisposeAsync()
     {
         if (_serviceProvider != null)
@@ -954,9 +951,7 @@ public sealed class GuildWars2ApiConnector : IAsyncDisposable,
 
     #region IDisposable
 
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources
-    /// </summary>
+    /// <inheritdoc/>
     public void Dispose()
     {
         _serviceProvider?.Dispose();

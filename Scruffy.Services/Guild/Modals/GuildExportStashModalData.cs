@@ -47,9 +47,7 @@ public class GuildExportStashModalData : IModal
 
     #region IModal
 
-    /// <summary>
-    /// Title
-    /// </summary>
+    /// <inheritdoc/>
     public string Title => "Export: Guild stash";
 
     #endregion // IModal

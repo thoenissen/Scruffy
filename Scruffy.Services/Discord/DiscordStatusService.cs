@@ -99,9 +99,7 @@ public sealed class DiscordStatusService : SingletonLocatedServiceBase, IDisposa
 
     #region IDisposable
 
-    /// <summary>
-    /// Dispose method
-    /// </summary>
+    /// <inheritdoc/>
     public void Dispose()
     {
         _timer?.Dispose();
