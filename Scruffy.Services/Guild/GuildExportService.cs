@@ -579,7 +579,7 @@ public class GuildExportService : LocatedServiceBase
                                          .ToListAsync()
                                          .ConfigureAwait(false);
 
-            var accounts = new List<(string User, string AccountName, int Characters, int?Representation)>();
+            var accounts = new List<(string User, string AccountName, int Characters, int? Representation)>();
 
             foreach (var entry in entries)
             {
