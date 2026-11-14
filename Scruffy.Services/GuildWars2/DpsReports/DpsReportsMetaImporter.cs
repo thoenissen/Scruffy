@@ -118,7 +118,7 @@ public class DpsReportsMetaImporter : LocatedServiceBase
                         break;
                     }
 
-                    reports ??= new List<DpsReportEntity>(uploads.TotalUploads ?? 0);
+                    reports ??= [with(uploads.TotalUploads ?? 0)];
 
                     foreach (var upload in uploads.Uploads)
                     {
