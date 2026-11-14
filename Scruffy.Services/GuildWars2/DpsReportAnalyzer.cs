@@ -100,6 +100,11 @@ public static class DpsReportAnalyzer
 
                    SpeciesIDs.TargetID.WhisperingShadow => DpsReportGroupLegacy.Kinfall,
 
+                   SpeciesIDs.TargetID.EternalTyrant
+                   or SpeciesIDs.TargetID.ConstructOfGaldra
+                   or SpeciesIDs.TargetID.RimeSprite
+                   or SpeciesIDs.TargetID.FrostElemental => DpsReportGroupLegacy.SolitaryThrone,
+
                    SpeciesIDs.TargetID.IcebroodConstruct
                    or SpeciesIDs.TargetID.VoiceOfTheFallen
                    or SpeciesIDs.TargetID.ClawOfTheFallen
@@ -228,6 +233,12 @@ public static class DpsReportAnalyzer
 
                    // Kinfall
                    SpeciesIDs.TargetID.WhisperingShadow => 1,
+
+                   // Solitary Throne
+                   SpeciesIDs.TargetID.EternalTyrant => 1,
+                   SpeciesIDs.TargetID.ConstructOfGaldra => 2,
+                   SpeciesIDs.TargetID.RimeSprite => 3,
+                   SpeciesIDs.TargetID.FrostElemental => 4,
 
                    // IBS Strikes
                    SpeciesIDs.TargetID.IcebroodConstruct => 1,

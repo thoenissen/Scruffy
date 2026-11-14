@@ -30,8 +30,6 @@ public enum DpsReportEncounterTarget
     /// </summary>
     Ensolyss,
 
-    // Shattered Observatory (Fractals)
-
     /// <summary>
     /// Skorvald the Shattered (Shattered Observatory)
     /// </summary>
@@ -57,8 +55,6 @@ public enum DpsReportEncounterTarget
     /// </summary>
     Kanaxai,
 
-    // Lonely Tower (Fractals)
-
     /// <summary>
     /// Cerus (Lonely Tower)
     /// </summary>
@@ -74,12 +70,15 @@ public enum DpsReportEncounterTarget
     /// </summary>
     EparchLonelyTower,
 
-    // Kinfall (Fractals)
-
     /// <summary>
     /// Whispering Shadow (Kinfall)
     /// </summary>
     WhisperingShadow,
+
+    /// <summary>
+    /// Eternal Tyrant (Solitary Throne)
+    /// </summary>
+    EternalTyrant,
 
     /// <summary>
     /// Icebrood Construct (IBS Strike)
@@ -146,8 +145,6 @@ public enum DpsReportEncounterTarget
     /// </summary>
     Cerus,
 
-    // Wing 1 (Spirit Vale)
-
     /// <summary>
     /// Vale Guardian (Wing 1)
     /// </summary>
@@ -162,8 +159,6 @@ public enum DpsReportEncounterTarget
     /// Sabetha the Saboteur (Wing 1)
     /// </summary>
     Sabetha,
-
-    // Wing 2 (Salvation Pass)
 
     /// <summary>
     /// Slothasor (Wing 2)

@@ -51,6 +51,12 @@ public enum DpsReportGroupLegacy
     [ChoiceDisplay("Kinfall")]
     Kinfall,
 
+    /// <summary>
+    /// Solitary Throne fractal
+    /// </summary>
+    [ChoiceDisplay("Solitary Throne")]
+    SolitaryThrone,
+
     // Strikes
 
     /// <summary>

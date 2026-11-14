@@ -31,7 +31,8 @@ public static class DpsReportGroupExtensions
                    or DpsReportGroupLegacy.SunquaPeak
                    or DpsReportGroupLegacy.SilentSurf
                    or DpsReportGroupLegacy.LonelyTower
-                   or DpsReportGroupLegacy.Kinfall => DpsReportType.Fractal,
+                   or DpsReportGroupLegacy.Kinfall
+                   or DpsReportGroupLegacy.SolitaryThrone => DpsReportType.Fractal,
 
                    DpsReportGroupLegacy.IBSStrikes
                    or DpsReportGroupLegacy.EoDStrikes
@@ -65,6 +66,7 @@ public static class DpsReportGroupExtensions
                    DpsReportGroupLegacy.SilentSurf => "Silent Surf",
                    DpsReportGroupLegacy.LonelyTower => "Lonely Tower",
                    DpsReportGroupLegacy.Kinfall => "Kinfall",
+                   DpsReportGroupLegacy.SolitaryThrone  => "Solitary Throne",
                    DpsReportGroupLegacy.IBSStrikes => "IBS Strikes",
                    DpsReportGroupLegacy.EoDStrikes => "EoD Strikes",
                    DpsReportGroupLegacy.SotOStrikes => "SotO Strikes",

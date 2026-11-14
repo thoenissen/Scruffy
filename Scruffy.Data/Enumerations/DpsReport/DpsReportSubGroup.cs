@@ -8,130 +8,135 @@ public enum DpsReportSubGroup
     /// <summary>
     /// Not defined
     /// </summary>
-    NotDefined = 0,
+    NotDefined,
 
     /// <summary>
     /// Nightmare (Fractals)
     /// </summary>
-    Nightmare = 1,
+    Nightmare,
 
     /// <summary>
     /// Shattered Observatory (Fractals)
     /// </summary>
-    ShatteredObservatory = 2,
+    ShatteredObservatory,
 
     /// <summary>
     /// Sunqua Peak (Fractals)
     /// </summary>
-    SunquaPeak = 3,
+    SunquaPeak,
 
     /// <summary>
     /// Silent Surft (Fractals)
     /// </summary>
-    SilentSurf = 4,
+    SilentSurf,
 
     /// <summary>
     /// Lonely Tower (Fractals)
     /// </summary>
-    LonelyTower = 5,
+    LonelyTower,
 
     /// <summary>
     /// Kinfall (Fractals)
     /// </summary>
-    Kinfall = 6,
+    Kinfall,
+
+    /// <summary>
+    /// Solitary Throne (Fractals)
+    /// </summary>
+    SolitaryThrone,
 
     /// <summary>
     /// Old Lion's Court (Core Game)
     /// </summary>
-    OldLionsCourt = 7,
+    OldLionsCourt,
 
     /// <summary>
     /// Spirit Vale (Wing 1)
     /// </summary>
-    SpiritVale = 8,
+    SpiritVale,
 
     /// <summary>
     /// Salvation Pass (Wing 2)
     /// </summary>
-    SalvationPass = 9,
+    SalvationPass,
 
     /// <summary>
     /// Stronghold of the Faithful (Wing 3)
     /// </summary>
-    StrongholdOfTheFaithful = 10,
+    StrongholdOfTheFaithful,
 
     /// <summary>
     /// Bastion of the Penitent (Wing 4)
     /// </summary>
-    BastionOfThePenitent = 11,
+    BastionOfThePenitent,
 
     /// <summary>
     /// Hall of Chains (Wing 5)
     /// </summary>
-    HallOfChains = 12,
+    HallOfChains,
 
     /// <summary>
     /// Mythwright Gambit (Wing 6)
     /// </summary>
-    MythwrightGambit = 13,
+    MythwrightGambit,
 
     /// <summary>
     /// The Key of Ahdashim (Wing 7)
     /// </summary>
-    TheKeyOfAhdashim = 14,
+    TheKeyOfAhdashim,
 
     /// <summary>
     /// Shiverpeaks Pass (Icebrood Saga)
     /// </summary>
-    ShiverpeaksPass = 15,
+    ShiverpeaksPass,
 
     /// <summary>
     /// Sanctum Arena (Icebrood Saga)
     /// </summary>
-    SanctuumArena = 16,
+    SanctuumArena,
 
     /// <summary>
     /// Whispering Depths (Icebrood Saga)
     /// </summary>
-    WhisperingDepths = 17,
+    WhisperingDepths,
 
     /// <summary>
     /// Aetherblade Hideout (End of Dragons)
     /// </summary>
-    AetherbladHideout = 18,
+    AetherbladHideout,
 
     /// <summary>
     /// Xunlai Jade Junkyard (End of Dragons)
     /// </summary>
-    XunlaiJadeJunkyard = 19,
+    XunlaiJadeJunkyard,
 
     /// <summary>
     /// Kaineng Overlook (End of Dragons)
     /// </summary>
-    KainengOverlook = 20,
+    KainengOverlook,
 
     /// <summary>
     /// Harvest Temple (End of Dragons)
     /// </summary>
-    HarvestTemple = 21,
+    HarvestTemple,
 
     /// <summary>
     /// Cosmic Observatory (Secrets of the Obscure)
     /// </summary>
-    CosmicObservatory = 22,
+    CosmicObservatory,
 
     /// <summary>
     /// Temple of Febe (Secrets of the Obscure)
     /// </summary>
-    TempleOfFebe = 23,
+    TempleOfFebe,
 
     /// <summary>
     /// Mount Balrior (Janthir Wilds)
     /// </summary>
-    MountBalrior = 24,
+    MountBalrior,
 
     /// <summary>
     /// Guardian's Glade (Visions of Eternity)
     /// </summary>
-    GuardiansGlade = 25
+    GuardiansGlade
 }

@@ -124,6 +124,17 @@ public class DpsReportEncounterKey : IEquatable<DpsReportEncounterKey>
                                                                Encounter = DpsReportEncounterTarget.WhisperingShadow
                                                            },
 
+                   // Fractals - Solitary Throne
+                   SpeciesIDs.TargetID.EternalTyrant
+                   or SpeciesIDs.TargetID.ConstructOfGaldra
+                   or SpeciesIDs.TargetID.RimeSprite
+                   or SpeciesIDs.TargetID.FrostElemental => new DpsReportEncounterKey
+                                                            {
+                                                                Group = DpsReportGroup.Fractals,
+                                                                SubGroup = DpsReportSubGroup.SolitaryThrone,
+                                                                Encounter = DpsReportEncounterTarget.EternalTyrant
+                                                            },
+
                    // IBS Strikes
                    SpeciesIDs.TargetID.IcebroodConstruct
                    or SpeciesIDs.TargetID.IcebroodConstructFraenir => new DpsReportEncounterKey

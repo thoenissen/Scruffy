@@ -92,6 +92,7 @@ public static class DpsReportDisplayExtensions
                    DpsReportEncounterTarget.CerusLonelyTower => "Cerus",
                    DpsReportEncounterTarget.DeimosLonelyTower => "Deimos",
                    DpsReportEncounterTarget.EparchLonelyTower => "Eparch",
+                   DpsReportEncounterTarget.EternalTyrant => "The Eternal Tyrant",
                    DpsReportEncounterTarget.WhisperingShadow => "Whispering Shadow",
                    DpsReportEncounterTarget.IcebroodConstruct => "Icebrood Construct",
                    DpsReportEncounterTarget.VoiceAndClawOfTheFallen => "Voice and Claw of the Fallen",
